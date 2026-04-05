@@ -1,0 +1,14 @@
+{
+  "exportedAt": "2026-03-12T01:33:14.107Z",
+  "summary": {
+    "html": "index.html",
+    "totalFiles": 27,
+    "copiedAssets": 25,
+    "missingAssets": 0,
+    "hashRouting": true,
+    "apiMock": true,
+    "mainAppGate": "passed"
+  },
+  "missingAssets": [],
+  "autoFixMessages": []
+}

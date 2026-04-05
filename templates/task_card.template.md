@@ -33,6 +33,10 @@
 - knowledge/business/{{DOMAIN}}/
 - knowledge/guidelines/
 
+## Wiki
+
+- knowledge/wiki/indices/{{DOMAIN}}-domain.md
+
 ## Templates
 
 - templates/facts.template.md

@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 
 
-SECTION_HEADERS = {"## Skills", "## Knowledge", "## Templates"}
+SECTION_HEADERS = {"## Skills", "## Knowledge", "## Wiki", "## Templates"}
 
 
 def parse_references(task_card_text: str) -> list[str]:
