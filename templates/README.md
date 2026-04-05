@@ -10,3 +10,7 @@
 - `experience_blueprint.template.md`
 - `gap_list.template.md`
 - `check_report.template.md`
+- `wiki_entity.template.md`
+- `wiki_concept.template.md`
+- `wiki_topic.template.md`
+- `wiki_relation.template.md`

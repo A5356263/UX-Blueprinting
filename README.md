@@ -10,6 +10,7 @@
 本项目由以下部分共同组成：
 - 独立 skill 文件，约束 AI Code 的执行方式
 - 业务知识包与设计指南，提供判断依据
+- 可选的 Wiki 编译层，沉淀跨任务复用知识页
 - 固定模板与检查清单，稳定输出结构
 - 轻量脚本，负责装配、校验与归档
 
@@ -18,6 +19,7 @@
 - `docs/`：项目说明、SDD 规格、运行手册
 - `skills/`：执行阶段 skill
 - `knowledge/`：业务知识包与设计指南
+- `knowledge/wiki/`：长期知识页与关系索引
 - `templates/`：固定输出模板
 - `checks/`：检查清单与覆盖规则
 - `scripts/`：轻量脚本
@@ -48,3 +50,4 @@ python scripts/archive_artifacts.py demo-task
 - 当前阶段不做重型 runtime
 - 当前阶段不做 monorepo 与复杂平台拆分
 - 设计原则正文已并入 `knowledge/guidelines/`，不在本次工程搭建中改写
+- `facts -> business_blueprint -> experience_blueprint` 主链路保持不变，Wiki 层仅作为前置知识编译增强
