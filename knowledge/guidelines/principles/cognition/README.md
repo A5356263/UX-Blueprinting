@@ -1,5 +1,11 @@
 # cognition
 
-当前阶段保留目录骨架。
+本目录承载认知负担、决策与记忆相关原则。
 
-原则正文仍以 `knowledge/guidelines/guidelines.md` 为准。
+## 包含范围
+
+- `C-*`
+
+## 当前正文
+
+- `principles.md`

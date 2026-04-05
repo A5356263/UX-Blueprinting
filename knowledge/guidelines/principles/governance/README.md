@@ -1,5 +1,11 @@
 # governance
 
-当前阶段保留目录骨架。
+本目录承载治理、信任、可解释性与审计相关原则。
 
-原则正文仍以 `knowledge/guidelines/guidelines.md` 为准。
+## 包含范围
+
+- `G-*`
+
+## 当前正文
+
+- `principles.md`

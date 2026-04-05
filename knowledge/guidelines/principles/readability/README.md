@@ -1,5 +1,11 @@
 # readability
 
-当前阶段保留目录骨架。
+本目录承载文案可读性、朴素语言与术语一致性原则。
 
-原则正文仍以 `knowledge/guidelines/guidelines.md` 为准。
+## 包含范围
+
+- `R-*`
+
+## 当前正文
+
+- `principles.md`

@@ -1,5 +1,13 @@
 # usability
 
-当前阶段保留目录骨架。
+本目录承载通用可用性启发式、ISO 交互原则与交互效率原则。
 
-原则正文仍以 `knowledge/guidelines/guidelines.md` 为准。
+## 包含范围
+
+- `U-*`
+- `ISO-*`
+- `I-*`
+
+## 当前正文
+
+- `principles.md`

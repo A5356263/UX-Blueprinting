@@ -1,5 +1,11 @@
 # accessibility
 
-当前阶段保留目录骨架。
+本目录承载无障碍与包容性原则。
 
-原则正文仍以 `knowledge/guidelines/guidelines.md` 为准。
+## 包含范围
+
+- `A11Y-*`
+
+## 当前正文
+
+- `principles.md`
