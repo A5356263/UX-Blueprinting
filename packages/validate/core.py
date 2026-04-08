@@ -10,33 +10,98 @@ from packages.common import (
     get_project_runtime_dir,
     get_project_source_dir,
     get_project_workspace_dir,
+    get_repo_root,
 )
 
 
-REQUIRED_HEADINGS = {
-    "facts.md": ["## 任务目标", "## 业务事实清单", "## 已知约束", "## 输入来源", "## 开放问题"],
-    "business_blueprint.md": ["## 场景定义", "## 核心判断", "## 关键规则与约束", "## 决策链路与依赖", "## 风险与缺口", "## 开放问题"],
-    "experience_blueprint.md": ["## 体验目标", "## 关键场景", "## 体验要求", "## 原则引用", "## 风险与保护", "## 开放问题"],
+STAGE_REQUIRED_HEADINGS = {
+    "facts.md": [
+        "## 任务意图",
+        "## 事实来源说明",
+        "## 术语与对象边界",
+        "## 角色与对象清单",
+        "## 原子事实清单",
+        "## 规则矩阵",
+        "## 状态模型",
+        "## 动作与流程事实",
+        "## 异常与拦截清单",
+        "## 依赖清单",
+        "## 范围与非范围",
+        "## 开放问题与缺口",
+        "## 追踪映射",
+    ],
+    "business_blueprint.md": [
+        "## 评审对象与任务边界",
+        "## 领域基线",
+        "## 方案意图与变更类型",
+        "## 合理性判断",
+        "## 底层逻辑一致性判断",
+        "## 管理策略一致性判断",
+        "## 能力归位判断",
+        "## 价值、成本与认知负担评估",
+        "## 备选路径比较",
+        "## 最终业务立场",
+        "## 关键规则与依赖影响",
+        "## 风险与反模式",
+        "## 开放问题与缺口",
+        "## 判断追踪映射",
+    ],
+    "experience_blueprint.md": [
+        "## 阶段定位",
+        "## 体验目标",
+        "## 体验范围与边界",
+        "## 用户与场景清单",
+        "## 信息架构",
+        "## 核心任务流",
+        "## 页面 / 窗口清单",
+        "## 页面蓝图",
+        "## 状态与反馈矩阵",
+        "## 风险场景与体验保护",
+        "## 原则引用与映射",
+        "## 开放问题",
+        "## 不进入本阶段的内容",
+    ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
 
 FORBIDDEN_TERMS = {
-    "facts.md": ["高保真", "视觉稿", "页面布局"],
-    "business_blueprint.md": ["高保真", "视觉稿", "组件样式"],
-    "experience_blueprint.md": ["数据库表", "接口字段", "SQL"],
+    "facts.md": [
+        "最终业务立场",
+        "能力归位判断",
+        "信息架构总览",
+        "任务流蓝图",
+        "高保真视觉",
+        "前端实现",
+    ],
+    "business_blueprint.md": [
+        "页面区块布局",
+        "高保真视觉",
+        "组件开发实现",
+        "前端技术栈",
+        "SQL",
+        "数据库表",
+    ],
+    "experience_blueprint.md": ["数据库表", "接口字段", "SQL", "React 组件实现", "前端实现方案"],
 }
 
-TRACKED_OUTPUTS = [
-    "facts.md",
-    "business_blueprint.md",
-    "experience_blueprint.md",
-    "gap_list.md",
-    "check_report.md",
-    "check_status.json",
+DEFAULT_TRACKED_OUTPUTS = [
+    "projects/{project_id}/workspace/facts.md",
+    "projects/{project_id}/workspace/business_blueprint.md",
+    "projects/{project_id}/workspace/experience_blueprint.md",
+    "projects/{project_id}/workspace/gap_list.md",
+    "projects/{project_id}/workspace/check_report.md",
+    "projects/{project_id}/workspace/check_status.json",
 ]
 
-FACT_ID_PATTERN = re.compile(r"\bF-\d+\b")
-GENERIC_ID_PATTERN = re.compile(r"\b[A-Z]{1,6}-\d+\b")
+FACT_ID_PATTERN = re.compile(r"\bF-[A-Z]{0,4}\d+\b|\bF-\d+\b")
+JUDGMENT_ID_PATTERN = re.compile(r"\bJ-\d+\b|\bPOS-\d+\b")
+PAGE_ID_PATTERN = re.compile(r"\bP-\d+\b")
+GENERIC_ID_PATTERN = re.compile(r"\b[A-Z]{1,8}-\d+\b")
+PLACEHOLDER_PATTERN = re.compile(r"(<填写|{{TASK_ID}}|<project-id>|<角色名称>|<页面名称>|<术语>)")
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 def get_workspace_dir(project_id: str) -> Path:
@@ -49,6 +114,13 @@ def get_gate_paths(project_id: str, stage: str) -> tuple[Path, Path]:
     return gates_dir / f"{stage}_gate_report.md", gates_dir / f"{stage}_gate_status.json"
 
 
+def to_repo_rel(path: Path) -> str:
+    try:
+        return str(path.relative_to(get_repo_root())).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
+
+
 def add_issue(issues: list[tuple[str, str]], level: str, message: str) -> None:
     issues.append((level, message))
 
@@ -57,13 +129,11 @@ def summarize_issues(issues: list[tuple[str, str]]) -> tuple[list[str], list[str
     blockers = [message for level, message in issues if level == "blocker"]
     warnings = [message for level, message in issues if level == "warning"]
     infos = [message for level, message in issues if level == "info"]
-
     status = "passed"
     if blockers:
         status = "failed"
     elif warnings:
         status = "warning"
-
     return blockers, warnings, infos, status
 
 
@@ -71,8 +141,25 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
+def read_json(path: Path) -> dict[str, object]:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
 def extract_fact_ids(text: str) -> list[str]:
     return sorted(set(FACT_ID_PATTERN.findall(text)))
+
+
+def extract_judgment_ids(text: str) -> list[str]:
+    return sorted(set(JUDGMENT_ID_PATTERN.findall(text)))
+
+
+def extract_page_ids(text: str) -> list[str]:
+    return sorted(set(PAGE_ID_PATTERN.findall(text)))
 
 
 def extract_generic_ids(text: str) -> list[str]:
@@ -80,7 +167,7 @@ def extract_generic_ids(text: str) -> list[str]:
 
 
 def check_required_headings(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
-    for heading in REQUIRED_HEADINGS.get(file_name, []):
+    for heading in STAGE_REQUIRED_HEADINGS.get(file_name, []):
         if heading not in content:
             add_issue(issues, "blocker", f"{file_name} 缺少栏目：{heading}")
 
@@ -92,21 +179,25 @@ def check_forbidden_terms(file_name: str, content: str, issues: list[tuple[str, 
 
 
 def check_placeholders(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
-    if "<填写" in content or "{{TASK_ID}}" in content or "<project-id>" in content:
+    if PLACEHOLDER_PATTERN.search(content):
         add_issue(issues, "warning", f"{file_name} 仍包含占位内容")
 
 
-def render_report(
-    project_id: str,
-    blockers: list[str],
-    warnings: list[str],
-    infos: list[str],
-    status: str,
-    present_outputs: list[str],
-) -> str:
-    lines = [
-        "# Check Report",
-        "",
+def check_required_files(required_paths: list[Path], issues: list[tuple[str, str]]) -> None:
+    for file_path in required_paths:
+        if not file_path.exists():
+            add_issue(issues, "blocker", f"缺少文件：{to_repo_rel(file_path)}")
+
+
+def required_output_paths(project_id: str, resolved_data: dict[str, object]) -> list[str]:
+    values = resolved_data.get("required_outputs")
+    if isinstance(values, list) and values:
+        return [str(item).replace("\\", "/") for item in values]
+    return [item.format(project_id=project_id) for item in DEFAULT_TRACKED_OUTPUTS]
+
+
+def report_summary_lines(status: str, blockers: list[str], warnings: list[str], infos: list[str]) -> list[str]:
+    return [
         "## Summary",
         "",
         f"- status: {status}",
@@ -115,30 +206,7 @@ def render_report(
         f"- warning_count: {len(warnings)}",
         f"- info_count: {len(infos)}",
         "",
-        "## Output Status",
-        "",
     ]
-
-    for output_name in TRACKED_OUTPUTS:
-        status_value = "present" if output_name in present_outputs else "missing"
-        lines.append(f"- {output_name}: {status_value}")
-
-    lines.extend(["", "## Blockers", ""])
-    lines.extend([f"- {item}" for item in blockers] or ["- none"])
-    lines.extend(["", "## Warnings", ""])
-    lines.extend([f"- {item}" for item in warnings] or ["- none"])
-    lines.extend(["", "## Infos", ""])
-    lines.extend([f"- {item}" for item in infos] or ["- none"])
-    lines.extend(
-        [
-            "",
-            "## Machine Status",
-            "",
-            f"- 机器可读状态文件：`projects/{project_id}/workspace/check_status.json`",
-            "",
-        ]
-    )
-    return "\n".join(lines)
 
 
 def render_stage_gate_report(
@@ -154,16 +222,11 @@ def render_stage_gate_report(
     lines = [
         "# Stage Gate Report",
         "",
-        "## Summary",
-        "",
+        *report_summary_lines(status, blockers, warnings, infos),
         f"- project_id: {project_id}",
         f"- stage: {stage}",
-        f"- status: {status}",
         f"- next_stage: {next_stage}",
         f"- can_proceed: {'true' if status != 'failed' else 'false'}",
-        f"- blocker_count: {len(blockers)}",
-        f"- warning_count: {len(warnings)}",
-        f"- info_count: {len(infos)}",
         "",
         "## Checked Files",
         "",
@@ -175,36 +238,30 @@ def render_stage_gate_report(
     lines.extend([f"- {item}" for item in warnings] or ["- none"])
     lines.extend(["", "## Infos", ""])
     lines.extend([f"- {item}" for item in infos] or ["- none"])
-    return "\n".join(lines)
+    return "\n".join(lines) + "\n"
 
 
-def build_status_payload(
-    task_id: str,
+def render_final_report(
+    project_id: str,
+    status: str,
     blockers: list[str],
     warnings: list[str],
     infos: list[str],
-    status: str,
-    completed_outputs: list[str],
-    missing_outputs: list[str],
-    generated_by: str,
-) -> dict[str, object]:
-    return {
-        "task_id": task_id,
-        "status": status,
-        "has_blocker": bool(blockers),
-        "blocker_count": len(blockers),
-        "warning_count": len(warnings),
-        "info_count": len(infos),
-        "completed_outputs": completed_outputs,
-        "missing_outputs": missing_outputs,
-        "generated_by": generated_by,
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-        "issues": {
-            "blockers": blockers,
-            "warnings": warnings,
-            "infos": infos,
-        },
-    }
+    output_status_lines: list[str],
+    coverage_lines: list[str],
+) -> str:
+    lines = ["# Check Report", "", *report_summary_lines(status, blockers, warnings, infos), "## Output Status", ""]
+    lines.extend([f"- {item}" for item in output_status_lines] or ["- none"])
+    lines.extend(["", "## Blockers", ""])
+    lines.extend([f"- {item}" for item in blockers] or ["- none"])
+    lines.extend(["", "## Warnings", ""])
+    lines.extend([f"- {item}" for item in warnings] or ["- none"])
+    lines.extend(["", "## Infos", ""])
+    lines.extend([f"- {item}" for item in infos] or ["- none"])
+    lines.extend(["", "## Coverage Check", ""])
+    lines.extend([f"- {item}" for item in coverage_lines] or ["- not_run"])
+    lines.extend(["", "## Machine Status", "", f"- 机器可读状态文件：`projects/{project_id}/workspace/check_status.json`", ""])
+    return "\n".join(lines)
 
 
 def build_gate_payload(
@@ -215,13 +272,13 @@ def build_gate_payload(
     warnings: list[str],
     infos: list[str],
     checked_files: list[str],
+    metrics: dict[str, object],
 ) -> dict[str, object]:
     status = "passed"
     if blockers:
         status = "failed"
     elif warnings:
         status = "warning"
-
     return {
         "project_id": project_id,
         "stage": stage,
@@ -229,84 +286,46 @@ def build_gate_payload(
         "can_proceed": status != "failed",
         "next_stage": next_stage,
         "generated_by": "packages.validate",
-        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": now_iso(),
         "checked_files": checked_files,
         "blocker_count": len(blockers),
         "warning_count": len(warnings),
         "info_count": len(infos),
-        "issues": {
-            "blockers": blockers,
-            "warnings": warnings,
-            "infos": infos,
-        },
+        "issues": {"blockers": blockers, "warnings": warnings, "infos": infos},
+        "metrics": metrics,
     }
 
 
-def replace_section(content: str, title: str, items: list[str]) -> str:
-    lines = content.splitlines()
-    new_lines: list[str] = []
-    in_section = False
-    replaced = False
-    for raw_line in lines:
-        stripped = raw_line.strip()
-        if stripped == f"## {title}":
-            in_section = True
-            replaced = True
-            new_lines.extend([f"## {title}", ""])
-            new_lines.extend([f"- {item}" for item in items] or ["- none"])
-            continue
-        if in_section and stripped.startswith("## "):
-            in_section = False
-        if not in_section:
-            new_lines.append(raw_line)
-    if not replaced:
-        if new_lines and new_lines[-1] != "":
-            new_lines.append("")
-        new_lines.extend([f"## {title}", ""])
-        new_lines.extend([f"- {item}" for item in items] or ["- none"])
-    return "\n".join(new_lines).rstrip() + "\n"
-
-
-def replace_summary(content: str, status: str, blocker_count: int, warning_count: int, info_count: int) -> str:
-    lines = content.splitlines()
-    new_lines: list[str] = []
-    in_summary = False
-    replaced = False
-    for raw_line in lines:
-        stripped = raw_line.strip()
-        if stripped == "## Summary":
-            in_summary = True
-            replaced = True
-            new_lines.extend(
-                [
-                    "## Summary",
-                    "",
-                    f"- status: {status}",
-                    f"- has_blocker: {'true' if blocker_count else 'false'}",
-                    f"- blocker_count: {blocker_count}",
-                    f"- warning_count: {warning_count}",
-                    f"- info_count: {info_count}",
-                ]
-            )
-            continue
-        if in_summary and stripped.startswith("## "):
-            in_summary = False
-        if not in_summary:
-            new_lines.append(raw_line)
-    if not replaced:
-        new_lines = [
-            "# Check Report",
-            "",
-            "## Summary",
-            "",
-            f"- status: {status}",
-            f"- has_blocker: {'true' if blocker_count else 'false'}",
-            f"- blocker_count: {blocker_count}",
-            f"- warning_count: {warning_count}",
-            f"- info_count: {info_count}",
-            "",
-        ] + new_lines
-    return "\n".join(new_lines).rstrip() + "\n"
+def build_final_payload(
+    project_id: str,
+    blockers: list[str],
+    warnings: list[str],
+    infos: list[str],
+    completed_outputs: list[str],
+    missing_outputs: list[str],
+    checked_files: list[str],
+    metrics: dict[str, object],
+) -> dict[str, object]:
+    status = "passed"
+    if blockers:
+        status = "failed"
+    elif warnings:
+        status = "warning"
+    return {
+        "task_id": project_id,
+        "status": status,
+        "has_blocker": bool(blockers),
+        "blocker_count": len(blockers),
+        "warning_count": len(warnings),
+        "info_count": len(infos),
+        "completed_outputs": completed_outputs,
+        "missing_outputs": missing_outputs,
+        "generated_by": "packages.validate",
+        "updated_at": now_iso(),
+        "checked_files": checked_files,
+        "issues": {"blockers": blockers, "warnings": warnings, "infos": infos},
+        "metrics": metrics,
+    }
 
 
 def write_gate_artifacts(
@@ -317,10 +336,11 @@ def write_gate_artifacts(
     warnings: list[str],
     infos: list[str],
     checked_files: list[str],
+    metrics: dict[str, object],
 ) -> tuple[Path, Path, str]:
     report_path, status_path = get_gate_paths(project_id, stage)
-    payload = build_gate_payload(project_id, stage, next_stage, blockers, warnings, infos, checked_files)
-    report = render_stage_gate_report(project_id, stage, next_stage, blockers, warnings, infos, payload["status"], checked_files)
+    payload = build_gate_payload(project_id, stage, next_stage, blockers, warnings, infos, checked_files, metrics)
+    report = render_stage_gate_report(project_id, stage, next_stage, blockers, warnings, infos, str(payload["status"]), checked_files)
     report_path.write_text(report, encoding="utf-8")
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return report_path, status_path, str(payload["status"])
@@ -333,63 +353,121 @@ def read_gate_status(project_id: str, stage: str) -> dict[str, object] | None:
     return json.loads(status_path.read_text(encoding="utf-8"))
 
 
+def compute_dimension_coverage(facts_text: str) -> dict[str, int]:
+    keys = {
+        "actor": ["### Actor Facts", "角色清单"],
+        "object": ["### Object Facts", "对象清单"],
+        "state": ["### State Facts", "## 状态模型"],
+        "action": ["### Action Facts", "## 动作与流程事实"],
+        "rule": ["### Rule Facts", "## 规则矩阵"],
+        "exception": ["### Exception Facts", "## 异常与拦截清单"],
+        "dependency": ["### Dependency Facts", "## 依赖清单"],
+        "scope": ["### Scope Facts", "## 范围与非范围"],
+    }
+    result: dict[str, int] = {}
+    for key, patterns in keys.items():
+        result[key] = 1 if any(pattern in facts_text for pattern in patterns) else 0
+    return result
+
+
+def evaluate_facts_source_legality(project_id: str, facts_text: str) -> tuple[int, int]:
+    required_sources = [
+        f"projects/{project_id}/source/requirement.md",
+        f"projects/{project_id}/source/background.md",
+    ]
+    source_hits = sum(1 for item in required_sources if item in facts_text)
+    knowledge_hits = facts_text.count("knowledge/") + facts_text.count("wiki/")
+    return source_hits, knowledge_hits
+
+
+def check_status_report_consistency(status_data: dict[str, object], report_text: str, issues: list[tuple[str, str]]) -> None:
+    status = str(status_data.get("status", ""))
+    blocker_count = int(status_data.get("blocker_count", 0))
+    warning_count = int(status_data.get("warning_count", 0))
+    info_count = int(status_data.get("info_count", 0))
+    checks = [
+        f"- status: {status}",
+        f"- blocker_count: {blocker_count}",
+        f"- warning_count: {warning_count}",
+        f"- info_count: {info_count}",
+    ]
+    if not all(item in report_text for item in checks):
+        add_issue(issues, "blocker", "check_report.md 与 check_status.json 的摘要字段不一致")
+
+
 def run_validate_outputs(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
+    runtime_dir = get_project_runtime_dir(project_id)
     report_path = workspace_dir / "check_report.md"
     status_path = workspace_dir / "check_status.json"
     issues: list[tuple[str, str]] = []
+    checked_files: list[str] = []
 
-    for file_name, headings in REQUIRED_HEADINGS.items():
+    resolved = read_json(runtime_dir / "task_card_resolved.json")
+    required_outputs = required_output_paths(project_id, resolved)
+    output_status_lines: list[str] = []
+    completed_outputs: list[str] = []
+    missing_outputs: list[str] = []
+
+    for output_path_str in required_outputs:
+        normalized = output_path_str.replace("\\", "/")
+        checked_files.append(normalized)
+        output_path = get_repo_root() / normalized
+        if output_path.exists():
+            completed_outputs.append(normalized)
+            output_status_lines.append(f"{normalized}: present")
+        else:
+            missing_outputs.append(normalized)
+            output_status_lines.append(f"{normalized}: missing")
+            add_issue(issues, "blocker", f"必需输出缺失：{normalized}")
+
+    for file_name in ["facts.md", "business_blueprint.md", "experience_blueprint.md", "gap_list.md"]:
         file_path = workspace_dir / file_name
         if not file_path.exists():
-            add_issue(issues, "blocker", f"{file_name} 缺失")
             continue
-
-        content = file_path.read_text(encoding="utf-8")
-        for heading in headings:
-            if heading not in content:
-                add_issue(issues, "blocker", f"{file_name} 缺少栏目：{heading}")
-
+        content = read_text(file_path)
+        check_required_headings(file_name, content, issues)
         check_forbidden_terms(file_name, content, issues)
         check_placeholders(file_name, content, issues)
+        checked_files.append(to_repo_rel(file_path))
 
-    completed_outputs = [
-        name
-        for name in TRACKED_OUTPUTS
-        if name not in {"check_report.md", "check_status.json"} and (workspace_dir / name).exists()
-    ]
-    add_issue(issues, "info", "结构检查已执行")
+    for stage in ["facts", "business", "experience"]:
+        gate_status = read_gate_status(project_id, stage)
+        checked_files.append(f"projects/{project_id}/runtime/gates/{stage}_gate_status.json")
+        if not gate_status:
+            add_issue(issues, "blocker", f"缺少 {stage} gate 状态文件")
+            continue
+        if gate_status.get("status") == "failed":
+            add_issue(issues, "blocker", f"{stage} gate 状态为 failed")
+        elif gate_status.get("status") == "warning":
+            add_issue(issues, "warning", f"{stage} gate 状态为 warning")
+        else:
+            add_issue(issues, "info", f"{stage} gate 状态：{gate_status.get('status')}")
 
     blockers, warnings, infos, status = summarize_issues(issues)
-    report_path.write_text(
-        render_report(
-            project_id,
-            blockers,
-            warnings,
-            infos,
-            status,
-            sorted(set(completed_outputs + ["check_report.md", "check_status.json"])),
-        ),
-        encoding="utf-8",
-    )
+    coverage_lines = ["not_run"]
+    report_text = render_final_report(project_id, status, blockers, warnings, infos, output_status_lines, coverage_lines)
+    report_path.write_text(report_text, encoding="utf-8")
 
-    completed_with_status = completed_outputs + ["check_report.md", "check_status.json"]
-    missing_outputs = sorted(set(TRACKED_OUTPUTS) - set(completed_with_status))
-    payload = build_status_payload(
+    metrics = {
+        "required_output_count": len(required_outputs),
+        "completed_output_count": len(completed_outputs),
+        "missing_output_count": len(missing_outputs),
+    }
+    payload = build_final_payload(
         project_id,
         blockers,
         warnings,
         infos,
-        status,
-        sorted(set(completed_with_status)),
-        missing_outputs,
-        "packages.validate",
+        sorted(set(completed_outputs)),
+        sorted(set(missing_outputs)),
+        sorted(set(checked_files)),
+        metrics,
     )
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-
     print(f"Validation finished: {report_path}")
     print(f"Machine status written: {status_path}")
-    return 0
+    return 0 if status != "failed" else 1
 
 
 def run_coverage_check(project_id: str) -> int:
@@ -397,46 +475,53 @@ def run_coverage_check(project_id: str) -> int:
     report_path = workspace_dir / "check_report.md"
     status_path = workspace_dir / "check_status.json"
 
-    report_content = read_text(report_path)
-    if not report_content:
+    report_text = read_text(report_path)
+    if not report_text:
         raise SystemExit(f"Missing report: {report_path}")
-    if not status_path.exists():
+    status_data = read_json(status_path)
+    if not status_data:
         raise SystemExit(f"Missing machine status: {status_path}")
 
-    status_data = json.loads(status_path.read_text(encoding="utf-8"))
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
     experience_text = read_text(workspace_dir / "experience_blueprint.md")
 
-    coverage_lines: list[str] = []
-    new_warnings: list[str] = []
     fact_ids = extract_fact_ids(facts_text)
+    judgment_ids = extract_judgment_ids(business_text)
+    page_ids = extract_page_ids(experience_text)
 
-    if not fact_ids:
-        message = "facts.md 中未找到事实 ID"
-        coverage_lines.append(f"warning: {message}")
-        new_warnings.append(message)
-    else:
-        for fact_id in fact_ids:
-            in_business = fact_id in business_text
-            in_experience = fact_id in experience_text
-            if in_business or in_experience:
-                coverage_lines.append(f"info: {fact_id} 已被蓝图承接")
-            else:
-                message = f"{fact_id} 未在业务蓝图或体验蓝图中引用"
-                coverage_lines.append(f"warning: {message}")
-                new_warnings.append(message)
+    facts_in_business = [item for item in fact_ids if item in business_text]
+    facts_in_experience = [item for item in fact_ids if item in experience_text]
+    orphan_facts = [item for item in fact_ids if item not in business_text and item not in experience_text]
+    judgments_in_experience = [item for item in judgment_ids if item in experience_text]
+    orphan_judgments = [item for item in judgment_ids if item not in experience_text]
+
+    coverage_lines: list[str] = [
+        f"facts_covered_by_business: {len(facts_in_business)}",
+        f"facts_covered_by_experience: {len(facts_in_experience)}",
+        f"business_judgments_consumed_by_experience: {len(judgments_in_experience)}",
+        f"orphan_fact_count: {len(orphan_facts)}",
+        f"orphan_judgment_count: {len(orphan_judgments)}",
+        f"orphan_page_count: {0 if page_ids else 1}",
+    ]
 
     blockers = list(status_data.get("issues", {}).get("blockers", []))
     warnings = list(status_data.get("issues", {}).get("warnings", []))
     infos = list(status_data.get("issues", {}).get("infos", []))
 
-    for warning in new_warnings:
-        if warning not in warnings:
-            warnings.append(warning)
-    for line in coverage_lines or ["info: 无可检查项"]:
-        if line not in infos:
-            infos.append(line)
+    if not fact_ids:
+        blockers.append("facts.md 未提取到事实 ID，无法完成覆盖检查")
+    if orphan_facts:
+        warnings.append(f"存在未被后续消费的事实：{', '.join(orphan_facts[:6])}")
+    if orphan_judgments:
+        warnings.append(f"存在未被体验层消费的业务判断：{', '.join(orphan_judgments[:6])}")
+    if not page_ids:
+        warnings.append("experience_blueprint.md 未发现页面 ID（P-xx），页面级消费不足")
+
+    infos.extend([f"coverage: {line}" for line in coverage_lines])
+    blockers = sorted(set(blockers))
+    warnings = sorted(set(warnings))
+    infos = sorted(set(infos))
 
     status = "passed"
     if blockers:
@@ -444,11 +529,9 @@ def run_coverage_check(project_id: str) -> int:
     elif warnings:
         status = "warning"
 
-    updated_report = replace_section(report_content, "Coverage Check", coverage_lines or ["info: 无可检查项"])
-    updated_report = replace_section(updated_report, "Warnings", warnings)
-    updated_report = replace_section(updated_report, "Infos", infos)
-    updated_report = replace_summary(updated_report, status, len(blockers), len(warnings), len(infos))
-    report_path.write_text(updated_report, encoding="utf-8")
+    output_status_lines = [line[2:] if line.startswith("- ") else line for line in re.findall(r"^- .+: (?:present|missing)$", report_text, flags=re.MULTILINE)]
+    final_report = render_final_report(project_id, status, blockers, warnings, infos, output_status_lines, coverage_lines)
+    report_path.write_text(final_report, encoding="utf-8")
 
     status_data["status"] = status
     status_data["has_blocker"] = bool(blockers)
@@ -456,23 +539,34 @@ def run_coverage_check(project_id: str) -> int:
     status_data["warning_count"] = len(warnings)
     status_data["info_count"] = len(infos)
     status_data["generated_by"] = "packages.validate"
-    status_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+    status_data["updated_at"] = now_iso()
     status_data.setdefault("issues", {})
     status_data["issues"]["blockers"] = blockers
     status_data["issues"]["warnings"] = warnings
     status_data["issues"]["infos"] = infos
-    status_data["coverage"] = coverage_lines or ["info: 无可检查项"]
+    status_data["metrics"] = status_data.get("metrics", {})
+    status_data["metrics"]["coverage"] = {
+        "facts_covered_by_business": len(facts_in_business),
+        "facts_covered_by_experience": len(facts_in_experience),
+        "business_judgments_consumed_by_experience": len(judgments_in_experience),
+        "orphan_fact_count": len(orphan_facts),
+        "orphan_judgment_count": len(orphan_judgments),
+        "orphan_page_count": 0 if page_ids else 1,
+    }
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
-
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
-    return 0
+    return 0 if status != "failed" else 1
 
 
 def run_facts_gate(project_id: str) -> int:
     source_dir = get_project_source_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
     workspace_dir = get_workspace_dir(project_id)
+    facts_path = workspace_dir / "facts.md"
+    task_resolved_path = runtime_dir / "task_card_resolved.json"
+    context_manifest_path = runtime_dir / "context_manifest.json"
+
     issues: list[tuple[str, str]] = []
     checked_files = [
         f"projects/{project_id}/source/task_card.md",
@@ -482,19 +576,18 @@ def run_facts_gate(project_id: str) -> int:
         f"projects/{project_id}/runtime/context_manifest.json",
         f"projects/{project_id}/workspace/facts.md",
     ]
+    check_required_files(
+        [
+            source_dir / "task_card.md",
+            source_dir / "requirement.md",
+            source_dir / "background.md",
+            task_resolved_path,
+            context_manifest_path,
+            facts_path,
+        ],
+        issues,
+    )
 
-    for path in [
-        source_dir / "task_card.md",
-        source_dir / "requirement.md",
-        source_dir / "background.md",
-        runtime_dir / "task_card_resolved.json",
-        runtime_dir / "context_manifest.json",
-        workspace_dir / "facts.md",
-    ]:
-        if not path.exists():
-            add_issue(issues, "blocker", f"缺少文件：{path.relative_to(path.parents[2])}")
-
-    facts_path = workspace_dir / "facts.md"
     facts_text = read_text(facts_path)
     if facts_text:
         check_required_headings("facts.md", facts_text, issues)
@@ -503,15 +596,46 @@ def run_facts_gate(project_id: str) -> int:
 
         fact_ids = extract_fact_ids(facts_text)
         if not fact_ids:
-            add_issue(issues, "blocker", "facts.md 未提炼出事实 ID")
+            add_issue(issues, "blocker", "facts.md 未提取到原子事实 ID")
         else:
             add_issue(issues, "info", f"facts.md 已提炼 {len(fact_ids)} 条事实")
 
-        source_hits = sum(1 for path in [f"projects/{project_id}/source/requirement.md", f"projects/{project_id}/source/background.md"] if path in facts_text)
+        dimension = compute_dimension_coverage(facts_text)
+        covered_count = sum(dimension.values())
+        if covered_count < 6:
+            add_issue(issues, "blocker", "facts.md 结构化维度覆盖不足，无法稳定支撑业务判断")
+        elif covered_count < 8:
+            add_issue(issues, "warning", "facts.md 结构化维度覆盖仍偏粗")
+
+        source_hits, knowledge_hits = evaluate_facts_source_legality(project_id, facts_text)
         if source_hits == 0:
-            add_issue(issues, "warning", "facts.md 尚未显式引用输入来源路径")
+            add_issue(issues, "blocker", "facts.md 未显式承接 requirement/background 输入来源")
+        elif source_hits < 2:
+            add_issue(issues, "warning", "facts.md 输入来源引用不完整")
+        if knowledge_hits and source_hits == 0:
+            add_issue(issues, "blocker", "facts.md 可能将知识补写为输入事实，请补充输入来源追溯")
+
+        if "## 追踪映射" not in facts_text:
+            add_issue(issues, "blocker", "facts.md 缺少追踪映射，关键事实不可追溯")
+        if ("GAP-" not in facts_text) and ("[GAP]" not in facts_text) and ("## 开放问题与缺口" not in facts_text):
+            add_issue(issues, "warning", "facts.md 未显式暴露缺口")
+
+    context_manifest = read_json(context_manifest_path)
+    warnings = context_manifest.get("warnings", [])
+    if isinstance(warnings, list):
+        for item in warnings:
+            warning_text = str(item)
+            if "directory-only" in warning_text or "directory" in warning_text:
+                add_issue(issues, "warning", f"context_manifest 警告：{warning_text}")
 
     blockers, warnings, infos, _ = summarize_issues(issues)
+    metrics = {
+        "fact_count": len(extract_fact_ids(facts_text)),
+        "dimension_coverage": compute_dimension_coverage(facts_text),
+        "traceable_fact_count": len(extract_fact_ids(facts_text)) if "## 追踪映射" in facts_text else 0,
+        "gap_count": facts_text.count("GAP-") + facts_text.count("[GAP]"),
+        "knowledge_derived_fact_count": 0,
+    }
     report_path, status_path, status = write_gate_artifacts(
         project_id,
         "facts",
@@ -520,6 +644,7 @@ def run_facts_gate(project_id: str) -> int:
         warnings,
         infos,
         checked_files,
+        metrics,
     )
     print(f"Facts gate finished: {report_path}")
     print(f"Facts gate status: {status_path}")
@@ -545,7 +670,6 @@ def run_business_gate(project_id: str) -> int:
 
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
-
     if not facts_text:
         add_issue(issues, "blocker", "缺少 facts.md")
     if not business_text:
@@ -555,23 +679,48 @@ def run_business_gate(project_id: str) -> int:
         check_required_headings("business_blueprint.md", business_text, issues)
         check_forbidden_terms("business_blueprint.md", business_text, issues)
         check_placeholders("business_blueprint.md", business_text, issues)
+        judgment_ids = extract_judgment_ids(business_text)
+        if not judgment_ids:
+            add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
 
+        required_dimensions = [
+            "## 合理性判断",
+            "## 底层逻辑一致性判断",
+            "## 管理策略一致性判断",
+            "## 能力归位判断",
+            "## 价值、成本与认知负担评估",
+            "## 备选路径比较",
+            "## 风险与反模式",
+        ]
+        missing_dimensions = [item for item in required_dimensions if item not in business_text]
+        if missing_dimensions:
+            add_issue(issues, "blocker", f"business_blueprint.md 缺少主判断框架：{', '.join(missing_dimensions)}")
+
+    fact_ids = extract_fact_ids(facts_text)
     if facts_text and business_text:
-        fact_ids = extract_fact_ids(facts_text)
+        referenced = [fact_id for fact_id in fact_ids if fact_id in business_text]
         if not fact_ids:
-            add_issue(issues, "blocker", "facts.md 中没有可承接的事实 ID")
+            add_issue(issues, "blocker", "facts.md 中没有可承接事实 ID")
+        elif not referenced:
+            add_issue(issues, "blocker", "business_blueprint.md 未承接任何 facts ID")
         else:
-            referenced = [fact_id for fact_id in fact_ids if fact_id in business_text]
-            missing = [fact_id for fact_id in fact_ids if fact_id not in business_text]
-            if not referenced:
-                add_issue(issues, "blocker", "business_blueprint.md 未显式承接任何事实 ID")
-            else:
-                add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced)} 条事实")
-            if missing:
-                sample = ", ".join(missing[:5])
-                add_issue(issues, "warning", f"部分事实尚未在 business_blueprint.md 中显式承接：{sample}")
+            add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced)} 条事实")
+        if len(referenced) < max(1, len(fact_ids) // 5):
+            add_issue(issues, "warning", "business_blueprint.md 对 facts 的显式承接偏弱")
+        if "## 判断追踪映射" not in business_text:
+            add_issue(issues, "warning", "business_blueprint.md 缺少判断追踪映射")
+        if ("GAP-" not in business_text) and ("OQ-" not in business_text):
+            add_issue(issues, "warning", "business_blueprint.md 未显式保留缺口或开放问题")
 
     blockers, warnings, infos, _ = summarize_issues(issues)
+    metrics = {
+        "judgment_count": len(extract_judgment_ids(business_text)),
+        "facts_consumed_count": len([item for item in fact_ids if item in business_text]),
+        "judgment_traceable_count": len(extract_judgment_ids(business_text)) if "## 判断追踪映射" in business_text else 0,
+        "option_compare_count": business_text.count("OP-"),
+        "anti_pattern_count": business_text.count("RK-") + business_text.count("AP-"),
+        "unresolved_gap_count": business_text.count("GAP-"),
+    }
     report_path, status_path, status = write_gate_artifacts(
         project_id,
         "business",
@@ -580,6 +729,7 @@ def run_business_gate(project_id: str) -> int:
         warnings,
         infos,
         checked_files,
+        metrics,
     )
     print(f"Business gate finished: {report_path}")
     print(f"Business gate status: {status_path}")
@@ -607,7 +757,6 @@ def run_experience_gate(project_id: str) -> int:
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
     experience_text = read_text(workspace_dir / "experience_blueprint.md")
-
     if not facts_text:
         add_issue(issues, "blocker", "缺少 facts.md")
     if not business_text:
@@ -620,22 +769,58 @@ def run_experience_gate(project_id: str) -> int:
         check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_placeholders("experience_blueprint.md", experience_text, issues)
 
+        table_line_count = len([line for line in experience_text.splitlines() if "|" in line])
+        text_diagram_count = experience_text.count("```text")
+        if table_line_count < 12 and text_diagram_count == 0:
+            add_issue(issues, "blocker", "experience_blueprint.md 仍偏抽象，缺少页面级结构表达")
+        elif table_line_count < 12 or text_diagram_count == 0:
+            add_issue(issues, "warning", "experience_blueprint.md 结构化表达仍偏弱，建议补充表格或文本图")
+
+        if "## 页面 / 窗口清单" not in experience_text or "## 状态与反馈矩阵" not in experience_text:
+            add_issue(issues, "blocker", "experience_blueprint.md 未达到页面/状态级蓝图粒度")
+
+    fact_ids = extract_fact_ids(facts_text)
+    judgment_ids = extract_judgment_ids(business_text)
     if facts_text and experience_text:
-        fact_ids = extract_fact_ids(facts_text)
-        referenced_facts = [fact_id for fact_id in fact_ids if fact_id in experience_text]
+        referenced_facts = [item for item in fact_ids if item in experience_text]
         if not referenced_facts:
-            add_issue(issues, "blocker", "experience_blueprint.md 未显式承接任何事实 ID")
+            add_issue(issues, "blocker", "experience_blueprint.md 未显式承接 facts ID")
         else:
             add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_facts)} 条事实")
 
+    if business_text and experience_text:
+        referenced_judgments = [item for item in judgment_ids if item in experience_text]
+        if not referenced_judgments:
+            add_issue(issues, "warning", "experience_blueprint.md 尚未显式承接业务判断 ID（J-xx / POS-xx）")
+        else:
+            add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_judgments)} 条业务判断")
+
+    if experience_text:
         all_ids = extract_generic_ids(experience_text)
-        principle_ids = [item for item in all_ids if item not in fact_ids]
+        excluded = set(fact_ids) | set(judgment_ids) | set(extract_page_ids(experience_text)) | set(re.findall(r"\bTF-\d+\b", experience_text))
+        principle_ids = [item for item in all_ids if item not in excluded]
         if not principle_ids:
-            add_issue(issues, "blocker", "experience_blueprint.md 未显式引用任何原则 ID")
+            add_issue(issues, "blocker", "experience_blueprint.md 未显式引用原则 ID")
         else:
             add_issue(issues, "info", f"experience_blueprint.md 已引用 {len(principle_ids)} 个原则 ID")
 
     blockers, warnings, infos, _ = summarize_issues(issues)
+    metrics = {
+        "flow_count": len(re.findall(r"\bTF-\d+\b", experience_text)),
+        "page_count": len(extract_page_ids(experience_text)),
+        "window_count": experience_text.count("弹窗") + experience_text.count("抽屉"),
+        "region_map_count": experience_text.count("区块说明"),
+        "state_feedback_pair_count": len(re.findall(r"\| <未开始 / 配置中 / 审批中 / 已成功 / 已失败 / 已阻断>", experience_text)),
+        "copy_contract_item_count": experience_text.count("| 文案位置 |"),
+        "business_judgment_consumed_count": len([item for item in judgment_ids if item in experience_text]),
+        "principle_ref_count": len(
+            [
+                item
+                for item in extract_generic_ids(experience_text)
+                if item not in set(fact_ids) | set(judgment_ids) | set(extract_page_ids(experience_text)) | set(re.findall(r"\bTF-\d+\b", experience_text))
+            ]
+        ),
+    }
     report_path, status_path, status = write_gate_artifacts(
         project_id,
         "experience",
@@ -644,6 +829,7 @@ def run_experience_gate(project_id: str) -> int:
         warnings,
         infos,
         checked_files,
+        metrics,
     )
     print(f"Experience gate finished: {report_path}")
     print(f"Experience gate status: {status_path}")
