@@ -2,24 +2,53 @@
 
 ## Step 1
 
-新建任务目录，放入需求材料。
+创建 `projects/<project-id>/`，并把需求与背景写入 `source/`。
 
 ## Step 2
 
-优先阅读任务引用的 Wiki 页面与领域知识，统一概念与边界。
+读取 `task_card.md`、Wiki、Knowledge 与模板，运行：
+
+```bash
+python -m packages assemble <project-id>
+```
 
 ## Step 3
 
-执行事实提炼，产出 `workspace/facts.md`。
+生成 `workspace/facts.md`，再运行：
+
+```bash
+python -m packages gate-facts <project-id>
+```
 
 ## Step 4
 
-执行业务蓝图与体验蓝图构建。
+生成 `workspace/business_blueprint.md`，再运行：
+
+```bash
+python -m packages gate-business <project-id>
+```
 
 ## Step 5
 
-运行校验脚本，产出 `workspace/check_report.md`。
+生成 `workspace/experience_blueprint.md`，再运行：
+
+```bash
+python -m packages gate-experience <project-id>
+```
 
 ## Step 6
 
-归档到 `artifacts/`。
+运行总检查：
+
+```bash
+python -m packages validate <project-id>
+python -m packages coverage <project-id>
+```
+
+## Step 7
+
+如需生成交付镜像，再运行：
+
+```bash
+python -m packages archive <project-id>
+```

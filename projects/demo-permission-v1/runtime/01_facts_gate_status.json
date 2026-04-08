@@ -1,0 +1,27 @@
+{
+  "project_id": "demo-permission-v1",
+  "stage": "01_facts",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "business",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-04-07T15:35:54.077050+00:00",
+  "checked_files": [
+    "projects/demo-permission-v1/source/task_card.md",
+    "projects/demo-permission-v1/source/requirement.md",
+    "projects/demo-permission-v1/source/background.md",
+    "projects/demo-permission-v1/runtime/task_card_resolved.json",
+    "projects/demo-permission-v1/runtime/context_manifest.json",
+    "projects/demo-permission-v1/workspace/01_facts.md"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "01_facts.md 已提炼 6 条事实"
+    ]
+  }
+}

@@ -1,53 +1,45 @@
 # 业务蓝图 / 体验蓝图项目 v1
 
-本项目是一个轻量工程化仓库。
+这是一个轻量的文档驱动型项目工作台。
 
-它的目标不是搭建重型 Agent 平台，而是用固定结构支持以下工作：
+它的目标不是搭建重型后端或 App，而是用稳定的本地目录、规则法典和执行中枢，支持三段主链路：
+
 - 需求事实提炼
 - 业务蓝图构建
 - 体验蓝图构建
 
-本项目由以下部分共同组成：
-- 独立 skill 文件，约束 AI Code 的执行方式
-- 业务知识包与设计指南，提供判断依据
-- 可选的 Wiki 编译层，沉淀跨任务复用知识页
-- 固定模板与检查清单，稳定输出结构
-- 轻量脚本，负责装配、校验与归档
+## 当前主结构
 
-## 当前结构
+- `specs/`：唯一正式规则真源
+- `packages/`：执行中枢
+- `projects/`：项目真相
+- `knowledge/`：业务真源、原则真源、Wiki 编译层
+- `templates/`：固定模板
+- `docs/`：解释、讨论、runbook
 
-- `docs/`：项目说明、SDD 规格、运行手册
-- `skills/`：执行阶段 skill
-- `knowledge/`：业务知识包与设计指南
-- `knowledge/wiki/`：长期知识页与关系索引
-- `templates/`：固定输出模板
-- `checks/`：检查清单与覆盖规则
-- `scripts/`：轻量脚本
-- `tasks/`：任务工作区
-- `artifacts/`：正式归档产物
-
-## 快速开始
-
-1. 创建新任务
-2. 在 `tasks/active/<task-id>/inputs/` 放入需求材料
-3. 按 `skills/` 与 `knowledge/` 执行事实提炼和蓝图构建
-4. 运行校验脚本
-5. 归档到 `artifacts/`
-
-## 最小命令
+## 最小使用方式
 
 ```bash
-python scripts/new_task.py demo-task
-python scripts/assemble_context.py demo-task
-python scripts/validate_outputs.py demo-task
-python scripts/coverage_check.py demo-task
-python scripts/archive_artifacts.py demo-task
+python -m packages bootstrap demo-task
+python -m packages assemble demo-task
+python -m packages gate-facts demo-task
+python -m packages gate-business demo-task
+python -m packages gate-experience demo-task
+python -m packages validate demo-task
+python -m packages coverage demo-task
+python -m packages archive demo-task
 ```
+
+## 阅读顺序
+
+1. `docs/runbook/external_ai_quickstart.md`
+2. `docs/sdd/README.md`
+3. `specs/README.md`
+4. `projects/<project-id>/source/task_card.md`
 
 ## 说明
 
-- 当前阶段不做 Web UI
-- 当前阶段不做重型 runtime
-- 当前阶段不做 monorepo 与复杂平台拆分
-- 设计原则正文已并入 `knowledge/guidelines/`，不在本次工程搭建中改写
-- `facts -> business_blueprint -> experience_blueprint` 主链路保持不变，Wiki 层仅作为前置知识编译增强
+- `docs/sdd/` 只负责帮助理解
+- `specs/` 才是正式规则
+- `packages/` 是唯一固定执行入口
+- 正式产物统一位于 `projects/<project-id>/`

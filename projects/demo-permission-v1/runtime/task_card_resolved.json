@@ -1,0 +1,53 @@
+{
+  "task_id": "demo-permission-v1",
+  "protocol_name": "Cross-AI Task Card",
+  "protocol_version": "v0.1",
+  "task_name": "Permission Blueprint Demo",
+  "domain": "permission",
+  "required_inputs": [
+    "projects/demo-permission-v1/source/requirement.md",
+    "projects/demo-permission-v1/source/background.md"
+  ],
+  "required_outputs": [
+    "projects/demo-permission-v1/workspace/01_facts.md",
+    "projects/demo-permission-v1/workspace/01_facts_gate.md",
+    "projects/demo-permission-v1/workspace/02_business_blueprint.md",
+    "projects/demo-permission-v1/workspace/02_business_gate.md",
+    "projects/demo-permission-v1/workspace/03_experience_blueprint.md",
+    "projects/demo-permission-v1/workspace/03_experience_gate.md",
+    "projects/demo-permission-v1/workspace/check_report.md",
+    "projects/demo-permission-v1/workspace/check_status.json"
+  ],
+  "knowledge_refs": [
+    "knowledge/business/permission/",
+    "knowledge/guidelines/"
+  ],
+  "wiki_refs": [
+    "knowledge/wiki/indices/permission-domain.md"
+  ],
+  "template_refs": [
+    "templates/facts.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md",
+    "templates/check_report.template.md"
+  ],
+  "check_refs": [
+    "specs/06_check_contract.md",
+    "specs/08_fact_extraction_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md"
+  ],
+  "result_locations": {
+    "执行中结果": "projects/demo-permission-v1/workspace/",
+    "机器状态": "projects/demo-permission-v1/runtime/"
+  },
+  "completion_criteria": [
+    "必需输出文件全部存在",
+    "`check_report.md` 已生成",
+    "无 blocker"
+  ],
+  "warnings": [
+    "Knowledge references include directory-only paths; consider narrowing to files or wiki indices"
+  ],
+  "errors": []
+}

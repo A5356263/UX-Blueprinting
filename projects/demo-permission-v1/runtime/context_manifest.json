@@ -1,0 +1,76 @@
+{
+  "task_id": "demo-permission-v1",
+  "resolved_from": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\task_card_resolved.json",
+  "reference_count": 11,
+  "references": [
+    {
+      "reference": "knowledge/business/permission/",
+      "type": "directory",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\business\\permission",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\knowledge\\business\\permission"
+    },
+    {
+      "reference": "knowledge/guidelines/",
+      "type": "directory",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\guidelines",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\knowledge\\guidelines"
+    },
+    {
+      "reference": "knowledge/wiki/indices/permission-domain.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\wiki\\indices\\permission-domain.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\knowledge\\wiki\\indices\\permission-domain.md"
+    },
+    {
+      "reference": "templates/facts.template.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\facts.template.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\templates\\facts.template.md"
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\business_blueprint.template.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\templates\\business_blueprint.template.md"
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\experience_blueprint.template.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\templates\\experience_blueprint.template.md"
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\check_report.template.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\templates\\check_report.template.md"
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\06_check_contract.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\specs\\06_check_contract.md"
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\08_fact_extraction_contract.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\specs\\08_fact_extraction_contract.md"
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\09_business_blueprint_contract.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\specs\\09_business_blueprint_contract.md"
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "type": "file",
+      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\10_experience_blueprint_contract.md",
+      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-permission-v1\\runtime\\context_bundle\\specs\\10_experience_blueprint_contract.md"
+    }
+  ],
+  "warnings": [
+    "Knowledge references include directory-only paths; consider narrowing to files or wiki indices"
+  ]
+}

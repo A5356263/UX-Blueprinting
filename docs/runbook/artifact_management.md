@@ -1,12 +1,17 @@
-# 产物管理
+# 产物管理说明
 
-## 工作区产物
+当前项目不再使用根级 `tasks/`、`artifacts/` 或顶层 `checks/`。
 
-- `tasks/active/<task-id>/workspace/` 放执行中产物
-- `tasks/active/<task-id>/artifacts/` 放上下文快照与运行留痕
+正式产物统一位于：
 
-## 归档产物
+- `projects/<project-id>/source/`
+- `projects/<project-id>/workspace/`
+- `projects/<project-id>/runtime/`
+- `projects/<project-id>/exports/`
 
-- `artifacts/<task-id>/final/` 放最终输出
-- `artifacts/<task-id>/checks/` 放检查报告
-- `artifacts/<task-id>/context_snapshot/` 放上下文快照
+其中：
+
+- `source/`：需求、背景、任务卡
+- `workspace/`：人主要查看的产物
+- `runtime/`：机器状态、解析结果、阶段 gate
+- `exports/`：可选交付镜像

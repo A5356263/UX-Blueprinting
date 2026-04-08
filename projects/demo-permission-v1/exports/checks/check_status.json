@@ -1,0 +1,44 @@
+{
+  "task_id": "demo-permission-v1",
+  "status": "passed",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 9,
+  "completed_outputs": [
+    "business_blueprint.md",
+    "check_report.md",
+    "check_status.json",
+    "experience_blueprint.md",
+    "facts.md",
+    "gap_list.md"
+  ],
+  "missing_outputs": [],
+  "generated_by": "packages.validate",
+  "updated_at": "2026-04-07T15:56:14.457355+00:00",
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "结构检查已执行",
+      "info: F-01 已被蓝图承接",
+      "info: F-02 已被蓝图承接",
+      "info: F-03 已被蓝图承接",
+      "info: F-04 已被蓝图承接",
+      "info: F-05 已被蓝图承接",
+      "info: F-06 已被蓝图承接",
+      "info: F-07 已被蓝图承接",
+      "info: F-08 已被蓝图承接"
+    ]
+  },
+  "coverage": [
+    "info: F-01 已被蓝图承接",
+    "info: F-02 已被蓝图承接",
+    "info: F-03 已被蓝图承接",
+    "info: F-04 已被蓝图承接",
+    "info: F-05 已被蓝图承接",
+    "info: F-06 已被蓝图承接",
+    "info: F-07 已被蓝图承接",
+    "info: F-08 已被蓝图承接"
+  ]
+}

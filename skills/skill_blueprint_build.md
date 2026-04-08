@@ -19,6 +19,13 @@
 - `knowledge/guidelines/`
 - 蓝图模板
 
+## 使用建议
+
+- 构建体验蓝图时，先读 `knowledge/guidelines/task_type_index.md`
+- 再按当前任务风险读 `knowledge/guidelines/trigger_index.md`
+- 最后只读取命中的 `principles/*/principles.md`
+- 不整包展开全部设计原则
+
 ## 输出
 
 - `workspace/business_blueprint.md`
