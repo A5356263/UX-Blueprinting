@@ -2,9 +2,9 @@
 
 ## Summary
 
-- status: passed
-- has_blocker: false
-- blocker_count: 0
+- status: failed
+- has_blocker: true
+- blocker_count: 40
 - warning_count: 0
 - info_count: 13
 ## Output Status
@@ -18,7 +18,46 @@
 
 ## Blockers
 
-- none
+- facts.md 缺少栏目：## 任务意图
+- facts.md 缺少栏目：## 事实来源说明
+- facts.md 缺少栏目：## 术语与对象边界
+- facts.md 缺少栏目：## 角色与对象清单
+- facts.md 缺少栏目：## 原子事实清单
+- facts.md 缺少栏目：## 规则矩阵
+- facts.md 缺少栏目：## 状态模型
+- facts.md 缺少栏目：## 动作与流程事实
+- facts.md 缺少栏目：## 异常与拦截清单
+- facts.md 缺少栏目：## 依赖清单
+- facts.md 缺少栏目：## 范围与非范围
+- facts.md 缺少栏目：## 开放问题与缺口
+- facts.md 缺少栏目：## 追踪映射
+- business_blueprint.md 缺少栏目：## 评审对象与任务边界
+- business_blueprint.md 缺少栏目：## 领域基线
+- business_blueprint.md 缺少栏目：## 方案意图与变更类型
+- business_blueprint.md 缺少栏目：## 合理性判断
+- business_blueprint.md 缺少栏目：## 底层逻辑一致性判断
+- business_blueprint.md 缺少栏目：## 管理策略一致性判断
+- business_blueprint.md 缺少栏目：## 能力归位判断
+- business_blueprint.md 缺少栏目：## 价值、成本与认知负担评估
+- business_blueprint.md 缺少栏目：## 备选路径比较
+- business_blueprint.md 缺少栏目：## 最终业务立场
+- business_blueprint.md 缺少栏目：## 关键规则与依赖影响
+- business_blueprint.md 缺少栏目：## 风险与反模式
+- business_blueprint.md 缺少栏目：## 开放问题与缺口
+- business_blueprint.md 缺少栏目：## 判断追踪映射
+- experience_blueprint.md 缺少栏目：## 体验目标与任务边界
+- experience_blueprint.md 缺少栏目：## 体验推导依据
+- experience_blueprint.md 缺少栏目：## 信息架构总览
+- experience_blueprint.md 缺少栏目：## 任务流蓝图
+- experience_blueprint.md 缺少栏目：## 页面 / 窗口清单
+- experience_blueprint.md 缺少栏目：## 关键页面蓝图
+- experience_blueprint.md 缺少栏目：## 区块布局示意
+- experience_blueprint.md 缺少栏目：## 内容与信息优先级合同
+- experience_blueprint.md 缺少栏目：## 状态与反馈矩阵
+- experience_blueprint.md 缺少栏目：## 文案合同
+- experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略
+- experience_blueprint.md 缺少栏目：## 开放问题与缺口
+- experience_blueprint.md 缺少栏目：## 体验追踪映射
 
 ## Warnings
 

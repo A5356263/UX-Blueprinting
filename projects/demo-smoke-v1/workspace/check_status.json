@@ -4,7 +4,7 @@
   "has_blocker": false,
   "blocker_count": 0,
   "warning_count": 0,
-  "info_count": 7,
+  "info_count": 1,
   "completed_outputs": [
     "business_blueprint.md",
     "check_report.md",
@@ -15,26 +15,12 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-07T16:10:30.507630+00:00",
+  "updated_at": "2026-04-08T06:03:02.190430+00:00",
   "issues": {
     "blockers": [],
     "warnings": [],
     "infos": [
-      "结构检查已执行",
-      "info: F-01 已被蓝图承接",
-      "info: F-02 已被蓝图承接",
-      "info: F-03 已被蓝图承接",
-      "info: F-04 已被蓝图承接",
-      "info: F-05 已被蓝图承接",
-      "info: F-06 已被蓝图承接"
+      "结构检查已执行"
     ]
-  },
-  "coverage": [
-    "info: F-01 已被蓝图承接",
-    "info: F-02 已被蓝图承接",
-    "info: F-03 已被蓝图承接",
-    "info: F-04 已被蓝图承接",
-    "info: F-05 已被蓝图承接",
-    "info: F-06 已被蓝图承接"
-  ]
+  }
 }
