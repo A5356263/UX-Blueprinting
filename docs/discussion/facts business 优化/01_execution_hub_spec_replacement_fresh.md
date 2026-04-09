@@ -214,8 +214,6 @@ projects/<project-id>/
 
 ### Warning 条件
 
-满足以下情况时，可继续执行，但必须记录 warning：
-
 - 缺少 `## Wiki`，但存在 `Knowledge`
 - 缺少 `## Read Order`
 - `Knowledge` 仅引用目录而未细化到文件或索引页

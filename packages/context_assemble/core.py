@@ -28,6 +28,8 @@ def copy_reference(repo_root: Path, target_root: Path, reference: str) -> dict[s
         "type": ref_type,
         "source": str(source),
         "destination": str(destination),
+        "is_directory_ref": "true" if ref_type == "directory" else "false",
+        "suggest_narrow_to_file": "true" if ref_type == "directory" else "false",
     }
 
 
@@ -46,16 +48,43 @@ def run_context_assemble(task_id: str) -> int:
         return 1
 
     references: list[str] = []
+    consumption_map = {
+        "knowledge_refs": ["facts", "business", "experience"],
+        "wiki_refs": ["facts", "business", "experience"],
+        "template_refs": ["facts", "business", "experience"],
+        "check_refs": ["gate", "validate"],
+    }
+    reference_items: list[dict[str, object]] = []
     for field in ("knowledge_refs", "wiki_refs", "template_refs", "check_refs"):
-        references.extend(str(reference) for reference in resolved[field])
+        for reference in resolved[field]:
+            reference_items.append(
+                {
+                    "reference": str(reference),
+                    "group": field,
+                    "consumed_by": consumption_map[field],
+                }
+            )
+            references.append(str(reference))
 
-    copied = [copy_reference(repo_root, context_bundle_dir, reference) for reference in references]
+    copied_map: dict[str, dict[str, str]] = {ref: copy_reference(repo_root, context_bundle_dir, ref) for ref in references}
+    copied: list[dict[str, object]] = []
+    for item in reference_items:
+        copied_item = dict(item)
+        copied_item.update(copied_map[item["reference"]])
+        copied.append(copied_item)
+
+    facts_req = resolved.get("facts_output_requirements", {})
+    business_req = resolved.get("business_output_requirements", {})
+    experience_req = resolved.get("experience_output_requirements", {})
     manifest = {
         "task_id": task_id,
         "resolved_from": str(resolved_path),
         "reference_count": len(copied),
         "references": copied,
         "warnings": resolved["warnings"],
+        "facts_extraction_boundary": facts_req.get("boundary", []),
+        "business_judgment_boundary": business_req.get("boundary", []),
+        "experience_translation_boundary": experience_req.get("boundary", []),
     }
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")

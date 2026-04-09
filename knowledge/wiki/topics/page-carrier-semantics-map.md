@@ -1,5 +1,19 @@
 # 页面承载语义专题
 
+- page_id: PG-TOPIC-0002
+- page_type: topic
+- canonical_name: 页面承载语义专题
+- aliases: [页面承载语义图谱]
+- status: stable
+- confidence: medium
+- source_refs: [SRC-BIZ-0010, SRC-BIZ-0012, SRC-BIZ-0020]
+- related_pages:
+  - knowledge/wiki/topics/permission-domain-index.md
+  - knowledge/wiki/topics/configuration-and-explanation-chains.md
+  - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
+- created_at: 2026-04-05
+- updated_at: 2026-04-09
+
 ## 0. 文件定位
 
 - 页面类型：Topic Page
@@ -95,13 +109,13 @@
 
 ## 5. 证据与来源
 
-- `knowledge/business/permission/15_page_carrier_semantics.md`
-- `knowledge/business/permission/31_experience_translation_requirements.md`
-- `knowledge/business/permission/13_route_map.md`
+- `knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- `knowledge/raw/business/permission/31_experience_translation_requirements.md`
+- `knowledge/raw/business/permission/13_route_map.md`
 
 ## 6. 关联页面
 
-- `knowledge/wiki/indices/permission-domain.md`
+- `knowledge/wiki/topics/permission-domain-index.md`
 - `knowledge/wiki/topics/configuration-and-explanation-chains.md`
 
 ## 7. 缺口与冲突

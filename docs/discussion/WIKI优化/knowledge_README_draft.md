@@ -78,11 +78,6 @@ knowledge/
     lint_wiki.py
     refresh_overview.py
     reindex_wiki.py
-    update_wiki.py
-    auto_update_wiki.py
-    run_auto_update_wiki.ps1
-    install_wiki_autoupdate_task.ps1
-    uninstall_wiki_autoupdate_task.ps1
 
   README.md
   LLM.md
@@ -194,14 +189,6 @@ AI 可以读 Raw，但不能直接改 Raw 正文。
 注意：
 
 这些都是 **Wiki 子系统维护动作**，不是主项目主链路动作。
-
-### 自动更新（无人值守）
-
-- 一次性编排更新：`python knowledge/scripts/update_wiki.py`
-- 持续监听 Raw 并自动触发：`python knowledge/scripts/auto_update_wiki.py --run-on-start`
-- 安装无人值守自动触发（优先计划任务，权限不足时自动降级到用户启动项）：`powershell -ExecutionPolicy Bypass -File knowledge/scripts/install_wiki_autoupdate_task.ps1`
-- 卸载系统级自动任务：`powershell -ExecutionPolicy Bypass -File knowledge/scripts/uninstall_wiki_autoupdate_task.ps1`
-- AI 待处理清单输出：`knowledge/outputs/reports/pending_wiki_updates.md`
 
 ---
 

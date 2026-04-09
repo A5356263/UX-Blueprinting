@@ -1,5 +1,19 @@
 # 查询页与配置页边界
 
+- page_id: PG-RELATION-0001
+- page_type: relation
+- canonical_name: 查询页与配置页边界
+- aliases: [查询配置边界]
+- status: stable
+- confidence: high
+- source_refs: [SRC-BIZ-0007, SRC-BIZ-0008, SRC-BIZ-0009, SRC-BIZ-0010, SRC-BIZ-0012, SRC-BIZ-0020]
+- related_pages:
+  - knowledge/wiki/concepts/functional-permission.md
+  - knowledge/wiki/concepts/data-permission.md
+  - knowledge/wiki/concepts/application-visibility.md
+- created_at: 2026-04-05
+- updated_at: 2026-04-09
+
 ## 0. 文件定位
 
 - 页面类型：Relation Page
@@ -69,19 +83,19 @@
 
 ## 5. 证据与来源
 
-- `knowledge/business/permission/10_capability_map.md`
-- `knowledge/business/permission/11_task_scenarios.md`
-- `knowledge/business/permission/12_query_and_configuration_paths.md`
-- `knowledge/business/permission/13_route_map.md`
-- `knowledge/business/permission/15_page_carrier_semantics.md`
-- `knowledge/business/permission/31_experience_translation_requirements.md`
+- `knowledge/raw/business/permission/10_capability_map.md`
+- `knowledge/raw/business/permission/11_task_scenarios.md`
+- `knowledge/raw/business/permission/12_query_and_configuration_paths.md`
+- `knowledge/raw/business/permission/13_route_map.md`
+- `knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- `knowledge/raw/business/permission/31_experience_translation_requirements.md`
 
 ## 6. 关联页面
 
 - `knowledge/wiki/concepts/functional-permission.md`
 - `knowledge/wiki/concepts/data-permission.md`
 - `knowledge/wiki/concepts/application-visibility.md`
-- `knowledge/wiki/indices/permission-domain.md`
+- `knowledge/wiki/topics/permission-domain-index.md`
 
 ## 7. 缺口与冲突
 

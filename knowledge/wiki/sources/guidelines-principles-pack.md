@@ -1,0 +1,27 @@
+# 设计原则真源包摘要
+
+- page_id: PG-SOURCE-0002
+- page_type: source
+- source_id: SRC-GDL-0001
+- source_type: source-pack
+- path: knowledge/raw/guidelines/principles/
+- one_sentence_summary: 该来源包沉淀多维设计原则，为体验表达、可用性、信息架构与治理一致性提供统一原则底座。
+- core_points:
+  - 覆盖 accessibility、usability、readability、visual 等体验维度
+  - 包含 cognition 与 flow mode 的任务认知与流程组织约束
+  - governance 与 quality 原则可直接支撑质量闸门评估
+- mentioned_terms:
+  - readability
+  - usability
+  - governance
+  - quality
+- mentioned_entities: []
+- touched_topics:
+  - configuration-and-explanation-chains
+- scope_boundary: 提供原则约束，不直接定义业务对象语义。
+- open_questions: []
+- source_refs:
+  - SRC-GDL-0005
+  - SRC-GDL-0013
+- created_at: 2026-04-09
+- updated_at: 2026-04-09

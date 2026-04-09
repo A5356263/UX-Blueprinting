@@ -16,6 +16,9 @@ REQUIRED_SECTIONS = {
     "## Checks",
     "## Result Locations",
     "## Completion Criteria",
+    "## Facts Output Requirements",
+    "## Business Output Requirements",
+    "## Experience Output Requirements",
 }
 
 REFERENCE_SECTIONS = {
@@ -23,6 +26,12 @@ REFERENCE_SECTIONS = {
     "## Wiki": "wiki_refs",
     "## Templates": "template_refs",
     "## Checks": "check_refs",
+}
+
+OUTPUT_REQUIREMENT_SECTIONS = {
+    "## Facts Output Requirements": "facts_output_requirements",
+    "## Business Output Requirements": "business_output_requirements",
+    "## Experience Output Requirements": "experience_output_requirements",
 }
 
 
@@ -74,6 +83,27 @@ def normalize_path_values(items: list[str]) -> list[str]:
         if "/" in candidate:
             values.append(candidate)
     return values
+
+
+def parse_output_requirements(lines: list[str]) -> dict[str, object]:
+    by_subsection: dict[str, list[str]] = {}
+    current = ""
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if stripped.startswith("### "):
+            current = stripped
+            by_subsection.setdefault(current, [])
+            continue
+        if current:
+            by_subsection[current].append(raw_line)
+    required_sections = parse_bullets(by_subsection.get("### Required Sections", []))
+    recommended_id_prefixes = parse_bullets(by_subsection.get("### Recommended ID Prefixes", []))
+    boundary_rules = parse_bullets(by_subsection.get("### Boundary", []))
+    return {
+        "required_sections": required_sections,
+        "recommended_id_prefixes": recommended_id_prefixes,
+        "boundary": boundary_rules,
+    }
 
 
 def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
@@ -133,12 +163,25 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "check_refs": [],
         "result_locations": result_locations,
         "completion_criteria": parse_bullets(sections.get("## Completion Criteria", [])),
+        "facts_output_requirements": {},
+        "business_output_requirements": {},
+        "experience_output_requirements": {},
         "warnings": warnings,
         "errors": errors,
     }
 
     for section, field in REFERENCE_SECTIONS.items():
-        resolved[field] = normalize_path_values(parse_bullets(sections.get(section, [])))
+        bullets = parse_bullets(sections.get(section, []))
+        parsed_values = normalize_path_values(bullets)
+        resolved[field] = parsed_values
+        if section in sections and bullets and not parsed_values:
+            errors.append(f"{section} exists but no valid paths were parsed")
+
+    for section, field in OUTPUT_REQUIREMENT_SECTIONS.items():
+        parsed = parse_output_requirements(sections.get(section, []))
+        resolved[field] = parsed
+        if not parsed["required_sections"] or not parsed["boundary"]:
+            errors.append(f"{section} is missing required subsections or bullet values")
 
     if not resolved["wiki_refs"] and resolved["knowledge_refs"]:
         warnings.append("Wiki section is missing or empty; execution will rely on Knowledge directly")
@@ -158,6 +201,8 @@ def resolve_task_card_file(task_id: str, write_output: bool = True) -> tuple[dic
     task_card_path = source_dir / "task_card.md"
     resolved_path = runtime_dir / "task_card_resolved.json"
 
+    if not task_card_path.exists():
+        raise FileNotFoundError(f"Task card not found: {task_card_path}")
     task_card_text = task_card_path.read_text(encoding="utf-8")
     resolved = resolve_task_card(task_card_text, task_id)
 
