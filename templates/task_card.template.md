@@ -54,12 +54,12 @@
 
 ## Knowledge
 
-- knowledge/business/{{DOMAIN}}/
-- knowledge/guidelines/
+- knowledge/raw/business/{{DOMAIN}}/
+- knowledge/raw/guidelines/
 
 ## Wiki
 
-- knowledge/wiki/indices/{{DOMAIN}}-domain.md
+- knowledge/wiki/topics/{{DOMAIN}}-domain-index.md
 
 ## Templates
 

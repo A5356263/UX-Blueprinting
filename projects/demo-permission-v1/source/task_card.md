@@ -3,7 +3,7 @@
 ## Protocol
 
 - Protocol Name：Cross-AI Task Card
-- Protocol Version：v0.1
+- Protocol Version：v0.2
 - Task ID：demo-permission-v1
 - Task Name：Permission Blueprint Demo
 - Domain：permission
@@ -11,11 +11,13 @@
 ## Task Goal
 
 - 为新接手分区的子管理员梳理权限业务事实，并基于权限知识产出业务蓝图与体验蓝图
+- 本次输出主要服务于权限治理场景下的业务评审与体验转译
 
 ## Task Scenario
 
 - 场景重点覆盖：可见性、功能权限、数据范围、治理与生效、排查与审计
 - 本任务用于验证 `projects/` 目录下的首个真实迁移试点
+- 本次任务覆盖全链路：facts / business / experience
 
 ## Required Inputs
 
@@ -35,9 +37,10 @@
 
 1. 先读本文件
 2. 再读 `Required Inputs`
-3. 再读 `Wiki`
-4. 再读 `Knowledge`
-5. 最后按 `Templates` 产出结果并按 `Checks` 自检
+3. facts 阶段仅做 input-first extraction（输入优先提取）
+4. business 阶段在 facts 基础上引入业务知识做 review（评审）
+5. experience 阶段在 business 基础上引入 guideline（设计指南）做 translation（转译）
+6. 最后按 `Templates` 产出结果并按 `Checks` 自检
 
 ## Constraints
 
@@ -45,15 +48,18 @@
 - 信息不足处保留 `[GAP]`
 - 正式产出必须写入 `workspace/`
 - 不得用聊天回复替代正式文档产物
+- facts 阶段不得把引用知识提升为当前任务的已确认事实
+- business 阶段不得输出 UI 方案或实现方案
+- experience 阶段不得输出高保真视觉稿或研发实现细节
 
 ## Knowledge
 
-- knowledge/business/permission/
-- knowledge/guidelines/
+- knowledge/raw/business/permission/
+- knowledge/raw/guidelines/
 
 ## Wiki
 
-- knowledge/wiki/indices/permission-domain.md
+- knowledge/wiki/topics/permission-domain-index.md
 
 ## Templates
 
@@ -86,6 +92,116 @@
 - `check_report.md` 已生成
 - 无 blocker
 
+## Facts Output Requirements
+
+### Required Sections
+
+- 任务意图
+- 事实来源说明
+- 术语与对象边界
+- 角色与对象清单
+- 原子事实清单
+- 规则矩阵
+- 状态模型
+- 动作与流程事实
+- 异常与拦截清单
+- 依赖清单
+- 范围与非范围
+- 开放问题与缺口
+- 追踪映射
+
+### Recommended ID Prefixes
+
+- F
+- C
+- R
+- S
+- A
+- EX
+- D
+- SC
+- OQ
+- GAP
+
+### Boundary
+
+- mode：input-first extraction
+- knowledge role：calibration only
+- forbidden：
+  - promote unconfirmed knowledge as confirmed task facts
+  - replace task inputs with wiki / knowledge summaries
+
+## Business Output Requirements
+
+### Required Sections
+
+- 评审对象与任务边界
+- 领域基线
+- 方案意图与变更类型
+- 合理性判断
+- 底层逻辑一致性判断
+- 管理策略一致性判断
+- 能力归位判断
+- 价值、成本与认知负担评估
+- 备选路径比较
+- 最终业务立场
+- 关键规则与依赖影响
+- 风险与反模式
+- 开放问题与缺口
+- 判断追踪映射
+
+### Recommended ID Prefixes
+
+- J
+- BL
+- POS
+- OPT
+- RSK
+- AP
+- OQ
+- GAP
+
+### Boundary
+
+- mode：facts-first judgment
+- knowledge role：baseline establishment
+- forbidden：
+  - replace facts with knowledge-only conclusions
+  - output UI / implementation decisions in business blueprint
+
+## Experience Output Requirements
+
+### Required Sections
+
+- 体验目标与任务边界
+- 体验推导依据
+- 信息架构总览
+- 任务流蓝图
+- 页面 / 窗口清单
+- 关键页面蓝图
+- 区块布局示意
+- 内容与信息优先级合同
+- 状态与反馈矩阵
+- 文案合同
+- 风险、疑惑点与保护策略
+- 开放问题与缺口
+- 体验追踪映射
+
+### Recommended ID Prefixes
+
+- EXP
+- OQ
+- GAP
+
+### Boundary
+
+- mode：business-first translation
+- knowledge role：business semantic guard + guideline-based derivation
+- forbidden：
+  - rewrite business rules in experience blueprint
+  - output high-fidelity visual specs or implementation details
+
 ## Notes
 
 - 该任务用于演示本项目从 `tasks + artifacts` 迁到 `projects` 后的最小执行链路
+- 本次仅做协议升级，不改变既有业务语义
