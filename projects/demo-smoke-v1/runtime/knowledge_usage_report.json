@@ -1,0 +1,119 @@
+{
+  "task_id": "demo-smoke-v1",
+  "generated_from": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_manifest.json",
+  "mainline_knowledge_policy": "wiki_pages_only",
+  "reference_summary": {
+    "knowledge_ref_count": 1,
+    "wiki_ref_count": 1,
+    "template_ref_count": 5,
+    "check_ref_count": 4
+  },
+  "references": [
+    {
+      "reference": "knowledge/wiki/topics/permission-domain-index.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "knowledge/wiki/topics/permission-domain-index.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ]
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ]
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ]
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ]
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ]
+    }
+  ]
+}

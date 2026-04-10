@@ -1,0 +1,93 @@
+{
+  "task_id": "demo-permission-v1",
+  "facts": [
+    {
+      "id": "F-01",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-02",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-03",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-04",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-05",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-06",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-07",
+      "in_business": true,
+      "in_experience": true
+    },
+    {
+      "id": "F-08",
+      "in_business": true,
+      "in_experience": true
+    }
+  ],
+  "judgments": [
+    {
+      "id": "J-01",
+      "in_experience": true
+    },
+    {
+      "id": "J-02",
+      "in_experience": true
+    },
+    {
+      "id": "J-03",
+      "in_experience": true
+    },
+    {
+      "id": "J-04",
+      "in_experience": true
+    },
+    {
+      "id": "J-05",
+      "in_experience": true
+    },
+    {
+      "id": "J-06",
+      "in_experience": true
+    },
+    {
+      "id": "POS-01",
+      "in_experience": true
+    },
+    {
+      "id": "POS-02",
+      "in_experience": true
+    }
+  ],
+  "pages": [
+    {
+      "id": "P-01"
+    },
+    {
+      "id": "P-02"
+    },
+    {
+      "id": "P-03"
+    },
+    {
+      "id": "P-04"
+    }
+  ]
+}

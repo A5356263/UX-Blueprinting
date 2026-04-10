@@ -1,5 +1,19 @@
 # 权限域索引
 
+- page_id: PG-INDEX-0001
+- page_type: index
+- canonical_name: 权限域索引
+- aliases: [permission-domain-index]
+- status: stable
+- confidence: high
+- source_refs: [SRC-BIZ-0002, SRC-BIZ-0007, SRC-BIZ-0008, SRC-BIZ-0009, SRC-BIZ-0010, SRC-BIZ-0012, SRC-BIZ-0020]
+- related_pages:
+  - knowledge/wiki/index.md
+  - knowledge/wiki/topics/page-carrier-semantics-map.md
+  - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
+- created_at: 2026-04-05
+- updated_at: 2026-04-09
+
 ## 0. 文件定位
 
 - 页面类型：Index Page
@@ -35,15 +49,15 @@
 ### 3.1 领域入口
 
 - 领域总览：
-  - `knowledge/business/permission/00_domain_overview.md`
+  - `knowledge/raw/business/permission/00_domain_overview.md`
 - 能力与场景：
-  - `knowledge/business/permission/10_capability_map.md`
-  - `knowledge/business/permission/11_task_scenarios.md`
-  - `knowledge/business/permission/12_query_and_configuration_paths.md`
-  - `knowledge/business/permission/13_route_map.md`
-  - `knowledge/business/permission/15_page_carrier_semantics.md`
+  - `knowledge/raw/business/permission/10_capability_map.md`
+  - `knowledge/raw/business/permission/11_task_scenarios.md`
+  - `knowledge/raw/business/permission/12_query_and_configuration_paths.md`
+  - `knowledge/raw/business/permission/13_route_map.md`
+  - `knowledge/raw/business/permission/15_page_carrier_semantics.md`
 - 体验转译：
-  - `knowledge/business/permission/31_experience_translation_requirements.md`
+  - `knowledge/raw/business/permission/31_experience_translation_requirements.md`
 
 ### 3.2 当前 Wiki 页面
 
@@ -104,14 +118,14 @@
 
 ## 5. 证据与来源
 
-- `knowledge/business/permission/README.md`
-- `knowledge/business/permission/00_domain_overview.md`
-- `knowledge/business/permission/10_capability_map.md`
-- `knowledge/business/permission/11_task_scenarios.md`
-- `knowledge/business/permission/12_query_and_configuration_paths.md`
-- `knowledge/business/permission/13_route_map.md`
-- `knowledge/business/permission/15_page_carrier_semantics.md`
-- `knowledge/business/permission/31_experience_translation_requirements.md`
+- `knowledge/raw/business/permission/README.md`
+- `knowledge/raw/business/permission/00_domain_overview.md`
+- `knowledge/raw/business/permission/10_capability_map.md`
+- `knowledge/raw/business/permission/11_task_scenarios.md`
+- `knowledge/raw/business/permission/12_query_and_configuration_paths.md`
+- `knowledge/raw/business/permission/13_route_map.md`
+- `knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- `knowledge/raw/business/permission/31_experience_translation_requirements.md`
 
 ## 6. 关联页面
 

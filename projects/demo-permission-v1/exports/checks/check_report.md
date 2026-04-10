@@ -2,19 +2,20 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
-- info_count: 9
+- warning_count: 2
+- info_count: 8
+
 ## Output Status
 
-- facts.md: present
-- business_blueprint.md: present
-- experience_blueprint.md: present
-- gap_list.md: present
-- check_report.md: present
-- check_status.json: present
+- projects/demo-permission-v1/workspace/facts.md: present
+- projects/demo-permission-v1/workspace/business_blueprint.md: present
+- projects/demo-permission-v1/workspace/experience_blueprint.md: present
+- projects/demo-permission-v1/workspace/gap_list.md: present
+- projects/demo-permission-v1/workspace/check_report.md: present
+- projects/demo-permission-v1/workspace/check_status.json: present
 
 ## Blockers
 
@@ -22,29 +23,29 @@
 
 ## Warnings
 
-- none
+- facts gate 状态为 warning
+- 存在未被体验层消费的业务判断：J-02, J-03, J-04, J-05
+
 ## Infos
 
-- 结构检查已执行
-- info: F-01 已被蓝图承接
-- info: F-02 已被蓝图承接
-- info: F-03 已被蓝图承接
-- info: F-04 已被蓝图承接
-- info: F-05 已被蓝图承接
-- info: F-06 已被蓝图承接
-- info: F-07 已被蓝图承接
-- info: F-08 已被蓝图承接
-## Machine Status
-
-- 机器可读状态文件：`projects/demo-permission-v1/workspace/check_status.json`
+- business gate 状态：passed
+- coverage: business_judgments_consumed_by_experience: 4
+- coverage: facts_covered_by_business: 8
+- coverage: facts_covered_by_experience: 8
+- coverage: orphan_fact_count: 0
+- coverage: orphan_judgment_count: 4
+- coverage: orphan_page_count: 0
+- experience gate 状态：passed
 
 ## Coverage Check
 
-- info: F-01 已被蓝图承接
-- info: F-02 已被蓝图承接
-- info: F-03 已被蓝图承接
-- info: F-04 已被蓝图承接
-- info: F-05 已被蓝图承接
-- info: F-06 已被蓝图承接
-- info: F-07 已被蓝图承接
-- info: F-08 已被蓝图承接
+- facts_covered_by_business: 8
+- facts_covered_by_experience: 8
+- business_judgments_consumed_by_experience: 4
+- orphan_fact_count: 0
+- orphan_judgment_count: 4
+- orphan_page_count: 0
+
+## Machine Status
+
+- 机器可读状态文件：`projects/demo-permission-v1/workspace/check_status.json`

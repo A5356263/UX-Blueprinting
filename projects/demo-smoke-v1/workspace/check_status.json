@@ -4,23 +4,55 @@
   "has_blocker": false,
   "blocker_count": 0,
   "warning_count": 0,
-  "info_count": 1,
+  "info_count": 9,
   "completed_outputs": [
-    "business_blueprint.md",
-    "check_report.md",
-    "check_status.json",
-    "experience_blueprint.md",
-    "facts.md",
-    "gap_list.md"
+    "projects/demo-smoke-v1/workspace/business_blueprint.md",
+    "projects/demo-smoke-v1/workspace/check_report.md",
+    "projects/demo-smoke-v1/workspace/check_status.json",
+    "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+    "projects/demo-smoke-v1/workspace/facts.md",
+    "projects/demo-smoke-v1/workspace/gap_list.md"
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-08T06:03:02.190430+00:00",
+  "updated_at": "2026-04-10T14:17:38.030411+00:00",
+  "checked_files": [
+    "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+    "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+    "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+    "projects/demo-smoke-v1/workspace/business_blueprint.md",
+    "projects/demo-smoke-v1/workspace/check_report.md",
+    "projects/demo-smoke-v1/workspace/check_status.json",
+    "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+    "projects/demo-smoke-v1/workspace/facts.md",
+    "projects/demo-smoke-v1/workspace/gap_list.md"
+  ],
   "issues": {
     "blockers": [],
     "warnings": [],
     "infos": [
-      "结构检查已执行"
+      "business gate 状态：passed",
+      "coverage: business_judgments_consumed_by_experience: 7",
+      "coverage: facts_covered_by_business: 6",
+      "coverage: facts_covered_by_experience: 5",
+      "coverage: orphan_fact_count: 0",
+      "coverage: orphan_judgment_count: 0",
+      "coverage: orphan_page_count: 0",
+      "experience gate 状态：passed",
+      "facts gate 状态：passed"
     ]
+  },
+  "metrics": {
+    "required_output_count": 6,
+    "completed_output_count": 6,
+    "missing_output_count": 0,
+    "coverage": {
+      "facts_covered_by_business": 6,
+      "facts_covered_by_experience": 5,
+      "business_judgments_consumed_by_experience": 7,
+      "orphan_fact_count": 0,
+      "orphan_judgment_count": 0,
+      "orphan_page_count": 0
+    }
   }
 }

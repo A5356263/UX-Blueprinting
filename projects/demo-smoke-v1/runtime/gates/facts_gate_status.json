@@ -1,11 +1,11 @@
 {
   "project_id": "demo-smoke-v1",
   "stage": "facts",
-  "status": "warning",
+  "status": "passed",
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-07T16:09:47.640515+00:00",
+  "updated_at": "2026-04-10T14:10:32.202277+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/source/task_card.md",
     "projects/demo-smoke-v1/source/requirement.md",
@@ -15,15 +15,29 @@
     "projects/demo-smoke-v1/workspace/facts.md"
   ],
   "blocker_count": 0,
-  "warning_count": 1,
+  "warning_count": 0,
   "info_count": 1,
   "issues": {
     "blockers": [],
-    "warnings": [
-      "facts.md 可能越过阶段边界：包含 视觉稿"
-    ],
+    "warnings": [],
     "infos": [
       "facts.md 已提炼 6 条事实"
     ]
+  },
+  "metrics": {
+    "fact_count": 6,
+    "dimension_coverage": {
+      "actor": 1,
+      "object": 1,
+      "state": 1,
+      "action": 1,
+      "rule": 1,
+      "exception": 1,
+      "dependency": 1,
+      "scope": 1
+    },
+    "traceable_fact_count": 6,
+    "gap_count": 1,
+    "knowledge_derived_fact_count": 0
   }
 }

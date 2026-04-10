@@ -37,6 +37,8 @@ def run_context_assemble(task_id: str) -> int:
     repo_root = get_repo_root()
     runtime_dir = get_project_runtime_dir(task_id)
     context_bundle_dir = runtime_dir / "context_bundle"
+    if context_bundle_dir.exists():
+        shutil.rmtree(context_bundle_dir)
     context_bundle_dir.mkdir(parents=True, exist_ok=True)
 
     resolved, resolved_path = resolve_task_card_file(task_id, write_output=True)
@@ -88,6 +90,29 @@ def run_context_assemble(task_id: str) -> int:
     }
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    usage_report = {
+        "task_id": task_id,
+        "generated_from": str(manifest_path),
+        "mainline_knowledge_policy": "wiki_pages_only",
+        "reference_summary": {
+            "knowledge_ref_count": len(resolved.get("knowledge_refs", [])),
+            "wiki_ref_count": len(resolved.get("wiki_refs", [])),
+            "template_ref_count": len(resolved.get("template_refs", [])),
+            "check_ref_count": len(resolved.get("check_refs", [])),
+        },
+        "references": [
+            {
+                "reference": item.get("reference"),
+                "group": item.get("group"),
+                "type": item.get("type"),
+                "consumed_by": item.get("consumed_by"),
+            }
+            for item in copied
+        ],
+    }
+    usage_report_path = runtime_dir / "knowledge_usage_report.json"
+    usage_report_path.write_text(json.dumps(usage_report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     for warning in resolved["warnings"]:
         print(f"WARNING: {warning}")

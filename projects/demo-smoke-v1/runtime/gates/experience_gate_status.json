@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-07T16:09:47.905703+00:00",
+  "updated_at": "2026-04-10T14:17:37.808947+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/workspace/facts.md",
     "projects/demo-smoke-v1/workspace/business_blueprint.md",
@@ -14,14 +14,25 @@
   ],
   "blocker_count": 0,
   "warning_count": 0,
-  "info_count": 3,
+  "info_count": 4,
   "issues": {
     "blockers": [],
     "warnings": [],
     "infos": [
       "business 阶段状态：passed",
-      "experience_blueprint.md 已承接 4 条事实",
-      "experience_blueprint.md 已引用 5 个原则 ID"
+      "experience_blueprint.md 已承接 5 条事实",
+      "experience_blueprint.md 已承接 7 条业务判断",
+      "experience_blueprint.md 已引用 4 个原则 ID"
     ]
+  },
+  "metrics": {
+    "flow_count": 4,
+    "page_count": 3,
+    "window_count": 0,
+    "region_map_count": 3,
+    "state_feedback_pair_count": 0,
+    "copy_contract_item_count": 1,
+    "business_judgment_consumed_count": 7,
+    "principle_ref_count": 4
   }
 }

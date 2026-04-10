@@ -54,8 +54,7 @@
 
 ## Knowledge
 
-- knowledge/raw/business/permission/
-- knowledge/raw/guidelines/
+- knowledge/wiki/topics/permission-domain-index.md
 
 ## Wiki
 

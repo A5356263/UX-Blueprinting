@@ -54,8 +54,7 @@
 
 ## Knowledge
 
-- knowledge/raw/business/{{DOMAIN}}/
-- knowledge/raw/guidelines/
+- knowledge/wiki/topics/{{DOMAIN}}-domain-index.md
 
 ## Wiki
 

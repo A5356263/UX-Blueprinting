@@ -2,14 +2,16 @@
 
 ## Summary
 
+- status: passed
+- has_blocker: false
+- blocker_count: 0
+- warning_count: 0
+- info_count: 1
+
 - project_id: demo-smoke-v1
 - stage: facts
-- status: warning
 - next_stage: business
 - can_proceed: true
-- blocker_count: 0
-- warning_count: 1
-- info_count: 1
 
 ## Checked Files
 
@@ -26,7 +28,7 @@
 
 ## Warnings
 
-- facts.md 可能越过阶段边界：包含 视觉稿
+- none
 
 ## Infos
 

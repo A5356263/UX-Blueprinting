@@ -353,6 +353,49 @@ def read_gate_status(project_id: str, stage: str) -> dict[str, object] | None:
     return json.loads(status_path.read_text(encoding="utf-8"))
 
 
+def write_runtime_extension_artifacts(
+    project_id: str,
+    fact_ids: list[str],
+    judgment_ids: list[str],
+    page_ids: list[str],
+    facts_in_business: list[str],
+    facts_in_experience: list[str],
+    judgments_in_experience: list[str],
+) -> None:
+    runtime_dir = get_project_runtime_dir(project_id)
+    workspace_dir = get_workspace_dir(project_id)
+
+    trace_index = {
+        "task_id": project_id,
+        "facts": [
+            {
+                "id": item,
+                "in_business": item in facts_in_business,
+                "in_experience": item in facts_in_experience,
+            }
+            for item in fact_ids
+        ],
+        "judgments": [
+            {
+                "id": item,
+                "in_experience": item in judgments_in_experience,
+            }
+            for item in judgment_ids
+        ],
+        "pages": [{"id": item} for item in page_ids],
+    }
+    (runtime_dir / "trace_index.json").write_text(json.dumps(trace_index, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    gate_metrics = {
+        "task_id": project_id,
+        "facts_gate": read_gate_status(project_id, "facts") or {},
+        "business_gate": read_gate_status(project_id, "business") or {},
+        "experience_gate": read_gate_status(project_id, "experience") or {},
+        "final_check_status": read_json(workspace_dir / "check_status.json"),
+    }
+    (runtime_dir / "gate_metrics.json").write_text(json.dumps(gate_metrics, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def compute_dimension_coverage(facts_text: str) -> dict[str, int]:
     keys = {
         "actor": ["### Actor Facts", "角色清单"],
@@ -554,6 +597,15 @@ def run_coverage_check(project_id: str) -> int:
         "orphan_page_count": 0 if page_ids else 1,
     }
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_runtime_extension_artifacts(
+        project_id,
+        fact_ids,
+        judgment_ids,
+        page_ids,
+        facts_in_business,
+        facts_in_experience,
+        judgments_in_experience,
+    )
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
     return 0 if status != "failed" else 1

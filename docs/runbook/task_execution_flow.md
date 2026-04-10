@@ -6,11 +6,18 @@
 
 ## Step 2
 
-读取 `task_card.md`、Wiki、Knowledge 与模板，运行：
+读取 `task_card.md`、Wiki 与模板，运行：
 
 ```bash
 python -m packages assemble <project-id>
 ```
+
+本步骤会产出：
+
+- `runtime/task_card_resolved.json`
+- `runtime/context_manifest.json`
+- `runtime/knowledge_usage_report.json`
+- `runtime/context_bundle/`
 
 ## Step 3
 
@@ -45,6 +52,11 @@ python -m packages validate <project-id>
 python -m packages coverage <project-id>
 ```
 
+本步骤会额外产出：
+
+- `runtime/trace_index.json`
+- `runtime/gate_metrics.json`
+
 ## Step 7
 
 如需生成交付镜像，再运行：
@@ -52,3 +64,9 @@ python -m packages coverage <project-id>
 ```bash
 python -m packages archive <project-id>
 ```
+
+## 执行约束
+
+- 主链路知识消费仅使用 `knowledge/wiki/topics/*.md`（wiki 页）
+- wiki 属于独立子系统，执行链不改动 wiki 体系本身
+- `check_status.json` 为机器状态真源：`failed / warning / passed`

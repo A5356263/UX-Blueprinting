@@ -2,14 +2,16 @@
 
 ## Summary
 
-- project_id: demo-smoke-v1
-- stage: experience
 - status: passed
-- next_stage: final-validate
-- can_proceed: true
+- has_blocker: false
 - blocker_count: 0
 - warning_count: 0
-- info_count: 3
+- info_count: 4
+
+- project_id: demo-smoke-v1
+- stage: experience
+- next_stage: final-validate
+- can_proceed: true
 
 ## Checked Files
 
@@ -29,5 +31,6 @@
 ## Infos
 
 - business 阶段状态：passed
-- experience_blueprint.md 已承接 4 条事实
-- experience_blueprint.md 已引用 5 个原则 ID
+- experience_blueprint.md 已承接 5 条事实
+- experience_blueprint.md 已承接 7 条业务判断
+- experience_blueprint.md 已引用 4 个原则 ID

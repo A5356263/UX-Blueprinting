@@ -32,10 +32,10 @@
 3. `specs/01_execution_hub_spec.md`
 4. `projects/<project-id>/source/task_card.md`
 5. `task_card.md` 中显式引用的 `Wiki`
-6. `task_card.md` 中显式引用的 `Knowledge`
-7. `task_card.md` 中显式引用的 `Templates`
+6. `task_card.md` 中显式引用的 `Templates`
 
-如果 `Wiki` 已经覆盖所需概念，默认先使用 `Wiki`；只有在存在 `[GAP]`、`[CONFLICT]` 或细节不足时，才回到 `knowledge/business/` 与 `knowledge/guidelines/`。
+主链路知识消费仅使用 `knowledge/wiki/topics/*.md`。  
+wiki 是独立子系统，执行任务时不要改动 wiki 体系本身。
 
 ## 两种任务入口
 
@@ -93,7 +93,6 @@ projects/<project-id>/
 - 任务目标
 - 必需输入
 - 必需输出
-- Knowledge 引用
 - Wiki 引用
 - Templates 引用
 - 结果位置
@@ -110,13 +109,14 @@ python -m packages assemble <project-id>
 
 - `projects/<project-id>/runtime/task_card_resolved.json`
 - `projects/<project-id>/runtime/context_manifest.json`
+- `projects/<project-id>/runtime/knowledge_usage_report.json`
 - `projects/<project-id>/runtime/context_bundle/`
 
 如果这一步失败，不要继续生成蓝图，先修复输入或任务卡。
 
 ### Step 3：生成事实文档
 
-基于 `source/` 输入、`Wiki`、`Knowledge` 和模板，生成：
+基于 `source/` 输入、`Wiki` 和模板，生成：
 
 - `projects/<project-id>/workspace/facts.md`
 - 如有必要，生成 `projects/<project-id>/workspace/gap_list.md`
@@ -129,14 +129,14 @@ python -m packages assemble <project-id>
 
 ### Step 4：生成业务蓝图
 
-基于 `facts.md` 与业务知识，生成：
+基于 `facts.md` 与 Wiki，生成：
 
 - `projects/<project-id>/workspace/business_blueprint.md`
 
 要求：
 
 - 业务蓝图必须建立在 `facts.md` 基础上
-- 必须引用任务所需的业务知识
+- 必须引用任务所需的 Wiki 页
 - 不要提前写体验层方案
 
 ### Step 5：运行 facts 与 business 阶段闸门

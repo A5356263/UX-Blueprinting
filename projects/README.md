@@ -36,7 +36,7 @@
 ## 常见卡点定位
 
 - 事实阶段不过：先检查 `source/` 是否写入真实输入，而非占位文本
-- 业务或体验阶段不过：先看 `workspace/01_facts_gate.md`、`02_business_gate.md`、`03_experience_gate.md`
+- 业务或体验阶段不过：先看 `runtime/gates/facts_gate_report.md`、`business_gate_report.md`、`experience_gate_report.md`
 - 覆盖检查告警：检查 `facts.md` 中事实 ID 是否在蓝图中被显式引用
 
 ## 执行入口
