@@ -1,11 +1,11 @@
 {
   "project_id": "real-self-apply-v1",
   "stage": "experience",
-  "status": "warning",
+  "status": "passed",
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-08T03:13:36.500517+00:00",
+  "updated_at": "2026-04-10T14:47:10.891533+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/workspace/facts.md",
     "projects/real-self-apply-v1/workspace/business_blueprint.md",
@@ -13,23 +13,26 @@
     "projects/real-self-apply-v1/runtime/gates/business_gate_status.json"
   ],
   "blocker_count": 0,
-  "warning_count": 8,
-  "info_count": 2,
+  "warning_count": 0,
+  "info_count": 4,
   "issues": {
     "blockers": [],
-    "warnings": [
-      "experience_blueprint.md 仍使用旧结构，建议升级到 experience architecture layer 模板",
-      "experience_blueprint.md 尚未显式给出信息架构总览",
-      "experience_blueprint.md 尚未显式给出任务流蓝图",
-      "experience_blueprint.md 尚未显式给出页面/窗口清单",
-      "experience_blueprint.md 尚未显式给出状态与反馈矩阵",
-      "experience_blueprint.md 尚未显式给出文案合同",
-      "experience_blueprint.md 尚未显式给出体验追踪映射",
-      "experience_blueprint.md 尚未显式提炼体验标识（EXP-xx）"
-    ],
+    "warnings": [],
     "infos": [
-      "business 阶段状态：warning",
-      "experience_blueprint.md 已承接 5 条事实"
+      "business 阶段状态：passed",
+      "experience_blueprint.md 已承接 9 条事实",
+      "experience_blueprint.md 已承接 11 条业务判断",
+      "experience_blueprint.md 已引用 6 个原则 ID"
     ]
+  },
+  "metrics": {
+    "flow_count": 6,
+    "page_count": 5,
+    "window_count": 1,
+    "region_map_count": 5,
+    "state_feedback_pair_count": 0,
+    "copy_contract_item_count": 0,
+    "business_judgment_consumed_count": 11,
+    "principle_ref_count": 6
   }
 }

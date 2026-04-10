@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-07T16:24:48.328170+00:00",
+  "updated_at": "2026-04-10T14:47:10.642618+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/source/task_card.md",
     "projects/real-self-apply-v1/source/requirement.md",
@@ -23,5 +23,21 @@
     "infos": [
       "facts.md 已提炼 12 条事实"
     ]
+  },
+  "metrics": {
+    "fact_count": 12,
+    "dimension_coverage": {
+      "actor": 1,
+      "object": 1,
+      "state": 1,
+      "action": 1,
+      "rule": 1,
+      "exception": 1,
+      "dependency": 1,
+      "scope": 1
+    },
+    "traceable_fact_count": 12,
+    "gap_count": 1,
+    "knowledge_derived_fact_count": 0
   }
 }

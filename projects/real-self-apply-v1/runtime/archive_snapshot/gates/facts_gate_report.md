@@ -2,14 +2,16 @@
 
 ## Summary
 
-- project_id: real-self-apply-v1
-- stage: facts
 - status: passed
-- next_stage: business
-- can_proceed: true
+- has_blocker: false
 - blocker_count: 0
 - warning_count: 0
 - info_count: 1
+
+- project_id: real-self-apply-v1
+- stage: facts
+- next_stage: business
+- can_proceed: true
 
 ## Checked Files
 

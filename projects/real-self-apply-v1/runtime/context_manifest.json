@@ -1,119 +1,179 @@
 {
   "task_id": "real-self-apply-v1",
-  "resolved_from": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\task_card_resolved.json",
-  "reference_count": 12,
+  "resolved_from": "projects/real-self-apply-v1/runtime/task_card_resolved.json",
+  "reference_count": 11,
   "references": [
     {
-      "reference": "knowledge/business/permission/",
-      "type": "directory",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\business\\permission",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\knowledge\\business\\permission"
-    },
-    {
-      "reference": "knowledge/guidelines/",
-      "type": "directory",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\guidelines",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\knowledge\\guidelines"
-    },
-    {
-      "reference": "knowledge/wiki/indices/permission-domain.md",
+      "reference": "knowledge/wiki/topics/permission-domain-index.md",
+      "group": "knowledge_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\wiki\\indices\\permission-domain.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\knowledge\\wiki\\indices\\permission-domain.md"
+      "source": "knowledge/wiki/topics/permission-domain-index.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/knowledge/wiki/topics/permission-domain-index.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
+    },
+    {
+      "reference": "knowledge/wiki/topics/permission-domain-index.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "type": "file",
+      "source": "knowledge/wiki/topics/permission-domain-index.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/knowledge/wiki/topics/permission-domain-index.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\facts.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\templates\\facts.template.md"
+      "source": "templates/facts.template.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/templates/facts.template.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\business_blueprint.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\templates\\business_blueprint.template.md"
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/templates/business_blueprint.template.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\experience_blueprint.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\templates\\experience_blueprint.template.md"
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/templates/experience_blueprint.template.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\gap_list.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\templates\\gap_list.template.md"
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/templates/gap_list.template.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\check_report.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\templates\\check_report.template.md"
+      "source": "templates/check_report.template.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/templates/check_report.template.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\06_check_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\specs\\06_check_contract.md"
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/specs/06_check_contract.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\08_fact_extraction_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\specs\\08_fact_extraction_contract.md"
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/specs/08_fact_extraction_contract.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\09_business_blueprint_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\specs\\09_business_blueprint_contract.md"
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/specs/09_business_blueprint_contract.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     },
     {
       "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\10_experience_blueprint_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\context_bundle\\specs\\10_experience_blueprint_contract.md"
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/real-self-apply-v1/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
+      "is_directory_ref": "false",
+      "suggest_narrow_to_file": "false"
     }
   ],
-  "warnings": [
-    "Knowledge references include directory-only paths; consider narrowing to files or wiki indices"
+  "warnings": [],
+  "facts_extraction_boundary": [
+    "mode：input-first extraction",
+    "knowledge role：calibration only",
+    "forbidden：",
+    "promote unconfirmed knowledge as confirmed task facts",
+    "replace task inputs with wiki / knowledge summaries"
   ],
-  "facts_extraction_boundary": {
-    "mode": "input-first-extraction",
-    "primary_inputs": [
-      "projects/real-self-apply-v1/source/requirement.md",
-      "projects/real-self-apply-v1/source/background.md"
-    ],
-    "knowledge_role": "calibration-only",
-    "forbidden": [
-      "promote unconfirmed knowledge as confirmed task facts",
-      "replace task inputs with wiki/knowledge summaries"
-    ]
-  },
-  "business_judgment_boundary": {
-    "mode": "facts-first-judgment",
-    "required_inputs": [
-      "projects/real-self-apply-v1/workspace/facts.md",
-      "task referenced wiki/business knowledge"
-    ],
-    "knowledge_role": "baseline-establishment",
-    "forbidden": [
-      "replace facts with knowledge-only conclusions",
-      "output UI/implementation decisions in business blueprint"
-    ]
-  },
-  "experience_translation_boundary": {
-    "mode": "business-first-translation",
-    "required_inputs": [
-      "projects/real-self-apply-v1/workspace/facts.md",
-      "projects/real-self-apply-v1/workspace/business_blueprint.md",
-      "task referenced business knowledge/guideline knowledge/wiki"
-    ],
-    "knowledge_role": "business-semantic-guard + guideline-based-experience-derivation",
-    "forbidden": [
-      "rewrite business rules in experience blueprint",
-      "output high-fidelity visual specs or implementation details"
-    ]
-  }
+  "business_judgment_boundary": [
+    "mode：facts-first judgment",
+    "knowledge role：baseline establishment",
+    "forbidden：",
+    "replace facts with knowledge-only conclusions",
+    "output UI / implementation decisions in business blueprint"
+  ],
+  "experience_translation_boundary": [
+    "mode：business-first translation",
+    "knowledge role：business semantic guard + guideline-based derivation",
+    "forbidden：",
+    "rewrite business rules in experience blueprint",
+    "output high-fidelity visual specs or implementation details"
+  ]
 }

@@ -2,96 +2,50 @@
 
 ## Summary
 
-- status: failed
-- has_blocker: true
-- blocker_count: 40
+- status: passed
+- has_blocker: false
+- blocker_count: 0
 - warning_count: 0
-- info_count: 13
+- info_count: 9
+
 ## Output Status
 
-- facts.md: present
-- business_blueprint.md: present
-- experience_blueprint.md: present
-- gap_list.md: present
-- check_report.md: present
-- check_status.json: present
+- projects/real-self-apply-v1/workspace/facts.md: present
+- projects/real-self-apply-v1/workspace/business_blueprint.md: present
+- projects/real-self-apply-v1/workspace/experience_blueprint.md: present
+- projects/real-self-apply-v1/workspace/gap_list.md: present
+- projects/real-self-apply-v1/workspace/check_report.md: present
+- projects/real-self-apply-v1/workspace/check_status.json: present
 
 ## Blockers
 
-- facts.md 缺少栏目：## 任务意图
-- facts.md 缺少栏目：## 事实来源说明
-- facts.md 缺少栏目：## 术语与对象边界
-- facts.md 缺少栏目：## 角色与对象清单
-- facts.md 缺少栏目：## 原子事实清单
-- facts.md 缺少栏目：## 规则矩阵
-- facts.md 缺少栏目：## 状态模型
-- facts.md 缺少栏目：## 动作与流程事实
-- facts.md 缺少栏目：## 异常与拦截清单
-- facts.md 缺少栏目：## 依赖清单
-- facts.md 缺少栏目：## 范围与非范围
-- facts.md 缺少栏目：## 开放问题与缺口
-- facts.md 缺少栏目：## 追踪映射
-- business_blueprint.md 缺少栏目：## 评审对象与任务边界
-- business_blueprint.md 缺少栏目：## 领域基线
-- business_blueprint.md 缺少栏目：## 方案意图与变更类型
-- business_blueprint.md 缺少栏目：## 合理性判断
-- business_blueprint.md 缺少栏目：## 底层逻辑一致性判断
-- business_blueprint.md 缺少栏目：## 管理策略一致性判断
-- business_blueprint.md 缺少栏目：## 能力归位判断
-- business_blueprint.md 缺少栏目：## 价值、成本与认知负担评估
-- business_blueprint.md 缺少栏目：## 备选路径比较
-- business_blueprint.md 缺少栏目：## 最终业务立场
-- business_blueprint.md 缺少栏目：## 关键规则与依赖影响
-- business_blueprint.md 缺少栏目：## 风险与反模式
-- business_blueprint.md 缺少栏目：## 开放问题与缺口
-- business_blueprint.md 缺少栏目：## 判断追踪映射
-- experience_blueprint.md 缺少栏目：## 体验目标与任务边界
-- experience_blueprint.md 缺少栏目：## 体验推导依据
-- experience_blueprint.md 缺少栏目：## 信息架构总览
-- experience_blueprint.md 缺少栏目：## 任务流蓝图
-- experience_blueprint.md 缺少栏目：## 页面 / 窗口清单
-- experience_blueprint.md 缺少栏目：## 关键页面蓝图
-- experience_blueprint.md 缺少栏目：## 区块布局示意
-- experience_blueprint.md 缺少栏目：## 内容与信息优先级合同
-- experience_blueprint.md 缺少栏目：## 状态与反馈矩阵
-- experience_blueprint.md 缺少栏目：## 文案合同
-- experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略
-- experience_blueprint.md 缺少栏目：## 开放问题与缺口
-- experience_blueprint.md 缺少栏目：## 体验追踪映射
+- none
 
 ## Warnings
 
 - none
+
 ## Infos
 
-- 结构检查已执行
-- info: F-01 已被蓝图承接
-- info: F-02 已被蓝图承接
-- info: F-03 已被蓝图承接
-- info: F-04 已被蓝图承接
-- info: F-05 已被蓝图承接
-- info: F-06 已被蓝图承接
-- info: F-07 已被蓝图承接
-- info: F-08 已被蓝图承接
-- info: F-09 已被蓝图承接
-- info: F-10 已被蓝图承接
-- info: F-11 已被蓝图承接
-- info: F-12 已被蓝图承接
-## Machine Status
-
-- 机器可读状态文件：`projects/real-self-apply-v1/workspace/check_status.json`
+- business gate 状态：passed
+- coverage: business_judgments_consumed_by_experience: 11
+- coverage: facts_covered_by_business: 12
+- coverage: facts_covered_by_experience: 9
+- coverage: orphan_fact_count: 0
+- coverage: orphan_judgment_count: 0
+- coverage: orphan_page_count: 0
+- experience gate 状态：passed
+- facts gate 状态：passed
 
 ## Coverage Check
 
-- info: F-01 已被蓝图承接
-- info: F-02 已被蓝图承接
-- info: F-03 已被蓝图承接
-- info: F-04 已被蓝图承接
-- info: F-05 已被蓝图承接
-- info: F-06 已被蓝图承接
-- info: F-07 已被蓝图承接
-- info: F-08 已被蓝图承接
-- info: F-09 已被蓝图承接
-- info: F-10 已被蓝图承接
-- info: F-11 已被蓝图承接
-- info: F-12 已被蓝图承接
+- facts_covered_by_business: 12
+- facts_covered_by_experience: 9
+- business_judgments_consumed_by_experience: 11
+- orphan_fact_count: 0
+- orphan_judgment_count: 0
+- orphan_page_count: 0
+
+## Machine Status
+
+- 机器可读状态文件：`projects/real-self-apply-v1/workspace/check_status.json`

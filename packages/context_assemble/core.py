@@ -8,6 +8,10 @@ from packages.common import get_project_runtime_dir, get_repo_root
 from packages.task_card_resolve import resolve_task_card_file
 
 
+def to_repo_relative(repo_root: Path, path: Path) -> str:
+    return str(path.resolve().relative_to(repo_root.resolve())).replace("\\", "/")
+
+
 def copy_reference(repo_root: Path, target_root: Path, reference: str) -> dict[str, str]:
     source = repo_root / Path(reference.replace("/", "\\"))
     if not source.exists():
@@ -26,8 +30,8 @@ def copy_reference(repo_root: Path, target_root: Path, reference: str) -> dict[s
     return {
         "reference": reference,
         "type": ref_type,
-        "source": str(source),
-        "destination": str(destination),
+        "source": to_repo_relative(repo_root, source),
+        "destination": to_repo_relative(repo_root, destination),
         "is_directory_ref": "true" if ref_type == "directory" else "false",
         "suggest_narrow_to_file": "true" if ref_type == "directory" else "false",
     }
@@ -80,7 +84,7 @@ def run_context_assemble(task_id: str) -> int:
     experience_req = resolved.get("experience_output_requirements", {})
     manifest = {
         "task_id": task_id,
-        "resolved_from": str(resolved_path),
+        "resolved_from": to_repo_relative(repo_root, resolved_path),
         "reference_count": len(copied),
         "references": copied,
         "warnings": resolved["warnings"],
@@ -93,7 +97,7 @@ def run_context_assemble(task_id: str) -> int:
 
     usage_report = {
         "task_id": task_id,
-        "generated_from": str(manifest_path),
+        "generated_from": to_repo_relative(repo_root, manifest_path),
         "mainline_knowledge_policy": "wiki_pages_only",
         "reference_summary": {
             "knowledge_ref_count": len(resolved.get("knowledge_refs", [])),

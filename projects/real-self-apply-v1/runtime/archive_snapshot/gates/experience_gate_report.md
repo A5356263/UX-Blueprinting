@@ -2,14 +2,16 @@
 
 ## Summary
 
-- project_id: real-self-apply-v1
-- stage: experience
 - status: passed
-- next_stage: final-validate
-- can_proceed: true
+- has_blocker: false
 - blocker_count: 0
 - warning_count: 0
-- info_count: 3
+- info_count: 4
+
+- project_id: real-self-apply-v1
+- stage: experience
+- next_stage: final-validate
+- can_proceed: true
 
 ## Checked Files
 
@@ -28,6 +30,7 @@
 
 ## Infos
 
-- business 阶段状态：warning
-- experience_blueprint.md 已承接 5 条事实
-- experience_blueprint.md 已引用 7 个原则 ID
+- business 阶段状态：passed
+- experience_blueprint.md 已承接 9 条事实
+- experience_blueprint.md 已承接 11 条业务判断
+- experience_blueprint.md 已引用 6 个原则 ID
