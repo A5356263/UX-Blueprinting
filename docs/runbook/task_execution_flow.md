@@ -35,6 +35,12 @@ python -m packages gate-facts <project-id>
 python -m packages gate-business <project-id>
 ```
 
+最小深度要求：
+
+- 必须形成 review 级业务判断，而不是 facts 摘要重写
+- 必须显式包含领域基线、合理性判断、能力归位判断、价值/成本/认知负担评估、备选路径比较、风险与反模式、判断追踪映射
+- 关键判断至少要能说明结论、依据、对比对象与剩余缺口
+
 ## Step 5
 
 生成 `workspace/experience_blueprint.md`，再运行：
@@ -42,6 +48,13 @@ python -m packages gate-business <project-id>
 ```bash
 python -m packages gate-experience <project-id>
 ```
+
+最小深度要求：
+
+- 必须形成 experience architecture layer，而不是“体验要求”摘要
+- 必须显式包含信息架构总览、任务流蓝图、页面 / 窗口清单、关键页面蓝图、区块布局示意、内容与信息优先级合同、状态与反馈矩阵、文案合同、体验追踪映射
+- 必须覆盖异常态 / 阻断态，不能只写 happy path
+- 仅列页面清单但不逐页展开，视为未达标
 
 ## Step 6
 

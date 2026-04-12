@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:10:32.202277+00:00",
+  "updated_at": "2026-04-12T02:36:41.733362+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/source/task_card.md",
     "projects/demo-smoke-v1/source/requirement.md",

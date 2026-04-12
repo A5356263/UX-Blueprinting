@@ -4,7 +4,7 @@
   "has_blocker": false,
   "blocker_count": 0,
   "warning_count": 0,
-  "info_count": 9,
+  "info_count": 13,
   "completed_outputs": [
     "projects/real-self-apply-v1/workspace/business_blueprint.md",
     "projects/real-self-apply-v1/workspace/check_report.md",
@@ -15,7 +15,7 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:47:11.131849+00:00",
+  "updated_at": "2026-04-12T02:36:20.192744+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/runtime/gates/business_gate_status.json",
     "projects/real-self-apply-v1/runtime/gates/experience_gate_status.json",
@@ -32,13 +32,17 @@
     "warnings": [],
     "infos": [
       "business gate 状态：passed",
+      "business_blueprint.md 已承接 12 条事实",
       "coverage: business_judgments_consumed_by_experience: 11",
       "coverage: facts_covered_by_business: 12",
-      "coverage: facts_covered_by_experience: 9",
+      "coverage: facts_covered_by_experience: 12",
       "coverage: orphan_fact_count: 0",
       "coverage: orphan_judgment_count: 0",
       "coverage: orphan_page_count: 0",
       "experience gate 状态：passed",
+      "experience_blueprint.md 已引用 4 个设计原则 ID",
+      "experience_blueprint.md 已承接 11 条业务判断",
+      "experience_blueprint.md 已承接 12 条事实",
       "facts gate 状态：passed"
     ]
   },
@@ -46,9 +50,33 @@
     "required_output_count": 6,
     "completed_output_count": 6,
     "missing_output_count": 0,
+    "business_depth": {
+      "judgment_count": 11,
+      "facts_consumed_count": 12,
+      "judgment_traceable_count": 11,
+      "trace_mapping_item_count": 11,
+      "option_compare_count": 4,
+      "value_assessment_item_count": 5,
+      "risk_item_count": 5,
+      "unresolved_gap_count": 22
+    },
+    "experience_depth": {
+      "flow_count": 6,
+      "page_count": 7,
+      "page_inventory_item_count": 7,
+      "expanded_page_blueprint_count": 4,
+      "region_map_count": 20,
+      "content_contract_item_count": 6,
+      "state_feedback_pair_count": 8,
+      "copy_contract_item_count": 6,
+      "trace_mapping_item_count": 7,
+      "business_judgment_consumed_count": 11,
+      "principle_ref_count": 4,
+      "exception_coverage": true
+    },
     "coverage": {
       "facts_covered_by_business": 12,
-      "facts_covered_by_experience": 9,
+      "facts_covered_by_experience": 12,
       "business_judgments_consumed_by_experience": 11,
       "orphan_fact_count": 0,
       "orphan_judgment_count": 0,

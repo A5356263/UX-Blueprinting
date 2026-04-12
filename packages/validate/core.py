@@ -47,19 +47,19 @@ STAGE_REQUIRED_HEADINGS = {
         "## 判断追踪映射",
     ],
     "experience_blueprint.md": [
-        "## 阶段定位",
-        "## 体验目标",
-        "## 体验范围与边界",
-        "## 用户与场景清单",
-        "## 信息架构",
-        "## 核心任务流",
+        "## 体验目标与任务边界",
+        "## 体验推导依据",
+        "## 信息架构总览",
+        "## 任务流蓝图",
         "## 页面 / 窗口清单",
-        "## 页面蓝图",
+        "## 关键页面蓝图",
+        "## 区块布局示意",
+        "## 内容与信息优先级合同",
         "## 状态与反馈矩阵",
-        "## 风险场景与体验保护",
-        "## 原则引用与映射",
-        "## 开放问题",
-        "## 不进入本阶段的内容",
+        "## 文案合同",
+        "## 风险、疑惑点与保护策略",
+        "## 开放问题与缺口",
+        "## 体验追踪映射",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
@@ -81,7 +81,24 @@ FORBIDDEN_TERMS = {
         "SQL",
         "数据库表",
     ],
-    "experience_blueprint.md": ["数据库表", "接口字段", "SQL", "React 组件实现", "前端实现方案"],
+    "experience_blueprint.md": [
+        "数据库表",
+        "接口字段",
+        "SQL",
+        "React 组件实现",
+        "前端实现方案",
+        "## 阶段定位",
+        "## 体验范围与边界",
+        "## 用户与场景清单",
+        "## 信息架构",
+        "## 核心任务流",
+        "## 页面蓝图",
+        "## 风险场景与体验保护",
+        "## 原则引用与映射",
+        "## 开放问题",
+        "## 不进入本阶段的内容",
+        "## 体验要求",
+    ],
 }
 
 DEFAULT_TRACKED_OUTPUTS = [
@@ -96,8 +113,18 @@ DEFAULT_TRACKED_OUTPUTS = [
 FACT_ID_PATTERN = re.compile(r"\bF-[A-Z]{0,4}\d+\b|\bF-\d+\b")
 JUDGMENT_ID_PATTERN = re.compile(r"\bJ-\d+\b|\bPOS-\d+\b")
 PAGE_ID_PATTERN = re.compile(r"\bP-\d+\b")
+FLOW_ID_PATTERN = re.compile(r"\bTF-\d+\b")
 GENERIC_ID_PATTERN = re.compile(r"\b[A-Z]{1,8}-\d+\b")
-PLACEHOLDER_PATTERN = re.compile(r"(<填写|{{TASK_ID}}|<project-id>|<角色名称>|<页面名称>|<术语>)")
+OPTION_ID_PATTERN = re.compile(r"\bOPT?-\d+\b")
+RISK_ID_PATTERN = re.compile(r"\b(?:RSK|RK|AP)-\d+\b")
+TRACE_ID_PATTERN = re.compile(r"\bTR-\d+\b")
+SECTION_HEADING_PATTERN = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+SUBPAGE_HEADING_PATTERN = re.compile(r"^(?:###|####)\s+(P-\d+)\b", re.MULTILINE)
+LIST_ITEM_PATTERN = re.compile(r"^\s*(?:[-*]|\d+\.)\s+")
+TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|(?:\s*:?-+:?\s*\|)+\s*$")
+PLACEHOLDER_PATTERN = re.compile(
+    r"(<填写|{{TASK_ID}}|<project-id>|<角色名称>|<页面名称>|<术语>|<页面 / 子页 / 抽屉 / 弹窗 / 内嵌模块>)"
+)
 
 
 def now_iso() -> str:
@@ -123,6 +150,10 @@ def to_repo_rel(path: Path) -> str:
 
 def add_issue(issues: list[tuple[str, str]], level: str, message: str) -> None:
     issues.append((level, message))
+
+
+def extend_issues(target: list[tuple[str, str]], extra: list[tuple[str, str]]) -> None:
+    target.extend(extra)
 
 
 def summarize_issues(issues: list[tuple[str, str]]) -> tuple[list[str], list[str], list[str], str]:
@@ -162,8 +193,90 @@ def extract_page_ids(text: str) -> list[str]:
     return sorted(set(PAGE_ID_PATTERN.findall(text)))
 
 
+def extract_flow_ids(text: str) -> list[str]:
+    return sorted(set(FLOW_ID_PATTERN.findall(text)))
+
+
 def extract_generic_ids(text: str) -> list[str]:
     return sorted(set(GENERIC_ID_PATTERN.findall(text)))
+
+
+def parse_h2_sections(content: str) -> dict[str, str]:
+    matches = list(SECTION_HEADING_PATTERN.finditer(content))
+    sections: dict[str, str] = {}
+    for index, match in enumerate(matches):
+        title = match.group(1).strip()
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        sections[title] = content[start:end].strip()
+    return sections
+
+
+def get_section(content: str, heading: str) -> str:
+    title = heading.replace("## ", "", 1) if heading.startswith("## ") else heading
+    return parse_h2_sections(content).get(title, "")
+
+
+def count_real_table_rows(text: str) -> int:
+    pipe_lines = [line.strip() for line in text.splitlines() if line.strip().startswith("|")]
+    if not pipe_lines:
+        return 0
+    separator_count = sum(1 for line in pipe_lines if TABLE_SEPARATOR_PATTERN.match(line))
+    non_separator_rows = [line for line in pipe_lines if not TABLE_SEPARATOR_PATTERN.match(line)]
+    non_placeholder_rows = [line for line in non_separator_rows if not PLACEHOLDER_PATTERN.search(line)]
+    header_count = min(separator_count, len(non_placeholder_rows))
+    return max(0, len(non_placeholder_rows) - header_count)
+
+
+def count_real_list_items(text: str) -> int:
+    return sum(1 for line in text.splitlines() if LIST_ITEM_PATTERN.match(line) and not PLACEHOLDER_PATTERN.search(line))
+
+
+def count_text_diagrams(text: str) -> int:
+    fenced_count = text.count("```text")
+    diagram_lines = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if any(char in stripped for char in ("└", "├", "┌", "┐", "┘", "┴", "│")):
+            diagram_lines += 1
+        elif stripped.startswith("[") and stripped.endswith("]"):
+            diagram_lines += 1
+        elif "->" in stripped:
+            diagram_lines += 1
+    return fenced_count + diagram_lines
+
+
+def count_unique_matches(pattern: re.Pattern[str], text: str) -> int:
+    return len(sorted(set(pattern.findall(text))))
+
+
+def count_keywords_present(text: str, keywords: list[str]) -> int:
+    return sum(1 for keyword in keywords if keyword in text)
+
+
+def contains_any(text: str, keywords: list[str]) -> bool:
+    return any(keyword in text for keyword in keywords)
+
+
+def extract_principle_refs(
+    text: str,
+    fact_ids: list[str] | None = None,
+    judgment_ids: list[str] | None = None,
+    page_ids: list[str] | None = None,
+    flow_ids: list[str] | None = None,
+) -> list[str]:
+    principle_lines = [line for line in text.splitlines() if ("原则" in line or "guideline" in line.lower())]
+    ids: set[str] = set()
+    for line in principle_lines:
+        ids.update(re.findall(GENERIC_ID_PATTERN, line))
+    excluded = set(fact_ids or []) | set(judgment_ids or []) | set(page_ids or []) | set(flow_ids or [])
+    return sorted(item for item in ids if item not in excluded)
+
+
+def count_expanded_page_blueprints(section_text: str) -> int:
+    return len({match for match in SUBPAGE_HEADING_PATTERN.findall(section_text) if match})
 
 
 def check_required_headings(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
@@ -174,8 +287,17 @@ def check_required_headings(file_name: str, content: str, issues: list[tuple[str
 
 def check_forbidden_terms(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
     for term in FORBIDDEN_TERMS.get(file_name, []):
-        if term in content:
+        if term.startswith("## "):
+            if re.search(rf"(?m)^{re.escape(term)}\s*$", content):
+                add_issue(issues, "warning", f"{file_name} 可能仍沿用旧口径：{term}")
+            continue
+        for line in content.splitlines():
+            if term not in line:
+                continue
+            if any(flag in line for flag in ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围"]):
+                continue
             add_issue(issues, "warning", f"{file_name} 可能越过阶段边界：包含 {term}")
+            break
 
 
 def check_placeholders(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
@@ -438,6 +560,183 @@ def check_status_report_consistency(status_data: dict[str, object], report_text:
         add_issue(issues, "blocker", "check_report.md 与 check_status.json 的摘要字段不一致")
 
 
+def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dict[str, object], list[tuple[str, str]]]:
+    issues: list[tuple[str, str]] = []
+    sections = parse_h2_sections(business_text)
+    fact_ids = extract_fact_ids(facts_text)
+    judgment_ids = extract_judgment_ids(business_text)
+    referenced_facts = [fact_id for fact_id in fact_ids if fact_id in business_text]
+
+    value_section = sections.get("价值、成本与认知负担评估", "")
+    option_section = sections.get("备选路径比较", "")
+    risk_section = sections.get("风险与反模式", "")
+    trace_section = sections.get("判断追踪映射", "")
+    stance_section = sections.get("最终业务立场", "")
+
+    judgment_count = len(judgment_ids)
+    option_compare_count = max(count_unique_matches(OPTION_ID_PATTERN, option_section), count_real_table_rows(option_section), count_real_list_items(option_section))
+    value_assessment_item_count = max(count_real_table_rows(value_section), count_real_list_items(value_section))
+    risk_item_count = max(count_unique_matches(RISK_ID_PATTERN, risk_section), count_real_table_rows(risk_section), count_real_list_items(risk_section))
+    judgment_traceable_count = len(sorted(set(JUDGMENT_ID_PATTERN.findall(trace_section))))
+    trace_mapping_item_count = max(judgment_traceable_count, count_real_table_rows(trace_section), count_real_list_items(trace_section))
+    unresolved_gap_count = business_text.count("GAP-") + business_text.count("OQ-")
+
+    if not judgment_ids:
+        add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
+    elif judgment_count < 3:
+        add_issue(issues, "warning", "business_blueprint.md 业务判断数量偏少，review 深度可能不足")
+
+    if not fact_ids:
+        add_issue(issues, "blocker", "facts.md 中没有可承接的事实 ID")
+    elif not referenced_facts:
+        add_issue(issues, "blocker", "business_blueprint.md 未承接任何 facts ID")
+    else:
+        add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced_facts)} 条事实")
+        if len(referenced_facts) < max(1, len(fact_ids) // 5):
+            add_issue(issues, "warning", "business_blueprint.md 对 facts 的显式承接偏弱")
+
+    if option_compare_count == 0:
+        add_issue(issues, "blocker", "business_blueprint.md 缺少显式备选路径比较")
+    elif option_compare_count < 2:
+        add_issue(issues, "warning", "business_blueprint.md 备选路径比较仍偏少，建议至少保留两个以上可比方案")
+
+    if value_assessment_item_count == 0 or count_keywords_present(value_section, ["价值", "成本", "认知"]) < 2:
+        add_issue(issues, "blocker", "business_blueprint.md 缺少价值 / 成本 / 认知负担评估")
+
+    if risk_item_count == 0:
+        add_issue(issues, "blocker", "business_blueprint.md 缺少风险与反模式单列")
+
+    if not trace_section.strip():
+        add_issue(issues, "warning", "business_blueprint.md 缺少有效的判断追踪映射内容")
+    elif judgment_traceable_count == 0:
+        add_issue(issues, "warning", "business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx")
+
+    if not stance_section.strip():
+        add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
+
+    if unresolved_gap_count == 0:
+        add_issue(issues, "warning", "business_blueprint.md 未显式保留开放问题或缺口")
+
+    metrics = {
+        "judgment_count": judgment_count,
+        "facts_consumed_count": len(referenced_facts),
+        "judgment_traceable_count": judgment_traceable_count,
+        "trace_mapping_item_count": trace_mapping_item_count,
+        "option_compare_count": option_compare_count,
+        "value_assessment_item_count": value_assessment_item_count,
+        "risk_item_count": risk_item_count,
+        "unresolved_gap_count": unresolved_gap_count,
+    }
+    return metrics, issues
+
+
+def analyze_experience_blueprint(
+    facts_text: str,
+    business_text: str,
+    experience_text: str,
+) -> tuple[dict[str, object], list[tuple[str, str]]]:
+    issues: list[tuple[str, str]] = []
+    sections = parse_h2_sections(experience_text)
+    fact_ids = extract_fact_ids(facts_text)
+    judgment_ids = extract_judgment_ids(business_text)
+    page_ids = extract_page_ids(experience_text)
+    flow_ids = extract_flow_ids(experience_text)
+
+    flow_section = sections.get("任务流蓝图", "")
+    page_inventory_section = sections.get("页面 / 窗口清单", "")
+    key_page_section = sections.get("关键页面蓝图", "")
+    layout_section = sections.get("区块布局示意", "")
+    content_contract_section = sections.get("内容与信息优先级合同", "")
+    state_section = sections.get("状态与反馈矩阵", "")
+    copy_section = sections.get("文案合同", "")
+    risk_section = sections.get("风险、疑惑点与保护策略", "")
+    trace_section = sections.get("体验追踪映射", "")
+
+    flow_count = max(len(flow_ids), count_real_table_rows(flow_section), count_real_list_items(flow_section))
+    page_inventory_item_count = max(count_real_table_rows(page_inventory_section), count_real_list_items(page_inventory_section))
+    expanded_page_blueprint_count = count_expanded_page_blueprints(key_page_section)
+    region_map_count = count_text_diagrams(layout_section)
+    content_contract_item_count = max(count_real_table_rows(content_contract_section), count_real_list_items(content_contract_section))
+    state_feedback_pair_count = max(count_real_table_rows(state_section), count_real_list_items(state_section))
+    copy_contract_item_count = max(count_real_table_rows(copy_section), count_real_list_items(copy_section))
+    trace_mapping_item_count = max(
+        count_unique_matches(TRACE_ID_PATTERN, trace_section),
+        count_real_table_rows(trace_section),
+        count_real_list_items(trace_section),
+    )
+    referenced_facts = [item for item in fact_ids if item in experience_text]
+    referenced_judgments = [item for item in judgment_ids if item in experience_text]
+    principle_refs = extract_principle_refs(experience_text, fact_ids, judgment_ids, page_ids, flow_ids)
+    principle_ref_count = len(principle_refs)
+
+    exception_text = "\n".join([flow_section, state_section, risk_section])
+    has_exception_coverage = contains_any(
+        exception_text,
+        ["失败", "阻断", "拦截", "拒绝", "异常", "不可", "空态", "冲突", "审批中", "处理中", "关闭失败"],
+    )
+    has_success_coverage = contains_any(exception_text, ["成功", "生效", "通过", "已开启", "完成", "可启用"])
+
+    if not referenced_facts:
+        add_issue(issues, "blocker", "experience_blueprint.md 未显式承接 facts ID")
+    else:
+        add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_facts)} 条事实")
+
+    if not referenced_judgments:
+        add_issue(issues, "warning", "experience_blueprint.md 尚未显式承接业务判断 ID（J-xx / POS-xx）")
+    else:
+        add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_judgments)} 条业务判断")
+
+    if principle_ref_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 未显式引用设计原则")
+    else:
+        add_issue(issues, "info", f"experience_blueprint.md 已引用 {principle_ref_count} 个设计原则 ID")
+
+    if flow_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少任务流蓝图")
+
+    if page_inventory_item_count == 0 and not page_ids:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 窗口清单")
+
+    if expanded_page_blueprint_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图")
+
+    if region_map_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少区块布局示意")
+
+    if content_contract_item_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少内容与信息优先级合同")
+
+    if state_feedback_pair_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与反馈矩阵")
+
+    if copy_contract_item_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少文案合同")
+
+    if trace_mapping_item_count == 0:
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少体验追踪映射")
+
+    if not has_exception_coverage:
+        add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
+    elif not has_success_coverage:
+        add_issue(issues, "warning", "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱")
+
+    metrics = {
+        "flow_count": len(flow_ids),
+        "page_count": len(page_ids),
+        "page_inventory_item_count": page_inventory_item_count,
+        "expanded_page_blueprint_count": expanded_page_blueprint_count,
+        "region_map_count": region_map_count,
+        "content_contract_item_count": content_contract_item_count,
+        "state_feedback_pair_count": state_feedback_pair_count,
+        "copy_contract_item_count": copy_contract_item_count,
+        "trace_mapping_item_count": trace_mapping_item_count,
+        "business_judgment_consumed_count": len(referenced_judgments),
+        "principle_ref_count": principle_ref_count,
+        "exception_coverage": has_exception_coverage,
+    }
+    return metrics, issues
+
+
 def run_validate_outputs(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -464,15 +763,35 @@ def run_validate_outputs(project_id: str) -> int:
             output_status_lines.append(f"{normalized}: missing")
             add_issue(issues, "blocker", f"必需输出缺失：{normalized}")
 
-    for file_name in ["facts.md", "business_blueprint.md", "experience_blueprint.md", "gap_list.md"]:
-        file_path = workspace_dir / file_name
-        if not file_path.exists():
+    facts_text = read_text(workspace_dir / "facts.md")
+    business_text = read_text(workspace_dir / "business_blueprint.md")
+    experience_text = read_text(workspace_dir / "experience_blueprint.md")
+
+    for file_name, content in [
+        ("facts.md", facts_text),
+        ("business_blueprint.md", business_text),
+        ("experience_blueprint.md", experience_text),
+        ("gap_list.md", read_text(workspace_dir / "gap_list.md")),
+    ]:
+        if not content:
             continue
-        content = read_text(file_path)
         check_required_headings(file_name, content, issues)
         check_forbidden_terms(file_name, content, issues)
         check_placeholders(file_name, content, issues)
-        checked_files.append(to_repo_rel(file_path))
+        checked_files.append(f"projects/{project_id}/workspace/{file_name}")
+
+    business_metrics: dict[str, object] = {}
+    experience_metrics: dict[str, object] = {}
+
+    if facts_text and business_text:
+        business_metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
+        extend_issues(issues, business_depth_issues)
+        if int(business_metrics.get("judgment_traceable_count", 0)) == 0:
+            add_issue(issues, "blocker", "final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review")
+
+    if facts_text and business_text and experience_text:
+        experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
+        extend_issues(issues, experience_depth_issues)
 
     for stage in ["facts", "business", "experience"]:
         gate_status = read_gate_status(project_id, stage)
@@ -496,6 +815,8 @@ def run_validate_outputs(project_id: str) -> int:
         "required_output_count": len(required_outputs),
         "completed_output_count": len(completed_outputs),
         "missing_output_count": len(missing_outputs),
+        "business_depth": business_metrics,
+        "experience_depth": experience_metrics,
     }
     payload = build_final_payload(
         project_id,
@@ -731,48 +1052,12 @@ def run_business_gate(project_id: str) -> int:
         check_required_headings("business_blueprint.md", business_text, issues)
         check_forbidden_terms("business_blueprint.md", business_text, issues)
         check_placeholders("business_blueprint.md", business_text, issues)
-        judgment_ids = extract_judgment_ids(business_text)
-        if not judgment_ids:
-            add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
-
-        required_dimensions = [
-            "## 合理性判断",
-            "## 底层逻辑一致性判断",
-            "## 管理策略一致性判断",
-            "## 能力归位判断",
-            "## 价值、成本与认知负担评估",
-            "## 备选路径比较",
-            "## 风险与反模式",
-        ]
-        missing_dimensions = [item for item in required_dimensions if item not in business_text]
-        if missing_dimensions:
-            add_issue(issues, "blocker", f"business_blueprint.md 缺少主判断框架：{', '.join(missing_dimensions)}")
-
-    fact_ids = extract_fact_ids(facts_text)
-    if facts_text and business_text:
-        referenced = [fact_id for fact_id in fact_ids if fact_id in business_text]
-        if not fact_ids:
-            add_issue(issues, "blocker", "facts.md 中没有可承接事实 ID")
-        elif not referenced:
-            add_issue(issues, "blocker", "business_blueprint.md 未承接任何 facts ID")
-        else:
-            add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced)} 条事实")
-        if len(referenced) < max(1, len(fact_ids) // 5):
-            add_issue(issues, "warning", "business_blueprint.md 对 facts 的显式承接偏弱")
-        if "## 判断追踪映射" not in business_text:
-            add_issue(issues, "warning", "business_blueprint.md 缺少判断追踪映射")
-        if ("GAP-" not in business_text) and ("OQ-" not in business_text):
-            add_issue(issues, "warning", "business_blueprint.md 未显式保留缺口或开放问题")
+        metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
+        extend_issues(issues, business_depth_issues)
+    else:
+        metrics = {}
 
     blockers, warnings, infos, _ = summarize_issues(issues)
-    metrics = {
-        "judgment_count": len(extract_judgment_ids(business_text)),
-        "facts_consumed_count": len([item for item in fact_ids if item in business_text]),
-        "judgment_traceable_count": len(extract_judgment_ids(business_text)) if "## 判断追踪映射" in business_text else 0,
-        "option_compare_count": business_text.count("OP-"),
-        "anti_pattern_count": business_text.count("RK-") + business_text.count("AP-"),
-        "unresolved_gap_count": business_text.count("GAP-"),
-    }
     report_path, status_path, status = write_gate_artifacts(
         project_id,
         "business",
@@ -820,59 +1105,12 @@ def run_experience_gate(project_id: str) -> int:
         check_required_headings("experience_blueprint.md", experience_text, issues)
         check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_placeholders("experience_blueprint.md", experience_text, issues)
-
-        table_line_count = len([line for line in experience_text.splitlines() if "|" in line])
-        text_diagram_count = experience_text.count("```text")
-        if table_line_count < 12 and text_diagram_count == 0:
-            add_issue(issues, "blocker", "experience_blueprint.md 仍偏抽象，缺少页面级结构表达")
-        elif table_line_count < 12 or text_diagram_count == 0:
-            add_issue(issues, "warning", "experience_blueprint.md 结构化表达仍偏弱，建议补充表格或文本图")
-
-        if "## 页面 / 窗口清单" not in experience_text or "## 状态与反馈矩阵" not in experience_text:
-            add_issue(issues, "blocker", "experience_blueprint.md 未达到页面/状态级蓝图粒度")
-
-    fact_ids = extract_fact_ids(facts_text)
-    judgment_ids = extract_judgment_ids(business_text)
-    if facts_text and experience_text:
-        referenced_facts = [item for item in fact_ids if item in experience_text]
-        if not referenced_facts:
-            add_issue(issues, "blocker", "experience_blueprint.md 未显式承接 facts ID")
-        else:
-            add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_facts)} 条事实")
-
-    if business_text and experience_text:
-        referenced_judgments = [item for item in judgment_ids if item in experience_text]
-        if not referenced_judgments:
-            add_issue(issues, "warning", "experience_blueprint.md 尚未显式承接业务判断 ID（J-xx / POS-xx）")
-        else:
-            add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_judgments)} 条业务判断")
-
-    if experience_text:
-        all_ids = extract_generic_ids(experience_text)
-        excluded = set(fact_ids) | set(judgment_ids) | set(extract_page_ids(experience_text)) | set(re.findall(r"\bTF-\d+\b", experience_text))
-        principle_ids = [item for item in all_ids if item not in excluded]
-        if not principle_ids:
-            add_issue(issues, "blocker", "experience_blueprint.md 未显式引用原则 ID")
-        else:
-            add_issue(issues, "info", f"experience_blueprint.md 已引用 {len(principle_ids)} 个原则 ID")
+        metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
+        extend_issues(issues, experience_depth_issues)
+    else:
+        metrics = {}
 
     blockers, warnings, infos, _ = summarize_issues(issues)
-    metrics = {
-        "flow_count": len(re.findall(r"\bTF-\d+\b", experience_text)),
-        "page_count": len(extract_page_ids(experience_text)),
-        "window_count": experience_text.count("弹窗") + experience_text.count("抽屉"),
-        "region_map_count": experience_text.count("区块说明"),
-        "state_feedback_pair_count": len(re.findall(r"\| <未开始 / 配置中 / 审批中 / 已成功 / 已失败 / 已阻断>", experience_text)),
-        "copy_contract_item_count": experience_text.count("| 文案位置 |"),
-        "business_judgment_consumed_count": len([item for item in judgment_ids if item in experience_text]),
-        "principle_ref_count": len(
-            [
-                item
-                for item in extract_generic_ids(experience_text)
-                if item not in set(fact_ids) | set(judgment_ids) | set(extract_page_ids(experience_text)) | set(re.findall(r"\bTF-\d+\b", experience_text))
-            ]
-        ),
-    }
     report_path, status_path, status = write_gate_artifacts(
         project_id,
         "experience",

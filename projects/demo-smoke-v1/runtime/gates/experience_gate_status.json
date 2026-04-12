@@ -1,38 +1,70 @@
 {
   "project_id": "demo-smoke-v1",
   "stage": "experience",
-  "status": "passed",
-  "can_proceed": true,
+  "status": "failed",
+  "can_proceed": false,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:17:37.808947+00:00",
+  "updated_at": "2026-04-12T02:36:58.521321+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/workspace/facts.md",
     "projects/demo-smoke-v1/workspace/business_blueprint.md",
     "projects/demo-smoke-v1/workspace/experience_blueprint.md",
     "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
   ],
-  "blocker_count": 0,
-  "warning_count": 0,
+  "blocker_count": 14,
+  "warning_count": 12,
   "info_count": 4,
   "issues": {
-    "blockers": [],
-    "warnings": [],
+    "blockers": [
+      "experience_blueprint.md 缺少栏目：## 体验目标与任务边界",
+      "experience_blueprint.md 缺少栏目：## 体验推导依据",
+      "experience_blueprint.md 缺少栏目：## 信息架构总览",
+      "experience_blueprint.md 缺少栏目：## 任务流蓝图",
+      "experience_blueprint.md 缺少栏目：## 关键页面蓝图",
+      "experience_blueprint.md 缺少栏目：## 区块布局示意",
+      "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同",
+      "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略",
+      "experience_blueprint.md 缺少栏目：## 开放问题与缺口",
+      "experience_blueprint.md 缺少栏目：## 体验追踪映射",
+      "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图",
+      "experience_blueprint.md 缺少区块布局示意",
+      "experience_blueprint.md 缺少内容与信息优先级合同",
+      "experience_blueprint.md 缺少体验追踪映射"
+    ],
+    "warnings": [
+      "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位",
+      "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界",
+      "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单",
+      "experience_blueprint.md 可能仍沿用旧口径：## 信息架构",
+      "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流",
+      "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图",
+      "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护",
+      "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射",
+      "experience_blueprint.md 可能仍沿用旧口径：## 开放问题",
+      "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容",
+      "experience_blueprint.md 可能仍沿用旧口径：## 体验要求",
+      "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱"
+    ],
     "infos": [
-      "business 阶段状态：passed",
+      "business 阶段状态：warning",
       "experience_blueprint.md 已承接 5 条事实",
       "experience_blueprint.md 已承接 7 条业务判断",
-      "experience_blueprint.md 已引用 4 个原则 ID"
+      "experience_blueprint.md 已引用 3 个设计原则 ID"
     ]
   },
   "metrics": {
     "flow_count": 4,
     "page_count": 3,
-    "window_count": 0,
-    "region_map_count": 3,
-    "state_feedback_pair_count": 0,
-    "copy_contract_item_count": 1,
+    "page_inventory_item_count": 3,
+    "expanded_page_blueprint_count": 0,
+    "region_map_count": 0,
+    "content_contract_item_count": 0,
+    "state_feedback_pair_count": 3,
+    "copy_contract_item_count": 3,
+    "trace_mapping_item_count": 0,
     "business_judgment_consumed_count": 7,
-    "principle_ref_count": 4
+    "principle_ref_count": 3,
+    "exception_coverage": true
   }
 }

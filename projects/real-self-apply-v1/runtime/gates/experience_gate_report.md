@@ -31,6 +31,6 @@
 ## Infos
 
 - business 阶段状态：passed
-- experience_blueprint.md 已承接 9 条事实
+- experience_blueprint.md 已承接 12 条事实
 - experience_blueprint.md 已承接 11 条业务判断
-- experience_blueprint.md 已引用 6 个原则 ID
+- experience_blueprint.md 已引用 4 个设计原则 ID

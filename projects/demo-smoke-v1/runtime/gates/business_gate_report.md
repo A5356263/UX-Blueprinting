@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
+- warning_count: 1
 - info_count: 2
 
 - project_id: demo-smoke-v1
@@ -25,7 +25,7 @@
 
 ## Warnings
 
-- none
+- business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx
 
 ## Infos
 

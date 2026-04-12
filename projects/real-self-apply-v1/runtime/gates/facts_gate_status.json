@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:47:10.642618+00:00",
+  "updated_at": "2026-04-12T02:35:51.878224+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/source/task_card.md",
     "projects/real-self-apply-v1/source/requirement.md",

@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "experience",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:47:10.770114+00:00",
+  "updated_at": "2026-04-12T02:35:58.079524+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/workspace/facts.md",
     "projects/real-self-apply-v1/workspace/business_blueprint.md",
@@ -26,8 +26,10 @@
     "judgment_count": 11,
     "facts_consumed_count": 12,
     "judgment_traceable_count": 11,
-    "option_compare_count": 0,
-    "anti_pattern_count": 3,
-    "unresolved_gap_count": 1
+    "trace_mapping_item_count": 11,
+    "option_compare_count": 4,
+    "value_assessment_item_count": 5,
+    "risk_item_count": 5,
+    "unresolved_gap_count": 22
   }
 }

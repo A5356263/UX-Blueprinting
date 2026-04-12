@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-10T14:47:10.891533+00:00",
+  "updated_at": "2026-04-12T02:36:06.074832+00:00",
   "checked_files": [
     "projects/real-self-apply-v1/workspace/facts.md",
     "projects/real-self-apply-v1/workspace/business_blueprint.md",
@@ -20,19 +20,23 @@
     "warnings": [],
     "infos": [
       "business 阶段状态：passed",
-      "experience_blueprint.md 已承接 9 条事实",
+      "experience_blueprint.md 已承接 12 条事实",
       "experience_blueprint.md 已承接 11 条业务判断",
-      "experience_blueprint.md 已引用 6 个原则 ID"
+      "experience_blueprint.md 已引用 4 个设计原则 ID"
     ]
   },
   "metrics": {
     "flow_count": 6,
-    "page_count": 5,
-    "window_count": 1,
-    "region_map_count": 5,
-    "state_feedback_pair_count": 0,
-    "copy_contract_item_count": 0,
+    "page_count": 7,
+    "page_inventory_item_count": 7,
+    "expanded_page_blueprint_count": 4,
+    "region_map_count": 20,
+    "content_contract_item_count": 6,
+    "state_feedback_pair_count": 8,
+    "copy_contract_item_count": 6,
+    "trace_mapping_item_count": 7,
     "business_judgment_consumed_count": 11,
-    "principle_ref_count": 6
+    "principle_ref_count": 4,
+    "exception_coverage": true
   }
 }
