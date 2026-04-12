@@ -6,7 +6,7 @@
 - has_blocker: false
 - blocker_count: 0
 - warning_count: 0
-- info_count: 9
+- info_count: 13
 
 ## Output Status
 
@@ -28,19 +28,23 @@
 ## Infos
 
 - business gate 状态：passed
+- business_blueprint.md 已承接 12 条事实
 - coverage: business_judgments_consumed_by_experience: 11
 - coverage: facts_covered_by_business: 12
-- coverage: facts_covered_by_experience: 9
+- coverage: facts_covered_by_experience: 12
 - coverage: orphan_fact_count: 0
 - coverage: orphan_judgment_count: 0
 - coverage: orphan_page_count: 0
 - experience gate 状态：passed
+- experience_blueprint.md 已引用 4 个设计原则 ID
+- experience_blueprint.md 已承接 11 条业务判断
+- experience_blueprint.md 已承接 12 条事实
 - facts gate 状态：passed
 
 ## Coverage Check
 
 - facts_covered_by_business: 12
-- facts_covered_by_experience: 9
+- facts_covered_by_experience: 12
 - business_judgments_consumed_by_experience: 11
 - orphan_fact_count: 0
 - orphan_judgment_count: 0

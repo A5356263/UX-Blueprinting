@@ -141,6 +141,14 @@ Repair Loop 至少输出以下正式产物：
 
 - `projects/<project-id>/runtime/remediation/repair_run_log.jsonl`
 
+命令入口至少支持：
+
+- `python -m packages repair-plan <project-id>`
+- `python -m packages repair-status <project-id>`
+- `python -m packages repair-close <project-id>`
+- `python -m packages repair-accept <project-id> <issue-id> --reason "..."`
+- `python -m packages repair-defer <project-id> <issue-id> --reason "..."`
+
 ## issue_index.json 合同
 
 ### 目标
@@ -281,6 +289,11 @@ Repair Loop 至少输出以下正式产物：
 - `resolved`
 - `deferred`
 - `invalid`
+
+如 issue 进入 `accepted` 或 `deferred`，应额外记录：
+
+- `status_reason`
+- `status_updated_at`
 
 ## remediation_plan.json 合同
 

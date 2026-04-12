@@ -35,14 +35,21 @@ projects/<project-id>/runtime/remediation/
 - `repair_run_log.jsonl`
 - `repair_summary.md`
 
+其中机器真源以 JSON 为准，当前至少包括：
+
+- `issue_index.json`
+- `retry_scope.json`
+- 各 gate / validate 状态文件中的 `issue_details`
+
 ## 如何阅读 `repair_summary.md`
 
-重点看 4 个区域：
+重点看 5 个区域：
 
 1. `当前状态`
-2. `本轮修复单元`
-3. `推荐重跑`
-4. `未关闭问题`
+2. `问题统计`
+3. `本轮修复单元`
+4. `推荐重跑`
+5. `未关闭问题`
 
 如果 `repair_loop_status` 为：
 
@@ -58,6 +65,7 @@ projects/<project-id>/runtime/remediation/
 - 优先局部补修，不默认整稿重写
 - 只修改 `repair_units[*].target_artifact` 对应的正式产物
 - 按 `operator_guidance` 修，不在聊天窗口口头声明“已修复”
+- 如 issue 明确指向上游阶段失败，不要跳过回退链直接做下游重跑
 
 建议操作顺序：
 
@@ -66,22 +74,36 @@ projects/<project-id>/runtime/remediation/
 3. 再看 `required_inputs`
 4. 最后按 `operator_guidance` 修改正式文件
 
-## 修完后如何按 `retry_scope.json` 重跑
+## 如何依据 `retry_scope.json` 判断回退范围
 
 读取：
 
 - `retry_scope.json.recommended_commands`
+- `retry_scope.json.highest_required_stage`
+- `retry_scope.json.backtrack_required`
 
-然后按顺序执行这些正式命令，例如：
+当前仓库的标准重跑范围是：
+
+- `facts` 问题：`gate-facts -> gate-business -> gate-experience -> validate -> coverage`
+- `business` 问题：`gate-business -> gate-experience -> validate -> coverage`
+- `experience` 问题：`gate-experience -> validate -> coverage`
+- `final/runtime` 问题：`validate -> coverage`
+
+不要凭经验自行缩小或扩大范围。  
+如果 `backtrack_required=true`，必须按更高阶段的推荐链路重跑。
+
+## 修完后如何按 `retry_scope.json` 重跑
+
+按 `recommended_commands` 顺序串行执行。例如：
 
 ```bash
+python -m packages gate-business <project-id>
 python -m packages gate-experience <project-id>
 python -m packages validate <project-id>
 python -m packages coverage <project-id>
 ```
 
-不要凭经验自行缩小或扩大范围。  
-如果 `backtrack_required=true`，必须按更高阶段的推荐链路重跑。
+这里要求串行，不建议并行执行依赖前一步状态文件的命令。
 
 ## 如何执行 `repair-close`
 
@@ -104,6 +126,13 @@ python -m packages repair-close <project-id>
 python -m packages repair-status <project-id>
 ```
 
+如需正式把 warning 标记为接受或延期，执行：
+
+```bash
+python -m packages repair-accept <project-id> <issue-id> --reason "<accepted-reason>"
+python -m packages repair-defer <project-id> <issue-id> --reason "<deferred-reason>"
+```
+
 ## 哪些 warning 可以 accept
 
 允许 `accepted` 的前提：
@@ -111,6 +140,7 @@ python -m packages repair-status <project-id>
 - 不属于 blocker
 - 不影响正式归档安全
 - 风险和保留理由已在 remediation 产物中可追溯
+- 已完成当前轮次要求的 scoped rerun
 
 不允许 accept 的情况：
 
@@ -118,13 +148,38 @@ python -m packages repair-status <project-id>
 - 需要上游回退却未回退
 - 未重跑验证就试图保留
 
+执行方式：
+
+```bash
+python -m packages repair-accept <project-id> <issue-id> --reason "<accepted-reason>"
+```
+
+## 哪些问题可以 defer
+
+允许 `deferred` 的前提：
+
+- 已明确记录延期原因
+- 延期不会让当前归档误判为安全
+- 对 blocker 的延期会继续阻断 `archive`
+
+不允许 defer 的情况：
+
+- 以 defer 规避 blocker 清零要求
+- 没有记录重新处理条件或下一触发点
+
+执行方式：
+
+```bash
+python -m packages repair-defer <project-id> <issue-id> --reason "<deferred-reason>"
+```
+
 ## 何时允许 `archive`
 
 必须同时满足：
 
 - `workspace/check_status.json.status` 不是 `failed`
 - `repair-status` 显示 `open_blocker_count=0`
-- 不存在 deferred blocker
+- 不存在 `deferred` blocker
 - 若已进入 Repair Loop，则以当前 remediation 状态为准
 
 执行：
@@ -133,4 +188,19 @@ python -m packages repair-status <project-id>
 python -m packages archive <project-id>
 ```
 
-如存在 open blocker，`archive` 会被正式拦截。
+如存在 open blocker 或 deferred blocker，`archive` 会被正式拦截。
+
+## 已验证的回退样例
+
+`projects/real-self-apply-v1/` 已完成以下专项验证：
+
+- facts 缺陷：临时移除 `facts.md` 的 `## 追踪映射`，验证 `retry_scope` 扩展为全链路重跑
+- business 缺陷：临时移除 `business_blueprint.md` 的 `## 判断追踪映射`，验证 `retry_scope` 扩展为中段回退
+- experience 缺陷：临时移除 `experience_blueprint.md` 的 `## 状态与反馈矩阵`，验证 `retry_scope` 保持 experience scoped rerun
+- warning 样例：临时制造 orphan judgment，验证 `repair-defer` 与 `repair-accept` 能正式落盘状态与理由
+
+这 3 类样例在恢复正式标题并重跑后，最终都回到：
+
+- `check_status.json.status=passed`
+- `repair_loop_status=closed`
+- `open_blocker_count=0`

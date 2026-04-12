@@ -4,7 +4,7 @@ from packages.common import get_project_remediation_dir
 from packages.repair_loop.issue_collect import append_jsonl, collect_issue_sources, now_iso, write_json, write_text
 from packages.repair_loop.issue_normalize import normalize_issue_index
 from packages.repair_loop.plan_build import build_remediation_plan
-from packages.repair_loop.repair_close import run_repair_close, run_repair_status
+from packages.repair_loop.repair_close import run_repair_accept, run_repair_close, run_repair_defer, run_repair_status
 from packages.repair_loop.retry_scope import build_retry_scope
 from packages.repair_loop.summary_render import render_repair_summary
 
@@ -46,4 +46,4 @@ def run_repair_plan(project_id: str) -> int:
     return 0
 
 
-__all__ = ["run_repair_plan", "run_repair_status", "run_repair_close"]
+__all__ = ["run_repair_plan", "run_repair_status", "run_repair_close", "run_repair_accept", "run_repair_defer"]

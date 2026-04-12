@@ -19,6 +19,31 @@ from packages.repair_loop.retry_scope import build_retry_scope
 from packages.repair_loop.summary_render import render_repair_summary
 
 
+def _refresh_issue_index(issue_index: dict[str, Any], empty_status: str) -> dict[str, Any]:
+    issues = list(issue_index.get("issues", []))
+    open_issues = [item for item in issues if item.get("status") == "open"]
+    open_blockers = [item for item in open_issues if item.get("severity") == "blocker"]
+    deferred_blockers = [
+        item for item in issues if item.get("status") == "deferred" and item.get("severity") == "blocker"
+    ]
+
+    issue_index["issue_count"] = len(issues)
+    issue_index["open_issue_count"] = len(open_issues)
+    issue_index["blocker_count"] = len(open_blockers)
+    issue_index["warning_count"] = sum(
+        1 for item in open_issues if item.get("severity") == "warning"
+    )
+    issue_index["info_count"] = sum(1 for item in open_issues if item.get("severity") == "info")
+    if open_blockers or deferred_blockers:
+        issue_index["repair_loop_status"] = "blocked"
+    elif open_issues:
+        issue_index["repair_loop_status"] = "planned"
+    else:
+        issue_index["repair_loop_status"] = empty_status
+    issue_index["updated_at"] = now_iso()
+    return issue_index
+
+
 def _command_output_paths(project_id: str, command: str) -> list[Path]:
     workspace_dir = get_project_workspace_dir(project_id)
     gates_dir = get_project_gates_dir(project_id)
@@ -69,6 +94,10 @@ def _merge_issue_statuses(previous_index: dict[str, Any], current_index: dict[st
             new_issue["status"] = "deferred"
         else:
             new_issue["status"] = "open"
+        if previous.get("status_reason"):
+            new_issue["status_reason"] = previous["status_reason"]
+        if previous.get("status_updated_at"):
+            new_issue["status_updated_at"] = previous["status_updated_at"]
         merged.append(new_issue)
 
     for issue_id, issue in previous_by_id.items():
@@ -79,24 +108,85 @@ def _merge_issue_statuses(previous_index: dict[str, Any], current_index: dict[st
             resolved_issue["status"] = "invalid"
         else:
             resolved_issue["status"] = "resolved"
+        if issue.get("status_reason"):
+            resolved_issue["status_reason"] = issue["status_reason"]
+        if issue.get("status_updated_at"):
+            resolved_issue["status_updated_at"] = issue["status_updated_at"]
         merged.append(resolved_issue)
 
     merged.sort(key=lambda item: ({"blocker": 0, "warning": 1, "info": 2}.get(item["severity"], 9), item["stage"], item["issue_id"]))
     current_index["issues"] = merged
-    current_index["issue_count"] = len(merged)
-    current_index["open_issue_count"] = sum(1 for item in merged if item.get("status") == "open")
-    current_index["blocker_count"] = sum(
-        1 for item in merged if item.get("status") == "open" and item.get("severity") == "blocker"
+    return _refresh_issue_index(current_index, empty_status="closed")
+
+
+def _write_remediation_state(
+    project_id: str,
+    remediation_dir: Path,
+    issue_index_path: Path,
+    retry_scope_path: Path,
+    issue_index: dict[str, Any],
+) -> None:
+    remediation_plan = build_remediation_plan(project_id, issue_index)
+    retry_scope = build_retry_scope(project_id, issue_index)
+    summary = render_repair_summary(issue_index, remediation_plan, retry_scope)
+
+    write_json(issue_index_path, issue_index)
+    write_json(remediation_dir / "remediation_plan.json", remediation_plan)
+    write_json(retry_scope_path, retry_scope)
+    write_text(remediation_dir / "repair_summary.md", summary)
+
+
+def _update_issue_status(project_id: str, issue_id: str, status: str, reason: str) -> int:
+    remediation_dir = get_project_remediation_dir(project_id)
+    issue_index_path = remediation_dir / "issue_index.json"
+    retry_scope_path = remediation_dir / "retry_scope.json"
+    log_path = remediation_dir / "repair_run_log.jsonl"
+
+    issue_index = read_json(issue_index_path)
+    retry_scope = read_json(retry_scope_path)
+    if not issue_index:
+        raise SystemExit(f"Missing remediation issue index: {issue_index_path}")
+    if not retry_scope:
+        raise SystemExit(f"Missing retry scope: {retry_scope_path}")
+
+    issues = list(issue_index.get("issues", []))
+    target_issue = next((item for item in issues if str(item.get("issue_id")) == issue_id), None)
+    if target_issue is None:
+        raise SystemExit(f"Unknown issue id: {issue_id}")
+
+    if status == "accepted":
+        if str(target_issue.get("severity")) == "blocker":
+            raise SystemExit("repair-accept blocked: blocker cannot be accepted.")
+        if not _rerun_observed(project_id, retry_scope, str(issue_index.get("generated_at"))):
+            raise SystemExit("repair-accept blocked: scoped rerun artifacts do not appear to have been refreshed.")
+
+    target_issue["status"] = status
+    target_issue["status_reason"] = reason
+    target_issue["status_updated_at"] = now_iso()
+    _refresh_issue_index(issue_index, empty_status="closed")
+    _write_remediation_state(project_id, remediation_dir, issue_index_path, retry_scope_path, issue_index)
+
+    append_jsonl(
+        log_path,
+        {
+            "ts": now_iso(),
+            "cycle_id": now_iso(),
+            "event": f"issue_{status}",
+            "actor": "packages.repair_loop",
+            "issue_ids": [issue_id],
+            "result": {"status": status, "reason": reason},
+        },
     )
-    current_index["warning_count"] = sum(
-        1 for item in merged if item.get("status") == "open" and item.get("severity") == "warning"
-    )
-    current_index["info_count"] = sum(
-        1 for item in merged if item.get("status") == "open" and item.get("severity") == "info"
-    )
-    current_index["repair_loop_status"] = "blocked" if current_index["blocker_count"] else "closed"
-    current_index["updated_at"] = now_iso()
-    return current_index
+    print(f"Issue {issue_id} marked as {status}: {remediation_dir / 'repair_summary.md'}")
+    return 0
+
+
+def run_repair_accept(project_id: str, issue_id: str, reason: str) -> int:
+    return _update_issue_status(project_id, issue_id, "accepted", reason)
+
+
+def run_repair_defer(project_id: str, issue_id: str, reason: str) -> int:
+    return _update_issue_status(project_id, issue_id, "deferred", reason)
 
 
 def run_repair_status(project_id: str) -> int:
@@ -143,14 +233,7 @@ def run_repair_close(project_id: str) -> int:
     collected = collect_issue_sources(project_id)
     current_index = normalize_issue_index(project_id, collected)
     merged_index = _merge_issue_statuses(previous_index, current_index)
-    remediation_plan = build_remediation_plan(project_id, merged_index)
-    next_retry_scope = build_retry_scope(project_id, merged_index)
-    summary = render_repair_summary(merged_index, remediation_plan, next_retry_scope)
-
-    write_json(issue_index_path, merged_index)
-    write_json(remediation_dir / "remediation_plan.json", remediation_plan)
-    write_json(retry_scope_path, next_retry_scope)
-    write_text(remediation_dir / "repair_summary.md", summary)
+    _write_remediation_state(project_id, remediation_dir, issue_index_path, retry_scope_path, merged_index)
 
     cycle_id = now_iso()
     append_jsonl(

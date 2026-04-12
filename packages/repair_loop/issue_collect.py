@@ -107,6 +107,37 @@ def _coerce_messages(payload: dict[str, Any], bucket_name: str) -> list[str]:
     return [str(item).strip() for item in values if str(item).strip()]
 
 
+def _coerce_issue_details(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    values = payload.get("issue_details", [])
+    if not isinstance(values, list):
+        return []
+    details: list[dict[str, Any]] = []
+    for item in values:
+        if not isinstance(item, dict):
+            continue
+        message = str(item.get("message", "")).strip()
+        if not message:
+            continue
+        checked_files = item.get("checked_files", [])
+        target_artifacts = item.get("target_artifacts", [])
+        violated_refs = item.get("violated_contract_refs", [])
+        evidence = item.get("evidence", [])
+        details.append(
+            {
+                "source": str(item.get("source") or ""),
+                "stage": str(item.get("stage") or ""),
+                "severity": str(item.get("severity") or ""),
+                "category": str(item.get("category") or ""),
+                "message": message,
+                "checked_files": [str(value) for value in checked_files if isinstance(value, str)],
+                "target_artifacts": [str(value) for value in target_artifacts if isinstance(value, str)],
+                "violated_contract_refs": [str(value) for value in violated_refs if isinstance(value, str)],
+                "evidence": evidence if isinstance(evidence, list) else [],
+            }
+        )
+    return [item for item in details if item["severity"] in {"blocker", "warning"}]
+
+
 def _map_final_source(source: str, message: str) -> str:
     if source != "final_validate":
         return source
@@ -157,23 +188,49 @@ def collect_issue_sources(project_id: str) -> dict[str, Any]:
 
         checked_files = [str(item) for item in status_payload.get("checked_files", []) if isinstance(item, str)]
         extracted_count = 0
-        for bucket_name, severity in SEVERITY_BUCKETS.items():
-            for message in _coerce_messages(status_payload, bucket_name):
-                source = _map_final_source(source_name, message)
-                if source == "validate" and _skip_redundant_final_issue(message):
+        structured_details = _coerce_issue_details(status_payload)
+        if structured_details:
+            for detail in structured_details:
+                source = detail["source"] or _map_final_source(source_name, detail["message"])
+                if source == "validate" and _skip_redundant_final_issue(detail["message"]):
                     continue
                 raw_issues.append(
                     {
                         "source": source,
-                        "stage": stage_name,
-                        "severity": severity,
-                        "message": message,
+                        "stage": detail["stage"] or stage_name,
+                        "severity": detail["severity"] or "warning",
+                        "category": detail["category"],
+                        "message": detail["message"],
                         "status_path": repo_rel(status_path),
                         "report_path": repo_rel(report_path),
-                        "checked_files": checked_files,
+                        "checked_files": detail["checked_files"] or checked_files,
+                        "target_artifacts": detail["target_artifacts"],
+                        "violated_contract_refs": detail["violated_contract_refs"],
+                        "evidence": detail["evidence"],
                     }
                 )
                 extracted_count += 1
+        else:
+            for bucket_name, severity in SEVERITY_BUCKETS.items():
+                for message in _coerce_messages(status_payload, bucket_name):
+                    source = _map_final_source(source_name, message)
+                    if source == "validate" and _skip_redundant_final_issue(message):
+                        continue
+                    raw_issues.append(
+                        {
+                            "source": source,
+                            "stage": stage_name,
+                            "severity": severity,
+                            "message": message,
+                            "status_path": repo_rel(status_path),
+                            "report_path": repo_rel(report_path),
+                            "checked_files": checked_files,
+                            "target_artifacts": [],
+                            "violated_contract_refs": [],
+                            "evidence": [],
+                        }
+                    )
+                    extracted_count += 1
 
         if status_payload.get("status") == "failed" and extracted_count == 0:
             raw_issues.append(
@@ -220,9 +277,15 @@ def collect_issue_sources(project_id: str) -> dict[str, Any]:
             }
         )
 
-    unique: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    unique: dict[tuple[str, str, str, str, str], dict[str, Any]] = {}
     for item in raw_issues:
-        key = (item["source"], item["stage"], item["severity"], item["message"])
+        key = (
+            item["source"],
+            item["stage"],
+            item["severity"],
+            item["message"],
+            ",".join(item.get("target_artifacts", [])),
+        )
         unique[key] = item
 
     deduped_issues = sorted(

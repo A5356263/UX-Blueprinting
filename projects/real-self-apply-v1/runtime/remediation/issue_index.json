@@ -1,7 +1,7 @@
 {
   "project_id": "real-self-apply-v1",
-  "generated_at": "2026-04-12T08:35:01.085405+00:00",
-  "issue_count": 2,
+  "generated_at": "2026-04-12T09:25:41.413760+00:00",
+  "issue_count": 1,
   "open_issue_count": 0,
   "blocker_count": 0,
   "warning_count": 0,
@@ -43,17 +43,17 @@
   ],
   "issues": [
     {
-      "issue_id": "EXP-1820AD07",
+      "issue_id": "CHK-002E5806",
       "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "title": "experience 阶段存在 structure_missing 问题",
-      "description": "experience_blueprint.md 缺少必需章节：## 状态与反馈矩阵",
+      "stage": "final",
+      "severity": "warning",
+      "category": "coverage_gap",
+      "title": "final 阶段存在 coverage_gap 问题",
+      "description": "final 阶段发现 coverage_gap 问题：存在未被体验层消费的业务判断：J-09",
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 状态与反馈矩阵"
+          "value": "存在未被体验层消费的业务判断：J-09"
         },
         {
           "type": "status_path",
@@ -62,16 +62,6 @@
         {
           "type": "report_path",
           "value": "projects/real-self-apply-v1/workspace/check_report.md"
-        },
-        {
-          "type": "missing_headings",
-          "value": [
-            "状态与反馈矩阵"
-          ]
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
         },
         {
           "type": "checked_files",
@@ -87,102 +77,87 @@
           ]
         },
         {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少状态与反馈矩阵"
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 11,
+              "trace_mapping_item_count": 11,
+              "option_compare_count": 4,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 22
+            },
+            "experience_depth": {
+              "flow_count": 6,
+              "page_count": 7,
+              "page_inventory_item_count": 7,
+              "expanded_page_blueprint_count": 4,
+              "region_map_count": 20,
+              "content_contract_item_count": 6,
+              "state_feedback_pair_count": 8,
+              "copy_contract_item_count": 6,
+              "trace_mapping_item_count": 7,
+              "business_judgment_consumed_count": 10,
+              "principle_ref_count": 4,
+              "exception_coverage": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 10,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 1,
+              "orphan_page_count": 0
+            }
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "check_status.json"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/real-self-apply-v1/runtime/gates/business_gate_status.json",
+            "projects/real-self-apply-v1/runtime/gates/experience_gate_status.json",
+            "projects/real-self-apply-v1/runtime/gates/facts_gate_status.json",
+            "projects/real-self-apply-v1/workspace/business_blueprint.md",
+            "projects/real-self-apply-v1/workspace/check_report.md",
+            "projects/real-self-apply-v1/workspace/check_status.json",
+            "projects/real-self-apply-v1/workspace/experience_blueprint.md",
+            "projects/real-self-apply-v1/workspace/facts.md"
+          ]
         }
       ],
       "violated_contract_refs": [
         "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
         "specs/06_check_contract.md"
       ],
       "target_artifacts": [
-        "projects/real-self-apply-v1/workspace/experience_blueprint.md"
+        "projects/real-self-apply-v1/workspace/check_status.json"
       ],
-      "repair_mode": "patch_current_artifact",
+      "repair_mode": "rerun_checks_only",
       "suggested_actions": [
         "不要整稿重写，优先做局部补修",
-        "补齐 experience_blueprint.md 的必需章节：## 状态与反馈矩阵"
+        "补齐 check_status.json 与上下游产物之间的覆盖与追踪关系"
       ],
       "upstream_backtrack_required": false,
       "retry_scope_hint": [
-        "gate-experience",
         "validate",
         "coverage"
       ],
       "related_sources": [
         "validate"
       ],
-      "status": "resolved"
-    },
-    {
-      "issue_id": "EXP-6318AABF",
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "title": "experience 阶段存在 structure_missing 问题",
-      "description": "experience_blueprint.md 缺少必需章节：## 状态与反馈矩阵",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 状态与反馈矩阵"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/real-self-apply-v1/runtime/gates/experience_gate_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/real-self-apply-v1/runtime/gates/experience_gate_report.md"
-        },
-        {
-          "type": "missing_headings",
-          "value": [
-            "状态与反馈矩阵"
-          ]
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/real-self-apply-v1/workspace/facts.md",
-            "projects/real-self-apply-v1/workspace/business_blueprint.md",
-            "projects/real-self-apply-v1/workspace/experience_blueprint.md",
-            "projects/real-self-apply-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少状态与反馈矩阵"
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/real-self-apply-v1/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 experience_blueprint.md 的必需章节：## 状态与反馈矩阵"
-      ],
-      "upstream_backtrack_required": false,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "experience_gate"
-      ],
-      "status": "resolved"
+      "status": "resolved",
+      "status_reason": "coverage warning intentionally retained after scoped rerun for P2 acceptance",
+      "status_updated_at": "2026-04-12T09:24:34.253936+00:00"
     }
   ],
-  "updated_at": "2026-04-12T08:35:01.085444+00:00"
+  "updated_at": "2026-04-12T09:25:41.413847+00:00"
 }

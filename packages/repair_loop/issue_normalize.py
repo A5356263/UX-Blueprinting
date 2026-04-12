@@ -61,6 +61,10 @@ EXPECTED_HEADINGS = {
 PLACEHOLDER_PATTERN = re.compile(r"{{[^}]+}}|<project-id>|<[^>]+>")
 
 
+def _severity_rank(value: str) -> int:
+    return {"blocker": 0, "warning": 1, "info": 2}.get(value, 9)
+
+
 def _stage_artifact_path(project_id: str, stage: str) -> Path | None:
     workspace_dir = get_project_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -99,18 +103,33 @@ def _artifact_inspection(project_id: str, stage: str) -> dict[str, Any]:
 def _infer_stage(raw_issue: dict[str, Any]) -> str:
     message = raw_issue["message"]
     lowered = message.lower()
-    if "experience_blueprint.md" in lowered or raw_issue["source"] == "experience_gate":
+    stage = str(raw_issue.get("stage") or "")
+    if "facts 阶段未通过" in message or "facts gate" in lowered:
+        return "facts"
+    if "business 阶段未通过" in message or "business gate" in lowered:
+        return "business"
+    if "experience_blueprint.md" in lowered or "experience gate" in lowered or raw_issue["source"] == "experience_gate":
         return "experience"
     if "business_blueprint.md" in lowered or raw_issue["source"] == "business_gate":
         return "business"
     if "facts.md" in lowered or raw_issue["source"] == "facts_gate":
         return "facts"
+    if stage:
+        return stage
     if raw_issue["source"] in {"validate", "coverage"}:
         return "final"
     return raw_issue["stage"]
 
 
-def _infer_target_artifacts(project_id: str, stage: str, source: str, message: str) -> list[str]:
+def _infer_target_artifacts(project_id: str, stage: str, source: str, message: str, raw_issue: dict[str, Any]) -> list[str]:
+    direct_targets = [str(item) for item in raw_issue.get("target_artifacts", []) if isinstance(item, str)]
+    if direct_targets:
+        unique_targets: list[str] = []
+        for item in direct_targets:
+            if item not in unique_targets:
+                unique_targets.append(item)
+        return unique_targets
+
     workspace_dir = get_project_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
     targets: list[Path] = []
@@ -166,6 +185,7 @@ def _infer_category(raw_issue: dict[str, Any], project_id: str, stage: str) -> t
     message = raw_issue["message"]
     lowered = message.lower()
     inspection = _artifact_inspection(project_id, stage)
+    raw_category = str(raw_issue.get("category") or "").strip()
 
     if inspection["missing_file"]:
         return "structure_missing", inspection
@@ -173,6 +193,8 @@ def _infer_category(raw_issue: dict[str, Any], project_id: str, stage: str) -> t
         return "structure_missing", inspection
     if inspection["has_placeholder"]:
         return "placeholder_residue", inspection
+    if raw_category and raw_category != "quality_gap":
+        return raw_category, inspection
     if raw_issue["source"] == "coverage":
         return "coverage_gap", inspection
     if "trace" in lowered or "追踪" in message or "追溯" in message:
@@ -198,8 +220,10 @@ def _infer_category(raw_issue: dict[str, Any], project_id: str, stage: str) -> t
     return "structure_missing", inspection
 
 
-def _infer_upstream_backtrack_required(raw_issue: dict[str, Any], stage: str) -> bool:
+def _infer_upstream_backtrack_required(raw_issue: dict[str, Any], stage: str, category: str) -> bool:
     message = raw_issue["message"].lower()
+    if category == "stage_blocked":
+        return True
     if stage == "business" and ("facts gate" in message or "facts stage" in message):
         return True
     if stage == "experience" and ("business gate" in message or "business stage" in message):
@@ -236,9 +260,8 @@ def _issue_prefix(stage: str) -> str:
 
 
 def _build_issue_id(stage: str, source: str, category: str, targets: list[str], description: str) -> str:
-    digest = hashlib.sha1(
-        "|".join([stage, source, category, ",".join(targets), description]).encode("utf-8")
-    ).hexdigest()[:8].upper()
+    del source
+    digest = hashlib.sha1("|".join([stage, category, ",".join(targets), description]).encode("utf-8")).hexdigest()[:8].upper()
     return f"{_issue_prefix(stage)}-{digest}"
 
 
@@ -276,6 +299,9 @@ def _build_evidence(raw_issue: dict[str, Any], inspection: dict[str, Any]) -> li
         {"type": "status_path", "value": raw_issue["status_path"]},
         {"type": "report_path", "value": raw_issue["report_path"]},
     ]
+    for evidence_item in raw_issue.get("evidence", []):
+        if evidence_item not in evidence:
+            evidence.append(evidence_item)
     if inspection.get("missing_headings"):
         evidence.append({"type": "missing_headings", "value": inspection["missing_headings"]})
     if inspection.get("path") is not None:
@@ -325,20 +351,35 @@ def normalize_issue_index(project_id: str, collected: dict[str, Any]) -> dict[st
 
     for raw_issue in collected.get("raw_issues", []):
         stage = _infer_stage(raw_issue)
-        targets = _infer_target_artifacts(project_id, stage, raw_issue["source"], raw_issue["message"])
+        targets = _infer_target_artifacts(project_id, stage, raw_issue["source"], raw_issue["message"], raw_issue)
         category, inspection = _infer_category(raw_issue, project_id, stage)
-        upstream_backtrack_required = _infer_upstream_backtrack_required(raw_issue, stage)
+        upstream_backtrack_required = _infer_upstream_backtrack_required(raw_issue, stage, category)
         description = _build_description(stage, category, raw_issue, inspection, targets)
         issue_id = _build_issue_id(stage, raw_issue["source"], category, targets, description)
 
         existing = issue_map.get(issue_id)
         if existing:
+            if _severity_rank(str(raw_issue["severity"])) < _severity_rank(str(existing.get("severity"))):
+                existing["severity"] = raw_issue["severity"]
+                existing["source"] = raw_issue["source"]
             existing_sources = existing.setdefault("related_sources", [])
             if raw_issue["source"] not in existing_sources:
                 existing_sources.append(raw_issue["source"])
+            for target in targets:
+                if target not in existing["target_artifacts"]:
+                    existing["target_artifacts"].append(target)
+            for ref in raw_issue.get("violated_contract_refs", []):
+                if ref not in existing["violated_contract_refs"]:
+                    existing["violated_contract_refs"].append(ref)
+            existing["upstream_backtrack_required"] = bool(
+                existing.get("upstream_backtrack_required") or upstream_backtrack_required
+            )
             for evidence_item in _build_evidence(raw_issue, inspection):
                 if evidence_item not in existing["evidence"]:
                     existing["evidence"].append(evidence_item)
+            for action in _suggested_actions(category, targets, inspection):
+                if action not in existing["suggested_actions"]:
+                    existing["suggested_actions"].append(action)
             continue
 
         issue_map[issue_id] = {
@@ -350,7 +391,12 @@ def normalize_issue_index(project_id: str, collected: dict[str, Any]) -> dict[st
             "title": f"{stage} 阶段存在 {category} 问题",
             "description": description,
             "evidence": _build_evidence(raw_issue, inspection),
-            "violated_contract_refs": _violated_contract_refs(stage, raw_issue["source"]),
+            "violated_contract_refs": list(
+                dict.fromkeys(
+                    _violated_contract_refs(stage, raw_issue["source"])
+                    + [str(ref) for ref in raw_issue.get("violated_contract_refs", []) if isinstance(ref, str)]
+                )
+            ),
             "target_artifacts": targets,
             "repair_mode": _infer_repair_mode(category, stage, raw_issue["severity"], inspection, upstream_backtrack_required),
             "suggested_actions": _suggested_actions(category, targets, inspection),

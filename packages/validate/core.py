@@ -4,6 +4,7 @@ import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from packages.common import (
     get_project_gates_dir,
@@ -146,6 +147,165 @@ def to_repo_rel(path: Path) -> str:
         return str(path.relative_to(get_repo_root())).replace("\\", "/")
     except ValueError:
         return str(path).replace("\\", "/")
+
+
+def dedupe_keep_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        deduped.append(value)
+    return deduped
+
+
+def infer_issue_stage(default_stage: str, message: str) -> str:
+    lowered = message.lower()
+    if "facts 阶段未通过" in message or "facts gate" in lowered:
+        return "facts"
+    if "business 阶段未通过" in message or "business gate" in lowered:
+        return "business"
+    if "experience_blueprint.md" in lowered or "experience gate" in lowered:
+        return "experience"
+    if "business_blueprint.md" in lowered:
+        return "business"
+    if "facts.md" in lowered:
+        return "facts"
+    if "runtime/" in lowered or "context_manifest" in lowered or "task_card_resolved" in lowered:
+        return "runtime"
+    if default_stage == "final" and lowered.startswith("coverage:"):
+        return "final"
+    return default_stage
+
+
+def infer_issue_source(default_stage: str, message: str) -> str:
+    if default_stage == "final":
+        coverage_warning_markers = (
+            "存在未被体验层消费的业务判断",
+            "存在未被后续消费的事实",
+            "未发现页面 ID",
+        )
+        if message.lower().startswith("coverage:") or any(marker in message for marker in coverage_warning_markers):
+            return "coverage"
+        return "validate"
+    return f"{default_stage}_gate"
+
+
+def infer_issue_category(stage: str, message: str) -> str:
+    lowered = message.lower()
+    if "缺少栏目" in message or "缺少必需章节" in message or ("缺少" in message and "## " in message):
+        return "structure_missing"
+    if "缺少追踪映射" in message or "不可追溯" in message or "追踪映射" in message:
+        return "trace_missing"
+    if "placeholder" in lowered or "占位" in message:
+        return "placeholder_residue"
+    if "未被" in message or lowered.startswith("coverage:") or "覆盖检查" in message:
+        return "coverage_gap"
+    if "未通过" in message or "状态为 failed" in message:
+        return "stage_blocked"
+    if "不完整" in message or "偏弱" in message or "不足" in message:
+        return "depth_insufficient"
+    if "sql" in lowered or "前端实现" in message or "高保真视觉" in message:
+        return "boundary_violation"
+    if "冲突" in message or "不一致" in message:
+        return "consistency_conflict"
+    if "缺失" in message or "missing" in lowered:
+        return "structure_missing"
+    return "quality_gap"
+
+
+def infer_target_artifacts(project_id: str, stage: str, message: str, checked_files: list[str]) -> list[str]:
+    workspace_prefix = f"projects/{project_id}/workspace"
+    runtime_prefix = f"projects/{project_id}/runtime"
+    inferred: list[str] = []
+    lowered = message.lower()
+
+    if "facts.md" in lowered or "facts gate" in lowered:
+        inferred.append(f"{workspace_prefix}/facts.md")
+    if "business_blueprint.md" in lowered or "business gate" in lowered:
+        inferred.append(f"{workspace_prefix}/business_blueprint.md")
+    if "experience_blueprint.md" in lowered or "experience gate" in lowered:
+        inferred.append(f"{workspace_prefix}/experience_blueprint.md")
+    if "check_status.json" in lowered:
+        inferred.append(f"{workspace_prefix}/check_status.json")
+    if "check_report.md" in lowered:
+        inferred.append(f"{workspace_prefix}/check_report.md")
+    if "trace_index.json" in lowered:
+        inferred.append(f"{runtime_prefix}/trace_index.json")
+    if "gate_metrics.json" in lowered:
+        inferred.append(f"{runtime_prefix}/gate_metrics.json")
+    if "context_manifest.json" in lowered:
+        inferred.append(f"{runtime_prefix}/context_manifest.json")
+    if "task_card_resolved.json" in lowered:
+        inferred.append(f"{runtime_prefix}/task_card_resolved.json")
+
+    if not inferred:
+        if stage == "facts":
+            inferred.append(f"{workspace_prefix}/facts.md")
+        elif stage == "business":
+            inferred.append(f"{workspace_prefix}/business_blueprint.md")
+        elif stage == "experience":
+            inferred.append(f"{workspace_prefix}/experience_blueprint.md")
+        elif stage == "runtime":
+            inferred.append(f"{runtime_prefix}/gate_metrics.json")
+        else:
+            inferred.append(f"{workspace_prefix}/check_status.json")
+
+    for checked_file in checked_files:
+        if checked_file in inferred:
+            continue
+        if Path(checked_file).name == Path(inferred[0]).name:
+            inferred.append(checked_file)
+
+    return dedupe_keep_order(inferred)
+
+
+def infer_violated_contract_refs(stage: str, source: str) -> list[str]:
+    refs = ["specs/06_check_contract.md"]
+    if stage == "facts":
+        refs.append("specs/08_fact_extraction_contract.md")
+    elif stage == "business":
+        refs.append("specs/09_business_blueprint_contract.md")
+    elif stage == "experience":
+        refs.append("specs/10_experience_blueprint_contract.md")
+    if source in {"facts_gate", "business_gate", "experience_gate"} and "specs/11_repair_loop_contract.md" not in refs:
+        refs.append("specs/11_repair_loop_contract.md")
+    return refs
+
+
+def build_issue_details(
+    project_id: str,
+    default_stage: str,
+    blockers: list[str],
+    warnings: list[str],
+    infos: list[str],
+    checked_files: list[str],
+    metrics: dict[str, object],
+) -> list[dict[str, Any]]:
+    issue_details: list[dict[str, Any]] = []
+    for severity, messages in [("blocker", blockers), ("warning", warnings), ("info", infos)]:
+        for message in messages:
+            issue_stage = infer_issue_stage(default_stage, message)
+            issue_source = infer_issue_source(default_stage, message)
+            issue_details.append(
+                {
+                    "source": issue_source,
+                    "stage": issue_stage,
+                    "severity": severity,
+                    "category": infer_issue_category(issue_stage, message),
+                    "message": message,
+                    "target_artifacts": infer_target_artifacts(project_id, issue_stage, message, checked_files),
+                    "violated_contract_refs": infer_violated_contract_refs(issue_stage, issue_source),
+                    "checked_files": checked_files,
+                    "evidence": [
+                        {"type": "message", "value": message},
+                        {"type": "checked_files", "value": checked_files[:8]},
+                        {"type": "metrics", "value": metrics},
+                    ],
+                }
+            )
+    return issue_details
 
 
 def add_issue(issues: list[tuple[str, str]], level: str, message: str) -> None:
@@ -401,6 +561,7 @@ def build_gate_payload(
         status = "failed"
     elif warnings:
         status = "warning"
+    issue_details = build_issue_details(project_id, stage, blockers, warnings, infos, checked_files, metrics)
     return {
         "project_id": project_id,
         "stage": stage,
@@ -414,6 +575,8 @@ def build_gate_payload(
         "warning_count": len(warnings),
         "info_count": len(infos),
         "issues": {"blockers": blockers, "warnings": warnings, "infos": infos},
+        "issue_details_version": "1.0",
+        "issue_details": issue_details,
         "metrics": metrics,
     }
 
@@ -433,6 +596,7 @@ def build_final_payload(
         status = "failed"
     elif warnings:
         status = "warning"
+    issue_details = build_issue_details(project_id, "final", blockers, warnings, infos, checked_files, metrics)
     return {
         "task_id": project_id,
         "status": status,
@@ -446,6 +610,8 @@ def build_final_payload(
         "updated_at": now_iso(),
         "checked_files": checked_files,
         "issues": {"blockers": blockers, "warnings": warnings, "infos": infos},
+        "issue_details_version": "1.0",
+        "issue_details": issue_details,
         "metrics": metrics,
     }
 
@@ -917,6 +1083,17 @@ def run_coverage_check(project_id: str) -> int:
         "orphan_judgment_count": len(orphan_judgments),
         "orphan_page_count": 0 if page_ids else 1,
     }
+    checked_files = [str(item) for item in status_data.get("checked_files", []) if isinstance(item, str)]
+    status_data["issue_details_version"] = "1.0"
+    status_data["issue_details"] = build_issue_details(
+        project_id,
+        "final",
+        blockers,
+        warnings,
+        infos,
+        checked_files,
+        status_data["metrics"],
+    )
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
     write_runtime_extension_artifacts(
         project_id,

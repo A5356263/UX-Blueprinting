@@ -8,8 +8,9 @@ def _issue_lines(issues: list[dict[str, Any]]) -> list[str]:
         return ["- none"]
     lines = []
     for issue in issues:
+        related_sources = ", ".join(issue.get("related_sources", [])) or issue.get("source", "unknown")
         lines.append(
-            f"- {issue['issue_id']} | {issue['severity']} | {issue['stage']} | {issue['category']} | {issue['description']}"
+            f"- {issue['issue_id']} | {issue['severity']} | {issue['stage']} | {issue['category']} | sources={related_sources} | {issue['description']}"
         )
     return lines
 

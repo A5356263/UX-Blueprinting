@@ -4,7 +4,7 @@ import argparse
 
 from packages.archive import run_archive_artifacts
 from packages.context_assemble import run_context_assemble
-from packages.repair_loop import run_repair_close, run_repair_plan, run_repair_status
+from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
 from packages.validate import (
     run_business_gate,
@@ -55,6 +55,16 @@ def main() -> int:
     repair_close = subparsers.add_parser("repair-close")
     repair_close.add_argument("project_id")
 
+    repair_accept = subparsers.add_parser("repair-accept")
+    repair_accept.add_argument("project_id")
+    repair_accept.add_argument("issue_id")
+    repair_accept.add_argument("--reason", required=True)
+
+    repair_defer = subparsers.add_parser("repair-defer")
+    repair_defer.add_argument("project_id")
+    repair_defer.add_argument("issue_id")
+    repair_defer.add_argument("--reason", required=True)
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
@@ -79,6 +89,10 @@ def main() -> int:
         return run_repair_status(args.project_id)
     if args.command == "repair-close":
         return run_repair_close(args.project_id)
+    if args.command == "repair-accept":
+        return run_repair_accept(args.project_id, args.issue_id, reason=args.reason)
+    if args.command == "repair-defer":
+        return run_repair_defer(args.project_id, args.issue_id, reason=args.reason)
     return 1
 
 

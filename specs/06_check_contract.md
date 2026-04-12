@@ -68,6 +68,23 @@ Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 
 
 - gate / validate / coverage 自身具备更稳定的 issue 暴露能力
 
+当前仓库中，`*_gate_status.json` 与 `check_status.json` 已正式补充：
+
+- `issue_details_version`
+- `issue_details`
+
+其中 `issue_details[*]` 至少应包含：
+
+- `source`
+- `stage`
+- `severity`
+- `category`
+- `message`
+- `target_artifacts`
+- `violated_contract_refs`
+- `checked_files`
+- `evidence`
+
 ## 最小机器字段要求
 
 机器状态文件至少应稳定表达：
@@ -89,6 +106,8 @@ Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 
 - `violated_contract_refs`
 - `target_artifacts`
 - `metrics`
+
+如已具备结构化 issue 输出，则应优先以 `issue_details` 作为 Repair Loop 的机器消费入口，`issues.blockers / warnings / infos` 保留为向后兼容的人类可读摘要层。
 
 ## issue 进入 Repair Loop 的规则
 

@@ -10,7 +10,7 @@
 
 ## 问题统计
 
-- issue_count: 2
+- issue_count: 1
 - open_issue_count: 0
 - blocker_count: 0
 - warning_count: 0
