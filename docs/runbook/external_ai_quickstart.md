@@ -14,6 +14,7 @@
 - 以 `specs/` 作为唯一正式规则真源
 - 以 `projects/<project-id>/source/task_card.md` 作为任务入口
 - 以 `packages/` 作为固定执行步骤入口
+- 以 `packages/capability_registry/` 作为正式能力声明入口
 - 把正式结果写回 `projects/<project-id>/workspace/` 与 `projects/<project-id>/exports/`
 
 你不得：
@@ -36,6 +37,13 @@
 
 主链路知识消费仅使用 `knowledge/wiki/topics/*.md`。  
 wiki 是独立子系统，执行任务时不要改动 wiki 体系本身。
+
+如需快速查看当前正式能力面，可运行：
+
+```bash
+python -m packages capabilities-list
+python -m packages capability-show <capability-id>
+```
 
 ## 两种任务入口
 

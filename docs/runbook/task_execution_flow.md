@@ -1,5 +1,12 @@
 # 任务执行流程
 
+如需先确认当前系统正式能力面，可读取 `packages/capability_registry/`，或运行：
+
+```bash
+python -m packages capabilities-list
+python -m packages capability-show <capability-id>
+```
+
 ## Step 1
 
 创建 `projects/<project-id>/`，并把需求与背景写入 `source/`。

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 
 from packages.archive import run_archive_artifacts
+from packages.capability_registry import run_capabilities_list, run_capability_show
 from packages.context_assemble import run_context_assemble
 from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
@@ -65,6 +66,11 @@ def main() -> int:
     repair_defer.add_argument("issue_id")
     repair_defer.add_argument("--reason", required=True)
 
+    capabilities_list = subparsers.add_parser("capabilities-list")
+
+    capability_show = subparsers.add_parser("capability-show")
+    capability_show.add_argument("capability_id")
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
@@ -93,6 +99,10 @@ def main() -> int:
         return run_repair_accept(args.project_id, args.issue_id, reason=args.reason)
     if args.command == "repair-defer":
         return run_repair_defer(args.project_id, args.issue_id, reason=args.reason)
+    if args.command == "capabilities-list":
+        return run_capabilities_list()
+    if args.command == "capability-show":
+        return run_capability_show(args.capability_id)
     return 1
 
 

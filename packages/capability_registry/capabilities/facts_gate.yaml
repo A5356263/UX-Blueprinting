@@ -1,0 +1,36 @@
+{
+  "capability_id": "facts_gate",
+  "display_name": "Facts Gate",
+  "type": "stage_gate",
+  "stage": "facts",
+  "entrypoint": "python -m packages gate-facts <project-id>",
+  "description": "检查 facts 阶段输出的结构完整性、事实追溯与边界合法性，并产出正式闸门状态。",
+  "required_inputs": [
+    "projects/<project-id>/source/task_card.md",
+    "projects/<project-id>/source/requirement.md",
+    "projects/<project-id>/source/background.md",
+    "projects/<project-id>/runtime/task_card_resolved.json",
+    "projects/<project-id>/runtime/context_manifest.json",
+    "projects/<project-id>/workspace/facts.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/gates/facts_gate_report.md",
+    "projects/<project-id>/runtime/gates/facts_gate_status.json"
+  ],
+  "dependencies": [
+    "context_assemble"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/01_execution_hub_spec.md",
+    "specs/08_fact_extraction_contract.md",
+    "packages/__main__.py",
+    "packages/validate/core.py",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/task_execution_flow.md"
+  ],
+  "status": "active"
+}

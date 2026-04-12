@@ -1,0 +1,37 @@
+{
+  "registry_version": "1.0",
+  "project": "UX-Blueprinting",
+  "description": "系统级 Capability Registry，总登记当前仓库在 packages 执行中枢上正式暴露的 capability。",
+  "capability_ids": [
+    "task_bootstrap",
+    "context_assemble",
+    "facts_gate",
+    "business_gate",
+    "experience_gate",
+    "validate_outputs",
+    "coverage_check",
+    "repair_plan",
+    "repair_status",
+    "repair_accept",
+    "repair_defer",
+    "repair_close",
+    "archive_artifacts",
+    "capabilities_list",
+    "capability_show"
+  ],
+  "last_updated_from": [
+    "packages/__main__.py",
+    "specs/01_execution_hub_spec.md",
+    "specs/11_repair_loop_contract.md",
+    "specs/12_capability_registry_contract.md",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/task_execution_flow.md",
+    "docs/runbook/repair_loop_flow.md",
+    "docs/runbook/capability_registry_flow.md"
+  ],
+  "notes": [
+    "Registry 只声明能力元信息，不承载实现逻辑，也不替代 packages 的真实执行入口。",
+    "active capability 必须可追溯到 packages 命令面、Execution Hub 规格与对应 runbook。",
+    "首轮以现有正式命令为主，并为 capability registry 查询命令提供只读消费入口。"
+  ]
+}

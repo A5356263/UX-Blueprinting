@@ -1,0 +1,41 @@
+{
+  "capability_id": "repair_plan",
+  "display_name": "Repair Plan",
+  "type": "repair",
+  "stage": "repair",
+  "entrypoint": "python -m packages repair-plan <project-id>",
+  "description": "把 gate 与最终检查暴露的问题标准化为 issue 模型、修复单元与 scoped rerun 计划。",
+  "required_inputs": [
+    "projects/<project-id>/runtime/gates/facts_gate_status.json",
+    "projects/<project-id>/runtime/gates/business_gate_status.json",
+    "projects/<project-id>/runtime/gates/experience_gate_status.json",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/runtime/trace_index.json",
+    "projects/<project-id>/runtime/gate_metrics.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/remediation/issue_index.json",
+    "projects/<project-id>/runtime/remediation/remediation_plan.json",
+    "projects/<project-id>/runtime/remediation/retry_scope.json",
+    "projects/<project-id>/runtime/remediation/repair_summary.md",
+    "projects/<project-id>/runtime/remediation/repair_run_log.jsonl"
+  ],
+  "dependencies": [
+    "validate_outputs",
+    "coverage_check"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/01_execution_hub_spec.md",
+    "specs/11_repair_loop_contract.md",
+    "packages/__main__.py",
+    "packages/repair_loop/__init__.py",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/repair_loop_flow.md"
+  ],
+  "status": "active"
+}

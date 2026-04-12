@@ -11,7 +11,7 @@
 ## 当前主结构
 
 - `specs/`：唯一正式规则真源
-- `packages/`：执行中枢
+- `packages/`：执行中枢（内含 Capability Registry 声明层）
 - `projects/`：项目真相
 - `knowledge/`：业务真源、原则真源、Wiki 编译层
 - `templates/`：固定模板
@@ -30,6 +30,13 @@ python -m packages coverage demo-task
 python -m packages archive demo-task
 ```
 
+如需查看当前正式能力面，可运行：
+
+```bash
+python -m packages capabilities-list
+python -m packages capability-show <capability-id>
+```
+
 ## 阅读顺序
 
 1. `docs/runbook/external_ai_quickstart.md`
@@ -42,4 +49,5 @@ python -m packages archive demo-task
 - `docs/sdd/` 只负责帮助理解
 - `specs/` 才是正式规则
 - `packages/` 是唯一固定执行入口
+- `packages/capability_registry/` 负责正式能力声明，不替代真实执行逻辑
 - 正式产物统一位于 `projects/<project-id>/`

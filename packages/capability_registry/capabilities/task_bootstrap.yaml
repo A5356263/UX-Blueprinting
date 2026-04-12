@@ -1,0 +1,45 @@
+{
+  "capability_id": "task_bootstrap",
+  "display_name": "Task Bootstrap",
+  "type": "command",
+  "stage": "runtime",
+  "entrypoint": "python -m packages bootstrap <project-id>",
+  "description": "创建项目任务工作区、初始化 source/workspace/runtime/exports 的最小结构，并生成基础占位文件。",
+  "required_inputs": [
+    "<project-id>",
+    "templates/task_card.template.md",
+    "templates/facts.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md",
+    "templates/gap_list.template.md",
+    "templates/check_report.template.md",
+    "templates/check_status.template.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/source/task_card.md",
+    "projects/<project-id>/source/requirement.md",
+    "projects/<project-id>/source/background.md",
+    "projects/<project-id>/workspace/facts.md",
+    "projects/<project-id>/workspace/business_blueprint.md",
+    "projects/<project-id>/workspace/experience_blueprint.md",
+    "projects/<project-id>/workspace/gap_list.md",
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/runtime/gates/",
+    "projects/<project-id>/exports/",
+    "projects/<project-id>/meta.json"
+  ],
+  "dependencies": [],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/01_execution_hub_spec.md",
+    "packages/__main__.py",
+    "packages/task_bootstrap/core.py",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/task_execution_flow.md"
+  ],
+  "status": "active"
+}

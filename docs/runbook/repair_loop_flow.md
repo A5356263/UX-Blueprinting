@@ -41,6 +41,14 @@ projects/<project-id>/runtime/remediation/
 - `retry_scope.json`
 - 各 gate / validate 状态文件中的 `issue_details`
 
+如需在修复前确认 repair 相关正式能力，可运行：
+
+```bash
+python -m packages capabilities-list
+python -m packages capability-show repair_plan
+python -m packages capability-show repair_close
+```
+
 ## 如何阅读 `repair_summary.md`
 
 重点看 5 个区域：

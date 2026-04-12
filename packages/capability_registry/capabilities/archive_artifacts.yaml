@@ -1,0 +1,39 @@
+{
+  "capability_id": "archive_artifacts",
+  "display_name": "Archive Artifacts",
+  "type": "archive",
+  "stage": "archive",
+  "entrypoint": "python -m packages archive <project-id>",
+  "description": "在检查通过且 repair loop 满足归档前置约束后，把正式产物复制到 exports 与 archive snapshot。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/runtime/context_bundle/",
+    "projects/<project-id>/runtime/context_manifest.json",
+    "projects/<project-id>/runtime/task_card_resolved.json",
+    "如存在：projects/<project-id>/runtime/remediation/issue_index.json",
+    "如存在：projects/<project-id>/runtime/remediation/repair_summary.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/exports/final/",
+    "projects/<project-id>/exports/checks/",
+    "projects/<project-id>/runtime/archive_snapshot/"
+  ],
+  "dependencies": [
+    "coverage_check"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/01_execution_hub_spec.md",
+    "specs/11_repair_loop_contract.md",
+    "packages/__main__.py",
+    "packages/archive/core.py",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/task_execution_flow.md",
+    "docs/runbook/repair_loop_flow.md"
+  ],
+  "status": "active"
+}

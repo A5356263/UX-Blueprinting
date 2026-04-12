@@ -1,0 +1,35 @@
+{
+  "capability_id": "repair_defer",
+  "display_name": "Repair Defer",
+  "type": "repair",
+  "stage": "repair",
+  "entrypoint": "python -m packages repair-defer <project-id> <issue-id> --reason <deferred-reason>",
+  "description": "对问题执行正式延期，并把延期理由写回 remediation 状态，供 archive 前置约束继续消费。",
+  "required_inputs": [
+    "projects/<project-id>/runtime/remediation/issue_index.json",
+    "projects/<project-id>/runtime/remediation/retry_scope.json",
+    "<issue-id>",
+    "--reason <deferred-reason>"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/remediation/issue_index.json",
+    "projects/<project-id>/runtime/remediation/remediation_plan.json",
+    "projects/<project-id>/runtime/remediation/retry_scope.json",
+    "projects/<project-id>/runtime/remediation/repair_summary.md",
+    "projects/<project-id>/runtime/remediation/repair_run_log.jsonl"
+  ],
+  "dependencies": [
+    "repair_plan"
+  ],
+  "retryable": true,
+  "review_required": true,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/11_repair_loop_contract.md",
+    "packages/__main__.py",
+    "packages/repair_loop/repair_close.py",
+    "docs/runbook/repair_loop_flow.md"
+  ],
+  "status": "active"
+}

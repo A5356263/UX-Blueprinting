@@ -22,6 +22,7 @@
 - `context_assemble/`：上下文装配
 - `validate/`：检查与状态产出
 - `archive/`：归档与导出
+- `capability_registry/`：正式能力声明与只读查询入口
 
 ## 运行方式
 
@@ -34,4 +35,6 @@ python -m packages gate-experience <project-id>
 python -m packages validate <project-id>
 python -m packages coverage <project-id>
 python -m packages archive <project-id>
+python -m packages capabilities-list
+python -m packages capability-show <capability-id>
 ```

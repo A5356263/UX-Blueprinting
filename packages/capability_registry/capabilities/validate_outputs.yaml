@@ -1,0 +1,37 @@
+{
+  "capability_id": "validate_outputs",
+  "display_name": "Validate Outputs",
+  "type": "final_check",
+  "stage": "final",
+  "entrypoint": "python -m packages validate <project-id>",
+  "description": "执行最终输出检查，校验正式产物存在性、结构完整性、阶段边界与 gate 状态一致性。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/facts.md",
+    "projects/<project-id>/workspace/business_blueprint.md",
+    "projects/<project-id>/workspace/experience_blueprint.md",
+    "projects/<project-id>/runtime/task_card_resolved.json",
+    "projects/<project-id>/runtime/gates/facts_gate_status.json",
+    "projects/<project-id>/runtime/gates/business_gate_status.json",
+    "projects/<project-id>/runtime/gates/experience_gate_status.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/workspace/check_status.json"
+  ],
+  "dependencies": [
+    "experience_gate"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": false,
+  "source_of_truth_refs": [
+    "specs/01_execution_hub_spec.md",
+    "specs/06_check_contract.md",
+    "packages/__main__.py",
+    "packages/validate/core.py",
+    "docs/runbook/external_ai_quickstart.md",
+    "docs/runbook/task_execution_flow.md"
+  ],
+  "status": "active"
+}
