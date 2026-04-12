@@ -85,7 +85,7 @@
     "can_proceed": true,
     "next_stage": "final-validate",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-12T02:36:06.074832+00:00",
+    "updated_at": "2026-04-12T08:34:40.493715+00:00",
     "checked_files": [
       "projects/real-self-apply-v1/workspace/facts.md",
       "projects/real-self-apply-v1/workspace/business_blueprint.md",
@@ -137,7 +137,7 @@
     ],
     "missing_outputs": [],
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-12T02:36:20.192744+00:00",
+    "updated_at": "2026-04-12T08:34:54.978985+00:00",
     "checked_files": [
       "projects/real-self-apply-v1/runtime/gates/business_gate_status.json",
       "projects/real-self-apply-v1/runtime/gates/experience_gate_status.json",

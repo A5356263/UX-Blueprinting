@@ -151,13 +151,6 @@ python -m packages gate-facts <project-id>
 python -m packages gate-business <project-id>
 ```
 
-闸门结果会写入：
-
-- `projects/<project-id>/runtime/gates/facts_gate_report.md`
-- `projects/<project-id>/runtime/gates/facts_gate_status.json`
-- `projects/<project-id>/runtime/gates/business_gate_report.md`
-- `projects/<project-id>/runtime/gates/business_gate_status.json`
-
 如果任一 gate 的状态为 `failed`，不要继续写体验蓝图，先回到上一阶段补齐并重新检查。
 
 ### Step 6：生成体验蓝图
@@ -206,13 +199,36 @@ python -m packages coverage <project-id>
 
 如果 `check_status.json.status` 为：
 
-- `failed`：不得归档，先修复 blocker
-- `warning`：可以继续，但必须理解 warning 是否可接受
+- `failed`：不得归档，必须先执行 `repair-plan`
+- `warning`：可以继续，但如需正式追踪、接受或关闭 warning，应执行 `repair-plan`
 - `passed`：进入归档
 
-### Step 10：归档结果
+### Step 10：进入 Repair Loop（如需要）
 
-通过正式检查后，执行：
+当检查结果需要正式修复闭环时，执行：
+
+```bash
+python -m packages repair-plan <project-id>
+```
+
+然后：
+
+1. 读取 `runtime/remediation/repair_summary.md`
+2. 按 `runtime/remediation/remediation_plan.json` 做局部补修
+3. 按 `runtime/remediation/retry_scope.json` 重跑推荐命令
+4. 执行 `python -m packages repair-close <project-id>`
+
+快速查看修复状态可运行：
+
+```bash
+python -m packages repair-status <project-id>
+```
+
+如仍存在 open blocker，不得归档。
+
+### Step 11：归档结果
+
+通过正式检查，且 Repair Loop 无 open blocker 后，执行：
 
 ```bash
 python -m packages archive <project-id>
@@ -233,6 +249,10 @@ python -m packages archive <project-id>
 - `projects/<project-id>/workspace/gap_list.md`
 - `projects/<project-id>/workspace/check_report.md`
 - `projects/<project-id>/workspace/check_status.json`
+- `projects/<project-id>/runtime/remediation/issue_index.json`
+- `projects/<project-id>/runtime/remediation/remediation_plan.json`
+- `projects/<project-id>/runtime/remediation/retry_scope.json`
+- `projects/<project-id>/runtime/remediation/repair_summary.md`
 
 最终查看位置：
 
@@ -251,11 +271,13 @@ python -m packages archive <project-id>
 然后生成 facts.md 并运行 gate-facts。
 再生成 business_blueprint.md 并运行 gate-business。
 只有 facts 与 business 都放行后，再生成 experience_blueprint.md 并运行 gate-experience。
-最后运行 validate、coverage 和 archive，把正式结果写回 workspace/ 与 exports/。
+最后运行 validate、coverage。
+如检查失败或需要正式修复闭环，则运行 repair-plan、按 retry_scope 重跑并执行 repair-close。
+只有 open blocker 清零后，才能运行 archive，把正式结果写回 workspace/ 与 exports/。
 ```
 
 ## 一句话原则
 
 先把聊天输入变成正式输入文件。  
 先把业务阶段做稳并自检。  
-正式检查通过后，再交付最终结果。
+正式检查通过，且 open blocker 清零后，再交付最终结果。

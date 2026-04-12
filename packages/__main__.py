@@ -4,6 +4,7 @@ import argparse
 
 from packages.archive import run_archive_artifacts
 from packages.context_assemble import run_context_assemble
+from packages.repair_loop import run_repair_close, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
 from packages.validate import (
     run_business_gate,
@@ -45,6 +46,15 @@ def main() -> int:
     archive = subparsers.add_parser("archive")
     archive.add_argument("project_id")
 
+    repair_plan = subparsers.add_parser("repair-plan")
+    repair_plan.add_argument("project_id")
+
+    repair_status = subparsers.add_parser("repair-status")
+    repair_status.add_argument("project_id")
+
+    repair_close = subparsers.add_parser("repair-close")
+    repair_close.add_argument("project_id")
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
@@ -63,6 +73,12 @@ def main() -> int:
         return run_experience_gate(args.project_id)
     if args.command == "archive":
         return run_archive_artifacts(args.project_id)
+    if args.command == "repair-plan":
+        return run_repair_plan(args.project_id)
+    if args.command == "repair-status":
+        return run_repair_status(args.project_id)
+    if args.command == "repair-close":
+        return run_repair_close(args.project_id)
     return 1
 
 

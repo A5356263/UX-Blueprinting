@@ -47,6 +47,7 @@
 - `specs/08_fact_extraction_contract.md`
 - `specs/09_business_blueprint_contract.md`
 - `specs/10_experience_blueprint_contract.md`
+- `specs/11_repair_loop_contract.md`
 
 其中：
 
@@ -469,6 +470,99 @@ projects/<project-id>/
 - 存在 blocker 且未显式写出
 - check 逻辑仍停留在旧标题 / 旧覆盖规则
 
+## Step 8.5: Repair Plan Build
+
+### 目标
+
+在 `validate / coverage` 之后，将 gate 与最终检查暴露的问题转译为正式修复任务。
+
+### 输入
+
+- `runtime/gates/*_gate_status.json`
+- `runtime/gates/*_gate_report.md`
+- `workspace/check_status.json`
+- `workspace/check_report.md`
+- `runtime/trace_index.json`
+- `runtime/gate_metrics.json`
+
+### 输出
+
+- `runtime/remediation/issue_index.json`
+- `runtime/remediation/remediation_plan.json`
+- `runtime/remediation/retry_scope.json`
+- `runtime/remediation/repair_summary.md`
+
+### 成功条件
+
+- 问题被标准化为 issue 模型
+- 修复计划形成 repair unit，而不是停留在口头说明
+- 重跑范围被明确给出
+- 如无 open issue，允许直接进入归档判定
+
+### 失败条件
+
+- remediation 产物缺失
+- blocker 未被纳入 issue 模型
+- 需要回退上游的问题被错误判定为当前阶段局部补修
+
+## Step 8.6: Scoped Retry
+
+### 目标
+
+在修复动作落盘后，按正式范围执行最小必要重跑，而不是凭经验临时决定。
+
+### 输入
+
+- `runtime/remediation/retry_scope.json`
+- 修复后更新的正式产物
+
+### 输出
+
+- 重跑后的 gate / validate / coverage 状态
+
+### 成功条件
+
+- 推荐命令来自正式 `python -m packages` 执行入口
+- 重跑范围与受影响阶段一致
+- 未发生无依据的全链路重跑或漏跑
+
+### 失败条件
+
+- 未按 `retry_scope.json` 重跑
+- 未完成验证却试图关闭问题
+- 重跑范围与修复影响阶段不一致
+
+## Step 8.7: Repair Close
+
+### 目标
+
+在重跑后重新判断 issue 状态，关闭已解决问题，并形成可追溯修复记录。
+
+### 输入
+
+- `runtime/remediation/issue_index.json`
+- `runtime/remediation/remediation_plan.json`
+- `runtime/remediation/retry_scope.json`
+- 重跑后的 gate / validate / coverage 结果
+
+### 输出
+
+- 更新后的 `runtime/remediation/issue_index.json`
+- `runtime/remediation/repair_run_log.jsonl`
+- 更新后的 `runtime/remediation/repair_summary.md`
+
+### 成功条件
+
+- issue 被更新为 `resolved / accepted / deferred / invalid / open`
+- 未完成重跑的问题不会被标记为 `resolved`
+- 当前修复闭环状态可被 archive 正式消费
+
+### 失败条件
+
+- 修复状态未更新
+- 修复记录未落盘
+- open blocker 未清零却被标记为可归档
+
 ## Step 9: Archive
 
 ### 目标
@@ -480,6 +574,8 @@ projects/<project-id>/
 - `workspace/`
 - `check_report.md`
 - `context_bundle/`
+- 如存在：`runtime/remediation/repair_summary.md`
+- 如存在：`runtime/remediation/issue_index.json`
 
 ### 输出
 
@@ -492,11 +588,15 @@ projects/<project-id>/
 - 最终产物归档完成
 - 检查报告归档完成
 - 上下文快照归档完成
+- 若已进入 Repair Loop，则不存在 open blocker 或 deferred blocker
+- archive 判定以当前 repair 状态为准，而不只看旧 gate 结果
 
 ### 失败条件
 
 - 任一标准归档目录缺失
 - 已完成产物未能复制到归档位置
+- 存在 open blocker 却继续归档
+- 存在 deferred blocker 却继续归档
 
 ## 执行中枢与 AI 推理的边界
 

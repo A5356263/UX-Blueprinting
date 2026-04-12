@@ -70,6 +70,35 @@ python -m packages coverage <project-id>
 - `runtime/trace_index.json`
 - `runtime/gate_metrics.json`
 
+## Step 6.5
+
+如 `check_status.json.status` 为 `failed`，或存在需要正式追踪的 warning，运行：
+
+```bash
+python -m packages repair-plan <project-id>
+```
+
+本步骤会产出：
+
+- `runtime/remediation/issue_index.json`
+- `runtime/remediation/remediation_plan.json`
+- `runtime/remediation/retry_scope.json`
+- `runtime/remediation/repair_summary.md`
+
+## Step 6.6
+
+根据 `remediation_plan.json` 对正式产物做局部补修，不在聊天窗口口头声明“已修复”。
+
+## Step 6.7
+
+按 `retry_scope.json` 重跑推荐命令，然后执行：
+
+```bash
+python -m packages repair-close <project-id>
+```
+
+只有在 open blocker 清零后，才允许进入归档。
+
 ## Step 7
 
 如需生成交付镜像，再运行：
@@ -83,3 +112,4 @@ python -m packages archive <project-id>
 - 主链路知识消费仅使用 `knowledge/wiki/topics/*.md`（wiki 页）
 - wiki 属于独立子系统，执行链不改动 wiki 体系本身
 - `check_status.json` 为机器状态真源：`failed / warning / passed`
+- 如已进入 Repair Loop，则 `runtime/remediation/issue_index.json` 与 `repair_summary.md` 共同构成 archive 前置约束

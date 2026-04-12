@@ -29,3 +29,7 @@ def get_project_exports_dir(project_id: str) -> Path:
 
 def get_project_gates_dir(project_id: str) -> Path:
     return get_project_runtime_dir(project_id) / "gates"
+
+
+def get_project_remediation_dir(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "remediation"
