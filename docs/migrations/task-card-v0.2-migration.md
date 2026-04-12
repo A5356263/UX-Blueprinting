@@ -4,7 +4,6 @@
 
 - `templates/task_card.template.md`
 - `specs/01_execution_hub_spec.md`
-- `projects/demo-permission-v1/source/task_card.md`
 - `projects/demo-smoke-v1/source/task_card.md`
 - `projects/real-self-apply-v1/source/task_card.md`
 
@@ -30,7 +29,6 @@
 
 ## 批量修改的历史任务
 
-- `demo-permission-v1`
 - `demo-smoke-v1`
 - `real-self-apply-v1`
 

@@ -2,15 +2,19 @@
 
 ## 样例分层
 
-- 黄金样例：`projects/demo-permission-v1/`
-- 轻量冒烟样例：`projects/demo-smoke-v1/`
-- 历史归档样例：当前无新增
+- 正向标准样例：`projects/real-self-apply-v1/`
+- 反向回归样例：`projects/demo-smoke-v1/`
 
 ## 什么时候看哪个
 
-- 想看完整主线怎么跑：看 `demo-permission-v1`
-- 想快速验证链路是否健康：看 `demo-smoke-v1`
-- 想排查旧历史行为：看各项目 `runtime/archive_snapshot/`
+- 想看按现行标准可通过的完整主线：看 `real-self-apply-v1`
+- 想看旧摘要式产物如何被新 gate / validate 拦截：看 `demo-smoke-v1`
+
+## 样例治理约束
+
+- `real-self-apply-v1` 与 `demo-smoke-v1` 是长期保留的正反案例，不用于承接新的日常任务。
+- 后续真实任务一律创建新的 `projects/<new-project-id>/`，不要复用这两个样例目录。
+- 样例目录只在需要刷新正例 / 反例基准时才允许定向更新。
 
 ## 标准复跑命令
 

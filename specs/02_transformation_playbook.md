@@ -152,7 +152,7 @@
 ### 当前状态
 
 - 进行中
-- `demo-permission-v1` 已完成首个迁移试点
+- `real-self-apply-v1` 已成为当前正向标准样例
 
 ## Phase 5: 执行中枢收敛
 

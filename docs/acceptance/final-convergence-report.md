@@ -2,7 +2,7 @@
 
 ## 验收范围
 
-- 规范来源：`docs/discussion/facts business 优化/final_convergence_85_to_100_spec.md`
+- 规范来源：`specs/09_business_blueprint_contract.md`、`specs/10_experience_blueprint_contract.md`
 - 黄金样例项目：`projects/real-self-apply-v1/`
 - 验收目标：刷新 runtime/workspace 真相，完成全链路可复跑、可验证、可演示闭环
 
