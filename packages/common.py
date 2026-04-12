@@ -33,3 +33,11 @@ def get_project_gates_dir(project_id: str) -> Path:
 
 def get_project_remediation_dir(project_id: str) -> Path:
     return get_project_runtime_dir(project_id) / "remediation"
+
+
+def get_project_memory_dir(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "memory"
+
+
+def get_memory_root_dir() -> Path:
+    return get_repo_root() / "memory"

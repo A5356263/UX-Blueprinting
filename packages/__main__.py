@@ -5,6 +5,7 @@ import argparse
 from packages.archive import run_archive_artifacts
 from packages.capability_registry import run_capabilities_list, run_capability_show
 from packages.context_assemble import run_context_assemble
+from packages.memory_layer import run_memory_accept, run_memory_extract, run_memory_summary
 from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
 from packages.validate import (
@@ -71,6 +72,15 @@ def main() -> int:
     capability_show = subparsers.add_parser("capability-show")
     capability_show.add_argument("capability_id")
 
+    memory_extract = subparsers.add_parser("memory-extract")
+    memory_extract.add_argument("project_id")
+
+    memory_accept = subparsers.add_parser("memory-accept")
+    memory_accept.add_argument("project_id")
+
+    memory_summary = subparsers.add_parser("memory-summary")
+    memory_summary.add_argument("project_id")
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
@@ -103,6 +113,12 @@ def main() -> int:
         return run_capabilities_list()
     if args.command == "capability-show":
         return run_capability_show(args.capability_id)
+    if args.command == "memory-extract":
+        return run_memory_extract(args.project_id)
+    if args.command == "memory-accept":
+        return run_memory_accept(args.project_id)
+    if args.command == "memory-summary":
+        return run_memory_summary(args.project_id)
     return 1
 
 

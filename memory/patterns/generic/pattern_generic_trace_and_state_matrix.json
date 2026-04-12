@@ -1,0 +1,30 @@
+{
+  "memory_id": "pattern_generic_trace_and_state_matrix",
+  "kind": "pattern",
+  "scope": "generic",
+  "title": "业务追踪映射与体验状态矩阵需要同时显式展开",
+  "rule": "当任务进入完整 business / experience 主链时，业务蓝图保持 judgement trace 显式展开，体验蓝图保持状态与反馈矩阵、关键页面蓝图显式展开。",
+  "why_it_helps": "这类结构能同时降低 trace missing、coverage gap 与 experience gate 的结构缺项。",
+  "anti_pattern": "business 只有立场摘要，experience 只有页面清单，没有状态矩阵、关键页面蓝图与追踪映射。",
+  "applies_to_stage": "cross_stage",
+  "domain_tags": [],
+  "task_type_tags": [
+    "self_apply"
+  ],
+  "classification_basis": [
+    "check_status.status=passed",
+    "validated_chain=business+experience"
+  ],
+  "confidence": "high",
+  "source_tasks": [
+    "real-self-apply-v1"
+  ],
+  "source_artifacts": [
+    "projects/real-self-apply-v1/workspace/business_blueprint.md",
+    "projects/real-self-apply-v1/workspace/experience_blueprint.md",
+    "projects/real-self-apply-v1/workspace/check_status.json"
+  ],
+  "source_issue_ids": [],
+  "status": "accepted",
+  "accepted_at": "2026-04-12T12:41:35.534775+00:00"
+}

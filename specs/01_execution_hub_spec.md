@@ -632,6 +632,9 @@ AI 推理负责：
 执行中枢未来可以扩展：
 
 - task status summarizer
+- memory extractor
+- memory acceptor
+- memory summary writer
 - wiki sync checker
 - export packager
 - plugin loader

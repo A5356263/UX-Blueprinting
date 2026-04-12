@@ -1,0 +1,33 @@
+{
+  "capability_id": "memory_extract",
+  "display_name": "Memory Extract",
+  "type": "command",
+  "stage": "cross_stage",
+  "entrypoint": "python -m packages memory-extract <project-id>",
+  "description": "从任务结果、repair 产物与 task_card/domain 证据中提取项目级 memory candidate，并写入 runtime/memory。",
+  "required_inputs": [
+    "projects/<project-id>/runtime/task_card_resolved.json",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/runtime/remediation/issue_index.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/memory/extracted_memory_candidates.json",
+    "projects/<project-id>/runtime/memory/memory_trace.json",
+    "projects/<project-id>/runtime/memory/accepted_memory_items.json"
+  ],
+  "dependencies": [
+    "validate_outputs",
+    "repair_plan"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "specs/13_memory_layer_contract.md",
+    "packages/__main__.py",
+    "packages/memory_layer/extract_candidates.py",
+    "docs/runbook/memory_layer_flow.md"
+  ],
+  "status": "active"
+}

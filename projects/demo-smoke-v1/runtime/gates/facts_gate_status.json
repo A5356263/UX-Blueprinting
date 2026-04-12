@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-12T02:36:41.733362+00:00",
+  "updated_at": "2026-04-12T11:15:02.181770+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/source/task_card.md",
     "projects/demo-smoke-v1/source/requirement.md",
@@ -24,6 +24,68 @@
       "facts.md 已提炼 6 条事实"
     ]
   },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "facts_gate",
+      "stage": "facts",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts.md 已提炼 6 条事实",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/facts.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/source/task_card.md",
+        "projects/demo-smoke-v1/source/requirement.md",
+        "projects/demo-smoke-v1/source/background.md",
+        "projects/demo-smoke-v1/runtime/task_card_resolved.json",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/workspace/facts.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts.md 已提炼 6 条事实"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/source/task_card.md",
+            "projects/demo-smoke-v1/source/requirement.md",
+            "projects/demo-smoke-v1/source/background.md",
+            "projects/demo-smoke-v1/runtime/task_card_resolved.json",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "fact_count": 6,
+            "dimension_coverage": {
+              "actor": 1,
+              "object": 1,
+              "state": 1,
+              "action": 1,
+              "rule": 1,
+              "exception": 1,
+              "dependency": 1,
+              "scope": 1
+            },
+            "traceable_fact_count": 6,
+            "gap_count": 1,
+            "knowledge_derived_fact_count": 0
+          }
+        }
+      ]
+    }
+  ],
   "metrics": {
     "fact_count": 6,
     "dimension_coverage": {

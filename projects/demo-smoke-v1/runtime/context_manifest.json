@@ -1,6 +1,6 @@
 {
   "task_id": "demo-smoke-v1",
-  "resolved_from": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\task_card_resolved.json",
+  "resolved_from": "projects/demo-smoke-v1/runtime/task_card_resolved.json",
   "reference_count": 11,
   "references": [
     {
@@ -12,8 +12,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\wiki\\topics\\permission-domain-index.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\knowledge\\wiki\\topics\\permission-domain-index.md",
+      "source": "knowledge/wiki/topics/permission-domain-index.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/knowledge/wiki/topics/permission-domain-index.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -26,8 +26,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\knowledge\\wiki\\topics\\permission-domain-index.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\knowledge\\wiki\\topics\\permission-domain-index.md",
+      "source": "knowledge/wiki/topics/permission-domain-index.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/knowledge/wiki/topics/permission-domain-index.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -40,8 +40,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\facts.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\templates\\facts.template.md",
+      "source": "templates/facts.template.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/templates/facts.template.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -54,8 +54,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\business_blueprint.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\templates\\business_blueprint.template.md",
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/templates/business_blueprint.template.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -68,8 +68,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\experience_blueprint.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\templates\\experience_blueprint.template.md",
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/templates/experience_blueprint.template.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -82,8 +82,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\gap_list.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\templates\\gap_list.template.md",
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/templates/gap_list.template.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -96,8 +96,8 @@
         "experience"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\templates\\check_report.template.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\templates\\check_report.template.md",
+      "source": "templates/check_report.template.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/templates/check_report.template.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -109,8 +109,8 @@
         "validate"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\06_check_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\specs\\06_check_contract.md",
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/specs/06_check_contract.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -122,8 +122,8 @@
         "validate"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\08_fact_extraction_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\specs\\08_fact_extraction_contract.md",
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/specs/08_fact_extraction_contract.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -135,8 +135,8 @@
         "validate"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\09_business_blueprint_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\specs\\09_business_blueprint_contract.md",
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/specs/09_business_blueprint_contract.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     },
@@ -148,8 +148,8 @@
         "validate"
       ],
       "type": "file",
-      "source": "E:\\AI设计\\体验蓝图构建思路\\specs\\10_experience_blueprint_contract.md",
-      "destination": "E:\\AI设计\\体验蓝图构建思路\\projects\\demo-smoke-v1\\runtime\\context_bundle\\specs\\10_experience_blueprint_contract.md",
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/demo-smoke-v1/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
       "is_directory_ref": "false",
       "suggest_narrow_to_file": "false"
     }

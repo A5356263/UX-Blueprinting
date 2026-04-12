@@ -15,6 +15,7 @@
 - 以 `projects/<project-id>/source/task_card.md` 作为任务入口
 - 以 `packages/` 作为固定执行步骤入口
 - 以 `packages/capability_registry/` 作为正式能力声明入口
+- 以顶层 `memory/` 作为长期质量经验沉淀层
 - 把正式结果写回 `projects/<project-id>/workspace/` 与 `projects/<project-id>/exports/`
 
 你不得：
@@ -43,6 +44,14 @@ wiki 是独立子系统，执行任务时不要改动 wiki 体系本身。
 ```bash
 python -m packages capabilities-list
 python -m packages capability-show <capability-id>
+```
+
+如需从已完成任务中提取 quality memory，可运行：
+
+```bash
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
 ```
 
 ## 两种任务入口
@@ -247,6 +256,30 @@ python -m packages archive <project-id>
 - 最终交付：`projects/<project-id>/exports/final/`
 - 检查结果：`projects/<project-id>/exports/checks/`
 
+### Step 12：沉淀 Memory（可选但推荐）
+
+当任务已通过正式检查，或 Repair Loop 已闭环后，可执行：
+
+```bash
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
+```
+
+这一步会生成：
+
+- `projects/<project-id>/runtime/memory/extracted_memory_candidates.json`
+- `projects/<project-id>/runtime/memory/accepted_memory_items.json`
+- `projects/<project-id>/runtime/memory/memory_trace.json`
+- `projects/<project-id>/workspace/memory_summary.md`
+
+长期 accepted memory 会写入顶层：
+
+- `memory/patterns/`
+- `memory/failure_modes/`
+- `memory/capability_insights/`
+- `memory/index.json`
+
 ## 结果应该写到哪里
 
 执行中产物：
@@ -261,6 +294,10 @@ python -m packages archive <project-id>
 - `projects/<project-id>/runtime/remediation/remediation_plan.json`
 - `projects/<project-id>/runtime/remediation/retry_scope.json`
 - `projects/<project-id>/runtime/remediation/repair_summary.md`
+- `projects/<project-id>/runtime/memory/extracted_memory_candidates.json`
+- `projects/<project-id>/runtime/memory/accepted_memory_items.json`
+- `projects/<project-id>/runtime/memory/memory_trace.json`
+- `projects/<project-id>/workspace/memory_summary.md`
 
 最终查看位置：
 

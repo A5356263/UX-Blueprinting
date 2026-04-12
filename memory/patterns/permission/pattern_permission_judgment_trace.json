@@ -1,0 +1,32 @@
+{
+  "memory_id": "pattern_permission_judgment_trace",
+  "kind": "pattern",
+  "scope": "domain",
+  "title": "permission 任务需要显式展开业务判断追踪映射",
+  "rule": "permission 任务的 business blueprint 需要把关键审批、拦截与授权判断显式追到 J-xx / POS-xx，而不是只给结论。",
+  "why_it_helps": "这能为 experience 转译提供稳定依据，并减少 orphan judgment 与 coverage gap。",
+  "anti_pattern": "只写权限策略立场，不写判断链路、依据与被下游消费的追踪映射。",
+  "applies_to_stage": "business",
+  "domain_tags": [
+    "permission"
+  ],
+  "task_type_tags": [
+    "self_apply"
+  ],
+  "classification_basis": [
+    "task_card.domain=permission",
+    "wiki_ref=knowledge/wiki/topics/permission-domain-index.md"
+  ],
+  "confidence": "high",
+  "source_tasks": [
+    "real-self-apply-v1"
+  ],
+  "source_artifacts": [
+    "projects/real-self-apply-v1/source/task_card.md",
+    "projects/real-self-apply-v1/workspace/business_blueprint.md",
+    "projects/real-self-apply-v1/workspace/check_status.json"
+  ],
+  "source_issue_ids": [],
+  "status": "accepted",
+  "accepted_at": "2026-04-12T12:41:35.538007+00:00"
+}

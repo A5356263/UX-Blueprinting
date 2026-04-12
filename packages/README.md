@@ -23,6 +23,7 @@
 - `validate/`：检查与状态产出
 - `archive/`：归档与导出
 - `capability_registry/`：正式能力声明与只读查询入口
+- `memory_layer/`：质量经验提取、接受与摘要生成
 
 ## 运行方式
 
@@ -37,4 +38,7 @@ python -m packages coverage <project-id>
 python -m packages archive <project-id>
 python -m packages capabilities-list
 python -m packages capability-show <capability-id>
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
 ```

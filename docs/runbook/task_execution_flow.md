@@ -114,9 +114,27 @@ python -m packages repair-close <project-id>
 python -m packages archive <project-id>
 ```
 
+## Step 8
+
+如需把本轮结果提炼为 quality memory，再运行：
+
+```bash
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
+```
+
+本步骤会产出：
+
+- `runtime/memory/extracted_memory_candidates.json`
+- `runtime/memory/accepted_memory_items.json`
+- `runtime/memory/memory_trace.json`
+- `workspace/memory_summary.md`
+
 ## 执行约束
 
 - 主链路知识消费仅使用 `knowledge/wiki/topics/*.md`（wiki 页）
 - wiki 属于独立子系统，执行链不改动 wiki 体系本身
+- 长期 memory 顶层独立于 wiki，正式写入 `memory/`
 - `check_status.json` 为机器状态真源：`failed / warning / passed`
 - 如已进入 Repair Loop，则 `runtime/remediation/issue_index.json` 与 `repair_summary.md` 共同构成 archive 前置约束

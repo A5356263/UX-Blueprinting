@@ -84,6 +84,7 @@ python -m packages capability-show <capability-id>
 - 修复闭环：`repair_plan`、`repair_status`、`repair_accept`、`repair_defer`、`repair_close`
 - 归档能力：`archive_artifacts`
 - 查询能力：`capabilities_list`、`capability_show`
+- memory 能力：`memory_extract`、`memory_accept`、`memory_summary`
 
 ## 为什么它不等于 plugin 平台
 

@@ -1,0 +1,63 @@
+{
+  "index_version": "1.0",
+  "updated_at": "2026-04-12T12:41:35.563367+00:00",
+  "item_count": 4,
+  "items": [
+    {
+      "memory_id": "capability_insight_coverage_check_judgment_gap",
+      "kind": "capability_insight",
+      "scope": "domain",
+      "title": "coverage_check 能快速暴露未被体验层消费的业务判断",
+      "status": "accepted",
+      "domain_tags": [
+        "permission"
+      ],
+      "task_type_tags": [
+        "self_apply"
+      ],
+      "path": "memory/capability_insights/capability_insight_coverage_check_judgment_gap.json",
+      "updated_at": "2026-04-12T12:41:35.563352+00:00"
+    },
+    {
+      "memory_id": "failure_mode_orphan_judgment_coverage_gap",
+      "kind": "failure_mode",
+      "scope": "generic",
+      "title": "未被体验层消费的业务判断会形成 coverage gap",
+      "status": "accepted",
+      "domain_tags": [],
+      "task_type_tags": [
+        "self_apply"
+      ],
+      "path": "memory/failure_modes/generic/failure_mode_orphan_judgment_coverage_gap.json",
+      "updated_at": "2026-04-12T12:41:35.553815+00:00"
+    },
+    {
+      "memory_id": "pattern_generic_trace_and_state_matrix",
+      "kind": "pattern",
+      "scope": "generic",
+      "title": "业务追踪映射与体验状态矩阵需要同时显式展开",
+      "status": "accepted",
+      "domain_tags": [],
+      "task_type_tags": [
+        "self_apply"
+      ],
+      "path": "memory/patterns/generic/pattern_generic_trace_and_state_matrix.json",
+      "updated_at": "2026-04-12T12:41:35.536393+00:00"
+    },
+    {
+      "memory_id": "pattern_permission_judgment_trace",
+      "kind": "pattern",
+      "scope": "domain",
+      "title": "permission 任务需要显式展开业务判断追踪映射",
+      "status": "accepted",
+      "domain_tags": [
+        "permission"
+      ],
+      "task_type_tags": [
+        "self_apply"
+      ],
+      "path": "memory/patterns/permission/pattern_permission_judgment_trace.json",
+      "updated_at": "2026-04-12T12:41:35.544915+00:00"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "project_id": "real-self-apply-v1",
+  "generated_at": "2026-04-12T12:37:23.759061+00:00",
+  "consumed_memory_ids": [],
+  "extracted_candidate_ids": [
+    "pattern_generic_trace_and_state_matrix",
+    "pattern_permission_judgment_trace",
+    "failure_mode_orphan_judgment_coverage_gap",
+    "capability_insight_coverage_check_judgment_gap"
+  ],
+  "accepted_memory_ids": [
+    "pattern_generic_trace_and_state_matrix",
+    "pattern_permission_judgment_trace",
+    "failure_mode_orphan_judgment_coverage_gap",
+    "capability_insight_coverage_check_judgment_gap"
+  ],
+  "rejected_memory_ids": [],
+  "deferred_memory_ids": [],
+  "source_artifacts": [
+    "projects/real-self-apply-v1/runtime/task_card_resolved.json",
+    "projects/real-self-apply-v1/workspace/check_status.json",
+    "projects/real-self-apply-v1/runtime/remediation/issue_index.json"
+  ],
+  "updated_at": "2026-04-12T12:41:35.565865+00:00"
+}

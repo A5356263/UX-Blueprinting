@@ -198,6 +198,18 @@ python -m packages archive <project-id>
 
 如存在 open blocker 或 deferred blocker，`archive` 会被正式拦截。
 
+## Repair 关闭后如何沉淀 Memory
+
+当 `repair_loop_status=closed`，且当前任务已通过正式检查后，可继续执行：
+
+```bash
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
+```
+
+这一步的作用不是替代 Repair Loop，而是把本轮暴露过的问题、修复路径与 capability 经验提炼成可复用 quality memory。
+
 ## 已验证的回退样例
 
 `projects/real-self-apply-v1/` 已完成以下专项验证：

@@ -11,8 +11,9 @@
 ## 当前主结构
 
 - `specs/`：唯一正式规则真源
-- `packages/`：执行中枢（内含 Capability Registry 声明层）
+- `packages/`：执行中枢（内含 Capability Registry 与 Memory Layer 入口）
 - `projects/`：项目真相
+- `memory/`：长期质量经验沉淀层
 - `knowledge/`：业务真源、原则真源、Wiki 编译层
 - `templates/`：固定模板
 - `docs/`：解释、讨论、runbook
@@ -37,6 +38,14 @@ python -m packages capabilities-list
 python -m packages capability-show <capability-id>
 ```
 
+如需提取与沉淀质量经验，可运行：
+
+```bash
+python -m packages memory-extract <project-id>
+python -m packages memory-accept <project-id>
+python -m packages memory-summary <project-id>
+```
+
 ## 阅读顺序
 
 1. `docs/runbook/external_ai_quickstart.md`
@@ -50,4 +59,5 @@ python -m packages capability-show <capability-id>
 - `specs/` 才是正式规则
 - `packages/` 是唯一固定执行入口
 - `packages/capability_registry/` 负责正式能力声明，不替代真实执行逻辑
+- `memory/` 是独立顶层长期 memory 子系统，不写进 wiki
 - 正式产物统一位于 `projects/<project-id>/`
