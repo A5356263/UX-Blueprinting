@@ -64,35 +64,109 @@ body {
   padding: 20px;
 }
 
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.mini-panel {
+  border: 1px solid #d9e2f0;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fafcff;
+}
+
+.mini-panel h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
 .section-title {
   margin: 0 0 16px;
   font-size: 20px;
 }
 
-.flow-row {
+.lane-list {
+  display: grid;
+  gap: 16px;
+}
+
+.lane {
+  border: 1px solid #d9e2f0;
+  border-radius: 16px;
+  padding: 16px;
+  background: #fafcff;
+}
+
+.lane h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.chain-list {
+  display: grid;
+  gap: 12px;
+}
+
+.chain {
+  border: 1px solid #cfe0fb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #eef4ff;
+}
+
+.chain-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.chip.primary {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.chip.secondary {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.node-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   align-items: center;
 }
 
 .flow-node {
   min-width: 180px;
-  padding: 14px 16px;
-  border-radius: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
   border: 1px solid #bdd2f4;
-  background: #eef4ff;
+  background: #ffffff;
 }
 
 .flow-node small {
   display: block;
   color: #4b5563;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .flow-arrow {
   color: #64748b;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .flow-legend {
@@ -117,6 +191,14 @@ body {
   margin: 0 0 8px;
 }
 
+.page-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  color: #64748b;
+  font-size: 13px;
+}
+
 .page-type {
   display: inline-block;
   padding: 4px 10px;
@@ -134,6 +216,12 @@ body {
 .info-block h4 {
   margin: 0 0 10px;
   font-size: 15px;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .empty {
@@ -188,6 +276,18 @@ pre {
   color: #e2e8f0;
   overflow: auto;
 }
+
+details {
+  border: 1px solid #d9e2f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fbfdff;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
 """.strip()
 
 
@@ -207,6 +307,12 @@ def _render_named_items(items: list[dict[str, Any]], formatter) -> str:
         return '<div class="empty">无直接项</div>'
     entries = "".join(f"<li>{formatter(item)}</li>" for item in items)
     return f"<ul>{entries}</ul>"
+
+
+def _render_chips(items: list[str]) -> str:
+    if not items:
+        return '<div class="empty">无直接项</div>'
+    return f"<div class=\"inline-list\">{''.join(f'<span class=\"chip\">{_escape(item)}</span>' for item in items)}</div>"
 
 
 def _render_sketch_blocks(page: dict[str, Any]) -> str:
@@ -232,84 +338,196 @@ def _render_sketch_blocks(page: dict[str, Any]) -> str:
     )
 
 
+def _dedupe_strings(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for item in items:
+        cleaned = str(item).strip()
+        if not cleaned:
+            continue
+        marker = cleaned.lower()
+        if marker in seen:
+            continue
+        seen.add(marker)
+        result.append(cleaned)
+    return result
+
+
+def _render_flow(model: dict[str, Any]) -> str:
+    global_flow = model.get("global_flow", {})
+    lanes = global_flow.get("lanes", [])
+    chains = {chain.get("chain_id"): chain for chain in global_flow.get("chains", [])}
+    nodes = global_flow.get("nodes", [])
+    if not lanes:
+        return '<div class="empty">无直接项</div>'
+
+    lane_html = []
+    for lane in lanes:
+        chain_html = []
+        for chain_id in lane.get("chain_ids", []):
+            chain = chains.get(chain_id, {})
+            chain_nodes = [node for node in nodes if node.get("chain_id") == chain_id]
+            node_parts = []
+            for index, node in enumerate(chain_nodes):
+                node_parts.append(
+                    "<div class=\"flow-node\">"
+                    f"<small>{_escape(node.get('type') or '节点')}</small>"
+                    f"<strong>{_escape(node.get('name') or '未命名节点')}</strong>"
+                    f"<div>{_escape(node.get('page_id') or node.get('goal') or '')}</div>"
+                    "</div>"
+                )
+                if index < len(chain_nodes) - 1:
+                    node_parts.append('<div class="flow-arrow">→</div>')
+            chain_html.append(
+                "<div class=\"chain\">"
+                "<div class=\"chain-head\">"
+                f"<strong>{_escape(chain.get('name') or chain_id)}</strong>"
+                f"<span class=\"chip {'primary' if chain.get('is_primary') else 'secondary'}\">{_escape(chain.get('path_type') or 'chain')}</span>"
+                f"<span class=\"chip\">{_escape(chain_id)}</span>"
+                "</div>"
+                f"<div>{_escape(chain.get('goal') or '')}</div>"
+                f"<div class=\"node-row\">{''.join(node_parts) if node_parts else '<div class=\"empty\">无节点</div>'}</div>"
+                "</div>"
+            )
+        lane_html.append(
+            "<section class=\"lane\">"
+            f"<h3>{_escape(lane.get('role') or '未命名角色')}</h3>"
+            f"<div class=\"chain-list\">{''.join(chain_html) if chain_html else '<div class=\"empty\">无链路</div>'}</div>"
+            "</section>"
+        )
+    return f"<div class=\"lane-list\">{''.join(lane_html)}</div>"
+
+
+def _render_dependency_list(items: list[dict[str, Any]]) -> str:
+    return _render_named_items(
+        items,
+        lambda item: (
+            f"<strong>{_escape(item.get('from_chain_id') or '')}</strong>"
+            f" 依赖 <strong>{_escape(item.get('to_chain_id') or '')}</strong>"
+            f" | {_escape(item.get('reason') or '')}"
+        ),
+    )
+
+
+def _render_blocker_list(items: list[dict[str, Any]]) -> str:
+    return _render_named_items(
+        items,
+        lambda item: (
+            f"<strong>{_escape(item.get('name') or item.get('id') or '阻断')}</strong>"
+            f" | 触发：{_escape(item.get('trigger') or '无直接项')}"
+            f" | 影响：{_escape(item.get('impact') or '无直接项')}"
+        ),
+    )
+
+
 def render_preview_html(model: dict[str, Any]) -> str:
     meta = model.get("meta", {})
     global_flow = model.get("global_flow", {})
-    nodes = global_flow.get("nodes", [])
-    flow_parts = []
-    for index, node in enumerate(nodes):
-        flow_parts.append(
-            "<div class=\"flow-node\">"
-            f"<small>{_escape(node.get('type') or '节点')}</small>"
-            f"<strong>{_escape(node.get('name') or '未命名节点')}</strong>"
-            f"<div>{_escape(node.get('goal') or '无直接项')}</div>"
-            "</div>"
+    global_context = model.get("global_context", {})
+
+    def render_global_list(field: str, title_key: str, fallback_key: str = "content") -> str:
+        items = global_context.get(field, [])
+        return _render_named_items(
+            items,
+            lambda item: (
+                f"<strong>{_escape(item.get(title_key) or item.get('id') or item.get('type') or '项')}</strong>"
+                f" | {_escape(item.get(fallback_key) or item.get('label') or item.get('reason') or item.get('position') or '无直接项')}"
+            ),
         )
-        if index < len(nodes) - 1:
-            flow_parts.append('<div class="flow-arrow">→</div>')
 
     page_cards = []
     for page in model.get("page_views", []):
+        page_id = str(page.get("page_id") or "")
+        view_name = str(page.get("view_name") or "未命名页面")
+        show_page_id = bool(page_id and page_id != view_name)
+
+        summary_items = []
+        summary = str(page.get("summary") or "").strip()
+        if summary and summary != view_name:
+            summary_items.append(summary)
+
+        state_items = page.get("states", [])
         states_html = _render_named_items(
-            page.get("states", []),
+            state_items,
             lambda item: (
-                f"<strong>{_escape(item.get('name') or '未命名状态')}</strong>"
-                f" | 触发条件：{_escape(item.get('trigger') or '无直接项')}"
-                f" | 页面反馈：{_escape(item.get('feedback') or '无直接项')}"
-                f" | 下游结果：{_escape(item.get('outcome') or '无直接项')}"
+                f"<strong>{_escape(item.get('name') or item.get('state_id') or '未命名状态')}</strong>"
+                f" | 触发：{_escape(item.get('trigger') or '无直接项')}"
+                f" | 反馈：{_escape(item.get('feedback') or item.get('copy_feedback') or '无直接项')}"
+                f" | 结果：{_escape(item.get('outcome') or '无直接项')}"
             ),
         )
+
         copy_html = _render_named_items(
             page.get("copy_items", []),
             lambda item: (
-                f"<strong>{_escape(item.get('id') or item.get('scene') or '文案项')}</strong>"
+                f"<strong>{_escape(item.get('copy_id') or '文案项')}</strong>"
                 f" | 场景：{_escape(item.get('scene') or '无直接项')}"
                 f" | 语义目标：{_escape(item.get('goal') or '无直接项')}"
+                f" | 示例：{_escape(item.get('example') or '无直接项')}"
             ),
         )
-        risk_items = [
-            (
-                f"<strong>{_escape(item.get('name') or '风险')}</strong>"
+
+        risk_html = _render_named_items(
+            page.get("risks", []),
+            lambda item: (
+                f"<strong>{_escape(item.get('name') or item.get('risk_id') or '风险')}</strong>"
                 f" | 困惑原因：{_escape(item.get('confusion_reason') or '无直接项')}"
                 f" | 保护策略：{_escape(item.get('protection') or '无直接项')}"
-            )
-            for item in page.get("risks", [])
-        ]
-        risk_items.extend(_escape(item) for item in page.get("blockers", []))
-        risk_html = '<div class="empty">无直接项</div>' if not risk_items else f"<ul>{''.join(f'<li>{item}</li>' for item in risk_items)}</ul>"
+            ),
+        )
+        blocker_html = _render_blocker_list(page.get("blockers", []))
 
-        principle_items = [str(item) for item in page.get("principles", [])]
-        principle_items.extend(str(item) for item in page.get("trace_items", []))
-        gap_items = [str(item) for item in page.get("open_items", [])]
-        gap_items.extend(str(item) for item in page.get("gap_items", []))
+        principle_items = [
+            f"{item.get('principle_id', '')} {item.get('name', '')} {item.get('reason', '')}".strip()
+            for item in page.get("principles", [])
+        ]
+        pattern_items = [str(item) for item in page.get("design_patterns", [])]
+        trace_items = [
+            f"{item.get('trace_id', '')} {item.get('note', '')}".strip()
+            for item in page.get("trace_items", [])
+        ]
+
+        open_gap_items = _dedupe_strings(
+            [str(item) for item in page.get("open_items", [])] + [str(item) for item in page.get("gap_items", [])]
+        )
+
+        page_meta_items = _dedupe_strings(
+            [str(role) for role in page.get("roles", [])]
+            + ([f"入口：{page.get('entry')}" ] if page.get("entry") else [])
+            + ([f"退出：{page.get('exit')}" ] if page.get("exit") else [])
+        )
 
         page_cards.append(
             "<article class=\"page-card\">"
             f"<div class=\"page-type\">{_escape(page.get('view_type') or '页面')}</div>"
-            f"<h3>{_escape(page.get('view_name') or '未命名页面')}</h3>"
-            f"<div>{_escape(page.get('view_id') or '')}</div>"
-            "<div class=\"info-block\"><h4>页面摘要</h4>"
-            f"{_render_list([str(page.get('summary') or '')] if page.get('summary') else [])}</div>"
-            "<div class=\"info-block\"><h4>线框草图</h4>"
-            f"{_render_sketch_blocks(page)}</div>"
-            "<div class=\"info-block\"><h4>关键理解</h4>"
-            f"{_render_list([str(item) for item in page.get('key_understanding', [])])}</div>"
-            "<div class=\"info-block\"><h4>状态</h4>"
-            f"{states_html}</div>"
-            "<div class=\"info-block\"><h4>文案</h4>"
-            f"{copy_html}</div>"
-            "<div class=\"info-block\"><h4>风险与阻断</h4>"
-            f"{risk_html}</div>"
-            "<div class=\"info-block\"><h4>原则与追踪</h4>"
-            f"{_render_list(principle_items)}</div>"
-            "<div class=\"info-block\"><h4>开放问题 / 缺口</h4>"
-            f"{_render_list(gap_items)}</div>"
-            "</article>"
+            f"<h3>{_escape(view_name)}</h3>"
+            + (f"<div class=\"page-meta\"><span>{_escape(page_id)}</span></div>" if show_page_id else "")
+            + f"<div class=\"page-meta\">{''.join(f'<span>{_escape(item)}</span>' for item in page_meta_items)}</div>"
+            + "<div class=\"info-block\"><h4>页面摘要</h4>"
+            + f"{_render_list(summary_items)}</div>"
+            + "<div class=\"info-block\"><h4>线框草图</h4>"
+            + f"{_render_sketch_blocks(page)}</div>"
+            + "<div class=\"info-block\"><h4>关键理解</h4>"
+            + f"{_render_list([str(item) for item in page.get('key_understanding', [])])}</div>"
+            + "<div class=\"info-block\"><h4>状态</h4>"
+            + f"{states_html}</div>"
+            + "<div class=\"info-block\"><h4>文案</h4>"
+            + f"{copy_html}</div>"
+            + "<div class=\"info-block\"><h4>风险与阻断</h4>"
+            + f"{risk_html}{blocker_html if page.get('blockers') else ''}</div>"
+            + "<div class=\"info-block\"><h4>原则、设计模式与追踪</h4>"
+            + f"{_render_list(_dedupe_strings(principle_items + pattern_items + trace_items))}</div>"
+            + "<div class=\"info-block\"><h4>开放问题 / 缺口</h4>"
+            + f"{_render_list(open_gap_items)}</div>"
+            + "<div class=\"info-block\"><details><summary>来源说明</summary>"
+            + f"{_render_list([str(item) for item in page.get('source_refs', [])])}</details></div>"
+            + "</article>"
         )
 
-    global_notes = model.get("global_notes", [])
-    unresolved_items = model.get("unresolved_items", [])
     notes_payload = json.dumps(model, ensure_ascii=False, indent=2)
+
+    dependencies_html = _render_dependency_list(global_flow.get("dependencies", []))
+    blockers_html = _render_blocker_list(global_flow.get("blockers", []))
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -326,6 +544,7 @@ def render_preview_html(model: dict[str, Any]) -> str:
       <p>该页面是正式体验蓝图的只读派生预览层，用于本地浏览器阅读，不回写正式蓝图、不新增业务语义。</p>
       <div class="meta">
         <span>项目：{_escape(model.get("project_id") or "")}</span>
+        <span>版本：{_escape(meta.get("version") or "v2")}</span>
         <span>来源：{_escape(meta.get("context", {}).get("source_blueprint") or "")}</span>
       </div>
     </section>
@@ -333,11 +552,44 @@ def render_preview_html(model: dict[str, Any]) -> str:
     <div class="layout">
       <section class="panel">
         <h2 class="section-title">全局流程总览</h2>
-        <div class="flow-row">{''.join(flow_parts) if flow_parts else '<div class="empty">无直接项</div>'}</div>
+        {_render_flow(model)}
         <div class="flow-legend">
-          <span>实线关系：主成功路径</span>
-          <span>虚线路径：阻断 / 回退可在风险与阻断区查看</span>
+          <span>按角色分泳道</span>
+          <span>按链路分组</span>
+          <span>阻断与依赖单独列示</span>
         </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">全局依赖 / 前提</h2>
+        {dependencies_html}
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">全局区块</h2>
+        <div class="panel-grid">
+          <section class="mini-panel">
+            <h3>全局原则</h3>
+            {render_global_list("principles", "principle_id")}
+          </section>
+          <section class="mini-panel">
+            <h3>全局风险</h3>
+            {render_global_list("risks", "risk_id", "protection")}
+          </section>
+          <section class="mini-panel">
+            <h3>全局开放问题</h3>
+            {render_global_list("open_questions", "id")}
+          </section>
+          <section class="mini-panel">
+            <h3>全局缺口</h3>
+            {render_global_list("gaps", "id")}
+          </section>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">流程级阻断</h2>
+        {blockers_html}
       </section>
 
       <section class="panel">
@@ -346,18 +598,16 @@ def render_preview_html(model: dict[str, Any]) -> str:
       </section>
 
       <section class="panel">
-        <h2 class="section-title">全局说明</h2>
-        {_render_named_items(global_notes, lambda item: f"<strong>{_escape(item.get('type') or '说明')}</strong> | {_escape(item.get('content') or '无直接项')}")}
-      </section>
-
-      <section class="panel">
         <h2 class="section-title">待人工确认</h2>
-        {_render_named_items(unresolved_items, lambda item: f"<strong>{_escape(item.get('type') or '未分类')}</strong> | {_escape(item.get('message') or '无直接项')}")}
+        {_render_named_items(model.get("unresolved_items", []), lambda item: f"<strong>{_escape(item.get('type') or '未分类')}</strong> | {_escape(item.get('message') or '无直接项')}")}
       </section>
 
       <section class="panel">
-        <h2 class="section-title">预览模型</h2>
-        <pre>{_escape(notes_payload)}</pre>
+        <h2 class="section-title">调试信息</h2>
+        <details>
+          <summary>展开 preview_model.json</summary>
+          <pre>{_escape(notes_payload)}</pre>
+        </details>
       </section>
     </div>
   </main>

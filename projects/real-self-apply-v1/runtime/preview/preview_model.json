@@ -3,348 +3,1681 @@
   "meta": {
     "title": "Experience Blueprint",
     "subject": "体验蓝图浏览器预览",
+    "version": "v2",
     "context": {
       "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\exports\\final\\experience_blueprint.md",
       "input_mode": "formal_export"
     }
   },
   "global_flow": {
+    "lanes": [
+      {
+        "role": "超管",
+        "chain_ids": [
+          "TF-01",
+          "TF-02",
+          "TF-06"
+        ]
+      },
+      {
+        "role": "员工",
+        "chain_ids": [
+          "TF-03",
+          "TF-04"
+        ]
+      },
+      {
+        "role": "审批人",
+        "chain_ids": [
+          "TF-05"
+        ]
+      }
+    ],
+    "chains": [
+      {
+        "chain_id": "TF-01",
+        "name": "模式启用流程",
+        "role": "超管",
+        "path_type": "primary",
+        "is_primary": true,
+        "goal": "模式已开启，员工入口可见",
+        "depends_on": [],
+        "page_refs": [
+          "P-01",
+          "P-02",
+          "P-03"
+        ]
+      },
+      {
+        "chain_id": "TF-02",
+        "name": "模式编辑流程",
+        "role": "超管",
+        "path_type": "secondary",
+        "is_primary": false,
+        "goal": "编辑成功并保留当前模式状态",
+        "depends_on": [],
+        "page_refs": [
+          "P-01",
+          "P-02",
+          "P-03"
+        ]
+      },
+      {
+        "chain_id": "TF-03",
+        "name": "员工申请角色流程",
+        "role": "员工",
+        "path_type": "primary",
+        "is_primary": true,
+        "goal": "进入审批中并生成记录",
+        "depends_on": [
+          "TF-01"
+        ],
+        "page_refs": [
+          "P-05",
+          "P-06"
+        ]
+      },
+      {
+        "chain_id": "TF-04",
+        "name": "员工申请功能权限流程",
+        "role": "员工",
+        "path_type": "secondary",
+        "is_primary": false,
+        "goal": "进入审批中并生成记录",
+        "depends_on": [
+          "TF-01"
+        ],
+        "page_refs": [
+          "P-05",
+          "P-06"
+        ]
+      },
+      {
+        "chain_id": "TF-05",
+        "name": "审批结果回写流程",
+        "role": "审批人",
+        "path_type": "primary",
+        "is_primary": true,
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "depends_on": [
+          "TF-03",
+          "TF-04"
+        ],
+        "page_refs": [
+          "P-06",
+          "P-04"
+        ]
+      },
+      {
+        "chain_id": "TF-06",
+        "name": "关闭模式流程",
+        "role": "超管",
+        "path_type": "secondary",
+        "is_primary": false,
+        "goal": "关闭成功并移除员工入口",
+        "depends_on": [
+          "TF-01"
+        ],
+        "page_refs": [
+          "P-01",
+          "P-07"
+        ]
+      }
+    ],
     "nodes": [
       {
-        "id": "自助申请权限模式设置页",
-        "name": "自助申请权限模式设置页",
-        "type": "页面",
-        "goal": ""
+        "node_id": "TF-01-N1",
+        "name": "IA-01 宣传态",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": ""
       },
       {
-        "id": "选择角色弹窗",
-        "name": "选择角色弹窗",
-        "type": "弹窗",
-        "goal": ""
+        "node_id": "TF-01-N2",
+        "name": "查看说明",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": ""
       },
       {
-        "id": "选择应用弹窗",
-        "name": "选择应用弹窗",
-        "type": "弹窗",
-        "goal": ""
+        "node_id": "TF-01-N3",
+        "name": "进入设置",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": "P-01"
       },
       {
-        "id": "我的权限页",
-        "name": "我的权限页",
-        "type": "页面",
-        "goal": ""
+        "node_id": "TF-01-N4",
+        "name": "选路径",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": "P-01"
       },
       {
-        "id": "申请权限抽屉",
-        "name": "申请权限抽屉",
-        "type": "抽屉",
-        "goal": ""
+        "node_id": "TF-01-N5",
+        "name": "配范围",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": "P-01"
       },
       {
-        "id": "申请记录 / 结果通知页",
-        "name": "申请记录 / 结果通知页",
-        "type": "页面",
-        "goal": ""
+        "node_id": "TF-01-N6",
+        "name": "配审批流",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": "P-01"
       },
       {
-        "id": "关闭失败弹窗",
-        "name": "关闭失败弹窗",
-        "type": "弹窗",
-        "goal": ""
+        "node_id": "TF-01-N7",
+        "name": "点击启用",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "模式已开启，员工入口可见",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-02-N1",
+        "name": "IA-01 已开启态",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "编辑成功并保留当前模式状态",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N2",
+        "name": "点击编辑",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "编辑成功并保留当前模式状态",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-02-N3",
+        "name": "调整路径/范围/审批流",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "编辑成功并保留当前模式状态",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-02-N4",
+        "name": "确认编辑",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "编辑成功并保留当前模式状态",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-03-N1",
+        "name": "IA-04",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-03-N2",
+        "name": "选择“申请角色”",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-03-N3",
+        "name": "选择角色",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-03-N4",
+        "name": "填原因",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-03-N5",
+        "name": "提交",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-04-N1",
+        "name": "IA-04",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-04-N2",
+        "name": "选择“申请功能权限”",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-04-N3",
+        "name": "选应用/权限",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-04-N4",
+        "name": "填原因",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-04-N5",
+        "name": "提交",
+        "type": "页面节点",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "进入审批中并生成记录",
+        "page_id": "P-05"
+      },
+      {
+        "node_id": "TF-05-N1",
+        "name": "IA-05 待办",
+        "type": "页面节点",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "page_id": "P-06"
+      },
+      {
+        "node_id": "TF-05-N2",
+        "name": "审批人处理",
+        "type": "页面节点",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "page_id": "P-06"
+      },
+      {
+        "node_id": "TF-05-N3",
+        "name": "系统回写结果",
+        "type": "页面节点",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "page_id": "P-06"
+      },
+      {
+        "node_id": "TF-05-N4",
+        "name": "通知申请人",
+        "type": "页面节点",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "page_id": "P-06"
+      },
+      {
+        "node_id": "TF-05-N5",
+        "name": "申请记录更新",
+        "type": "页面节点",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "page_id": "P-06"
+      },
+      {
+        "node_id": "TF-06-N1",
+        "name": "IA-01 已开启态",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-06",
+        "goal": "关闭成功并移除员工入口",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-06-N2",
+        "name": "点击关闭模式",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-06",
+        "goal": "关闭成功并移除员工入口",
+        "page_id": "P-01"
+      },
+      {
+        "node_id": "TF-06-N3",
+        "name": "二次确认",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-06",
+        "goal": "关闭成功并移除员工入口",
+        "page_id": "P-07"
+      },
+      {
+        "node_id": "TF-06-N4",
+        "name": "校验在途流程",
+        "type": "页面节点",
+        "role": "超管",
+        "chain_id": "TF-06",
+        "goal": "关闭成功并移除员工入口",
+        "page_id": "P-07"
       }
     ],
     "edges": [
       {
-        "from": "自助申请权限模式设置页",
-        "to": "选择角色弹窗",
+        "from": "TF-01-N1",
+        "to": "TF-01-N2",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
       },
       {
-        "from": "选择角色弹窗",
-        "to": "选择应用弹窗",
+        "from": "TF-01-N2",
+        "to": "TF-01-N3",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
       },
       {
-        "from": "选择应用弹窗",
-        "to": "我的权限页",
+        "from": "TF-01-N3",
+        "to": "TF-01-N4",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
       },
       {
-        "from": "我的权限页",
-        "to": "申请权限抽屉",
+        "from": "TF-01-N4",
+        "to": "TF-01-N5",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
       },
       {
-        "from": "申请权限抽屉",
-        "to": "申请记录 / 结果通知页",
+        "from": "TF-01-N5",
+        "to": "TF-01-N6",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
       },
       {
-        "from": "申请记录 / 结果通知页",
-        "to": "关闭失败弹窗",
+        "from": "TF-01-N6",
+        "to": "TF-01-N7",
         "path_type": "success",
-        "label": ""
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-02-N1",
+        "to": "TF-02-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N2",
+        "to": "TF-02-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N3",
+        "to": "TF-02-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-03-N1",
+        "to": "TF-03-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-03-N2",
+        "to": "TF-03-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-03-N3",
+        "to": "TF-03-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-03-N4",
+        "to": "TF-03-N5",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-04-N1",
+        "to": "TF-04-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-04-N2",
+        "to": "TF-04-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-04-N3",
+        "to": "TF-04-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-04-N4",
+        "to": "TF-04-N5",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-05-N1",
+        "to": "TF-05-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "审批人",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-05-N2",
+        "to": "TF-05-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "审批人",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-05-N3",
+        "to": "TF-05-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "审批人",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-05-N4",
+        "to": "TF-05-N5",
+        "path_type": "success",
+        "label": "",
+        "role": "审批人",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-06-N1",
+        "to": "TF-06-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-06"
+      },
+      {
+        "from": "TF-06-N2",
+        "to": "TF-06-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-06"
+      },
+      {
+        "from": "TF-06-N3",
+        "to": "TF-06-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-06"
+      }
+    ],
+    "dependencies": [
+      {
+        "from_chain_id": "TF-03",
+        "to_chain_id": "TF-01",
+        "reason": "员工申请角色依赖模式已启用"
+      },
+      {
+        "from_chain_id": "TF-04",
+        "to_chain_id": "TF-01",
+        "reason": "员工申请功能权限依赖模式已启用"
+      },
+      {
+        "from_chain_id": "TF-06",
+        "to_chain_id": "TF-01",
+        "reason": "关闭模式依赖当前模式已开启"
+      },
+      {
+        "from_chain_id": "TF-05",
+        "to_chain_id": "TF-03",
+        "reason": "审批结果回写依赖员工申请角色流程已提交"
+      },
+      {
+        "from_chain_id": "TF-05",
+        "to_chain_id": "TF-04",
+        "reason": "审批结果回写依赖员工申请功能权限流程已提交"
+      }
+    ],
+    "blockers": [
+      {
+        "id": "TF-01",
+        "name": "模式启用流程",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "trigger": "R-01 互斥校验；若命中 EX-01 必须阻断并解释",
+        "impact": "启用失败，显示冲突模式和处理建议"
+      },
+      {
+        "id": "TF-02",
+        "name": "模式编辑流程",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "trigger": "已开启态下不可无提示修改关键策略",
+        "impact": "规则冲突则阻断并解释"
+      },
+      {
+        "id": "TF-03",
+        "name": "员工申请角色流程",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "trigger": "必须只展示允许申请的已启用角色；异常命中 EX-03 时阻断",
+        "impact": "范围外角色不可提交并解释原因"
+      },
+      {
+        "id": "TF-04",
+        "name": "员工申请功能权限流程",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "trigger": "需解释“默认申请功能的所有数据权限”；超范围则阻断",
+        "impact": "范围外应用不可提交并解释原因"
+      },
+      {
+        "id": "TF-05",
+        "name": "审批结果回写流程",
+        "role": "审批人",
+        "chain_id": "TF-05",
+        "trigger": "R-03 生效逻辑必须解释“已生效 / 未生效”",
+        "impact": "审批拒绝或撤回，不生效并展示原因"
+      },
+      {
+        "id": "TF-06",
+        "name": "关闭模式流程",
+        "role": "超管",
+        "chain_id": "TF-06",
+        "trigger": "R-04 在途流程存在则命中 EX-02 并阻断",
+        "impact": "关闭失败，弹窗解释在途流程与处理方向"
+      },
+      {
+        "id": "ST-04",
+        "name": "启用失败（互斥拦截）",
+        "trigger": "命中 R-01 / EX-01",
+        "impact": "返回配置页继续调整",
+        "page_id": "P-01"
+      },
+      {
+        "id": "ST-07",
+        "name": "申请已拒绝 / 未生效",
+        "trigger": "审批拒绝或撤回",
+        "impact": "可回到 P-05 重新申请",
+        "page_id": "P-05"
+      },
+      {
+        "id": "ST-07",
+        "name": "申请已拒绝 / 未生效",
+        "trigger": "审批拒绝或撤回",
+        "impact": "可回到 P-05 重新申请",
+        "page_id": "P-06"
+      },
+      {
+        "id": "ST-08",
+        "name": "关闭失败",
+        "trigger": "关闭模式时存在在途流程，命中 EX-02",
+        "impact": "模式维持已开启态",
+        "page_id": "P-07"
       }
     ]
   },
   "page_views": [
     {
-      "view_id": "自助申请权限模式设置页",
+      "page_id": "P-01",
       "view_name": "自助申请权限模式设置页",
       "view_type": "页面",
-      "audience": "",
-      "summary": "",
+      "roles": [
+        "超管",
+        "超管。"
+      ],
+      "summary": "把“启用模式”这件事拆解成可理解、可配置、可校验的治理动作，而不是一次性黑盒开关。",
+      "entry": "未命中互斥模式时从宣传态进入；已开启状态点击“编辑”也会回到本页。",
+      "exit": "返回模式页 / 启用成功后刷新",
+      "upstream_links": [
+        "P-07",
+        "P-02",
+        "P-03"
+      ],
+      "downstream_links": [],
       "sketch_blocks": [
         {
-          "label": "主内容区",
-          "block_type": "Main Area"
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "页面标题 + 当前模式状态 + 帮助入口"
         },
         {
-          "label": "操作区",
-          "block_type": "Detail Area"
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "模式说明 / 启用后效果 / 互斥规则提醒"
+        },
+        {
+          "label": "Step 1",
+          "block_type": "Detail Area",
+          "summary": "申请路径选择（申请角色 / 申请功能权限）"
+        },
+        {
+          "label": "Step 2",
+          "block_type": "Detail Area",
+          "summary": "范围配置（角色范围 / 应用范围 + 自动加入设置）"
+        },
+        {
+          "label": "Step 3",
+          "block_type": "Detail Area",
+          "summary": "审批流程说明 + 修改审批流程入口"
+        },
+        {
+          "label": "Footer Actions",
+          "block_type": "Detail Area",
+          "summary": "取消 / 启用 或 取消编辑 / 确认编辑"
         }
       ],
-      "key_understanding": [],
-      "states": [],
-      "copy_items": [],
-      "risks": [],
-      "blockers": [],
-      "principles": [],
-      "trace_items": [],
+      "key_understanding": [
+        "主任务是完成路径、范围和审批流配置并启用；次任务是回顾当前模式说明、查看帮助与退出编辑。",
+        "当前模式还是未开启/已开启；启用后会发生什么；如果企业已开启互斥模式会被拦截。",
+        "角色/应用范围的定义、后续新增是否自动加入、预设审批流的默认含义。",
+        "路径一旦确定会改变员工申请语义；关闭模式时若有在途流程会失败。",
+        "选择申请路径 | 进入页面后即可操作 | 单选切换并刷新第二步范围区域 | 决定后续申请语义",
+        "选择角色范围 / 应用范围 | 选择路径后可操作 | 打开 P-02 / P-03 或更新“全部范围”状态 | 形成员工可申请范围",
+        "修改审批流程 | 第三步可点击 | 打开审批流子页面 | 回写审批流配置",
+        "点击启用 / 确认编辑 | 必填配置完成后可点击 | 先校验互斥规则，再给结果反馈 | 成功进入已开启态；失败则阻断并解释",
+        "互斥规则与关闭拦截原因：用户把治理限制误判为系统故障",
+        "申请路径差异（角色 vs 功能权限）：申请语义混乱，审批难以判断",
+        "可申请范围与“后续新增自动加入”策略：员工提交超范围申请，反复失败",
+        "帮助文档与了解更多入口：培训成本无法转移到自助解释"
+      ],
+      "states": [
+        {
+          "state_id": "ST-01",
+          "name": "模式未开启",
+          "trigger": "企业未启用自助申请权限模式",
+          "actions": "立即启用",
+          "feedback": "展示宣传态和模式说明",
+          "copy_feedback": "强调启用后员工可查询和申请权限",
+          "outcome": "可进入 P-01 配置页"
+        },
+        {
+          "state_id": "ST-02",
+          "name": "模式设置中",
+          "trigger": "进入 P-01 但尚未点击启用",
+          "actions": "继续配置 / 取消",
+          "feedback": "保留草稿上下文",
+          "copy_feedback": "解释哪些配置项尚未完成",
+          "outcome": "可继续启用或返回"
+        },
+        {
+          "state_id": "ST-03",
+          "name": "模式已开启",
+          "trigger": "启用成功",
+          "actions": "编辑 / 关闭模式",
+          "feedback": "显示只读已开启态",
+          "copy_feedback": "强调员工可查询和申请，审批通过后自动分配",
+          "outcome": "员工入口可见"
+        },
+        {
+          "state_id": "ST-04",
+          "name": "启用失败（互斥拦截）",
+          "trigger": "命中 R-01 / EX-01",
+          "actions": "返回 / 处理冲突模式后重试",
+          "feedback": "阻断启用并显示冲突模式",
+          "copy_feedback": "明确“企业已开启某模式，不能同时开启此模式”",
+          "outcome": "返回配置页继续调整"
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "模式宣传态",
+          "copy_type": "说明文案",
+          "goal": "解释模式价值与结果",
+          "required": "自助申请、审批通过后自动分配、可查询",
+          "avoid": "只说“立即启用更方便”不解释治理语义",
+          "example": "“员工可自助申请权限，审批通过后系统自动分配权限。”"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "启用失败",
+          "copy_type": "错误 / 阻断文案",
+          "goal": "解释互斥规则，不让用户误判系统故障",
+          "required": "冲突模式名称、不能同时开启、处理方向",
+          "avoid": "“启用失败”“系统异常”这类泛化表达",
+          "example": "“企业已开启「双管理员互审模式」，不能同时开启此模式。”"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "ACT-01",
+          "name": "选择申请路径",
+          "trigger": "进入页面后即可操作",
+          "confusion_reason": "",
+          "protection": "在切换时解释角色申请与功能权限申请差异"
+        },
+        {
+          "risk_id": "ACT-02",
+          "name": "选择角色范围 / 应用范围",
+          "trigger": "选择路径后可操作",
+          "confusion_reason": "",
+          "protection": "对“后续新增自动加入”做前置解释"
+        },
+        {
+          "risk_id": "ACT-03",
+          "name": "修改审批流程",
+          "trigger": "第三步可点击",
+          "confusion_reason": "",
+          "protection": "返回时不刷新页面，保持上下文"
+        },
+        {
+          "risk_id": "ACT-04",
+          "name": "点击启用 / 确认编辑",
+          "trigger": "必填配置完成后可点击",
+          "confusion_reason": "",
+          "protection": "必须展示冲突模式名称和处理方向"
+        },
+        {
+          "risk_id": "RSK-01",
+          "name": "把互斥规则误解成系统故障",
+          "trigger": "启用模式失败",
+          "confusion_reason": "用户只看到失败，不知道是治理规则冲突",
+          "protection": "启用失败时显式展示冲突模式名称和处理方向"
+        }
+      ],
+      "blockers": [
+        {
+          "id": "ST-04",
+          "name": "启用失败（互斥拦截）",
+          "trigger": "命中 R-01 / EX-01",
+          "impact": "返回配置页继续调整",
+          "page_id": "P-01"
+        }
+      ],
+      "principles": [
+        {
+          "principle_id": "PR-01",
+          "name": "状态可见",
+          "reason": "模式启停、审批中、审批结果、关闭失败都必须有显性状态"
+        },
+        {
+          "principle_id": "PR-03",
+          "name": "风险前置解释",
+          "reason": "互斥规则、范围限制、关闭拦截若不前置解释会被误读"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:页面",
+        "设置页"
+      ],
+      "trace_items": [
+        {
+          "trace_id": "TR-01",
+          "object": "P-01 / TF-01",
+          "business_judgment": "J-03、J-08、POS-01",
+          "facts": "F-05、F-06、R-01、EX-01",
+          "principles": "PR-01、PR-03",
+          "note": "模式启用前必须把治理互斥显性解释出来"
+        },
+        {
+          "trace_id": "TR-02",
+          "object": "P-01 / INFO-04",
+          "business_judgment": "J-04、POS-01",
+          "facts": "F-07、F-08、F-09",
+          "principles": "PR-03",
+          "note": "路径差异和范围策略必须在配置动作前讲清楚"
+        }
+      ],
       "open_items": [],
       "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+        "GAP-02：复杂组织结构下预设审批人说明仍缺少统一解释口径。"
       ],
-      "source_refs": []
+      "source_refs": [
+        "页面 / 窗口清单:P-01",
+        "关键页面蓝图:P-01:页面目标",
+        "关键页面蓝图:P-01:首屏重点与关键信息",
+        "关键页面蓝图:P-01:关键动作与状态",
+        "区块布局示意:P-01",
+        "内容与信息优先级合同:INFO-02",
+        "内容与信息优先级合同:INFO-03",
+        "内容与信息优先级合同:INFO-04",
+        "内容与信息优先级合同:INFO-06",
+        "状态与反馈矩阵:ST-01",
+        "状态与反馈矩阵:ST-02",
+        "状态与反馈矩阵:ST-03",
+        "状态与反馈矩阵:ST-04",
+        "文案合同:COPY-01",
+        "文案合同:COPY-02",
+        "风险、疑惑点与保护策略:RSK-01",
+        "已命中的设计原则:PR-01",
+        "已命中的设计原则:PR-03",
+        "体验追踪映射:TR-01",
+        "体验追踪映射:TR-02",
+        "开放问题与缺口:GAP-02"
+      ]
     },
     {
-      "view_id": "选择角色弹窗",
+      "page_id": "P-02",
       "view_name": "选择角色弹窗",
       "view_type": "弹窗",
-      "audience": "",
-      "summary": "",
-      "sketch_blocks": [
-        {
-          "label": "主内容区",
-          "block_type": "Main Area"
-        },
-        {
-          "label": "操作区",
-          "block_type": "Detail Area"
-        }
+      "roles": [
+        "超管"
       ],
+      "summary": "选择允许员工申请的角色范围",
+      "entry": "P-01 第二步选择“部分角色”",
+      "exit": "关闭弹窗 / 确认选择",
+      "upstream_links": [],
+      "downstream_links": [
+        "P-01"
+      ],
+      "sketch_blocks": [],
       "key_understanding": [],
       "states": [],
       "copy_items": [],
       "risks": [],
       "blockers": [],
-      "principles": [],
+      "principles": [
+        {
+          "principle_id": "PR-02",
+          "name": "先结论后细节",
+          "reason": "用户先要知道“能不能做”，再看为什么"
+        },
+        {
+          "principle_id": "PR-03",
+          "name": "风险前置解释",
+          "reason": "互斥规则、范围限制、关闭拦截若不前置解释会被误读"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:弹窗",
+        "选择器"
+      ],
       "trace_items": [],
       "open_items": [],
       "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+        "缺少直接区块布局示意"
       ],
-      "source_refs": []
+      "source_refs": [
+        "页面 / 窗口清单:P-02",
+        "已命中的设计原则:PR-02",
+        "已命中的设计原则:PR-03"
+      ]
     },
     {
-      "view_id": "选择应用弹窗",
+      "page_id": "P-03",
       "view_name": "选择应用弹窗",
       "view_type": "弹窗",
-      "audience": "",
-      "summary": "",
-      "sketch_blocks": [
-        {
-          "label": "主内容区",
-          "block_type": "Main Area"
-        },
-        {
-          "label": "操作区",
-          "block_type": "Detail Area"
-        }
+      "roles": [
+        "超管"
       ],
+      "summary": "选择允许员工申请的应用范围",
+      "entry": "P-01 第二步选择“部分应用”",
+      "exit": "关闭弹窗 / 确认选择",
+      "upstream_links": [],
+      "downstream_links": [
+        "P-01"
+      ],
+      "sketch_blocks": [],
       "key_understanding": [],
       "states": [],
       "copy_items": [],
       "risks": [],
       "blockers": [],
-      "principles": [],
+      "principles": [
+        {
+          "principle_id": "PR-01",
+          "name": "状态可见",
+          "reason": "模式启停、审批中、审批结果、关闭失败都必须有显性状态"
+        },
+        {
+          "principle_id": "PR-02",
+          "name": "先结论后细节",
+          "reason": "用户先要知道“能不能做”，再看为什么"
+        },
+        {
+          "principle_id": "PR-04",
+          "name": "结果可行动",
+          "reason": "失败反馈必须给下一步，不只给原因"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:弹窗",
+        "选择器"
+      ],
       "trace_items": [],
       "open_items": [],
       "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+        "缺少直接区块布局示意"
       ],
-      "source_refs": []
+      "source_refs": [
+        "页面 / 窗口清单:P-03",
+        "已命中的设计原则:PR-01",
+        "已命中的设计原则:PR-02",
+        "已命中的设计原则:PR-04"
+      ]
     },
     {
-      "view_id": "我的权限页",
+      "page_id": "P-04",
       "view_name": "我的权限页",
       "view_type": "页面",
-      "audience": "",
-      "summary": "",
-      "sketch_blocks": [
+      "roles": [
+        "员工",
+        "员工。"
+      ],
+      "summary": "让员工在一个稳定入口里确认“我当前有哪些权限、为什么有/没有、是否需要去申请”。",
+      "entry": "企业已开启自助申请权限模式，且用户进入个人中心。",
+      "exit": "返回个人中心",
+      "upstream_links": [],
+      "downstream_links": [
+        "P-05"
+      ],
+      "sketch_blocks": [],
+      "key_understanding": [
+        "主任务是查询功能权限、数据权限、角色；次任务是从查询结果出发进入申请权限。",
+        "当前正在看功能权限/数据权限/角色哪一类；如果没有数据，缺的是哪一类权限。",
+        "哪些是已生效权限、哪些仍需要申请、哪些仅是没有数据而不是没有授权。",
+        "不能把“无数据权限”误读成“系统异常”。",
+        "切换 Tab | 页面加载后即可操作 | 切换到功能权限 / 数据权限 / 角色 | 查看不同维度权限",
+        "从结果进入申请 | 当用户发现缺少权限时 | 跳转或打开 P-05 | 开始申请流程",
+        "帮助文档与了解更多入口：培训成本无法转移到自助解释"
+      ],
+      "states": [
         {
-          "label": "主内容区",
-          "block_type": "Main Area"
+          "state_id": "ST-03",
+          "name": "模式已开启",
+          "trigger": "启用成功",
+          "actions": "编辑 / 关闭模式",
+          "feedback": "显示只读已开启态",
+          "copy_feedback": "强调员工可查询和申请，审批通过后自动分配",
+          "outcome": "员工入口可见"
         },
         {
-          "label": "操作区",
-          "block_type": "Detail Area"
+          "state_id": "ST-05",
+          "name": "申请审批中",
+          "trigger": "员工提交申请后",
+          "actions": "查看记录 / 撤销",
+          "feedback": "结果页展示审批中与当前节点",
+          "copy_feedback": "明确“已提交，等待审批，不代表已生效”",
+          "outcome": "等待审批结果"
+        },
+        {
+          "state_id": "ST-06",
+          "name": "申请已通过并生效",
+          "trigger": "审批同意",
+          "actions": "查看我的权限",
+          "feedback": "结果页展示已通过与已生效",
+          "copy_feedback": "明确生效时间和对应权限对象",
+          "outcome": "用户在 P-04 中可看到生效结果"
         }
       ],
-      "key_understanding": [],
-      "states": [],
       "copy_items": [],
-      "risks": [],
+      "risks": [
+        {
+          "risk_id": "ACT-05",
+          "name": "切换 Tab",
+          "trigger": "页面加载后即可操作",
+          "confusion_reason": "",
+          "protection": "每个空态都要给清楚语义，不统一写成“暂无数据”"
+        },
+        {
+          "risk_id": "ACT-06",
+          "name": "从结果进入申请",
+          "trigger": "当用户发现缺少权限时",
+          "confusion_reason": "",
+          "protection": "先说明哪些权限可申请，避免盲点进入"
+        }
+      ],
       "blockers": [],
-      "principles": [],
+      "principles": [
+        {
+          "principle_id": "PR-01",
+          "name": "状态可见",
+          "reason": "模式启停、审批中、审批结果、关闭失败都必须有显性状态"
+        },
+        {
+          "principle_id": "PR-04",
+          "name": "结果可行动",
+          "reason": "失败反馈必须给下一步，不只给原因"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:页面"
+      ],
       "trace_items": [],
       "open_items": [],
       "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+        "缺少直接区块布局示意"
       ],
-      "source_refs": []
+      "source_refs": [
+        "页面 / 窗口清单:P-04",
+        "关键页面蓝图:P-04:页面目标",
+        "关键页面蓝图:P-04:首屏重点与关键信息",
+        "关键页面蓝图:P-04:关键动作与状态",
+        "内容与信息优先级合同:INFO-06",
+        "状态与反馈矩阵:ST-03",
+        "状态与反馈矩阵:ST-05",
+        "状态与反馈矩阵:ST-06",
+        "已命中的设计原则:PR-01",
+        "已命中的设计原则:PR-04"
+      ]
     },
     {
-      "view_id": "申请权限抽屉",
+      "page_id": "P-05",
       "view_name": "申请权限抽屉",
       "view_type": "抽屉",
-      "audience": "",
-      "summary": "",
+      "roles": [
+        "员工",
+        "员工申请人。"
+      ],
+      "summary": "在一个上下文完整的抽屉里完成“选申请对象 -> 填申请原因 -> 提交审批”。",
+      "entry": "从个人中心点击“申请权限”。",
+      "exit": "关闭抽屉 / 提交成功后停留记录视图",
+      "upstream_links": [],
+      "downstream_links": [
+        "P-06"
+      ],
       "sketch_blocks": [
         {
-          "label": "主内容区",
-          "block_type": "Main Area"
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "申请权限 + 申请人信息"
         },
         {
-          "label": "操作区",
-          "block_type": "Detail Area"
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "申请规则说明 / 提交后生效说明"
+        },
+        {
+          "label": "Main Form",
+          "block_type": "Detail Area",
+          "summary": "申请类型 + 申请对象选择 + 申请原因"
+        },
+        {
+          "label": "Constraint Note",
+          "block_type": "Detail Area",
+          "summary": "范围限制 / 默认数据权限说明"
+        },
+        {
+          "label": "Sub Area",
+          "block_type": "Detail Area",
+          "summary": "申请记录筛选与列表"
+        },
+        {
+          "label": "Footer Actions",
+          "block_type": "Detail Area",
+          "summary": "取消 / 提交申请"
         }
       ],
-      "key_understanding": [],
-      "states": [],
-      "copy_items": [],
-      "risks": [],
-      "blockers": [],
-      "principles": [],
-      "trace_items": [],
-      "open_items": [],
-      "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+      "key_understanding": [
+        "主任务是提交角色或功能权限申请；次任务是查看申请限制和申请记录。",
+        "申请人是谁、当前申请的是角色还是功能权限、允许申请的范围是什么。",
+        "申请原因必填、功能权限申请默认连同所有数据权限一起申请、范围外对象不可提交。",
+        "不要把“范围外不可申请”误解成系统故障；不要误以为提交后立即生效。",
+        "选择申请类型 | 打开抽屉后可操作 | 切换表单主体 | 改变后续选择区",
+        "选择申请对象并填写原因 | 申请类型选定后可操作 | 表单校验 | 满足提交条件",
+        "提交申请 | 必填项完成后可点击 | 显示审批中状态与记录入口 | 进入审批流",
+        "申请路径差异（角色 vs 功能权限）：申请语义混乱，审批难以判断",
+        "可申请范围与“后续新增自动加入”策略：员工提交超范围申请，反复失败"
       ],
-      "source_refs": []
+      "states": [
+        {
+          "state_id": "ST-03",
+          "name": "模式已开启",
+          "trigger": "启用成功",
+          "actions": "编辑 / 关闭模式",
+          "feedback": "显示只读已开启态",
+          "copy_feedback": "强调员工可查询和申请，审批通过后自动分配",
+          "outcome": "员工入口可见"
+        },
+        {
+          "state_id": "ST-05",
+          "name": "申请审批中",
+          "trigger": "员工提交申请后",
+          "actions": "查看记录 / 撤销",
+          "feedback": "结果页展示审批中与当前节点",
+          "copy_feedback": "明确“已提交，等待审批，不代表已生效”",
+          "outcome": "等待审批结果"
+        },
+        {
+          "state_id": "ST-07",
+          "name": "申请已拒绝 / 未生效",
+          "trigger": "审批拒绝或撤回",
+          "actions": "查看原因 / 重新申请",
+          "feedback": "结果页展示已拒绝或已撤销",
+          "copy_feedback": "说明拒绝原因或撤销结果，并给下一步",
+          "outcome": "可回到 P-05 重新申请"
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-03",
+          "scene": "申请提交成功",
+          "copy_type": "成功反馈",
+          "goal": "解释提交成功但尚未生效",
+          "required": "已提交、进入审批、可在申请记录查看进度",
+          "avoid": "“申请成功，权限已开通”",
+          "example": "“申请已提交，待审批通过后生效。”"
+        },
+        {
+          "copy_id": "COPY-04",
+          "scene": "范围外不可申请",
+          "copy_type": "提示 / 校验文案",
+          "goal": "解释为什么当前对象不能申请",
+          "required": "不在允许范围、需联系管理员",
+          "avoid": "只说“不可选”“暂无权限”",
+          "example": "“当前角色不在企业允许的申请范围内，请联系超级管理员调整范围。”"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "ACT-07",
+          "name": "选择申请类型",
+          "trigger": "打开抽屉后可操作",
+          "confusion_reason": "",
+          "protection": "清晰区分“申请角色”和“申请功能权限”"
+        },
+        {
+          "risk_id": "ACT-08",
+          "name": "选择申请对象并填写原因",
+          "trigger": "申请类型选定后可操作",
+          "confusion_reason": "",
+          "protection": "对不可申请对象即时阻断并解释"
+        },
+        {
+          "risk_id": "ACT-09",
+          "name": "提交申请",
+          "trigger": "必填项完成后可点击",
+          "confusion_reason": "",
+          "protection": "明确提示“提交后进入审批，不代表已生效”"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "把提交成功误解成权限已生效",
+          "trigger": "员工提交申请后",
+          "confusion_reason": "“提交”与“生效”时间点被混淆",
+          "protection": "成功反馈固定带出“待审批后生效”"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "把范围外限制误解成权限异常",
+          "trigger": "申请对象不可选或提交失败",
+          "confusion_reason": "用户不知道是范围限制还是系统问题",
+          "protection": "在对象选择前展示允许范围，并对范围外对象即时解释"
+        }
+      ],
+      "blockers": [
+        {
+          "id": "ST-07",
+          "name": "申请已拒绝 / 未生效",
+          "trigger": "审批拒绝或撤回",
+          "impact": "可回到 P-05 重新申请",
+          "page_id": "P-05"
+        }
+      ],
+      "principles": [],
+      "design_patterns": [
+        "承载模式:抽屉"
+      ],
+      "trace_items": [
+        {
+          "trace_id": "TR-03",
+          "object": "P-05 / TF-03",
+          "business_judgment": "J-04、POS-02",
+          "facts": "F-07、F-08、EX-03",
+          "principles": "PR-02、PR-04",
+          "note": "角色申请要先给可申请范围，再允许提交"
+        },
+        {
+          "trace_id": "TR-04",
+          "object": "P-05 / TF-04",
+          "business_judgment": "J-04、POS-02",
+          "facts": "F-07、F-09、EX-03",
+          "principles": "PR-02、PR-04",
+          "note": "功能权限申请需要说明默认数据权限语义和范围边界"
+        }
+      ],
+      "open_items": [
+        "OQ-03：功能权限申请是否需要额外解释“默认申请所有数据权限”，仍待规则最终确认。"
+      ],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-05",
+        "关键页面蓝图:P-05:页面目标",
+        "关键页面蓝图:P-05:首屏重点与关键信息",
+        "关键页面蓝图:P-05:关键动作与状态",
+        "区块布局示意:P-05",
+        "内容与信息优先级合同:INFO-03",
+        "内容与信息优先级合同:INFO-04",
+        "状态与反馈矩阵:ST-03",
+        "状态与反馈矩阵:ST-05",
+        "状态与反馈矩阵:ST-07",
+        "文案合同:COPY-03",
+        "文案合同:COPY-04",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "体验追踪映射:TR-03",
+        "体验追踪映射:TR-04",
+        "开放问题与缺口:OQ-03"
+      ]
     },
     {
-      "view_id": "申请记录 / 结果通知页",
+      "page_id": "P-06",
       "view_name": "申请记录 / 结果通知页",
       "view_type": "页面",
-      "audience": "",
-      "summary": "",
+      "roles": [
+        "员工",
+        "超管",
+        "员工申请人",
+        "超管。"
+      ],
+      "summary": "把“审批中、已通过、已拒绝、已撤销、是否生效”统一放在同一结果页解释清楚。",
+      "entry": "提交申请后、收到通知后或从申请记录入口进入。",
+      "exit": "返回个人中心 / 关闭通知",
+      "upstream_links": [],
+      "downstream_links": [],
       "sketch_blocks": [
         {
-          "label": "主内容区",
-          "block_type": "Main Area"
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "申请结果 / 申请记录"
         },
         {
-          "label": "操作区",
-          "block_type": "Detail Area"
+          "label": "Summary",
+          "block_type": "Detail Area",
+          "summary": "当前审批状态 + 是否生效 + 申请时间"
+        },
+        {
+          "label": "Reason",
+          "block_type": "Detail Area",
+          "summary": "通过/拒绝原因 + 失败解释"
+        },
+        {
+          "label": "Detail Entry",
+          "block_type": "Detail Area",
+          "summary": "查看申请详情"
+        },
+        {
+          "label": "Actions",
+          "block_type": "Detail Area",
+          "summary": "撤销（仅审批中） / 返回"
         }
       ],
-      "key_understanding": [],
-      "states": [],
-      "copy_items": [],
-      "risks": [],
-      "blockers": [],
-      "principles": [],
-      "trace_items": [],
-      "open_items": [],
-      "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+      "key_understanding": [
+        "主任务是确认状态和下一步动作；次任务是撤销审批中申请或查看静态详情。",
+        "当前审批状态、是否已生效、失败原因或撤销结果。",
+        "审批原因、申请内容、下一步动作入口。",
+        "不能把“审批拒绝”与“已通过但尚未查看”写成同一种结果表达。",
+        "查看申请详情 | 有记录即可点击 | 打开静态详情抽屉 | 理解申请内容",
+        "撤销申请 | 状态为审批中时可点击 | 提示撤销成功或失败 | 状态更新为已撤销",
+        "审批结果与生效时点：用户误以为“提交即生效”"
       ],
-      "source_refs": []
+      "states": [
+        {
+          "state_id": "ST-03",
+          "name": "模式已开启",
+          "trigger": "启用成功",
+          "actions": "编辑 / 关闭模式",
+          "feedback": "显示只读已开启态",
+          "copy_feedback": "强调员工可查询和申请，审批通过后自动分配",
+          "outcome": "员工入口可见"
+        },
+        {
+          "state_id": "ST-05",
+          "name": "申请审批中",
+          "trigger": "员工提交申请后",
+          "actions": "查看记录 / 撤销",
+          "feedback": "结果页展示审批中与当前节点",
+          "copy_feedback": "明确“已提交，等待审批，不代表已生效”",
+          "outcome": "等待审批结果"
+        },
+        {
+          "state_id": "ST-06",
+          "name": "申请已通过并生效",
+          "trigger": "审批同意",
+          "actions": "查看我的权限",
+          "feedback": "结果页展示已通过与已生效",
+          "copy_feedback": "明确生效时间和对应权限对象",
+          "outcome": "用户在 P-04 中可看到生效结果"
+        },
+        {
+          "state_id": "ST-07",
+          "name": "申请已拒绝 / 未生效",
+          "trigger": "审批拒绝或撤回",
+          "actions": "查看原因 / 重新申请",
+          "feedback": "结果页展示已拒绝或已撤销",
+          "copy_feedback": "说明拒绝原因或撤销结果，并给下一步",
+          "outcome": "可回到 P-05 重新申请"
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-05",
+          "scene": "审批结果",
+          "copy_type": "状态 / 说明文案",
+          "goal": "明确审批状态与生效状态",
+          "required": "已通过/已拒绝/已撤销、生效或未生效、原因",
+          "avoid": "把“审批拒绝”和“未生效”写成同一句黑盒状态",
+          "example": "“审批已拒绝，本次权限不会生效。原因：……”"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "ACT-10",
+          "name": "查看申请详情",
+          "trigger": "有记录即可点击",
+          "confusion_reason": "",
+          "protection": "详情中保持申请时的上下文，不重新解释成新规则"
+        },
+        {
+          "risk_id": "ACT-11",
+          "name": "撤销申请",
+          "trigger": "状态为审批中时可点击",
+          "confusion_reason": "",
+          "protection": "防止用户误撤销，需二次确认"
+        }
+      ],
+      "blockers": [
+        {
+          "id": "ST-07",
+          "name": "申请已拒绝 / 未生效",
+          "trigger": "审批拒绝或撤回",
+          "impact": "可回到 P-05 重新申请",
+          "page_id": "P-06"
+        }
+      ],
+      "principles": [
+        {
+          "principle_id": "PR-02",
+          "name": "先结论后细节",
+          "reason": "用户先要知道“能不能做”，再看为什么"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:页面",
+        "结果页"
+      ],
+      "trace_items": [
+        {
+          "trace_id": "TR-05",
+          "object": "P-06 / ST-05 / COPY-03",
+          "business_judgment": "J-05、J-09",
+          "facts": "F-10、R-03",
+          "principles": "PR-01、PR-02",
+          "note": "审批中状态必须明确“已提交但未生效”"
+        },
+        {
+          "trace_id": "TR-06",
+          "object": "P-06 / ST-06 / COPY-05",
+          "business_judgment": "J-05、J-09、POS-02",
+          "facts": "F-10、F-12",
+          "principles": "PR-01、PR-04",
+          "note": "通过结果必须同时解释审批结论和生效状态"
+        }
+      ],
+      "open_items": [
+        "OQ-02：敏感角色 / 敏感组织的申请限制是否在首期直接可视化暴露，仍待业务决策。",
+        "OQ-03：功能权限申请是否需要额外解释“默认申请所有数据权限”，仍待规则最终确认。"
+      ],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-06",
+        "关键页面蓝图:P-06:页面目标",
+        "关键页面蓝图:P-06:首屏重点与关键信息",
+        "关键页面蓝图:P-06:关键动作与状态",
+        "区块布局示意:P-06",
+        "内容与信息优先级合同:INFO-05",
+        "状态与反馈矩阵:ST-03",
+        "状态与反馈矩阵:ST-05",
+        "状态与反馈矩阵:ST-06",
+        "状态与反馈矩阵:ST-07",
+        "文案合同:COPY-05",
+        "已命中的设计原则:PR-02",
+        "体验追踪映射:TR-05",
+        "体验追踪映射:TR-06",
+        "开放问题与缺口:OQ-02",
+        "开放问题与缺口:OQ-03"
+      ]
     },
     {
-      "view_id": "关闭失败弹窗",
+      "page_id": "P-07",
       "view_name": "关闭失败弹窗",
       "view_type": "弹窗",
-      "audience": "",
-      "summary": "",
-      "sketch_blocks": [
+      "roles": [
+        "超管"
+      ],
+      "summary": "解释在途流程拦截并给出处理建议",
+      "entry": "P-01 / 已开启态点击“关闭模式”",
+      "exit": "点击“知道了”关闭",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [
+        "互斥规则与关闭拦截原因：用户把治理限制误判为系统故障"
+      ],
+      "states": [
         {
-          "label": "主内容区",
-          "block_type": "Main Area"
-        },
-        {
-          "label": "操作区",
-          "block_type": "Detail Area"
+          "state_id": "ST-08",
+          "name": "关闭失败",
+          "trigger": "关闭模式时存在在途流程，命中 EX-02",
+          "actions": "知道了 / 先处理在途流程",
+          "feedback": "弹出 P-07，阻断关闭",
+          "copy_feedback": "明确“当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式”",
+          "outcome": "模式维持已开启态"
         }
       ],
-      "key_understanding": [],
-      "states": [],
-      "copy_items": [],
-      "risks": [],
-      "blockers": [],
-      "principles": [],
-      "trace_items": [],
+      "copy_items": [
+        {
+          "copy_id": "COPY-06",
+          "scene": "关闭失败",
+          "copy_type": "阻断文案",
+          "goal": "解释关闭模式被拦截的治理原因",
+          "required": "在途流程、先处理审批、再关闭模式",
+          "avoid": "“关闭失败，请稍后再试”",
+          "example": "“当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。”"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "RSK-04",
+          "name": "关闭失败时不知如何处理",
+          "trigger": "关闭模式被拦截",
+          "confusion_reason": "用户不知道在途流程是什么、谁该处理",
+          "protection": "P-07 明确说明“有在途流程未审批完”，并提示联系审批人"
+        }
+      ],
+      "blockers": [
+        {
+          "id": "ST-08",
+          "name": "关闭失败",
+          "trigger": "关闭模式时存在在途流程，命中 EX-02",
+          "impact": "模式维持已开启态",
+          "page_id": "P-07"
+        }
+      ],
+      "principles": [
+        {
+          "principle_id": "PR-01",
+          "name": "状态可见",
+          "reason": "模式启停、审批中、审批结果、关闭失败都必须有显性状态"
+        },
+        {
+          "principle_id": "PR-03",
+          "name": "风险前置解释",
+          "reason": "互斥规则、范围限制、关闭拦截若不前置解释会被误读"
+        },
+        {
+          "principle_id": "PR-04",
+          "name": "结果可行动",
+          "reason": "失败反馈必须给下一步，不只给原因"
+        }
+      ],
+      "design_patterns": [
+        "承载模式:弹窗"
+      ],
+      "trace_items": [
+        {
+          "trace_id": "TR-07",
+          "object": "P-07 / TF-06 / COPY-06",
+          "business_judgment": "J-06、J-08",
+          "facts": "F-11、R-04、EX-02",
+          "principles": "PR-03、PR-04",
+          "note": "关闭失败不是泛化报错，而是治理阻断，需要给下一步"
+        }
+      ],
       "open_items": [],
       "gap_items": [
-        "缺少直接区块来源，已按页面摘要降级抽象草图",
-        "本页无直接专属状态项",
-        "本页无直接专属文案项"
+        "缺少直接区块布局示意"
       ],
-      "source_refs": []
+      "source_refs": [
+        "页面 / 窗口清单:P-07",
+        "内容与信息优先级合同:INFO-02",
+        "状态与反馈矩阵:ST-08",
+        "文案合同:COPY-06",
+        "风险、疑惑点与保护策略:RSK-04",
+        "已命中的设计原则:PR-01",
+        "已命中的设计原则:PR-03",
+        "已命中的设计原则:PR-04",
+        "体验追踪映射:TR-07"
+      ]
     }
   ],
-  "global_notes": [
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    },
-    {
-      "type": "状态",
-      "content": "未能归属的状态项"
-    }
-  ],
+  "global_context": {
+    "principles": [
+      {
+        "principle_id": "PR-01",
+        "label": "PR-01 状态可见"
+      },
+      {
+        "principle_id": "PR-02",
+        "label": "PR-02 先结论后细节"
+      },
+      {
+        "principle_id": "PR-03",
+        "label": "PR-03 风险前置解释"
+      },
+      {
+        "principle_id": "PR-04",
+        "label": "PR-04 结果可行动。"
+      }
+    ],
+    "dependencies": [
+      {
+        "from_chain_id": "TF-03",
+        "to_chain_id": "TF-01",
+        "reason": "员工申请角色依赖模式已启用"
+      },
+      {
+        "from_chain_id": "TF-04",
+        "to_chain_id": "TF-01",
+        "reason": "员工申请功能权限依赖模式已启用"
+      },
+      {
+        "from_chain_id": "TF-06",
+        "to_chain_id": "TF-01",
+        "reason": "关闭模式依赖当前模式已开启"
+      },
+      {
+        "from_chain_id": "TF-05",
+        "to_chain_id": "TF-03",
+        "reason": "审批结果回写依赖员工申请角色流程已提交"
+      },
+      {
+        "from_chain_id": "TF-05",
+        "to_chain_id": "TF-04",
+        "reason": "审批结果回写依赖员工申请功能权限流程已提交"
+      }
+    ],
+    "risks": [],
+    "open_questions": [
+      {
+        "id": "OQ-01",
+        "content": "帮助文档的正式内容、链接归属和维护机制仍待确认。"
+      }
+    ],
+    "gaps": [
+      {
+        "id": "GAP-01",
+        "content": "帮助文档链接与内容尚未提供。"
+      }
+    ],
+    "notes": [
+      {
+        "type": "信息优先级",
+        "content": "模式当前状态（未开启 / 已开启 / 审批中 / 关闭失败）",
+        "position": "首屏 Header / Summary"
+      }
+    ]
+  },
   "unresolved_items": [],
   "source_refs": [
     "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\exports\\final\\experience_blueprint.md"
