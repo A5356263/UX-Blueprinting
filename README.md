@@ -29,6 +29,7 @@ python -m packages gate-experience demo-task
 python -m packages validate demo-task
 python -m packages coverage demo-task
 python -m packages archive demo-task
+python -m packages preview demo-task --host 127.0.0.1 --port 0
 ```
 
 如需查看当前正式能力面，可运行：
@@ -44,6 +45,7 @@ python -m packages capability-show <capability-id>
 python -m packages memory-extract <project-id>
 python -m packages memory-accept <project-id>
 python -m packages memory-summary <project-id>
+python -m packages preview <project-id> --host 127.0.0.1 --port 0
 ```
 
 ## 阅读顺序

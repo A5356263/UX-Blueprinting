@@ -5,6 +5,7 @@ import argparse
 from packages.archive import run_archive_artifacts
 from packages.capability_registry import run_capabilities_list, run_capability_show
 from packages.context_assemble import run_context_assemble
+from packages.experience_preview import run_experience_preview
 from packages.memory_layer import run_memory_accept, run_memory_extract, run_memory_summary
 from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
@@ -81,6 +82,12 @@ def main() -> int:
     memory_summary = subparsers.add_parser("memory-summary")
     memory_summary.add_argument("project_id")
 
+    preview = subparsers.add_parser("preview")
+    preview.add_argument("project_id")
+    preview.add_argument("--host", default="127.0.0.1")
+    preview.add_argument("--port", type=int, default=0)
+    preview.add_argument("--no-serve", action="store_true")
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
@@ -119,6 +126,13 @@ def main() -> int:
         return run_memory_accept(args.project_id)
     if args.command == "memory-summary":
         return run_memory_summary(args.project_id)
+    if args.command == "preview":
+        return run_experience_preview(
+            args.project_id,
+            host=args.host,
+            port=args.port,
+            serve=not args.no_serve,
+        )
     return 1
 
 

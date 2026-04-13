@@ -24,6 +24,7 @@
 - `archive/`：归档与导出
 - `capability_registry/`：正式能力声明与只读查询入口
 - `memory_layer/`：质量经验提取、接受与摘要生成
+- `experience_preview/`：体验蓝图预览层生成与本地地址交付
 
 ## 运行方式
 
@@ -41,4 +42,5 @@ python -m packages capability-show <capability-id>
 python -m packages memory-extract <project-id>
 python -m packages memory-accept <project-id>
 python -m packages memory-summary <project-id>
+python -m packages preview <project-id> --host 127.0.0.1 --port 0
 ```

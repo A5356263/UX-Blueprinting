@@ -116,6 +116,22 @@ python -m packages archive <project-id>
 
 ## Step 8
 
+如需生成体验蓝图浏览器预览，并向用户交付本地预览地址，运行：
+
+```bash
+python -m packages preview <project-id> --host 127.0.0.1 --port 0
+```
+
+本步骤会产出：
+
+- `runtime/preview/index.html`
+- `runtime/preview/assets/style.css`
+- `runtime/preview/preview_model.json`
+- `runtime/preview/preview_runtime.json`
+- `runtime/preview/preview_build_log.md`
+
+## Step 9
+
 如需把本轮结果提炼为 quality memory，再运行：
 
 ```bash

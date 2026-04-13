@@ -23,6 +23,10 @@ def get_project_runtime_dir(project_id: str) -> Path:
     return get_project_dir(project_id) / "runtime"
 
 
+def get_project_preview_dir(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "preview"
+
+
 def get_project_exports_dir(project_id: str) -> Path:
     return get_project_dir(project_id) / "exports"
 

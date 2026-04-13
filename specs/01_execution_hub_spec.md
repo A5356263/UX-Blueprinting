@@ -48,6 +48,7 @@
 - `specs/09_business_blueprint_contract.md`
 - `specs/10_experience_blueprint_contract.md`
 - `specs/11_repair_loop_contract.md`
+- `specs/14_experience_preview_contract.md`
 
 其中：
 
@@ -598,6 +599,39 @@ projects/<project-id>/
 - 存在 open blocker 却继续归档
 - 存在 deferred blocker 却继续归档
 
+## Step 9.5: Experience Preview
+
+### 目标
+
+在主链路正式产物完成后，生成正式体验蓝图的只读浏览器预览层，并向用户交付明确可访问的本地预览地址。
+
+### 输入
+
+- `projects/<project-id>/exports/final/experience_blueprint.md`
+- 或降级输入 `projects/<project-id>/workspace/experience_blueprint.md`
+
+### 输出
+
+- `projects/<project-id>/runtime/preview/index.html`
+- `projects/<project-id>/runtime/preview/assets/style.css`
+- `projects/<project-id>/runtime/preview/preview_model.json`
+- `projects/<project-id>/runtime/preview/preview_runtime.json`
+- `projects/<project-id>/runtime/preview/preview_build_log.md`
+
+### 成功条件
+
+- 预览运行时文件已写入 `runtime/preview/`
+- 本地服务已成功启动，或已显式选择仅构建模式
+- 若服务已启动，输出中明确给出完整本地 URL
+- 预览层未修改正式蓝图与主链路正式产物
+
+### 失败条件
+
+- 输入体验蓝图不存在
+- 预览运行时文件缺失
+- 服务已启动但未输出完整 URL
+- 预览层失败被误判为主链路失败
+
 ## 执行中枢与 AI 推理的边界
 
 执行中枢负责：
@@ -635,6 +669,7 @@ AI 推理负责：
 - memory extractor
 - memory acceptor
 - memory summary writer
+- experience preview generator
 - wiki sync checker
 - export packager
 - plugin loader

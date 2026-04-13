@@ -36,3 +36,7 @@
 - `08_fact_extraction_contract.md`
 - `09_business_blueprint_contract.md`
 - `10_experience_blueprint_contract.md`
+- `11_repair_loop_contract.md`
+- `12_capability_registry_contract.md`
+- `13_memory_layer_contract.md`
+- `14_experience_preview_contract.md`

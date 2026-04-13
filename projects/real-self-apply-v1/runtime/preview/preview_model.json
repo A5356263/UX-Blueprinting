@@ -1,0 +1,352 @@
+{
+  "project_id": "real-self-apply-v1",
+  "meta": {
+    "title": "Experience Blueprint",
+    "subject": "体验蓝图浏览器预览",
+    "context": {
+      "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\exports\\final\\experience_blueprint.md",
+      "input_mode": "formal_export"
+    }
+  },
+  "global_flow": {
+    "nodes": [
+      {
+        "id": "自助申请权限模式设置页",
+        "name": "自助申请权限模式设置页",
+        "type": "页面",
+        "goal": ""
+      },
+      {
+        "id": "选择角色弹窗",
+        "name": "选择角色弹窗",
+        "type": "弹窗",
+        "goal": ""
+      },
+      {
+        "id": "选择应用弹窗",
+        "name": "选择应用弹窗",
+        "type": "弹窗",
+        "goal": ""
+      },
+      {
+        "id": "我的权限页",
+        "name": "我的权限页",
+        "type": "页面",
+        "goal": ""
+      },
+      {
+        "id": "申请权限抽屉",
+        "name": "申请权限抽屉",
+        "type": "抽屉",
+        "goal": ""
+      },
+      {
+        "id": "申请记录 / 结果通知页",
+        "name": "申请记录 / 结果通知页",
+        "type": "页面",
+        "goal": ""
+      },
+      {
+        "id": "关闭失败弹窗",
+        "name": "关闭失败弹窗",
+        "type": "弹窗",
+        "goal": ""
+      }
+    ],
+    "edges": [
+      {
+        "from": "自助申请权限模式设置页",
+        "to": "选择角色弹窗",
+        "path_type": "success",
+        "label": ""
+      },
+      {
+        "from": "选择角色弹窗",
+        "to": "选择应用弹窗",
+        "path_type": "success",
+        "label": ""
+      },
+      {
+        "from": "选择应用弹窗",
+        "to": "我的权限页",
+        "path_type": "success",
+        "label": ""
+      },
+      {
+        "from": "我的权限页",
+        "to": "申请权限抽屉",
+        "path_type": "success",
+        "label": ""
+      },
+      {
+        "from": "申请权限抽屉",
+        "to": "申请记录 / 结果通知页",
+        "path_type": "success",
+        "label": ""
+      },
+      {
+        "from": "申请记录 / 结果通知页",
+        "to": "关闭失败弹窗",
+        "path_type": "success",
+        "label": ""
+      }
+    ]
+  },
+  "page_views": [
+    {
+      "view_id": "自助申请权限模式设置页",
+      "view_name": "自助申请权限模式设置页",
+      "view_type": "页面",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "选择角色弹窗",
+      "view_name": "选择角色弹窗",
+      "view_type": "弹窗",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "选择应用弹窗",
+      "view_name": "选择应用弹窗",
+      "view_type": "弹窗",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "我的权限页",
+      "view_name": "我的权限页",
+      "view_type": "页面",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "申请权限抽屉",
+      "view_name": "申请权限抽屉",
+      "view_type": "抽屉",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "申请记录 / 结果通知页",
+      "view_name": "申请记录 / 结果通知页",
+      "view_type": "页面",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    },
+    {
+      "view_id": "关闭失败弹窗",
+      "view_name": "关闭失败弹窗",
+      "view_type": "弹窗",
+      "audience": "",
+      "summary": "",
+      "sketch_blocks": [
+        {
+          "label": "主内容区",
+          "block_type": "Main Area"
+        },
+        {
+          "label": "操作区",
+          "block_type": "Detail Area"
+        }
+      ],
+      "key_understanding": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [
+        "缺少直接区块来源，已按页面摘要降级抽象草图",
+        "本页无直接专属状态项",
+        "本页无直接专属文案项"
+      ],
+      "source_refs": []
+    }
+  ],
+  "global_notes": [
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    },
+    {
+      "type": "状态",
+      "content": "未能归属的状态项"
+    }
+  ],
+  "unresolved_items": [],
+  "source_refs": [
+    "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\exports\\final\\experience_blueprint.md"
+  ]
+}
