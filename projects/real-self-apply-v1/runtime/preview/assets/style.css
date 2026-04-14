@@ -64,22 +64,7 @@ textarea {
 }
 
 .hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent-strong);
+  margin-bottom: 8px;
 }
 
 .hero h1 {
@@ -90,8 +75,8 @@ textarea {
 
 .hero p {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--text-muted);
 }
 
@@ -103,7 +88,8 @@ textarea {
 }
 
 .meta span,
-.hero-tags span,
+.hero-detail dt,
+.hero-detail dd,
 .legend-chip,
 .tiny-chip,
 .node-chip {
@@ -120,28 +106,39 @@ textarea {
   line-height: 1;
 }
 
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
+.hero-detail {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.hero-detail-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
   gap: 8px;
-  margin-top: 10px;
-}
-
-.hero-tags span {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  border-color: rgba(31, 107, 91, 0.14);
-}
-
-.hero-note {
-  margin-top: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px dashed var(--line-strong);
+  align-items: start;
   font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.hero-detail dt,
+.hero-detail dd {
+  margin: 0;
+  min-height: unset;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.hero-detail dt {
+  color: var(--text-soft);
+}
+
+.hero-detail dd {
+  color: var(--text);
 }
 
 .panel {
@@ -348,38 +345,17 @@ textarea {
   margin-top: 12px;
 }
 
-.flow-judgments {
+.chain-judgment {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid rgba(216, 209, 194, 0.9);
 }
 
-.flow-judgments h3 {
-  margin: 0 0 10px;
-  font-size: 14px;
+.chain-judgment h5 {
+  margin: 0 0 8px;
+  font-size: 12px;
   line-height: 1.4;
-}
-
-.judgment-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-}
-
-.judgment-item {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.78);
-}
-
-.judgment-item strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 13px;
-  line-height: 1.45;
+  color: var(--text-soft);
 }
 
 .judgment-lines {

@@ -7,6 +7,11 @@
     "context": {
       "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\workspace\\experience_blueprint.md",
       "input_mode": "workspace_preferred"
+    },
+    "overview": {
+      "目标用户与角色": "目标用户与角色：超管、员工申请人、审批人，以及需要解释规则的实施与运营支持角色。",
+      "体验目标": "体验目标：让用户清楚理解“能否启用、能申请什么、申请后何时生效、为什么失败、关闭模式为什么被拦截”，避免把治理限制误读为系统异常。",
+      "任务边界": "任务边界：覆盖模式启停、路径选择、范围配置、审批结果回写、我的权限查询、申请记录、关闭模式拦截这条主链路。"
     }
   },
   "global_flow": {
@@ -40,7 +45,10 @@
         "role": "超管",
         "path_type": "primary",
         "is_primary": true,
+        "start": "IA-01 宣传态",
+        "judgment": "R-01 互斥校验；若命中 EX-01 必须阻断并解释",
         "goal": "模式已开启，员工入口可见",
+        "failure_result": "启用失败，显示冲突模式和处理建议",
         "depends_on": [],
         "page_refs": [
           "P-01",
@@ -53,7 +61,10 @@
         "role": "超管",
         "path_type": "secondary",
         "is_primary": false,
+        "start": "IA-01 已开启态",
+        "judgment": "已开启态下不可无提示修改关键策略",
         "goal": "编辑成功并保留当前模式状态",
+        "failure_result": "规则冲突则阻断并解释",
         "depends_on": [],
         "page_refs": [
           "P-01",
@@ -66,7 +77,10 @@
         "role": "员工",
         "path_type": "primary",
         "is_primary": true,
+        "start": "IA-04",
+        "judgment": "必须只展示允许申请的已启用角色；异常命中 EX-03 时阻断",
         "goal": "进入审批中并生成记录",
+        "failure_result": "范围外角色不可提交并解释原因",
         "depends_on": [],
         "page_refs": [
           "P-05",
@@ -79,7 +93,10 @@
         "role": "员工",
         "path_type": "secondary",
         "is_primary": false,
+        "start": "IA-04",
+        "judgment": "需解释“默认申请功能的所有数据权限”；超范围则阻断",
         "goal": "进入审批中并生成记录",
+        "failure_result": "范围外应用不可提交并解释原因",
         "depends_on": [],
         "page_refs": [
           "P-05",
@@ -92,7 +109,10 @@
         "role": "审批人",
         "path_type": "primary",
         "is_primary": true,
+        "start": "IA-05 待办",
+        "judgment": "R-03 生效逻辑必须解释“已生效 / 未生效”",
         "goal": "审批通过后自动分配权限并可在“我的权限”中查看",
+        "failure_result": "审批拒绝或撤回，不生效并展示原因",
         "depends_on": [],
         "page_refs": [
           "P-04",
@@ -105,7 +125,10 @@
         "role": "超管",
         "path_type": "secondary",
         "is_primary": false,
+        "start": "IA-01 已开启态",
+        "judgment": "R-04 在途流程存在则命中 EX-02 并阻断",
         "goal": "关闭成功并移除员工入口",
+        "failure_result": "关闭失败，弹窗解释在途流程与处理方向",
         "depends_on": [],
         "page_refs": [
           "P-01",
@@ -646,34 +669,6 @@
         "impact": "关闭失败，弹窗解释在途流程与处理方向",
         "failure_result": "关闭失败，弹窗解释在途流程与处理方向",
         "return_direction": ""
-      },
-      {
-        "id": "ST-04",
-        "name": "启用失败（互斥拦截）",
-        "trigger": "命中 R-01 / EX-01",
-        "impact": "返回配置页继续调整",
-        "page_id": "P-01"
-      },
-      {
-        "id": "ST-07",
-        "name": "申请已拒绝 / 未生效",
-        "trigger": "审批拒绝或撤回",
-        "impact": "可回到 P-05 重新申请",
-        "page_id": "P-05"
-      },
-      {
-        "id": "ST-07",
-        "name": "申请已拒绝 / 未生效",
-        "trigger": "审批拒绝或撤回",
-        "impact": "可回到 P-05 重新申请",
-        "page_id": "P-06"
-      },
-      {
-        "id": "ST-08",
-        "name": "关闭失败",
-        "trigger": "关闭模式时存在在途流程，命中 EX-02",
-        "impact": "模式维持已开启态",
-        "page_id": "P-07"
       }
     ]
   },

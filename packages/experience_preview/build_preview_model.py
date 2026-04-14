@@ -58,6 +58,20 @@ def _extract_title(text: str, source_path: Path) -> str:
     return source_path.stem
 
 
+def _extract_overview(section_text: str) -> dict[str, str]:
+    result = {
+        "目标用户与角色": "",
+        "体验目标": "",
+        "任务边界": "",
+    }
+    for line in _parse_bullets(section_text):
+        for key in list(result.keys()):
+            prefix = f"{key}："
+            if line.startswith(prefix):
+                result[key] = line
+    return result
+
+
 def _normalize(value: str) -> str:
     compact = re.sub(r"\s+", "", value).lower()
     for token in ["页面", "页", "弹窗", "抽屉", "子页面", "窗口", "结果通知", "结果", "记录", "/", "（", "）", "(", ")"]:
@@ -447,7 +461,6 @@ def _apply_states(page_index: dict[str, dict[str, Any]], sections: dict[str, str
                     "page_id": page_id,
                 }
                 _append_page_dict(page, "blockers", blocker, ["id", "page_id"], f"状态与反馈矩阵:{state_item['state_id']}")
-                global_flow["blockers"] = _dedupe_dicts(list(global_flow.get("blockers", [])) + [blocker], ["id", "page_id"])
 
 
 def _copy_binding_hint(copy_id: str, scene: str) -> list[str]:
@@ -633,7 +646,10 @@ def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str
             "role": role,
             "path_type": "primary" if flow_id in {"TF-01", "TF-03", "TF-05"} else "secondary",
             "is_primary": flow_id in {"TF-01", "TF-03", "TF-05"},
+            "start": start_label,
+            "judgment": row.get("关键判断 / 阻断", "").strip(),
             "goal": row.get("成功结果", "").strip(),
+            "failure_result": row.get("失败 / 异常结果", "").strip(),
             "depends_on": [],
             "page_refs": chain_pages,
         }
@@ -733,6 +749,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
     sections = _split_sections(text)
     page_index = _build_page_index(sections)
     ia_index = _build_ia_index(sections)
+    overview = _extract_overview(sections.get("体验目标与任务边界", ""))
     unresolved_items: list[dict[str, str]] = []
     global_context: dict[str, list[Any]] = {
         "principles": [],
@@ -783,6 +800,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                 "source_blueprint": str(source_path),
                 "input_mode": "workspace_preferred" if "workspace" in str(source_path) else "formal_export_fallback",
             },
+            "overview": overview,
         },
         "global_flow": global_flow,
         "page_views": pages,

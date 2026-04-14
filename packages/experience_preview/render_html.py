@@ -73,22 +73,7 @@ textarea {
 }
 
 .hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent-strong);
+  margin-bottom: 8px;
 }
 
 .hero h1 {
@@ -99,8 +84,8 @@ textarea {
 
 .hero p {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--text-muted);
 }
 
@@ -112,7 +97,8 @@ textarea {
 }
 
 .meta span,
-.hero-tags span,
+.hero-detail dt,
+.hero-detail dd,
 .legend-chip,
 .tiny-chip,
 .node-chip {
@@ -129,28 +115,39 @@ textarea {
   line-height: 1;
 }
 
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
+.hero-detail {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.hero-detail-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
   gap: 8px;
-  margin-top: 10px;
-}
-
-.hero-tags span {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  border-color: rgba(31, 107, 91, 0.14);
-}
-
-.hero-note {
-  margin-top: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px dashed var(--line-strong);
+  align-items: start;
   font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.hero-detail dt,
+.hero-detail dd {
+  margin: 0;
+  min-height: unset;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.hero-detail dt {
+  color: var(--text-soft);
+}
+
+.hero-detail dd {
+  color: var(--text);
 }
 
 .panel {
@@ -357,38 +354,17 @@ textarea {
   margin-top: 12px;
 }
 
-.flow-judgments {
+.chain-judgment {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid rgba(216, 209, 194, 0.9);
 }
 
-.flow-judgments h3 {
-  margin: 0 0 10px;
-  font-size: 14px;
+.chain-judgment h5 {
+  margin: 0 0 8px;
+  font-size: 12px;
   line-height: 1.4;
-}
-
-.judgment-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-}
-
-.judgment-item {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.78);
-}
-
-.judgment-item strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 13px;
-  line-height: 1.45;
+  color: var(--text-soft);
 }
 
 .judgment-lines {
@@ -801,6 +777,20 @@ def _render_meta_rows(rows: list[tuple[str, str]]) -> str:
     return f'<dl class="meta-list">{entries}</dl>'
 
 
+def _render_hero_rows(rows: list[tuple[str, str]]) -> str:
+    filtered_rows = [(label, value) for label, value in rows if _normalize_text(value)]
+    if not filtered_rows:
+        return ""
+    entries = "".join(
+        "<div class=\"hero-detail-row\">"
+        f"<dt>{_escape(label)}</dt>"
+        f"<dd>{_escape(value)}</dd>"
+        "</div>"
+        for label, value in filtered_rows
+    )
+    return f'<dl class="hero-detail">{entries}</dl>'
+
+
 def _render_section(title: str, body: str) -> str:
     if not body:
         return ""
@@ -951,6 +941,7 @@ def _render_flow(model: dict[str, Any]) -> str:
                     node_parts.append('<div class="flow-arrow">→</div>')
 
             node_row_html = "".join(node_parts) if node_parts else '<p class="empty-note">暂无链路节点。</p>'
+            chain_judgment_html = _render_chain_judgment(chain)
 
             chain_html.append(
                 "<section class=\"chain\">"
@@ -965,6 +956,7 @@ def _render_flow(model: dict[str, Any]) -> str:
                 "</div>"
                 "</div>"
                 f'<div class="node-row">{node_row_html}</div>'
+                f"{chain_judgment_html}"
                 "</section>"
             )
 
@@ -982,32 +974,20 @@ def _render_flow(model: dict[str, Any]) -> str:
     return f'<div class="lane-list">{"".join(lane_html)}</div>'
 
 
-def _render_flow_judgments(model: dict[str, Any]) -> str:
-    blockers = [
-        item
-        for item in model.get("global_flow", {}).get("blockers", [])
-        if _normalize_text(item.get("chain_id"))
-    ]
-    if not blockers:
+def _render_chain_judgment(chain: dict[str, Any]) -> str:
+    lines = _render_pairs(
+        [
+            ("依赖 / 前提", chain.get("start")),
+            ("判断 / 阻断", chain.get("judgment")),
+            ("失败后去向 / 回退关系", chain.get("failure_result")),
+        ]
+    )
+    if not lines:
         return ""
-
-    entries: list[str] = []
-    for blocker in blockers:
-        title = _normalize_text(blocker.get("name") or blocker.get("id") or "未命名流程")
-        lines = _render_pairs(
-            [
-                ("触发条件", blocker.get("trigger")),
-                ("通过结果", blocker.get("success_result")),
-                ("阻断结果", blocker.get("failure_result") or blocker.get("impact")),
-                ("返回方向 / 回退方向", blocker.get("return_direction")),
-            ]
-        )
-        entries.append(f'<li class="judgment-item"><strong>{_escape(title)}</strong><div class="judgment-lines">{lines}</div></li>')
-
     return (
-        '<div class="flow-judgments">'
-        "<h3>判断说明区</h3>"
-        f'<ul class="judgment-list">{"".join(entries)}</ul>'
+        '<div class="chain-judgment">'
+        "<h5>判断说明</h5>"
+        f'<div class="judgment-lines">{lines}</div>'
         "</div>"
     )
 
@@ -1165,6 +1145,7 @@ def _render_page_card(page: dict[str, Any]) -> str:
 def render_preview_html(model: dict[str, Any]) -> str:
     meta = model.get("meta", {})
     global_context = model.get("global_context", {})
+    overview = meta.get("overview", {})
     global_principles_html = _render_bullet_list(
         [_normalize_text(item.get("label") or item.get("principle_id")) for item in global_context.get("principles", [])]
     )
@@ -1192,7 +1173,6 @@ def render_preview_html(model: dict[str, Any]) -> str:
         )
 
     flow_html = _render_flow(model)
-    flow_judgments_html = _render_flow_judgments(model)
     page_cards = "".join(_render_page_card(page) for page in model.get("page_views", []))
     debug_payload = html.escape(json_dumps(model))
     global_reference_body = "".join(
@@ -1214,16 +1194,16 @@ def render_preview_html(model: dict[str, Any]) -> str:
   <main class="page">
     <section class="hero">
       <div class="hero-top">
-        <div>
-          <div class="hero-kicker">Read-only Preview</div>
-          <h1>{_escape(_normalize_text(meta.get("title") or "体验蓝图预览"))}</h1>
-        </div>
+        <h1>{_escape(_normalize_text(meta.get("title") or "体验蓝图预览"))}</h1>
       </div>
-      <p>该页面仅用于本地阅读正式体验蓝图的派生预览，不回写正式蓝图，也不新增业务语义。</p>
-      <div class="meta">
-        <span>项目：{_escape(_normalize_text(model.get("project_id") or ""))}</span>
-        <span>来源：{_escape(_normalize_text(meta.get("context", {}).get("source_blueprint") or ""))}</span>
-      </div>
+      {_render_hero_rows([
+          ("只读说明", "该页面仅用于本地阅读正式体验蓝图的派生预览，不回写正式蓝图，也不新增业务语义。"),
+          ("项目", _normalize_text(model.get("project_id") or "")),
+          ("来源", _normalize_text(meta.get("context", {}).get("source_blueprint") or "")),
+          ("目标用户与角色", _normalize_text(overview.get("目标用户与角色") or "").replace("目标用户与角色：", "", 1)),
+          ("体验目标", _normalize_text(overview.get("体验目标") or "").replace("体验目标：", "", 1)),
+          ("任务边界", _normalize_text(overview.get("任务边界") or "").replace("任务边界：", "", 1)),
+      ])}
     </section>
 
     <div class="layout">
@@ -1231,27 +1211,23 @@ def render_preview_html(model: dict[str, Any]) -> str:
         <div class="panel-header">
           <div>
             <h2 class="section-title">全局流程总览</h2>
-            <p class="section-desc">按角色分泳道、按链路分组保留流程本体；判断信息改为流程图下方的纯文案说明区。</p>
           </div>
         </div>
         {flow_html}
         <div class="flow-legend">
           <span class="legend-chip">按角色分泳道</span>
           <span class="legend-chip">按链路分组</span>
-          <span class="legend-chip">判断信息下移为文案说明</span>
         </div>
-        {flow_judgments_html}
       </section>
 
-      {_render_section_panel("全局待确认", "仅在存在开放问题、缺口或待人工确认事项时显示。", _render_global_confirm_list(pending_global_items))}
+      {_render_section_panel("全局待确认", _render_global_confirm_list(pending_global_items))}
 
-      {_render_section_panel("全局原文补充", "保留未归入单页但仍需展示的原文原则引用与信息优先级。", global_reference_body)}
+      {_render_section_panel("全局原文补充", global_reference_body)}
 
       <section class="panel">
         <div class="panel-header">
           <div>
             <h2 class="section-title">页面预览卡</h2>
-            <p class="section-desc">一行一页，左侧为页面正文阅读区，右侧为状态、规则、追踪与待确认信息。</p>
           </div>
         </div>
         <div class="pages">{page_cards or '<p class="empty-note">无可渲染页面。</p>'}</div>
@@ -1261,7 +1237,6 @@ def render_preview_html(model: dict[str, Any]) -> str:
         <div class="panel-header">
           <div>
             <h2 class="section-title">调试信息</h2>
-            <p class="section-desc">默认折叠，仅在需要核对预览模型时展开。</p>
           </div>
         </div>
         <details>
@@ -1287,15 +1262,16 @@ def _render_global_confirm_list(items: list[str]) -> str:
     return f'<ul class="confirm-list">{entries}</ul>'
 
 
-def _render_section_panel(title: str, desc: str, body: str) -> str:
+def _render_section_panel(title: str, body: str, desc: str = "") -> str:
     if not body:
         return ""
+    desc_html = f"<p class=\"section-desc\">{_escape(desc)}</p>" if _normalize_text(desc) else ""
     return (
         "<section class=\"panel\">"
         "<div class=\"panel-header\">"
         "<div>"
         f"<h2 class=\"section-title\">{_escape(title)}</h2>"
-        f"<p class=\"section-desc\">{_escape(desc)}</p>"
+        f"{desc_html}"
         "</div>"
         "</div>"
         f"{body}"
