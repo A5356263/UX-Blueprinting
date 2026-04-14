@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import html
 import re
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -358,6 +357,52 @@ textarea {
   margin-top: 12px;
 }
 
+.flow-judgments {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216, 209, 194, 0.9);
+}
+
+.flow-judgments h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.judgment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.judgment-item {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.judgment-item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.judgment-lines {
+  display: grid;
+  gap: 4px;
+}
+
+.judgment-lines span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
 .legend-chip {
   color: var(--text-muted);
 }
@@ -445,18 +490,28 @@ textarea {
 .page-main,
 .page-side {
   display: grid;
-  gap: 12px;
+  gap: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.page-side {
+  background: var(--panel-subtle);
 }
 
 .info-block {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.72);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-.page-side .info-block {
-  background: var(--panel-subtle);
+.info-block + .info-block {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216, 209, 194, 0.9);
 }
 
 .info-block h4 {
@@ -502,7 +557,7 @@ textarea {
 }
 
 .detail-list li {
-  padding: 9px 10px;
+  padding: 8px 10px;
   border-radius: 12px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.88);
@@ -780,7 +835,7 @@ def _split_title_and_body(value: str) -> tuple[str, str]:
     elif ":" in text:
         title, body = text.split(":", 1)
     else:
-        return text, "补充信息已折叠为紧凑展示。"
+        return text, ""
     return _normalize_text(title), _normalize_text(body)
 
 
@@ -796,17 +851,41 @@ def _path_label(chain: dict[str, Any]) -> str:
     return _normalize_text(chain.get("path_type") or "链路")
 
 
-def _derive_node_title(node: dict[str, Any], page_names: dict[str, str]) -> tuple[str, str]:
+def _derive_node_title(node: dict[str, Any], page_names: dict[str, str] | None = None) -> tuple[str, str]:
     code, label = _split_code_and_label(str(node.get("name") or ""))
-    page_id = _normalize_text(node.get("page_id"))
-    page_name = page_names.get(page_id, "")
     if label:
         return code, label
-    if page_name:
-        return code, page_name
     if code:
         return code, code
     return "", _normalize_text(node.get("name") or "未命名节点")
+
+
+def _render_pairs(pairs: list[tuple[str, str]]) -> str:
+    rows = [(label, _normalize_text(value)) for label, value in pairs if _normalize_text(value)]
+    if not rows:
+        return ""
+    return "".join(f"<span>{_escape(label)}：{_escape(value)}</span>" for label, value in rows)
+
+
+def _render_structured_list(items: list[dict[str, Any]], title_builder, field_builder) -> str:
+    if not items:
+        return ""
+    entries: list[str] = []
+    for item in items:
+        title = _normalize_text(title_builder(item))
+        fields = field_builder(item)
+        field_html = _render_pairs(fields)
+        if not title and not field_html:
+            continue
+        entries.append(
+            "<li>"
+            + (f"<strong>{_escape(title)}</strong>" if title else "")
+            + field_html
+            + "</li>"
+        )
+    if not entries:
+        return ""
+    return f'<ul class="detail-list">{"".join(entries)}</ul>'
 
 
 def _render_sketch_blocks(page: dict[str, Any]) -> str:
@@ -839,22 +918,6 @@ def _render_flow(model: dict[str, Any]) -> str:
     global_flow = model.get("global_flow", {})
     lanes = global_flow.get("lanes", [])
     chains = {chain.get("chain_id"): chain for chain in global_flow.get("chains", [])}
-    page_names = {
-        _normalize_text(page.get("page_id")): _normalize_text(page.get("view_name"))
-        for page in model.get("page_views", [])
-    }
-
-    dependencies_by_chain: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for dependency in global_flow.get("dependencies", []):
-        chain_id = _normalize_text(dependency.get("from_chain_id"))
-        if chain_id:
-            dependencies_by_chain[chain_id].append(dependency)
-
-    blockers_by_chain: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for blocker in global_flow.get("blockers", []):
-        chain_id = _normalize_text(blocker.get("chain_id"))
-        if chain_id:
-            blockers_by_chain[chain_id].append(blocker)
 
     if not lanes:
         return '<p class="empty-note">暂无流程可展示。</p>'
@@ -868,57 +931,23 @@ def _render_flow(model: dict[str, Any]) -> str:
             chain = chains.get(chain_id, {})
             chain_nodes = [node for node in nodes if _normalize_text(node.get("chain_id")) == chain_id]
             node_parts: list[str] = []
-            dependency_notes = [
-                f"依赖：{_normalize_text(dep.get('to_chain_id'))} 已完成"
-                for dep in dependencies_by_chain.get(chain_id, [])
-                if _normalize_text(dep.get("to_chain_id"))
-            ]
 
             for index, node in enumerate(chain_nodes):
-                code, title = _derive_node_title(node, page_names)
+                code, title = _derive_node_title(node, {})
                 node_meta: list[str] = []
                 page_id = _normalize_text(node.get("page_id"))
                 if code and code != title:
                     node_meta.append(code)
                 if page_id:
                     node_meta.append(page_id)
-                note_lines: list[str] = []
-                if index == 0:
-                    note_lines.extend(dependency_notes)
-                if page_id and page_names.get(page_id) and page_names[page_id] != title:
-                    note_lines.append(f"关联页：{page_names[page_id]}")
-                note_html = "".join(
-                    f'<p class="node-note">{_escape(line)}</p>' for line in _dedupe_strings(note_lines)
-                )
                 node_parts.append(
                     "<div class=\"flow-node\">"
                     f"<small>{_escape(_normalize_text(node.get('type') or '节点'))}</small>"
                     f"<strong>{_escape(title or '未命名节点')}</strong>"
                     + (f'<div class="node-meta">{_render_chips(node_meta)}</div>' if node_meta else "")
-                    + note_html
                     + "</div>"
                 )
-                if index < len(chain_nodes) - 1 or blockers_by_chain.get(chain_id):
-                    node_parts.append('<div class="flow-arrow">→</div>')
-
-            blockers = blockers_by_chain.get(chain_id, [])
-            for blocker_index, blocker in enumerate(blockers):
-                blocker_name = _normalize_text(blocker.get("name"))
-                decision_title = blocker_name if blocker_name and blocker_name != _normalize_text(chain.get("name")) else "阻断校验"
-                decision_goal = _normalize_text(chain.get("goal") or "进入下一步")
-                blocker_impact = _normalize_text(blocker.get("impact") or "当前链路被阻断")
-                node_parts.append(
-                    "<div class=\"flow-node decision\">"
-                    "<small>判断节点</small>"
-                    f"<strong>{_escape(decision_title)}</strong>"
-                    f"<p>{_escape(_normalize_text(blocker.get('trigger') or '命中条件时阻断并解释'))}</p>"
-                    "<div class=\"decision-branches\">"
-                    f"<span class=\"decision-pass\">通过 / 继续：{_escape(decision_goal)}</span>"
-                    f"<span class=\"decision-stop\">阻断 / 返回：{_escape(blocker_impact)}</span>"
-                    "</div>"
-                    "</div>"
-                )
-                if blocker_index < len(blockers) - 1:
+                if index < len(chain_nodes) - 1:
                     node_parts.append('<div class="flow-arrow">→</div>')
 
             node_row_html = "".join(node_parts) if node_parts else '<p class="empty-note">暂无链路节点。</p>'
@@ -953,6 +982,36 @@ def _render_flow(model: dict[str, Any]) -> str:
     return f'<div class="lane-list">{"".join(lane_html)}</div>'
 
 
+def _render_flow_judgments(model: dict[str, Any]) -> str:
+    blockers = [
+        item
+        for item in model.get("global_flow", {}).get("blockers", [])
+        if _normalize_text(item.get("chain_id"))
+    ]
+    if not blockers:
+        return ""
+
+    entries: list[str] = []
+    for blocker in blockers:
+        title = _normalize_text(blocker.get("name") or blocker.get("id") or "未命名流程")
+        lines = _render_pairs(
+            [
+                ("触发条件", blocker.get("trigger")),
+                ("通过结果", blocker.get("success_result")),
+                ("阻断结果", blocker.get("failure_result") or blocker.get("impact")),
+                ("返回方向 / 回退方向", blocker.get("return_direction")),
+            ]
+        )
+        entries.append(f'<li class="judgment-item"><strong>{_escape(title)}</strong><div class="judgment-lines">{lines}</div></li>')
+
+    return (
+        '<div class="flow-judgments">'
+        "<h3>判断说明区</h3>"
+        f'<ul class="judgment-list">{"".join(entries)}</ul>'
+        "</div>"
+    )
+
+
 def _render_page_card(page: dict[str, Any]) -> str:
     page_id = _normalize_text(page.get("page_id"))
     view_name = _normalize_text(page.get("view_name") or "未命名页面")
@@ -970,56 +1029,106 @@ def _render_page_card(page: dict[str, Any]) -> str:
     if summary == view_name:
         summary = ""
 
+    key_understanding_blocks: list[str] = []
+    understanding_html = _render_bullet_list([str(item) for item in page.get("key_understanding", [])])
+    if understanding_html:
+        key_understanding_blocks.append(understanding_html)
+
+    action_html = _render_structured_list(
+        page.get("action_items", []),
+        lambda item: f"{_normalize_text(item.get('action_id'))} { _normalize_text(item.get('name')) }".strip(),
+        lambda item: [
+            ("触发条件", item.get("trigger")),
+            ("即时反馈", item.get("feedback")),
+            ("后续结果", item.get("outcome")),
+            ("风险保护", item.get("protection")),
+        ],
+    )
+    if action_html:
+        key_understanding_blocks.append(action_html)
+
+    info_contract_html = _render_structured_list(
+        page.get("info_contract_items", []),
+        lambda item: f"{_normalize_text(item.get('info_id'))} { _normalize_text(item.get('purpose')) }".strip(),
+        lambda item: [
+            ("优先级", item.get("priority")),
+            ("推荐位置", item.get("position")),
+            ("触发时机", item.get("trigger")),
+            ("不展示风险", item.get("risk")),
+        ],
+    )
+    if info_contract_html:
+        key_understanding_blocks.append(info_contract_html)
+
     left_sections = "".join(
         [
+            _render_section("线框草图", _render_sketch_blocks(page)),
             _render_section("页面信息", meta_rows),
             _render_section("页面摘要", f"<p>{_escape(summary)}</p>" if summary else ""),
-            _render_section("线框草图", _render_sketch_blocks(page)),
+            _render_section("关键理解", "".join(key_understanding_blocks)),
             _render_section("来源说明", _render_source_details([str(item) for item in page.get("source_refs", [])])),
         ]
     )
 
-    states_html = _render_named_items(
+    states_html = _render_structured_list(
         page.get("states", []),
-        lambda item: (
-            f"<strong>{_escape(_normalize_text(item.get('name') or item.get('state_id') or '未命名状态'))}</strong>"
-            f"<span>触发：{_escape(_normalize_text(item.get('trigger') or '无直接项'))}</span>"
-            f"<span>结果：{_escape(_normalize_text(item.get('outcome') or item.get('feedback') or item.get('copy_feedback') or '无直接项'))}</span>"
-        ),
+        lambda item: f"{_normalize_text(item.get('state_id'))} {_normalize_text(item.get('name'))}".strip(),
+        lambda item: [
+            ("触发条件", item.get("trigger")),
+            ("可用动作", item.get("actions")),
+            ("页面反馈", item.get("feedback")),
+            ("文案反馈", item.get("copy_feedback")),
+            ("下游结果", item.get("outcome")),
+        ],
     )
 
-    copy_html = _render_named_items(
+    copy_html = _render_structured_list(
         page.get("copy_items", []),
-        lambda item: (
-            f"<strong>{_escape(_normalize_text(item.get('scene') or item.get('copy_id') or '文案项'))}</strong>"
-            f"<span>目标：{_escape(_normalize_text(item.get('goal') or '无直接项'))}</span>"
-            f"<span>示例：{_escape(_normalize_text(item.get('example') or '无直接项'))}</span>"
-        ),
+        lambda item: f"{_normalize_text(item.get('copy_id'))} {_normalize_text(item.get('scene'))}".strip(),
+        lambda item: [
+            ("文案类型", item.get("copy_type")),
+            ("语义目标", item.get("goal")),
+            ("必含信息", item.get("required")),
+            ("禁止写法", item.get("avoid")),
+            ("示例方向", item.get("example")),
+        ],
     )
 
-    risk_entries: list[str] = []
-    for item in page.get("risks", []):
-        name = _normalize_text(item.get("name") or item.get("risk_id") or "风险")
-        confusion = _normalize_text(item.get("confusion_reason") or item.get("trigger") or "无直接项")
-        protection = _normalize_text(item.get("protection") or "无直接项")
-        risk_entries.append(f"{name}：{confusion}。保护策略：{protection}")
+    risk_html = _render_structured_list(
+        page.get("risks", []),
+        lambda item: f"{_normalize_text(item.get('risk_id'))} {_normalize_text(item.get('name'))}".strip(),
+        lambda item: [
+            ("触发场景", item.get("trigger")),
+            ("困惑原因", item.get("confusion_reason")),
+            ("保护策略", item.get("protection")),
+        ],
+    )
 
-    for item in page.get("blockers", []):
-        name = _normalize_text(item.get("name") or item.get("id") or "阻断")
-        trigger = _normalize_text(item.get("trigger") or "无直接项")
-        impact = _normalize_text(item.get("impact") or "无直接项")
-        risk_entries.append(f"{name}：触发 {trigger}。影响：{impact}")
+    blocker_html = _render_structured_list(
+        page.get("blockers", []),
+        lambda item: f"{_normalize_text(item.get('id'))} {_normalize_text(item.get('name'))}".strip(),
+        lambda item: [
+            ("触发条件", item.get("trigger")),
+            ("影响", item.get("impact")),
+        ],
+    )
 
-    principle_items = [
-        f"{_normalize_text(item.get('principle_id'))} {_normalize_text(item.get('name'))}：{_normalize_text(item.get('reason'))}".strip(" ：")
-        for item in page.get("principles", [])
-    ]
-    pattern_items = [str(item) for item in page.get("design_patterns", [])]
-    trace_items = [
-        f"{_normalize_text(item.get('trace_id'))} {_normalize_text(item.get('note'))}".strip()
-        for item in page.get("trace_items", [])
-    ]
-    principle_trace_html = _render_bullet_list(principle_items + pattern_items + trace_items)
+    principle_html = _render_structured_list(
+        page.get("principles", []),
+        lambda item: f"{_normalize_text(item.get('principle_id'))} {_normalize_text(item.get('name'))}".strip(),
+        lambda item: [("命中原因", item.get("reason"))],
+    )
+
+    mode_trace_html = _render_structured_list(
+        [{"mode": page.get("view_type")}] + list(page.get("trace_items", [])),
+        lambda item: _normalize_text(item.get("mode")) if item.get("mode") else f"{_normalize_text(item.get('trace_id'))} {_normalize_text(item.get('object'))}".strip(),
+        lambda item: [("承载模式", item.get("mode"))] if item.get("mode") else [
+            ("承接业务判断", item.get("business_judgment")),
+            ("承接事实 / 规则 / 异常", item.get("facts")),
+            ("承接原则", item.get("principles")),
+            ("说明", item.get("note")),
+        ],
+    )
 
     pending_items = _dedupe_strings(
         [str(item) for item in page.get("open_items", [])] + [str(item) for item in page.get("gap_items", [])]
@@ -1027,11 +1136,11 @@ def _render_page_card(page: dict[str, Any]) -> str:
 
     right_sections = "".join(
         [
-            _render_section("关键理解", _render_bullet_list([str(item) for item in page.get("key_understanding", [])])),
             _render_section("状态与反馈", states_html),
             _render_section("文案", copy_html),
-            _render_section("风险与阻断", _render_detail_list(risk_entries)),
-            _render_section("原则、模式与追踪", principle_trace_html),
+            _render_section("风险与阻断", "".join([risk_html, blocker_html])),
+            _render_section("原则", principle_html),
+            _render_section("模式与追踪", mode_trace_html),
             _render_section("待确认项", _render_bullet_list(pending_items)),
         ]
     )
@@ -1056,15 +1165,17 @@ def _render_page_card(page: dict[str, Any]) -> str:
 def render_preview_html(model: dict[str, Any]) -> str:
     meta = model.get("meta", {})
     global_context = model.get("global_context", {})
-
-    principle_labels = [
-        _normalize_text(item.get("label") or item.get("name") or item.get("principle_id"))
-        for item in global_context.get("principles", [])
-    ]
-    note_items = [
-        f"{_normalize_text(item.get('type') or '说明')}：{_normalize_text(item.get('content') or item.get('position') or '')}".strip(" ：")
-        for item in global_context.get("notes", [])
-    ]
+    global_principles_html = _render_bullet_list(
+        [_normalize_text(item.get("label") or item.get("principle_id")) for item in global_context.get("principles", [])]
+    )
+    global_notes_html = _render_structured_list(
+        global_context.get("notes", []),
+        lambda item: _normalize_text(item.get("type")),
+        lambda item: [
+            ("内容", item.get("content")),
+            ("推荐位置", item.get("position")),
+        ],
+    )
 
     pending_global_items = []
     for item in global_context.get("open_questions", []):
@@ -1081,8 +1192,15 @@ def render_preview_html(model: dict[str, Any]) -> str:
         )
 
     flow_html = _render_flow(model)
+    flow_judgments_html = _render_flow_judgments(model)
     page_cards = "".join(_render_page_card(page) for page in model.get("page_views", []))
     debug_payload = html.escape(json_dumps(model))
+    global_reference_body = "".join(
+        [
+            _render_section("原则引用", global_principles_html),
+            _render_section("信息优先级", global_notes_html),
+        ]
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1104,11 +1222,8 @@ def render_preview_html(model: dict[str, Any]) -> str:
       <p>该页面仅用于本地阅读正式体验蓝图的派生预览，不回写正式蓝图，也不新增业务语义。</p>
       <div class="meta">
         <span>项目：{_escape(_normalize_text(model.get("project_id") or ""))}</span>
-        <span>版本：{_escape(_normalize_text(meta.get("version") or "v2"))}</span>
         <span>来源：{_escape(_normalize_text(meta.get("context", {}).get("source_blueprint") or ""))}</span>
       </div>
-      {"<div class=\"hero-tags\">" + _render_chips(principle_labels, "node-chip") + "</div>" if principle_labels else ""}
-      {f'<div class="hero-note">{_escape("；".join(_dedupe_strings(note_items)))}</div>' if note_items else ""}
     </section>
 
     <div class="layout">
@@ -1116,24 +1231,27 @@ def render_preview_html(model: dict[str, Any]) -> str:
         <div class="panel-header">
           <div>
             <h2 class="section-title">全局流程总览</h2>
-            <p class="section-desc">按角色分泳道、按链路分组，依赖与阻断直接并入链路节点，便于同屏快速扫读。</p>
+            <p class="section-desc">按角色分泳道、按链路分组保留流程本体；判断信息改为流程图下方的纯文案说明区。</p>
           </div>
         </div>
         {flow_html}
         <div class="flow-legend">
           <span class="legend-chip">按角色分泳道</span>
           <span class="legend-chip">按链路分组</span>
-          <span class="legend-chip">依赖 / 阻断已并入节点</span>
+          <span class="legend-chip">判断信息下移为文案说明</span>
         </div>
+        {flow_judgments_html}
       </section>
 
       {_render_section_panel("全局待确认", "仅在存在开放问题、缺口或待人工确认事项时显示。", _render_global_confirm_list(pending_global_items))}
+
+      {_render_section_panel("全局原文补充", "保留未归入单页但仍需展示的原文原则引用与信息优先级。", global_reference_body)}
 
       <section class="panel">
         <div class="panel-header">
           <div>
             <h2 class="section-title">页面预览卡</h2>
-            <p class="section-desc">一行一页，左侧保留主阅读信息，右侧集中呈现状态、文案、风险与追踪。</p>
+            <p class="section-desc">一行一页，左侧为页面正文阅读区，右侧为状态、规则、追踪与待确认信息。</p>
           </div>
         </div>
         <div class="pages">{page_cards or '<p class="empty-note">无可渲染页面。</p>'}</div>

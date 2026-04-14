@@ -10,6 +10,7 @@ from packages.common import get_project_dir, get_project_exports_dir, get_projec
 SECTION_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 PAGE_ID_RE = re.compile(r"\bP-\d+\b", re.IGNORECASE)
 FLOW_ID_RE = re.compile(r"\bTF-\d+\b", re.IGNORECASE)
+IA_ID_RE = re.compile(r"\bIA-\d+\b", re.IGNORECASE)
 COPY_ID_RE = re.compile(r"\bCOPY-\d+\b", re.IGNORECASE)
 TRACE_ID_RE = re.compile(r"\bTR-\d+\b", re.IGNORECASE)
 PRINCIPLE_ID_RE = re.compile(r"\bPR-\d+\b", re.IGNORECASE)
@@ -20,8 +21,8 @@ SUB_BLOCK_RE = re.compile(r"^####\s+(.+?)\s*$", re.MULTILINE)
 def _read_blueprint_source(project_id: str) -> tuple[Path, str]:
     project_dir = get_project_dir(project_id)
     candidates = [
-        get_project_exports_dir(project_id) / "final" / "experience_blueprint.md",
         get_project_workspace_dir(project_id) / "experience_blueprint.md",
+        get_project_exports_dir(project_id) / "final" / "experience_blueprint.md",
     ]
     for path in candidates:
         if path.exists():
@@ -154,6 +155,8 @@ def _empty_page(page_id: str, view_name: str, view_type: str, roles: list[str], 
         "downstream_links": [],
         "sketch_blocks": [],
         "key_understanding": [],
+        "action_items": [],
+        "info_contract_items": [],
         "states": [],
         "copy_items": [],
         "risks": [],
@@ -191,18 +194,44 @@ def _build_page_index(sections: dict[str, str]) -> dict[str, dict[str, Any]]:
                 page["upstream_links"].append(related_id)
             elif related_id != page_id:
                 page["downstream_links"].append(related_id)
-        page["design_patterns"].extend(
-            _dedupe_strings(
-                [
-                    f"承载模式:{view_type}",
-                    "结果页" if "结果" in view_name or "记录" in view_name else "",
-                    "设置页" if "设置" in view_name else "",
-                    "选择器" if "选择" in view_name else "",
-                ]
-            )
-        )
         page_index[page_id] = page
     return page_index
+
+
+def _build_ia_index(sections: dict[str, str]) -> dict[str, dict[str, Any]]:
+    rows = _parse_markdown_table(sections.get("信息架构总览", ""))
+    ia_index: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        ia_id = (row.get("ia_node") or row.get("IA节点") or row.get("节点") or "").strip().upper()
+        if not ia_id:
+            continue
+        ia_index[ia_id] = {
+            "ia_id": ia_id,
+            "roles": _split_labels(row.get("面向角色", "")),
+            "type": (row.get("类型") or "").strip(),
+            "entry": (row.get("入口") or "").strip(),
+            "task": (row.get("承接对象 / 主任务") or "").strip(),
+            "relation": (row.get("与其他节点关系") or "").strip(),
+        }
+    return ia_index
+
+
+def _ia_page_refs(label: str, ia_index: dict[str, dict[str, Any]], page_index: dict[str, dict[str, Any]]) -> list[str]:
+    refs: list[str] = []
+    for ia_id in [match.group(0).upper() for match in IA_ID_RE.finditer(label)]:
+        ia_item = ia_index.get(ia_id)
+        if ia_item is None:
+            continue
+        binding_text = " ".join(
+            [
+                ia_id,
+                str(ia_item.get("entry") or ""),
+                str(ia_item.get("task") or ""),
+                str(ia_item.get("relation") or ""),
+            ]
+        )
+        refs.extend(_bind_pages(binding_text, page_index))
+    return _dedupe_strings(refs)
 
 
 def _page_aliases(page: dict[str, Any]) -> list[str]:
@@ -237,6 +266,10 @@ def _bind_pages(text: str, page_index: dict[str, dict[str, Any]]) -> list[str]:
             matched.append(page_id)
             continue
     return _dedupe_strings(matched)
+
+
+def _explicit_page_refs(text: str, page_index: dict[str, dict[str, Any]]) -> list[str]:
+    return [page_id for page_id in _dedupe_strings([match.upper() for match in PAGE_ID_RE.findall(text)]) if page_id in page_index]
 
 
 def _bind_best_page(text: str, page_index: dict[str, dict[str, Any]]) -> str | None:
@@ -310,30 +343,15 @@ def _apply_page_blueprints(page_index: dict[str, dict[str, Any]], sections: dict
 
         action_rows = _parse_markdown_table(sub_blocks.get("关键动作与状态", ""))
         for row in action_rows:
-            action_summary = " | ".join(
-                [
-                    row.get("动作", "").strip(),
-                    row.get("触发条件", "").strip(),
-                    row.get("即时反馈", "").strip(),
-                    row.get("后续结果", "").strip(),
-                ]
-            )
-            _append_page_string(page, "key_understanding", action_summary, f"关键页面蓝图:{page_id}:关键动作与状态")
-            risk_text = row.get("风险保护", "").strip()
-            if risk_text:
-                _append_page_dict(
-                    page,
-                    "risks",
-                    {
-                        "risk_id": row.get("action_id", "").strip() or f"{page_id}-action-risk",
-                        "name": row.get("动作", "").strip() or "关键动作风险保护",
-                        "trigger": row.get("触发条件", "").strip(),
-                        "confusion_reason": "",
-                        "protection": risk_text,
-                    },
-                    ["risk_id", "name"],
-                    f"关键页面蓝图:{page_id}:关键动作与状态",
-                )
+            action_item = {
+                "action_id": row.get("action_id", "").strip(),
+                "name": row.get("动作", "").strip(),
+                "trigger": row.get("触发条件", "").strip(),
+                "feedback": row.get("即时反馈", "").strip(),
+                "outcome": row.get("后续结果", "").strip(),
+                "protection": row.get("风险保护", "").strip(),
+            }
+            _append_page_dict(page, "action_items", action_item, ["action_id", "name"], f"关键页面蓝图:{page_id}:关键动作与状态")
 
 
 def _apply_layout_blocks(page_index: dict[str, dict[str, Any]], sections: dict[str, str]) -> None:
@@ -381,8 +399,7 @@ def _apply_content_contract(page_index: dict[str, dict[str, Any]], sections: dic
             global_context["notes"].append({"type": "信息优先级", "content": item["purpose"], "position": item["position"]})
             continue
         for page_id in refs:
-            page = page_index[page_id]
-            _append_page_string(page, "key_understanding", f"{item['purpose']}：{item['risk']}", f"内容与信息优先级合同:{item['info_id']}")
+            _append_page_dict(page_index[page_id], "info_contract_items", item, ["info_id"], f"内容与信息优先级合同:{item['info_id']}")
 
 
 def _state_binding_hint(state_id: str, state_name: str, feedback: str, outcome: str) -> str:
@@ -555,109 +572,43 @@ def _apply_open_questions(page_index: dict[str, dict[str, Any]], sections: dict[
 
 
 def _build_flow_dependencies(flow_rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    dependencies: list[dict[str, str]] = []
-    flow_map = {row.get("flow_id", "").strip(): row for row in flow_rows}
-    if "TF-01" in flow_map:
-        dependencies.append({"from_chain_id": "TF-03", "to_chain_id": "TF-01", "reason": "员工申请角色依赖模式已启用"})
-        dependencies.append({"from_chain_id": "TF-04", "to_chain_id": "TF-01", "reason": "员工申请功能权限依赖模式已启用"})
-        dependencies.append({"from_chain_id": "TF-06", "to_chain_id": "TF-01", "reason": "关闭模式依赖当前模式已开启"})
-    if "TF-03" in flow_map:
-        dependencies.append({"from_chain_id": "TF-05", "to_chain_id": "TF-03", "reason": "审批结果回写依赖员工申请角色流程已提交"})
-    if "TF-04" in flow_map:
-        dependencies.append({"from_chain_id": "TF-05", "to_chain_id": "TF-04", "reason": "审批结果回写依赖员工申请功能权限流程已提交"})
-    return dependencies
+    return []
 
 
-def _infer_role(flow_id: str, flow_name: str, bound_pages: list[str], page_index: dict[str, dict[str, Any]]) -> str:
-    explicit_roles = {
-        "TF-01": "超管",
-        "TF-02": "超管",
-        "TF-03": "员工",
-        "TF-04": "员工",
-        "TF-05": "审批人",
-        "TF-06": "超管",
-    }
-    if flow_id in explicit_roles:
-        return explicit_roles[flow_id]
+def _infer_role(start_label: str, bound_pages: list[str], page_index: dict[str, dict[str, Any]], ia_index: dict[str, dict[str, Any]]) -> str:
+    for ia_id in [match.group(0).upper() for match in IA_ID_RE.finditer(start_label)]:
+        roles = ia_index.get(ia_id, {}).get("roles", [])
+        if roles:
+            return _dedupe_strings([str(role) for role in roles])[0]
     combined_roles: list[str] = []
     for page_id in bound_pages:
         combined_roles.extend(str(role) for role in page_index.get(page_id, {}).get("roles", []))
     if combined_roles:
         return _dedupe_strings(combined_roles)[0]
-    if "员工" in flow_name:
+    if "员工" in start_label:
         return "员工"
-    if "审批" in flow_name:
+    if "审批" in start_label:
         return "审批人"
     return "超管"
 
 
-def _flow_page_refs(flow_id: str, flow_name: str, text: str, page_index: dict[str, dict[str, Any]]) -> list[str]:
-    explicit_map = {
-        "TF-01": ["P-01", "P-02", "P-03"],
-        "TF-02": ["P-01", "P-02", "P-03"],
-        "TF-03": ["P-05", "P-06"],
-        "TF-04": ["P-05", "P-06"],
-        "TF-05": ["P-06", "P-04"],
-        "TF-06": ["P-01", "P-07"],
-    }
-    if flow_id in explicit_map:
-        return [page_id for page_id in explicit_map[flow_id] if page_id in page_index]
-    refs = _bind_pages(f"{flow_name} {text}", page_index)
-    return refs
+def _flow_page_refs(flow_name: str, text: str, page_index: dict[str, dict[str, Any]], ia_index: dict[str, dict[str, Any]]) -> list[str]:
+    refs = _explicit_page_refs(f"{flow_name} {text}", page_index)
+    refs.extend(_ia_page_refs(text, ia_index, page_index))
+    return _dedupe_strings(refs)
 
 
-def _infer_step_page(flow_id: str, label: str, chain_pages: list[str], page_index: dict[str, dict[str, Any]]) -> str:
-    step_map = {
-        "TF-01": {
-            "进入设置": "P-01",
-            "选路径": "P-01",
-            "配范围": "P-01",
-            "配审批流": "P-01",
-            "点击启用": "P-01",
-        },
-        "TF-02": {
-            "点击编辑": "P-01",
-            "调整路径/范围/审批流": "P-01",
-            "确认编辑": "P-01",
-        },
-        "TF-03": {
-            "IA-04": "P-05",
-            "选择“申请角色”": "P-05",
-            "选择角色": "P-05",
-            "填原因": "P-05",
-            "提交": "P-05",
-        },
-        "TF-04": {
-            "IA-04": "P-05",
-            "选择“申请功能权限”": "P-05",
-            "选应用/权限": "P-05",
-            "填原因": "P-05",
-            "提交": "P-05",
-        },
-        "TF-05": {
-            "IA-05 待办": "P-06",
-            "审批人处理": "P-06",
-            "系统回写结果": "P-06",
-            "通知申请人": "P-06",
-            "申请记录更新": "P-06",
-        },
-        "TF-06": {
-            "点击关闭模式": "P-01",
-            "二次确认": "P-07",
-            "校验在途流程": "P-07",
-            "IA-01 已开启态": "P-01",
-        },
-    }
-    mapped = step_map.get(flow_id, {}).get(label)
-    if mapped and mapped in page_index:
-        return mapped
-    refs = _bind_pages(label, page_index)
+def _infer_step_page(label: str, chain_pages: list[str], page_index: dict[str, dict[str, Any]], ia_index: dict[str, dict[str, Any]]) -> str:
+    ia_refs = _ia_page_refs(label, ia_index, page_index)
+    if ia_refs:
+        return ia_refs[0]
+    refs = _explicit_page_refs(label, page_index)
     if refs:
         return refs[0]
     return chain_pages[0] if len(chain_pages) == 1 else ""
 
 
-def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str, str]) -> dict[str, Any]:
+def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str, str], ia_index: dict[str, dict[str, Any]]) -> dict[str, Any]:
     rows = _parse_markdown_table(sections.get("任务流蓝图", ""))
     chains: list[dict[str, Any]] = []
     nodes: list[dict[str, Any]] = []
@@ -671,10 +622,11 @@ def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str
             continue
         flow_name = row.get("流程名称", "").strip()
         steps = _split_arrow_steps(row.get("关键步骤", "").strip())
-        step_labels = [row.get("起点", "").strip()] + steps
+        start_label = row.get("起点", "").strip()
+        step_labels = [start_label] + steps
         full_text = " ".join(step_labels + [row.get("关键判断 / 阻断", ""), row.get("成功结果", ""), row.get("失败 / 异常结果", "")])
-        chain_pages = _flow_page_refs(flow_id, flow_name, full_text, page_index)
-        role = _infer_role(flow_id, flow_name, chain_pages, page_index)
+        chain_pages = _flow_page_refs(flow_name, full_text, page_index, ia_index)
+        role = _infer_role(start_label, chain_pages, page_index, ia_index)
         chain = {
             "chain_id": flow_id,
             "name": flow_name,
@@ -692,7 +644,7 @@ def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str
         previous_node_id: str | None = None
         for index, label in enumerate(step_labels):
             node_id = f"{flow_id}-N{index + 1}"
-            bound_page_id = _infer_step_page(flow_id, label, chain_pages, page_index)
+            bound_page_id = _infer_step_page(label, chain_pages, page_index, ia_index)
             node = {
                 "node_id": node_id,
                 "name": label,
@@ -726,7 +678,10 @@ def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str
                     "role": role,
                     "chain_id": flow_id,
                     "trigger": judgment_text,
+                    "success_result": row.get("成功结果", "").strip(),
                     "impact": failure_text,
+                    "failure_result": failure_text,
+                    "return_direction": "",
                 }
             )
 
@@ -749,8 +704,6 @@ def _build_global_flow(page_index: dict[str, dict[str, Any]], sections: dict[str
 def _finalize_pages(page_index: dict[str, dict[str, Any]], unresolved_items: list[dict[str, str]]) -> list[dict[str, Any]]:
     pages: list[dict[str, Any]] = []
     for page_id, page in page_index.items():
-        if not page["sketch_blocks"]:
-            page["gap_items"].append("缺少直接区块布局示意")
         page["roles"] = _dedupe_strings([str(role) for role in page.get("roles", [])])
         page["upstream_links"] = _dedupe_strings([str(item) for item in page.get("upstream_links", []) if item])
         page["downstream_links"] = _dedupe_strings([str(item) for item in page.get("downstream_links", []) if item])
@@ -759,6 +712,8 @@ def _finalize_pages(page_index: dict[str, dict[str, Any]], unresolved_items: lis
         page["gap_items"] = _dedupe_strings([str(item) for item in page.get("gap_items", [])])
         page["source_refs"] = _dedupe_strings([str(item) for item in page.get("source_refs", [])])
         page["design_patterns"] = _dedupe_strings([str(item) for item in page.get("design_patterns", [])])
+        page["action_items"] = _dedupe_dicts(list(page.get("action_items", [])), ["action_id", "name"])
+        page["info_contract_items"] = _dedupe_dicts(list(page.get("info_contract_items", [])), ["info_id"])
         page["states"] = _dedupe_dicts(list(page.get("states", [])), ["state_id", "name"])
         page["copy_items"] = _dedupe_dicts(list(page.get("copy_items", [])), ["copy_id"])
         page["risks"] = _dedupe_dicts(list(page.get("risks", [])), ["risk_id", "name"])
@@ -777,6 +732,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
     source_path, text = _read_blueprint_source(project_id)
     sections = _split_sections(text)
     page_index = _build_page_index(sections)
+    ia_index = _build_ia_index(sections)
     unresolved_items: list[dict[str, str]] = []
     global_context: dict[str, list[Any]] = {
         "principles": [],
@@ -795,7 +751,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
             }
         )
 
-    global_flow = _build_global_flow(page_index, sections)
+    global_flow = _build_global_flow(page_index, sections, ia_index)
     global_context["dependencies"] = list(global_flow.get("dependencies", []))
 
     _apply_page_blueprints(page_index, sections)
@@ -825,7 +781,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
             "version": "v2",
             "context": {
                 "source_blueprint": str(source_path),
-                "input_mode": "formal_export" if "exports" in str(source_path) else "workspace_fallback",
+                "input_mode": "workspace_preferred" if "workspace" in str(source_path) else "formal_export_fallback",
             },
         },
         "global_flow": global_flow,

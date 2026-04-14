@@ -1,13 +1,13 @@
 {
   "project_id": "real-self-apply-v1",
-  "generated_at": "2026-04-14T13:25:29+00:00",
+  "generated_at": "2026-04-14T14:16:41+00:00",
   "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\preview",
   "server_host": "127.0.0.1",
-  "server_port": 54723,
-  "preview_url": "http://127.0.0.1:54723/",
+  "server_port": 59579,
+  "preview_url": "http://127.0.0.1:59579/",
   "ready_state": "ready",
   "page_count": 7,
   "global_note_count": 0,
   "unresolved_count": 0,
-  "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\exports\\final\\experience_blueprint.md"
+  "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\workspace\\experience_blueprint.md"
 }

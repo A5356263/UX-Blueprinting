@@ -348,6 +348,52 @@ textarea {
   margin-top: 12px;
 }
 
+.flow-judgments {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216, 209, 194, 0.9);
+}
+
+.flow-judgments h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.judgment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.judgment-item {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.judgment-item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.judgment-lines {
+  display: grid;
+  gap: 4px;
+}
+
+.judgment-lines span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
 .legend-chip {
   color: var(--text-muted);
 }
@@ -435,18 +481,28 @@ textarea {
 .page-main,
 .page-side {
   display: grid;
-  gap: 12px;
+  gap: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.page-side {
+  background: var(--panel-subtle);
 }
 
 .info-block {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.72);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-.page-side .info-block {
-  background: var(--panel-subtle);
+.info-block + .info-block {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216, 209, 194, 0.9);
 }
 
 .info-block h4 {
@@ -492,7 +548,7 @@ textarea {
 }
 
 .detail-list li {
-  padding: 9px 10px;
+  padding: 8px 10px;
   border-radius: 12px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.88);
