@@ -1,10 +1,10 @@
 {
   "project_id": "real-self-apply-v1",
-  "generated_at": "2026-04-13T15:03:03+00:00",
+  "generated_at": "2026-04-14T13:25:29+00:00",
   "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\real-self-apply-v1\\runtime\\preview",
   "server_host": "127.0.0.1",
-  "server_port": 57788,
-  "preview_url": "http://127.0.0.1:57788/",
+  "server_port": 54723,
+  "preview_url": "http://127.0.0.1:54723/",
   "ready_state": "ready",
   "page_count": 7,
   "global_note_count": 0,
