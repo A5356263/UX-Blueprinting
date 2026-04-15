@@ -23,6 +23,9 @@
 ```bash
 python -m packages bootstrap demo-task
 python -m packages assemble demo-task
+python -m packages generate-facts demo-task
+python -m packages generate-business demo-task
+python -m packages generate-experience demo-task
 python -m packages gate-facts demo-task
 python -m packages gate-business demo-task
 python -m packages gate-experience demo-task
@@ -30,6 +33,7 @@ python -m packages validate demo-task
 python -m packages coverage demo-task
 python -m packages archive demo-task
 python -m packages preview demo-task --host 127.0.0.1 --port 0
+python -m packages run-main demo-task
 ```
 
 如需查看当前正式能力面，可运行：
@@ -46,6 +50,7 @@ python -m packages memory-extract <project-id>
 python -m packages memory-accept <project-id>
 python -m packages memory-summary <project-id>
 python -m packages preview <project-id> --host 127.0.0.1 --port 0
+python -m packages sample-check
 ```
 
 ## 阅读顺序

@@ -11,6 +11,7 @@ from packages.common import (
     get_project_source_dir,
     get_project_workspace_dir,
 )
+from packages.provenance import append_command_if_provenance_exists
 
 
 def copy_if_exists(source: Path, destination: Path) -> bool:
@@ -99,9 +100,12 @@ def run_archive_artifacts(task_id: str) -> int:
         copied += 1
     if copy_if_exists(runtime_dir / "task_card_resolved.json", context_dir / "task_card_resolved.json"):
         copied += 1
+    if copy_if_exists(runtime_dir / "provenance.json", context_dir / "provenance.json"):
+        copied += 1
     if copy_if_exists(remediation_dir / "repair_summary.md", checks_dir / "repair_summary.md"):
         copied += 1
 
     print(f"Artifacts archived to: {exports_dir}")
     print(f"Copied items: {copied}")
+    append_command_if_provenance_exists(task_id, "archive")
     return 0

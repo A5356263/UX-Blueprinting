@@ -31,6 +31,7 @@ python -m packages assemble <project-id>
 生成 `workspace/facts.md`，再运行：
 
 ```bash
+python -m packages generate-facts <project-id>
 python -m packages gate-facts <project-id>
 ```
 
@@ -39,6 +40,7 @@ python -m packages gate-facts <project-id>
 生成 `workspace/business_blueprint.md`，再运行：
 
 ```bash
+python -m packages generate-business <project-id>
 python -m packages gate-business <project-id>
 ```
 
@@ -53,6 +55,7 @@ python -m packages gate-business <project-id>
 生成 `workspace/experience_blueprint.md`，再运行：
 
 ```bash
+python -m packages generate-experience <project-id>
 python -m packages gate-experience <project-id>
 ```
 
@@ -116,7 +119,7 @@ python -m packages archive <project-id>
 
 ## Step 8
 
-如需生成体验蓝图浏览器预览，并向用户交付本地预览地址，运行：
+如需只补做体验蓝图浏览器预览，并向用户交付本地预览地址，运行：
 
 ```bash
 python -m packages preview <project-id> --host 127.0.0.1 --port 0
@@ -131,6 +134,28 @@ python -m packages preview <project-id> --host 127.0.0.1 --port 0
 - `runtime/preview/preview_build_log.md`
 
 ## Step 9
+
+如需按正式主链路一次性执行 `assemble -> generate-* -> gate-* -> validate -> coverage -> archive -> preview`，运行：
+
+```bash
+python -m packages run-main <project-id>
+```
+
+如只希望主链路执行到归档，不自动补 preview，可运行：
+
+```bash
+python -m packages run-main <project-id> --skip-preview
+```
+
+## Step 10
+
+如需校验正反样例是否仍满足回归要求，运行：
+
+```bash
+python -m packages sample-check
+```
+
+## Step 11
 
 如需把本轮结果提炼为 quality memory，再运行：
 

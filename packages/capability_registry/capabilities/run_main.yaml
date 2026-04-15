@@ -1,0 +1,30 @@
+{
+  "capability_id": "run_main",
+  "display_name": "Run Main",
+  "type": "command",
+  "stage": "mainline",
+  "entrypoint": "python -m packages run-main <project-id> [--skip-preview]",
+  "description": "按统一顺序运行 assemble、generate-*、gate-*、validate、coverage、archive，并在默认情况下自动后置执行 preview。",
+  "required_inputs": [
+    "projects/<project-id>/source/task_card.md",
+    "projects/<project-id>/source/requirement.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/*.md",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/exports/final/*",
+    "projects/<project-id>/runtime/provenance.json",
+    "projects/<project-id>/runtime/preview/*"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/mainline.py",
+    "packages/__main__.py",
+    "packages/provenance.py",
+    "docs/discussion/ux_blueprinting_优化规范包/ux_blueprinting_spec_pack/01_执行中枢与主链路优化规范.md"
+  ],
+  "status": "active"
+}

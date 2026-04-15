@@ -24,9 +24,18 @@ TEMPLATE_MAP = {
 }
 
 
+def _resolve_domain_knowledge_ref(domain: str) -> str:
+    repo_root = get_repo_root()
+    candidate = repo_root / "knowledge" / "wiki" / "topics" / f"{domain}-domain-index.md"
+    if candidate.exists():
+        return f"knowledge/wiki/topics/{domain}-domain-index.md"
+    return "knowledge/wiki/topics/README.md"
+
+
 def render_template(content: str, project_id: str, task_name: str, domain: str) -> str:
     return (
-        content.replace("{{TASK_ID}}", project_id)
+        content.replace("knowledge/wiki/topics/{{DOMAIN}}-domain-index.md", _resolve_domain_knowledge_ref(domain))
+        .replace("{{TASK_ID}}", project_id)
         .replace("{{TASK_NAME}}", task_name)
         .replace("{{DOMAIN}}", domain)
     )
@@ -99,6 +108,9 @@ def run_task_bootstrap(
                 "task_name": task_name,
                 "domain": domain,
                 "status": "draft",
+                "project_role": "real_project",
+                "read_only": False,
+                "excluded_from_default_scan": False,
             },
             ensure_ascii=False,
             indent=2,

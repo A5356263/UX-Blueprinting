@@ -21,8 +21,8 @@ SUB_BLOCK_RE = re.compile(r"^####\s+(.+?)\s*$", re.MULTILINE)
 def _read_blueprint_source(project_id: str) -> tuple[Path, str]:
     project_dir = get_project_dir(project_id)
     candidates = [
-        get_project_workspace_dir(project_id) / "experience_blueprint.md",
         get_project_exports_dir(project_id) / "final" / "experience_blueprint.md",
+        get_project_workspace_dir(project_id) / "experience_blueprint.md",
     ]
     for path in candidates:
         if path.exists():
@@ -493,7 +493,16 @@ def _apply_copy_items(page_index: dict[str, dict[str, Any]], sections: dict[str,
         if not bound_pages:
             global_context["notes"].append({"type": "文案", "content": f"{item['copy_id']} {item['scene']}"})
             continue
-        for page_id in bound_pages:
+        valid_page_ids = [page_id for page_id in bound_pages if page_id in page_index]
+        if not valid_page_ids:
+            global_context["notes"].append(
+                {
+                    "type": "文案",
+                    "content": f"{item['copy_id']} 引用了未落盘页面: {', '.join(bound_pages)}",
+                }
+            )
+            continue
+        for page_id in valid_page_ids:
             _append_page_dict(page_index[page_id], "copy_items", item, ["copy_id"], f"文案合同:{item['copy_id']}")
 
 
@@ -798,7 +807,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
             "version": "v2",
             "context": {
                 "source_blueprint": str(source_path),
-                "input_mode": "workspace_preferred" if "workspace" in str(source_path) else "formal_export_fallback",
+                "input_mode": "formal_export" if "exports" in str(source_path) else "workspace_fallback",
             },
             "overview": overview,
         },

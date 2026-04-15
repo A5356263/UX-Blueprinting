@@ -6,6 +6,8 @@ from packages.archive import run_archive_artifacts
 from packages.capability_registry import run_capabilities_list, run_capability_show
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
+from packages.generation import run_generate_business, run_generate_experience, run_generate_facts
+from packages.mainline import run_main, run_sample_check
 from packages.memory_layer import run_memory_accept, run_memory_extract, run_memory_summary
 from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
 from packages.task_bootstrap import run_task_bootstrap
@@ -30,6 +32,15 @@ def main() -> int:
 
     assemble = subparsers.add_parser("assemble")
     assemble.add_argument("project_id")
+
+    generate_facts = subparsers.add_parser("generate-facts")
+    generate_facts.add_argument("project_id")
+
+    generate_business = subparsers.add_parser("generate-business")
+    generate_business.add_argument("project_id")
+
+    generate_experience = subparsers.add_parser("generate-experience")
+    generate_experience.add_argument("project_id")
 
     validate = subparsers.add_parser("validate")
     validate.add_argument("project_id")
@@ -88,12 +99,24 @@ def main() -> int:
     preview.add_argument("--port", type=int, default=0)
     preview.add_argument("--no-serve", action="store_true")
 
+    run_main_parser = subparsers.add_parser("run-main")
+    run_main_parser.add_argument("project_id")
+    run_main_parser.add_argument("--skip-preview", action="store_true")
+
+    subparsers.add_parser("sample-check")
+
     args = parser.parse_args()
 
     if args.command == "bootstrap":
         return run_task_bootstrap(args.project_id, task_name=args.task_name, domain=args.domain, force=args.force)
     if args.command == "assemble":
         return run_context_assemble(args.project_id)
+    if args.command == "generate-facts":
+        return run_generate_facts(args.project_id)
+    if args.command == "generate-business":
+        return run_generate_business(args.project_id)
+    if args.command == "generate-experience":
+        return run_generate_experience(args.project_id)
     if args.command == "validate":
         return run_validate_outputs(args.project_id)
     if args.command == "coverage":
@@ -133,6 +156,10 @@ def main() -> int:
             port=args.port,
             serve=not args.no_serve,
         )
+    if args.command == "run-main":
+        return run_main(args.project_id, skip_preview=args.skip_preview)
+    if args.command == "sample-check":
+        return run_sample_check()
     return 1
 
 

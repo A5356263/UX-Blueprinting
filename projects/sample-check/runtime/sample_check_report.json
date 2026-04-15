@@ -1,0 +1,11 @@
+{
+  "positive_samples": [
+    "real-self-apply-v1"
+  ],
+  "negative_samples": [
+    "demo-smoke-v1"
+  ],
+  "issue_count": 0,
+  "issues": [],
+  "status": "passed"
+}

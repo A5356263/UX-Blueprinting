@@ -632,6 +632,23 @@ projects/<project-id>/
 - 服务已启动但未输出完整 URL
 - 预览层失败被误判为主链路失败
 
+## 推荐命令入口
+
+建议至少提供以下命令入口，保证执行中枢既可逐步运行，也可一键跑完整主链路：
+
+- `python -m packages generate-facts <project-id>`
+- `python -m packages generate-business <project-id>`
+- `python -m packages generate-experience <project-id>`
+- `python -m packages run-main <project-id>`
+- `python -m packages run-main <project-id> --skip-preview`
+- `python -m packages sample-check`
+
+其中：
+
+- `run-main` 负责按固定顺序串联 `assemble -> generate-* -> gate-* -> validate -> coverage -> archive`
+- 默认 `run-main` 在 archive 成功后自动执行 preview
+- `sample-check` 只消费 benchmark 样例，不参与真实项目默认扫描
+
 ## 执行中枢与 AI 推理的边界
 
 执行中枢负责：

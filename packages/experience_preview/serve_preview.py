@@ -7,6 +7,7 @@ from packages.common import get_project_preview_dir
 from packages.experience_preview.build_preview_model import build_preview_model
 from packages.experience_preview.render_html import write_preview_site
 from packages.experience_preview.write_preview_runtime import write_preview_runtime
+from packages.provenance import append_command_if_provenance_exists
 
 
 class PreviewHTTPServer(ThreadingHTTPServer):
@@ -29,6 +30,7 @@ def run_experience_preview(project_id: str, host: str = "127.0.0.1", port: int =
             ready_state="built",
             preview_url="",
         )
+        append_command_if_provenance_exists(project_id, "preview")
         print("体验蓝图预览已生成。")
         print(f"预览输出目录：{preview_dir}")
         return 0
@@ -45,6 +47,7 @@ def run_experience_preview(project_id: str, host: str = "127.0.0.1", port: int =
             ready_state="ready",
             preview_url=preview_url,
         )
+        append_command_if_provenance_exists(project_id, "preview")
         print("体验蓝图预览已生成。", flush=True)
         print(f"本地预览地址：{preview_url}", flush=True)
         print("可在浏览器中直接打开查看全局流程图与页面预览卡。", flush=True)

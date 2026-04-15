@@ -13,6 +13,7 @@ from packages.common import (
     get_project_workspace_dir,
     get_repo_root,
 )
+from packages.provenance import append_command_if_provenance_exists, validate_provenance
 
 
 STAGE_REQUIRED_HEADINGS = {
@@ -641,6 +642,11 @@ def read_gate_status(project_id: str, stage: str) -> dict[str, object] | None:
     return json.loads(status_path.read_text(encoding="utf-8"))
 
 
+def add_provenance_issues(issues: list[tuple[str, str]], project_id: str, required_commands: list[str]) -> None:
+    for issue in validate_provenance(project_id, required_commands=required_commands):
+        add_issue(issues, "blocker", f"provenance: {issue}")
+
+
 def write_runtime_extension_artifacts(
     project_id: str,
     fact_ids: list[str],
@@ -913,6 +919,15 @@ def run_validate_outputs(project_id: str) -> int:
 
     resolved = read_json(runtime_dir / "task_card_resolved.json")
     required_outputs = required_output_paths(project_id, resolved)
+    add_provenance_issues(
+        issues,
+        project_id,
+        required_commands=[
+            "generate-facts",
+            "generate-business",
+            "generate-experience",
+        ],
+    )
     output_status_lines: list[str] = []
     completed_outputs: list[str] = []
     missing_outputs: list[str] = []
@@ -997,6 +1012,7 @@ def run_validate_outputs(project_id: str) -> int:
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Validation finished: {report_path}")
     print(f"Machine status written: {status_path}")
+    append_command_if_provenance_exists(project_id, "validate")
     return 0 if status != "failed" else 1
 
 
@@ -1106,6 +1122,7 @@ def run_coverage_check(project_id: str) -> int:
     )
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
+    append_command_if_provenance_exists(project_id, "coverage")
     return 0 if status != "failed" else 1
 
 
@@ -1118,12 +1135,14 @@ def run_facts_gate(project_id: str) -> int:
     context_manifest_path = runtime_dir / "context_manifest.json"
 
     issues: list[tuple[str, str]] = []
+    add_provenance_issues(issues, project_id, required_commands=["generate-facts"])
     checked_files = [
         f"projects/{project_id}/source/task_card.md",
         f"projects/{project_id}/source/requirement.md",
         f"projects/{project_id}/source/background.md",
         f"projects/{project_id}/runtime/task_card_resolved.json",
         f"projects/{project_id}/runtime/context_manifest.json",
+        f"projects/{project_id}/runtime/provenance.json",
         f"projects/{project_id}/workspace/facts.md",
     ]
     check_required_files(
@@ -1198,15 +1217,18 @@ def run_facts_gate(project_id: str) -> int:
     )
     print(f"Facts gate finished: {report_path}")
     print(f"Facts gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-facts")
     return 0 if status != "failed" else 1
 
 
 def run_business_gate(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     issues: list[tuple[str, str]] = []
+    add_provenance_issues(issues, project_id, required_commands=["generate-facts", "generate-business"])
     checked_files = [
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_blueprint.md",
+        f"projects/{project_id}/runtime/provenance.json",
         f"projects/{project_id}/runtime/gates/facts_gate_status.json",
     ]
 
@@ -1247,16 +1269,23 @@ def run_business_gate(project_id: str) -> int:
     )
     print(f"Business gate finished: {report_path}")
     print(f"Business gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-business")
     return 0 if status != "failed" else 1
 
 
 def run_experience_gate(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     issues: list[tuple[str, str]] = []
+    add_provenance_issues(
+        issues,
+        project_id,
+        required_commands=["generate-facts", "generate-business", "generate-experience"],
+    )
     checked_files = [
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_blueprint.md",
         f"projects/{project_id}/workspace/experience_blueprint.md",
+        f"projects/{project_id}/runtime/provenance.json",
         f"projects/{project_id}/runtime/gates/business_gate_status.json",
     ]
 
@@ -1300,4 +1329,5 @@ def run_experience_gate(project_id: str) -> int:
     )
     print(f"Experience gate finished: {report_path}")
     print(f"Experience gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-experience")
     return 0 if status != "failed" else 1

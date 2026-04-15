@@ -1,0 +1,29 @@
+{
+  "capability_id": "generate_facts",
+  "display_name": "Generate Facts",
+  "type": "command",
+  "stage": "mainline",
+  "entrypoint": "python -m packages generate-facts <project-id>",
+  "description": "从当前项目 source 输入生成正式 facts 初稿，并写入 provenance。",
+  "required_inputs": [
+    "projects/<project-id>/source/requirement.md",
+    "projects/<project-id>/source/task_card.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/facts.md",
+    "projects/<project-id>/workspace/gap_list.md",
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/workspace/check_status.json",
+    "projects/<project-id>/runtime/provenance.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/generation/core.py",
+    "packages/provenance.py",
+    "docs/discussion/ux_blueprinting_优化规范包/ux_blueprinting_spec_pack/02_实施任务清单.md"
+  ],
+  "status": "active"
+}

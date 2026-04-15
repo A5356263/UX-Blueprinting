@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_repo_root
+from packages.provenance import append_command_if_provenance_exists
 from packages.task_card_resolve import resolve_task_card_file
 
 
@@ -122,4 +123,5 @@ def run_context_assemble(task_id: str) -> int:
         print(f"WARNING: {warning}")
     print(f"Task card resolved: {resolved_path}")
     print(f"Context assembled: {manifest_path}")
+    append_command_if_provenance_exists(task_id, "assemble")
     return 0

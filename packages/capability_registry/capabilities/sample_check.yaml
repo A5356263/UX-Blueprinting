@@ -1,0 +1,24 @@
+{
+  "capability_id": "sample_check",
+  "display_name": "Sample Check",
+  "type": "command",
+  "stage": "benchmark",
+  "entrypoint": "python -m packages sample-check",
+  "description": "对 benchmark_positive / benchmark_negative 样例执行独立回归校验，不把样例当作普通真实项目处理。",
+  "required_inputs": [
+    "projects/*/meta.json"
+  ],
+  "declared_outputs": [
+    "projects/sample-check/runtime/sample_check_report.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/mainline.py",
+    "packages/common.py",
+    "docs/discussion/ux_blueprinting_优化规范包/ux_blueprinting_spec_pack/01_执行中枢与主链路优化规范.md"
+  ],
+  "status": "active"
+}

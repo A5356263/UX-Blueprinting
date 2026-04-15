@@ -5,11 +5,16 @@
   "capability_ids": [
     "task_bootstrap",
     "context_assemble",
+    "generate_facts",
+    "generate_business",
+    "generate_experience",
     "facts_gate",
     "business_gate",
     "experience_gate",
     "validate_outputs",
     "coverage_check",
+    "run_main",
+    "sample_check",
     "repair_plan",
     "repair_status",
     "repair_accept",
@@ -35,13 +40,15 @@
     "docs/runbook/repair_loop_flow.md",
     "docs/runbook/capability_registry_flow.md",
     "docs/runbook/memory_layer_flow.md",
-    "docs/runbook/experience_preview_flow.md"
+    "docs/runbook/experience_preview_flow.md",
+    "docs/discussion/ux_blueprinting_优化规范包/ux_blueprinting_spec_pack/01_执行中枢与主链路优化规范.md"
   ],
   "notes": [
     "Registry 只声明能力元信息，不承载实现逻辑，也不替代 packages 的真实执行入口。",
     "active capability 必须可追溯到 packages 命令面、Execution Hub 规格与对应 runbook。",
     "首轮以现有正式命令为主，并为 capability registry 查询命令提供只读消费入口。",
     "P3 新增 memory 命令用于提取候选、接受长期 memory，并生成用户可读摘要。",
-    "P4 新增 preview 命令用于在主链路完成后生成体验蓝图预览层，并交付本地预览地址。"
+    "P4 新增 preview 命令用于在主链路完成后生成体验蓝图预览层，并交付本地预览地址。",
+    "P5 新增 generate-*、run-main、sample-check 与 provenance 约束，用于补齐主链路、来源追溯和样例治理。"
   ]
 }

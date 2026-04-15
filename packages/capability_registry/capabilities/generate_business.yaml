@@ -1,0 +1,26 @@
+{
+  "capability_id": "generate_business",
+  "display_name": "Generate Business",
+  "type": "command",
+  "stage": "mainline",
+  "entrypoint": "python -m packages generate-business <project-id>",
+  "description": "从当前项目 facts 初稿生成正式 business blueprint 初稿，并写入 provenance。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/facts.md",
+    "projects/<project-id>/source/requirement.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/business_blueprint.md",
+    "projects/<project-id>/runtime/provenance.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/generation/core.py",
+    "packages/provenance.py",
+    "docs/discussion/ux_blueprinting_优化规范包/ux_blueprinting_spec_pack/02_实施任务清单.md"
+  ],
+  "status": "active"
+}
