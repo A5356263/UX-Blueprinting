@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_project_source_dir, get_project_workspace_dir
+from packages.common import get_project_runtime_dir, get_project_source_dir, get_project_workspace_dir, get_repo_root
 from packages.provenance import upsert_generated_provenance
 
 
@@ -45,11 +45,9 @@ def _pick(lines: list[str], keyword: str, fallback: str) -> str:
 
 def _extract_roles(lines: list[str]) -> list[str]:
     role_map = [
-        ("超管", "超管"),
-        ("超级管理员", "超级管理员"),
-        ("管理员", "管理员"),
+        ("管理员", "管理者"),
         ("员工", "员工"),
-        ("审批", "审批人"),
+        ("审批", "处理人"),
         ("实施", "实施/运营支持"),
         ("系统", "系统"),
     ]
@@ -63,12 +61,15 @@ def _extract_roles(lines: list[str]) -> list[str]:
 
 def _extract_objects(lines: list[str]) -> list[str]:
     object_map = [
-        ("权限", "权限"),
         ("角色", "角色"),
         ("应用", "应用"),
-        ("审批", "审批流程"),
+        ("配置", "关键配置"),
+        ("范围", "范围对象"),
+        ("详情", "明细对象"),
+        ("结果", "结果状态"),
+        ("审批", "处理流程"),
         ("记录", "申请记录"),
-        ("帮助", "帮助文档"),
+        ("帮助", "帮助说明"),
         ("模式", "治理模式"),
     ]
     result: list[str] = []
@@ -88,7 +89,7 @@ def _extract_structure_semantics(project_id: str) -> list[str]:
     snippets: list[str] = []
     for path in sorted(bundle_dir.rglob("*.md")):
         lowered = path.name.lower()
-        if "page-carrier" not in lowered and "permission-domain-index" not in lowered and "structure" not in lowered:
+        if "page" not in lowered and "structure" not in lowered and "carrier" not in lowered and "index" not in lowered:
             continue
         text = _read_text(path)
         for raw_line in text.splitlines():
@@ -107,7 +108,7 @@ def _extract_structure_semantics(project_id: str) -> list[str]:
 
 def _structure_change_kind(lines: list[str]) -> tuple[bool, str, str]:
     joined = "\n".join(lines)
-    if any(keyword in joined for keyword in ["新增说明", "风险提示", "帮助文档", "了解更多", "步骤", "审批流程", "模式", "入口", "通知"]):
+    if any(keyword in joined for keyword in ["新增说明", "风险提示", "帮助文档", "了解更多", "步骤", "处理流程", "模式", "入口", "通知"]):
         return True, "说明区显性化", "需求包含前置解释、风险提示、流程提示或模式切换信息，继续藏在既有内容中会让用户误判规则边界。"
     if any(keyword in joined for keyword in ["新增", "增加", "优化页面结构", "调整页面布局", "新增模块", "新增入口"]):
         return True, "新增区块", "需求包含新增能力或新增信息块，需要以独立区块或更清晰分层承接。"
@@ -132,7 +133,7 @@ def _render_facts(project_id: str) -> str:
     rule_line = _pick(lines, "不能", "存在治理约束，命中冲突条件时系统必须阻断并解释。")
     state_line = _pick(lines, "状态", "需求中存在明确的状态切换、结果反馈与阻断结果。")
     exception_line = _pick(lines, "失败", "需求中明确存在失败、阻断或异常处理场景。")
-    dependency_line = _pick(lines, "审批", "当前能力依赖外部审批、帮助说明或组织/角色配置能力协同完成。")
+    dependency_line = _pick(lines, "协作", "当前能力依赖外部处理流程、帮助说明或关键对象配置能力协同完成。")
 
     return f"""# Facts
 
@@ -166,8 +167,8 @@ def _render_facts(project_id: str) -> str:
 | actor_id | 角色 | 角色类型 | 当前职责 / 影响 | 来源 |
 |---|---|---|---|---|
 | A-01 | {roles[0]} | 配置方/管理方 | 负责配置、放行、确认或治理当前能力 | requirement.md |
-| A-02 | {roles[1] if len(roles) > 1 else "用户"} | 申请方/使用方 | 负责发起动作、查看结果或承接反馈 | requirement.md |
-| A-03 | {roles[2] if len(roles) > 2 else "系统"} | 审核方/协作方 | 负责审批、回写状态或提供系统反馈 | requirement.md |
+| A-02 | {roles[1] if len(roles) > 1 else "用户"} | 发起方/使用方 | 负责发起动作、查看结果或承接反馈 | requirement.md |
+| A-03 | {roles[2] if len(roles) > 2 else "系统"} | 处理方/协作方 | 负责处理、回写状态或提供系统反馈 | requirement.md |
 
 ### 对象清单
 
@@ -238,7 +239,7 @@ def _render_facts(project_id: str) -> str:
 
 | flow_id | 发起角色 | 动作 | 前置条件 | 后续动作 / 结果 | 备注 | source_ref |
 |---|---|---|---|---|---|---|
-| FL-01 | {roles[0]} | 配置或启用核心能力 | 已进入主任务并具备管理权限 | 形成可被执行侧使用的能力边界 | 承接配置与治理责任 | F-07 |
+| FL-01 | {roles[0]} | 配置或启用核心能力 | 已进入主任务并具备管理条件 | 形成可被执行侧使用的能力边界 | 承接配置与治理责任 | F-07 |
 | FL-02 | {roles[1] if len(roles) > 1 else "用户"} | 发起主动作并等待结果 | 能力已开放、范围允许、依赖可用 | 进入成功结果或失败解释链路 | 需要有清晰反馈 | F-08 |
 
 ## 异常与拦截清单
@@ -246,13 +247,13 @@ def _render_facts(project_id: str) -> str:
 | exception_id | 场景 | 触发条件 | 系统结果 / 提示 | 影响对象 | source_ref |
 |---|---|---|---|---|---|
 | EX-01 | 前置规则冲突 | 命中互斥规则、范围外限制或治理冲突 | 阻断继续执行并给出原因与处理方向 | 使用方 / 管理方 | F-09 |
-| EX-02 | 依赖未就绪或结果失败 | 外部依赖未完成、审批未完成或处理失败 | 保留当前状态并提示如何补救 | 使用方 | F-11 |
+| EX-02 | 依赖未就绪或结果失败 | 外部依赖未完成、协作处理未完成或处理失败 | 保留当前状态并提示如何补救 | 使用方 | F-11 |
 
 ## 依赖清单
 
 | dependency_id | 依赖项 | 类型 | 当前作用 | 当前确认度 | source_ref |
 |---|---|---|---|---|---|
-| DEP-01 | 审批或协作流程 | 流程引擎 / 审核链路 | 决定动作是否放行以及结果如何回写 | 部分确认 | F-13 |
+| DEP-01 | 处理或协作流程 | 流程引擎 / 协作链路 | 决定动作是否放行以及结果如何回写 | 部分确认 | F-13 |
 | DEP-02 | 帮助说明或结果解释机制 | 帮助文档 / 解释能力 | 决定用户是否能理解规则、失败和下一步 | 部分确认 | F-14 |
 
 ## 范围与非范围
@@ -316,8 +317,8 @@ def _render_business(project_id: str) -> str:
 
 ### 领域底层逻辑
 
-- BL-03: 当前能力本质上属于“治理 + 申请/执行 + 结果解释”的组合能力。
-- BL-04: 责任、审批、生效、范围和审计逻辑必须在链路中显式可见。
+- BL-03: 当前能力本质上属于“治理 + 执行 + 结果解释”的组合能力。
+- BL-04: 责任、处理、生效、范围和审计逻辑必须在链路中显式可见。
 
 ### 管理策略与治理边界
 
@@ -352,7 +353,7 @@ def _render_business(project_id: str) -> str:
 | --- | --- | --- | --- | --- | --- |
 | J-03 | 责任归属 | 一致 | F-01、F-13、BL-04 | 若把生成逻辑塞进 gate，会混淆生成与检查责任 | 需要持续维护命令边界 |
 | J-04 | 授权逻辑 | 一致 | F-08、F-09、BL-05 | 若允许跨项目复制，会破坏当前项目独立性 | provenance 细化字段可后续扩展 |
-| J-05 | 审批 / 生效逻辑 | 一致 | F-06、F-10、F-13 | 若无结果回写与追溯，能力无法稳定交付 | 外部依赖细节仍待补足 |
+| J-05 | 处理 / 生效逻辑 | 一致 | F-06、F-10、F-13 | 若无结果回写与追溯，能力无法稳定交付 | 外部依赖细节仍待补足 |
 | J-06 | 范围与边界 | 一致 | F-15、F-16、BL-06 | 若把 preview 写成正式产物，会破坏主链路边界 | preview 细化展示可后续演进 |
 
 ## 管理策略一致性判断
@@ -585,60 +586,38 @@ def _parse_named_layout_entries(code_block: str) -> dict[str, list[str]]:
 
 def _build_structure_catalog(project_id: str) -> list[dict[str, object]]:
     runtime_dir = get_project_runtime_dir(project_id)
-    bundle_dir = runtime_dir / "context_bundle"
+    bundle_dir = runtime_dir / "context_bundle" / "knowledge" / "wiki"
     catalog: dict[str, dict[str, object]] = {}
-    topic_path = bundle_dir / "knowledge" / "wiki" / "topics" / "page-carrier-semantics-map.md"
-    topic_text = _read_text(topic_path)
-    if topic_text:
-        topic_blocks = _split_heading_blocks(topic_text, HEADING_L3_RE)
-        for bullet in _parse_bullet_lines(topic_blocks.get("3.5 结构语义摘要", "")):
-            if "：" not in bullet:
-                continue
-            name, baseline = bullet.split("：", 1)
-            _merge_catalog_entry(catalog, name.strip(), baseline=baseline.strip())
-        named_layouts = _parse_named_layout_entries(_extract_code_block(topic_blocks.get("3.6 原始区块关系图保留", "")))
-        for name, layout_lines in named_layouts.items():
-            _merge_catalog_entry(catalog, name.strip(), layout_lines=layout_lines)
+    if not bundle_dir.exists():
+        return []
 
-    detail_path = bundle_dir / "knowledge" / "wiki" / "entities" / "permission-detail-view.md"
-    detail_text = _read_text(detail_path)
-    if detail_text:
-        detail_blocks = _split_heading_blocks(detail_text, HEADING_L3_RE)
-        detail_baseline = " ".join(_parse_bullet_lines(detail_blocks.get("3.4 结构语义摘要", "")))
-        detail_layout = [line.strip() for line in _extract_code_block(detail_blocks.get("3.5 原始区块关系图保留", "")).splitlines() if line.strip()]
-        _merge_catalog_entry(catalog, "权限明细视图", baseline=detail_baseline, layout_lines=detail_layout, aliases=["权限明细", "权限详情"])
+    for path in sorted(bundle_dir.rglob("*.md")):
+        text = _read_text(path)
+        if not text:
+            continue
+        metadata = _parse_metadata(text)
+        blocks = _split_heading_blocks(text, HEADING_L3_RE)
+        canonical_name = metadata.get("canonical_name") or metadata.get("对象名称") or metadata.get("专题名称") or path.stem
+        aliases = _parse_inline_list(metadata.get("aliases", ""))
+
+        baseline_parts: list[str] = []
+        layout_lines: list[str] = []
+        for heading, body in blocks.items():
+            if "结构语义摘要" in heading or "骨架结构" in heading:
+                bullet_lines = _parse_bullet_lines(body)
+                for bullet in bullet_lines:
+                    if "：" in bullet:
+                        name, baseline = bullet.split("：", 1)
+                        _merge_catalog_entry(catalog, name.strip(), baseline=baseline.strip(), aliases=[canonical_name] + aliases)
+                    else:
+                        baseline_parts.append(bullet)
+            if "原始区块关系图保留" in heading:
+                layout_lines.extend([line.strip() for line in _extract_code_block(body).splitlines() if line.strip()])
+
+        if baseline_parts or layout_lines:
+            _merge_catalog_entry(catalog, canonical_name, baseline=" ".join(baseline_parts), layout_lines=layout_lines, aliases=aliases)
 
     return list(catalog.values())
-
-
-def _find_catalog_entry(catalog: list[dict[str, object]], *candidate_names: str) -> dict[str, object] | None:
-    normalized_candidates = [_normalize_name(name) for name in candidate_names if name.strip()]
-    for candidate in normalized_candidates:
-        for item in catalog:
-            names = [str(item.get("canonical_name", ""))] + [str(alias) for alias in item.get("aliases", [])]
-            if any(_normalize_name(name) == candidate for name in names if name.strip()):
-                return item
-    for candidate in normalized_candidates:
-        for item in catalog:
-            names = [str(item.get("canonical_name", ""))] + [str(alias) for alias in item.get("aliases", [])]
-            if any(candidate and candidate in _normalize_name(name) for name in names if name.strip()):
-                return item
-    return None
-
-
-def _detect_task_signals(lines: list[str], facts_text: str, business_text: str) -> dict[str, object]:
-    joined = "\n".join(lines + [facts_text, business_text])
-    return {
-        "joined": joined,
-        "has_mode_setup": any(keyword in joined for keyword in ["模式", "设置页面", "立即启用", "确认编辑", "关闭模式", "启用成功"]),
-        "has_selection_dialog": any(keyword in joined for keyword in ["弹窗", "弹层", "搜索角色", "搜索应用", "部分角色", "部分应用", "分页展示"]),
-        "has_apply_page": any(keyword in joined for keyword in ["申请权限", "自助申请", "发起申请", "提交申请"]),
-        "has_my_permissions": any(keyword in joined for keyword in ["我的权限", "查看权限清单", "个人中心"]),
-        "has_result_page": any(keyword in joined for keyword in ["审批通过", "收到通知", "权限生效", "关闭失败", "结果", "处理中", "审批人"]),
-        "has_help_doc": any(keyword in joined for keyword in ["帮助文档", "了解更多", "说明文案", "提示文案"]),
-        "has_risk_rules": any(keyword in joined for keyword in ["不能", "限制", "失败", "提示", "敏感", "校验", "不可选"]),
-        "has_steps": any(keyword in joined for keyword in ["第一步", "第二步", "第三步", "审批流程", "步骤"]),
-    }
 
 
 def _ordered_slots(slots: list[str]) -> list[str]:
@@ -674,10 +653,10 @@ def _slot_summary_map(archetype: str) -> dict[str, str]:
     if archetype == "config_workbench":
         return {
             "Header": "模式名称 + 当前状态 + 帮助入口",
-            "Step": "申请方式 / 范围 / 审批流程步骤",
+            "Step": "关键步骤 / 范围 / 处理流程",
             "Alert": "模式互斥规则 / 前置限制 / 风险提醒",
             "Main": "配置表单 + 范围设置 + 启用动作",
-            "Side": "规则解释 / 帮助说明 / 审批配置说明",
+            "Side": "规则解释 / 帮助说明 / 协作配置说明",
             "Footer": "取消 / 启用 / 确认编辑",
         }
     if archetype == "selection_dialog":
@@ -691,26 +670,26 @@ def _slot_summary_map(archetype: str) -> dict[str, str]:
     if archetype == "apply_page":
         return {
             "Header": "页面标题 + 当前身份 + 入口说明",
-            "Intro": "申请目标说明 / 能做什么 / 申请后预期",
-            "Alert": "敏感角色限制 / 审批前提 / 风险提醒",
-            "Main": "权限选择 + 原因填写 + 提交动作",
+            "Intro": "主动作目标说明 / 能做什么 / 提交后预期",
+            "Alert": "范围限制 / 前置条件 / 风险提醒",
+            "Main": "关键对象选择 + 必要信息填写 + 提交动作",
             "Side": "规则解释 / 帮助文档 / 追溯入口",
-            "Footer": "取消 / 提交申请 / 查看我的权限",
+            "Footer": "取消 / 提交主动作 / 查看当前结果",
         }
     if archetype == "detail_page":
         return {
             "Header": "当前对象 + 身份标签 + 返回入口",
             "Info": "解释说明 / 当前上下文 / 来源说明",
-            "Tab": "身份 / 终端 / 权限视角切换",
+            "Tab": "身份 / 终端 / 分类维度切换",
             "Menu": "模块导航 / 目录切换",
-            "Main": "权限明细构成 / 查询结果 / 解释内容",
+            "Main": "明细构成 / 查询结果 / 解释内容",
             "Footer": "关闭 / 返回",
         }
     return {
         "Header": "当前结果 + 状态标签",
-        "Summary": "审批结论 / 生效结果 / 处理中状态",
+        "Summary": "处理结论 / 生效结果 / 处理中状态",
         "Info": "原因说明 + 下一步 + 通知解释",
-        "Main": "申请记录 / 审批轨迹 / 权限变化详情",
+        "Main": "处理记录 / 协作轨迹 / 结果变化详情",
         "Footer": "返回 / 继续处理",
     }
 
@@ -742,7 +721,7 @@ def _judge_structure_change(
 
     if "Step" in missing_slots:
         change_type = "新增区块"
-        note = f"{page_name} 需要把模式设置与审批配置分成可理解的阶段，因此要补出 Step 级结构，而不是把所有设置压在单一主区。"
+        note = f"{page_name} 需要把关键配置与处理流程分成可理解的阶段，因此要补出 Step 级结构，而不是把所有设置压在单一主区。"
     elif any(slot in missing_slots for slot in ["Alert", "Intro"]) and signals.get("has_risk_rules"):
         change_type = "风险提示前置"
         note = f"{page_name} 需要把限制条件、互斥规则和失败原因前置到主动作前，不再藏在操作后的被动解释里。"
@@ -815,197 +794,6 @@ def _build_page_plan(
     }
 
 
-def _identify_impacted_pages(project_id: str, lines: list[str], facts_text: str, business_text: str) -> list[dict[str, object]]:
-    catalog = _build_structure_catalog(project_id)
-    signals = _detect_task_signals(lines, facts_text, business_text)
-    pages: list[dict[str, object]] = []
-
-    if signals.get("has_mode_setup"):
-        pages.append(
-            _build_page_plan(
-                "config_workbench",
-                "自助申请权限模式设置页",
-                "页面",
-                ["超管", "超级管理员"],
-                "配置自助申请权限模式、申请范围和审批流程，并决定是否启用或编辑该模式。",
-                "从权限管理模式页点击“立即启用”或“编辑”进入。",
-                "取消返回上一页；启用或确认编辑后停留当前页并刷新状态。",
-                "作为治理入口页，可流向范围选择弹窗、表单编辑子页和结果反馈页。",
-                [
-                    "当前模式是否可启用、为什么可启用或不可启用",
-                    "申请方式、角色范围 / 应用范围、审批流程如何影响后续员工端",
-                    "当前动作成功后会刷新什么、失败时如何处理",
-                ],
-                "若把互斥模式限制和在途流程校验藏在操作后，用户会把治理冲突误判为系统异常。",
-                [
-                    {
-                        "name": "配置申请方式与范围",
-                        "trigger": "进入页面后即可操作",
-                        "feedback": "步骤区和主配置区同步刷新当前选择结果",
-                        "outcome": "形成可启用的模式配置",
-                        "protection": "对角色 / 应用范围的限制即时解释",
-                    },
-                    {
-                        "name": "启用、关闭或确认编辑",
-                        "trigger": "完成配置并满足前置条件后可点击",
-                        "feedback": "先校验互斥模式和在途流程，再给出成功或失败反馈",
-                        "outcome": "刷新为已开启、已关闭或已编辑状态",
-                        "protection": "命中互斥模式或在途流程时必须阻断并解释原因",
-                    },
-                ],
-                _find_catalog_entry(catalog, "功能授权", "角色管理"),
-                signals,
-            )
-        )
-
-    if signals.get("has_selection_dialog"):
-        pages.append(
-            _build_page_plan(
-                "selection_dialog",
-                "角色 / 应用范围选择弹窗",
-                "弹窗",
-                ["超管", "超级管理员"],
-                "在不离开当前配置上下文的情况下选择允许申请的角色或应用范围。",
-                "在设置页中选择“部分角色”或“部分应用”时打开。",
-                "确认后回填配置页并保留当前上下文，取消则直接关闭。",
-                "服务于模式设置页，选择完成后回流主配置页。",
-                [
-                    "当前在选择什么、可选范围是什么",
-                    "哪些对象不可选、为什么不可选",
-                    "确认选择后会回填到哪个设置项",
-                ],
-                "如果范围限制和不可选原因不在弹层内即时解释，用户会反复试错并怀疑系统数据有误。",
-                [
-                    {
-                        "name": "搜索并勾选角色 / 应用",
-                        "trigger": "弹窗打开后即可操作",
-                        "feedback": "搜索结果、勾选状态和已选计数即时变化",
-                        "outcome": "形成回填到设置页的范围结果",
-                        "protection": "对不可选对象即时解释原因",
-                    },
-                    {
-                        "name": "确认范围选择",
-                        "trigger": "完成选择后可点击",
-                        "feedback": "关闭弹窗并回填主配置页",
-                        "outcome": "主配置页形成完整的范围设置",
-                        "protection": "保持当前上下文不丢失",
-                    },
-                ],
-                None,
-                signals,
-            )
-        )
-
-    if signals.get("has_apply_page"):
-        pages.append(
-            _build_page_plan(
-                "apply_page",
-                "员工申请权限页",
-                "页面",
-                ["员工", "业务管理员"],
-                "查看可申请权限范围、填写申请原因并发起申请。",
-                "从个人中心或权限入口进入“申请权限”。",
-                "提交后进入结果 / 进度页，取消则返回上一入口。",
-                "承接员工自助申请主任务，并流向结果与进度页。",
-                [
-                    "当前能申请什么、为什么能申请或不能申请",
-                    "申请通过后会如何生效、需要经过哪些审批",
-                    "如果命中敏感角色 / 组织限制，系统会如何提示",
-                ],
-                "若申请页只给入口不解释范围限制和审批预期，用户会把被拦截理解成系统异常或流程没生效。",
-                [
-                    {
-                        "name": "选择权限并填写申请原因",
-                        "trigger": "进入申请页后即可操作",
-                        "feedback": "申请对象、原因和限制提示即时刷新",
-                        "outcome": "形成可提交的申请单",
-                        "protection": "命中敏感对象或范围外时立即阻断并解释",
-                    },
-                    {
-                        "name": "提交申请",
-                        "trigger": "满足前置校验后可点击",
-                        "feedback": "进入待审批 / 已提交状态反馈",
-                        "outcome": "流向审批与结果反馈链路",
-                        "protection": "提交前必须明确审批预期和失败处理方向",
-                    },
-                ],
-                _find_catalog_entry(catalog, "用户授权", "功能授权"),
-                signals,
-            )
-        )
-
-    if signals.get("has_my_permissions"):
-        pages.append(
-            _build_page_plan(
-                "detail_page",
-                "我的权限页",
-                "页面",
-                ["员工"],
-                "查看当前已拥有的权限、来源和细粒度构成，支撑员工自查与核对。",
-                "从个人中心新增的“我的权限”入口进入。",
-                "关闭或返回个人中心，不承担新的治理提交动作。",
-                "作为只读核对页，可继续下钻到权限明细解释层。",
-                [
-                    "当前有哪些权限、来源是什么、属于哪个身份或终端",
-                    "如果申请已生效，哪些结果已经落到当前权限上",
-                    "从哪里进入更细的权限明细解释",
-                ],
-                "如果“我的权限”只有聚合结果没有明细解释，用户无法完成自助核对，也无法判断权限为何生效。",
-                [
-                    {
-                        "name": "切换权限视角并查看明细",
-                        "trigger": "进入我的权限页后即可操作",
-                        "feedback": "Tab、导航与明细内容同步切换",
-                        "outcome": "完成权限核对和来源解释",
-                        "protection": "保持当前对象和身份上下文可见",
-                    }
-                ],
-                _find_catalog_entry(catalog, "权限详情", "权限明细视图"),
-                signals,
-            )
-        )
-
-    if signals.get("has_result_page"):
-        pages.append(
-            _build_page_plan(
-                "result_page",
-                "申请结果与审批进度页",
-                "页面",
-                ["员工", "审批人", "超管"],
-                "查看申请当前处于待审批、已生效还是失败阻断，并给出下一步。",
-                "提交申请后、收到通知后或从申请记录入口进入。",
-                "返回申请页、返回我的权限页或结束当前链路。",
-                "承接申请后的解释链路，并与我的权限页形成结果核对闭环。",
-                [
-                    "当前状态是什么、是否已经生效、为什么会失败或还在处理中",
-                    "当前需要谁继续处理、用户下一步该做什么",
-                    "如何回到申请页或我的权限页继续查看",
-                ],
-                "若结果页只告诉用户“成功/失败”，不解释审批进度、原因和下一步，用户无法判断是否还需要等待、重试或联系审批人。",
-                [
-                    {
-                        "name": "查看当前结果与审批进度",
-                        "trigger": "有申请记录后即可进入",
-                        "feedback": "状态、原因和下一步同步展示",
-                        "outcome": "用户理解当前结果并决定后续动作",
-                        "protection": "失败与处理中必须明确区分，不能混成黑盒结果",
-                    },
-                    {
-                        "name": "返回申请页或查看我的权限",
-                        "trigger": "理解结果后可点击",
-                        "feedback": "带着当前申请上下文跳回对应页面",
-                        "outcome": "继续处理或完成核对",
-                        "protection": "保持记录可追溯、状态不丢失",
-                    },
-                ],
-                _find_catalog_entry(catalog, "权限详情", "权限明细视图"),
-                signals,
-            )
-        )
-
-    return pages
-
-
 def _info_rows_for_page(page: dict[str, object]) -> list[dict[str, str]]:
     page_id = str(page["page_id"])
     page_name = str(page["name"])
@@ -1013,20 +801,20 @@ def _info_rows_for_page(page: dict[str, object]) -> list[dict[str, str]]:
     if archetype == "config_workbench":
         return [
             {
-                "purpose": "当前模式状态与可启用性",
+                "purpose": "当前配置状态与可执行性",
                 "priority": "高",
                 "position": f"{page_id} Header / Alert",
                 "slot": "Header / Alert",
-                "trigger": "进入页、点击启用前",
-                "risk": "用户无法判断当前模式是否能启用，容易把互斥限制误判为系统异常。",
+                "trigger": "进入页、点击确认前",
+                "risk": "用户无法判断当前配置是否可继续，容易把前置限制误判为系统异常。",
             },
             {
-                "purpose": "申请方式、范围与审批配置",
+                "purpose": "关键步骤、范围与协作配置",
                 "priority": "高",
                 "position": f"{page_id} Step / Main",
                 "slot": "Step / Main",
                 "trigger": "配置过程中",
-                "risk": "用户难以理解配置顺序，后续员工端能力边界会不清楚。",
+                "risk": "用户难以理解配置顺序，后续执行边界会不清楚。",
             },
         ]
     if archetype == "selection_dialog":
@@ -1043,31 +831,31 @@ def _info_rows_for_page(page: dict[str, object]) -> list[dict[str, str]]:
     if archetype == "apply_page":
         return [
             {
-                "purpose": f"{page_name} 的申请范围与规则解释",
+                "purpose": f"{page_name} 的可执行范围与规则解释",
                 "priority": "高",
                 "position": f"{page_id} Intro / Alert",
                 "slot": "Intro / Alert",
                 "trigger": "进入页、提交前",
-                "risk": "用户不知道能申请什么、为什么被限制，容易误解申请链路。",
+                "risk": "用户不知道当前能执行什么、为什么被限制，容易误解主链路。",
             },
             {
-                "purpose": "申请对象、申请原因与提交动作",
+                "purpose": "关键对象、必要信息与提交动作",
                 "priority": "高",
                 "position": f"{page_id} Main / Footer",
                 "slot": "Main / Footer",
                 "trigger": "填写并提交时",
-                "risk": "主任务入口不清晰，用户无法完成申请。",
+                "risk": "主任务入口不清晰，用户无法完成当前动作。",
             },
         ]
     if archetype == "detail_page":
         return [
             {
-                "purpose": f"{page_name} 的权限解释与来源说明",
+                "purpose": f"{page_name} 的明细解释与来源说明",
                 "priority": "高",
                 "position": f"{page_id} Info / Tab / Main",
                 "slot": "Info / Tab / Main",
                 "trigger": "进入页、切换视角时",
-                "risk": "用户只能看到聚合结果，无法完成权限核对和来源理解。",
+                "risk": "用户只能看到聚合结果，无法完成结果核对和来源理解。",
             }
         ]
     return [
@@ -1077,9 +865,544 @@ def _info_rows_for_page(page: dict[str, object]) -> list[dict[str, str]]:
             "position": f"{page_id} Summary / Info / Footer",
             "slot": "Summary / Info / Footer",
             "trigger": "提交后、收到通知后",
-            "risk": "用户不知道当前是否生效、为何失败以及接下来该做什么。",
+            "risk": "用户不知道当前是否完成、为何失败以及接下来该做什么。",
         }
     ]
+
+
+def _parse_metadata(text: str) -> dict[str, str]:
+    metadata: dict[str, str] = {}
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            break
+        if not stripped.startswith("- ") or ":" not in stripped:
+            continue
+        key, value = stripped[2:].split(":", 1)
+        metadata[key.strip()] = value.strip()
+    return metadata
+
+
+def _parse_inline_list(value: str) -> list[str]:
+    value = value.strip()
+    if not value.startswith("[") or not value.endswith("]"):
+        return []
+    return [item.strip().strip("'\"") for item in value[1:-1].split(",") if item.strip()]
+
+
+def _normalize_lines_from_text(text: str) -> list[str]:
+    lines: list[str] = []
+    for raw_line in text.splitlines():
+        line = re.sub(r"\s+", " ", raw_line).strip(" -\t")
+        if len(line) < 2:
+            continue
+        lines.append(line)
+    return lines
+
+
+def _extract_backticked_terms(text: str) -> list[str]:
+    terms: list[str] = []
+    for term in re.findall(r"`([^`]+)`", text):
+        cleaned = term.strip()
+        if not cleaned or "/" in cleaned or ".md" in cleaned:
+            continue
+        terms.append(cleaned)
+    return _dedupe_strings(terms)
+
+
+def _infer_view_type_from_text(name: str, text: str) -> str:
+    lowered = f"{name} {text}".lower()
+    if "抽屉" in lowered or "drawer" in lowered:
+        return "抽屉"
+    if "弹窗" in lowered or "弹层" in lowered or "modal" in lowered or "dialog" in lowered:
+        return "弹窗"
+    if "子页面" in lowered or "subpage" in lowered:
+        return "子页面"
+    return "页面"
+
+
+def _merge_page_candidate(
+    catalog: dict[str, dict[str, object]],
+    name: str,
+    *,
+    aliases: list[str] | None = None,
+    page_type: str = "",
+    summary: str = "",
+    baseline: str = "",
+    layout_lines: list[str] | None = None,
+    roles: list[str] | None = None,
+    objects: list[str] | None = None,
+    relations: list[str] | None = None,
+    source_ref: str = "",
+) -> None:
+    key = _normalize_name(name)
+    existing = catalog.get(
+        key,
+        {
+            "canonical_name": name,
+            "aliases": [],
+            "page_type": page_type or "页面",
+            "summary": "",
+            "baseline": "",
+            "layout_lines": [],
+            "zones": [],
+            "roles": [],
+            "objects": [],
+            "relations": [],
+            "source_refs": [],
+        },
+    )
+    baseline_text = baseline.strip() or str(existing.get("baseline", "")).strip()
+    merged_layout_lines = list(existing.get("layout_lines", [])) + list(layout_lines or [])
+    zones = _extract_zone_tokens(([baseline_text] if baseline_text else []) + merged_layout_lines)
+    existing["canonical_name"] = name
+    existing["aliases"] = _dedupe_strings([name] + list(existing.get("aliases", [])) + list(aliases or []))
+    existing["page_type"] = page_type or str(existing.get("page_type", "") or "页面")
+    existing["summary"] = summary.strip() or str(existing.get("summary", "")).strip()
+    existing["baseline"] = baseline_text
+    existing["layout_lines"] = _dedupe_strings([str(item) for item in merged_layout_lines])
+    existing["zones"] = zones
+    existing["roles"] = _dedupe_strings([str(item) for item in list(existing.get("roles", [])) + list(roles or [])])
+    existing["objects"] = _dedupe_strings([str(item) for item in list(existing.get("objects", [])) + list(objects or [])])
+    existing["relations"] = _dedupe_strings([str(item) for item in list(existing.get("relations", [])) + list(relations or [])])
+    if source_ref:
+        existing["source_refs"] = _dedupe_strings([str(item) for item in list(existing.get("source_refs", [])) + [source_ref]])
+    catalog[key] = existing
+
+
+def _build_page_candidates(project_id: str) -> list[dict[str, object]]:
+    runtime_dir = get_project_runtime_dir(project_id)
+    bundle_dir = runtime_dir / "context_bundle" / "knowledge" / "wiki"
+    catalog: dict[str, dict[str, object]] = {}
+
+    for item in _build_structure_catalog(project_id):
+        _merge_page_candidate(
+            catalog,
+            str(item.get("canonical_name", "")),
+            aliases=[str(alias) for alias in item.get("aliases", [])],
+            baseline=str(item.get("baseline", "")),
+            layout_lines=[str(line) for line in item.get("layout_lines", [])],
+            page_type=_infer_view_type_from_text(str(item.get("canonical_name", "")), str(item.get("baseline", ""))),
+            source_ref="context_bundle/knowledge/wiki/topics/page-structure-catalog",
+        )
+
+    if not bundle_dir.exists():
+        return list(catalog.values())
+
+    for path in sorted(bundle_dir.rglob("*.md")):
+        repo_rel = str(path.relative_to(get_repo_root())).replace("\\", "/")
+        if any(skip in repo_rel for skip in ["/log.md", "/overview.md", "/templates/", "/archive/"]):
+            continue
+        text = _read_text(path)
+        if not text:
+            continue
+        metadata = _parse_metadata(text)
+        page_type_meta = metadata.get("page_type", "")
+        if any(skip in page_type_meta.lower() for skip in ["template", "archive"]):
+            continue
+
+        blocks = _split_heading_blocks(text, HEADING_L3_RE)
+        heading_text = " ".join(blocks.keys())
+        canonical_name = (
+            metadata.get("canonical_name")
+            or metadata.get("对象名称")
+            or metadata.get("专题名称")
+            or _extract_backticked_terms(text)[:1][0] if _extract_backticked_terms(text) else path.stem
+        )
+        aliases = _parse_inline_list(metadata.get("aliases", ""))
+        roles = _extract_roles(_normalize_lines_from_text(text))
+        relations = _extract_backticked_terms(text)
+        summary_candidates = []
+        for heading, body in blocks.items():
+            if any(marker in heading for marker in ["对象职责", "页面职责骨架", "专题目标", "结构分解", "当前结论", "结论"]):
+                summary_candidates.extend(_parse_bullet_lines(body))
+        summary = " ".join(summary_candidates[:2]) if summary_candidates else ""
+
+        baseline_parts: list[str] = []
+        layout_lines: list[str] = []
+        for heading, body in blocks.items():
+            if "结构语义摘要" in heading:
+                baseline_parts.extend(_parse_bullet_lines(body))
+            if "原始区块关系图保留" in heading:
+                layout_lines.extend([line.strip() for line in _extract_code_block(body).splitlines() if line.strip()])
+            if "骨架结构" in heading and not baseline_parts:
+                baseline_parts.extend(_parse_bullet_lines(body))
+
+        objects = []
+        for term in [canonical_name] + relations:
+            if len(term) >= 2:
+                objects.append(term)
+
+        if metadata.get("page_type", "").lower() == "entity":
+            _merge_page_candidate(
+                catalog,
+                canonical_name,
+                aliases=aliases,
+                page_type=_infer_view_type_from_text(canonical_name, text),
+                summary=summary,
+                baseline=" ".join(baseline_parts),
+                layout_lines=layout_lines,
+                roles=roles,
+                objects=objects,
+                relations=relations,
+                source_ref=repo_rel,
+            )
+
+        for term in relations:
+            _merge_page_candidate(
+                catalog,
+                term,
+                page_type=_infer_view_type_from_text(term, text),
+                summary=summary,
+                roles=roles,
+                relations=[canonical_name],
+                source_ref=repo_rel,
+            )
+
+    return list(catalog.values())
+
+
+def _detect_interaction_signals(lines: list[str], facts_text: str, business_text: str) -> dict[str, object]:
+    joined = "\n".join(lines + [facts_text, business_text])
+    return {
+        "joined": joined,
+        "needs_configuration": any(keyword in joined for keyword in ["设置", "配置", "启用", "编辑", "关闭", "修改", "模式"]),
+        "needs_selection_overlay": any(keyword in joined for keyword in ["弹窗", "弹层", "抽屉", "选择", "搜索", "分页", "部分"]),
+        "needs_submission": any(keyword in joined for keyword in ["申请", "发起", "提交", "填写", "原因", "确认"]),
+        "needs_detail": any(keyword in joined for keyword in ["详情", "明细", "查询", "清单", "核对", "查看"]),
+        "needs_result": any(keyword in joined for keyword in ["结果", "通知", "成功", "失败", "处理中", "状态", "生效", "回写"]),
+        "has_help_doc": any(keyword in joined for keyword in ["帮助", "了解更多", "说明", "提示", "文档"]),
+        "has_risk_rules": any(keyword in joined for keyword in ["不能", "限制", "失败", "冲突", "阻断", "校验", "不可"]),
+        "has_steps": any(keyword in joined for keyword in ["第一步", "第二步", "第三步", "步骤", "流程"]),
+    }
+
+
+def _score_candidate(
+    candidate: dict[str, object],
+    source_text: str,
+    source_roles: list[str],
+    signals: dict[str, object],
+) -> tuple[int, list[str]]:
+    aliases = [str(candidate.get("canonical_name", ""))] + [str(item) for item in candidate.get("aliases", [])]
+    objects = [str(item) for item in candidate.get("objects", [])]
+    relations = [str(item) for item in candidate.get("relations", [])]
+    summary = str(candidate.get("summary", ""))
+    zones = [str(item) for item in candidate.get("zones", [])]
+    candidate_roles = [str(item) for item in candidate.get("roles", [])]
+
+    score = 0
+    evidence: list[str] = []
+
+    alias_hits = [alias for alias in aliases if len(alias) >= 2 and alias in source_text]
+    if alias_hits:
+        score += len(alias_hits) * 4
+        evidence.append(f"别名命中:{'、'.join(alias_hits[:3])}")
+
+    object_hits = [item for item in objects if len(item) >= 2 and item in source_text]
+    if object_hits:
+        score += len(object_hits) * 3
+        evidence.append(f"承载对象命中:{'、'.join(object_hits[:3])}")
+
+    summary_tokens = [token.strip() for token in re.split(r"[、，,；;。:：/（）()\s]+", summary) if 2 <= len(token.strip()) <= 12]
+    summary_hits = [token for token in summary_tokens if token in source_text]
+    if summary_hits:
+        score += min(len(summary_hits), 3) * 2
+        evidence.append(f"主任务命中:{'、'.join(summary_hits[:3])}")
+
+    role_hits = [role for role in candidate_roles if role in source_roles]
+    if role_hits:
+        score += len(role_hits) * 2
+        evidence.append(f"角色命中:{'、'.join(role_hits)}")
+
+    relation_hits = [item for item in relations if len(item) >= 2 and item in source_text]
+    if relation_hits:
+        score += len(relation_hits)
+        evidence.append(f"上下游命中:{'、'.join(relation_hits[:3])}")
+
+    if signals.get("needs_selection_overlay") and str(candidate.get("page_type")) in {"弹窗", "抽屉"}:
+        score += 2
+        evidence.append("页面类型命中:选择层")
+    if signals.get("needs_configuration") and any(zone in zones for zone in ["Step", "Filter", "Action"]):
+        score += 2
+        evidence.append("结构语义命中:配置链路")
+    if signals.get("needs_result") and any(zone in zones for zone in ["Summary", "Info", "Footer"]):
+        score += 2
+        evidence.append("结构语义命中:结果解释")
+    if signals.get("needs_detail") and any(zone in zones for zone in ["Tab", "Menu", "Main"]):
+        score += 1
+        evidence.append("结构语义命中:详情/明细")
+    if signals.get("has_risk_rules") and any(zone in zones for zone in ["Alert", "Info"]):
+        score += 1
+        evidence.append("事实规则命中:限制解释")
+
+    return score, evidence
+
+
+def _infer_archetype_for_candidate(candidate: dict[str, object], signals: dict[str, object]) -> str:
+    page_type = str(candidate.get("page_type", "页面"))
+    name = str(candidate.get("canonical_name", ""))
+    summary = str(candidate.get("summary", ""))
+    zones = [str(item) for item in candidate.get("zones", [])]
+    combined = f"{name} {summary}"
+    if page_type in {"弹窗", "抽屉"}:
+        return "selection_dialog"
+    if "Summary" in zones or ("结果" in combined and signals.get("needs_result")):
+        return "result_page"
+    if any(token in combined for token in ["详情", "明细", "查询", "核对"]) or ("Tab" in zones and "Menu" in zones):
+        return "detail_page"
+    if any(zone in zones for zone in ["Step", "Filter", "Action"]):
+        return "config_workbench"
+    if signals.get("needs_submission"):
+        return "apply_page"
+    return "detail_page" if signals.get("needs_detail") else "apply_page"
+
+
+def _is_usable_page_name(name: str) -> bool:
+    cleaned = name.strip()
+    if not cleaned or len(cleaned) < 2 or len(cleaned) > 24:
+        return False
+    allowed_markers = ["页", "层", "弹窗", "抽屉", "详情", "结果", "查询", "设置", "配置", "入口", "清单", "明细", "状态", "方式"]
+    forbidden_markers = [
+        ".md",
+        "README",
+        "overview",
+        "domain",
+        "管理后台-",
+        "http",
+        "LOG-",
+        "SRC-",
+        "topic",
+        "index",
+        "专题",
+        "索引",
+        "尝试给",
+        "不会推",
+        "提升空间",
+        "如其他",
+        "客户使用",
+        "企业场景",
+        "当前有",
+    ]
+    if any(marker.lower() in cleaned.lower() for marker in forbidden_markers):
+        return False
+    if not any(marker in cleaned for marker in allowed_markers) and len(cleaned) > 8:
+        return False
+    if cleaned.count("，") >= 1 or cleaned.count(",") >= 1:
+        return False
+    return True
+
+
+def _derive_page_name(lines: list[str], keywords: list[str], fallback: str) -> str:
+    for line in lines:
+        if not any(keyword in line for keyword in keywords):
+            continue
+        cleaned = line.strip()
+        if "：" in cleaned:
+            tail = cleaned.split("：")[-1].strip()
+            if 2 <= len(tail) <= 20:
+                cleaned = tail
+        cleaned = re.sub(r"^[A-Za-z0-9一二三四五六七八九十.、（）()：: ]+", "", cleaned).strip()
+        cleaned = cleaned.replace("点击", "").replace("需要", "").replace("支持", "").replace("用户可", "").strip()
+        cleaned = re.split(r"[，,。；;]", cleaned)[0].strip()
+        if _is_usable_page_name(cleaned):
+            return cleaned
+    return fallback
+
+
+def _build_generic_page_from_candidate(
+    archetype: str,
+    candidate: dict[str, object] | None,
+    lines: list[str],
+    source_roles: list[str],
+    signals: dict[str, object],
+) -> dict[str, object]:
+    candidate = candidate or {}
+    candidate_name = str(candidate.get("canonical_name", "")).strip()
+    usable_candidate_name = candidate_name if _is_usable_page_name(candidate_name) else ""
+    baseline = str(candidate.get("baseline", "")).strip()
+    relations = [str(item) for item in candidate.get("relations", [])]
+    roles = [str(item) for item in candidate.get("roles", [])] or source_roles[:3] or ["使用方", "管理方", "协作方"]
+    page_type = str(candidate.get("page_type", "") or ("弹窗" if archetype == "selection_dialog" else "页面"))
+
+    name_map = {
+        "config_workbench": _derive_page_name(lines, ["设置", "配置", "启用", "编辑", "关闭"], usable_candidate_name or "主配置与治理页"),
+        "selection_dialog": _derive_page_name(lines, ["弹窗", "弹层", "抽屉", "选择", "搜索"], usable_candidate_name or "关键对象选择层"),
+        "apply_page": _derive_page_name(lines, ["申请", "提交", "发起", "填写"], usable_candidate_name or "主提交与发起页"),
+        "detail_page": _derive_page_name(lines, ["详情", "明细", "查询", "核对", "清单"], usable_candidate_name or "详情与核对页"),
+        "result_page": _derive_page_name(lines, ["结果", "通知", "失败", "成功", "处理中", "状态"], usable_candidate_name or "结果与状态页"),
+    }
+    task_map = {
+        "config_workbench": "完成关键配置、确认生效条件并决定是否提交治理动作。",
+        "selection_dialog": "在不离开当前上下文的情况下完成关键对象或范围选择。",
+        "apply_page": "完成主对象选择、填写必要信息并发起核心动作。",
+        "detail_page": "查看当前结果、来源、明细和解释信息，完成核对。",
+        "result_page": "确认当前状态、失败原因或后续动作，完成结果理解。",
+    }
+    focus_map = {
+        "config_workbench": [
+            "当前配置是否可继续、需要满足哪些前置条件",
+            "关键步骤、范围边界和确认动作会如何影响后续结果",
+            "命中失败或冲突时系统会如何解释",
+        ],
+        "selection_dialog": [
+            "当前在选择什么、允许范围是什么",
+            "哪些对象不可选、为什么不可选",
+            "确认后会回填到哪里以及是否保留上下文",
+        ],
+        "apply_page": [
+            "当前能做什么、需要补什么信息",
+            "提交后会发生什么、谁来继续处理",
+            "命中限制时系统会如何阻断并解释",
+        ],
+        "detail_page": [
+            "当前对象是什么、明细或结果来源是什么",
+            "哪些视角可以切换、应该先看哪部分内容",
+            "若需要进一步追溯，应从哪里继续查看",
+        ],
+        "result_page": [
+            "当前状态是什么、是否已经完成",
+            "为什么成功、失败或仍在处理中",
+            "接下来该返回哪里或继续做什么",
+        ],
+    }
+    actions_map = {
+        "config_workbench": [
+            {
+                "name": "查看并调整关键配置",
+                "trigger": "进入页面后即可操作",
+                "feedback": "步骤区与主配置区同步刷新当前选择结果",
+                "outcome": "形成可被后续执行或提交的配置方案",
+                "protection": "命中前置限制时即时解释原因",
+            },
+            {
+                "name": "提交配置或确认变更",
+                "trigger": "满足前置条件后可点击",
+                "feedback": "先校验规则，再给出成功或失败反馈",
+                "outcome": "进入已生效、已保存或后续处理状态",
+                "protection": "失败时必须解释原因和下一步",
+            },
+        ],
+        "selection_dialog": [
+            {
+                "name": "选择并确认对象",
+                "trigger": "打开选择层后即可操作",
+                "feedback": "搜索结果、选择状态和已选信息即时变化",
+                "outcome": "形成回填到上层页面的结果",
+                "protection": "对不可选对象即时解释原因",
+            }
+        ],
+        "apply_page": [
+            {
+                "name": "填写必要信息并发起动作",
+                "trigger": "进入页面后即可操作",
+                "feedback": "主区和提示区同步刷新当前可执行状态",
+                "outcome": "形成可提交的动作对象",
+                "protection": "提交前必须明确限制和预期结果",
+            }
+        ],
+        "detail_page": [
+            {
+                "name": "切换视角并查看明细",
+                "trigger": "进入页面后即可操作",
+                "feedback": "导航、标签和主体内容同步切换",
+                "outcome": "完成明细查看与来源解释",
+                "protection": "保持当前对象与上下文可见",
+            }
+        ],
+        "result_page": [
+            {
+                "name": "查看状态与后续动作",
+                "trigger": "产生结果后即可进入",
+                "feedback": "状态、原因和下一步同步展示",
+                "outcome": "用户理解当前结果并继续处理",
+                "protection": "失败与处理中必须明确区分",
+            }
+        ],
+    }
+    entry_map = {
+        "config_workbench": "从主入口或治理入口进入。",
+        "selection_dialog": "从上层页面的关键选择动作进入。",
+        "apply_page": "从主入口、任务入口或当前流程入口进入。",
+        "detail_page": "从结果页、查询页或当前对象入口进入。",
+        "result_page": "在提交、处理或状态回写后进入。",
+    }
+    exit_map = {
+        "config_workbench": "返回上一页或提交后停留当前链路。",
+        "selection_dialog": "确认后回填上层页面，或关闭返回。",
+        "apply_page": "提交后进入结果链路，或取消返回上一入口。",
+        "detail_page": "关闭或返回上一层，不承担新的提交动作。",
+        "result_page": "返回上一页、返回入口或结束当前链路。",
+    }
+
+    relation_text = "；".join(relations[:3]) if relations else "由任务上下文命中，可与相邻页面形成前后链路。"
+    return _build_page_plan(
+        archetype,
+        name_map[archetype],
+        page_type,
+        roles,
+        task_map[archetype],
+        entry_map[archetype],
+        exit_map[archetype],
+        relation_text,
+        focus_map[archetype],
+        "若关键解释、限制条件或结果状态没有在合适区块显性表达，用户会误解主任务边界或下一步。",
+        actions_map[archetype],
+        candidate,
+        signals,
+    )
+
+
+def _identify_impacted_pages_generalized(project_id: str, lines: list[str], facts_text: str, business_text: str) -> list[dict[str, object]]:
+    candidates = _build_page_candidates(project_id)
+    signals = _detect_interaction_signals(lines, facts_text, business_text)
+    source_text = str(signals["joined"])
+    source_roles = _extract_roles(_normalize_lines_from_text(source_text))
+
+    scored: list[dict[str, object]] = []
+    for candidate in candidates:
+        score, evidence = _score_candidate(candidate, source_text, source_roles, signals)
+        if score <= 0:
+            continue
+        item = dict(candidate)
+        item["score"] = score
+        item["evidence"] = evidence
+        item["archetype"] = _infer_archetype_for_candidate(candidate, signals)
+        scored.append(item)
+
+    scored.sort(key=lambda item: int(item.get("score", 0)), reverse=True)
+    selected: list[dict[str, object]] = []
+    used_archetypes: set[str] = set()
+    for item in scored:
+        archetype = str(item.get("archetype", ""))
+        if archetype in used_archetypes:
+            continue
+        if int(item.get("score", 0)) < 3:
+            continue
+        selected.append(_build_generic_page_from_candidate(archetype, item, lines, source_roles, signals))
+        used_archetypes.add(archetype)
+
+    required_archetypes: list[str] = []
+    if signals.get("needs_configuration"):
+        required_archetypes.append("config_workbench")
+    if signals.get("needs_selection_overlay"):
+        required_archetypes.append("selection_dialog")
+    if signals.get("needs_submission"):
+        required_archetypes.append("apply_page")
+    if signals.get("needs_detail"):
+        required_archetypes.append("detail_page")
+    if signals.get("needs_result"):
+        required_archetypes.append("result_page")
+    if not required_archetypes:
+        required_archetypes = ["apply_page", "result_page"]
+
+    for archetype in required_archetypes:
+        if archetype in used_archetypes:
+            continue
+        best_candidate = next((item for item in scored if str(item.get("archetype")) == archetype), None)
+        selected.append(_build_generic_page_from_candidate(archetype, best_candidate, lines, source_roles, signals))
+        used_archetypes.add(archetype)
+
+    return selected
 
 
 def _render_experience(project_id: str) -> str:
@@ -1087,8 +1410,7 @@ def _render_experience(project_id: str) -> str:
     facts_text = _read_workspace_text(project_id, "facts.md")
     business_text = _read_workspace_text(project_id, "business_blueprint.md")
     goal_line = _pick(lines, "提升", "让用户更容易理解当前能力何时可用、如何执行、何时成功以及为什么失败。")
-    risk_line = _pick(lines, "失败", "若只提示失败而不解释原因，用户会把治理限制误读为系统异常。")
-    pages = _identify_impacted_pages(project_id, lines, facts_text, business_text)
+    pages = _identify_impacted_pages_generalized(project_id, lines, facts_text, business_text)
     for index, page in enumerate(pages, start=1):
         page["page_id"] = f"P-{index:02d}"
 
@@ -1101,25 +1423,23 @@ def _render_experience(project_id: str) -> str:
 
     flow_rows: list[str] = []
     if "config_workbench" in page_lookup:
-        config_page = page_lookup["config_workbench"]
         flow_rows.append(
-            f"| TF-01 | 模式配置与启用流程 | IA-01 | 查看当前状态 -> 配置申请方式与范围 -> 配置审批流程 -> 点击启用/编辑确认 | 命中互斥模式或在途流程时阻断并解释 | 模式成功启用或编辑完成 | 启用失败并提示原因与处理方向 |"
+            "| TF-01 | 配置与治理流程 | IA-01 | 查看当前状态 -> 调整关键配置 -> 提交或确认变更 | 命中前置规则或冲突条件时阻断并解释 | 配置成功生效或进入后续处理 | 配置失败并提示原因与处理方向 |"
         )
     if "apply_page" in page_lookup:
-        apply_page = page_lookup["apply_page"]
         start_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "apply_page"), "IA-01")
         flow_rows.append(
-            f"| TF-02 | 员工自助申请流程 | {start_ia} | 查看可申请范围 -> 选择权限并填写原因 -> 提交申请 | 命中敏感对象或范围限制时阻断并解释 | 进入待审批 / 已提交状态 | 提交失败并说明原因与下一步 |"
+            f"| TF-02 | 主动作发起流程 | {start_ia} | 查看当前范围 -> 选择对象并填写必要信息 -> 提交主动作 | 命中范围限制或前置规则时阻断并解释 | 进入已提交 / 待处理状态 | 提交失败并说明原因与下一步 |"
         )
     if "result_page" in page_lookup:
         result_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "result_page"), "IA-01")
         flow_rows.append(
-            f"| TF-03 | 结果回写与进度确认流程 | {result_ia} | 查看审批状态 -> 理解结果原因 -> 决定返回申请页或查看我的权限 | 审批未完成则停留处理中并解释当前进度 | 用户理解结果并继续下一步 | 把失败 / 处理中误解成黑盒结果 |"
+            f"| TF-03 | 结果回写与进度确认流程 | {result_ia} | 查看当前状态 -> 理解结果原因 -> 决定返回上一层或继续下一步 | 处理未完成则停留处理中并解释当前进度 | 用户理解结果并继续下一步 | 把失败 / 处理中误解成黑盒结果 |"
         )
     if "detail_page" in page_lookup:
         detail_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "detail_page"), "IA-01")
         flow_rows.append(
-            f"| TF-04 | 权限自查与核对流程 | {detail_ia} | 进入我的权限 -> 切换视角 -> 查看权限明细 | 找不到来源说明时需要继续下钻解释 | 完成权限自查和结果核对 | 用户只能看到聚合结果，无法确认权限来源 |"
+            f"| TF-04 | 详情查看与结果核对流程 | {detail_ia} | 进入详情入口 -> 切换视角 -> 查看明细与来源解释 | 找不到来源说明时需要继续下钻解释 | 完成明细查看和结果核对 | 用户只能看到聚合结果，无法确认来源 |"
         )
 
     page_rows: list[str] = []
@@ -1197,21 +1517,21 @@ def _render_experience(project_id: str) -> str:
             info_index += 1
 
     state_rows = [
-        "| ST-01 | 配置中 / 可申请 | 用户进入配置页或申请页且前置条件满足 | 查看说明、选择、提交 | 展示当前状态与关键说明 | 明确当前可以继续执行 | 可进入提交或启用链路 |",
-        "| ST-02 | 待审批 / 处理中 | 提交申请后等待审批或结果回写 | 查看进度、返回上一页、查看我的权限 | 结果页展示处理中状态和当前进度 | 明确“已提交，不代表已完成” | 等待审批或结果回写 |",
-        "| ST-03 | 失败 / 阻断 | 命中互斥模式、范围限制或在途流程校验 | 查看原因、返回调整、联系审批人 | 展示失败状态和拦截说明 | 解释为什么失败以及如何处理 | 返回配置页或申请页继续处理 |",
-        "| ST-04 | 成功完成 / 已生效 | 关键动作放行并回写成功 | 查看结果、查看我的权限、继续下一步 | 展示成功状态和结果摘要 | 明确成功影响与后续动作 | 进入稳定可交付状态 |",
+        "| ST-01 | 配置中 / 可执行 | 用户进入主页面且前置条件满足 | 查看说明、选择、提交 | 展示当前状态与关键说明 | 明确当前可以继续执行 | 可进入提交或确认链路 |",
+        "| ST-02 | 已提交 / 处理中 | 提交主动作后等待处理或结果回写 | 查看进度、返回上一页、查看详情 | 结果页展示处理中状态和当前进度 | 明确“已提交，不代表已完成” | 等待处理完成或结果回写 |",
+        "| ST-03 | 失败 / 阻断 | 命中前置规则、范围限制或冲突校验 | 查看原因、返回调整、联系协作方 | 展示失败状态和拦截说明 | 解释为什么失败以及如何处理 | 返回上一页继续处理 |",
+        "| ST-04 | 成功完成 / 已生效 | 关键动作放行并回写成功 | 查看结果、查看详情、继续下一步 | 展示成功状态和结果摘要 | 明确成功影响与后续动作 | 进入稳定可交付状态 |",
     ]
 
     copy_rows = [
-        '| COPY-01 | 配置与启用说明 | 说明文案 | 解释模式价值、边界和互斥限制 | 能做什么、为什么存在、什么时候不能启用 | 只说“更方便”不解释治理边界 | “当前模式允许员工自助申请权限，命中互斥模式时将被阻断并说明原因。” |',
-        '| COPY-02 | 申请页说明 / 提交前提示 | 说明 / 提示文案 | 解释可申请范围、审批预期和敏感对象限制 | 可申请什么、谁来审批、被限制时如何处理 | 只给入口不解释规则 | “当前仅可申请允许开放的角色或功能权限，敏感对象不可申请。” |',
-        '| COPY-03 | 结果 / 处理中反馈 | 状态文案 | 解释已提交、处理中、已生效、失败这几种状态差异 | 当前状态、原因、下一步、去哪里看结果 | 把处理中写成已完成 | “已提交，审批通过后系统将自动分配权限。” |',
+        '| COPY-01 | 配置与入口说明 | 说明文案 | 解释当前能力价值、边界和前置限制 | 能做什么、为什么存在、什么时候不能继续 | 只说“更方便”不解释边界 | “当前能力用于……，命中限制时会被阻断并说明原因。” |',
+        '| COPY-02 | 主动作说明 / 提交前提示 | 说明 / 提示文案 | 解释可执行范围、处理预期和限制条件 | 当前能做什么、处理链路是什么、被限制时如何处理 | 只给入口不解释规则 | “当前仅在满足范围和前置条件时可继续执行，失败会说明原因。” |',
+        '| COPY-03 | 结果 / 处理中反馈 | 状态文案 | 解释已提交、处理中、已完成、失败这几种状态差异 | 当前状态、原因、下一步、去哪里看结果 | 把处理中写成已完成 | “已提交，处理完成后可在结果页查看最终状态。” |',
     ]
 
     risk_rows = [
-        f"| RSK-01 | 把治理限制误解成系统异常 | 配置启用失败或申请提交被阻断 | 只看到了失败，没有理解规则原因 | 在 {pages[0]['page_id'] if pages else 'P-01'} 的前置说明和结果页中显式解释限制与处理方向 | {'、'.join([page['page_id'] for page in pages[:2]]) if pages else 'P-01'}、COPY-01、COPY-03 |",
-        f"| RSK-02 | 把已提交误解成已生效 | 提交申请后进入处理中 | 用户不了解审批与回写时点 | 在结果页显式说明“已提交 / 待审批 / 已生效”的差异 | {next((page['page_id'] for page in pages if page['archetype'] == 'result_page'), 'P-01')}、ST-02、COPY-03 |",
+        f"| RSK-01 | 把治理限制误解成系统异常 | 配置启用失败或主动作提交被阻断 | 只看到了失败，没有理解规则原因 | 在 {pages[0]['page_id'] if pages else 'P-01'} 的前置说明和结果页中显式解释限制与处理方向 | {'、'.join([page['page_id'] for page in pages[:2]]) if pages else 'P-01'}、COPY-01、COPY-03 |",
+        f"| RSK-02 | 把已提交误解成已生效 | 提交主动作后进入处理中 | 用户不了解处理与回写时点 | 在结果页显式说明“已提交 / 待处理 / 已生效”的差异 | {next((page['page_id'] for page in pages if page['archetype'] == 'result_page'), 'P-01')}、ST-02、COPY-03 |",
     ]
 
     trace_rows: list[str] = []
@@ -1224,7 +1544,7 @@ def _render_experience(project_id: str) -> str:
 
 ## 体验目标与任务边界
 
-- 目标用户与角色：管理者、执行用户、审批/协作角色，以及需要解释规则的支持角色。
+- 目标用户与角色：管理者、执行用户、处理/协作角色，以及需要解释规则的支持角色。
 - 体验目标：{goal_line}
 - 任务边界：覆盖进入主能力、配置/选择、提交/确认、状态反馈、失败解释与结果确认这条主链路。
 - 不覆盖范围：高保真视觉稿、研发实现细节、数据库和接口设计。
@@ -1237,7 +1557,7 @@ def _render_experience(project_id: str) -> str:
 - 承接业务立场：POS-01、POS-02、J-01、J-02、J-03、J-04、J-05、J-06、J-07、J-08、J-09。
 - 承接规则：F-05、F-06、F-07、F-08、F-09、F-10、F-11、F-12、R-01、R-02、EX-01、EX-02。
 - 承接风险：RSK-01、AP-01。
-- 页面结构语义输入：已消费权限域 Wiki 中保留的页面结构语义，用于判断当前需求是结构变化还是结构不变，并决定信息进入 Header、Step、Main、Side、Footer 还是 Alert / Info 区。
+- 页面结构语义输入：已消费任务上下文中的 Wiki 页面知识与结构语义摘要，用于判断当前需求是结构变化还是结构不变，并决定信息进入 Header、Step、Main、Side、Footer 还是 Alert / Info 区。
 
 ### 已命中的设计原则
 
@@ -1265,7 +1585,7 @@ def _render_experience(project_id: str) -> str:
 ```text
 任务主入口
 ├── 配置与治理页面
-├── 员工申请与自查页面
+├── 主动作与自查页面
 ├── 关键范围选择弹窗
 └── 结果 / 进度 / 明细解释页面
 ```
