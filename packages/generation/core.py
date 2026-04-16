@@ -445,30 +445,781 @@ def _render_business(project_id: str) -> str:
 """
 
 
+HEADING_L3_RE = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+ZONE_ORDER = ["Header", "Intro", "Step", "Alert", "Filter", "Tab", "Menu", "Summary", "Main", "Side", "Info", "Footer"]
+
+
+def _read_workspace_text(project_id: str, file_name: str) -> str:
+    return _read_text(get_project_workspace_dir(project_id) / file_name)
+
+
+def _split_heading_blocks(text: str, pattern: re.Pattern[str]) -> dict[str, str]:
+    matches = list(pattern.finditer(text))
+    blocks: dict[str, str] = {}
+    for index, match in enumerate(matches):
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        blocks[match.group(1).strip()] = text[start:end].strip()
+    return blocks
+
+
+def _parse_bullet_lines(section_text: str) -> list[str]:
+    items: list[str] = []
+    for line in section_text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- "):
+            items.append(stripped[2:].strip())
+    return items
+
+
+def _extract_code_block(section_text: str) -> str:
+    match = re.search(r"```(?:text)?\n([\s\S]*?)```", section_text)
+    return match.group(1).strip() if match else ""
+
+
+def _parse_markdown_table_rows(section_text: str) -> list[dict[str, str]]:
+    rows = [line.strip() for line in section_text.splitlines() if line.strip().startswith("|")]
+    if len(rows) < 2:
+        return []
+    headers = [cell.strip() for cell in rows[0].strip("|").split("|")]
+    result: list[dict[str, str]] = []
+    for row in rows[2:]:
+        cells = [cell.strip() for cell in row.strip("|").split("|")]
+        if len(cells) != len(headers):
+            continue
+        result.append({headers[index]: cells[index] for index in range(len(headers))})
+    return result
+
+
+def _dedupe_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", value).strip()
+        if not cleaned:
+            continue
+        marker = cleaned.lower()
+        if marker in seen:
+            continue
+        seen.add(marker)
+        result.append(cleaned)
+    return result
+
+
+def _normalize_name(value: str) -> str:
+    compact = re.sub(r"\s+", "", value).lower()
+    for token in ["页面", "页", "弹窗", "弹层", "抽屉", "子页面", "窗口", "结果", "记录", "与", "及", "（", "）", "(", ")", "/"]:
+        compact = compact.replace(token, "")
+    return compact
+
+
+def _extract_zone_tokens(parts: list[str]) -> list[str]:
+    joined = "\n".join(parts)
+    token_map = [
+        ("Header", "Header"),
+        ("Intro", "Intro"),
+        ("Filter", "Filter"),
+        ("Search", "Filter"),
+        ("Action", "Action"),
+        ("Menu", "Menu"),
+        ("Tab", "Tab"),
+        ("Sub-Tab", "Tab"),
+        ("Step", "Step"),
+        ("Summary", "Summary"),
+        ("Main", "Main"),
+        ("Side", "Side"),
+        ("Footer", "Footer"),
+        ("Alert", "Alert"),
+        ("Info", "Info"),
+        ("Left", "Left"),
+        ("Right", "Right"),
+    ]
+    zones: list[str] = []
+    lowered = joined.lower()
+    for token, zone in token_map:
+        if token.lower() in lowered and zone not in zones:
+            zones.append(zone)
+    if "Right" in zones and "Side" not in zones:
+        zones.append("Side")
+    if "Left" in zones and "Menu" not in zones and ("角色索引" in joined or "导航" in joined or "Menu" in joined):
+        zones.append("Menu")
+    return zones
+
+
+def _merge_catalog_entry(
+    catalog: dict[str, dict[str, object]],
+    name: str,
+    baseline: str = "",
+    layout_lines: list[str] | None = None,
+    aliases: list[str] | None = None,
+) -> None:
+    key = _normalize_name(name)
+    existing = catalog.get(key, {"canonical_name": name, "aliases": [], "baseline": "", "layout_lines": [], "zones": []})
+    alias_values = [name] + list(existing.get("aliases", [])) + list(aliases or [])
+    layout_values = list(existing.get("layout_lines", [])) + list(layout_lines or [])
+    baseline_text = baseline.strip() or str(existing.get("baseline", "")).strip()
+    zones = _extract_zone_tokens(([baseline_text] if baseline_text else []) + layout_values)
+    existing["canonical_name"] = name
+    existing["aliases"] = _dedupe_strings(alias_values)
+    existing["baseline"] = baseline_text
+    existing["layout_lines"] = _dedupe_strings(layout_values)
+    existing["zones"] = zones
+    catalog[key] = existing
+
+
+def _parse_named_layout_entries(code_block: str) -> dict[str, list[str]]:
+    entries: dict[str, list[str]] = {}
+    current_name = ""
+    for raw_line in code_block.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line.endswith("：") and not line.startswith("->"):
+            current_name = line[:-1].strip()
+            entries.setdefault(current_name, [])
+            continue
+        if current_name:
+            entries[current_name].append(line)
+    return entries
+
+
+def _build_structure_catalog(project_id: str) -> list[dict[str, object]]:
+    runtime_dir = get_project_runtime_dir(project_id)
+    bundle_dir = runtime_dir / "context_bundle"
+    catalog: dict[str, dict[str, object]] = {}
+    topic_path = bundle_dir / "knowledge" / "wiki" / "topics" / "page-carrier-semantics-map.md"
+    topic_text = _read_text(topic_path)
+    if topic_text:
+        topic_blocks = _split_heading_blocks(topic_text, HEADING_L3_RE)
+        for bullet in _parse_bullet_lines(topic_blocks.get("3.5 结构语义摘要", "")):
+            if "：" not in bullet:
+                continue
+            name, baseline = bullet.split("：", 1)
+            _merge_catalog_entry(catalog, name.strip(), baseline=baseline.strip())
+        named_layouts = _parse_named_layout_entries(_extract_code_block(topic_blocks.get("3.6 原始区块关系图保留", "")))
+        for name, layout_lines in named_layouts.items():
+            _merge_catalog_entry(catalog, name.strip(), layout_lines=layout_lines)
+
+    detail_path = bundle_dir / "knowledge" / "wiki" / "entities" / "permission-detail-view.md"
+    detail_text = _read_text(detail_path)
+    if detail_text:
+        detail_blocks = _split_heading_blocks(detail_text, HEADING_L3_RE)
+        detail_baseline = " ".join(_parse_bullet_lines(detail_blocks.get("3.4 结构语义摘要", "")))
+        detail_layout = [line.strip() for line in _extract_code_block(detail_blocks.get("3.5 原始区块关系图保留", "")).splitlines() if line.strip()]
+        _merge_catalog_entry(catalog, "权限明细视图", baseline=detail_baseline, layout_lines=detail_layout, aliases=["权限明细", "权限详情"])
+
+    return list(catalog.values())
+
+
+def _find_catalog_entry(catalog: list[dict[str, object]], *candidate_names: str) -> dict[str, object] | None:
+    normalized_candidates = [_normalize_name(name) for name in candidate_names if name.strip()]
+    for candidate in normalized_candidates:
+        for item in catalog:
+            names = [str(item.get("canonical_name", ""))] + [str(alias) for alias in item.get("aliases", [])]
+            if any(_normalize_name(name) == candidate for name in names if name.strip()):
+                return item
+    for candidate in normalized_candidates:
+        for item in catalog:
+            names = [str(item.get("canonical_name", ""))] + [str(alias) for alias in item.get("aliases", [])]
+            if any(candidate and candidate in _normalize_name(name) for name in names if name.strip()):
+                return item
+    return None
+
+
+def _detect_task_signals(lines: list[str], facts_text: str, business_text: str) -> dict[str, object]:
+    joined = "\n".join(lines + [facts_text, business_text])
+    return {
+        "joined": joined,
+        "has_mode_setup": any(keyword in joined for keyword in ["模式", "设置页面", "立即启用", "确认编辑", "关闭模式", "启用成功"]),
+        "has_selection_dialog": any(keyword in joined for keyword in ["弹窗", "弹层", "搜索角色", "搜索应用", "部分角色", "部分应用", "分页展示"]),
+        "has_apply_page": any(keyword in joined for keyword in ["申请权限", "自助申请", "发起申请", "提交申请"]),
+        "has_my_permissions": any(keyword in joined for keyword in ["我的权限", "查看权限清单", "个人中心"]),
+        "has_result_page": any(keyword in joined for keyword in ["审批通过", "收到通知", "权限生效", "关闭失败", "结果", "处理中", "审批人"]),
+        "has_help_doc": any(keyword in joined for keyword in ["帮助文档", "了解更多", "说明文案", "提示文案"]),
+        "has_risk_rules": any(keyword in joined for keyword in ["不能", "限制", "失败", "提示", "敏感", "校验", "不可选"]),
+        "has_steps": any(keyword in joined for keyword in ["第一步", "第二步", "第三步", "审批流程", "步骤"]),
+    }
+
+
+def _ordered_slots(slots: list[str]) -> list[str]:
+    return [slot for slot in ZONE_ORDER if slot in slots]
+
+
+def _required_slots_for_page(archetype: str, signals: dict[str, object]) -> list[str]:
+    if archetype == "config_workbench":
+        slots = ["Header", "Step", "Alert", "Main", "Side", "Footer"]
+        if not signals.get("has_steps"):
+            slots.remove("Step")
+        if not signals.get("has_risk_rules"):
+            slots.remove("Alert")
+        return slots
+    if archetype == "selection_dialog":
+        slots = ["Header", "Info", "Main", "Side", "Footer"]
+        if not signals.get("has_help_doc"):
+            slots.remove("Side")
+        return slots
+    if archetype == "apply_page":
+        slots = ["Header", "Intro", "Alert", "Main", "Side", "Footer"]
+        if not signals.get("has_risk_rules"):
+            slots.remove("Alert")
+        return slots
+    if archetype == "detail_page":
+        return ["Header", "Info", "Tab", "Menu", "Main", "Footer"]
+    if archetype == "result_page":
+        return ["Header", "Summary", "Info", "Main", "Footer"]
+    return ["Header", "Main", "Footer"]
+
+
+def _slot_summary_map(archetype: str) -> dict[str, str]:
+    if archetype == "config_workbench":
+        return {
+            "Header": "模式名称 + 当前状态 + 帮助入口",
+            "Step": "申请方式 / 范围 / 审批流程步骤",
+            "Alert": "模式互斥规则 / 前置限制 / 风险提醒",
+            "Main": "配置表单 + 范围设置 + 启用动作",
+            "Side": "规则解释 / 帮助说明 / 审批配置说明",
+            "Footer": "取消 / 启用 / 确认编辑",
+        }
+    if archetype == "selection_dialog":
+        return {
+            "Header": "选择对象 + 当前上下文",
+            "Info": "可选范围 / 限制说明 / 已选提示",
+            "Main": "搜索 + 列表 + 勾选结果",
+            "Side": "不可选原因 / 帮助说明",
+            "Footer": "取消 / 确认",
+        }
+    if archetype == "apply_page":
+        return {
+            "Header": "页面标题 + 当前身份 + 入口说明",
+            "Intro": "申请目标说明 / 能做什么 / 申请后预期",
+            "Alert": "敏感角色限制 / 审批前提 / 风险提醒",
+            "Main": "权限选择 + 原因填写 + 提交动作",
+            "Side": "规则解释 / 帮助文档 / 追溯入口",
+            "Footer": "取消 / 提交申请 / 查看我的权限",
+        }
+    if archetype == "detail_page":
+        return {
+            "Header": "当前对象 + 身份标签 + 返回入口",
+            "Info": "解释说明 / 当前上下文 / 来源说明",
+            "Tab": "身份 / 终端 / 权限视角切换",
+            "Menu": "模块导航 / 目录切换",
+            "Main": "权限明细构成 / 查询结果 / 解释内容",
+            "Footer": "关闭 / 返回",
+        }
+    return {
+        "Header": "当前结果 + 状态标签",
+        "Summary": "审批结论 / 生效结果 / 处理中状态",
+        "Info": "原因说明 + 下一步 + 通知解释",
+        "Main": "申请记录 / 审批轨迹 / 权限变化详情",
+        "Footer": "返回 / 继续处理",
+    }
+
+
+def _build_layout_blocks(archetype: str, slots: list[str]) -> list[tuple[str, str]]:
+    summary_map = _slot_summary_map(archetype)
+    return [(slot, summary_map.get(slot, "")) for slot in _ordered_slots(slots)]
+
+
+def _judge_structure_change(
+    archetype: str,
+    page_name: str,
+    baseline_zones: list[str],
+    required_slots: list[str],
+    signals: dict[str, object],
+) -> dict[str, str]:
+    baseline_set = set(baseline_zones)
+    missing_slots = [slot for slot in required_slots if slot not in baseline_set and not (slot == "Summary" and "Info" in baseline_set)]
+
+    if archetype == "selection_dialog":
+        return {
+            "changed": "否",
+            "type": "结构不变",
+            "note": "该页面继续保持短链路选择结构，只在既有 Header / Info / Main / Footer 内补充范围限制和解释信息。",
+            "reason": "选择弹窗的目标是快速完成对象选择与回填，不适合再拆出更重的多层结构。",
+            "risk": "若把短链路选择页做成重工作台，会打断主任务节奏并增加理解成本。",
+            "keep_note": "仅在既有区块内补充选择限制、帮助说明与即时反馈。",
+        }
+
+    if "Step" in missing_slots:
+        change_type = "新增区块"
+        note = f"{page_name} 需要把模式设置与审批配置分成可理解的阶段，因此要补出 Step 级结构，而不是把所有设置压在单一主区。"
+    elif any(slot in missing_slots for slot in ["Alert", "Intro"]) and signals.get("has_risk_rules"):
+        change_type = "风险提示前置"
+        note = f"{page_name} 需要把限制条件、互斥规则和失败原因前置到主动作前，不再藏在操作后的被动解释里。"
+    elif any(slot in missing_slots for slot in ["Info", "Side", "Summary"]):
+        change_type = "说明区显性化"
+        note = f"{page_name} 需要把帮助说明、结果解释或下一步提示显性分层，避免继续挤在 Main 内容中。"
+    elif missing_slots:
+        change_type = "主次调整"
+        note = f"{page_name} 需要把新增信息重新放到更合适的结构位置，让主任务与解释信息的主次关系更清楚。"
+    else:
+        return {
+            "changed": "否",
+            "type": "结构不变",
+            "note": f"{page_name} 可以在既有结构基线内完成本次增强，不需要新增独立区块，只需补充内容、文案和状态反馈。",
+            "reason": "当前新增内容与页面原有承载语义一致，结构基线已经足以承接本次变化。",
+            "risk": "若误做额外结构拆分，会让信息层级变重，用户反而更难理解主任务。",
+            "keep_note": "仅在既有区块内补充内容、文案和状态反馈。",
+        }
+
+    return {
+        "changed": "是",
+        "type": change_type,
+        "note": note,
+        "reason": "本次判断综合了任务新增信息类型、业务限制和页面原有结构基线，而不是只根据“新增”做粗糙判断。",
+        "risk": "若不显式调整结构，用户会把规则、结果或帮助信息继续误读为隐藏规则、系统异常或次要信息。",
+        "keep_note": "本次涉及结构变化，需要在区块布局里显式表达新增或前置的结构层。",
+    }
+
+
+def _default_baseline(page_type: str) -> str:
+    if page_type == "弹窗":
+        return "弹层 / 抽屉基线保持“Header -> Info -> Main -> Footer”的短链路连续结构。"
+    return "页面基线保持“Header -> Main -> Footer”的主任务结构，并在需要时用 Info / Side 承接解释信息。"
+
+
+def _build_page_plan(
+    archetype: str,
+    page_name: str,
+    page_type: str,
+    roles: list[str],
+    main_task: str,
+    entry: str,
+    exit_text: str,
+    relation: str,
+    focus_points: list[str],
+    risk_text: str,
+    actions: list[dict[str, str]],
+    catalog_entry: dict[str, object] | None,
+    signals: dict[str, object],
+) -> dict[str, object]:
+    baseline = str((catalog_entry or {}).get("baseline", "")).strip() or _default_baseline(page_type)
+    baseline_zones = list((catalog_entry or {}).get("zones", []))
+    required_slots = _required_slots_for_page(archetype, signals)
+    structure = _judge_structure_change(archetype, page_name, baseline_zones, required_slots, signals)
+    return {
+        "archetype": archetype,
+        "name": page_name,
+        "page_type": page_type,
+        "roles": roles,
+        "main_task": main_task,
+        "entry": entry,
+        "exit": exit_text,
+        "relation": relation,
+        "baseline": baseline,
+        "focus_points": focus_points,
+        "risk_text": risk_text,
+        "actions": actions,
+        "layout_blocks": _build_layout_blocks(archetype, required_slots),
+        "structure": structure,
+    }
+
+
+def _identify_impacted_pages(project_id: str, lines: list[str], facts_text: str, business_text: str) -> list[dict[str, object]]:
+    catalog = _build_structure_catalog(project_id)
+    signals = _detect_task_signals(lines, facts_text, business_text)
+    pages: list[dict[str, object]] = []
+
+    if signals.get("has_mode_setup"):
+        pages.append(
+            _build_page_plan(
+                "config_workbench",
+                "自助申请权限模式设置页",
+                "页面",
+                ["超管", "超级管理员"],
+                "配置自助申请权限模式、申请范围和审批流程，并决定是否启用或编辑该模式。",
+                "从权限管理模式页点击“立即启用”或“编辑”进入。",
+                "取消返回上一页；启用或确认编辑后停留当前页并刷新状态。",
+                "作为治理入口页，可流向范围选择弹窗、表单编辑子页和结果反馈页。",
+                [
+                    "当前模式是否可启用、为什么可启用或不可启用",
+                    "申请方式、角色范围 / 应用范围、审批流程如何影响后续员工端",
+                    "当前动作成功后会刷新什么、失败时如何处理",
+                ],
+                "若把互斥模式限制和在途流程校验藏在操作后，用户会把治理冲突误判为系统异常。",
+                [
+                    {
+                        "name": "配置申请方式与范围",
+                        "trigger": "进入页面后即可操作",
+                        "feedback": "步骤区和主配置区同步刷新当前选择结果",
+                        "outcome": "形成可启用的模式配置",
+                        "protection": "对角色 / 应用范围的限制即时解释",
+                    },
+                    {
+                        "name": "启用、关闭或确认编辑",
+                        "trigger": "完成配置并满足前置条件后可点击",
+                        "feedback": "先校验互斥模式和在途流程，再给出成功或失败反馈",
+                        "outcome": "刷新为已开启、已关闭或已编辑状态",
+                        "protection": "命中互斥模式或在途流程时必须阻断并解释原因",
+                    },
+                ],
+                _find_catalog_entry(catalog, "功能授权", "角色管理"),
+                signals,
+            )
+        )
+
+    if signals.get("has_selection_dialog"):
+        pages.append(
+            _build_page_plan(
+                "selection_dialog",
+                "角色 / 应用范围选择弹窗",
+                "弹窗",
+                ["超管", "超级管理员"],
+                "在不离开当前配置上下文的情况下选择允许申请的角色或应用范围。",
+                "在设置页中选择“部分角色”或“部分应用”时打开。",
+                "确认后回填配置页并保留当前上下文，取消则直接关闭。",
+                "服务于模式设置页，选择完成后回流主配置页。",
+                [
+                    "当前在选择什么、可选范围是什么",
+                    "哪些对象不可选、为什么不可选",
+                    "确认选择后会回填到哪个设置项",
+                ],
+                "如果范围限制和不可选原因不在弹层内即时解释，用户会反复试错并怀疑系统数据有误。",
+                [
+                    {
+                        "name": "搜索并勾选角色 / 应用",
+                        "trigger": "弹窗打开后即可操作",
+                        "feedback": "搜索结果、勾选状态和已选计数即时变化",
+                        "outcome": "形成回填到设置页的范围结果",
+                        "protection": "对不可选对象即时解释原因",
+                    },
+                    {
+                        "name": "确认范围选择",
+                        "trigger": "完成选择后可点击",
+                        "feedback": "关闭弹窗并回填主配置页",
+                        "outcome": "主配置页形成完整的范围设置",
+                        "protection": "保持当前上下文不丢失",
+                    },
+                ],
+                None,
+                signals,
+            )
+        )
+
+    if signals.get("has_apply_page"):
+        pages.append(
+            _build_page_plan(
+                "apply_page",
+                "员工申请权限页",
+                "页面",
+                ["员工", "业务管理员"],
+                "查看可申请权限范围、填写申请原因并发起申请。",
+                "从个人中心或权限入口进入“申请权限”。",
+                "提交后进入结果 / 进度页，取消则返回上一入口。",
+                "承接员工自助申请主任务，并流向结果与进度页。",
+                [
+                    "当前能申请什么、为什么能申请或不能申请",
+                    "申请通过后会如何生效、需要经过哪些审批",
+                    "如果命中敏感角色 / 组织限制，系统会如何提示",
+                ],
+                "若申请页只给入口不解释范围限制和审批预期，用户会把被拦截理解成系统异常或流程没生效。",
+                [
+                    {
+                        "name": "选择权限并填写申请原因",
+                        "trigger": "进入申请页后即可操作",
+                        "feedback": "申请对象、原因和限制提示即时刷新",
+                        "outcome": "形成可提交的申请单",
+                        "protection": "命中敏感对象或范围外时立即阻断并解释",
+                    },
+                    {
+                        "name": "提交申请",
+                        "trigger": "满足前置校验后可点击",
+                        "feedback": "进入待审批 / 已提交状态反馈",
+                        "outcome": "流向审批与结果反馈链路",
+                        "protection": "提交前必须明确审批预期和失败处理方向",
+                    },
+                ],
+                _find_catalog_entry(catalog, "用户授权", "功能授权"),
+                signals,
+            )
+        )
+
+    if signals.get("has_my_permissions"):
+        pages.append(
+            _build_page_plan(
+                "detail_page",
+                "我的权限页",
+                "页面",
+                ["员工"],
+                "查看当前已拥有的权限、来源和细粒度构成，支撑员工自查与核对。",
+                "从个人中心新增的“我的权限”入口进入。",
+                "关闭或返回个人中心，不承担新的治理提交动作。",
+                "作为只读核对页，可继续下钻到权限明细解释层。",
+                [
+                    "当前有哪些权限、来源是什么、属于哪个身份或终端",
+                    "如果申请已生效，哪些结果已经落到当前权限上",
+                    "从哪里进入更细的权限明细解释",
+                ],
+                "如果“我的权限”只有聚合结果没有明细解释，用户无法完成自助核对，也无法判断权限为何生效。",
+                [
+                    {
+                        "name": "切换权限视角并查看明细",
+                        "trigger": "进入我的权限页后即可操作",
+                        "feedback": "Tab、导航与明细内容同步切换",
+                        "outcome": "完成权限核对和来源解释",
+                        "protection": "保持当前对象和身份上下文可见",
+                    }
+                ],
+                _find_catalog_entry(catalog, "权限详情", "权限明细视图"),
+                signals,
+            )
+        )
+
+    if signals.get("has_result_page"):
+        pages.append(
+            _build_page_plan(
+                "result_page",
+                "申请结果与审批进度页",
+                "页面",
+                ["员工", "审批人", "超管"],
+                "查看申请当前处于待审批、已生效还是失败阻断，并给出下一步。",
+                "提交申请后、收到通知后或从申请记录入口进入。",
+                "返回申请页、返回我的权限页或结束当前链路。",
+                "承接申请后的解释链路，并与我的权限页形成结果核对闭环。",
+                [
+                    "当前状态是什么、是否已经生效、为什么会失败或还在处理中",
+                    "当前需要谁继续处理、用户下一步该做什么",
+                    "如何回到申请页或我的权限页继续查看",
+                ],
+                "若结果页只告诉用户“成功/失败”，不解释审批进度、原因和下一步，用户无法判断是否还需要等待、重试或联系审批人。",
+                [
+                    {
+                        "name": "查看当前结果与审批进度",
+                        "trigger": "有申请记录后即可进入",
+                        "feedback": "状态、原因和下一步同步展示",
+                        "outcome": "用户理解当前结果并决定后续动作",
+                        "protection": "失败与处理中必须明确区分，不能混成黑盒结果",
+                    },
+                    {
+                        "name": "返回申请页或查看我的权限",
+                        "trigger": "理解结果后可点击",
+                        "feedback": "带着当前申请上下文跳回对应页面",
+                        "outcome": "继续处理或完成核对",
+                        "protection": "保持记录可追溯、状态不丢失",
+                    },
+                ],
+                _find_catalog_entry(catalog, "权限详情", "权限明细视图"),
+                signals,
+            )
+        )
+
+    return pages
+
+
+def _info_rows_for_page(page: dict[str, object]) -> list[dict[str, str]]:
+    page_id = str(page["page_id"])
+    page_name = str(page["name"])
+    archetype = str(page["archetype"])
+    if archetype == "config_workbench":
+        return [
+            {
+                "purpose": "当前模式状态与可启用性",
+                "priority": "高",
+                "position": f"{page_id} Header / Alert",
+                "slot": "Header / Alert",
+                "trigger": "进入页、点击启用前",
+                "risk": "用户无法判断当前模式是否能启用，容易把互斥限制误判为系统异常。",
+            },
+            {
+                "purpose": "申请方式、范围与审批配置",
+                "priority": "高",
+                "position": f"{page_id} Step / Main",
+                "slot": "Step / Main",
+                "trigger": "配置过程中",
+                "risk": "用户难以理解配置顺序，后续员工端能力边界会不清楚。",
+            },
+        ]
+    if archetype == "selection_dialog":
+        return [
+            {
+                "purpose": "可选范围与不可选原因",
+                "priority": "高",
+                "position": f"{page_id} Info / Main",
+                "slot": "Info / Main",
+                "trigger": "打开弹窗后",
+                "risk": "用户会反复试错，无法理解为什么某些对象不可选。",
+            }
+        ]
+    if archetype == "apply_page":
+        return [
+            {
+                "purpose": f"{page_name} 的申请范围与规则解释",
+                "priority": "高",
+                "position": f"{page_id} Intro / Alert",
+                "slot": "Intro / Alert",
+                "trigger": "进入页、提交前",
+                "risk": "用户不知道能申请什么、为什么被限制，容易误解申请链路。",
+            },
+            {
+                "purpose": "申请对象、申请原因与提交动作",
+                "priority": "高",
+                "position": f"{page_id} Main / Footer",
+                "slot": "Main / Footer",
+                "trigger": "填写并提交时",
+                "risk": "主任务入口不清晰，用户无法完成申请。",
+            },
+        ]
+    if archetype == "detail_page":
+        return [
+            {
+                "purpose": f"{page_name} 的权限解释与来源说明",
+                "priority": "高",
+                "position": f"{page_id} Info / Tab / Main",
+                "slot": "Info / Tab / Main",
+                "trigger": "进入页、切换视角时",
+                "risk": "用户只能看到聚合结果，无法完成权限核对和来源理解。",
+            }
+        ]
+    return [
+        {
+            "purpose": f"{page_name} 的结果结论与下一步",
+            "priority": "高",
+            "position": f"{page_id} Summary / Info / Footer",
+            "slot": "Summary / Info / Footer",
+            "trigger": "提交后、收到通知后",
+            "risk": "用户不知道当前是否生效、为何失败以及接下来该做什么。",
+        }
+    ]
+
+
 def _render_experience(project_id: str) -> str:
     lines = _extract_source_lines(project_id)
-    structure_snippets = _extract_structure_semantics(project_id)
+    facts_text = _read_workspace_text(project_id, "facts.md")
+    business_text = _read_workspace_text(project_id, "business_blueprint.md")
     goal_line = _pick(lines, "提升", "让用户更容易理解当前能力何时可用、如何执行、何时成功以及为什么失败。")
     risk_line = _pick(lines, "失败", "若只提示失败而不解释原因，用户会把治理限制误读为系统异常。")
-    structure_changed, structure_change_type, structure_reason = _structure_change_kind(lines)
-    p01_baseline = _baseline_line(
-        structure_snippets,
-        "基线来自权限域 Wiki：顶部先给出规则与解释信息，再进入主配置区，辅助说明位于侧区或结果说明区。",
-    )
-    p02_baseline = "弹层 / 抽屉基线保持“Header -> 说明 -> Main -> Footer”的轻量连续结构。"
-    p03_baseline = "结果页基线保持“Header -> 结果结论 -> 原因说明 -> Detail -> Footer”的解释型结构。"
-    p01_change_label = structure_change_type if structure_changed else "结构不变"
-    p01_change_note = (
-        "在 Header 后前置解释 / 风险说明区，并把规则提示与帮助信息从隐式入口改为显式首屏理解区。"
-        if structure_changed
-        else "本次仅在既有 Main 与说明区内补充内容、文案和状态反馈。"
-    )
-    p03_change_label = "风险提示前置" if structure_changed else "结构不变"
-    p03_change_note = (
-        "把结果原因与下一步说明作为独立 Summary / Reason 区块显性展示，避免用户把处理中、失败和成功混读。"
-        if structure_changed
-        else "本次仅增强结果页中的原因说明与状态文案，不改变结果页主结构。"
-    )
+    pages = _identify_impacted_pages(project_id, lines, facts_text, business_text)
+    for index, page in enumerate(pages, start=1):
+        page["page_id"] = f"P-{index:02d}"
+
+    page_lookup = {str(page["archetype"]): page for page in pages}
+    ia_rows: list[str] = []
+    for index, page in enumerate(pages, start=1):
+        ia_rows.append(
+            f"| IA-{index:02d} | {page['page_type']} | {'/'.join(page['roles'])} | {page['entry']} | {page['main_task']} | {page['relation']} |"
+        )
+
+    flow_rows: list[str] = []
+    if "config_workbench" in page_lookup:
+        config_page = page_lookup["config_workbench"]
+        flow_rows.append(
+            f"| TF-01 | 模式配置与启用流程 | IA-01 | 查看当前状态 -> 配置申请方式与范围 -> 配置审批流程 -> 点击启用/编辑确认 | 命中互斥模式或在途流程时阻断并解释 | 模式成功启用或编辑完成 | 启用失败并提示原因与处理方向 |"
+        )
+    if "apply_page" in page_lookup:
+        apply_page = page_lookup["apply_page"]
+        start_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "apply_page"), "IA-01")
+        flow_rows.append(
+            f"| TF-02 | 员工自助申请流程 | {start_ia} | 查看可申请范围 -> 选择权限并填写原因 -> 提交申请 | 命中敏感对象或范围限制时阻断并解释 | 进入待审批 / 已提交状态 | 提交失败并说明原因与下一步 |"
+        )
+    if "result_page" in page_lookup:
+        result_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "result_page"), "IA-01")
+        flow_rows.append(
+            f"| TF-03 | 结果回写与进度确认流程 | {result_ia} | 查看审批状态 -> 理解结果原因 -> 决定返回申请页或查看我的权限 | 审批未完成则停留处理中并解释当前进度 | 用户理解结果并继续下一步 | 把失败 / 处理中误解成黑盒结果 |"
+        )
+    if "detail_page" in page_lookup:
+        detail_ia = next((f"IA-{index + 1:02d}" for index, page in enumerate(pages) if page["archetype"] == "detail_page"), "IA-01")
+        flow_rows.append(
+            f"| TF-04 | 权限自查与核对流程 | {detail_ia} | 进入我的权限 -> 切换视角 -> 查看权限明细 | 找不到来源说明时需要继续下钻解释 | 完成权限自查和结果核对 | 用户只能看到聚合结果，无法确认权限来源 |"
+        )
+
+    page_rows: list[str] = []
+    for page in pages:
+        page_rows.append(
+            f"| {page['page_id']} | {page['name']} | {page['page_type']} | {'/'.join(page['roles'])} | {page['main_task']} | {page['entry']} | {page['exit']} | {page['relation']} |"
+        )
+
+    blueprint_blocks: list[str] = []
+    for page in pages:
+        action_rows = "\n".join(
+            [
+                f"| ACT-{page['page_id'].split('-')[-1]}-{index + 1:02d} | {item['name']} | {item['trigger']} | {item['feedback']} | {item['outcome']} | {item['protection']} |"
+                for index, item in enumerate(page["actions"])
+            ]
+        )
+        structure = page["structure"]
+        focus_lines = page["focus_points"]
+        blueprint_blocks.append(
+            f"""### {page['page_id']} {page['name']}
+
+#### 页面目标
+
+- 页面目标：{page['main_task']}
+- 目标用户：{'、'.join(page['roles'])}
+- 进入条件：{page['entry']}
+- 主任务 / 次任务：主任务是{page['main_task']}；次任务是理解规则、查看解释或返回上一层。
+
+#### 首屏重点与关键信息
+
+- 首屏必须理解：{focus_lines[0]}
+- 决策必需信息：{focus_lines[1] if len(focus_lines) > 1 else focus_lines[0]}
+- 风险提醒：{page['risk_text']}
+
+#### 关键动作与状态
+
+| action_id | 动作 | 触发条件 | 即时反馈 | 后续结果 | 风险保护 |
+| --- | --- | --- | --- | --- | --- |
+{action_rows}
+
+#### 结构变化判断
+
+- 页面结构语义基线：{page['baseline']}
+- 本次是否涉及结构变化：{structure['changed']}
+- 变化类型：{structure['type']}
+- 变化说明：{structure['note']}
+- 变化理由：{structure['reason']}
+- 不这样做的风险：{structure['risk']}
+"""
+        )
+
+    layout_blocks: list[str] = []
+    for page in pages:
+        layout_text = "\n".join([f"[{label}: {summary}]" for label, summary in page["layout_blocks"]])
+        structure = page["structure"]
+        layout_blocks.append(
+            f"""### {page['page_id']} {page['name']}
+
+```text
+{layout_text}
+```
+
+- 结构变化结论：{structure['type']}
+- 结构保持不变时说明：{structure['keep_note']}
+"""
+        )
+
+    info_rows: list[str] = []
+    info_index = 1
+    for page in pages:
+        for row in _info_rows_for_page(page):
+            info_rows.append(
+                f"| INFO-{info_index:02d} | {row['purpose']} | {row['priority']} | {row['position']} | {row['slot']} | {row['trigger']} | {row['risk']} |"
+            )
+            info_index += 1
+
+    state_rows = [
+        "| ST-01 | 配置中 / 可申请 | 用户进入配置页或申请页且前置条件满足 | 查看说明、选择、提交 | 展示当前状态与关键说明 | 明确当前可以继续执行 | 可进入提交或启用链路 |",
+        "| ST-02 | 待审批 / 处理中 | 提交申请后等待审批或结果回写 | 查看进度、返回上一页、查看我的权限 | 结果页展示处理中状态和当前进度 | 明确“已提交，不代表已完成” | 等待审批或结果回写 |",
+        "| ST-03 | 失败 / 阻断 | 命中互斥模式、范围限制或在途流程校验 | 查看原因、返回调整、联系审批人 | 展示失败状态和拦截说明 | 解释为什么失败以及如何处理 | 返回配置页或申请页继续处理 |",
+        "| ST-04 | 成功完成 / 已生效 | 关键动作放行并回写成功 | 查看结果、查看我的权限、继续下一步 | 展示成功状态和结果摘要 | 明确成功影响与后续动作 | 进入稳定可交付状态 |",
+    ]
+
+    copy_rows = [
+        '| COPY-01 | 配置与启用说明 | 说明文案 | 解释模式价值、边界和互斥限制 | 能做什么、为什么存在、什么时候不能启用 | 只说“更方便”不解释治理边界 | “当前模式允许员工自助申请权限，命中互斥模式时将被阻断并说明原因。” |',
+        '| COPY-02 | 申请页说明 / 提交前提示 | 说明 / 提示文案 | 解释可申请范围、审批预期和敏感对象限制 | 可申请什么、谁来审批、被限制时如何处理 | 只给入口不解释规则 | “当前仅可申请允许开放的角色或功能权限，敏感对象不可申请。” |',
+        '| COPY-03 | 结果 / 处理中反馈 | 状态文案 | 解释已提交、处理中、已生效、失败这几种状态差异 | 当前状态、原因、下一步、去哪里看结果 | 把处理中写成已完成 | “已提交，审批通过后系统将自动分配权限。” |',
+    ]
+
+    risk_rows = [
+        f"| RSK-01 | 把治理限制误解成系统异常 | 配置启用失败或申请提交被阻断 | 只看到了失败，没有理解规则原因 | 在 {pages[0]['page_id'] if pages else 'P-01'} 的前置说明和结果页中显式解释限制与处理方向 | {'、'.join([page['page_id'] for page in pages[:2]]) if pages else 'P-01'}、COPY-01、COPY-03 |",
+        f"| RSK-02 | 把已提交误解成已生效 | 提交申请后进入处理中 | 用户不了解审批与回写时点 | 在结果页显式说明“已提交 / 待审批 / 已生效”的差异 | {next((page['page_id'] for page in pages if page['archetype'] == 'result_page'), 'P-01')}、ST-02、COPY-03 |",
+    ]
+
+    trace_rows: list[str] = []
+    for index, page in enumerate(pages, start=1):
+        trace_rows.append(
+            f"| TR-{index:02d} | {page['page_id']} / {page['name']} / {page['layout_blocks'][0][0]} | J-01、POS-02 | F-07、F-09、F-10、EX-01、EX-02 | PR-01、PR-02、PR-03 | 该页由任务命中页面与 Wiki 页面结构语义共同推导生成 |"
+        )
+
     return f"""# Experience Blueprint
 
 ## 体验目标与任务边界
@@ -483,8 +1234,8 @@ def _render_experience(project_id: str) -> str:
 
 ### 上游业务立场与关键规则
 
-- 承接业务立场：POS-01、POS-02、J-01、J-03、J-08、J-09。
-- 承接规则：F-05、F-07、F-09、F-10、F-11、R-01、R-02、EX-01、EX-02。
+- 承接业务立场：POS-01、POS-02、J-01、J-02、J-03、J-04、J-05、J-06、J-07、J-08、J-09。
+- 承接规则：F-05、F-06、F-07、F-08、F-09、F-10、F-11、F-12、R-01、R-02、EX-01、EX-02。
 - 承接风险：RSK-01、AP-01。
 - 页面结构语义输入：已消费权限域 Wiki 中保留的页面结构语义，用于判断当前需求是结构变化还是结构不变，并决定信息进入 Header、Step、Main、Side、Footer 还是 Alert / Info 区。
 
@@ -493,12 +1244,13 @@ def _render_experience(project_id: str) -> str:
 - 原则 PR-01：状态可见，状态切换和结果反馈必须被用户看见并理解。
 - 原则 PR-02：先结论后细节，先让用户知道能不能做、结果是什么，再决定是否展开原因和规则。
 - 原则 PR-03：风险前置解释，治理限制和失败原因需要在关键动作前后明确解释。
+- 命中的页面集合：{"、".join([f"{page['page_id']} {page['name']}" for page in pages])}
 
 | principle_id | 原则名称 | 命中原因 | 作用位置 |
 | --- | --- | --- | --- |
-| PR-01 | 状态可见 | 状态切换和结果反馈必须被用户看见并理解 | P-01、P-03、ST-01~ST-03 |
-| PR-02 | 先结论后细节 | 用户先要知道能不能做、结果是什么，再看原因和规则 | P-01、P-02、COPY-01~COPY-03 |
-| PR-03 | 风险前置解释 | 治理限制和失败原因需要在关键动作前后明确解释 | P-01、P-03、RSK-01 |
+| PR-01 | 状态可见 | 状态切换和结果反馈必须被用户看见并理解 | {pages[0]['page_id'] if pages else 'P-01'}、ST-01~ST-04 |
+| PR-02 | 先结论后细节 | 用户先要知道能不能做、结果是什么，再看原因和规则 | {pages[0]['page_id'] if pages else 'P-01'}、COPY-01~COPY-03 |
+| PR-03 | 风险前置解释 | 治理限制和失败原因需要在关键动作前后明确解释 | {next((page['page_id'] for page in pages if page['archetype'] == 'result_page'), pages[0]['page_id'] if pages else 'P-01')}、RSK-01 |
 
 ## 信息架构总览
 
@@ -506,18 +1258,16 @@ def _render_experience(project_id: str) -> str:
 
 | ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
 | --- | --- | --- | --- | --- | --- |
-| IA-01 | 页面 | 管理者 | 任务主入口 | 说明能力目标、查看状态、进入配置 | 上游入口，流向 P-01 |
-| IA-02 | 抽屉/弹窗 | 执行用户 | P-01 内部关键动作 | 承接关键选择、填写或确认 | 服务 P-01 |
-| IA-03 | 页面 | 执行用户/管理者 | 提交或处理后的结果入口 | 展示状态、原因与下一步 | 承接 TF-02、TF-03 |
+{chr(10).join(ia_rows)}
 
 ### 信息架构文本图
 
 ```text
 任务主入口
-└── 主配置/执行页面
-    ├── 关键选择弹层
-    ├── 提交或确认动作
-    └── 结果页 / 记录页 / 说明区
+├── 配置与治理页面
+├── 员工申请与自查页面
+├── 关键范围选择弹窗
+└── 结果 / 进度 / 明细解释页面
 ```
 
 ## 任务流蓝图
@@ -526,195 +1276,55 @@ def _render_experience(project_id: str) -> str:
 
 ```text
 进入主入口
--> 查看当前状态与规则说明
--> 完成关键配置或选择
--> 点击提交/确认
--> 命中规则冲突 ? 阻断并解释 : 进入结果确认
+-> 识别当前是配置治理还是员工申请
+-> 在命中页面内完成主任务与规则判断
+-> 提交 / 启用 / 查看结果
+-> 命中规则冲突 ? 阻断并解释 : 进入结果或明细确认
 ```
 
 ### 流程明细
 
 | flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
 | --- | --- | --- | --- | --- | --- | --- |
-| TF-01 | 配置与启用流程 | IA-01 | 查看说明 -> 配置关键选项 -> 提交确认 | 命中 R-01 时阻断并解释 | 进入可交付状态 | 失败并提示原因与处理方向 |
-| TF-02 | 使用与申请流程 | IA-01 | 查看当前信息 -> 发起关键动作 -> 提交 | 范围外或依赖缺失时阻断 | 进入处理中 / 已提交状态 | 不可执行并解释为什么 |
-| TF-03 | 结果回写流程 | IA-03 | 处理结果 -> 回写状态 -> 通知用户 | 若依赖未完成则停留处理中 | 用户看到成功结果和下一步 | 用户看到失败结果与补救方向 |
+{chr(10).join(flow_rows)}
 
 ## 页面 / 窗口清单
 
 | page_id | 名称 | 类型 | 目标用户 | 主任务 | 入口 | 退出方式 | 上下游关系 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P-01 | 主配置与执行页 | 页面 | 管理者/执行用户 | 理解规则、完成关键配置或发起主动作 | 任务主入口 | 返回、提交后进入结果页 | 上游 IA-01，下游 P-02 / P-03 |
-| P-02 | 关键选择弹层 | 弹窗 | 执行用户 | 选择关键对象、补充必要信息 | P-01 关键动作 | 关闭弹层 / 确认选择 | 服务 P-01 |
-| P-03 | 结果与记录页 | 页面 | 执行用户/管理者 | 查看状态、原因、结果和下一步 | 提交后、通知后 | 返回主入口 | 承接 TF-02、TF-03 |
+{chr(10).join(page_rows)}
 
 ## 关键页面蓝图
 
-### P-01 主配置与执行页
-
-#### 页面目标
-
-- 页面目标：让用户清楚知道当前能力是什么、为什么能做/不能做，以及如何完成主任务。
-- 目标用户：管理者、执行用户。
-- 进入条件：从主入口进入，且需要完成配置、查看规则或发起动作。
-- 主任务 / 次任务：主任务是完成关键动作；次任务是理解规则、查看帮助与退出。
-
-#### 首屏重点与关键信息
-
-- 首屏必须理解：当前状态、当前能力是否可用、关键规则是什么。
-- 决策必需信息：关键对象范围、提交后会发生什么、失败时如何处理。
-- 风险提醒：{risk_line}
-
-#### 关键动作与状态
-
-| action_id | 动作 | 触发条件 | 即时反馈 | 后续结果 | 风险保护 |
-| --- | --- | --- | --- | --- | --- |
-| ACT-01 | 查看并切换关键配置 | 进入页面后即可操作 | 页面状态与信息区同步刷新 | 明确当前执行边界 | 在切换前后解释差异 |
-| ACT-02 | 点击提交/确认 | 满足前置条件后可点击 | 先校验规则，再给出结果反馈 | 成功进入 P-03；失败则阻断 | 必须展示原因与下一步 |
-
-#### 结构变化判断
-
-- 页面结构语义基线：{p01_baseline}
-- 本次是否涉及结构变化：{"是" if structure_changed else "否"}
-- 变化类型：{p01_change_label}
-- 变化说明：{p01_change_note}
-- 变化理由：{structure_reason}
-- 不这样做的风险：用户会把治理限制、帮助说明和关键前提继续误解为隐藏规则或系统异常。
-
-### P-02 关键选择弹层
-
-#### 页面目标
-
-- 页面目标：让用户在不离开上下文的情况下完成关键选择和补充信息。
-- 目标用户：执行用户。
-- 进入条件：P-01 需要进一步选择对象、范围或理由时进入。
-- 主任务 / 次任务：主任务是完成选择；次任务是理解限制和关闭返回。
-
-#### 首屏重点与关键信息
-
-- 首屏必须理解：当前在选择什么、允许范围是什么。
-- 决策必需信息：哪些对象可选、哪些对象不可选、提交后会承接到哪里。
-- 风险提醒：范围外对象不可选时必须即时解释原因。
-
-#### 关键动作与状态
-
-| action_id | 动作 | 触发条件 | 即时反馈 | 后续结果 | 风险保护 |
-| --- | --- | --- | --- | --- | --- |
-| ACT-03 | 选择关键对象 | 打开弹层后可操作 | 表单或列表状态更新 | 形成提交条件 | 对不可选对象即时解释 |
-| ACT-04 | 确认选择并返回 | 必填信息满足后可点击 | 关闭弹层并回填 P-01 | 回到主页面继续完成任务 | 保持上下文不刷新 |
-
-#### 结构变化判断
-
-- 页面结构语义基线：{p02_baseline}
-- 本次是否涉及结构变化：否
-- 变化类型：结构不变
-- 变化说明：本次仅在既有 Main 与 Info 区内补充选择限制、帮助说明和即时反馈，不新增独立区块，也不改变左右关系。
-- 变化理由：该页面承担的是短链路选择任务，继续保持轻量连续结构更利于上下文回填。
-- 不这样做的风险：若额外拆出复杂分层，会拉长选择链路并打断主任务节奏。
-
-### P-03 结果与记录页
-
-#### 页面目标
-
-- 页面目标：把成功、处理中、失败这三类结果清楚解释，并给出下一步。
-- 目标用户：执行用户、管理者。
-- 进入条件：提交后、收到通知后或从记录入口进入。
-- 主任务 / 次任务：主任务是确认结果和下一步；次任务是查看记录和返回主入口。
-
-#### 首屏重点与关键信息
-
-- 首屏必须理解：当前状态、是否成功、如果失败是为什么。
-- 决策必需信息：结果原因、影响对象、下一步动作。
-- 风险提醒：不要把处理中、失败和已成功混写成同一种黑盒结果。
-
-#### 关键动作与状态
-
-| action_id | 动作 | 触发条件 | 即时反馈 | 后续结果 | 风险保护 |
-| --- | --- | --- | --- | --- | --- |
-| ACT-05 | 查看结果详情 | 有结果记录即可查看 | 结果信息区展开 | 理解原因、影响和后续动作 | 保留原始上下文 |
-| ACT-06 | 返回主入口 | 结果已理解后可操作 | 返回主入口或相关记录 | 继续下一轮操作或结束 | 明确不会丢失已记录结果 |
-
-#### 结构变化判断
-
-- 页面结构语义基线：{p03_baseline}
-- 本次是否涉及结构变化：{"是" if structure_changed else "否"}
-- 变化类型：{p03_change_label}
-- 变化说明：{p03_change_note}
-- 变化理由：结果页承担解释与确认职责，必须让结果结论、原因说明和下一步分层可见。
-- 不这样做的风险：用户会把处理中、失败和已成功混成同一种黑盒结果，无法判断后续动作。
+{chr(10).join(blueprint_blocks)}
 
 ## 区块布局示意
 
-### P-01 主配置与执行页
-
-```text
-[Header: 页面标题 + 当前状态 + 帮助入口]
-[Intro: 能力说明 / 规则解释 / 风险提醒]
-[Main: 关键配置或主任务动作]
-[Side: 限制说明 / 结果预期 / 追溯入口]
-[Footer: 取消 / 提交 / 下一步]
-```
-
-- 结构变化结论：{p01_change_label}
-- 结构保持不变时说明：{"本次涉及结构变化，需把解释与风险前置到首屏结构。" if structure_changed else "仅在既有 Main / Side 内补充内容、文案和状态反馈。"}
-
-### P-02 关键选择弹层
-
-```text
-[Header: 选择对象 + 当前上下文]
-[Info: 当前限制与说明]
-[Main: 选择列表 / 表单区]
-[Side: 不可选原因 / 帮助说明]
-[Footer: 关闭 / 确认]
-```
-
-- 结构变化结论：结构不变
-- 结构保持不变时说明：仅在既有 Main / Info / Side 内补充选择限制与帮助说明，不新增区块。
-
-### P-03 结果与记录页
-
-```text
-[Header: 当前结果 + 状态标签]
-[Summary: 成功/失败/处理中结论]
-[Info: 原因说明 + 下一步]
-[Main: 记录详情 / 追溯信息]
-[Footer: 返回 / 继续处理]
-```
-
-- 结构变化结论：{p03_change_label}
-- 结构保持不变时说明：{"本次强调结果原因和下一步的显性分层展示。" if structure_changed else "仅增强结果页中的状态文案和解释信息，不改变主结构。"}
+{chr(10).join(layout_blocks)}
 
 ## 内容与信息优先级合同
 
 | info_item | 信息目的 | 优先级 | 推荐位置 | 结构落位 | 触发时机 | 不展示风险 |
 | --- | --- | --- | --- | --- | --- | --- |
-| INFO-01 | 当前状态与可执行性 | 高 | 首屏 Header / Summary | Header | 进入页 | 用户无法判断现在能不能做 |
-| INFO-02 | 关键规则与阻断原因 | 高 | P-01 Intro / P-03 Info | Intro / Info | 操作前、失败后 | 用户把治理约束误判为系统异常 |
-| INFO-03 | 结果与下一步 | 高 | P-03 Summary / Footer | Summary / Footer | 成功后、失败后 | 用户不知道后续怎么继续 |
+{chr(10).join(info_rows)}
 
 ## 状态与反馈矩阵
 
 | state_id | 状态名称 | 触发条件 | 可用动作 | 页面反馈 | 文案反馈 | 下游结果 |
 | --- | --- | --- | --- | --- | --- | --- |
-| ST-01 | 配置中 / 可执行 | 进入 P-01 且前置条件满足 | 查看说明、选择、提交 | 展示当前状态和关键说明 | 告知当前可以继续执行 | 可进入提交链路 |
-| ST-02 | 已提交 / 处理中 | 提交后等待外部处理 | 查看记录、等待结果 | P-03 展示处理中和当前进度 | 明确“已提交，不代表已完成” | 等待结果回写 |
-| ST-03 | 失败 / 阻断 | 命中规则冲突或依赖缺失 | 查看原因、返回调整 | 展示失败状态和拦截说明 | 解释为什么失败以及如何处理 | 返回 P-01 或停留结果页 |
-| ST-04 | 成功完成 | 关键动作放行并回写成功 | 查看结果、继续下一步 | 展示成功状态和结果摘要 | 明确成功影响与后续动作 | 进入稳定可交付状态 |
+{chr(10).join(state_rows)}
 
 ## 文案合同
 
 | copy_id | 场景 | 文案类型 | 语义目标 | 必含信息 | 禁止写法 | 示例方向 |
 | --- | --- | --- | --- | --- | --- | --- |
-| COPY-01 | 主页面说明 | 说明文案 | 解释能力价值、规则边界和当前收益 | 能做什么、为什么存在、关键限制 | 只说“更方便”不解释边界 | “当前能力用于……，命中限制时会被阻断并说明原因。” |
-| COPY-02 | 提交成功 / 处理中 | 成功 / 状态文案 | 解释已提交但尚未最终完成 | 当前状态、下一步、去哪里看结果 | 把处理中写成已完成 | “已提交，结果回写后可在结果页查看。” |
-| COPY-03 | 失败 / 阻断 | 错误 / 阻断文案 | 解释为什么失败、如何处理 | 失败原因、处理方向、是否可重试 | 只说“失败，请稍后再试” | “当前命中规则限制，请先处理前置条件后再重试。” |
+{chr(10).join(copy_rows)}
 
 ## 风险、疑惑点与保护策略
 
 | risk_id | 风险 / 疑惑点 | 触发场景 | 用户为什么会困惑 / 出错 | 保护策略 | 对应页面 / 流程 / 文案 |
 | --- | --- | --- | --- | --- | --- |
-| RSK-01 | 把治理限制误解成系统异常 | 提交失败或不可执行 | 只看到了失败，没有理解规则原因 | 在失败态显式解释限制和处理方向 | P-01、P-03、COPY-03 |
-| RSK-02 | 把已提交误解成已完成 | 提交后进入处理中 | 用户不了解结果回写时点 | 成功反馈必须说明“已提交 / 待回写” | P-03、ST-02、COPY-02 |
+{chr(10).join(risk_rows)}
 
 ## 开放问题与缺口
 
@@ -727,9 +1337,7 @@ def _render_experience(project_id: str) -> str:
 
 | trace_id | 页面 / 流程 / 文案对象 | 承接业务判断 | 承接事实 / 规则 / 异常 | 承接原则 | 说明 |
 | --- | --- | --- | --- | --- | --- |
-| TR-01 | P-01 / Header 风险说明区 / TF-01 / COPY-01 | J-01、POS-02 | F-07、F-09、R-01、EX-01 | PR-01、PR-02 | 首屏先解释可执行性和规则边界 |
-| TR-02 | P-03 / Info 结果原因区 / TF-03 / COPY-02 | J-05、J-09 | F-06、F-10、EX-02 | PR-01、PR-03 | 结果页必须解释状态、原因与下一步 |
-| TR-03 | P-03 / Footer 返回动作 / ST-03 / COPY-03 | J-08、POS-02 | F-11、F-12、EX-01 | PR-03 | 失败不是黑盒报错，而是治理阻断解释 |
+{chr(10).join(trace_rows)}
 """
 
 
