@@ -182,6 +182,7 @@ def main() -> int:
     steps_order = [
         "scan_raw.py",
         "build_manifest.py",
+        "sync_page_structure_semantics.py",
         "reindex_wiki.py",
         "refresh_overview.py",
         "lint_wiki.py",

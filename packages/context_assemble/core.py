@@ -38,6 +38,17 @@ def copy_reference(repo_root: Path, target_root: Path, reference: str) -> dict[s
     }
 
 
+def _is_structure_semantics_reference(reference: str) -> bool:
+    lowered = reference.replace("\\", "/").lower()
+    markers = [
+        "page-carrier-semantics",
+        "page_structure",
+        "页面结构语义",
+        "15_page_carrier_semantics",
+    ]
+    return any(marker in lowered for marker in markers)
+
+
 def run_context_assemble(task_id: str) -> int:
     repo_root = get_repo_root()
     runtime_dir = get_project_runtime_dir(task_id)
@@ -93,6 +104,25 @@ def run_context_assemble(task_id: str) -> int:
         "business_judgment_boundary": business_req.get("boundary", []),
         "experience_translation_boundary": experience_req.get("boundary", []),
     }
+    structure_refs = sorted(
+        {
+            str(item["reference"])
+            for item in copied
+            if _is_structure_semantics_reference(str(item.get("reference", "")))
+        }
+    )
+    wiki_refs = [str(item.get("reference", "")) for item in copied if item.get("group") == "wiki_refs"]
+    permission_wiki_refs = [ref for ref in wiki_refs if "permission" in ref.replace("\\", "/").lower()]
+    structure_warning = ""
+    if permission_wiki_refs and not structure_refs:
+        structure_warning = "任务已引用权限域 Wiki，但未显式命中页面结构语义页，体验阶段可能无法稳定判断结构变化。"
+        manifest["warnings"] = [*manifest["warnings"], structure_warning]
+    manifest["structure_semantics"] = {
+        "has_structure_semantics_source": bool(structure_refs),
+        "matched_references": structure_refs,
+        "permission_wiki_ref_count": len(permission_wiki_refs),
+        "warning": structure_warning,
+    }
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -105,6 +135,12 @@ def run_context_assemble(task_id: str) -> int:
             "wiki_ref_count": len(resolved.get("wiki_refs", [])),
             "template_ref_count": len(resolved.get("template_refs", [])),
             "check_ref_count": len(resolved.get("check_refs", [])),
+        },
+        "structure_semantics": {
+            "available": bool(structure_refs),
+            "matched_references": structure_refs,
+            "permission_wiki_ref_count": len(permission_wiki_refs),
+            "warning": structure_warning,
         },
         "references": [
             {
@@ -121,6 +157,8 @@ def run_context_assemble(task_id: str) -> int:
 
     for warning in resolved["warnings"]:
         print(f"WARNING: {warning}")
+    if structure_warning:
+        print(f"WARNING: {structure_warning}")
     print(f"Task card resolved: {resolved_path}")
     print(f"Context assembled: {manifest_path}")
     append_command_if_provenance_exists(task_id, "assemble")

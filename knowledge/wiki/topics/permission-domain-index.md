@@ -110,6 +110,16 @@
   - 数据授权页面事实
   - 更细粒度的原因码与状态示例
 
+### 3.5 页面结构语义入口
+
+- 页面结构语义的正式消费入口是 `knowledge/wiki/topics/page-carrier-semantics-map.md`
+- 体验阶段若要判断结构变化 / 结构不变，应优先消费该专题页中的结构语义摘要与原始区块关系图保留
+- 当前权限域已至少保留以下结构判断依据：
+  - 用户授权：Filter / Action / Main / Footer 的工作台顺序
+  - 功能授权：Header / Step / Alert 在上，Menu Left 与 Main Config Right 并列
+  - 角色管理：Left 角色索引在左，Right 成员治理主区在右
+  - 权限详情：Info / Tab 在上，Menu Left 与 Main Content Right 构成解释型左右布局
+
 ## 4. 关键关系
 
 - 关联实体：`用户授权`、`角色管理`、`权限查询`、`应用管理`、`应用设置页`

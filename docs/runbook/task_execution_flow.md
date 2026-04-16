@@ -63,6 +63,9 @@ python -m packages gate-experience <project-id>
 
 - 必须形成 experience architecture layer，而不是“体验要求”摘要
 - 必须显式包含信息架构总览、任务流蓝图、页面 / 窗口清单、关键页面蓝图、区块布局示意、内容与信息优先级合同、状态与反馈矩阵、文案合同、体验追踪映射
+- 必须先基于 Wiki 页面结构语义判断本次需求是“结构变化”还是“结构不变”
+- 若涉及结构变化，必须在关键页面蓝图与区块布局示意中显式表达；若不涉及，也必须写明结构不变
+- 内容与信息优先级合同必须给出结构落位（如 Header / Step / Main / Side / Footer）
 - 必须覆盖异常态 / 阻断态，不能只写 happy path
 - 仅列页面清单但不逐页展开，视为未达标
 
@@ -175,6 +178,7 @@ python -m packages memory-summary <project-id>
 ## 执行约束
 
 - 主链路知识消费仅使用 `knowledge/wiki/topics/*.md`（wiki 页）
+- 页面结构语义默认通过 Wiki 保真页进入体验阶段，不默认回读 `knowledge/raw/`
 - wiki 属于独立子系统，执行链不改动 wiki 体系本身
 - 长期 memory 顶层独立于 wiki，正式写入 `memory/`
 - `check_status.json` 为机器状态真源：`failed / warning / passed`

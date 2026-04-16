@@ -4,9 +4,9 @@
 
 - Protocol Name：Cross-AI Task Card
 - Protocol Version：v0.2
-- Task ID：{{TASK_ID}}
-- Task Name：{{TASK_NAME}}
-- Domain：{{DOMAIN}}
+- Task ID：001
+- Task Name：权限自助申请主链路
+- Domain：permission
 
 ## Task Goal
 
@@ -21,17 +21,17 @@
 
 ## Required Inputs
 
-- projects/{{TASK_ID}}/source/requirement.md
-- projects/{{TASK_ID}}/source/background.md
+- projects/001/source/requirement.md
+- projects/001/source/background.md
 
 ## Required Outputs
 
-- projects/{{TASK_ID}}/workspace/facts.md
-- projects/{{TASK_ID}}/workspace/business_blueprint.md
-- projects/{{TASK_ID}}/workspace/experience_blueprint.md
-- projects/{{TASK_ID}}/workspace/gap_list.md
-- projects/{{TASK_ID}}/workspace/check_report.md
-- projects/{{TASK_ID}}/workspace/check_status.json
+- projects/001/workspace/facts.md
+- projects/001/workspace/business_blueprint.md
+- projects/001/workspace/experience_blueprint.md
+- projects/001/workspace/gap_list.md
+- projects/001/workspace/check_report.md
+- projects/001/workspace/check_status.json
 
 ## Read Order
 
@@ -54,11 +54,13 @@
 
 ## Knowledge
 
-{{DOMAIN_KNOWLEDGE_REFS}}
+- knowledge/wiki/topics/permission-domain-index.md
+- knowledge/wiki/topics/page-carrier-semantics-map.md
 
 ## Wiki
 
-{{DOMAIN_WIKI_REFS}}
+- knowledge/wiki/topics/permission-domain-index.md
+- knowledge/wiki/topics/page-carrier-semantics-map.md
 
 ## Templates
 
@@ -82,8 +84,8 @@
 
 ## Result Locations
 
-- 执行中结果：projects/{{TASK_ID}}/workspace/
-- 归档结果：projects/{{TASK_ID}}/exports/final/
+- 执行中结果：projects/001/workspace/
+- 归档结果：projects/001/exports/final/
 
 ## Completion Criteria
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from packages.common import get_project_source_dir, get_project_workspace_dir
+from packages.common import get_project_runtime_dir, get_project_source_dir, get_project_workspace_dir
 from packages.provenance import upsert_generated_provenance
 
 
@@ -77,6 +77,50 @@ def _extract_objects(lines: list[str]) -> list[str]:
         if keyword in joined and label not in result:
             result.append(label)
     return result or ["核心对象", "关键配置", "结果记录"]
+
+
+def _extract_structure_semantics(project_id: str) -> list[str]:
+    runtime_dir = get_project_runtime_dir(project_id)
+    bundle_dir = runtime_dir / "context_bundle"
+    if not bundle_dir.exists():
+        return []
+
+    snippets: list[str] = []
+    for path in sorted(bundle_dir.rglob("*.md")):
+        lowered = path.name.lower()
+        if "page-carrier" not in lowered and "permission-domain-index" not in lowered and "structure" not in lowered:
+            continue
+        text = _read_text(path)
+        for raw_line in text.splitlines():
+            line = re.sub(r"\s+", " ", raw_line).strip(" -\t")
+            if len(line) < 8:
+                continue
+            if line.startswith("#"):
+                continue
+            if "结构语义" in line or "结构关系" in line or any(token in line for token in ["Left", "Right", "Main", "Side", "Footer", "Step"]):
+                if line not in snippets:
+                    snippets.append(line)
+            if len(snippets) >= 6:
+                return snippets
+    return snippets
+
+
+def _structure_change_kind(lines: list[str]) -> tuple[bool, str, str]:
+    joined = "\n".join(lines)
+    if any(keyword in joined for keyword in ["新增说明", "风险提示", "帮助文档", "了解更多", "步骤", "审批流程", "模式", "入口", "通知"]):
+        return True, "说明区显性化", "需求包含前置解释、风险提示、流程提示或模式切换信息，继续藏在既有内容中会让用户误判规则边界。"
+    if any(keyword in joined for keyword in ["新增", "增加", "优化页面结构", "调整页面布局", "新增模块", "新增入口"]):
+        return True, "新增区块", "需求包含新增能力或新增信息块，需要以独立区块或更清晰分层承接。"
+    return False, "结构不变", "当前变化更偏向既有区块内的内容、文案或状态补充，不需要重排页面主结构。"
+
+
+def _baseline_line(snippets: list[str], fallback: str) -> str:
+    for snippet in snippets:
+        if snippet.startswith("#"):
+            continue
+        if any(token in snippet for token in ["Left", "Right", "Main", "Side", "Footer", "Step", "结构语义摘要", "结构关系摘要"]):
+            return snippet
+    return fallback
 
 
 def _render_facts(project_id: str) -> str:
@@ -403,8 +447,28 @@ def _render_business(project_id: str) -> str:
 
 def _render_experience(project_id: str) -> str:
     lines = _extract_source_lines(project_id)
+    structure_snippets = _extract_structure_semantics(project_id)
     goal_line = _pick(lines, "提升", "让用户更容易理解当前能力何时可用、如何执行、何时成功以及为什么失败。")
     risk_line = _pick(lines, "失败", "若只提示失败而不解释原因，用户会把治理限制误读为系统异常。")
+    structure_changed, structure_change_type, structure_reason = _structure_change_kind(lines)
+    p01_baseline = _baseline_line(
+        structure_snippets,
+        "基线来自权限域 Wiki：顶部先给出规则与解释信息，再进入主配置区，辅助说明位于侧区或结果说明区。",
+    )
+    p02_baseline = "弹层 / 抽屉基线保持“Header -> 说明 -> Main -> Footer”的轻量连续结构。"
+    p03_baseline = "结果页基线保持“Header -> 结果结论 -> 原因说明 -> Detail -> Footer”的解释型结构。"
+    p01_change_label = structure_change_type if structure_changed else "结构不变"
+    p01_change_note = (
+        "在 Header 后前置解释 / 风险说明区，并把规则提示与帮助信息从隐式入口改为显式首屏理解区。"
+        if structure_changed
+        else "本次仅在既有 Main 与说明区内补充内容、文案和状态反馈。"
+    )
+    p03_change_label = "风险提示前置" if structure_changed else "结构不变"
+    p03_change_note = (
+        "把结果原因与下一步说明作为独立 Summary / Reason 区块显性展示，避免用户把处理中、失败和成功混读。"
+        if structure_changed
+        else "本次仅增强结果页中的原因说明与状态文案，不改变结果页主结构。"
+    )
     return f"""# Experience Blueprint
 
 ## 体验目标与任务边界
@@ -422,6 +486,7 @@ def _render_experience(project_id: str) -> str:
 - 承接业务立场：POS-01、POS-02、J-01、J-03、J-08、J-09。
 - 承接规则：F-05、F-07、F-09、F-10、F-11、R-01、R-02、EX-01、EX-02。
 - 承接风险：RSK-01、AP-01。
+- 页面结构语义输入：已消费权限域 Wiki 中保留的页面结构语义，用于判断当前需求是结构变化还是结构不变，并决定信息进入 Header、Step、Main、Side、Footer 还是 Alert / Info 区。
 
 ### 已命中的设计原则
 
@@ -507,6 +572,15 @@ def _render_experience(project_id: str) -> str:
 | ACT-01 | 查看并切换关键配置 | 进入页面后即可操作 | 页面状态与信息区同步刷新 | 明确当前执行边界 | 在切换前后解释差异 |
 | ACT-02 | 点击提交/确认 | 满足前置条件后可点击 | 先校验规则，再给出结果反馈 | 成功进入 P-03；失败则阻断 | 必须展示原因与下一步 |
 
+#### 结构变化判断
+
+- 页面结构语义基线：{p01_baseline}
+- 本次是否涉及结构变化：{"是" if structure_changed else "否"}
+- 变化类型：{p01_change_label}
+- 变化说明：{p01_change_note}
+- 变化理由：{structure_reason}
+- 不这样做的风险：用户会把治理限制、帮助说明和关键前提继续误解为隐藏规则或系统异常。
+
 ### P-02 关键选择弹层
 
 #### 页面目标
@@ -528,6 +602,15 @@ def _render_experience(project_id: str) -> str:
 | --- | --- | --- | --- | --- | --- |
 | ACT-03 | 选择关键对象 | 打开弹层后可操作 | 表单或列表状态更新 | 形成提交条件 | 对不可选对象即时解释 |
 | ACT-04 | 确认选择并返回 | 必填信息满足后可点击 | 关闭弹层并回填 P-01 | 回到主页面继续完成任务 | 保持上下文不刷新 |
+
+#### 结构变化判断
+
+- 页面结构语义基线：{p02_baseline}
+- 本次是否涉及结构变化：否
+- 变化类型：结构不变
+- 变化说明：本次仅在既有 Main 与 Info 区内补充选择限制、帮助说明和即时反馈，不新增独立区块，也不改变左右关系。
+- 变化理由：该页面承担的是短链路选择任务，继续保持轻量连续结构更利于上下文回填。
+- 不这样做的风险：若额外拆出复杂分层，会拉长选择链路并打断主任务节奏。
 
 ### P-03 结果与记录页
 
@@ -551,6 +634,15 @@ def _render_experience(project_id: str) -> str:
 | ACT-05 | 查看结果详情 | 有结果记录即可查看 | 结果信息区展开 | 理解原因、影响和后续动作 | 保留原始上下文 |
 | ACT-06 | 返回主入口 | 结果已理解后可操作 | 返回主入口或相关记录 | 继续下一轮操作或结束 | 明确不会丢失已记录结果 |
 
+#### 结构变化判断
+
+- 页面结构语义基线：{p03_baseline}
+- 本次是否涉及结构变化：{"是" if structure_changed else "否"}
+- 变化类型：{p03_change_label}
+- 变化说明：{p03_change_note}
+- 变化理由：结果页承担解释与确认职责，必须让结果结论、原因说明和下一步分层可见。
+- 不这样做的风险：用户会把处理中、失败和已成功混成同一种黑盒结果，无法判断后续动作。
+
 ## 区块布局示意
 
 ### P-01 主配置与执行页
@@ -559,37 +651,46 @@ def _render_experience(project_id: str) -> str:
 [Header: 页面标题 + 当前状态 + 帮助入口]
 [Intro: 能力说明 / 规则解释 / 风险提醒]
 [Main: 关键配置或主任务动作]
-[Support: 限制说明 / 结果预期 / 追溯入口]
+[Side: 限制说明 / 结果预期 / 追溯入口]
 [Footer: 取消 / 提交 / 下一步]
 ```
+
+- 结构变化结论：{p01_change_label}
+- 结构保持不变时说明：{"本次涉及结构变化，需把解释与风险前置到首屏结构。" if structure_changed else "仅在既有 Main / Side 内补充内容、文案和状态反馈。"}
 
 ### P-02 关键选择弹层
 
 ```text
 [Header: 选择对象 + 当前上下文]
-[Summary: 当前限制与说明]
+[Info: 当前限制与说明]
 [Main: 选择列表 / 表单区]
-[Support: 不可选原因 / 帮助说明]
+[Side: 不可选原因 / 帮助说明]
 [Footer: 关闭 / 确认]
 ```
+
+- 结构变化结论：结构不变
+- 结构保持不变时说明：仅在既有 Main / Info / Side 内补充选择限制与帮助说明，不新增区块。
 
 ### P-03 结果与记录页
 
 ```text
 [Header: 当前结果 + 状态标签]
 [Summary: 成功/失败/处理中结论]
-[Reason: 原因说明 + 下一步]
-[Detail: 记录详情 / 追溯信息]
+[Info: 原因说明 + 下一步]
+[Main: 记录详情 / 追溯信息]
 [Footer: 返回 / 继续处理]
 ```
 
+- 结构变化结论：{p03_change_label}
+- 结构保持不变时说明：{"本次强调结果原因和下一步的显性分层展示。" if structure_changed else "仅增强结果页中的状态文案和解释信息，不改变主结构。"}
+
 ## 内容与信息优先级合同
 
-| info_item | 信息目的 | 优先级 | 推荐位置 | 触发时机 | 不展示风险 |
-| --- | --- | --- | --- | --- | --- |
-| INFO-01 | 当前状态与可执行性 | 高 | 首屏 Header / Summary | 进入页 | 用户无法判断现在能不能做 |
-| INFO-02 | 关键规则与阻断原因 | 高 | P-01 Intro / P-03 Reason | 操作前、失败后 | 用户把治理约束误判为系统异常 |
-| INFO-03 | 结果与下一步 | 高 | P-03 Summary / Footer | 成功后、失败后 | 用户不知道后续怎么继续 |
+| info_item | 信息目的 | 优先级 | 推荐位置 | 结构落位 | 触发时机 | 不展示风险 |
+| --- | --- | --- | --- | --- | --- | --- |
+| INFO-01 | 当前状态与可执行性 | 高 | 首屏 Header / Summary | Header | 进入页 | 用户无法判断现在能不能做 |
+| INFO-02 | 关键规则与阻断原因 | 高 | P-01 Intro / P-03 Info | Intro / Info | 操作前、失败后 | 用户把治理约束误判为系统异常 |
+| INFO-03 | 结果与下一步 | 高 | P-03 Summary / Footer | Summary / Footer | 成功后、失败后 | 用户不知道后续怎么继续 |
 
 ## 状态与反馈矩阵
 
@@ -626,9 +727,9 @@ def _render_experience(project_id: str) -> str:
 
 | trace_id | 页面 / 流程 / 文案对象 | 承接业务判断 | 承接事实 / 规则 / 异常 | 承接原则 | 说明 |
 | --- | --- | --- | --- | --- | --- |
-| TR-01 | P-01 / TF-01 / COPY-01 | J-01、POS-02 | F-07、F-09、R-01、EX-01 | PR-01、PR-02 | 首屏先解释可执行性和规则边界 |
-| TR-02 | P-03 / TF-03 / COPY-02 | J-05、J-09 | F-06、F-10、EX-02 | PR-01、PR-03 | 结果页必须解释状态、原因与下一步 |
-| TR-03 | P-03 / ST-03 / COPY-03 | J-08、POS-02 | F-11、F-12、EX-01 | PR-03 | 失败不是黑盒报错，而是治理阻断解释 |
+| TR-01 | P-01 / Header 风险说明区 / TF-01 / COPY-01 | J-01、POS-02 | F-07、F-09、R-01、EX-01 | PR-01、PR-02 | 首屏先解释可执行性和规则边界 |
+| TR-02 | P-03 / Info 结果原因区 / TF-03 / COPY-02 | J-05、J-09 | F-06、F-10、EX-02 | PR-01、PR-03 | 结果页必须解释状态、原因与下一步 |
+| TR-03 | P-03 / Footer 返回动作 / ST-03 / COPY-03 | J-08、POS-02 | F-11、F-12、EX-01 | PR-03 | 失败不是黑盒报错，而是治理阻断解释 |
 """
 
 

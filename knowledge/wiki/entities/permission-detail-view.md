@@ -63,6 +63,23 @@
 - 下游：
   - [GAP] 暂未发现更深一级已明确的标准下钻对象
 
+### 3.4 结构语义摘要
+
+- 这是解释型而非配置型视图，Header 与 Info 区承担前置解释职责。
+- 顶部先通过 Tab / Sub-Tab 切换权限身份与终端视角，再进入主体内容。
+- Menu Left 承担业务模块导航，Main Content Right 承担权限明细解释，属于稳定的左右主从结构。
+- Footer 仅承担关闭返回，不承接新的治理动作。
+
+### 3.5 原始区块关系图保留
+
+```text
+Header
+-> Info
+-> Tab / Sub-Tab
+-> Menu Left / Main Content Right
+-> Footer
+```
+
 ## 4. 关键关系
 
 - 依赖对象：`权限查询`、`按用户查询结果`、`权限详情`

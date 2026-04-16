@@ -165,6 +165,7 @@ def _empty_page(page_id: str, view_name: str, view_type: str, roles: list[str], 
         "summary": summary,
         "entry": entry,
         "exit": exit_text,
+        "structure_judgment": {},
         "upstream_links": [],
         "downstream_links": [],
         "sketch_blocks": [],
@@ -332,6 +333,60 @@ def _extract_page_blueprint_blocks(section_text: str) -> dict[str, dict[str, str
     return result
 
 
+def _infer_zone(label: str) -> str:
+    lowered = _normalize(label)
+    if "header" in lowered:
+        return "header"
+    if "intro" in lowered or "summary" in lowered:
+        return "intro"
+    if "filter" in lowered or "search" in lowered:
+        return "filter"
+    if "action" in lowered:
+        return "action"
+    if "menu" in lowered:
+        return "menu"
+    if "tab" in lowered:
+        return "tab"
+    if "step" in lowered:
+        return "step"
+    if "alert" in lowered:
+        return "alert"
+    if "info" in lowered:
+        return "info"
+    if "side" in lowered or "support" in lowered:
+        return "side"
+    if "footer" in lowered:
+        return "footer"
+    return "main"
+
+
+def _infer_position_hint(label: str, zone: str) -> str:
+    lowered = _normalize(label)
+    if "left" in lowered:
+        return "left"
+    if "right" in lowered:
+        return "right"
+    if zone in {"header", "intro", "filter", "action", "step", "alert", "info"}:
+        return "top"
+    if zone == "footer":
+        return "bottom"
+    if zone == "side":
+        return "right"
+    return "center"
+
+
+def _infer_layout_kind(zone: str, hints: list[str]) -> str:
+    if zone == "footer":
+        return "footer_actions"
+    if zone == "header":
+        return "header_with_actions"
+    if zone in {"main", "side", "menu"} and "right" in hints:
+        return "main_side"
+    if zone in {"main", "side", "menu"} and {"left", "right"} & set(hints):
+        return "split_lr"
+    return "stack" if zone not in {"main"} else "single"
+
+
 def _apply_page_blueprints(page_index: dict[str, dict[str, Any]], sections: dict[str, str]) -> None:
     blocks = _extract_page_blueprint_blocks(sections.get("关键页面蓝图", ""))
     for page_id, sub_blocks in blocks.items():
@@ -367,6 +422,18 @@ def _apply_page_blueprints(page_index: dict[str, dict[str, Any]], sections: dict
             }
             _append_page_dict(page, "action_items", action_item, ["action_id", "name"], f"关键页面蓝图:{page_id}:关键动作与状态")
 
+        structure_lines = _parse_bullets(sub_blocks.get("结构变化判断", ""))
+        if structure_lines:
+            structure_item: dict[str, str] = {}
+            for line in structure_lines:
+                if "：" not in line:
+                    continue
+                key, value = line.split("：", 1)
+                structure_item[key.strip()] = value.strip()
+            if structure_item:
+                page["structure_judgment"] = structure_item
+                page["source_refs"] = _dedupe_strings(list(page.get("source_refs", [])) + [f"关键页面蓝图:{page_id}:结构变化判断"])
+
 
 def _apply_layout_blocks(page_index: dict[str, dict[str, Any]], sections: dict[str, str]) -> None:
     blocks = _split_heading_blocks(sections.get("区块布局示意", ""), BLOCK_RE)
@@ -378,22 +445,39 @@ def _apply_layout_blocks(page_index: dict[str, dict[str, Any]], sections: dict[s
         page = page_index.get(page_id)
         if page is None:
             continue
+        structure_note = [line.strip() for line in body.splitlines() if line.strip().startswith("- ")]
+        for note in structure_note:
+            cleaned = note[2:].strip()
+            if cleaned and "结构" in cleaned:
+                _append_page_string(page, "key_understanding", cleaned, f"区块布局示意:{page_id}:结构结论")
         code_block = _extract_code_block(body)
         lines = [line.strip().strip("[]") for line in code_block.splitlines() if line.strip()]
+        position_hints: list[str] = []
+        pending_blocks: list[dict[str, Any]] = []
         for index, line in enumerate(lines):
             if ":" in line:
                 label, summary = line.split(":", 1)
-                block_item = {
-                    "label": label.strip(),
-                    "block_type": "Main Area" if index == 0 else "Detail Area",
-                    "summary": summary.strip(),
-                }
+                block_label = label.strip()
+                block_summary = summary.strip()
             else:
-                block_item = {
-                    "label": line.strip(),
-                    "block_type": "Main Area" if index == 0 else "Detail Area",
-                    "summary": "",
-                }
+                block_label = line.strip()
+                block_summary = ""
+            zone = _infer_zone(block_label)
+            position_hint = _infer_position_hint(block_label, zone)
+            position_hints.append(position_hint)
+            block_item = {
+                "block_id": f"{page_id}-B{index + 1:02d}",
+                "label": block_label,
+                "block_type": "Main Area" if index == 0 else "Detail Area",
+                "summary": block_summary,
+                "zone": zone,
+                "position_hint": position_hint,
+                "layout_kind": "stack",
+                "children": [],
+            }
+            pending_blocks.append(block_item)
+        for block_item in pending_blocks:
+            block_item["layout_kind"] = _infer_layout_kind(str(block_item.get("zone", "")), position_hints)
             _append_page_dict(page, "sketch_blocks", block_item, ["label", "summary"], f"区块布局示意:{page_id}")
 
 
@@ -745,7 +829,7 @@ def _finalize_pages(page_index: dict[str, dict[str, Any]], unresolved_items: lis
         page["blockers"] = _dedupe_dicts(list(page.get("blockers", [])), ["id", "page_id"])
         page["principles"] = _dedupe_dicts(list(page.get("principles", [])), ["principle_id"])
         page["trace_items"] = _dedupe_dicts(list(page.get("trace_items", [])), ["trace_id"])
-        page["sketch_blocks"] = _dedupe_dicts(list(page.get("sketch_blocks", [])), ["label", "summary"])
+        page["sketch_blocks"] = _dedupe_dicts(list(page.get("sketch_blocks", [])), ["block_id", "label", "summary"])
 
         page.pop("_relation_text", None)
         page.pop("_aliases", None)
