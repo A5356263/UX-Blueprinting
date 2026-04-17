@@ -32,27 +32,9 @@ def _resolve_domain_knowledge_ref(domain: str) -> str:
     return "knowledge/wiki/topics/README.md"
 
 
-def _resolve_domain_structure_ref(domain: str) -> str:
-    repo_root = get_repo_root()
-    if domain == "permission":
-        candidate = repo_root / "knowledge" / "wiki" / "topics" / "page-carrier-semantics-map.md"
-        if candidate.exists():
-            return "knowledge/wiki/topics/page-carrier-semantics-map.md"
-    return ""
-
-
-def _render_domain_refs(domain: str) -> str:
-    refs = [_resolve_domain_knowledge_ref(domain)]
-    structure_ref = _resolve_domain_structure_ref(domain)
-    if structure_ref and structure_ref not in refs:
-        refs.append(structure_ref)
-    return "\n".join(f"- {ref}" for ref in refs)
-
-
 def render_template(content: str, project_id: str, task_name: str, domain: str) -> str:
     return (
-        content.replace("{{DOMAIN_KNOWLEDGE_REFS}}", _render_domain_refs(domain))
-        .replace("{{DOMAIN_WIKI_REFS}}", _render_domain_refs(domain))
+        content.replace("knowledge/wiki/topics/{{DOMAIN}}-domain-index.md", _resolve_domain_knowledge_ref(domain))
         .replace("{{TASK_ID}}", project_id)
         .replace("{{TASK_NAME}}", task_name)
         .replace("{{DOMAIN}}", domain)

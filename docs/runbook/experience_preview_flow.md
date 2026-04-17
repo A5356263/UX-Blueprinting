@@ -79,15 +79,6 @@ projects/<project-id>/runtime/preview/preview_build_log.md
 - `preview_runtime.json` 是本次运行的地址与状态真源
 - `preview_build_log.md` 是简要构建日志
 
-当前预览模型中的 `sketch_blocks[]` 应优先保留最小结构字段：
-
-- `zone`
-- `layout_kind`
-- `position_hint`
-- `children`
-
-这样 preview 才能把 `left / right / main / side / footer / step` 关系还原成结构草图，而不是全部从上到下堆叠。
-
 ## 地址输出要求
 
 命令成功后，必须显式输出完整 URL，例如：
@@ -106,11 +97,6 @@ projects/<project-id>/runtime/preview/preview_build_log.md
 2. 页面 / 窗口清单是否可识别
 3. 本地端口是否可绑定
 4. `preview_runtime.json.ready_state` 是否为 `ready`
-
-若页面草图结果明显被压平成顺序堆叠，还应继续检查：
-
-5. `区块布局示意` 是否写出了结构关系
-6. `preview_model.json.page_views[].sketch_blocks[]` 是否成功识别 `zone / layout_kind / position_hint`
 
 若主链路正式产物已存在，则应明确说明：
 

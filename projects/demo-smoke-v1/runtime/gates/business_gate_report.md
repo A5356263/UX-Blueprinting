@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: warning
+- status: passed
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 1
+- warning_count: 0
 - info_count: 2
 
 - project_id: demo-smoke-v1
@@ -17,6 +17,7 @@
 
 - projects/demo-smoke-v1/workspace/facts.md
 - projects/demo-smoke-v1/workspace/business_blueprint.md
+- projects/demo-smoke-v1/runtime/provenance.json
 - projects/demo-smoke-v1/runtime/gates/facts_gate_status.json
 
 ## Blockers
@@ -25,9 +26,9 @@
 
 ## Warnings
 
-- business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx
+- none
 
 ## Infos
 
 - facts 阶段状态：passed
-- business_blueprint.md 已承接 6 条事实
+- business_blueprint.md 已承接 12 条事实

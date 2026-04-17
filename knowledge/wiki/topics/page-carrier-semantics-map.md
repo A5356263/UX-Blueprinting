@@ -97,39 +97,6 @@
   - 直接产出开发方案
   - 替代页面事实来源
 
-### 3.5 结构语义摘要
-
-- 用户授权：顶部先是 Filter，再是批量治理 Action，主体是 Main 用户列表，Footer 承接分页；查询与治理信息都在主工作台中前置可见。
-- 功能授权：Header 与 Step 在上，Alert 用于前置解释；Menu Left 与 Main Config Matrix Right 构成主从关系，Footer 承接取消与下一步。
-- 权限详情：Header 与 Info 在上，Tab / Sub-Tab 负责视角切换；Menu Left 与 Main Content Right 构成解释型左右布局，Footer 只承接关闭动作。
-- 角色管理：Left 为角色索引与维护区，Right 为当前角色成员治理主区；右区内部继续分成 Header、Filter、Action、Main 的治理工作台结构。
-
-### 3.6 原始区块关系图保留
-
-```text
-用户授权：
-Filter Left / Filter Right
--> Action Left / Action Right
--> Main：用户列表
--> Footer：分页导航
-
-功能授权：
-Header
--> Step
--> Alert
--> Tab Left / Search Right
--> Menu Left / Main Config Matrix Right
--> Footer
-
-角色管理：
-Left：角色索引与维护区
-Right：当前角色成员治理区
-  -> Header
-  -> Filter
-  -> Action
-  -> Main
-```
-
 ## 4. 关键关系
 
 - 关联实体：

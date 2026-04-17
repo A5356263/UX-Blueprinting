@@ -20,6 +20,7 @@
 - projects/demo-smoke-v1/source/background.md
 - projects/demo-smoke-v1/runtime/task_card_resolved.json
 - projects/demo-smoke-v1/runtime/context_manifest.json
+- projects/demo-smoke-v1/runtime/provenance.json
 - projects/demo-smoke-v1/workspace/facts.md
 
 ## Blockers
@@ -32,4 +33,4 @@
 
 ## Infos
 
-- facts.md 已提炼 6 条事实
+- facts.md 已提炼 16 条事实

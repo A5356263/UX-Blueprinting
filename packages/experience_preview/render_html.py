@@ -608,48 +608,6 @@ textarea {
   text-align: center;
 }
 
-.sketch-stack {
-  display: grid;
-  gap: 8px;
-}
-
-.sketch-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.sketch-block[data-zone="header"],
-.sketch-block[data-zone="footer"],
-.sketch-block[data-zone="step"],
-.sketch-block[data-zone="alert"],
-.sketch-block[data-zone="info"] {
-  background: rgba(246, 243, 236, 0.96);
-}
-
-.sketch-block[data-zone="main"] {
-  background: rgba(226, 241, 235, 0.56);
-}
-
-.sketch-block[data-zone="side"],
-.sketch-block[data-zone="menu"] {
-  background: rgba(248, 228, 225, 0.55);
-}
-
-.sketch-block-label {
-  display: block;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.sketch-block-summary {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--text-soft);
-}
-
 details {
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -934,55 +892,15 @@ def _render_sketch_blocks(page: dict[str, Any]) -> str:
     elif view_type == "子页面":
         shell_class = "subpage"
 
-    top_zones = {"header", "intro", "filter", "action", "tab", "step", "alert", "info"}
-    ordered_blocks = [block for block in blocks if isinstance(block, dict)]
-    top_blocks = [block for block in ordered_blocks if _normalize_text(block.get("zone")) in top_zones]
-    main_blocks = [block for block in ordered_blocks if _normalize_text(block.get("zone")) in {"main", "side", "menu"}]
-    footer_blocks = [block for block in ordered_blocks if _normalize_text(block.get("zone")) == "footer"]
-    other_blocks = [block for block in ordered_blocks if block not in top_blocks and block not in main_blocks and block not in footer_blocks]
-
-    rendered_blocks = "".join(_render_sketch_block(block) for block in top_blocks)
-    if main_blocks:
-        left = [block for block in main_blocks if _normalize_text(block.get("position_hint")) == "left" or _normalize_text(block.get("zone")) == "menu"]
-        right = [block for block in main_blocks if block not in left]
-        if left and right:
-            rendered_blocks += (
-                '<div class="sketch-row">'
-                f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in left)}</div>'
-                f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in right)}</div>'
-                "</div>"
-            )
-        elif len(main_blocks) >= 2:
-            rendered_blocks += (
-                '<div class="sketch-row">'
-                + "".join(_render_sketch_block(block) for block in main_blocks[:2])
-                + "</div>"
-            )
-            if len(main_blocks) > 2:
-                rendered_blocks += f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in main_blocks[2:])}</div>'
-        else:
-            rendered_blocks += f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in main_blocks)}</div>'
-    if other_blocks:
-        rendered_blocks += f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in other_blocks)}</div>'
-    if footer_blocks:
-        rendered_blocks += f'<div class="sketch-stack">{"".join(_render_sketch_block(block) for block in footer_blocks)}</div>'
+    rendered_blocks = "".join(
+        f'<div class="sketch-block">{_escape(_normalize_text(block.get("label") or "未命名区块"))}</div>'
+        for block in blocks
+    )
     return (
         f'<div class="sketch-shell {shell_class}">'
         f'<div class="sketch-label">{_escape(view_type)}线框草图</div>'
         f'<div class="sketch-grid">{rendered_blocks}</div>'
         "</div>"
-    )
-
-
-def _render_sketch_block(block: dict[str, Any]) -> str:
-    label = _normalize_text(block.get("label") or "未命名区块")
-    summary = _normalize_text(block.get("summary") or "")
-    zone = _normalize_text(block.get("zone") or "main")
-    return (
-        f'<div class="sketch-block" data-zone="{_escape(zone)}">'
-        f'<span class="sketch-block-label">{_escape(label)}</span>'
-        + (f'<span class="sketch-block-summary">{_escape(summary)}</span>' if summary else "")
-        + "</div>"
     )
 
 
@@ -1108,20 +1026,6 @@ def _render_page_card(page: dict[str, Any]) -> str:
     )
     if action_html:
         key_understanding_blocks.append(action_html)
-
-    structure_judgment = page.get("structure_judgment", {})
-    structure_html = _render_pairs(
-        [
-            ("结构基线", structure_judgment.get("页面结构语义基线")),
-            ("是否涉及结构变化", structure_judgment.get("本次是否涉及结构变化")),
-            ("变化类型", structure_judgment.get("变化类型")),
-            ("变化说明", structure_judgment.get("变化说明")),
-            ("变化理由", structure_judgment.get("变化理由")),
-            ("不这样做的风险", structure_judgment.get("不这样做的风险")),
-        ]
-    )
-    if structure_html:
-        key_understanding_blocks.append(structure_html)
 
     info_contract_html = _render_structured_list(
         page.get("info_contract_items", []),

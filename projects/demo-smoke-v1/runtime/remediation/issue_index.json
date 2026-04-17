@@ -1,6 +1,6 @@
 {
   "project_id": "demo-smoke-v1",
-  "generated_at": "2026-04-12T11:17:03.575068+00:00",
+  "generated_at": "2026-04-14T17:13:27.094963+00:00",
   "issue_count": 3,
   "open_issue_count": 3,
   "blocker_count": 2,
@@ -563,6 +563,5 @@
       ],
       "status": "open"
     }
-  ],
-  "updated_at": "2026-04-12T11:17:03.619786+00:00"
+  ]
 }

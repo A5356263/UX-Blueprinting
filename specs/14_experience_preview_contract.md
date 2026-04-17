@@ -114,25 +114,6 @@ page_view
 - 仅在无法稳定命中 `page_id` 时，才允许降级到页面名 / 别名 / flow context
 - 不得把无法稳定归属的信息强塞进任意页面
 
-其中 `sketch_blocks[]` 不再只是线性块列表，至少应支持以下最小结构字段：
-
-```text
-sketch_block
-- block_id
-- label
-- summary
-- zone
-- layout_kind
-- position_hint
-- children[]
-```
-
-推荐值：
-
-- `zone`: `header / intro / filter / action / menu / tab / step / main / side / footer / alert / info`
-- `layout_kind`: `stack / split_lr / main_side / footer_actions / header_with_actions / single`
-- `position_hint`: `top / left / right / center / bottom / inline`
-
 ### global_context
 
 V2 禁止再以单一 `global_notes[]` 作为全局兜底池，必须拆分为：
@@ -184,9 +165,6 @@ global_context
 - 自动降级提示不得淹没蓝图原始内容
 - 默认页面不再直接展示整段 `preview_model.json`
 - 全局区块必须拆分为：全局流程总览、全局原则、全局依赖 / 前提、全局风险、全局开放问题、全局缺口、待人工确认
-- 页面草图应优先表达 left / right / main / side / footer / step 等结构关系
-- 若无法稳定识别结构关系，可安全降级为 `stack`
-- preview 不得伪造蓝图中不存在的 left / right / main / side 关系
 
 ## 执行入口
 

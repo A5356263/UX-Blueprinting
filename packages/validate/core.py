@@ -124,8 +124,6 @@ SECTION_HEADING_PATTERN = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 SUBPAGE_HEADING_PATTERN = re.compile(r"^(?:###|####)\s+(P-\d+)\b", re.MULTILINE)
 LIST_ITEM_PATTERN = re.compile(r"^\s*(?:[-*]|\d+\.)\s+")
 TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|(?:\s*:?-+:?\s*\|)+\s*$")
-STRUCTURE_CHANGE_LABELS = ["新增区块", "区块并入", "区块前置", "区块后置", "主次调整", "左右关系调整", "说明区显性化", "风险提示前置"]
-FORBIDDEN_CONTAINER_TERMS = ["Root Container", "Section Container", "Left Container", "Right Container", "Global Container"]
 PLACEHOLDER_PATTERN = re.compile(
     r"(<填写|{{TASK_ID}}|<project-id>|<角色名称>|<页面名称>|<术语>|<页面 / 子页 / 抽屉 / 弹窗 / 内嵌模块>)"
 )
@@ -421,10 +419,6 @@ def count_keywords_present(text: str, keywords: list[str]) -> int:
 
 def contains_any(text: str, keywords: list[str]) -> bool:
     return any(keyword in text for keyword in keywords)
-
-
-def count_term_occurrences(text: str, terms: list[str]) -> int:
-    return sum(text.count(term) for term in terms)
 
 
 def extract_principle_refs(
@@ -829,7 +823,6 @@ def analyze_experience_blueprint(
     copy_section = sections.get("文案合同", "")
     risk_section = sections.get("风险、疑惑点与保护策略", "")
     trace_section = sections.get("体验追踪映射", "")
-    basis_section = sections.get("体验推导依据", "")
 
     flow_count = max(len(flow_ids), count_real_table_rows(flow_section), count_real_list_items(flow_section))
     page_inventory_item_count = max(count_real_table_rows(page_inventory_section), count_real_list_items(page_inventory_section))
@@ -847,13 +840,6 @@ def analyze_experience_blueprint(
     referenced_judgments = [item for item in judgment_ids if item in experience_text]
     principle_refs = extract_principle_refs(experience_text, fact_ids, judgment_ids, page_ids, flow_ids)
     principle_ref_count = len(principle_refs)
-    structure_judgment_count = experience_text.count("#### 结构变化判断")
-    structure_change_item_count = count_term_occurrences(experience_text, STRUCTURE_CHANGE_LABELS)
-    structure_unchanged_item_count = experience_text.count("结构不变")
-    structure_semantics_trace_count = experience_text.count("页面结构语义")
-    layout_delta_item_count = count_term_occurrences(layout_section, STRUCTURE_CHANGE_LABELS) + layout_section.count("结构变化结论")
-    content_contract_has_slot = "结构落位" in content_contract_section
-    forbidden_container_hits = [term for term in FORBIDDEN_CONTAINER_TERMS if term in experience_text]
 
     exception_text = "\n".join([flow_section, state_section, risk_section])
     has_exception_coverage = contains_any(
@@ -906,24 +892,6 @@ def analyze_experience_blueprint(
     elif not has_success_coverage:
         add_issue(issues, "warning", "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱")
 
-    if structure_judgment_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 未显式给出结构变化判断，可能跳过了结构变化 / 结构不变判断")
-    if structure_change_item_count == 0 and structure_unchanged_item_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 未显式表达结构变化或结构不变")
-    if structure_semantics_trace_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 未显式承接页面结构语义来源")
-    elif "页面结构语义输入" not in basis_section:
-        add_issue(issues, "warning", "experience_blueprint.md 提到了页面结构语义，但未在体验推导依据中说明其输入作用")
-    if structure_change_item_count > 0 and layout_delta_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 声称存在结构变化，但区块布局示意未给出对应结构表达")
-    if not content_contract_has_slot:
-        add_issue(issues, "warning", "experience_blueprint.md 的内容与信息优先级合同缺少结构落位列")
-    if forbidden_container_hits:
-        add_issue(issues, "blocker", f"experience_blueprint.md 出现实现层容器词：{', '.join(forbidden_container_hits)}")
-    demand_markers = ["新增模块", "新增入口", "新增说明区", "新增风险提示", "新增帮助区", "新增摘要区", "优化页面结构", "调整页面布局"]
-    if contains_any(experience_text, demand_markers) and structure_judgment_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 出现新增模块或结构调整语义，但未给出结构变化判断")
-
     metrics = {
         "flow_count": len(flow_ids),
         "page_count": len(page_ids),
@@ -937,12 +905,6 @@ def analyze_experience_blueprint(
         "business_judgment_consumed_count": len(referenced_judgments),
         "principle_ref_count": principle_ref_count,
         "exception_coverage": has_exception_coverage,
-        "structure_judgment_count": structure_judgment_count,
-        "structure_change_item_count": structure_change_item_count,
-        "structure_unchanged_item_count": structure_unchanged_item_count,
-        "structure_semantics_trace_count": structure_semantics_trace_count,
-        "layout_delta_item_count": layout_delta_item_count,
-        "content_contract_has_structure_slot": content_contract_has_slot,
     }
     return metrics, issues
 
@@ -1073,11 +1035,6 @@ def run_coverage_check(project_id: str) -> int:
     fact_ids = extract_fact_ids(facts_text)
     judgment_ids = extract_judgment_ids(business_text)
     page_ids = extract_page_ids(experience_text)
-    structure_change_item_count = count_term_occurrences(experience_text, STRUCTURE_CHANGE_LABELS)
-    structure_unchanged_item_count = experience_text.count("结构不变")
-    structure_semantics_trace_count = experience_text.count("页面结构语义")
-    layout_delta_item_count = count_term_occurrences(experience_text, STRUCTURE_CHANGE_LABELS) + experience_text.count("结构变化结论")
-    structure_slot_count = experience_text.count("结构落位")
 
     facts_in_business = [item for item in fact_ids if item in business_text]
     facts_in_experience = [item for item in fact_ids if item in experience_text]
@@ -1092,11 +1049,6 @@ def run_coverage_check(project_id: str) -> int:
         f"orphan_fact_count: {len(orphan_facts)}",
         f"orphan_judgment_count: {len(orphan_judgments)}",
         f"orphan_page_count: {0 if page_ids else 1}",
-        f"structure_change_item_count: {structure_change_item_count}",
-        f"structure_unchanged_item_count: {structure_unchanged_item_count}",
-        f"structure_semantics_trace_count: {structure_semantics_trace_count}",
-        f"layout_delta_item_count: {layout_delta_item_count}",
-        f"structure_slot_count: {structure_slot_count}",
     ]
 
     blockers = list(status_data.get("issues", {}).get("blockers", []))
@@ -1111,12 +1063,6 @@ def run_coverage_check(project_id: str) -> int:
         warnings.append(f"存在未被体验层消费的业务判断：{', '.join(orphan_judgments[:6])}")
     if not page_ids:
         warnings.append("experience_blueprint.md 未发现页面 ID（P-xx），页面级消费不足")
-    if structure_change_item_count == 0 and structure_unchanged_item_count == 0:
-        warnings.append("coverage: 未发现结构变化或结构不变表达，结构语义参与度不足")
-    if structure_semantics_trace_count == 0:
-        warnings.append("coverage: 未发现页面结构语义来源承接，结构依据追踪不足")
-    if structure_change_item_count > 0 and structure_slot_count == 0:
-        warnings.append("coverage: 已表达结构变化，但内容与信息优先级合同缺少结构落位承接")
 
     infos.extend([f"coverage: {line}" for line in coverage_lines])
     blockers = sorted(set(blockers))
@@ -1152,11 +1098,6 @@ def run_coverage_check(project_id: str) -> int:
         "orphan_fact_count": len(orphan_facts),
         "orphan_judgment_count": len(orphan_judgments),
         "orphan_page_count": 0 if page_ids else 1,
-        "structure_change_item_count": structure_change_item_count,
-        "structure_unchanged_item_count": structure_unchanged_item_count,
-        "structure_semantics_trace_count": structure_semantics_trace_count,
-        "layout_delta_item_count": layout_delta_item_count,
-        "structure_slot_count": structure_slot_count,
     }
     checked_files = [str(item) for item in status_data.get("checked_files", []) if isinstance(item, str)]
     status_data["issue_details_version"] = "1.0"
@@ -1344,7 +1285,6 @@ def run_experience_gate(project_id: str) -> int:
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_blueprint.md",
         f"projects/{project_id}/workspace/experience_blueprint.md",
-        f"projects/{project_id}/runtime/context_manifest.json",
         f"projects/{project_id}/runtime/provenance.json",
         f"projects/{project_id}/runtime/gates/business_gate_status.json",
     ]
@@ -1366,15 +1306,6 @@ def run_experience_gate(project_id: str) -> int:
         add_issue(issues, "blocker", "缺少 business_blueprint.md")
     if not experience_text:
         add_issue(issues, "blocker", "缺少 experience_blueprint.md")
-
-    context_manifest = read_json(get_project_runtime_dir(project_id) / "context_manifest.json")
-    structure_info = context_manifest.get("structure_semantics", {}) if isinstance(context_manifest, dict) else {}
-    if isinstance(structure_info, dict):
-        if not structure_info.get("has_structure_semantics_source"):
-            add_issue(issues, "warning", "context_manifest 未确认页面结构语义来源，体验阶段的结构判断可能依据不足")
-        warning_text = str(structure_info.get("warning") or "").strip()
-        if warning_text:
-            add_issue(issues, "warning", f"context_manifest 警告：{warning_text}")
 
     if experience_text:
         check_required_headings("experience_blueprint.md", experience_text, issues)

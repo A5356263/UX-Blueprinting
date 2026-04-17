@@ -1,55 +1,32 @@
 {
   "project_id": "demo-smoke-v1",
   "stage": "experience",
-  "status": "failed",
-  "can_proceed": false,
+  "status": "warning",
+  "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-12T11:16:32.564481+00:00",
+  "updated_at": "2026-04-16T06:33:21.709470+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/workspace/facts.md",
     "projects/demo-smoke-v1/workspace/business_blueprint.md",
     "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+    "projects/demo-smoke-v1/runtime/context_manifest.json",
+    "projects/demo-smoke-v1/runtime/provenance.json",
     "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
   ],
-  "blocker_count": 14,
-  "warning_count": 12,
+  "blocker_count": 0,
+  "warning_count": 2,
   "info_count": 4,
   "issues": {
-    "blockers": [
-      "experience_blueprint.md 缺少栏目：## 体验目标与任务边界",
-      "experience_blueprint.md 缺少栏目：## 体验推导依据",
-      "experience_blueprint.md 缺少栏目：## 信息架构总览",
-      "experience_blueprint.md 缺少栏目：## 任务流蓝图",
-      "experience_blueprint.md 缺少栏目：## 关键页面蓝图",
-      "experience_blueprint.md 缺少栏目：## 区块布局示意",
-      "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同",
-      "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略",
-      "experience_blueprint.md 缺少栏目：## 开放问题与缺口",
-      "experience_blueprint.md 缺少栏目：## 体验追踪映射",
-      "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图",
-      "experience_blueprint.md 缺少区块布局示意",
-      "experience_blueprint.md 缺少内容与信息优先级合同",
-      "experience_blueprint.md 缺少体验追踪映射"
-    ],
+    "blockers": [],
     "warnings": [
-      "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位",
-      "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界",
-      "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单",
-      "experience_blueprint.md 可能仍沿用旧口径：## 信息架构",
-      "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流",
-      "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图",
-      "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护",
-      "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射",
-      "experience_blueprint.md 可能仍沿用旧口径：## 开放问题",
-      "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容",
-      "experience_blueprint.md 可能仍沿用旧口径：## 体验要求",
-      "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱"
+      "context_manifest 未确认页面结构语义来源，体验阶段的结构判断可能依据不足",
+      "context_manifest 警告：任务已引用权限域 Wiki，但未显式命中页面结构语义页，体验阶段可能无法稳定判断结构变化。"
     ],
     "infos": [
-      "business 阶段状态：warning",
-      "experience_blueprint.md 已承接 5 条事实",
-      "experience_blueprint.md 已承接 7 条业务判断",
+      "business 阶段状态：passed",
+      "experience_blueprint.md 已承接 12 条事实",
+      "experience_blueprint.md 已承接 11 条业务判断",
       "experience_blueprint.md 已引用 3 个设计原则 ID"
     ]
   },
@@ -57,1353 +34,29 @@
   "issue_details": [
     {
       "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验目标与任务边界",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验目标与任务边界"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验推导依据",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验推导依据"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 信息架构总览",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 信息架构总览"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 任务流蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 任务流蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 关键页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 关键页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 区块布局示意",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 区块布局示意"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 开放问题与缺口",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 开放问题与缺口"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验追踪映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验追踪映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 缺少区块布局示意",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少区块布局示意"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 缺少内容与信息优先级合同",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少内容与信息优先级合同"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "trace_missing",
-      "message": "experience_blueprint.md 缺少体验追踪映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少体验追踪映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 信息架构",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 信息架构"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 开放问题",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 开放问题"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 体验要求",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 体验要求"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/workspace/facts.md",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
-            "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
-            "principle_ref_count": 3,
-            "exception_coverage": true
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
+      "stage": "runtime",
       "severity": "warning",
       "category": "depth_insufficient",
-      "message": "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱",
+      "message": "context_manifest 未确认页面结构语义来源，体验阶段的结构判断可能依据不足",
       "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
+        "projects/demo-smoke-v1/runtime/gate_metrics.json"
       ],
       "violated_contract_refs": [
         "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
         "specs/11_repair_loop_contract.md"
       ],
       "checked_files": [
         "projects/demo-smoke-v1/workspace/facts.md",
         "projects/demo-smoke-v1/workspace/business_blueprint.md",
         "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
         "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
       ],
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱"
+          "value": "context_manifest 未确认页面结构语义来源，体验阶段的结构判断可能依据不足"
         },
         {
           "type": "checked_files",
@@ -1411,6 +64,8 @@
             "projects/demo-smoke-v1/workspace/facts.md",
             "projects/demo-smoke-v1/workspace/business_blueprint.md",
             "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
             "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
           ]
         },
@@ -1418,17 +73,85 @@
           "type": "metrics",
           "value": {
             "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
             "principle_ref_count": 3,
-            "exception_coverage": true
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "runtime",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "context_manifest 警告：任务已引用权限域 Wiki，但未显式命中页面结构语义页，体验阶段可能无法稳定判断结构变化。",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/runtime/gate_metrics.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "context_manifest 警告：任务已引用权限域 Wiki，但未显式命中页面结构语义页，体验阶段可能无法稳定判断结构变化。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/workspace/facts.md",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 4,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
+            "copy_contract_item_count": 3,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
+            "principle_ref_count": 3,
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
           }
         }
       ]
@@ -1438,7 +161,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "business 阶段状态：warning",
+      "message": "business 阶段状态：passed",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -1451,12 +174,14 @@
         "projects/demo-smoke-v1/workspace/facts.md",
         "projects/demo-smoke-v1/workspace/business_blueprint.md",
         "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
         "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
       ],
       "evidence": [
         {
           "type": "message",
-          "value": "business 阶段状态：warning"
+          "value": "business 阶段状态：passed"
         },
         {
           "type": "checked_files",
@@ -1464,6 +189,8 @@
             "projects/demo-smoke-v1/workspace/facts.md",
             "projects/demo-smoke-v1/workspace/business_blueprint.md",
             "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
             "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
           ]
         },
@@ -1471,17 +198,23 @@
           "type": "metrics",
           "value": {
             "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
             "principle_ref_count": 3,
-            "exception_coverage": true
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
           }
         }
       ]
@@ -1491,7 +224,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已承接 5 条事实",
+      "message": "experience_blueprint.md 已承接 12 条事实",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -1504,12 +237,14 @@
         "projects/demo-smoke-v1/workspace/facts.md",
         "projects/demo-smoke-v1/workspace/business_blueprint.md",
         "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
         "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
       ],
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已承接 5 条事实"
+          "value": "experience_blueprint.md 已承接 12 条事实"
         },
         {
           "type": "checked_files",
@@ -1517,6 +252,8 @@
             "projects/demo-smoke-v1/workspace/facts.md",
             "projects/demo-smoke-v1/workspace/business_blueprint.md",
             "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
             "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
           ]
         },
@@ -1524,17 +261,23 @@
           "type": "metrics",
           "value": {
             "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
             "principle_ref_count": 3,
-            "exception_coverage": true
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
           }
         }
       ]
@@ -1544,7 +287,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已承接 7 条业务判断",
+      "message": "experience_blueprint.md 已承接 11 条业务判断",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -1557,12 +300,14 @@
         "projects/demo-smoke-v1/workspace/facts.md",
         "projects/demo-smoke-v1/workspace/business_blueprint.md",
         "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
         "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
       ],
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已承接 7 条业务判断"
+          "value": "experience_blueprint.md 已承接 11 条业务判断"
         },
         {
           "type": "checked_files",
@@ -1570,6 +315,8 @@
             "projects/demo-smoke-v1/workspace/facts.md",
             "projects/demo-smoke-v1/workspace/business_blueprint.md",
             "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
             "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
           ]
         },
@@ -1577,17 +324,23 @@
           "type": "metrics",
           "value": {
             "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
             "principle_ref_count": 3,
-            "exception_coverage": true
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
           }
         }
       ]
@@ -1610,6 +363,8 @@
         "projects/demo-smoke-v1/workspace/facts.md",
         "projects/demo-smoke-v1/workspace/business_blueprint.md",
         "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/runtime/context_manifest.json",
+        "projects/demo-smoke-v1/runtime/provenance.json",
         "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
       ],
       "evidence": [
@@ -1623,6 +378,8 @@
             "projects/demo-smoke-v1/workspace/facts.md",
             "projects/demo-smoke-v1/workspace/business_blueprint.md",
             "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/runtime/context_manifest.json",
+            "projects/demo-smoke-v1/runtime/provenance.json",
             "projects/demo-smoke-v1/runtime/gates/business_gate_status.json"
           ]
         },
@@ -1630,17 +387,23 @@
           "type": "metrics",
           "value": {
             "flow_count": 4,
-            "page_count": 3,
-            "page_inventory_item_count": 3,
-            "expanded_page_blueprint_count": 0,
-            "region_map_count": 0,
-            "content_contract_item_count": 0,
-            "state_feedback_pair_count": 3,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 33,
+            "content_contract_item_count": 7,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 3,
-            "trace_mapping_item_count": 0,
-            "business_judgment_consumed_count": 7,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 11,
             "principle_ref_count": 3,
-            "exception_coverage": true
+            "exception_coverage": true,
+            "structure_judgment_count": 5,
+            "structure_change_item_count": 8,
+            "structure_unchanged_item_count": 3,
+            "structure_semantics_trace_count": 11,
+            "layout_delta_item_count": 9,
+            "content_contract_has_structure_slot": true
           }
         }
       ]
@@ -1648,16 +411,22 @@
   ],
   "metrics": {
     "flow_count": 4,
-    "page_count": 3,
-    "page_inventory_item_count": 3,
-    "expanded_page_blueprint_count": 0,
-    "region_map_count": 0,
-    "content_contract_item_count": 0,
-    "state_feedback_pair_count": 3,
+    "page_count": 5,
+    "page_inventory_item_count": 5,
+    "expanded_page_blueprint_count": 5,
+    "region_map_count": 33,
+    "content_contract_item_count": 7,
+    "state_feedback_pair_count": 4,
     "copy_contract_item_count": 3,
-    "trace_mapping_item_count": 0,
-    "business_judgment_consumed_count": 7,
+    "trace_mapping_item_count": 5,
+    "business_judgment_consumed_count": 11,
     "principle_ref_count": 3,
-    "exception_coverage": true
+    "exception_coverage": true,
+    "structure_judgment_count": 5,
+    "structure_change_item_count": 8,
+    "structure_unchanged_item_count": 3,
+    "structure_semantics_trace_count": 11,
+    "layout_delta_item_count": 9,
+    "content_contract_has_structure_slot": true
   }
 }

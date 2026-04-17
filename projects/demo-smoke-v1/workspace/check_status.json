@@ -1,10 +1,10 @@
 {
   "task_id": "demo-smoke-v1",
-  "status": "failed",
-  "has_blocker": true,
-  "blocker_count": 16,
-  "warning_count": 14,
-  "info_count": 11,
+  "status": "warning",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 17,
   "completed_outputs": [
     "projects/demo-smoke-v1/workspace/business_blueprint.md",
     "projects/demo-smoke-v1/workspace/check_report.md",
@@ -15,7 +15,7 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-12T11:16:54.743991+00:00",
+  "updated_at": "2026-04-16T06:33:21.756218+00:00",
   "checked_files": [
     "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
     "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
@@ -28,51 +28,27 @@
     "projects/demo-smoke-v1/workspace/gap_list.md"
   ],
   "issues": {
-    "blockers": [
-      "experience gate 状态为 failed",
-      "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图",
-      "experience_blueprint.md 缺少体验追踪映射",
-      "experience_blueprint.md 缺少内容与信息优先级合同",
-      "experience_blueprint.md 缺少区块布局示意",
-      "experience_blueprint.md 缺少栏目：## 任务流蓝图",
-      "experience_blueprint.md 缺少栏目：## 体验推导依据",
-      "experience_blueprint.md 缺少栏目：## 体验目标与任务边界",
-      "experience_blueprint.md 缺少栏目：## 体验追踪映射",
-      "experience_blueprint.md 缺少栏目：## 信息架构总览",
-      "experience_blueprint.md 缺少栏目：## 关键页面蓝图",
-      "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同",
-      "experience_blueprint.md 缺少栏目：## 区块布局示意",
-      "experience_blueprint.md 缺少栏目：## 开放问题与缺口",
-      "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略",
-      "final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review"
-    ],
+    "blockers": [],
     "warnings": [
-      "business gate 状态为 warning",
-      "business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx",
-      "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容",
-      "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界",
-      "experience_blueprint.md 可能仍沿用旧口径：## 体验要求",
-      "experience_blueprint.md 可能仍沿用旧口径：## 信息架构",
-      "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射",
-      "experience_blueprint.md 可能仍沿用旧口径：## 开放问题",
-      "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流",
-      "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单",
-      "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位",
-      "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图",
-      "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护",
-      "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱"
+      "experience gate 状态为 warning"
     ],
     "infos": [
-      "business_blueprint.md 已承接 6 条事实",
-      "coverage: business_judgments_consumed_by_experience: 7",
-      "coverage: facts_covered_by_business: 6",
-      "coverage: facts_covered_by_experience: 5",
+      "business gate 状态：passed",
+      "business_blueprint.md 已承接 12 条事实",
+      "coverage: business_judgments_consumed_by_experience: 11",
+      "coverage: facts_covered_by_business: 12",
+      "coverage: facts_covered_by_experience: 12",
+      "coverage: layout_delta_item_count: 13",
       "coverage: orphan_fact_count: 0",
       "coverage: orphan_judgment_count: 0",
       "coverage: orphan_page_count: 0",
+      "coverage: structure_change_item_count: 8",
+      "coverage: structure_semantics_trace_count: 11",
+      "coverage: structure_slot_count: 1",
+      "coverage: structure_unchanged_item_count: 3",
       "experience_blueprint.md 已引用 3 个设计原则 ID",
-      "experience_blueprint.md 已承接 5 条事实",
-      "experience_blueprint.md 已承接 7 条业务判断",
+      "experience_blueprint.md 已承接 11 条业务判断",
+      "experience_blueprint.md 已承接 12 条事实",
       "facts gate 状态：passed"
     ]
   },
@@ -81,1521 +57,9 @@
     {
       "source": "validate",
       "stage": "experience",
-      "severity": "blocker",
-      "category": "stage_blocked",
-      "message": "experience gate 状态为 failed",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience gate 状态为 failed"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "trace_missing",
-      "message": "experience_blueprint.md 缺少体验追踪映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少体验追踪映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 缺少内容与信息优先级合同",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少内容与信息优先级合同"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 缺少区块布局示意",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少区块布局示意"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 任务流蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 任务流蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验推导依据",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验推导依据"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验目标与任务边界",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验目标与任务边界"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 体验追踪映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 体验追踪映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 信息架构总览",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 信息架构总览"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 关键页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 关键页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 内容与信息优先级合同"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 区块布局示意",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 区块布局示意"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 开放问题与缺口",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 开放问题与缺口"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "blocker",
-      "category": "structure_missing",
-      "message": "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "business",
-      "severity": "blocker",
-      "category": "trace_missing",
-      "message": "final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/business_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/09_business_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "business",
       "severity": "warning",
       "category": "quality_gap",
-      "message": "business gate 状态为 warning",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/business_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/09_business_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "business gate 状态为 warning"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "business",
-      "severity": "warning",
-      "category": "trace_missing",
-      "message": "business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/business_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/09_business_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容",
+      "message": "experience gate 状态为 warning",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -1617,7 +81,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容"
+          "value": "experience gate 状态为 warning"
         },
         {
           "type": "checked_files",
@@ -1639,960 +103,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 体验要求",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 体验要求"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 信息架构",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 信息架构"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 开放问题",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 开放问题"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 核心任务流"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 阶段定位"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "source": "validate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "depth_insufficient",
-      "message": "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱",
-      "target_artifacts": [
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md"
-      ],
-      "checked_files": [
-        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-        "projects/demo-smoke-v1/workspace/business_blueprint.md",
-        "projects/demo-smoke-v1/workspace/check_report.md",
-        "projects/demo-smoke-v1/workspace/check_status.json",
-        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-        "projects/demo-smoke-v1/workspace/facts.md",
-        "projects/demo-smoke-v1/workspace/gap_list.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
-            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
-            "projects/demo-smoke-v1/workspace/business_blueprint.md",
-            "projects/demo-smoke-v1/workspace/check_report.md",
-            "projects/demo-smoke-v1/workspace/check_status.json",
-            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
-            "projects/demo-smoke-v1/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 2
-            },
-            "experience_depth": {
-              "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
-              "principle_ref_count": 3,
-              "exception_coverage": true
-            },
-            "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
-              "orphan_fact_count": 0,
-              "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -2603,7 +154,7 @@
       "stage": "business",
       "severity": "info",
       "category": "quality_gap",
-      "message": "business_blueprint.md 已承接 6 条事实",
+      "message": "business gate 状态：passed",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/business_blueprint.md"
       ],
@@ -2625,7 +176,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "business_blueprint.md 已承接 6 条事实"
+          "value": "business gate 状态：passed"
         },
         {
           "type": "checked_files",
@@ -2647,36 +198,142 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 已承接 12 条事实",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 已承接 12 条事实"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -2687,7 +344,7 @@
       "stage": "final",
       "severity": "info",
       "category": "coverage_gap",
-      "message": "coverage: business_judgments_consumed_by_experience: 7",
+      "message": "coverage: business_judgments_consumed_by_experience: 11",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/check_status.json"
       ],
@@ -2708,7 +365,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "coverage: business_judgments_consumed_by_experience: 7"
+          "value": "coverage: business_judgments_consumed_by_experience: 11"
         },
         {
           "type": "checked_files",
@@ -2730,36 +387,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -2770,7 +438,7 @@
       "stage": "final",
       "severity": "info",
       "category": "coverage_gap",
-      "message": "coverage: facts_covered_by_business: 6",
+      "message": "coverage: facts_covered_by_business: 12",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/check_status.json"
       ],
@@ -2791,7 +459,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "coverage: facts_covered_by_business: 6"
+          "value": "coverage: facts_covered_by_business: 12"
         },
         {
           "type": "checked_files",
@@ -2813,36 +481,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -2853,7 +532,7 @@
       "stage": "final",
       "severity": "info",
       "category": "coverage_gap",
-      "message": "coverage: facts_covered_by_experience: 5",
+      "message": "coverage: facts_covered_by_experience: 12",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/check_status.json"
       ],
@@ -2874,7 +553,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "coverage: facts_covered_by_experience: 5"
+          "value": "coverage: facts_covered_by_experience: 12"
         },
         {
           "type": "checked_files",
@@ -2896,36 +575,141 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "coverage_gap",
+      "message": "coverage: layout_delta_item_count: 13",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage: layout_delta_item_count: 13"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -2979,36 +763,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3062,36 +857,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3145,36 +951,423 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "coverage_gap",
+      "message": "coverage: structure_change_item_count: 8",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage: structure_change_item_count: 8"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "coverage_gap",
+      "message": "coverage: structure_semantics_trace_count: 11",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage: structure_semantics_trace_count: 11"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "coverage_gap",
+      "message": "coverage: structure_slot_count: 1",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage: structure_slot_count: 1"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "coverage_gap",
+      "message": "coverage: structure_unchanged_item_count: 3",
+      "target_artifacts": [
+        "projects/demo-smoke-v1/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+        "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+        "projects/demo-smoke-v1/workspace/business_blueprint.md",
+        "projects/demo-smoke-v1/workspace/check_report.md",
+        "projects/demo-smoke-v1/workspace/check_status.json",
+        "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+        "projects/demo-smoke-v1/workspace/facts.md",
+        "projects/demo-smoke-v1/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage: structure_unchanged_item_count: 3"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/demo-smoke-v1/runtime/gates/business_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/experience_gate_status.json",
+            "projects/demo-smoke-v1/runtime/gates/facts_gate_status.json",
+            "projects/demo-smoke-v1/workspace/business_blueprint.md",
+            "projects/demo-smoke-v1/workspace/check_report.md",
+            "projects/demo-smoke-v1/workspace/check_status.json",
+            "projects/demo-smoke-v1/workspace/experience_blueprint.md",
+            "projects/demo-smoke-v1/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
+              "risk_item_count": 2,
+              "unresolved_gap_count": 8
+            },
+            "experience_depth": {
+              "flow_count": 4,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
+              "copy_contract_item_count": 3,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
+              "principle_ref_count": 3,
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
+            },
+            "coverage": {
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
+              "orphan_fact_count": 0,
+              "orphan_judgment_count": 0,
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3229,36 +1422,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3269,7 +1473,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已承接 5 条事实",
+      "message": "experience_blueprint.md 已承接 11 条业务判断",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -3291,7 +1495,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已承接 5 条事实"
+          "value": "experience_blueprint.md 已承接 11 条业务判断"
         },
         {
           "type": "checked_files",
@@ -3313,36 +1517,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3353,7 +1568,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已承接 7 条业务判断",
+      "message": "experience_blueprint.md 已承接 12 条事实",
       "target_artifacts": [
         "projects/demo-smoke-v1/workspace/experience_blueprint.md"
       ],
@@ -3375,7 +1590,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已承接 7 条业务判断"
+          "value": "experience_blueprint.md 已承接 12 条事实"
         },
         {
           "type": "checked_files",
@@ -3397,36 +1612,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3481,36 +1707,47 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "judgment_count": 7,
-              "facts_consumed_count": 6,
-              "judgment_traceable_count": 0,
-              "trace_mapping_item_count": 3,
-              "option_compare_count": 2,
-              "value_assessment_item_count": 3,
+              "judgment_count": 11,
+              "facts_consumed_count": 12,
+              "judgment_traceable_count": 5,
+              "trace_mapping_item_count": 5,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 5,
               "risk_item_count": 2,
-              "unresolved_gap_count": 2
+              "unresolved_gap_count": 8
             },
             "experience_depth": {
               "flow_count": 4,
-              "page_count": 3,
-              "page_inventory_item_count": 3,
-              "expanded_page_blueprint_count": 0,
-              "region_map_count": 0,
-              "content_contract_item_count": 0,
-              "state_feedback_pair_count": 3,
+              "page_count": 5,
+              "page_inventory_item_count": 5,
+              "expanded_page_blueprint_count": 5,
+              "region_map_count": 33,
+              "content_contract_item_count": 7,
+              "state_feedback_pair_count": 4,
               "copy_contract_item_count": 3,
-              "trace_mapping_item_count": 0,
-              "business_judgment_consumed_count": 7,
+              "trace_mapping_item_count": 5,
+              "business_judgment_consumed_count": 11,
               "principle_ref_count": 3,
-              "exception_coverage": true
+              "exception_coverage": true,
+              "structure_judgment_count": 5,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 9,
+              "content_contract_has_structure_slot": true
             },
             "coverage": {
-              "facts_covered_by_business": 6,
-              "facts_covered_by_experience": 5,
-              "business_judgments_consumed_by_experience": 7,
+              "facts_covered_by_business": 12,
+              "facts_covered_by_experience": 12,
+              "business_judgments_consumed_by_experience": 11,
               "orphan_fact_count": 0,
               "orphan_judgment_count": 0,
-              "orphan_page_count": 0
+              "orphan_page_count": 0,
+              "structure_change_item_count": 8,
+              "structure_unchanged_item_count": 3,
+              "structure_semantics_trace_count": 11,
+              "layout_delta_item_count": 13,
+              "structure_slot_count": 1
             }
           }
         }
@@ -3522,36 +1759,47 @@
     "completed_output_count": 6,
     "missing_output_count": 0,
     "business_depth": {
-      "judgment_count": 7,
-      "facts_consumed_count": 6,
-      "judgment_traceable_count": 0,
-      "trace_mapping_item_count": 3,
-      "option_compare_count": 2,
-      "value_assessment_item_count": 3,
+      "judgment_count": 11,
+      "facts_consumed_count": 12,
+      "judgment_traceable_count": 5,
+      "trace_mapping_item_count": 5,
+      "option_compare_count": 3,
+      "value_assessment_item_count": 5,
       "risk_item_count": 2,
-      "unresolved_gap_count": 2
+      "unresolved_gap_count": 8
     },
     "experience_depth": {
       "flow_count": 4,
-      "page_count": 3,
-      "page_inventory_item_count": 3,
-      "expanded_page_blueprint_count": 0,
-      "region_map_count": 0,
-      "content_contract_item_count": 0,
-      "state_feedback_pair_count": 3,
+      "page_count": 5,
+      "page_inventory_item_count": 5,
+      "expanded_page_blueprint_count": 5,
+      "region_map_count": 33,
+      "content_contract_item_count": 7,
+      "state_feedback_pair_count": 4,
       "copy_contract_item_count": 3,
-      "trace_mapping_item_count": 0,
-      "business_judgment_consumed_count": 7,
+      "trace_mapping_item_count": 5,
+      "business_judgment_consumed_count": 11,
       "principle_ref_count": 3,
-      "exception_coverage": true
+      "exception_coverage": true,
+      "structure_judgment_count": 5,
+      "structure_change_item_count": 8,
+      "structure_unchanged_item_count": 3,
+      "structure_semantics_trace_count": 11,
+      "layout_delta_item_count": 9,
+      "content_contract_has_structure_slot": true
     },
     "coverage": {
-      "facts_covered_by_business": 6,
-      "facts_covered_by_experience": 5,
-      "business_judgments_consumed_by_experience": 7,
+      "facts_covered_by_business": 12,
+      "facts_covered_by_experience": 12,
+      "business_judgments_consumed_by_experience": 11,
       "orphan_fact_count": 0,
       "orphan_judgment_count": 0,
-      "orphan_page_count": 0
+      "orphan_page_count": 0,
+      "structure_change_item_count": 8,
+      "structure_unchanged_item_count": 3,
+      "structure_semantics_trace_count": 11,
+      "layout_delta_item_count": 13,
+      "structure_slot_count": 1
     }
   }
 }

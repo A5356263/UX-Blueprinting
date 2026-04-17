@@ -360,7 +360,6 @@ projects/<project-id>/
 - 任务显式引用的 wiki
 - 任务显式引用的业务知识
 - 任务显式引用的 guideline knowledge（设计指南）
-- Wiki 中保留的页面结构语义
 - `task_card_resolved.json`
 - `context_manifest.json`
 - 输出模板
@@ -374,7 +373,6 @@ projects/<project-id>/
 - `experience_blueprint.md` 存在
 - 输出结构符合 `specs/10_experience_blueprint_contract.md`
 - 已形成可进入 UI 设计讨论的 IA、task flow、page/window inventory、page blueprint、state & feedback matrix、copy contract
-- 已判断新增 / 优化信息是否引起结构变化，并显式表达结构变化或结构不变
 - 能回溯到 business judgment、facts 与 guideline
 - 未输出高保真视觉设计稿或研发实现细节
 
@@ -384,7 +382,6 @@ projects/<project-id>/
 - 必需栏目缺失
 - 仍停留在抽象体验口号
 - 改写 business rules
-- 跳过页面结构语义判断，导致新增区块或结构不变没有被显式表达
 - 越权进入高保真视觉稿或实现稿
 
 ## Step 7: Stage Gates

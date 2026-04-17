@@ -2,11 +2,11 @@
 
 ## Summary
 
-- status: failed
-- has_blocker: true
-- blocker_count: 16
-- warning_count: 14
-- info_count: 11
+- status: warning
+- has_blocker: false
+- blocker_count: 0
+- warning_count: 1
+- info_count: 17
 
 ## Output Status
 
@@ -19,62 +19,45 @@
 
 ## Blockers
 
-- experience gate 状态为 failed
-- experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图
-- experience_blueprint.md 缺少体验追踪映射
-- experience_blueprint.md 缺少内容与信息优先级合同
-- experience_blueprint.md 缺少区块布局示意
-- experience_blueprint.md 缺少栏目：## 任务流蓝图
-- experience_blueprint.md 缺少栏目：## 体验推导依据
-- experience_blueprint.md 缺少栏目：## 体验目标与任务边界
-- experience_blueprint.md 缺少栏目：## 体验追踪映射
-- experience_blueprint.md 缺少栏目：## 信息架构总览
-- experience_blueprint.md 缺少栏目：## 关键页面蓝图
-- experience_blueprint.md 缺少栏目：## 内容与信息优先级合同
-- experience_blueprint.md 缺少栏目：## 区块布局示意
-- experience_blueprint.md 缺少栏目：## 开放问题与缺口
-- experience_blueprint.md 缺少栏目：## 风险、疑惑点与保护策略
-- final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review
+- none
 
 ## Warnings
 
-- business gate 状态为 warning
-- business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx
-- experience_blueprint.md 可能仍沿用旧口径：## 不进入本阶段的内容
-- experience_blueprint.md 可能仍沿用旧口径：## 体验范围与边界
-- experience_blueprint.md 可能仍沿用旧口径：## 体验要求
-- experience_blueprint.md 可能仍沿用旧口径：## 信息架构
-- experience_blueprint.md 可能仍沿用旧口径：## 原则引用与映射
-- experience_blueprint.md 可能仍沿用旧口径：## 开放问题
-- experience_blueprint.md 可能仍沿用旧口径：## 核心任务流
-- experience_blueprint.md 可能仍沿用旧口径：## 用户与场景清单
-- experience_blueprint.md 可能仍沿用旧口径：## 阶段定位
-- experience_blueprint.md 可能仍沿用旧口径：## 页面蓝图
-- experience_blueprint.md 可能仍沿用旧口径：## 风险场景与体验保护
-- experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱
+- experience gate 状态为 warning
 
 ## Infos
 
-- business_blueprint.md 已承接 6 条事实
-- coverage: business_judgments_consumed_by_experience: 7
-- coverage: facts_covered_by_business: 6
-- coverage: facts_covered_by_experience: 5
+- business gate 状态：passed
+- business_blueprint.md 已承接 12 条事实
+- coverage: business_judgments_consumed_by_experience: 11
+- coverage: facts_covered_by_business: 12
+- coverage: facts_covered_by_experience: 12
+- coverage: layout_delta_item_count: 13
 - coverage: orphan_fact_count: 0
 - coverage: orphan_judgment_count: 0
 - coverage: orphan_page_count: 0
+- coverage: structure_change_item_count: 8
+- coverage: structure_semantics_trace_count: 11
+- coverage: structure_slot_count: 1
+- coverage: structure_unchanged_item_count: 3
 - experience_blueprint.md 已引用 3 个设计原则 ID
-- experience_blueprint.md 已承接 5 条事实
-- experience_blueprint.md 已承接 7 条业务判断
+- experience_blueprint.md 已承接 11 条业务判断
+- experience_blueprint.md 已承接 12 条事实
 - facts gate 状态：passed
 
 ## Coverage Check
 
-- facts_covered_by_business: 6
-- facts_covered_by_experience: 5
-- business_judgments_consumed_by_experience: 7
+- facts_covered_by_business: 12
+- facts_covered_by_experience: 12
+- business_judgments_consumed_by_experience: 11
 - orphan_fact_count: 0
 - orphan_judgment_count: 0
 - orphan_page_count: 0
+- structure_change_item_count: 8
+- structure_unchanged_item_count: 3
+- structure_semantics_trace_count: 11
+- layout_delta_item_count: 13
+- structure_slot_count: 1
 
 ## Machine Status
 
