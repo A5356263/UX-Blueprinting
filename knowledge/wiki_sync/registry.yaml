@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "domains": {
+    "permission": {
+      "enabled": true,
+      "mappings": [
+        {
+          "raw_source": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+          "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+          "page_type": "topic",
+          "block_id": "structure_breakdown",
+          "sync_mode": "replace_block",
+          "extract_rule": "permission.page_group_inventory",
+          "deletion_policy": "mark_gap",
+          "create_policy": "must_exist",
+          "source_mode": "single_source",
+          "priority": 100
+        },
+        {
+          "raw_source": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+          "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+          "page_type": "topic",
+          "block_id": "evidence_sources",
+          "sync_mode": "merge_unique_list",
+          "extract_rule": "permission.evidence_sources",
+          "deletion_policy": "mark_gap",
+          "create_policy": "must_exist",
+          "source_mode": "single_source",
+          "priority": 90
+        },
+        {
+          "raw_source": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+          "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+          "page_type": "topic",
+          "block_id": "coverage_and_gaps",
+          "sync_mode": "replace_block",
+          "extract_rule": "permission.gap_summary",
+          "deletion_policy": "mark_gap",
+          "create_policy": "must_exist",
+          "source_mode": "single_source",
+          "priority": 80
+        },
+        {
+          "raw_source": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+          "target_page": "knowledge/wiki/topics/permission-domain-index.md",
+          "page_type": "index",
+          "block_id": "related_entries",
+          "sync_mode": "replace_block",
+          "extract_rule": "permission.page_group_inventory",
+          "deletion_policy": "mark_gap",
+          "create_policy": "must_exist",
+          "source_mode": "single_source",
+          "priority": 70
+        },
+        {
+          "raw_source": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+          "target_page": "knowledge/wiki/entities/permission-detail-view.md",
+          "page_type": "entity",
+          "block_id": "coverage_and_gaps",
+          "sync_mode": "replace_block",
+          "extract_rule": "permission.detail_view_gap_summary",
+          "deletion_policy": "mark_gap",
+          "create_policy": "must_exist",
+          "source_mode": "single_source",
+          "priority": 60
+        }
+      ]
+    }
+  }
+}

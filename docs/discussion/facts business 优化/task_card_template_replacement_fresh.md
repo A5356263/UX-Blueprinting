@@ -59,7 +59,7 @@
 
 ## Wiki
 
-- knowledge/wiki/indices/{{DOMAIN}}-domain.md
+- knowledge/wiki/index.md
 
 ## Templates
 

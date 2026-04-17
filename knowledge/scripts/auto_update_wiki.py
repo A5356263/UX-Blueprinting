@@ -73,7 +73,7 @@ def run_update(root: Path, changed: list[str], log_file: Path, runtime_file: Pat
     update_script = root / "scripts" / "update_wiki.py"
     append_log(log_file, f"trigger_update changed_count={len(changed)}")
     proc = subprocess.run(
-        [sys.executable, str(update_script)],
+        [sys.executable, str(update_script), "--apply"],
         cwd=str(root),
         capture_output=True,
         text=False,

@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-04-17T12:25:08+00:00
+- generated_at_utc: 2026-04-17T14:55:51+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -8,7 +8,7 @@
 
 - scan_raw.py: ok
 - build_manifest.py: ok
-- sync_page_structure_semantics.py: ok
+- sync_wiki_pages.py: ok
 - reindex_wiki.py: ok
 - refresh_overview.py: ok
 - lint_wiki.py: ok
@@ -84,14 +84,15 @@ written=E:\AI设计\体验蓝图构建思路\knowledge\raw\manifests\source_mani
 record_count=38
 ```
 
-### sync_page_structure_semantics.py
+### sync_wiki_pages.py
 
 ```text
-raw_source=raw/business/permission/15_page_carrier_semantics.md
-checked_targets=3
-synced_target=wiki/topics/page-carrier-semantics-map.md
-synced_target=wiki/topics/permission-domain-index.md
-synced_target=wiki/entities/permission-detail-view.md
+wiki_sync_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_report.md
+wiki_sync_state=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_state.json
+mode=apply
+changed_raw=0
+planned_updates=0
+errors=0
 ```
 
 ### reindex_wiki.py

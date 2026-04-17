@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "raw_path": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+      "raw_hash": "sha256:b7c334e1b4cba5402d9e2153603c6a48726d51c22e3107ff38e216bb44368366",
+      "target_page": "knowledge/wiki/entities/permission-detail-view.md",
+      "block_id": "coverage_and_gaps",
+      "output_hash": "sha256:152dfedb07f759cf6a433b7247585e72c1ff64a8d69d638e3570f22e46e72740",
+      "last_sync_status": "applied",
+      "synced_at": "2026-04-17T14:55:50Z"
+    },
+    {
+      "raw_path": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+      "raw_hash": "sha256:b7c334e1b4cba5402d9e2153603c6a48726d51c22e3107ff38e216bb44368366",
+      "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+      "block_id": "coverage_and_gaps",
+      "output_hash": "sha256:8c97ab63ddc4dbcfa7071329bb101cb502625f1a7cce4a6ff915d3a41dcd479c",
+      "last_sync_status": "applied",
+      "synced_at": "2026-04-17T14:55:50Z"
+    },
+    {
+      "raw_path": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+      "raw_hash": "sha256:b7c334e1b4cba5402d9e2153603c6a48726d51c22e3107ff38e216bb44368366",
+      "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+      "block_id": "evidence_sources",
+      "output_hash": "sha256:3e266de464117c0f63fb8807583ee2b7122b3b6cb36f0f795fc7b21399488708",
+      "last_sync_status": "applied",
+      "synced_at": "2026-04-17T14:55:50Z"
+    },
+    {
+      "raw_path": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+      "raw_hash": "sha256:b7c334e1b4cba5402d9e2153603c6a48726d51c22e3107ff38e216bb44368366",
+      "target_page": "knowledge/wiki/topics/page-carrier-semantics-map.md",
+      "block_id": "structure_breakdown",
+      "output_hash": "sha256:6e1961449f70ad5138fb50c471c9ea8fde03b6598f4fcf7b80e4d440730bee56",
+      "last_sync_status": "applied",
+      "synced_at": "2026-04-17T14:55:50Z"
+    },
+    {
+      "raw_path": "knowledge/raw/business/permission/15_page_carrier_semantics.md",
+      "raw_hash": "sha256:b7c334e1b4cba5402d9e2153603c6a48726d51c22e3107ff38e216bb44368366",
+      "target_page": "knowledge/wiki/topics/permission-domain-index.md",
+      "block_id": "related_entries",
+      "output_hash": "sha256:37251f831554f8e1d10275b71d45026c7885a18d279cfdf97a6a8b66745bee4c",
+      "last_sync_status": "applied",
+      "synced_at": "2026-04-17T14:55:50Z"
+    }
+  ]
+}

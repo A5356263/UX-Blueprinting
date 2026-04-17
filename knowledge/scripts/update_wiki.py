@@ -4,6 +4,7 @@ import json
 import locale
 import subprocess
 import sys
+import argparse
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -47,10 +48,13 @@ def decode_output(raw: bytes) -> str:
     return raw.decode("utf-8", errors="replace")
 
 
-def run_step(root: Path, script_name: str) -> StepResult:
+def run_step(root: Path, script_name: str, extra_args: list[str] | None = None) -> StepResult:
     script = root / "scripts" / script_name
+    command = [sys.executable, str(script)]
+    if extra_args:
+        command.extend(extra_args)
     proc = subprocess.run(
-        [sys.executable, str(script)],
+        command,
         cwd=str(root),
         capture_output=True,
         text=False,
@@ -172,6 +176,14 @@ def build_pending_report(
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--only")
+    parser.add_argument("--strict", action="store_true")
+    parser.add_argument("--domain")
+    args = parser.parse_args()
+
     root = Path(__file__).resolve().parents[1]
     outputs_reports = root / "outputs" / "reports"
     report_file = outputs_reports / "pending_wiki_updates.md"
@@ -179,16 +191,29 @@ def main() -> int:
     old_state = read_state(state_file)
     last_run = old_state.get("last_run_utc")
 
-    steps_order = [
-        "scan_raw.py",
-        "build_manifest.py",
-        "reindex_wiki.py",
-        "refresh_overview.py",
-        "lint_wiki.py",
+    sync_args: list[str] = []
+    if args.dry_run:
+        sync_args.append("--dry-run")
+    if args.apply:
+        sync_args.append("--apply")
+    if args.only:
+        sync_args.extend(["--only", args.only])
+    if args.strict:
+        sync_args.append("--strict")
+    if args.domain:
+        sync_args.extend(["--domain", args.domain])
+
+    steps_order: list[tuple[str, list[str]]] = [
+        ("scan_raw.py", []),
+        ("build_manifest.py", []),
+        ("sync_wiki_pages.py", sync_args),
+        ("reindex_wiki.py", []),
+        ("refresh_overview.py", []),
+        ("lint_wiki.py", []),
     ]
     results: list[StepResult] = []
-    for script_name in steps_order:
-        result = run_step(root, script_name)
+    for script_name, extra_args in steps_order:
+        result = run_step(root, script_name, extra_args=extra_args)
         results.append(result)
         if result.returncode != 0:
             break

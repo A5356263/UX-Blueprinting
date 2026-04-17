@@ -20,7 +20,7 @@
 - `knowledge/wiki/concepts/<slug>.md`
 - `knowledge/wiki/topics/<slug>.md`
 - `knowledge/wiki/relations/<slug>.md`
-- `knowledge/wiki/indices/<slug>.md`
+- `knowledge/wiki/index.md`
 
 ## 通用页面合同
 

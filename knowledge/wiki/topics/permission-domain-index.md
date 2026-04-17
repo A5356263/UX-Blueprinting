@@ -59,6 +59,38 @@
 - 体验转译：
   - `knowledge/raw/business/permission/31_experience_translation_requirements.md`
 
+<!-- AUTO-SYNC:BEGIN block_id=related_entries source=knowledge/raw/business/permission/15_page_carrier_semantics.md mode=replace_block -->
+### 托管同步结果
+
+- 来源真源：`knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- 同步页面数：16
+
+#### 由页面语义真源补充的相关入口
+
+- 全局治理相关页面
+  - `双管理员模式配置页`
+  - `子管理员列表页`
+  - `子管理配置页`
+  - `权限变更审批模式配置页`
+  - `权限管理模式`
+- 协作可见性相关页面
+  - `成员协作权限`
+- 应用级入口治理相关页面
+  - `应用管理`
+  - `应用设置页`
+- 查询排障相关页面
+  - `按用户查询结果`
+  - `权限查询`
+- 用户直授相关页面
+  - `功能授权`
+  - `数据授权`
+  - `权限详情`
+  - `用户授权`
+- 角色授权相关页面
+  - `授权规则`
+  - `角色管理`
+<!-- AUTO-SYNC:END block_id=related_entries -->
+
 ### 3.2 当前 Wiki 页面
 
 - 概念页：

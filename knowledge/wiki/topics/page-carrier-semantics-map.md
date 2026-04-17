@@ -57,27 +57,21 @@
 
 ### 3.2 结构分解
 
-- 用户直授相关页面：
-  - `用户授权`
-  - `功能授权`
-  - `数据授权`
-  - `权限详情`
-- 角色授权相关页面：
-  - `角色管理`
-  - `授权规则`
-- 全局治理相关页面：
-  - `权限管理模式`
-  - `子管理配置页`
-  - `双管理员模式配置页`
-  - `权限变更审批模式配置页`
-- 协作可见性页面：
-  - `成员协作权限`
-- 查询排障页面：
-  - `权限查询`
-  - `按用户查询结果`
-- 应用治理页面：
-  - `应用管理`
-  - `应用设置页`
+<!-- AUTO-SYNC:BEGIN block_id=structure_breakdown source=knowledge/raw/business/permission/15_page_carrier_semantics.md mode=replace_block -->
+### 托管同步结果
+
+- 来源真源：`knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- 同步页面数：16
+
+#### 页面分组清单
+
+- 全局治理相关页面：双管理员模式配置页、子管理员列表页、子管理配置页、权限变更审批模式配置页、权限管理模式
+- 协作可见性相关页面：成员协作权限
+- 应用级入口治理相关页面：应用管理、应用设置页
+- 查询排障相关页面：按用户查询结果、权限查询
+- 用户直授相关页面：功能授权、数据授权、权限详情、用户授权
+- 角色授权相关页面：授权规则、角色管理
+<!-- AUTO-SYNC:END block_id=structure_breakdown -->
 
 ### 3.3 关键结论
 
@@ -109,9 +103,11 @@
 
 ## 5. 证据与来源
 
+<!-- AUTO-SYNC:BEGIN block_id=evidence_sources source=knowledge/raw/business/permission/15_page_carrier_semantics.md mode=merge_unique_list -->
 - `knowledge/raw/business/permission/15_page_carrier_semantics.md`
 - `knowledge/raw/business/permission/31_experience_translation_requirements.md`
 - `knowledge/raw/business/permission/13_route_map.md`
+<!-- AUTO-SYNC:END block_id=evidence_sources -->
 
 ## 6. 关联页面
 
@@ -120,8 +116,14 @@
 
 ## 7. 缺口与冲突
 
-- [GAP] `数据授权` 页的承载语义仍未补齐
-- [GAP] `权限明细视图` 仍缺少完整页面事实
+<!-- AUTO-SYNC:BEGIN block_id=coverage_and_gaps source=knowledge/raw/business/permission/15_page_carrier_semantics.md mode=replace_block -->
+### 托管同步缺口
+
+- [GAP] 数据授权页的页面事实材料尚未补充
+- [GAP] 权限查询中的按角色查、按权限查、按功能点查的现状承载尚未核实
+- [GAP] 部分治理弹窗和配置页的下游跳转未在现有页面事实中给出
+- [GAP] 权限明细视图的独立页面语义尚未在现有材料中展开
+<!-- AUTO-SYNC:END block_id=coverage_and_gaps -->
 - [CONFLICT] 暂未发现直接冲突
 
 ## 8. 变更记录

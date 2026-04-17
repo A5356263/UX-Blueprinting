@@ -60,7 +60,7 @@
   - knowledge/wiki/entities/permission-detail-view.md
   - knowledge/wiki/topics/*
   - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
-  - knowledge/wiki/indices/permission-domain.md
+  - knowledge/wiki/index.md
 - summary: 为核心 Wiki 内容页补齐 page_id/page_type/source_refs 等元数据，并修正原始来源路径到 raw 层。
 - reason: 推进 Wiki 从可用状态进入稳定状态，提升可追溯性与长期维护能力。
 - risk_level: low
@@ -96,7 +96,7 @@
   - knowledge/wiki/topics/*
   - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
   - knowledge/scripts/reindex_wiki.py
-  - knowledge/wiki/indices/
+  - knowledge/wiki/index.md
 - summary: 对齐 v2 规范目录，移除 `wiki/indices/`，将权限域索引页迁移至 `wiki/topics/` 并批量修复链接。
 - reason: 消除目录结构与规范定义差异，降低后续维护与脚本分叉风险。
 - risk_level: low

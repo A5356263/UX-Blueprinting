@@ -40,3 +40,6 @@
 - `12_capability_registry_contract.md`
 - `13_memory_layer_contract.md`
 - `14_experience_preview_contract.md`
+- `15_wiki_sync_contract.md`
+- `16_wiki_sync_registry_contract.md`
+- `17_wiki_sync_execution_contract.md`

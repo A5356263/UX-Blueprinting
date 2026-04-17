@@ -85,8 +85,11 @@
 
 ## 7. 缺口与冲突
 
-- [GAP] 独立页面语义尚未在现有事实中完整展开
-- [GAP] 页面类型、模块结构、关键状态、导出能力尚待补齐
+<!-- AUTO-SYNC:BEGIN block_id=coverage_and_gaps source=knowledge/raw/business/permission/15_page_carrier_semantics.md mode=replace_block -->
+### 托管同步缺口
+
+- [GAP] 权限明细视图的独立页面语义尚未在现有材料中展开
+<!-- AUTO-SYNC:END block_id=coverage_and_gaps -->
 - [CONFLICT] 暂未发现直接冲突
 
 ## 8. 变更记录
