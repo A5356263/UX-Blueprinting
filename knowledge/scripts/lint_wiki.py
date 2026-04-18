@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
+
+import yaml
 
 
 BEGIN_RE = re.compile(
@@ -17,8 +18,10 @@ def read_registry(path: Path) -> list[dict[str, object]]:
     if not path.exists():
         return []
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError:
+        return []
+    if payload is None:
         return []
     domains = payload.get("domains")
     if not isinstance(domains, dict):

@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 
 BEGIN_RE = re.compile(r"<!-- AUTO-SYNC:BEGIN (?P<meta>.+?) -->")
 END_RE = re.compile(r"<!-- AUTO-SYNC:END block_id=(?P<block_id>[a-zA-Z0-9_\-]+) -->")
@@ -38,6 +40,16 @@ def read_json_file(path: Path, default: Any) -> Any:
         return default
 
 
+def read_yaml_file(path: Path, default: Any) -> Any:
+    if not path.exists():
+        return default
+    try:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError:
+        return default
+    return default if payload is None else payload
+
+
 def write_json_file(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -49,7 +61,7 @@ def write_text_file(path: Path, content: str) -> None:
 
 
 def load_registry(registry_path: Path, domain: str | None) -> list[dict[str, Any]]:
-    payload = read_json_file(registry_path, {})
+    payload = read_yaml_file(registry_path, {})
     domains = payload.get("domains")
     if not isinstance(domains, dict):
         raise ValueError("registry.yaml 缺少 domains")

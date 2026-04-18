@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-04-17T14:55:51+00:00
+- generated_at_utc: 2026-04-18T03:44:13+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -15,18 +15,36 @@
 
 ## Changed Raw Sources
 
-- none
+- raw/business/permission/15_page_carrier_semantics.md
 
-## Suggested Wiki Pages For AI Update
+## Registry Coverage Candidates
 
-- none
+- wiki/concepts/application-visibility.md
+- wiki/concepts/collaboration-visibility.md
+- wiki/concepts/governance-mode-system.md
+- wiki/concepts/role-template-authorization.md
+- wiki/concepts/single-app-admin.md
+- wiki/entities/query-by-feature-result-view.md
+- wiki/topics/configuration-and-explanation-chains.md
+- wiki/index.md
+- wiki/entities/query-by-role-result-view.md
+- wiki/README.md
+- wiki/questions.md
+- wiki/synthesis/governance-mode-synthesis.md
+- wiki/topics/page-carrier-semantics-map.md
+- wiki/sources/guidelines-principles-pack.md
+- wiki/sources/permission-business-pack.md
+- wiki/archive/archive-index.md
+- wiki/concepts/data-permission.md
+- wiki/concepts/functional-permission.md
+- wiki/entities/data-authorization-page.md
+- wiki/entities/permission-detail-view.md
 
-## AI Actions
+## Auto Sync Notes
 
-- 检查 Changed Raw Sources 是否包含新增事实或冲突。
-- 按建议页面逐个更新 `source_refs`、边界、缺口与关系描述。
-- 如存在无法裁决的冲突，写入 `knowledge/wiki/questions.md`。
-- 完成语义更新后，追加 `knowledge/wiki/log.md`。
+- 自动同步仅对白名单 registry 映射生效，候选页仅用于覆盖面审查。
+- 当 changed raw 无注册映射时，不会写回 Wiki 页面。
+- 实际写回结果以 `sync_wiki_pages.py` 步骤输出与 `wiki_sync_report.md` 为准。
 
 ## Step Outputs
 
@@ -90,7 +108,7 @@ record_count=38
 wiki_sync_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_report.md
 wiki_sync_state=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_state.json
 mode=apply
-changed_raw=0
+changed_raw=1
 planned_updates=0
 errors=0
 ```
