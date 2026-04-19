@@ -1,0 +1,1563 @@
+{
+  "project_id": "001",
+  "meta": {
+    "title": "Experience Blueprint",
+    "subject": "体验蓝图浏览器预览",
+    "version": "v2",
+    "context": {
+      "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\001\\exports\\final\\experience_blueprint.md",
+      "input_mode": "formal_export"
+    },
+    "overview": {
+      "目标用户与角色": "目标用户与角色：当前任务链路中涉及的主要角色，以及需要共同评审该蓝图的设计 / 产品 / 业务角色。",
+      "体验目标": "体验目标：把 business 的当前动态结论翻译成可读的任务闭环、页面承载、状态反馈与文案职责。",
+      "任务边界": "任务边界：围绕当前输入推导出的主闭环、节点、页面、状态与解释责任展开，不预设固定页面集合。"
+    }
+  },
+  "global_flow": {
+    "lanes": [
+      {
+        "role": "员工",
+        "chain_ids": [
+          "TF-01",
+          "TF-02",
+          "TF-03",
+          "TF-04",
+          "TF-05",
+          "TF-06"
+        ]
+      }
+    ],
+    "chains": [
+      {
+        "chain_id": "TF-01",
+        "name": "生成 基于真实需求文档",
+        "role": "员工",
+        "path_type": "primary",
+        "is_primary": true,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-006",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-02",
+        "name": "输出 本次输出主要服务于权限",
+        "role": "员工",
+        "path_type": "secondary",
+        "is_primary": false,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-007",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-03",
+        "name": "生成 本次任务属于新能力设计与全链路蓝图",
+        "role": "员工",
+        "path_type": "primary",
+        "is_primary": true,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-009",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-04",
+        "name": "引用 阶段不得把引用知识提升为当前任务",
+        "role": "员工",
+        "path_type": "secondary",
+        "is_primary": false,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-029",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-05",
+        "name": "输出 员工自助申请与查询权限能力",
+        "role": "员工",
+        "path_type": "primary",
+        "is_primary": true,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-030",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-06",
+        "name": "输出 员工自助申请与查询权限能力",
+        "role": "员工",
+        "path_type": "secondary",
+        "is_primary": false,
+        "start": "目前企业的员工权限分配均由权限管理员",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-031",
+        "goal": "成功",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      }
+    ],
+    "nodes": [
+      {
+        "node_id": "TF-01-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-01",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N2",
+        "name": "Task Card / Task Goal",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-01",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N3",
+        "name": "生成 基于真实需求文档",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-01",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N4",
+        "name": "基于真实需求文档，生成一套围绕“员工自助申请权限、查询个人权限、对接审批流”的 facts、business、experience 正式产物。",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-01",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-02",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N2",
+        "name": "Task Card / Task Goal",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-02",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N3",
+        "name": "输出 本次输出主要服务于权限",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-02",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N4",
+        "name": "本次输出主要服务于权限域业务评审、产品方案收敛与体验蓝图设计。",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-02",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-03-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-03-N2",
+        "name": "Task Card / Task Scenario",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-03-N3",
+        "name": "生成 本次任务属于新能力设计与全链路蓝图",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-03-N4",
+        "name": "本次任务属于新能力设计与全链路蓝图生成，不是实现细节拆解，也不是高保真设计。",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-04-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-04-N2",
+        "name": "Task Card / Constraints",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-04-N3",
+        "name": "引用 阶段不得把引用知识提升为当前任务",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-04-N4",
+        "name": "facts 阶段不得把引用知识提升为当前任务的已确认事实",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-05-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-05",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-05-N2",
+        "name": "Task Card / Constraints",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-05",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-05-N3",
+        "name": "输出 员工自助申请与查询权限能力",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-05",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-05-N4",
+        "name": "business 阶段不得输出研发实现方案",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-05",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-06-N1",
+        "name": "目前企业的员工权限分配均由权限管理员",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-06",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-06-N2",
+        "name": "Task Card / Constraints",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-06",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-06-N3",
+        "name": "输出 员工自助申请与查询权限能力",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-06",
+        "goal": "成功",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-06-N4",
+        "name": "experience 阶段不得输出高保真视觉稿或前端代码方案",
+        "type": "流程步骤",
+        "role": "员工",
+        "chain_id": "TF-06",
+        "goal": "成功",
+        "page_id": ""
+      }
+    ],
+    "edges": [
+      {
+        "from": "TF-01-N1",
+        "to": "TF-01-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-01-N2",
+        "to": "TF-01-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-01-N3",
+        "to": "TF-01-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-02-N1",
+        "to": "TF-02-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N2",
+        "to": "TF-02-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N3",
+        "to": "TF-02-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-03-N1",
+        "to": "TF-03-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-03-N2",
+        "to": "TF-03-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-03-N3",
+        "to": "TF-03-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-03"
+      },
+      {
+        "from": "TF-04-N1",
+        "to": "TF-04-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-04-N2",
+        "to": "TF-04-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-04-N3",
+        "to": "TF-04-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-04"
+      },
+      {
+        "from": "TF-05-N1",
+        "to": "TF-05-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-05-N2",
+        "to": "TF-05-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-05-N3",
+        "to": "TF-05-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-05"
+      },
+      {
+        "from": "TF-06-N1",
+        "to": "TF-06-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-06"
+      },
+      {
+        "from": "TF-06-N2",
+        "to": "TF-06-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-06"
+      },
+      {
+        "from": "TF-06-N3",
+        "to": "TF-06-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "员工",
+        "chain_id": "TF-06"
+      }
+    ],
+    "dependencies": [],
+    "blockers": [
+      {
+        "id": "TF-01",
+        "name": "生成 基于真实需求文档",
+        "role": "员工",
+        "chain_id": "TF-01",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-006",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-02",
+        "name": "输出 本次输出主要服务于权限",
+        "role": "员工",
+        "chain_id": "TF-02",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-007",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-03",
+        "name": "生成 本次任务属于新能力设计与全链路蓝图",
+        "role": "员工",
+        "chain_id": "TF-03",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-009",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-04",
+        "name": "引用 阶段不得把引用知识提升为当前任务",
+        "role": "员工",
+        "chain_id": "TF-04",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-029",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-05",
+        "name": "输出 员工自助申请与查询权限能力",
+        "role": "员工",
+        "chain_id": "TF-05",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-030",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-06",
+        "name": "输出 员工自助申请与查询权限能力",
+        "role": "员工",
+        "chain_id": "TF-06",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-031",
+        "success_result": "成功",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      }
+    ]
+  },
+  "page_views": [
+    {
+      "page_id": "P-01",
+      "view_name": "生成 基于真实需求文档承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“生成 基于真实需求文档”，同时知道为什么要在这里承载。",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 基于真实需求文档承载页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "生成 基于真实需求文档"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "进入 成功 或 进入阻断或补充链路"
+        }
+      ],
+      "key_understanding": [
+        "生成 基于真实需求文档 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-01",
+          "purpose": "解释 生成 基于真实需求文档承载页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-01 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-02",
+          "purpose": "解释 生成 基于真实需求文档承载页 的状态与下一步",
+          "priority": "高",
+          "position": "P-01 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [
+        {
+          "state_id": "S-01",
+          "name": "启用",
+          "trigger": "进入当前链路时",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“启用”与其上下文含义。",
+          "copy_feedback": "M5 --> M6[启用员工申请权限模式]",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        },
+        {
+          "state_id": "S-02",
+          "name": "状态2",
+          "trigger": "进入当前链路时",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“状态2”与其上下文含义。",
+          "copy_feedback": "A1[收到待办]",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        },
+        {
+          "state_id": "S-03",
+          "name": "成功",
+          "trigger": "进入当前链路时",
+          "actions": "查看结果 / 进入下一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“成功”与其上下文含义。",
+          "copy_feedback": "3.1 自助申请权限模式【优先级：中】<br/>1、权限管理模式中，新增”自助申请权限模式“，此功能属于超管专属功能，其他用户不可授予权限<br/>2、自助申请权限模式<br/>1）说明文案：员工可自助申请权限，工作流审批通过后，系统将自动分配权限<br/>2）点击“了解更多”，跳转至帮助文档：待补充<br/>3）点击“立即启用”，<br/>A. 需要校验“双管理员互审模式”和“权限变更审批模式”是否开启，如果任意模式开启了，则不能启用并提示：企业已开启「双管理员互审模式」，不能同时开启此模式<br/>B. 如其他模式未开启，则进入 自助申请权限模式 的设置页面，此时仍然是未开启状态。设置页面点击“开启”后才变为已启用状态<br/>3、自助申请模式设置页面<br/>1）第一步标题：选择员工申请权限的方式<br/>A. 有2个选项：申请角色、申请功能权限。默认选中“申请角色”，必选，单选<br/>B. 申请角色下方提示文案：1. 申请通过后，员工将自动关联上申请角色 2. 如果启用常用角色进行授权，建议采用此方式<br/>C. 申请功能权限下方提示文案：1. 申请通过后，员工将自动授权功能权限 2. 如果企业常用用户直接授权的方式，建议采用此方式<br/>2）第二步标题：设置角色范围<br/>A. 如果第一步选了“申请角色”，那么第二步为设置角色范围<br/>B. 标题下方提示语：请选择允许员工自助申请的角色<br/>C. 选项：全部角色、部分角色。默认选中“全部角色”，必选，单选<br/>D. 选择“部分角色”，打开选择角色的弹窗，弹窗中①支持搜索角色；②角色列表展示字段：选项框、角色名称、角色说明、角色状态；③分页展示；④设置完成后，展示角色名称，需要限制最多展示的个数<br/>E. 角色范围为企业中已启用+已停用角色<br/>F. 设置项：后续新增角色自动加入员工可申请的范围。此设置项默认选中<br/>G. 员工可申请的角色范围=这里选择的角色范围<br/>3）第二步标题：设置应用范围<br/>A. 如果第一步选了“申请功能权限”，那么第二步为设置应用范围<br/>B. 标题下方提示语：请选择允许员工自助申请权限的应用<br/>C. 选项：全部应用、部分应用。默认选中“全部应用”，必选，单选<br/>D. 选择“部分应用”，打开选择应用的弹窗，弹窗中①支持搜索应用；②应用列表展示字段：选项框、应用名称、应用终端、应用启用状态；③分页展示；④设置完成后，展示应用名称，需要限制最多展示的个数<br/>E. 应用范围为企业中已添加的应用（包括已启用+已停用）<br/>F. 设置项：后续新添加的应用自动加入员工可申请的范围。此设置项默认选中<br/>G. 员工可申请的功能权限范围=这里选择的应用及对应的功能权限<br/>4）第三步标题：设置审批流程<br/>A. 提示文案：系统已预设了「员工申请权限」时的审批流程，预设审批人为员工所在组织的组织负责人。如需调整，可点击修改审批流程<br/>B. 点击“修改审批流程”，打开子页面“表单编辑”页面<br/>C. 点击返回，回到”自助申请模式设置“页面，页面不刷新<br/>5）点击”取消“，返回上一页，设置权限管理模式宣传页、或 自助申请权限模式宣传页<br/>6）点击”启用“，<br/>A. 校验“双管理员互审模式”和“权限变更审批模式”是否开启<br/>B. 如果任意模式开启了，则不能启用并提示：企业已开启「双管理员互审模式」，不能同时开启此模式<br/>C. 如其他模式未开启，则启用成功。①toast提示开启成功；②个人中心增加“我的权限”入口；③员工通过“申请权限”提交申请后需要发起审批流程；④页面刷新为已开启的页面<br/>4、自助申请权限模式 已开启状态<br/>1）开启后，变为不可编辑状态，同时页面出现2个按钮：关闭模式、编辑<br/>2）点击“关闭模式”，打开二次确认弹窗<br/>A. 二次确认弹窗标题：关闭模式；文案：关闭模式后，员工将无法自助查询和申请权限，请确认是否关闭自助申请模式？；按钮：不关闭、确认关闭<br/>B. 点击”确认关闭“，需要校验此模式是否有在途流程，如有在途流程，则关闭失败并打开提示弹窗<br/>C. 关闭失败的弹窗标题：关闭失败；文案：当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式；按钮：知道了<br/>D. 如关闭成功，则toast提示：关闭「自助申请权限模式」成功<br/>3）点击“编辑\"，关闭模式和编辑按钮隐藏，同时页面变为可编辑状态，底部出现”取消编辑“、”确认编辑“按钮<br/>A. 点击“确认编辑”，toast提示：编辑成功<br/>3）顶部展示提示语：此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。帮助文档<br/>A. 点击“帮助文档”，打开链接：待补充<br/>oa的可发起人去掉<br/>风险：默认复核人员<br/>3.2 我的权限【优先级：中】<br/>1、个人中心，增加”我的权限“功能<br/>1）开启”自助申请权限模式“的企业，企业下的用户增加”我i的权限“功能；未开启模式的企业，企业下的用户不展示此功能。服务人员无此入口<br/>2）”我的权限“无需授权，属于全员功能<br/>3）“我的权限”展示在“我的企业”下方<br/>2、点击“我的权限”进入独立页面【我的权限】<br/>1）我的权限分为2个tab：功能权限、数据权限、角色<br/>2）默认选中功能权限tab，展示用户有权限的应用、功能权限列表，包括全员应用和管理类应用，以及全员功能和管理类功能<br/>3）切到数据权限tab，展示用户拥有的数据权限，交互和数据与用户授权-权限详情一致<br/>4）切到角色tab，展示用户关联的所有角色，交互和数据与用户授权-权限详情一致<br/>5）如果tab下没有数据，需要展示提示语和占位图，提示语：您没有功能权限/您没有数据权限/您没有关联的角色<br/>3.3 申请权限【优先级：中】<br/>1、点击“申请权限”，打开【申请权限】抽屉<br/>2、申请人：默认带出当前用户名称，不可编辑<br/>3、申请原因：必填；提示词：请填写申请原因；限制最多500字<br/>4、申请功能权限<br/>1）提示语：提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。<br/>2）下方内容与功能权限设置组件一致，应用范围只包括管理端设置的“应用范围”<br/>3）功能权限设置组件需要有组件规则中的第2、3、4、5、6、7、9、10、11、12、13、14、16①③④⑤、17、18，组件规则：权限组件：功能权限/数据权限/权限详情<br/>5、申请角色<br/>1）下方表格的字段有：勾选项、角色名称、角色说明<br/>2）角色范围是：管理端设置的“角色范围”中的已启用角色<br/>3）提交申请后的，校验内容：<br/>①资金用户校验：为非资金用户授予”代发付款“时报错<br/>②授予子管理员模式权限的校验：子管理员授予子管理员模式时报错<br/>③特殊身份默认权限<br/>④实名要求<br/>6、申请记录<br/>1）筛选项<br/>①申请日期<br/>②审批状态，选项有：已通过、已拒绝、审批中、已撤销<br/>2）列表内容<br/>①申请时间：展示提交申请的时间，年月日 时分秒<br/>②申请原因：展示提交申请时填写的申请原因<br/>③申请内容：如申请的是角色，那么展示角色名称；如申请的是功能权限，那么展示“查看详情”超链接，点击查看详情打开抽屉展示申请页面的静态抽屉<br/>④审批状态：如审批通过，则展示“已通过”；审批拒绝展示“已拒绝”；审批中展示“审批中”；申请单被撤销展示“已撤销”<br/>⑤操作：撤销。如状态为审批中，则可以点击撤销；其他状态不支持点击<br/>3）分页展示<br/><br/>",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        },
+        {
+          "state_id": "S-04",
+          "name": "状态4",
+          "trigger": "Background / 方案范围提示",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“状态4”与其上下文含义。",
+          "copy_feedback": "方案中涉及角色申请、功能权限申请、审批状态反馈、权限生效通知、申请记录与撤销等关键闭环。",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        },
+        {
+          "state_id": "S-05",
+          "name": "关闭",
+          "trigger": "Background / 风险与注意点",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“关闭”与其上下文含义。",
+          "copy_feedback": "权限申请通过后默认授予的范围、敏感角色/敏感组织限制、在途流程关闭限制，都是业务判断的关键点。",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        },
+        {
+          "state_id": "S-06",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 基于真实需求文档承载页 需要显式显示“待补充”与其上下文含义。",
+          "copy_feedback": "当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "生成 基于真实需求文档承载页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "生成 基于真实需求文档反馈页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        },
+        {
+          "copy_id": "COPY-05",
+          "scene": "启用",
+          "copy_type": "状态 / 反馈文案",
+          "goal": "解释当前状态意味着什么，以及用户下一步可以做什么。",
+          "required": "状态含义、原因、下一步。",
+          "avoid": "不能把处理中写成已完成，也不能把阻断写成黑盒失败。",
+          "example": "M5 --> M6[启用员工申请权限模式]"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "成功",
+          "trigger": "命中失败、异常、冲突或阻断条件",
+          "confusion_reason": "如果不解释 成功，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Background / 风险与注意点",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 信息不足处保留 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-05",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 命中 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-01",
+          "object": "生成 基于真实需求文档承载页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 基于真实需求文档承载页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-01: 信息不足处保留 `[GAP]`：GAP-01: 信息不足处保留 `[GAP]`"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-01",
+        "关键页面蓝图:P-01:页面目标",
+        "区块布局示意:P-01",
+        "内容与信息优先级合同:INFO-01",
+        "内容与信息优先级合同:INFO-02",
+        "状态与反馈矩阵:S-01",
+        "状态与反馈矩阵:S-02",
+        "状态与反馈矩阵:S-03",
+        "状态与反馈矩阵:S-04",
+        "状态与反馈矩阵:S-05",
+        "状态与反馈矩阵:S-06",
+        "文案合同:COPY-01",
+        "文案合同:COPY-02",
+        "文案合同:COPY-05",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "风险、疑惑点与保护策略:RSK-05",
+        "体验追踪映射:TR-01",
+        "开放问题与缺口:GAP-01: 信息不足处保留 `[GAP]`"
+      ]
+    },
+    {
+      "page_id": "P-02",
+      "view_name": "生成 基于真实需求文档反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“理解结果、状态与下一步”，同时知道为什么要在这里承载。",
+      "entry": "生成 基于真实需求文档 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 基于真实需求文档反馈页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "理解结果、状态与下一步"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "返回上一步或进入下一闭环"
+        }
+      ],
+      "key_understanding": [
+        "理解结果、状态与下一步 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-03",
+          "purpose": "解释 生成 基于真实需求文档反馈页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-02 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-04",
+          "purpose": "解释 生成 基于真实需求文档反馈页 的状态与下一步",
+          "priority": "高",
+          "position": "P-02 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "成功",
+          "trigger": "命中失败、异常、冲突或阻断条件",
+          "confusion_reason": "如果不解释 成功，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Background / 风险与注意点",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 信息不足处保留 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-05",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 命中 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-02",
+          "object": "生成 基于真实需求文档反馈页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 基于真实需求文档反馈页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-02: 命中 `[GAP]`：GAP-02: 命中 `[GAP]`"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-02",
+        "关键页面蓝图:P-02:页面目标",
+        "区块布局示意:P-02",
+        "内容与信息优先级合同:INFO-03",
+        "内容与信息优先级合同:INFO-04",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "风险、疑惑点与保护策略:RSK-05",
+        "体验追踪映射:TR-02",
+        "开放问题与缺口:GAP-02: 命中 `[GAP]`"
+      ]
+    },
+    {
+      "page_id": "P-03",
+      "view_name": "输出 本次输出主要服务于权限承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“输出 本次输出主要服务于权限”，同时知道为什么要在这里承载。",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "输出 本次输出主要服务于权限承载页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "输出 本次输出主要服务于权限"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "进入 成功 或 进入阻断或补充链路"
+        }
+      ],
+      "key_understanding": [
+        "输出 本次输出主要服务于权限 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-05",
+          "purpose": "解释 输出 本次输出主要服务于权限承载页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-03 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-06",
+          "purpose": "解释 输出 本次输出主要服务于权限承载页 的状态与下一步",
+          "priority": "高",
+          "position": "P-03 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "成功",
+          "trigger": "命中失败、异常、冲突或阻断条件",
+          "confusion_reason": "如果不解释 成功，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Background / 风险与注意点",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 信息不足处保留 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-05",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 命中 `[GAP]`",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-03",
+          "object": "输出 本次输出主要服务于权限承载页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "输出 本次输出主要服务于权限承载页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-03: 摘要页未覆盖当前任务所需的对象、规则、审批链或页面承载语义：GAP-03: 摘要页未覆盖当前任务所需的对象、规则、审批链或页面承载语义"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-03",
+        "关键页面蓝图:P-03:页面目标",
+        "区块布局示意:P-03",
+        "内容与信息优先级合同:INFO-05",
+        "内容与信息优先级合同:INFO-06",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "风险、疑惑点与保护策略:RSK-05",
+        "体验追踪映射:TR-03",
+        "开放问题与缺口:GAP-03: 摘要页未覆盖当前任务所需的对象、规则、审批链或页面承载语义"
+      ]
+    },
+    {
+      "page_id": "P-04",
+      "view_name": "输出 本次输出主要服务于权限反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“理解结果、状态与下一步”，同时知道为什么要在这里承载。",
+      "entry": "输出 本次输出主要服务于权限 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "输出 本次输出主要服务于权限反馈页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "理解结果、状态与下一步"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "返回上一步或进入下一闭环"
+        }
+      ],
+      "key_understanding": [
+        "理解结果、状态与下一步 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-07",
+          "purpose": "解释 输出 本次输出主要服务于权限反馈页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-04 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-08",
+          "purpose": "解释 输出 本次输出主要服务于权限反馈页 的状态与下一步",
+          "priority": "高",
+          "position": "P-04 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-04",
+          "object": "输出 本次输出主要服务于权限反馈页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "输出 本次输出主要服务于权限反馈页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-04: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。：GAP-04: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-04",
+        "关键页面蓝图:P-04:页面目标",
+        "区块布局示意:P-04",
+        "内容与信息优先级合同:INFO-07",
+        "内容与信息优先级合同:INFO-08",
+        "体验追踪映射:TR-04",
+        "开放问题与缺口:GAP-04: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。"
+      ]
+    },
+    {
+      "page_id": "P-05",
+      "view_name": "生成 本次任务属于新能力设计与全链路蓝图承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“生成 本次任务属于新能力设计与全链路蓝图”，同时知道为什么要在这里承载。",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 本次任务属于新能力设计与全链路蓝图承载页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "生成 本次任务属于新能力设计与全链路蓝图"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "进入 成功 或 进入阻断或补充链路"
+        }
+      ],
+      "key_understanding": [
+        "生成 本次任务属于新能力设计与全链路蓝图 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [
+        {
+          "copy_id": "COPY-03",
+          "scene": "输出 本次输出主要服务于权限承载页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        },
+        {
+          "copy_id": "COPY-04",
+          "scene": "输出 本次输出主要服务于权限反馈页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        }
+      ],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-05",
+          "object": "生成 本次任务属于新能力设计与全链路蓝图承载页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 本次任务属于新能力设计与全链路蓝图承载页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-05",
+        "关键页面蓝图:P-05:页面目标",
+        "区块布局示意:P-05",
+        "文案合同:COPY-03",
+        "文案合同:COPY-04",
+        "体验追踪映射:TR-05"
+      ]
+    },
+    {
+      "page_id": "P-06",
+      "view_name": "生成 本次任务属于新能力设计与全链路蓝图反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "让用户在当前节点完成“理解结果、状态与下一步”，同时知道为什么要在这里承载。",
+      "entry": "生成 本次任务属于新能力设计与全链路蓝图 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 本次任务属于新能力设计与全链路蓝图反馈页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "facts 阶段不得把引用知识提升为当前任务的已确认事实"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "理解结果、状态与下一步"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "返回上一步或进入下一闭环"
+        }
+      ],
+      "key_understanding": [
+        "理解结果、状态与下一步 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-06",
+          "object": "生成 本次任务属于新能力设计与全链路蓝图反馈页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC01, F-AC02, F-AC03",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 本次任务属于新能力设计与全链路蓝图反馈页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-06",
+        "关键页面蓝图:P-06:页面目标",
+        "区块布局示意:P-06",
+        "体验追踪映射:TR-06"
+      ]
+    },
+    {
+      "page_id": "P-07",
+      "view_name": "引用 阶段不得把引用知识提升为当前任务承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "引用 阶段不得把引用知识提升为当前任务",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [
+        {
+          "copy_id": "COPY-06",
+          "scene": "状态2",
+          "copy_type": "状态 / 反馈文案",
+          "goal": "解释当前状态意味着什么，以及用户下一步可以做什么。",
+          "required": "状态含义、原因、下一步。",
+          "avoid": "不能把处理中写成已完成，也不能把阻断写成黑盒失败。",
+          "example": "A1[收到待办]"
+        }
+      ],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-07",
+        "文案合同:COPY-06"
+      ]
+    },
+    {
+      "page_id": "P-08",
+      "view_name": "引用 阶段不得把引用知识提升为当前任务反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "理解结果、状态与下一步",
+      "entry": "引用 阶段不得把引用知识提升为当前任务 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-08"
+      ]
+    },
+    {
+      "page_id": "P-09",
+      "view_name": "输出 员工自助申请与查询权限能力承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "输出 员工自助申请与查询权限能力",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-09"
+      ]
+    },
+    {
+      "page_id": "P-10",
+      "view_name": "输出 员工自助申请与查询权限能力反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "理解结果、状态与下一步",
+      "entry": "输出 员工自助申请与查询权限能力 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-10"
+      ]
+    },
+    {
+      "page_id": "P-11",
+      "view_name": "输出 员工自助申请与查询权限能力承载页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "输出 员工自助申请与查询权限能力",
+      "entry": "从 目前企业的员工权限分配均由权限管理员 进入该闭环",
+      "exit": "进入 成功 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-11"
+      ]
+    },
+    {
+      "page_id": "P-12",
+      "view_name": "输出 员工自助申请与查询权限能力反馈页",
+      "view_type": "页面",
+      "roles": [
+        "目前企业的员工权限分配均由权限管理员"
+      ],
+      "summary": "理解结果、状态与下一步",
+      "entry": "输出 员工自助申请与查询权限能力 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-12"
+      ]
+    },
+    {
+      "page_id": "P-13",
+      "view_name": "帮助与追踪页",
+      "view_type": "抽屉",
+      "roles": [
+        "所有需要解释边界的角色"
+      ],
+      "summary": "查看规则、来源、依赖与 gaps",
+      "entry": "从主页面或反馈页进入",
+      "exit": "关闭后回到原上下文",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [],
+      "key_understanding": [],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-13"
+      ]
+    }
+  ],
+  "global_context": {
+    "principles": [
+      {
+        "principle_id": "PR-01",
+        "label": "PR-01"
+      },
+      {
+        "principle_id": "PR-02",
+        "label": "PR-02"
+      },
+      {
+        "principle_id": "PR-03",
+        "label": "PR-03"
+      },
+      {
+        "principle_id": "PR-04",
+        "label": "PR-04"
+      },
+      {
+        "principle_id": "PR-01",
+        "name": "治理、信任与可解释性原则",
+        "reason": "page_id: PG-SUMMARY-GUIDELINES-GUIDELINES-PRINCIPLES-GOVERNANCE-PRINCIPLES"
+      },
+      {
+        "principle_id": "PR-02",
+        "name": "治理、信任与可解释性原则",
+        "reason": "page_type: summary"
+      },
+      {
+        "principle_id": "PR-03",
+        "name": "信息架构与可发现性原则",
+        "reason": "page_id: PG-SUMMARY-GUIDELINES-GUIDELINES-PRINCIPLES-INFORMATION_ARCHITECTURE-PRINCIPLES"
+      },
+      {
+        "principle_id": "PR-04",
+        "name": "信息架构与可发现性原则",
+        "reason": "page_type: summary"
+      },
+      {
+        "principle_id": "PR-05",
+        "name": "可用性、交互控制与效率原则",
+        "reason": "page_id: PG-SUMMARY-GUIDELINES-GUIDELINES-PRINCIPLES-USABILITY-PRINCIPLES"
+      },
+      {
+        "principle_id": "PR-06",
+        "name": "可用性、交互控制与效率原则",
+        "reason": "page_type: summary"
+      }
+    ],
+    "dependencies": [],
+    "risks": [],
+    "open_questions": [],
+    "gaps": [],
+    "notes": [
+      {
+        "type": "文案",
+        "content": "COPY-07 成功"
+      }
+    ]
+  },
+  "unresolved_items": [],
+  "source_refs": [
+    "E:\\AI设计\\体验蓝图构建思路\\projects\\001\\exports\\final\\experience_blueprint.md"
+  ]
+}

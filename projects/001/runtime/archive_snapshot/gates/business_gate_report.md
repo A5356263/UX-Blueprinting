@@ -1,0 +1,34 @@
+# Stage Gate Report
+
+## Summary
+
+- status: passed
+- has_blocker: false
+- blocker_count: 0
+- warning_count: 0
+- info_count: 2
+
+- project_id: 001
+- stage: business
+- next_stage: experience
+- can_proceed: true
+
+## Checked Files
+
+- projects/001/workspace/facts.md
+- projects/001/workspace/business_blueprint.md
+- projects/001/runtime/provenance.json
+- projects/001/runtime/gates/facts_gate_status.json
+
+## Blockers
+
+- none
+
+## Warnings
+
+- none
+
+## Infos
+
+- facts 阶段状态：warning
+- business_blueprint.md 已承接 12 条事实
