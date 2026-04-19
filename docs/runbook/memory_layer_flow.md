@@ -122,7 +122,7 @@ python -m packages memory-summary <project-id>
 
 ## 已验证样例
 
-当前已用 `projects/real-self-apply-v1/` 验证以下链路：
+当前已用 `examples/positive/real-self-apply-v1/` 验证以下链路：
 
 - 能生成 memory candidate
 - 能把一条 generic pattern 接受到长期 memory

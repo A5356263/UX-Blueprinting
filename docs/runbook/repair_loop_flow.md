@@ -212,7 +212,7 @@ python -m packages memory-summary <project-id>
 
 ## 已验证的回退样例
 
-`projects/real-self-apply-v1/` 已完成以下专项验证：
+`examples/positive/real-self-apply-v1/` 已完成以下专项验证：
 
 - facts 缺陷：临时移除 `facts.md` 的 `## 追踪映射`，验证 `retry_scope` 扩展为全链路重跑
 - business 缺陷：临时移除 `business_blueprint.md` 的 `## 判断追踪映射`，验证 `retry_scope` 扩展为中段回退

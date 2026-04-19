@@ -4,8 +4,8 @@
 
 - `templates/task_card.template.md`
 - `specs/01_execution_hub_spec.md`
-- `projects/demo-smoke-v1/source/task_card.md`
-- `projects/real-self-apply-v1/source/task_card.md`
+- `examples/negative/demo-smoke-v1/source/task_card.md`
+- `examples/positive/real-self-apply-v1/source/task_card.md`
 
 ## 从 v0.1 到 v0.2 的字段变化
 

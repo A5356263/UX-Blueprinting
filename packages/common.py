@@ -49,7 +49,7 @@ def get_memory_root_dir() -> Path:
 
 
 def get_examples_root_dir() -> Path:
-    return get_repo_root() / "examples" / "benchmarks"
+    return get_repo_root() / "examples"
 
 
 def get_project_meta_path(project_id: str) -> Path:

@@ -3,7 +3,7 @@
 ## 验收范围
 
 - 规范来源：`specs/01_execution_hub_spec.md`、`specs/06_check_contract.md`、`specs/11_repair_loop_contract.md`
-- 黄金样例项目：`projects/real-self-apply-v1/`
+- 黄金样例项目：`examples/positive/real-self-apply-v1/`
 - 验收目标：完成 P2 Repair Loop 落地，并验证 facts / business / experience 三类失败样例均可进入正式修复闭环
 
 ## 当前命令面
@@ -27,31 +27,31 @@ python -m packages archive
 ## 已刷新产物
 
 - runtime
-  - `projects/real-self-apply-v1/runtime/task_card_resolved.json`
-  - `projects/real-self-apply-v1/runtime/context_manifest.json`
-  - `projects/real-self-apply-v1/runtime/gates/facts_gate_report.md`
-  - `projects/real-self-apply-v1/runtime/gates/facts_gate_status.json`
-  - `projects/real-self-apply-v1/runtime/gates/business_gate_report.md`
-  - `projects/real-self-apply-v1/runtime/gates/business_gate_status.json`
-  - `projects/real-self-apply-v1/runtime/gates/experience_gate_report.md`
-  - `projects/real-self-apply-v1/runtime/gates/experience_gate_status.json`
-  - `projects/real-self-apply-v1/runtime/trace_index.json`
-  - `projects/real-self-apply-v1/runtime/gate_metrics.json`
-  - `projects/real-self-apply-v1/runtime/knowledge_usage_report.json`
-  - `projects/real-self-apply-v1/runtime/remediation/issue_index.json`
-  - `projects/real-self-apply-v1/runtime/remediation/remediation_plan.json`
-  - `projects/real-self-apply-v1/runtime/remediation/retry_scope.json`
-  - `projects/real-self-apply-v1/runtime/remediation/repair_run_log.jsonl`
-  - `projects/real-self-apply-v1/runtime/remediation/repair_summary.md`
+  - `examples/positive/real-self-apply-v1/runtime/task_card_resolved.json`
+  - `examples/positive/real-self-apply-v1/runtime/context_manifest.json`
+  - `examples/positive/real-self-apply-v1/runtime/gates/facts_gate_report.md`
+  - `examples/positive/real-self-apply-v1/runtime/gates/facts_gate_status.json`
+  - `examples/positive/real-self-apply-v1/runtime/gates/business_gate_report.md`
+  - `examples/positive/real-self-apply-v1/runtime/gates/business_gate_status.json`
+  - `examples/positive/real-self-apply-v1/runtime/gates/experience_gate_report.md`
+  - `examples/positive/real-self-apply-v1/runtime/gates/experience_gate_status.json`
+  - `examples/positive/real-self-apply-v1/runtime/trace_index.json`
+  - `examples/positive/real-self-apply-v1/runtime/gate_metrics.json`
+  - `examples/positive/real-self-apply-v1/runtime/knowledge_usage_report.json`
+  - `examples/positive/real-self-apply-v1/runtime/remediation/issue_index.json`
+  - `examples/positive/real-self-apply-v1/runtime/remediation/remediation_plan.json`
+  - `examples/positive/real-self-apply-v1/runtime/remediation/retry_scope.json`
+  - `examples/positive/real-self-apply-v1/runtime/remediation/repair_run_log.jsonl`
+  - `examples/positive/real-self-apply-v1/runtime/remediation/repair_summary.md`
 - workspace
-  - `projects/real-self-apply-v1/workspace/facts.md`
-  - `projects/real-self-apply-v1/workspace/business_blueprint.md`
-  - `projects/real-self-apply-v1/workspace/experience_blueprint.md`
-  - `projects/real-self-apply-v1/workspace/gap_list.md`
-  - `projects/real-self-apply-v1/workspace/check_report.md`
-  - `projects/real-self-apply-v1/workspace/check_status.json`
+  - `examples/positive/real-self-apply-v1/workspace/facts.md`
+  - `examples/positive/real-self-apply-v1/workspace/business_blueprint.md`
+  - `examples/positive/real-self-apply-v1/workspace/experience_blueprint.md`
+  - `examples/positive/real-self-apply-v1/workspace/gap_list.md`
+  - `examples/positive/real-self-apply-v1/workspace/check_report.md`
+  - `examples/positive/real-self-apply-v1/workspace/check_status.json`
 - exports
-  - `projects/real-self-apply-v1/exports/checks/repair_summary.md`
+  - `examples/positive/real-self-apply-v1/exports/checks/repair_summary.md`
 
 ## Repair Loop 失败样例验证
 
@@ -59,7 +59,7 @@ python -m packages archive
 
 人工制造缺陷：
 
-- 将 `projects/real-self-apply-v1/workspace/facts.md` 中的 `## 追踪映射`
+- 将 `examples/positive/real-self-apply-v1/workspace/facts.md` 中的 `## 追踪映射`
 - 临时改为 `## 追踪补丁（临时缺陷）`
 
 故障期命令链：
@@ -98,7 +98,7 @@ python -m packages repair-plan real-self-apply-v1
 
 人工制造缺陷：
 
-- 将 `projects/real-self-apply-v1/workspace/business_blueprint.md` 中的 `## 判断追踪映射`
+- 将 `examples/positive/real-self-apply-v1/workspace/business_blueprint.md` 中的 `## 判断追踪映射`
 - 临时改为 `## 判断追踪补丁（临时缺陷）`
 
 故障期命令链：
@@ -138,7 +138,7 @@ python -m packages repair-plan real-self-apply-v1
 
 人工制造缺陷：
 
-- 将 `projects/real-self-apply-v1/workspace/experience_blueprint.md` 中的 `## 状态与反馈矩阵`
+- 将 `examples/positive/real-self-apply-v1/workspace/experience_blueprint.md` 中的 `## 状态与反馈矩阵`
 - 临时改为 `## 状态矩阵（临时缺陷）`
 
 故障期命令链：
@@ -192,7 +192,7 @@ python -m packages archive real-self-apply-v1
 
 人工制造缺陷：
 
-- 临时移除 `projects/real-self-apply-v1/workspace/experience_blueprint.md` 对 `J-09` 的消费
+- 临时移除 `examples/positive/real-self-apply-v1/workspace/experience_blueprint.md` 对 `J-09` 的消费
 - 使 coverage 产生 warning：`存在未被体验层消费的业务判断：J-09`
 
 故障期命令链：

@@ -1,0 +1,22 @@
+{
+  "project_id": "demo-smoke-v1",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "30e60f6bca1eacc2f32b8cc13a7ce839489465c75354acd14aef43ff92b3290c",
+  "task_card_hash": "7c6c2e2ddcaffaf9b98a98711b1a1649353638e73a882452b1d33614ce993444",
+  "generated_at": "2026-04-16T06:33:21+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "assemble"
+  ]
+}
