@@ -2,56 +2,87 @@
 
 - page_id: PG-SYSTEM-INDEX
 - page_type: system
-- status: stable
+- status: active
 - confidence: medium
-- source_refs: [SRC-BIZ-0001, SRC-GDL-0001]
-- related_pages: [overview.md, questions.md, log.md]
+- related_summaries: []
 
-## sources
+## System Pages
 
-- [guidelines-principles-pack](sources/guidelines-principles-pack.md)
-- [permission-business-pack](sources/permission-business-pack.md)
+- [overview](overview.md)
+- [questions](questions.md)
+- [log](log.md)
 
-## concepts
+## business
 
-- [application-visibility](concepts/application-visibility.md)
-- [collaboration-visibility](concepts/collaboration-visibility.md)
-- [data-permission](concepts/data-permission.md)
-- [functional-permission](concepts/functional-permission.md)
-- [governance-mode-system](concepts/governance-mode-system.md)
-- [role-template-authorization](concepts/role-template-authorization.md)
-- [single-app-admin](concepts/single-app-admin.md)
+### permission
 
-## entities
+- [00_domain_overview](summaries/business/permission/00_domain_overview.md)
+- [01_scope_and_boundary](summaries/business/permission/01_scope_and_boundary.md)
+- [02_glossary](summaries/business/permission/02_glossary.md)
+- [03_business_objects](summaries/business/permission/03_business_objects.md)
+- [04_object_relations](summaries/business/permission/04_object_relations.md)
+- [10_capability_map](summaries/business/permission/10_capability_map.md)
+- [11_task_scenarios](summaries/business/permission/11_task_scenarios.md)
+- [12_query_and_configuration_paths](summaries/business/permission/12_query_and_configuration_paths.md)
+- [13_route_map](summaries/business/permission/13_route_map.md)
+- [14_actor_boundary](summaries/business/permission/14_actor_boundary.md)
+- [15_page_carrier_semantics](summaries/business/permission/15_page_carrier_semantics.md)
+- [20_decision_chain_contract](summaries/business/permission/20_decision_chain_contract.md)
+- [21_source_model](summaries/business/permission/21_source_model.md)
+- [22_conflict_reason_codes](summaries/business/permission/22_conflict_reason_codes.md)
+- [23_rule_contracts](summaries/business/permission/23_rule_contracts.md)
+- [24_governance_state_model](summaries/business/permission/24_governance_state_model.md)
+- [25_audit_contract](summaries/business/permission/25_audit_contract.md)
+- [30_experience_risk_patterns](summaries/business/permission/30_experience_risk_patterns.md)
+- [31_experience_translation_requirements](summaries/business/permission/31_experience_translation_requirements.md)
+- [32_copy_and_explanation_strategy](summaries/business/permission/32_copy_and_explanation_strategy.md)
+- [40_blueprint_consumption_map](summaries/business/permission/40_blueprint_consumption_map.md)
+- [41_business_blueprint_handoff](summaries/business/permission/41_business_blueprint_handoff.md)
+- [42_experience_blueprint_handoff](summaries/business/permission/42_experience_blueprint_handoff.md)
+- [README](summaries/business/permission/README.md)
+- [README](summaries/business/README.md)
 
-- [data-authorization-page](entities/data-authorization-page.md)
-- [permission-detail-view](entities/permission-detail-view.md)
-- [query-by-feature-result-view](entities/query-by-feature-result-view.md)
-- [query-by-permission-result-view](entities/query-by-permission-result-view.md)
-- [query-by-role-result-view](entities/query-by-role-result-view.md)
+## guidelines
 
-## topics
+### principles/accessibility
 
-- [configuration-and-explanation-chains](topics/configuration-and-explanation-chains.md)
-- [data-permission-gaps-backlog](topics/data-permission-gaps-backlog.md)
-- [page-carrier-semantics-map](topics/page-carrier-semantics-map.md)
-- [permission-domain-index](topics/permission-domain-index.md)
+- [principles](summaries/guidelines/principles/accessibility/principles.md)
 
-## relations
+### principles/cognition
 
-- [page-lifecycle-and-archive-policy](relations/page-lifecycle-and-archive-policy.md)
-- [query-page-vs-configuration-page-boundary](relations/query-page-vs-configuration-page-boundary.md)
+- [principles](summaries/guidelines/principles/cognition/principles.md)
 
-## synthesis
+### principles/flow_mode
 
-- [governance-mode-synthesis](synthesis/governance-mode-synthesis.md)
-- [permission-configuration-chain-synthesis](synthesis/permission-configuration-chain-synthesis.md)
+- [principles](summaries/guidelines/principles/flow_mode/principles.md)
 
-## templates
+### principles/governance
 
-- [archive-record-template](templates/archive-record-template.md)
-- [synthesis-template](templates/synthesis-template.md)
+- [principles](summaries/guidelines/principles/governance/principles.md)
 
-## archive
+### principles/information_architecture
 
-- [archive-index](archive/archive-index.md)
+- [principles](summaries/guidelines/principles/information_architecture/principles.md)
+
+### principles/quality
+
+- [principles](summaries/guidelines/principles/quality/principles.md)
+
+### principles/readability
+
+- [principles](summaries/guidelines/principles/readability/principles.md)
+
+### principles
+
+- [README](summaries/guidelines/principles/README.md)
+
+### principles/usability
+
+- [principles](summaries/guidelines/principles/usability/principles.md)
+
+### principles/visual
+
+- [principles](summaries/guidelines/principles/visual/principles.md)
+- [README](summaries/guidelines/README.md)
+- [task_type_index](summaries/guidelines/task_type_index.md)
+- [trigger_index](summaries/guidelines/trigger_index.md)

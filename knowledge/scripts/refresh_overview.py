@@ -4,41 +4,61 @@ from datetime import date
 from pathlib import Path
 
 
+def count_markers(files: list[Path], marker: str) -> int:
+    count = 0
+    for file in files:
+        try:
+            count += file.read_text(encoding="utf-8").count(marker)
+        except UnicodeDecodeError:
+            continue
+    return count
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    wiki = root / "wiki"
-    manifest = root / "raw" / "manifests" / "source_manifest.md"
-    wiki_pages = sorted(p for p in wiki.rglob("*.md") if p.is_file())
-    source_count = 0
-    if manifest.exists():
-        source_count = sum(1 for line in manifest.read_text(encoding="utf-8").splitlines() if line.startswith("| SRC-"))
+    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file() and "manifests" not in p.parts)
+    summary_files = sorted(p for p in (root / "wiki" / "summaries").rglob("*.md") if p.is_file())
+    raw_set = {p.relative_to(root / "raw").as_posix() for p in raw_files}
+    summary_set = {p.relative_to(root / "wiki" / "summaries").as_posix() for p in summary_files}
+    missing = sorted(raw_set - summary_set)
+    latest_raw = sorted(raw_files, key=lambda p: p.stat().st_mtime, reverse=True)[:5]
+    question_file = root / "wiki" / "questions.md"
+    question_count = 0
+    if question_file.exists():
+        question_count = sum(1 for line in question_file.read_text(encoding="utf-8").splitlines() if line.startswith("- question_id:"))
+
     content = "\n".join(
         [
             "# Knowledge Wiki Overview",
             "",
             "- page_id: PG-SYSTEM-OVERVIEW",
             "- page_type: system",
-            "- status: stable",
+            "- status: active",
             "- confidence: medium",
-            "- source_refs: [SRC-BIZ-0001, SRC-GDL-0001]",
-            "- related_pages: [index.md, log.md, questions.md]",
-            "- created_at: 2026-04-09",
             f"- updated_at: {date.today().isoformat()}",
             "",
             "## 当前概况",
             "",
-            f"- 页面总数: {len(wiki_pages)}",
-            f"- 来源总数: {source_count}",
-            f"- 最近更新: {date.today().isoformat()}",
-            "- 未解决冲突数: 0",
-            "- 未解决缺口数: 0",
-            "- 孤立页数: 0",
-            "- 过时页数: 0",
-            "- 待回写 outputs 数量: 0",
+            f"- raw_total: {len(raw_files)}",
+            f"- summary_total: {len(summary_files)}",
+            f"- summary_coverage: {len(summary_files)}/{len(raw_files) if raw_files else 0}",
+            f"- gap_count: {count_markers(raw_files + summary_files, '[GAP]')}",
+            f"- conflict_count: {count_markers(raw_files + summary_files, '[CONFLICT]')}",
+            f"- question_marker_count: {count_markers(raw_files + summary_files, '[QUESTION]')}",
+            f"- raw_without_summary: {len(missing)}",
+            f"- questions_total: {question_count}",
+            "",
+            "## 最近更新的 Raw",
+            "",
+            *([f"- {item.relative_to(root).as_posix()}" for item in latest_raw] if latest_raw else ["- none"]),
+            "",
+            "## 无 Summary 的 Raw",
+            "",
+            *([f"- knowledge/raw/{item}" for item in missing] if missing else ["- none"]),
             "",
         ]
     )
-    (wiki / "overview.md").write_text(content, encoding="utf-8")
+    (root / "wiki" / "overview.md").write_text(content, encoding="utf-8")
     print("refreshed=knowledge/wiki/overview.md")
     return 0
 

@@ -215,3 +215,34 @@
 - reason: 提升无人值守在普通权限环境中的可用性与稳定性，防止守护进程自触发抖动。
 - risk_level: low
 - rollback_hint: 回滚安装脚本与监听脚本到前一版本，改回纯计划任务方案。
+## LOG-2026-04-18-0001
+
+- log_id: LOG-2026-04-18-0001
+- timestamp: 2026-04-18T23:55:00+08:00
+- action_type: migration
+- operator: ai
+- touched_files:
+  - knowledge/README.md
+  - knowledge/LLM.md
+  - knowledge/wiki/README.md
+  - knowledge/wiki/index.md
+  - knowledge/wiki/overview.md
+  - knowledge/wiki/questions.md
+  - knowledge/wiki/summaries/**
+  - knowledge/scripts/build_summaries.py
+  - knowledge/scripts/refresh_questions.py
+  - knowledge/scripts/reindex_wiki.py
+  - knowledge/scripts/refresh_overview.py
+  - knowledge/scripts/lint_wiki.py
+  - knowledge/scripts/update_wiki.py
+  - knowledge/scripts/auto_update_wiki.py
+  - knowledge/scripts/sync_wiki_pages.py
+  - knowledge/wiki_sync/registry.yaml
+  - specs/07_wiki_contract.md
+  - specs/15_wiki_sync_contract.md
+  - specs/16_wiki_sync_registry_contract.md
+  - specs/17_wiki_sync_execution_contract.md
+- summary: 将 Knowledge Wiki 从重型 compiled page 加 registry sync 机制迁移为 summary-first 轻量入口机制，并物理移除旧页型目录与 heavy-sync 文件。
+- reason: 对齐 2026-04-18 的轻量化方案，统一为 raw -> summary -> system pages 的默认链路。
+- risk_level: medium
+- rollback_hint: 如需回退，只能依赖 Git 历史恢复旧目录、旧脚本与旧 specs；当前仓库不再保留 legacy 兼容层。

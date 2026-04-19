@@ -40,28 +40,21 @@ def process_exists(pid: int) -> bool:
 def collect_raw_snapshot(raw_root: Path) -> dict[str, int]:
     snapshot: dict[str, int] = {}
     for file in sorted(raw_root.rglob("*.md")):
-        if not file.is_file():
+        if not file.is_file() or "manifests" in file.parts:
             continue
-        if "manifests" in file.parts:
-            continue
-        rel = file.relative_to(raw_root).as_posix()
-        snapshot[rel] = file.stat().st_mtime_ns
+        snapshot[file.relative_to(raw_root).as_posix()] = file.stat().st_mtime_ns
     return snapshot
 
 
 def diff_files(old: dict[str, int], new: dict[str, int]) -> list[str]:
-    changed: list[str] = []
     keys = set(old) | set(new)
-    for key in sorted(keys):
-        if old.get(key) != new.get(key):
-            changed.append(key)
-    return changed
+    return sorted(key for key in keys if old.get(key) != new.get(key))
 
 
 def append_log(log_file: Path, message: str) -> None:
     log_file.parent.mkdir(parents=True, exist_ok=True)
-    with log_file.open("a", encoding="utf-8") as f:
-        f.write(f"[{utc_now_iso()}] {message}\n")
+    with log_file.open("a", encoding="utf-8") as file:
+        file.write(f"[{utc_now_iso()}] {message}\n")
 
 
 def write_runtime(runtime_file: Path, payload: dict[str, object]) -> None:
@@ -71,7 +64,7 @@ def write_runtime(runtime_file: Path, payload: dict[str, object]) -> None:
 
 def run_update(root: Path, changed: list[str], log_file: Path, runtime_file: Path) -> int:
     update_script = root / "scripts" / "update_wiki.py"
-    append_log(log_file, f"trigger_update changed_count={len(changed)}")
+    append_log(log_file, f"trigger_summary_refresh changed_count={len(changed)}")
     proc = subprocess.run(
         [sys.executable, str(update_script), "--apply"],
         cwd=str(root),
@@ -165,8 +158,7 @@ def main() -> int:
                 run_update(root, changed, log_file, runtime_file)
             snapshot = new_snapshot
     finally:
-        if lock_file.exists():
-            lock_file.unlink(missing_ok=True)
+        lock_file.unlink(missing_ok=True)
         append_log(log_file, "daemon_stopped")
 
 

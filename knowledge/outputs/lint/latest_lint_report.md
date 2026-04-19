@@ -1,13 +1,9 @@
 # Wiki Lint Report
 
-- total_pages: 34
-- missing_source_refs: 0
-- sync_issues: 0
+- raw_total: 38
+- summary_total: 38
+- issue_total: 0
 
-## missing_source_refs_pages
-
-- none
-
-## sync_issues
+## Issues
 
 - none

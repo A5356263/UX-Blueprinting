@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import argparse
 import json
 import locale
 import subprocess
 import sys
-import argparse
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -53,12 +53,7 @@ def run_step(root: Path, script_name: str, extra_args: list[str] | None = None) 
     command = [sys.executable, str(script)]
     if extra_args:
         command.extend(extra_args)
-    proc = subprocess.run(
-        command,
-        cwd=str(root),
-        capture_output=True,
-        text=False,
-    )
+    proc = subprocess.run(command, cwd=str(root), capture_output=True, text=False)
     return StepResult(
         name=script_name,
         returncode=proc.returncode,
@@ -76,41 +71,15 @@ def changed_raw_files(root: Path, last_run_utc: str | None) -> list[Path]:
         last_dt = datetime.fromisoformat(last_run_utc.replace("Z", "+00:00"))
     except ValueError:
         return files
-    changed: list[Path] = []
-    for file in files:
-        modified = datetime.fromtimestamp(file.stat().st_mtime, tz=timezone.utc)
-        if modified > last_dt:
-            changed.append(file)
-    return changed
+    return [file for file in files if datetime.fromtimestamp(file.stat().st_mtime, tz=timezone.utc) > last_dt]
 
 
-def tokenize(path: Path) -> set[str]:
-    text = path.stem.replace("-", "_")
-    tokens = {x.strip().lower() for x in text.split("_") if x.strip()}
-    tokens.update({part.lower() for part in path.parts if part})
-    return {t for t in tokens if len(t) >= 3}
-
-
-def suggest_wiki_pages(root: Path, changed_files: list[Path], max_items: int = 20) -> list[Path]:
-    wiki_root = root / "wiki"
-    wiki_pages = [p for p in wiki_root.rglob("*.md") if p.is_file() and p.name != "log.md"]
-    keywords: set[str] = set()
-    for file in changed_files:
-        keywords |= tokenize(file.relative_to(root))
-    scored: list[tuple[int, Path]] = []
-    for page in wiki_pages:
-        rel = page.relative_to(root).as_posix().lower()
-        score = sum(1 for kw in keywords if kw in rel)
-        if score == 0:
-            try:
-                body = page.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                body = ""
-            score = sum(1 for kw in keywords if kw in body)
-        if score > 0:
-            scored.append((score, page))
-    scored.sort(key=lambda item: (-item[0], item[1].as_posix()))
-    return [x[1] for x in scored[:max_items]]
+def suggest_summaries(root: Path, changed_files: list[Path]) -> list[Path]:
+    suggestions: list[Path] = []
+    for raw in changed_files:
+        rel = raw.relative_to(root / "raw")
+        suggestions.append(root / "wiki" / "summaries" / rel)
+    return suggestions
 
 
 def build_pending_report(
@@ -118,7 +87,7 @@ def build_pending_report(
     run_time_utc: str,
     steps: list[StepResult],
     changed_files: list[Path],
-    suggested_pages: list[Path],
+    suggested_summaries: list[Path],
     report_file: Path,
     state_file: Path,
 ) -> None:
@@ -135,26 +104,21 @@ def build_pending_report(
     for step in steps:
         status = "ok" if step.returncode == 0 else "failed"
         lines.append(f"- {step.name}: {status}")
+
     lines.extend(["", "## Changed Raw Sources", ""])
-    if changed_files:
-        for file in changed_files:
-            lines.append(f"- {file.relative_to(root).as_posix()}")
-    else:
-        lines.append("- none")
-    lines.extend(["", "## Registry Coverage Candidates", ""])
-    if suggested_pages:
-        for page in suggested_pages:
-            lines.append(f"- {page.relative_to(root).as_posix()}")
-    else:
-        lines.append("- none")
+    lines.extend([f"- {file.relative_to(root).as_posix()}" for file in changed_files] or ["- none"])
+
+    lines.extend(["", "## Updated Summaries", ""])
+    lines.extend([f"- {item.relative_to(root).as_posix()}" for item in suggested_summaries] or ["- none"])
+
     lines.extend(
         [
             "",
-            "## Auto Sync Notes",
+            "## Notes",
             "",
-            "- 自动同步仅对白名单 registry 映射生效，候选页仅用于覆盖面审查。",
-            "- 当 changed raw 无注册映射时，不会写回 Wiki 页面。",
-            "- 实际写回结果以 `sync_wiki_pages.py` 步骤输出与 `wiki_sync_report.md` 为准。",
+            "- 当前链路采用 summary-first 轻量 Wiki 机制。",
+            "- 默认产物为 raw 对应 summary、index、overview、questions 与 lint 报告。",
+            "- 不再使用 registry、AUTO-SYNC block 或 heavy-sync 写回。",
             "",
             "## Step Outputs",
             "",
@@ -180,7 +144,6 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--only")
     parser.add_argument("--strict", action="store_true")
-    parser.add_argument("--domain")
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[1]
@@ -190,23 +153,20 @@ def main() -> int:
     old_state = read_state(state_file)
     last_run = old_state.get("last_run_utc")
 
-    sync_args: list[str] = []
+    summary_args: list[str] = []
     if args.dry_run:
-        sync_args.append("--dry-run")
+        summary_args.append("--dry-run")
     if args.apply:
-        sync_args.append("--apply")
+        summary_args.append("--apply")
     if args.only:
-        sync_args.extend(["--only", args.only])
-    if args.strict:
-        sync_args.append("--strict")
-    if args.domain:
-        sync_args.extend(["--domain", args.domain])
+        summary_args.extend(["--only", args.only])
 
     steps_order: list[tuple[str, list[str]]] = [
         ("scan_raw.py", []),
         ("build_manifest.py", []),
-        ("sync_wiki_pages.py", sync_args),
+        ("build_summaries.py", summary_args),
         ("reindex_wiki.py", []),
+        ("refresh_questions.py", []),
         ("refresh_overview.py", []),
         ("lint_wiki.py", []),
     ]
@@ -219,18 +179,19 @@ def main() -> int:
 
     run_time = utc_now_iso()
     changed = changed_raw_files(root, last_run)
-    suggested = suggest_wiki_pages(root, changed)
+    suggested = suggest_summaries(root, changed)
     build_pending_report(root, run_time, results, changed, suggested, report_file, state_file)
 
-    if all(item.returncode == 0 for item in results) and len(results) == len(steps_order):
+    success = all(item.returncode == 0 for item in results) and len(results) == len(steps_order)
+    if success:
         write_state(state_file, {"last_run_utc": run_time})
-        print(f"status=ok")
+        print("status=ok")
         print(f"pending_report={report_file}")
         return 0
 
     print("status=failed")
     print(f"pending_report={report_file}")
-    return 1
+    return 1 if args.strict else 0
 
 
 if __name__ == "__main__":

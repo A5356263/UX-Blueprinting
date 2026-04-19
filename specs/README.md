@@ -2,8 +2,6 @@
 
 本目录是本项目唯一正式规则真源。
 
-后续凡是会驱动执行中枢、约束输入输出、决定失败条件、定义状态语义的内容，只能写在 `specs/`。
-
 ## 职责
 
 - 定义执行中枢步骤规则
@@ -11,18 +9,12 @@
 - 定义知识引用合同
 - 定义输出合同
 - 定义检查合同
-- 定义 Wiki 页面合同
-- 定义项目改造执行顺序
+- 定义轻量 Wiki 合同
 
 ## 与 `docs/sdd/` 的分工
 
-- `specs/`：正式法典，面向执行与实现
+- `specs/`：正式规则，面向执行与实现
 - `docs/sdd/`：解释层，面向理解与导读
-
-一句话区分：
-
-- 改规则，改 `specs/`
-- 帮人理解，改 `docs/sdd/`
 
 ## 当前文件
 
@@ -40,6 +32,3 @@
 - `12_capability_registry_contract.md`
 - `13_memory_layer_contract.md`
 - `14_experience_preview_contract.md`
-- `15_wiki_sync_contract.md`
-- `16_wiki_sync_registry_contract.md`
-- `17_wiki_sync_execution_contract.md`

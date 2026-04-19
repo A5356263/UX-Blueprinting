@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-04-18T03:44:13+00:00
+- generated_at_utc: 2026-04-19T03:29:30+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -8,43 +8,25 @@
 
 - scan_raw.py: ok
 - build_manifest.py: ok
-- sync_wiki_pages.py: ok
+- build_summaries.py: ok
 - reindex_wiki.py: ok
+- refresh_questions.py: ok
 - refresh_overview.py: ok
 - lint_wiki.py: ok
 
 ## Changed Raw Sources
 
-- raw/business/permission/15_page_carrier_semantics.md
+- none
 
-## Registry Coverage Candidates
+## Updated Summaries
 
-- wiki/concepts/application-visibility.md
-- wiki/concepts/collaboration-visibility.md
-- wiki/concepts/governance-mode-system.md
-- wiki/concepts/role-template-authorization.md
-- wiki/concepts/single-app-admin.md
-- wiki/entities/query-by-feature-result-view.md
-- wiki/topics/configuration-and-explanation-chains.md
-- wiki/index.md
-- wiki/entities/query-by-role-result-view.md
-- wiki/README.md
-- wiki/questions.md
-- wiki/synthesis/governance-mode-synthesis.md
-- wiki/topics/page-carrier-semantics-map.md
-- wiki/sources/guidelines-principles-pack.md
-- wiki/sources/permission-business-pack.md
-- wiki/archive/archive-index.md
-- wiki/concepts/data-permission.md
-- wiki/concepts/functional-permission.md
-- wiki/entities/data-authorization-page.md
-- wiki/entities/permission-detail-view.md
+- none
 
-## Auto Sync Notes
+## Notes
 
-- 自动同步仅对白名单 registry 映射生效，候选页仅用于覆盖面审查。
-- 当 changed raw 无注册映射时，不会写回 Wiki 页面。
-- 实际写回结果以 `sync_wiki_pages.py` 步骤输出与 `wiki_sync_report.md` 为准。
+- 当前链路采用 summary-first 轻量 Wiki 机制。
+- 默认产物为 raw 对应 summary、index、overview、questions 与 lint 报告。
+- 不再使用 registry、AUTO-SYNC block 或 heavy-sync 写回。
 
 ## Step Outputs
 
@@ -102,21 +84,62 @@ written=E:\AI设计\体验蓝图构建思路\knowledge\raw\manifests\source_mani
 record_count=38
 ```
 
-### sync_wiki_pages.py
+### build_summaries.py
 
 ```text
-wiki_sync_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_report.md
-wiki_sync_state=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\wiki_sync_state.json
 mode=apply
-changed_raw=1
-planned_updates=0
-errors=0
+summary_count=38
+wiki/summaries/business/permission/00_domain_overview.md
+wiki/summaries/business/permission/01_scope_and_boundary.md
+wiki/summaries/business/permission/02_glossary.md
+wiki/summaries/business/permission/03_business_objects.md
+wiki/summaries/business/permission/04_object_relations.md
+wiki/summaries/business/permission/10_capability_map.md
+wiki/summaries/business/permission/11_task_scenarios.md
+wiki/summaries/business/permission/12_query_and_configuration_paths.md
+wiki/summaries/business/permission/13_route_map.md
+wiki/summaries/business/permission/14_actor_boundary.md
+wiki/summaries/business/permission/15_page_carrier_semantics.md
+wiki/summaries/business/permission/20_decision_chain_contract.md
+wiki/summaries/business/permission/21_source_model.md
+wiki/summaries/business/permission/22_conflict_reason_codes.md
+wiki/summaries/business/permission/23_rule_contracts.md
+wiki/summaries/business/permission/24_governance_state_model.md
+wiki/summaries/business/permission/25_audit_contract.md
+wiki/summaries/business/permission/30_experience_risk_patterns.md
+wiki/summaries/business/permission/31_experience_translation_requirements.md
+wiki/summaries/business/permission/32_copy_and_explanation_strategy.md
+wiki/summaries/business/permission/40_blueprint_consumption_map.md
+wiki/summaries/business/permission/41_business_blueprint_handoff.md
+wiki/summaries/business/permission/42_experience_blueprint_handoff.md
+wiki/summaries/business/permission/README.md
+wiki/summaries/business/README.md
+wiki/summaries/guidelines/principles/accessibility/principles.md
+wiki/summaries/guidelines/principles/cognition/principles.md
+wiki/summaries/guidelines/principles/flow_mode/principles.md
+wiki/summaries/guidelines/principles/governance/principles.md
+wiki/summaries/guidelines/principles/information_architecture/principles.md
+wiki/summaries/guidelines/principles/quality/principles.md
+wiki/summaries/guidelines/principles/readability/principles.md
+wiki/summaries/guidelines/principles/README.md
+wiki/summaries/guidelines/principles/usability/principles.md
+wiki/summaries/guidelines/principles/visual/principles.md
+wiki/summaries/guidelines/README.md
+wiki/summaries/guidelines/task_type_index.md
+wiki/summaries/guidelines/trigger_index.md
 ```
 
 ### reindex_wiki.py
 
 ```text
 reindexed=knowledge/wiki/index.md
+```
+
+### refresh_questions.py
+
+```text
+questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
+question_count=10
 ```
 
 ### refresh_overview.py

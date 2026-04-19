@@ -2,12 +2,21 @@
 
 ## 1. 这是什么
 
-本目录是当前项目里的独立 Wiki 子系统。  
-它的目标不是直接产出业务蓝图或体验蓝图，而是持续维护一套可复用、可追溯的正式知识层，供主项目稳定消费。
+本目录是当前项目里的独立 Wiki 子系统。
 
-主项目默认只消费：
+它不再承担“重型正式知识页编译系统”的职责，而是承担一套更轻的知识入口机制：
 
-- `knowledge/wiki/`
+- 维护 `knowledge/raw/**` 作为唯一高频真源
+- 为每份 raw 生成一份一对一 summary
+- 维护 `index.md`、`overview.md`、`questions.md`、`log.md`
+- 让主项目与 LLM 默认走 `summary-first`，必要时再回查 raw
+
+主项目默认先消费：
+
+- `knowledge/wiki/index.md`
+- `knowledge/wiki/summaries/**`
+- `knowledge/wiki/overview.md`
+- `knowledge/wiki/questions.md`
 
 主项目不默认直接消费：
 
@@ -20,24 +29,24 @@
 ## 2. 子系统和主项目的关系
 
 ### 主项目负责
+
 - 接收需求
-- 读取任务输入
-- 消费正式 Wiki 页
-- 生成业务蓝图与体验蓝图
-- 输出主项目产物
+- 装配任务上下文
+- 消费 Wiki 入口页与 summary
+- 在需要证据或细节时回查 raw
+- 生成主项目产物
 
 ### Wiki 子系统负责
+
 - 管理原始来源
-- 编译正式 Wiki 页
-- 记录日志
-- 做健康检查
+- 生成 mirrored summaries
+- 维护入口、状态页、问题池
+- 做结构性检查
 - 做自动更新
-- 做自动回写
-- 提供稳定知识入口
 
 一句话：
 
-**主项目用知识，Wiki 子系统养知识。**
+**主项目先读 summary，Wiki 子系统负责把 raw 变成稳定入口。**
 
 ---
 
@@ -55,16 +64,12 @@ knowledge/
   wiki/
     index.md
     overview.md
-    log.md
     questions.md
-    sources/
-    concepts/
-    entities/
-    topics/
-    relations/
-    synthesis/
-    templates/
-    archive/
+    log.md
+    summaries/
+      business/
+      guidelines/
+      inbox/
 
   outputs/
     answers/
@@ -75,9 +80,11 @@ knowledge/
   scripts/
     scan_raw.py
     build_manifest.py
-    lint_wiki.py
-    refresh_overview.py
+    build_summaries.py
     reindex_wiki.py
+    refresh_overview.py
+    refresh_questions.py
+    lint_wiki.py
     update_wiki.py
     auto_update_wiki.py
     run_auto_update_wiki.ps1
@@ -93,171 +100,163 @@ knowledge/
 ## 4. 每一层是干什么的
 
 ### raw/
-原始来源层，只保存事实来源。
+
+原始来源层，只保存事实来源和原始规则文本。
 
 这里放：
+
 - 业务知识真源
 - 设计指南真源
-- 新进但还没处理的文件
-
-建议至少分为：
-- `raw/business/`
-- `raw/guidelines/`
-- `raw/inbox/`
+- 新进但还没整理完的文件
 
 ### wiki/
-正式知识层，也是主项目默认消费层。
+
+轻量 Wiki 层，也是主项目默认消费入口。
 
 这里放：
-- 来源摘要页
-- 概念页
-- 实体页
-- 主题页
-- 关系页
-- 综合页
-- 系统页
+
+- `summaries/`：raw 的一对一摘要页
+- `index.md`：总入口
+- `overview.md`：机械状态页
+- `questions.md`：显式问题池
+- `log.md`：维护留痕
 
 ### outputs/
+
 结果层。
 
 这里放：
+
 - 查询回答
-- 专题总结
+- 报告
 - 图表
 - lint 报告
 
 注意：
-**outputs 不是正式 Wiki。**
+
+**outputs 不是正式 Wiki 入口。**
 
 ### scripts/
-通用工具层。
+
+工具层。
 
 这里放：
-- 扫描来源脚本
-- 构建 manifest 脚本
-- lint 脚本
-- 刷新 overview 脚本
-- 重建索引脚本
+
+- 扫描 raw
+- 构建 manifest
+- 生成 summaries
+- 刷新 index / overview / questions
+- lint 与自动更新
 
 注意：
-**scripts 帮 AI 做工具工作，不替代 AI 做知识判断。**
 
-### README.md
-给人看的系统说明。
-
-### LLM.md
-给 AI 看的工作合同。
+**脚本只做机械任务，不做语义裁决。**
 
 ---
 
 ## 5. 基本原则
 
 ### Raw 原文不可改
-AI 可以读 Raw，但不能直接改 Raw 正文。  
-不能把摘要覆盖回原始文件。
 
-### 主项目只消费正式 Wiki
-主项目默认只读 `knowledge/wiki/`。  
-不要让主项目直接读取 Raw 或 Outputs。
+AI 可以读 raw，但不能把总结覆盖回 raw 正文。
 
-### 输出先进入 Outputs
-回答、总结、图表、报告先进入 `outputs/`。  
-只有稳定、可复用、可追溯的内容，才允许回写到 Wiki。
+### Summary-first，按需回查 raw
+
+默认消费顺序：
+
+1. 从 `knowledge/wiki/index.md` 进入
+2. 先读对应 summary
+3. 需要细节、证据、正式判断时再回查 raw
+
+### 一对一镜像
+
+summary 与 raw 保持：
+
+- 同名
+- 镜像路径
+- 一对一对应
+
+### 显式保留 gaps / conflicts / questions
+
+当 raw 或 summary 中存在：
+
+- `[GAP]`
+- `[CONFLICT]`
+- `[QUESTION]`
+
+必须显式保留，不得自动抹平。
 
 ### 重要操作必须留痕
-新来源入库、Wiki 更新、体检、回写，都要写入 `wiki/log.md`。
 
-### 脚本只做通用任务
-脚本可以做：
-- 扫描
-- 检查
-- 统计
-- 刷新
-- 生成报告
-
-脚本不做：
-- 术语定义
-- 冲突裁决
-- 正式知识结论
+新来源入库、批量更新、lint、人工覆盖等动作，都要写入 `wiki/log.md`。
 
 ---
 
 ## 6. 如何触发 Wiki 维护
 
-当有新原始文件进入时，可显式对 AI 下指令，例如：
+常见命令：
 
-- 基于这个新文件更新 Wiki
-- 把这个新来源编译进 Wiki
-- 运行一次 Wiki 健康检查
-- 把某个 outputs 回写进 Wiki
+- 一次性编排更新：`python knowledge/scripts/update_wiki.py --apply`
+- 预览本次将更新什么：`python knowledge/scripts/update_wiki.py --dry-run`
+- 只更新单个 raw 对应 summary：`python knowledge/scripts/update_wiki.py --apply --only knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- 持续监听 raw 并自动触发：`python knowledge/scripts/auto_update_wiki.py --run-on-start`
 
-注意：
-
-这些都是 **Wiki 子系统维护动作**，不是主项目主链路动作。
-
-### 自动更新（无人值守）
-
-- 一次性编排更新：`python knowledge/scripts/update_wiki.py`
-- 持续监听 Raw 并自动触发：`python knowledge/scripts/auto_update_wiki.py --run-on-start`
-- 安装无人值守自动触发（优先计划任务，权限不足时自动降级到用户启动项）：`powershell -ExecutionPolicy Bypass -File knowledge/scripts/install_wiki_autoupdate_task.ps1`
-- 卸载系统级自动任务：`powershell -ExecutionPolicy Bypass -File knowledge/scripts/uninstall_wiki_autoupdate_task.ps1`
-- AI 待处理清单输出：`knowledge/outputs/reports/pending_wiki_updates.md`
+自动更新不会再使用 registry、block sync 或 compiled wiki page 写回机制。
 
 ---
 
 ## 7. 系统页说明
 
 ### wiki/index.md
-Wiki 总入口和阅读导航。
+
+总入口和导航页，默认只索引 `summaries/`。
 
 ### wiki/overview.md
-Wiki 健康状态和运行概况。
 
-### wiki/log.md
-操作日志。
+机械状态页，只做计数、覆盖率、最近变更和显式标记统计。
 
 ### wiki/questions.md
-待研究、待补证、待裁决的问题池。
+
+显式未决项聚合页，只汇总 raw / summary 中已出现的 `[GAP]`、`[CONFLICT]`、`[QUESTION]`。
+
+### wiki/log.md
+
+维护日志。
 
 ---
 
 ## 8. 推荐维护顺序
 
 ### 新来源进入时
+
 1. 放入 `raw/business/`、`raw/guidelines/` 或 `raw/inbox/`
 2. 更新 `source_manifest.md`
-3. 生成来源摘要
-4. 更新受影响 Wiki 页
-5. 更新 `index.md`
-6. 更新 `overview.md`
+3. 生成对应 summary
+4. 刷新 `index.md`
+5. 刷新 `overview.md`
+6. 刷新 `questions.md`
 7. 写入 `log.md`
 
 ### 做健康检查时
-1. 扫描全部 Wiki 页
-2. 运行 lint 脚本
+
+1. 扫描 raw 与 summaries
+2. 运行 lint
 3. 输出 lint 报告
 4. 刷新 `overview.md`
-5. 写入 `log.md`
-
-### 回写 outputs 时
-1. 判断是否有复用价值
-2. 判断是否可追溯
-3. 判断是否有未裁决争议
-4. 更新正式页或新建综合页
 5. 写入 `log.md`
 
 ---
 
 ## 9. 本子系统不做什么
 
-- 不替代主项目执行逻辑
-- 不把 Wiki 维护塞进 `packages` 主执行中枢
-- 不要求所有工作都靠大模型硬做
-- 不把一次性闲聊直接写成正式知识
-- 不让主项目默认直接消费 Raw
+- 不再维护 `concepts / entities / topics / relations / synthesis` 默认页型
+- 不再维护 registry 驱动的 heavy-sync
+- 不再做 block 级 AUTO-SYNC 回写
+- 不给旧机制提供兼容层
+- 不让主项目默认直接消费 raw
 
 ---
 
 ## 10. 一句话结论
 
-**Knowledge 目录是项目里的独立 Wiki 子系统。主项目只消费 Wiki，Wiki 自己负责养护和演化。**
+**Knowledge 目录仍然是独立 Wiki 子系统，但它现在是一个 summary-first 的轻量知识入口系统，而不是重型二次知识编译层。**

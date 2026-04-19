@@ -1,127 +1,113 @@
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
-import yaml
+
+REQUIRED_SUMMARY_FIELDS = [
+    "page_id:",
+    "page_type: summary",
+    "source_path:",
+    "source_group:",
+    "status:",
+    "confidence:",
+    "updated_at:",
+    "source_refs:",
+    "related_summaries:",
+]
 
 
-BEGIN_RE = re.compile(
-    r"<!-- AUTO-SYNC:BEGIN block_id=(?P<block_id>[a-zA-Z0-9_\-]+) "
-    r"source=(?P<source>[^ ]+) mode=(?P<mode>[a-z_]+) -->"
-)
-END_RE = re.compile(r"<!-- AUTO-SYNC:END block_id=(?P<block_id>[a-zA-Z0-9_\-]+) -->")
-SUPPORTED_MODES = {"replace_block", "merge_unique_list"}
+def summary_path_for(root: Path, raw_file: Path) -> Path:
+    rel = raw_file.relative_to(root / "raw")
+    return root / "wiki" / "summaries" / rel
 
 
-def read_registry(path: Path) -> list[dict[str, object]]:
-    if not path.exists():
-        return []
-    try:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except yaml.YAMLError:
-        return []
-    if payload is None:
-        return []
-    domains = payload.get("domains")
-    if not isinstance(domains, dict):
-        return []
-    mappings: list[dict[str, object]] = []
-    for domain_payload in domains.values():
-        if not isinstance(domain_payload, dict):
-            continue
-        domain_mappings = domain_payload.get("mappings")
-        if not isinstance(domain_mappings, list):
-            continue
-        for item in domain_mappings:
-            if isinstance(item, dict):
-                mappings.append(item)
-    return mappings
-
-
-def collect_page_blocks(text: str) -> tuple[list[dict[str, str]], list[str]]:
-    blocks: list[dict[str, str]] = []
-    issues: list[str] = []
-    stack: list[dict[str, str]] = []
-    seen_ids: set[str] = set()
+def parse_source_path(text: str) -> str | None:
     for line in text.splitlines():
-        begin = BEGIN_RE.fullmatch(line.strip())
-        if begin:
-            block = begin.groupdict()
-            block_id = block["block_id"]
-            if block_id in seen_ids:
-                issues.append(f"duplicate_block_id:{block_id}")
-            seen_ids.add(block_id)
-            if block["mode"] not in SUPPORTED_MODES:
-                issues.append(f"unsupported_mode:{block['mode']}:{block_id}")
-            stack.append(block)
-            blocks.append(block)
+        if line.startswith("- source_path:"):
+            return line.split(":", 1)[1].strip()
+    return None
+
+
+def parse_related_summaries(text: str) -> list[str]:
+    items: list[str] = []
+    in_block = False
+    for line in text.splitlines():
+        if line.startswith("- related_summaries:"):
+            in_block = True
             continue
-        end = END_RE.fullmatch(line.strip())
-        if end:
-            block_id = end.group("block_id")
-            if not stack:
-                issues.append(f"end_without_begin:{block_id}")
+        if in_block:
+            if line.startswith("  - "):
+                items.append(line[4:].strip())
                 continue
-            current = stack.pop()
-            if current["block_id"] != block_id:
-                issues.append(f"mismatched_block:{current['block_id']}:{block_id}")
-    if stack:
-        issues.extend([f"unclosed_block:{item['block_id']}" for item in stack])
-    return blocks, issues
+            if line.strip() == "":
+                continue
+            break
+    return items
 
 
 def main() -> int:
-    repo_root = Path(__file__).resolve().parents[2]
     root = Path(__file__).resolve().parents[1]
-    wiki = root / "wiki"
-    files = sorted(p for p in wiki.rglob("*.md") if p.is_file())
-    missing_source_refs: list[str] = []
-    sync_issues: list[str] = []
-    page_block_map: dict[str, set[str]] = {}
-    for file in files:
-        text = file.read_text(encoding="utf-8")
-        if "source_refs" not in text and file.name not in {"README.md", "log.md"}:
-            missing_source_refs.append(file.relative_to(wiki).as_posix())
-        blocks, issues = collect_page_blocks(text)
-        rel = file.relative_to(repo_root).as_posix()
-        page_block_map[rel] = {item["block_id"] for item in blocks}
-        sync_issues.extend([f"{rel}: {issue}" for issue in issues])
+    repo_root = root.parent
+    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file() and "manifests" not in p.parts)
+    summary_files = sorted(p for p in (root / "wiki" / "summaries").rglob("*.md") if p.is_file())
+    issues: list[str] = []
 
-    registry_path = root / "wiki_sync" / "registry.yaml"
-    mappings = read_registry(registry_path)
-    for mapping in mappings:
-        target_page = str(mapping.get("target_page") or "")
-        block_id = str(mapping.get("block_id") or "")
-        if not target_page or not block_id:
-            sync_issues.append("registry: missing target_page or block_id")
-            continue
-        target_file = repo_root / target_page
-        if not target_file.exists():
-            sync_issues.append(f"registry: target_missing:{target_page}")
-            continue
-        if block_id not in page_block_map.get(target_page, set()):
-            sync_issues.append(f"registry: block_missing:{target_page}#{block_id}")
+    summary_lookup = {p.relative_to(root / "wiki" / "summaries").as_posix(): p for p in summary_files}
+
+    for raw_file in raw_files:
+        summary_file = summary_path_for(root, raw_file)
+        if not summary_file.exists():
+            issues.append(f"missing_summary:{raw_file.relative_to(repo_root).as_posix()}")
+
+    for summary_file in summary_files:
+        text = summary_file.read_text(encoding="utf-8")
+        rel = summary_file.relative_to(repo_root).as_posix()
+        for field in REQUIRED_SUMMARY_FIELDS:
+            if field not in text:
+                issues.append(f"missing_field:{rel}:{field}")
+        source_path = parse_source_path(text)
+        if not source_path:
+            issues.append(f"missing_source_path:{rel}")
+        else:
+            source_file = repo_root / source_path
+            if not source_file.exists():
+                issues.append(f"broken_source_path:{rel}:{source_path}")
+        for related in parse_related_summaries(text):
+            if related == "none":
+                continue
+            related_rel = related.replace("knowledge/wiki/summaries/", "")
+            if related_rel not in summary_lookup:
+                issues.append(f"broken_related_summary:{rel}:{related}")
+
+    index_file = root / "wiki" / "index.md"
+    if index_file.exists():
+        index_text = index_file.read_text(encoding="utf-8")
+        for forbidden in ["concepts/", "entities/", "topics/", "relations/", "synthesis/", "sources/"]:
+            if forbidden in index_text:
+                issues.append(f"forbidden_index_reference:{forbidden}")
+    else:
+        issues.append("missing_index:knowledge/wiki/index.md")
+
+    for required in [root / "wiki" / "overview.md", root / "wiki" / "questions.md"]:
+        if not required.exists():
+            issues.append(f"missing_system_page:{required.relative_to(repo_root).as_posix()}")
+
     report = root / "outputs" / "lint" / "latest_lint_report.md"
     lines = [
         "# Wiki Lint Report",
         "",
-        f"- total_pages: {len(files)}",
-        f"- missing_source_refs: {len(missing_source_refs)}",
-        f"- sync_issues: {len(sync_issues)}",
+        f"- raw_total: {len(raw_files)}",
+        f"- summary_total: {len(summary_files)}",
+        f"- issue_total: {len(issues)}",
         "",
-        "## missing_source_refs_pages",
+        "## Issues",
         "",
-        *([f"- {x}" for x in missing_source_refs] if missing_source_refs else ["- none"]),
-        "",
-        "## sync_issues",
-        "",
-        *([f"- {x}" for x in sync_issues] if sync_issues else ["- none"]),
+        *([f"- {issue}" for issue in issues] if issues else ["- none"]),
         "",
     ]
     report.write_text("\n".join(lines), encoding="utf-8")
     print(f"report={report}")
-    return 0
+    return 0 if not issues else 1
 
 
 if __name__ == "__main__":

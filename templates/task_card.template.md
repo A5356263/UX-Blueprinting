@@ -54,11 +54,13 @@
 
 ## Knowledge
 
-- knowledge/wiki/topics/{{DOMAIN}}-domain-index.md
+- knowledge/wiki/index.md
+- knowledge/wiki/summaries/{{DOMAIN}}/**
 
 ## Wiki
 
-- knowledge/wiki/topics/{{DOMAIN}}-domain-index.md
+- knowledge/wiki/index.md
+- knowledge/wiki/summaries/{{DOMAIN}}/**
 
 ## Templates
 

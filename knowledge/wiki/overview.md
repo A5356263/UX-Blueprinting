@@ -2,20 +2,29 @@
 
 - page_id: PG-SYSTEM-OVERVIEW
 - page_type: system
-- status: stable
+- status: active
 - confidence: medium
-- source_refs: [SRC-BIZ-0001, SRC-GDL-0001]
-- related_pages: [index.md, log.md, questions.md]
-- created_at: 2026-04-09
-- updated_at: 2026-04-18
+- updated_at: 2026-04-19
 
 ## 当前概况
 
-- 页面总数: 34
-- 来源总数: 38
-- 最近更新: 2026-04-18
-- 未解决冲突数: 0
-- 未解决缺口数: 0
-- 孤立页数: 0
-- 过时页数: 0
-- 待回写 outputs 数量: 0
+- raw_total: 38
+- summary_total: 38
+- summary_coverage: 38/38
+- gap_count: 25
+- conflict_count: 0
+- question_marker_count: 0
+- raw_without_summary: 0
+- questions_total: 10
+
+## 最近更新的 Raw
+
+- raw/business/permission/10_capability_map.md
+- raw/business/permission/11_task_scenarios.md
+- raw/business/permission/12_query_and_configuration_paths.md
+- raw/business/permission/13_route_map.md
+- raw/business/permission/15_page_carrier_semantics.md
+
+## 无 Summary 的 Raw
+
+- none
