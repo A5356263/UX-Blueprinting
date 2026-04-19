@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import re
+
+from .knowledge_loader import load_knowledge_notes
 from .schemas import (
     BaselineEntry,
     BusinessModel,
@@ -11,83 +14,287 @@ from .schemas import (
 )
 
 
+def _dedupe_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    results: list[str] = []
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", value).strip()
+        if not cleaned or cleaned in seen:
+            continue
+        seen.add(cleaned)
+        results.append(cleaned)
+    return results
+
+
+def _fact_ids(facts_model: FactsModel) -> list[str]:
+    entries = (
+        facts_model.actor_facts
+        + facts_model.object_facts
+        + facts_model.state_facts
+        + facts_model.action_facts
+        + facts_model.rule_facts
+        + facts_model.exception_facts
+        + facts_model.dependency_facts
+        + facts_model.scope_facts
+    )
+    return [item.fact_id for item in entries[:12]]
+
+
+def _derive_change_type(facts_model: FactsModel) -> str:
+    text = " ".join([facts_model.task_goal, facts_model.task_scenario] + [unit.text for unit in facts_model.evidence_units[:20]])
+    if any(token in text for token in ("新增", "建立", "创建", "引入")):
+        return "新增能力 / 引入新机制"
+    if any(token in text for token in ("重构", "改造", "升级")):
+        return "内部重构 / 生成机制升级"
+    if any(token in text for token in ("优化", "收敛", "调整")):
+        return "优化 / 收敛 / 调整"
+    return "当前输入驱动的能力调整"
+
+
+def _knowledge_overlap(facts_model: FactsModel, notes: list[object]) -> list[str]:
+    corpus = " ".join(
+        [facts_model.task_goal, facts_model.task_scenario]
+        + [actor.name for actor in facts_model.actors]
+        + [obj.name for obj in facts_model.objects]
+        + [unit.text for unit in facts_model.evidence_units[:25]]
+    )
+    hits: list[str] = []
+    for note in notes:
+        if note.title in corpus or any(signal and signal[:8] in corpus for signal in note.signals):
+            hits.append(f"{note.note_id} {note.title}")
+        elif note.kind in {"wiki", "business"}:
+            hits.append(f"{note.note_id} {note.title}")
+    return hits[:8]
+
+
+def _build_baselines(notes: list[object], facts_model: FactsModel) -> list[BaselineEntry]:
+    baselines: list[BaselineEntry] = []
+    for note in notes:
+        if note.kind not in {"wiki", "business", "knowledge", "raw"}:
+            continue
+        signal = note.signals[0] if note.signals else note.summary
+        baselines.append(
+            BaselineEntry(
+                baseline_id=f"BL-{len(baselines) + 1:02d}",
+                text=f"{note.title}：{signal}",
+                source_refs=[note.note_id, note.path],
+            )
+        )
+        if len(baselines) >= 5:
+            break
+    if facts_model.rules:
+        baselines.append(
+            BaselineEntry(
+                baseline_id=f"BL-{len(baselines) + 1:02d}",
+                text="当前任务至少存在规则、依赖或异常证据，业务判断必须把治理边界纳入主链路。",
+                source_refs=[facts_model.rules[0].source_ref],
+            )
+        )
+    if facts_model.states:
+        baselines.append(
+            BaselineEntry(
+                baseline_id=f"BL-{len(baselines) + 1:02d}",
+                text="当前任务不是静态说明，而是包含状态变化与结果反馈的动态链路。",
+                source_refs=[facts_model.states[0].source_ref],
+            )
+        )
+    return baselines[:6]
+
+
+def _build_dynamic_judgments(facts_model: FactsModel, baselines: list[BaselineEntry], knowledge_hits: list[str]) -> list[JudgmentEntry]:
+    judgments: list[JudgmentEntry] = []
+    if facts_model.task_goal:
+        judgments.append(
+            JudgmentEntry(
+                judgment_id=f"J-{len(judgments) + 1:02d}",
+                title="问题与意图是否足以支撑当前改造",
+                conclusion="成立" if len(facts_model.gaps) <= 3 else "部分成立",
+                evidence=f"task_goal={facts_model.task_goal}; facts={', '.join(_fact_ids(facts_model)[:4])}",
+                comparison="若问题与意图不清晰，生成会继续退回到固定模板或固定话术。",
+                gap=facts_model.gaps[0] if facts_model.gaps else "当前意图层证据基本可用。",
+            )
+        )
+    if baselines:
+        judgments.append(
+            JudgmentEntry(
+                judgment_id=f"J-{len(judgments) + 1:02d}",
+                title="当前输入与命中知识是否形成稳定基线",
+                conclusion="较稳定" if knowledge_hits else "偏弱",
+                evidence=f"knowledge={'; '.join(knowledge_hits[:3]) or '无稳定命中'}",
+                comparison="没有知识基线时，业务判断只能停留在输入表层，难以形成领域立场。",
+                gap=facts_model.gaps[0] if facts_model.gaps else "知识基线可参与当前判断。",
+            )
+        )
+    if facts_model.rules or facts_model.dependencies:
+        judgments.append(
+            JudgmentEntry(
+                judgment_id=f"J-{len(judgments) + 1:02d}",
+                title="治理与依赖是否已经进入判断链",
+                conclusion="是" if facts_model.rules and facts_model.dependencies else "部分进入",
+                evidence=f"rules={len(facts_model.rules)}; dependencies={len(facts_model.dependencies)}; exceptions={len(facts_model.exceptions)}",
+                comparison="若只描述结果、不承接规则与依赖，后续体验层会失去边界依据。",
+                gap="缺少依赖或异常证据时，需要把不确定性保留到 gaps 中。",
+            )
+        )
+    if facts_model.states or facts_model.exceptions:
+        judgments.append(
+            JudgmentEntry(
+                judgment_id=f"J-{len(judgments) + 1:02d}",
+                title="状态、结果与异常是否形成闭环",
+                conclusion="形成闭环" if facts_model.states and facts_model.exceptions else "闭环偏弱",
+                evidence=f"states={len(facts_model.states)}; exceptions={len(facts_model.exceptions)}",
+                comparison="如果没有状态与异常闭环，experience 只能产出静态页面，而不是任务闭环。",
+                gap=facts_model.gaps[1] if len(facts_model.gaps) > 1 else "状态与异常仍需随真实输入继续细化。",
+            )
+        )
+    if facts_model.gaps:
+        judgments.append(
+            JudgmentEntry(
+                judgment_id=f"J-{len(judgments) + 1:02d}",
+                title="信息充分性是否足够下最终立场",
+                conclusion="可下保守立场" if len(facts_model.gaps) <= 2 else "需要保守收敛",
+                evidence=f"gaps={'; '.join(facts_model.gaps[:2])}",
+                comparison="信息不足时允许结论更保守，但不能回退到旧模板结论。",
+                gap=facts_model.gaps[0],
+            )
+        )
+    return judgments
+
+
+def _score_options(facts_model: FactsModel, change_type: str) -> list[PlacementOption]:
+    candidate_specs = [
+        ("独立生成能力", "适合对象、规则、状态和输出链路都需要单独建模时", "边界清晰，便于持续迭代", "模块数量与建模成本会上升"),
+        ("并入既有生成链路", "适合当前变化更像既有链路增强而不是新能力时", "主链不分裂，使用成本更低", "容易再次被既有模板结构吞没"),
+        ("收敛为规则 / 配置层", "适合动作较少、规则较多、更多是边界治理时", "可以降低页面和链路复杂度", "表达力可能不足，体验层承载空间变小"),
+        ("暂不下最终立场", "适合 gaps 较多、知识命中较弱时", "避免过度结论化", "短期无法给出强推进结论"),
+    ]
+    scores = {spec[0]: 0 for spec in candidate_specs}
+    if "新增" in change_type:
+        scores["独立生成能力"] += 2
+    if "重构" in change_type or "升级" in change_type:
+        scores["并入既有生成链路"] += 2
+    if len(facts_model.objects) >= 3 or len(facts_model.flows) >= 2:
+        scores["独立生成能力"] += 2
+    if len(facts_model.rules) >= len(facts_model.action_facts) and len(facts_model.action_facts) <= 2:
+        scores["收敛为规则 / 配置层"] += 2
+    if len(facts_model.gaps) >= 3:
+        scores["暂不下最终立场"] += 3
+    if not facts_model.action_facts:
+        scores["暂不下最终立场"] += 2
+        scores["收敛为规则 / 配置层"] += 1
+    scores["并入既有生成链路"] += 1
+
+    ranked = sorted(candidate_specs, key=lambda item: scores[item[0]], reverse=True)
+    options: list[PlacementOption] = []
+    best_name = ranked[0][0]
+    for index, (name, fit_condition, benefit, tradeoff) in enumerate(ranked[:4], start=1):
+        options.append(
+            PlacementOption(
+                option_id=f"OPT-{index:02d}",
+                option=name,
+                conclusion="当前最优" if name == best_name else "可对照方案",
+                fit_condition=fit_condition,
+                benefit=benefit,
+                tradeoff=tradeoff,
+                why_not_final="当前证据更支持其它路径。" if name != best_name else "当前输入、知识基线和闭环结构都更支持这个方案。",
+            )
+        )
+    return options
+
+
+def _final_position_from_options(options: list[PlacementOption], facts_model: FactsModel) -> tuple[str, list[str]]:
+    best = options[0]
+    if best.option == "暂不下最终立场":
+        return (
+            "事实不足，当前只适合输出保守判断，不适合写死强立场。",
+            [
+                "当前 gaps 较多，强行给出肯定结论只会把旧模板答案换个位置继续输出。",
+                "在信息进一步补足前，应保持问题、风险和约束对后续阶段可见。",
+            ],
+        )
+    return (
+        f"当前更适合定位为“{best.option}”。",
+        [
+            f"当前 change_type 更接近：{_derive_change_type(facts_model)}。",
+            f"现有对象数={len(facts_model.objects)}、流程数={len(facts_model.flows)}、规则数={len(facts_model.rules)}，说明它不是单纯说明文案问题。",
+            "命中知识已经参与基线建立与路径比较，因此结论不再只是固定 judgment 的复写。",
+        ],
+    )
+
+
 def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessModel:
-    logic_checks = [
-        JudgmentEntry("J-03", "责任归属", "一致", "F-01、F-13、BL-04", "若把生成逻辑塞进 gate，会混淆生成与检查职责。", "命令边界仍需持续维护。"),
-        JudgmentEntry("J-04", "授权逻辑", "一致", "F-08、F-09、BL-05", "若允许跨项目复制，会破坏当前项目独立性。", "provenance 细化字段可后续扩展。"),
-        JudgmentEntry("J-05", "审批 / 生效逻辑", "一致", "F-06、F-10、F-13", "若无结果回写与追踪，能力无法稳定交付。", "外部依赖细节仍待补足。"),
-        JudgmentEntry("J-06", "范围与边界", "一致", "F-15、F-16、BL-06", "若把 preview 写成正式产物，会破坏主链路边界。", "preview 展示细节可后续演进。"),
+    notes = load_knowledge_notes(project_id, stage="business") or facts_model.knowledge_notes
+    fact_links = _fact_ids(facts_model)
+    knowledge_hits = _knowledge_overlap(facts_model, notes)
+    baselines = _build_baselines(notes, facts_model)
+    judgments = _build_dynamic_judgments(facts_model, baselines, knowledge_hits)
+    placement_options = _score_options(facts_model, _derive_change_type(facts_model))
+    final_position, final_position_reason = _final_position_from_options(placement_options, facts_model)
+
+    adopted_rules = [f"{rule.rule_id}: {rule.name} -> {rule.result}" for rule in facts_model.rules[:4]]
+    adopted_dependencies = [f"{dep.dependency_id}: {dep.name} -> {dep.role}" for dep in facts_model.dependencies[:4]]
+    risks: list[RiskEntry] = []
+    for gap in facts_model.gaps[:3]:
+        risks.append(
+            RiskEntry(
+                risk_id=f"RSK-{len(risks) + 1:02d}",
+                name="信息缺口会让业务结论失稳",
+                manifestation=gap,
+                consequence="如果继续写死固定立场，输出会再次退化成模板答案。",
+                level="高" if len(facts_model.gaps) >= 3 else "中",
+                mitigation="保留 gap，并让最终立场与体验约束一起显式降级。",
+            )
+        )
+    for exception in facts_model.exceptions[:2]:
+        risks.append(
+            RiskEntry(
+                risk_id=f"RSK-{len(risks) + 1:02d}",
+                name="异常或阻断未被业务层接住",
+                manifestation=exception.outcome,
+                consequence="experience 会不知道该把风险落到哪里。",
+                level="中",
+                mitigation="把异常从 facts 显式带进 business judgment 与后续体验约束。",
+            )
+        )
+
+    experience_constraints = [
+        "体验层必须承接当前最终立场，而不是重新发明业务答案。",
+        "页面与流程要围绕当前事实中的真实闭环、真实状态与真实异常展开。",
+        "命中知识如何影响了承载方式、优先级与解释责任，需要在体验层继续可见。",
     ]
-    strategy_checks = [
-        JudgmentEntry("J-07", "集中治理 / 分级治理关系", "一致", "F-09、F-13、BL-05", "若放宽治理口径，后续会放大规则冲突。", "治理口径仍需结合真实项目继续校准。"),
-        JudgmentEntry("J-08", "风险控制", "一致", "F-10、F-11、BL-02", "若只保留模板壳，不引入推理链，则难以识别风险。", "风险等级仍需结合真实需求再调优。"),
-        JudgmentEntry("J-09", "审计闭环 / 责任清晰度", "一致", "F-06、F-14、BL-06", "若沿用样例产物或硬编码段落，后续追踪会失真。", "追踪字段还可继续细化。"),
-    ]
-    value_cost_assessment = [
-        JudgmentEntry("VC-01", "业务价值", "高", "F-15、J-01", "不改造将继续把结构化生成和模板填充混在一起。", "需要更多真实案例验证收益曲线。"),
-        JudgmentEntry("VC-02", "管理价值", "高", "F-16、J-03", "推理层和渲染层分离后，合同回归更容易做。", "维护者需要理解新的模块边界。"),
-        JudgmentEntry("VC-03", "培训 / 理解成本", "中", "J-02、BL-03", "相比单文件模板器，新增子模块会带来学习成本。", "需要文档继续跟进。"),
-        JudgmentEntry("VC-04", "操作 / 维护成本", "中", "J-05、J-08", "多一层模型定义，但换来更清晰的调试和扩展面。", "reasoner 规则需要持续维护。"),
-        JudgmentEntry("VC-05", "认知负担变化", "略增可控", "J-03、J-09", "内部复杂度提升，但对外输出更加稳定。", "需要保持 renderer 不要重新变成硬模板。"),
-    ]
-    placement_options = [
-        PlacementOption("OPT-01", "维持旧模板填空式生成", "不推荐", "仅在追求最低改造成本时成立", "改动小", "继续把推理和文稿耦在一起", "无法满足文档要求的推理链显式化"),
-        PlacementOption("OPT-02", "引入推理模型 + renderer", "推荐", "需要保持外部命令与合同不变", "内部可推理、外部可兼容", "需要新增模块与维护模型", "这是当前最终立场"),
-        PlacementOption("OPT-03", "把推理逻辑塞进 validate 或 gate", "不推荐", "仅在忽略职责边界时成立", "表面上减少模块数", "生成与检查职责混乱", "违背主线边界"),
-    ]
-    risks = [
-        RiskEntry("RSK-01", "推理层再次退化成模板拼接", "reasoner 只换文件位置，不做模型推理", "内部结构仍不可扩展", "中", "保持 facts/business/experience model 为独立中间层"),
-        RiskEntry("RSK-02", "输出结构偏离合同", "renderer 只追求自由表达，丢掉必需标题", "gate 与 validate 回归失败", "中", "保留合同要求的章节和编号"),
-        RiskEntry("AP-01", "把体验便利建立在业务失真之上", "experience 直接越权改写业务结论", "体验方案和业务判断脱节", "高", "experience 只消费 business stance，不重写业务立场"),
-    ]
-    final_position = "合理，建议成立，并采用“推理模型 + 渲染器”替代原有模板填空式内部实现。"
-    final_position_reason = [
-        "reasoning 与 rendering 解耦后，facts、business、experience 三层的职责边界更清晰。",
-        "对外仍保留现有文件名、章节结构与 provenance 机制，不打断主链路。",
-        "业务判断能够显式回链到事实和基线，而不是被埋进固定模板措辞。",
-        "体验层将基于任务流、页面、状态与文案职责继续展开，而不是照搬页面骨架。",
-    ]
-    adopted_rules = ["BR-01: 继续继承关键规则 R-01，体验层必须解释可执行性与阻断原因。", "BR-02: 继续继承结果解释规则 R-02，不能只输出黑盒结果。"]
-    adopted_dependencies = ["BD-01: 外部审批 / 协作链路仍是能力成立前提。", "BD-02: 帮助说明与结果解释机制仍是体验层必需依赖。"]
-    trace_links = [
-        BusinessTraceEntry("J-01", "合理性判断", "合理", "F-01 / F-07 / F-13", "BL-01 / BL-02", "OPT-01", "GAP-01"),
-        BusinessTraceEntry("J-03", "底层逻辑一致性判断", "一致", "F-08 / F-09 / F-16", "BL-04 / BL-06", "OPT-03", "GAP-02"),
-        BusinessTraceEntry("POS-01", "能力归位判断", "应以 generation 内部推理化改造成立", "F-15 / F-16", "BL-03 / BL-06", "OPT-01 / OPT-03", "GAP-01"),
-    ]
+    trace_links: list[BusinessTraceEntry] = []
+    for judgment in judgments:
+        trace_links.append(
+            BusinessTraceEntry(
+                judgment_id=judgment.judgment_id,
+                section=judgment.title,
+                conclusion=judgment.conclusion,
+                facts_basis=", ".join(fact_links[:4]),
+                baseline_basis=", ".join(item.baseline_id for item in baselines[:3]),
+                comparison=", ".join(item.option_id for item in placement_options[:2]),
+                remaining_gap=judgment.gap,
+            )
+        )
+
     return BusinessModel(
         project_id=project_id,
-        review_target="当前项目 generation 阶段的正式生成机制，从模板填空式改为推理式内部实现。",
-        review_boundary="本次只评审生成内部结构、业务合理性和能力归位，不评审 UI 实现与研发技术方案。",
-        review_goal="形成可供体验层承接的稳定业务立场，并确认该改造是否应成立。",
-        fact_links=["F-01", "F-05", "F-09", "F-11", "F-13", "R-01", "R-02", "EX-01", "EX-02", "GAP-01"],
+        review_target="当前任务要求生成的业务能力与其生成机制，不预设固定结论。",
+        review_boundary="本次只评审当前输入能否支撑稳定的业务立场，以及知识如何影响这个立场。",
+        review_goal="先判断，再生成，让 business blueprint 成为当前任务的动态结论，而不是兼容旧模板的载体。",
+        fact_links=fact_links,
+        knowledge_hits=knowledge_hits,
+        problem_statement=facts_model.task_scenario,
         change_intent=facts_model.task_goal,
-        change_type="正式生成能力内部重构，保持外部命令、合同结构与落盘路径不变。",
-        trigger="现有 generation 把提取、判断、文稿输出混在一个大模板渲染器中，无法满足推理式生成要求。",
-        baselines=[
-            BaselineEntry("BL-01", "生成层必须服务核心业务目标，而不是只做表面模板填充。"),
-            BaselineEntry("BL-02", "治理约束、结果反馈和责任边界必须稳定且可解释。"),
-            BaselineEntry("BL-03", "当前能力本质上属于‘结构化提取 + 业务判断 + 体验翻译’的组合能力。"),
-            BaselineEntry("BL-04", "事实、判断、体验翻译三层应分工明确，不能相互替代。"),
-            BaselineEntry("BL-05", "允许分层执行，但不能削弱集中治理与结果可追踪性。"),
-            BaselineEntry("BL-06", "禁止用样例正式产物、固定话术或临时模板替代当前项目真实推理结果。"),
-        ],
-        judgments=[
-            JudgmentEntry("J-01", "是否服务核心目标", "合理", "F-01、F-07、F-13、BL-01", "若只保留 assemble + gate，将无法独立生成正式产物。", "依赖能力的最终细化口径仍待补充。"),
-            JudgmentEntry("J-02", "是否只是表面性补功能", "不是", "F-09、F-14、BL-02、BL-06", "若只补样式、只补 preview 或只补校验，无法解决来源与闭环问题。", "后续仍需持续校验生成质量。"),
-        ],
-        logic_checks=logic_checks,
-        strategy_checks=strategy_checks,
+        change_type=_derive_change_type(facts_model),
+        trigger="当前系统已经有推理骨架，但仍需把固定 judgment、固定立场和固定路径改成动态推导。",
+        baselines=baselines,
+        judgments=judgments,
         placement_options=placement_options,
         final_position=final_position,
         final_position_reason=final_position_reason,
-        experience_constraints=[
-            "体验层必须承接最终业务立场，不得越权重写业务结论。",
-            "页面、流程与文案需要显式解释规则命中、状态变化和阻断原因。",
-            "体验蓝图应围绕任务流、页面、状态和阅读顺序展开，而不是复用固定页面骨架。",
-        ],
+        experience_constraints=experience_constraints,
         adopted_rules=adopted_rules,
         adopted_dependencies=adopted_dependencies,
-        value_cost_assessment=value_cost_assessment,
         risks=risks,
         open_questions=facts_model.open_questions[:],
         gaps=facts_model.gaps[:],

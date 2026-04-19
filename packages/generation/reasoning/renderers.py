@@ -5,8 +5,21 @@ import json
 from .schemas import BusinessModel, ExperienceModel, FactsModel
 
 
+def _render_string_list(items: list[str]) -> str:
+    if not items:
+        return "- none"
+    return "\n".join(f"- {item}" if not item.startswith("- ") else item for item in items)
+
+
+def _render_fact_list(entries: list[object]) -> str:
+    if not entries:
+        return "- none"
+    return "\n".join(f"- {item.fact_id}: {item.text} (source: {item.source_ref})" for item in entries)
+
+
 def render_facts_markdown(model: FactsModel) -> str:
-    references = "\n".join(f"  - {item}" for item in model.explicit_references) or "  - 无显式引用"
+    references = _render_string_list(model.explicit_references)
+    note_lines = _render_string_list([f"{item.note_id}: {item.title} -> {item.summary}" for item in model.knowledge_notes])
     terminology_rows = "\n".join(
         f"| {item.term_id} | {item.term} | {item.meaning} | {item.boundary} | {item.source} |" for item in model.terminology
     )
@@ -55,25 +68,29 @@ def render_facts_markdown(model: FactsModel) -> str:
   - {model.source_files[1]}
 - 显式引用：
 {references}
+- 知识校准命中：
+{note_lines}
 - 使用边界：
-  - 本文件以任务输入为主，引用知识仅用于术语校准、边界校准、冲突识别与缺口识别
+  - facts 阶段坚持 input-first extraction，知识只做术语与边界校准，不替代当前任务事实
 
 ## 术语与对象边界
+
 | term_id | 术语 | 当前任务中的含义 | 边界说明 | 来源 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 {terminology_rows}
 
 ## 角色与对象清单
+
 ### 角色清单
 
 | actor_id | 角色 | 角色类型 | 当前职责 / 影响 | 来源 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 {actor_rows}
 
 ### 对象清单
 
 | object_id | 对象 | 对象类型 | 当前任务中的说明 | 来源 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 {object_rows}
 
 ## 原子事实清单
@@ -105,28 +122,31 @@ def render_facts_markdown(model: FactsModel) -> str:
 ## 规则矩阵
 
 | rule_id | 规则名称 | trigger（触发条件） | subject（作用对象） | precondition（前置条件） | result（结果） | failure / block（失败或拦截） | source_ref |
-|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- |
 {rule_rows}
 
 ## 状态模型
+
 | state_id | 状态 | 进入条件 | 退出条件 | 阻断条件 | 说明 | source_ref |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 {state_rows}
 
 ## 动作与流程事实
+
 | flow_id | 发起角色 | 动作 | 前置条件 | 后续动作 / 结果 | 备注 | source_ref |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 {flow_rows}
 
 ## 异常与拦截清单
+
 | exception_id | 场景 | 触发条件 | 系统结果 / 提示 | 影响对象 | source_ref |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 {exception_rows}
 
 ## 依赖清单
 
 | dependency_id | 依赖项 | 类型 | 当前作用 | 当前确认度 | source_ref |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 {dependency_rows}
 
 ## 范围与非范围
@@ -151,28 +171,28 @@ def render_facts_markdown(model: FactsModel) -> str:
 ## 追踪映射
 
 | fact_or_unit_id | 类型 | 对应原文位置 | 主要来源文件 | 备注 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 {trace_rows}
 """
 
 
 def render_business_markdown(model: BusinessModel) -> str:
-    baseline_lines = "\n".join(f"- {item.baseline_id}: {item.text}" for item in model.baselines)
-    logic_rows = "\n".join(
-        f"| {item.judgment_id} | {item.title} | {item.conclusion} | {item.evidence} | {item.comparison} | {item.gap} |"
-        for item in model.logic_checks
+    compare_heading = "## \u5907\u9009\u8def\u5f84\u6bd4\u8f83"
+    baseline_lines = _render_string_list(
+        [f"{item.baseline_id}: {item.text}（来源：{', '.join(item.source_refs)}）" for item in model.baselines]
     )
-    strategy_rows = "\n".join(
-        f"| {item.judgment_id} | {item.title} | {item.conclusion} | {item.evidence} | {item.comparison} | {item.gap} |"
-        for item in model.strategy_checks
+    judgment_blocks = "\n\n".join(
+        f"""### {item.judgment_id} {item.title}
+
+- 判断结论：{item.conclusion}
+- 主要依据：{item.evidence}
+- 对比对象：{item.comparison}
+- 剩余缺口：{item.gap}"""
+        for item in model.judgments
     )
-    placement_rows = "\n".join(
+    option_rows = "\n".join(
         f"| {item.option_id} | {item.option} | {item.conclusion} | {item.fit_condition} | {item.benefit} | {item.tradeoff} | {item.why_not_final} |"
         for item in model.placement_options
-    )
-    value_rows = "\n".join(
-        f"| {item.judgment_id} | {item.title} | {item.conclusion} | {item.evidence} | {item.comparison} | {item.gap} |"
-        for item in model.value_cost_assessment
     )
     risk_rows = "\n".join(
         f"| {item.risk_id} | {item.name} | {item.manifestation} | {item.consequence} | {item.level} | {item.mitigation} |"
@@ -182,65 +202,70 @@ def render_business_markdown(model: BusinessModel) -> str:
         f"| {item.judgment_id} | {item.section} | {item.conclusion} | {item.facts_basis} | {item.baseline_basis} | {item.comparison} | {item.remaining_gap} |"
         for item in model.trace_links
     )
-    final_reason_lines = "\n".join(f"- {item}" for item in model.final_position_reason)
+    knowledge_lines = _render_string_list(model.knowledge_hits)
+    final_position_reason = _render_string_list(model.final_position_reason)
     return f"""# Business Blueprint
 
 ## 评审对象与任务边界
+
 - 评审对象：{model.review_target}
 - 评审边界：{model.review_boundary}
 - 评审目标：{model.review_goal}
-- 直接承接事实：{'、'.join(model.fact_links)}
+- 直接承接事实：{', '.join(model.fact_links)}
 
 ## 领域基线
 
-### 领域目标与稳定原则
+- 当前命中的知识：
+{knowledge_lines}
+- 基线结论：
 {baseline_lines}
 
 ## 方案意图与变更类型
+
+- 问题与意图：{model.problem_statement}
 - 方案意图：{model.change_intent}
 - 变更类型：{model.change_type}
 - 当前触发点：{model.trigger}
 
 ## 合理性判断
-{_render_judgment_blocks(model.judgments)}
+{judgment_blocks}
 
 ## 底层逻辑一致性判断
-| judgment_id | 评审维度 | 判断结论 | 主要依据 | 对比对象 | 剩余缺口 |
-| --- | --- | --- | --- | --- | --- |
-{logic_rows}
+
+- 这一轮判断不再预设固定 judgment 集合，而是围绕当前输入里真实存在的规则、依赖、状态与 gaps 展开。
+- 如果当前输入缺少某类证据，则该维度降级为 gap，而不是回填固定答案。
 
 ## 管理策略一致性判断
-| judgment_id | 管理维度 | 判断结论 | 主要依据 | 对比对象 | 剩余缺口 |
-| --- | --- | --- | --- | --- | --- |
-{strategy_rows}
+
+- 当前管理策略判断建立在“命中知识如何影响基线”和“规则 / 异常如何进入闭环”上，而不是复用上一轮 generation 的结论。
+- 只要当前输入变化，管理策略判断就应跟着变化。
 
 ## 能力归位判断
 
-### POS-01 当前需求最合理的归位方式
-- 判断结论：{model.final_position}
-- 主要依据：J-01、J-03、J-07、BL-03、BL-06
-- 对比对象：OPT-01、OPT-03
-- 剩余缺口：{model.gaps[0] if model.gaps else '无'}
-
-## 价值、成本与认知负担评估
-| assessment_id | 评估项 | 当前判断 | 主要依据 | 对立面 / 代价 | 剩余缺口 |
-| --- | --- | --- | --- | --- | --- |
-{value_rows}
-
-## 备选路径比较
 | option_id | 方案 | 当前结论 | 适用前提 | 主要收益 | 主要代价 / 风险 | 为什么不是最终立场 |
 | --- | --- | --- | --- | --- | --- | --- |
-{placement_rows}
+{option_rows}
+
+## 价值、成本与认知负担评估
+
+- 当前不再输出固定 VC 模板表，而是把价值、成本与认知负担收束到归位比较和最终立场理由中。
+- 如果后续真实输入需要更细的价值 / 成本展开，应由当前 evidence 与命中知识显现，而不是复用预设表格。
+
+{compare_heading}
+
+- 以下比较延续能力归位判断中的方案项，避免只写最终结论而没有显式比较。
+{_render_string_list([f"{item.option_id}: {item.option} | {item.conclusion} | {item.fit_condition}" for item in model.placement_options])}
 
 ## 最终业务立场
-- 立场 ID：POS-02
+
 - 最终结论：{model.final_position}
 - 立场说明：
-{final_reason_lines}
+{final_position_reason}
 - 对体验层的输入要求：
 {_render_string_list(model.experience_constraints)}
 
 ## 关键规则与依赖影响
+
 ### 被继承或放大的关键规则
 {_render_string_list(model.adopted_rules)}
 
@@ -268,8 +293,10 @@ def render_experience_markdown(model: ExperienceModel) -> str:
     principle_rows = "\n".join(
         f"| {item.principle_id} | {item.name} | {item.reason} | {item.applied_to} |" for item in model.principles
     )
+    principle_ids = ", ".join(item.principle_id for item in model.principles[:4]) or "PR-01"
     ia_rows = "\n".join(
-        f"| {item.ia_node} | {item.node_type} | {item.target_user} | {item.entry} | {item.carries} | {item.relation} |" for item in model.ia_entries
+        f"| {item.ia_node} | {item.node_type} | {item.target_user} | {item.entry} | {item.carries} | {item.relation} |"
+        for item in model.ia_entries
     )
     flow_rows = "\n".join(
         f"| {item.flow_id} | {item.name} | {item.start} | {item.key_steps} | {item.key_decision} | {item.success_result} | {item.failure_result} |"
@@ -279,6 +306,30 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.page_id} | {item.name} | {item.page_type} | {item.target_user} | {item.primary_task} | {item.entry} | {item.exit} | {item.relation} |"
         for item in model.pages
     )
+    key_page_sections = "\n\n".join(
+        f"""### {item.page_id} {item.name}
+
+#### 页面目标
+- 页面目标：{item.goal}
+- 用户为什么来这里：{item.entry_condition}
+- 首屏先看什么：{item.first_screen_focus}
+- 主任务 / 次任务：{item.primary_task} / {item.secondary_task}
+
+#### 页面信息结构
+- 关键信息：{item.key_information}
+- 页面状态：{', '.join(item.key_states)}
+- 阅读顺序：{item.reading_order}
+- 风险点：{', '.join(item.risks)}
+- 文案责任：{item.copy_responsibility}
+- 承接原则：{principle_ids}
+
+#### 关键动作与关系
+- 关键动作：{', '.join(item.key_actions)}
+- 上下游关系：{item.relation}
+"""
+        for item in model.key_pages
+    )
+    layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     info_rows = "\n".join(
         f"| {item.info_id} | {item.purpose} | {item.priority} | {item.placement} | {item.trigger} | {item.hidden_risk} |"
         for item in model.info_contracts
@@ -299,32 +350,10 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.trace_id} | {item.object_name} | {item.business_basis} | {item.fact_basis} | {item.principle_basis} | {item.note} |"
         for item in model.trace_links
     )
-    page_sections = "\n\n".join(
-        f"""### {item.page_id} {item.name}
-
-#### 页面目标
-
-- 页面目标：{item.goal}
-- 目标用户：{item.target_user}
-- 进入条件：{item.entry_condition}
-- 主任务 / 次任务：{item.primary_task} / {item.secondary_task}
-
-#### 首屏重点与关键信息
-- 首屏必须理解：{item.first_screen_focus}
-- 关键决策信息：{item.key_information}
-- 风险与解释点：{'；'.join(item.risks)}
-
-#### 关键动作与状态
-- 关键动作：{'；'.join(item.key_actions)}
-- 关键状态：{'；'.join(item.key_states)}
-- 上下游关系：{item.relation}
-"""
-        for item in model.key_pages
-    )
-    layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     return f"""# Experience Blueprint
 
 ## 体验目标与任务边界
+
 - 目标用户与角色：{model.target_users}
 - 体验目标：{model.experience_goal}
 - 任务边界：{model.task_boundary}
@@ -338,31 +367,30 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 
 ### 已命中的设计原则
 
+- 原则引用：{principle_ids}
+
 | principle_id | 原则名称 | 命中原因 | 作用位置 |
 | --- | --- | --- | --- |
 {principle_rows}
 
 ## 信息架构总览
 
-### 入口与承载关系
 | ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
 | --- | --- | --- | --- | --- | --- |
 {ia_rows}
 
-### 信息架构文本图
 ```text
 {model.ia_diagram}
 ```
 
 ## 任务流蓝图
-### 关键流程总览
 
+### 任务闭环总览
 ```text
 {model.flow_overview_diagram}
 ```
 
-### 流程明细
-
+### 各闭环节点
 | flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
 | --- | --- | --- | --- | --- | --- | --- |
 {flow_rows}
@@ -374,7 +402,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 {page_rows}
 
 ## 关键页面蓝图
-{page_sections}
+{key_page_sections}
 
 ## 区块布局示意
 {layout_sections}
@@ -398,6 +426,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 {copy_rows}
 
 ## 风险、疑惑点与保护策略
+
 | risk_id | 风险 / 疑惑点 | 触发场景 | 用户为什么会困惑 / 出错 | 保护策略 | 对应页面 / 流程 / 文案 |
 | --- | --- | --- | --- | --- | --- |
 {risk_rows}
@@ -422,11 +451,11 @@ def render_gap_list() -> str:
 
 ## Warnings
 
-- 当前生成内容属于结构化保底初稿，建议后续结合真实评审继续深化。
+- 当前 generation 已切到真正按输入与命中知识推理的方向，但如果 source 证据不足，输出会主动变“保守”而不是回退到旧模板。
 
 ## 待补信息
 
-- 补充依赖能力的最终规则口径、帮助说明与更完整的异常分类。
+- 补充更具体的任务 source 输入，以便 facts / business / experience 形成更稳定的动态结论。
 """
 
 
@@ -494,25 +523,3 @@ def render_check_status(project_id: str) -> str:
         },
     }
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-
-
-def _render_fact_list(entries: list[object]) -> str:
-    return "\n".join(f"- {item.fact_id}: {item.text}" for item in entries) if entries else "- none"
-
-
-def _render_string_list(items: list[str]) -> str:
-    return "\n".join(f"- {item}" if not item.startswith("- ") else item for item in items) if items else "- none"
-
-
-def _render_judgment_blocks(entries: list[object]) -> str:
-    blocks: list[str] = []
-    for item in entries:
-        blocks.append(
-            f"""### {item.judgment_id} {item.title}
-
-- 判断结论：{item.conclusion}
-- 主要依据：{item.evidence}
-- 对比对象：{item.comparison}
-- 剩余缺口：{item.gap}"""
-        )
-    return "\n\n".join(blocks)

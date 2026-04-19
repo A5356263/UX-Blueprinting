@@ -4,6 +4,28 @@ from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
+class KnowledgeNote:
+    note_id: str
+    path: str
+    kind: str
+    title: str
+    summary: str
+    signals: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class EvidenceUnit:
+    evidence_id: str
+    text: str
+    source_file: str
+    heading: str
+    line_no: int
+    categories: list[str] = field(default_factory=list)
+    actor_candidates: list[str] = field(default_factory=list)
+    object_candidates: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
 class TerminologyEntry:
     term_id: str
     term: str
@@ -34,6 +56,7 @@ class ObjectEntry:
 class FactEntry:
     fact_id: str
     text: str
+    source_ref: str
 
 
 @dataclass(slots=True)
@@ -104,9 +127,12 @@ class FactsModel:
     project_id: str
     task_goal: str
     task_boundary: str
+    task_scenario: str
     output_purpose: str
     source_files: list[str]
     explicit_references: list[str]
+    evidence_units: list[EvidenceUnit] = field(default_factory=list)
+    knowledge_notes: list[KnowledgeNote] = field(default_factory=list)
     terminology: list[TerminologyEntry] = field(default_factory=list)
     actors: list[ActorEntry] = field(default_factory=list)
     objects: list[ObjectEntry] = field(default_factory=list)
@@ -132,6 +158,13 @@ class FactsModel:
 
 
 @dataclass(slots=True)
+class BaselineEntry:
+    baseline_id: str
+    text: str
+    source_refs: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
 class JudgmentEntry:
     judgment_id: str
     title: str
@@ -139,12 +172,6 @@ class JudgmentEntry:
     evidence: str
     comparison: str
     gap: str
-
-
-@dataclass(slots=True)
-class BaselineEntry:
-    baseline_id: str
-    text: str
 
 
 @dataclass(slots=True)
@@ -186,20 +213,19 @@ class BusinessModel:
     review_boundary: str
     review_goal: str
     fact_links: list[str]
-    change_intent: str
-    change_type: str
-    trigger: str
+    knowledge_hits: list[str] = field(default_factory=list)
+    problem_statement: str = ""
+    change_intent: str = ""
+    change_type: str = ""
+    trigger: str = ""
     baselines: list[BaselineEntry] = field(default_factory=list)
     judgments: list[JudgmentEntry] = field(default_factory=list)
-    logic_checks: list[JudgmentEntry] = field(default_factory=list)
-    strategy_checks: list[JudgmentEntry] = field(default_factory=list)
     placement_options: list[PlacementOption] = field(default_factory=list)
     final_position: str = ""
     final_position_reason: list[str] = field(default_factory=list)
     experience_constraints: list[str] = field(default_factory=list)
     adopted_rules: list[str] = field(default_factory=list)
     adopted_dependencies: list[str] = field(default_factory=list)
-    value_cost_assessment: list[JudgmentEntry] = field(default_factory=list)
     risks: list[RiskEntry] = field(default_factory=list)
     open_questions: list[str] = field(default_factory=list)
     gaps: list[str] = field(default_factory=list)
@@ -258,9 +284,11 @@ class PageBlueprint:
     secondary_task: str
     first_screen_focus: str
     key_information: str
+    reading_order: str
     key_actions: list[str]
     key_states: list[str]
     risks: list[str]
+    copy_responsibility: str
     relation: str
     layout_diagram: str
 
