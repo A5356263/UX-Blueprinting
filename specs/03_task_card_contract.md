@@ -1,16 +1,16 @@
-# Task Card 合同
+# Task Card Contract
 
-## 目标
+## Goal
 
-定义 `projects/<project-id>/source/task_card.md` 的正式协议字段、路径约束与解析结果。
+Define the required structure, path rules, and parse result for `projects/<project-id>/source/task_card.md`.
 
-## 定位
+## Positioning
 
-`task_card.md` 是执行中枢的正式入口协议文件，不是业务判断正文。
+`task_card.md` is the formal execution entry contract. It describes task scope, explicit references, and delivery targets. It is not the place to replace business judgment or wiki source content.
 
-## 必填段落
+## Required Sections
 
-以下一级段落必须存在且可解析：
+The following level-2 sections must exist and must be machine-parseable:
 
 - `## Protocol`
 - `## Task Goal`
@@ -21,50 +21,71 @@
 - `## Checks`
 - `## Result Locations`
 - `## Completion Criteria`
+- `## Facts Output Requirements`
+- `## Business Output Requirements`
+- `## Experience Output Requirements`
 
-以下段落为推荐但可选：
+The following sections are recommended but optional:
 
 - `## Task Scenario`
 - `## Read Order`
 - `## Knowledge`
 - `## Wiki`
+- `## Knowledge Consumption Policy`
 - `## Platform Optimizations`
 - `## Notes`
 
-## Protocol 字段
+## Protocol Fields
 
-在 `## Protocol` 中，至少必须包含：
+`## Protocol` must include:
 
 - `Protocol Name`
 - `Protocol Version`
 - `Task ID`
 
-如存在以下字段，应一并解析：
+It may additionally include:
 
 - `Task Name`
 - `Domain`
 
-## 路径规则
+## Path Rules
 
-- 所有路径必须使用仓库相对路径
-- 不允许使用绝对路径
-- 不允许使用 URL 替代仓库文件路径
-- `Required Outputs` 必须全部位于 `projects/<project-id>/workspace/`
-- `Result Locations` 必须显式给出 `workspace` 与 `exports` 查看位置
+- All paths must use repository-relative paths.
+- Absolute paths are not allowed.
+- URLs are not allowed in place of repository files.
+- Every `Required Outputs` entry must stay under `projects/<project-id>/workspace/`.
+- `Result Locations` must explicitly include both `workspace` viewing locations and final export locations.
 
-## 知识引用规则
+## Knowledge Reference Rules
 
-- `Knowledge`、`Wiki`、`Templates`、`Checks` 中的路径必须可逐条提取
-- 当存在稳定 Wiki 入口时，优先显式引用 Wiki
-- `Platform Optimizations` 只作为增强层信息，不得替代主线输入输出合同
+- `Knowledge`, `Wiki`, `Templates`, and `Checks` must be extractable item by item.
+- Prefer file or stable index-page references over directory references.
+- If a task must keep a broad source reference, it must also provide a narrowing policy in `## Knowledge Consumption Policy`.
+- `Platform Optimizations` is supplementary only and cannot replace formal inputs, outputs, or knowledge references.
 
-## 解析产物
+## Knowledge Consumption Policy
 
-执行中枢解析后必须生成：
+When `## Knowledge Consumption Policy` exists, it should be structured with bullet-based subsections:
+
+- `Primary Knowledge Entry`
+- `Fallback Source`
+- `Fallback Conditions`
+- `Disallowed Broad References`
+
+Expected semantics:
+
+- `Primary Knowledge Entry` lists the preferred wiki or summary entry pages.
+- `Fallback Source` lists raw-source directories or files that may be used only when narrowing fails or coverage is insufficient.
+- `Fallback Conditions` states when fallback is allowed, such as `[GAP]`, `[CONFLICT]`, or uncovered details.
+- `Disallowed Broad References` states broad-reference modes that must not be copied by default.
+
+## Parse Output
+
+Execution must generate:
 
 - `projects/<project-id>/runtime/task_card_resolved.json`
 
-最小字段包括：
+Minimum fields:
 
 - `task_id`
 - `protocol_name`
@@ -77,26 +98,38 @@
 - `wiki_refs`
 - `template_refs`
 - `check_refs`
+- `primary_knowledge_entries`
+- `fallback_source_refs`
+- `fallback_conditions`
+- `disallowed_broad_references`
+- `reference_granularity`
+- `has_directory_ref`
+- `requires_narrowing`
 - `result_locations`
 - `completion_criteria`
+- `facts_output_requirements`
+- `business_output_requirements`
+- `experience_output_requirements`
 - `warnings`
 - `errors`
 
-## Warning 条件
+## Warning Conditions
 
-以下情况可继续执行，但必须记录 warning：
+The task card may still pass with warnings when:
 
-- 缺少 `## Wiki`，但存在 `Knowledge`
-- 缺少 `## Read Order`
-- `Knowledge` 仅引用目录而未细化到文件或索引页
-- `Platform Optimizations` 存在但为空
+- `## Wiki` is missing but `## Knowledge` exists.
+- `## Read Order` is missing.
+- A knowledge or wiki reference is directory-only or wildcard-based.
+- `## Knowledge Consumption Policy` is missing while broad references are present.
+- `## Platform Optimizations` exists but is empty.
 
-## 失败条件
+## Failure Conditions
 
-- `task_card.md` 缺失
-- 任一必填段落缺失
-- `Protocol Name`、`Protocol Version`、`Task ID` 缺失
-- `Required Outputs` 为空
-- 任一输出路径不位于 `projects/<project-id>/workspace/`
-- 任一路径段存在但无法解析为路径列表
-- `task_card_resolved.json` 未生成
+- `task_card.md` is missing.
+- Any required section is missing.
+- `Protocol Name`, `Protocol Version`, or `Task ID` is missing.
+- `Required Outputs` is empty.
+- Any output path is outside `projects/<project-id>/workspace/`.
+- Any reference section exists but cannot be parsed into path entries.
+- Any output requirement section is missing required subsections.
+- `task_card_resolved.json` is not generated.

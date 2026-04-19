@@ -34,6 +34,13 @@ OUTPUT_REQUIREMENT_SECTIONS = {
     "## Experience Output Requirements": "experience_output_requirements",
 }
 
+POLICY_SUBSECTIONS = {
+    "### Primary Knowledge Entry": "primary_knowledge_entries",
+    "### Fallback Source": "fallback_source_refs",
+    "### Fallback Conditions": "fallback_conditions",
+    "### Disallowed Broad References": "disallowed_broad_references",
+}
+
 
 def split_kv(value: str) -> tuple[str, str]:
     for separator in ("：", ":"):
@@ -81,7 +88,7 @@ def normalize_path_values(items: list[str]) -> list[str]:
         key, value = split_kv(item)
         candidate = value or key
         if "/" in candidate:
-            values.append(candidate)
+            values.append(candidate.replace("\\", "/").strip())
     return values
 
 
@@ -96,14 +103,65 @@ def parse_output_requirements(lines: list[str]) -> dict[str, object]:
             continue
         if current:
             by_subsection[current].append(raw_line)
-    required_sections = parse_bullets(by_subsection.get("### Required Sections", []))
-    recommended_id_prefixes = parse_bullets(by_subsection.get("### Recommended ID Prefixes", []))
-    boundary_rules = parse_bullets(by_subsection.get("### Boundary", []))
     return {
-        "required_sections": required_sections,
-        "recommended_id_prefixes": recommended_id_prefixes,
-        "boundary": boundary_rules,
+        "required_sections": parse_bullets(by_subsection.get("### Required Sections", [])),
+        "recommended_id_prefixes": parse_bullets(by_subsection.get("### Recommended ID Prefixes", [])),
+        "boundary": parse_bullets(by_subsection.get("### Boundary", [])),
     }
+
+
+def parse_policy_section(lines: list[str]) -> dict[str, object]:
+    by_subsection: dict[str, list[str]] = {}
+    current = ""
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if stripped.startswith("### "):
+            current = stripped
+            by_subsection.setdefault(current, [])
+            continue
+        if current:
+            by_subsection[current].append(raw_line)
+
+    parsed: dict[str, object] = {field: [] for field in POLICY_SUBSECTIONS.values()}
+    for heading, field in POLICY_SUBSECTIONS.items():
+        bullet_values = parse_bullets(by_subsection.get(heading, []))
+        if field.endswith("_refs") or field.endswith("_entries"):
+            parsed[field] = normalize_path_values(bullet_values)
+        else:
+            parsed[field] = bullet_values
+    return parsed
+
+
+def classify_reference(reference: str) -> str:
+    normalized = reference.replace("\\", "/").strip()
+    if not normalized:
+        return "missing"
+    if "*" in normalized or "?" in normalized:
+        return "pattern"
+    if normalized.endswith("/"):
+        return "directory"
+    if normalized.endswith(".md"):
+        file_name = Path(normalized).name.lower()
+        if file_name in {"readme.md", "index.md"} or file_name.endswith("-index.md") or file_name.endswith("-domain-index.md"):
+            return "index"
+        return "file"
+    if "." not in Path(normalized).name:
+        return "directory"
+    return "file"
+
+
+def parse_reference_details(references: list[str]) -> list[dict[str, str]]:
+    details: list[dict[str, str]] = []
+    for reference in references:
+        ref_type = classify_reference(reference)
+        details.append(
+            {
+                "reference": reference,
+                "kind": ref_type,
+                "is_broad": "true" if ref_type in {"directory", "pattern"} else "false",
+            }
+        )
+    return details
 
 
 def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
@@ -161,6 +219,18 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "wiki_refs": [],
         "template_refs": [],
         "check_refs": [],
+        "knowledge_refs_details": [],
+        "wiki_refs_details": [],
+        "primary_knowledge_entries": [],
+        "fallback_source_refs": [],
+        "fallback_conditions": [],
+        "disallowed_broad_references": [],
+        "reference_granularity": {
+            "wiki_refs": "file_or_index_preferred",
+            "knowledge_refs": "file_or_index_preferred",
+        },
+        "has_directory_ref": False,
+        "requires_narrowing": False,
         "result_locations": result_locations,
         "completion_criteria": parse_bullets(sections.get("## Completion Criteria", [])),
         "facts_output_requirements": {},
@@ -176,6 +246,12 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         resolved[field] = parsed_values
         if section in sections and bullets and not parsed_values:
             errors.append(f"{section} exists but no valid paths were parsed")
+        if field in {"knowledge_refs", "wiki_refs"}:
+            resolved[f"{field}_details"] = parse_reference_details(parsed_values)
+
+    policy_section = sections.get("## Knowledge Consumption Policy", [])
+    policy = parse_policy_section(policy_section) if policy_section else parse_policy_section([])
+    resolved.update(policy)
 
     for section, field in OUTPUT_REQUIREMENT_SECTIONS.items():
         parsed = parse_output_requirements(sections.get(section, []))
@@ -183,12 +259,23 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         if not parsed["required_sections"] or not parsed["boundary"]:
             errors.append(f"{section} is missing required subsections or bullet values")
 
+    detail_items = list(resolved.get("knowledge_refs_details", [])) + list(resolved.get("wiki_refs_details", []))
+    has_directory_ref = any(item.get("kind") == "directory" for item in detail_items)
+    has_pattern_ref = any(item.get("kind") == "pattern" for item in detail_items)
+    requires_narrowing = any(item.get("kind") in {"directory", "pattern"} for item in detail_items)
+    resolved["has_directory_ref"] = has_directory_ref
+    resolved["requires_narrowing"] = requires_narrowing
+
     if not resolved["wiki_refs"] and resolved["knowledge_refs"]:
         warnings.append("Wiki section is missing or empty; execution will rely on Knowledge directly")
     if "## Read Order" not in sections:
         warnings.append("Read Order section is missing")
-    if any(str(ref).endswith("/") for ref in resolved["knowledge_refs"]):
-        warnings.append("Knowledge references include directory-only paths; consider narrowing to files or wiki indices")
+    if has_directory_ref:
+        warnings.append("Knowledge or Wiki references include directory-only paths; assembly must narrow them to stable entries when possible")
+    if has_pattern_ref:
+        warnings.append("Knowledge or Wiki references include wildcard paths; wildcard references cannot be copied directly during context assembly")
+    if requires_narrowing and not policy_section:
+        warnings.append("Knowledge Consumption Policy is missing while broad references are present")
     if "## Platform Optimizations" in sections and not parse_bullets(sections["## Platform Optimizations"]):
         warnings.append("Platform Optimizations section is present but empty")
 

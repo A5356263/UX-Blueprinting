@@ -1,40 +1,96 @@
-# Knowledge 引用合同
+# Knowledge Reference Contract
 
-## 目标
+## Goal
 
-定义任务如何正式引用 `knowledge/business/`、`knowledge/guidelines/` 与 `knowledge/wiki/`。
+Define how tasks reference `knowledge/wiki/`, `knowledge/raw/`, and other explicit knowledge assets, and how execution narrows broad references during context assembly.
 
-## 知识层职责
+## Knowledge Layer Responsibilities
 
-- `knowledge/business/`：业务真源
-- `knowledge/guidelines/`：原则真源
-- `knowledge/wiki/`：默认消费层与编译层
+- `knowledge/wiki/`: default consumption layer, especially index pages and summary pages.
+- `knowledge/raw/`: source-of-truth layer for detailed fallback lookup.
+- Task card and execution hub: decide what is consumed for the current task and how broad references are narrowed.
+- Generation stages: consume assembled context only.
+- Validate and coverage: expose broad-reference risk and fallback usage, but do not silently rewrite references.
 
-## 默认消费顺序
+## Default Consumption Order
 
 1. `task_card.md`
-2. `knowledge/wiki/` 中显式引用的页面
-3. 必要的 `knowledge/business/`
-4. 必要的 `knowledge/guidelines/`
-5. 模板与检查规则
+2. Explicit wiki entry pages referenced by the task
+3. Explicit summary pages referenced by the task
+4. Explicit fallback raw sources under allowed conditions
+5. Templates and checks
 
-## 引用规则
+## Reference Rules
 
-- 任务应优先显式引用 Wiki 页面
-- 当 Wiki 存在 `[GAP]`、`[CONFLICT]` 或缺少细节时，再回查真源
-- 引用必须使用仓库相对路径
-- 执行中枢只装配显式引用内容，不得静默扩展无关知识
+- Tasks must prefer file or stable index-page references.
+- Directory references are considered broad references and must be narrowed before normal assembly whenever possible.
+- Wildcard references are descriptive only and must not be copied into `context_bundle/` as raw patterns.
+- A broad reference is acceptable only if the task card also defines a consumption policy that makes narrowing and fallback behavior explicit.
 
-## Context Assembly 要求
+## Narrowing Rules
 
-执行中枢装配上下文时，必须：
+When a reference points to a directory, the execution hub must attempt narrowing in the following order:
 
-- 基于 `task_card_resolved.json`
-- 把 `Knowledge`、`Wiki`、`Templates`、`Checks` 的显式引用写入 `context_manifest.json`
-- 把显式引用内容复制到 `projects/<project-id>/runtime/context_bundle/`
+1. Explicit `Primary Knowledge Entry` under the same directory
+2. `README.md`
+3. `index.md`
+4. `*-index.md`
+5. `*-domain-index.md`
 
-## 失败条件
+If a stable entry is found, execution should copy that entry instead of copying the whole directory.
 
-- 引用路径不存在
-- 引用无法复制到 `context_bundle/`
-- `context_manifest.json` 未生成
+If no stable entry is found:
+
+- ordinary mode: emit a warning and allow fallback directory copy
+- strict mode: fail the assembly step
+
+## Fallback Rules
+
+Fallback to raw-source references is allowed only when the task card states a valid fallback condition, for example:
+
+- summary page contains `[GAP]`
+- summary page contains `[CONFLICT]`
+- summary page does not cover the needed object, rule, path, or decision point
+
+## Context Assembly Requirements
+
+Context assembly must:
+
+- read `task_card_resolved.json`
+- record every explicit reference in `context_manifest.json`
+- record narrowing decisions, fallback copies, and broad-reference warnings
+- copy only resolved files, allowed fallback directories, templates, and checks into `projects/<project-id>/runtime/context_bundle/`
+- generate `knowledge_usage_report.json` that distinguishes primary entries from fallback sources
+
+## Required Manifest Fields
+
+`context_manifest.json` must include at least:
+
+- `references`
+- `warnings`
+- `knowledge_entry_mode`
+- `strict_mode`
+- `directory_refs_detected`
+- `directory_refs_resolved_to_index`
+- `directory_refs_fallback_copied`
+- `narrowed_references`
+- `facts_extraction_boundary`
+- `business_judgment_boundary`
+- `experience_translation_boundary`
+
+## Required Usage Report Fields
+
+`knowledge_usage_report.json` must include at least:
+
+- `primary_entries_used`
+- `fallback_sources_used`
+- `narrowing_actions`
+- `broad_reference_warnings`
+
+## Failure Conditions
+
+- A referenced path does not exist.
+- A wildcard reference is treated as a direct copy target.
+- A reference cannot be copied into `context_bundle/`.
+- `context_manifest.json` is not generated.
+- strict mode encounters an unresolved broad reference.

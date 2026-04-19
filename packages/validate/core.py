@@ -918,7 +918,16 @@ def run_validate_outputs(project_id: str) -> int:
     checked_files: list[str] = []
 
     resolved = read_json(runtime_dir / "task_card_resolved.json")
+    context_manifest = read_json(runtime_dir / "context_manifest.json")
+    usage_report = read_json(runtime_dir / "knowledge_usage_report.json")
     required_outputs = required_output_paths(project_id, resolved)
+    checked_files.extend(
+        [
+            f"projects/{project_id}/runtime/task_card_resolved.json",
+            f"projects/{project_id}/runtime/context_manifest.json",
+            f"projects/{project_id}/runtime/knowledge_usage_report.json",
+        ]
+    )
     add_provenance_issues(
         issues,
         project_id,
@@ -973,6 +982,26 @@ def run_validate_outputs(project_id: str) -> int:
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
+
+    has_directory_ref = bool(resolved.get("has_directory_ref"))
+    requires_narrowing = bool(resolved.get("requires_narrowing"))
+    narrowed_references = context_manifest.get("narrowed_references", [])
+    fallback_copied = context_manifest.get("directory_refs_fallback_copied", [])
+    strict_mode = bool(context_manifest.get("strict_mode"))
+    fallback_sources_used = usage_report.get("fallback_sources_used", [])
+    fallback_conditions = resolved.get("fallback_conditions", [])
+    resolved_to_index = context_manifest.get("directory_refs_resolved_to_index", [])
+
+    if has_directory_ref and fallback_copied:
+        add_issue(issues, "warning", "Broad knowledge references required directory fallback copy during context assembly")
+    if requires_narrowing and not narrowed_references and not fallback_copied:
+        add_issue(issues, "warning", "Broad knowledge references were declared but no narrowing action was recorded")
+    if fallback_sources_used and not fallback_conditions:
+        add_issue(issues, "warning", "Fallback knowledge sources were used without explicit fallback conditions")
+    if strict_mode and fallback_copied:
+        add_issue(issues, "blocker", "Strict assembly mode still produced directory fallback copies")
+    if resolved_to_index and fallback_copied:
+        add_issue(issues, "warning", "Some broad references were narrowed while others still fell back to directory copies")
 
     for stage in ["facts", "business", "experience"]:
         gate_status = read_gate_status(project_id, stage)
@@ -1190,12 +1219,20 @@ def run_facts_gate(project_id: str) -> int:
             add_issue(issues, "warning", "facts.md 未显式暴露缺口")
 
     context_manifest = read_json(context_manifest_path)
+    resolved = read_json(task_resolved_path)
     warnings = context_manifest.get("warnings", [])
     if isinstance(warnings, list):
         for item in warnings:
             warning_text = str(item)
             if "directory-only" in warning_text or "directory" in warning_text:
                 add_issue(issues, "warning", f"context_manifest 警告：{warning_text}")
+
+    if resolved.get("has_directory_ref"):
+        add_issue(issues, "warning", "task_card_resolved.json reports broad knowledge references that may require narrowing")
+    fallback_copied = context_manifest.get("directory_refs_fallback_copied", [])
+    if isinstance(fallback_copied, list) and fallback_copied:
+        joined_refs = ", ".join(str(item) for item in fallback_copied)
+        add_issue(issues, "warning", f"context_manifest reports directory fallback copies: {joined_refs}")
 
     blockers, warnings, infos, _ = summarize_issues(issues)
     metrics = {

@@ -32,6 +32,7 @@ def main() -> int:
 
     assemble = subparsers.add_parser("assemble")
     assemble.add_argument("project_id")
+    assemble.add_argument("--strict", action="store_true")
 
     generate_facts = subparsers.add_parser("generate-facts")
     generate_facts.add_argument("project_id")
@@ -102,6 +103,7 @@ def main() -> int:
     run_main_parser = subparsers.add_parser("run-main")
     run_main_parser.add_argument("project_id")
     run_main_parser.add_argument("--skip-preview", action="store_true")
+    run_main_parser.add_argument("--strict", action="store_true")
 
     subparsers.add_parser("sample-check")
 
@@ -110,7 +112,7 @@ def main() -> int:
     if args.command == "bootstrap":
         return run_task_bootstrap(args.project_id, task_name=args.task_name, domain=args.domain, force=args.force)
     if args.command == "assemble":
-        return run_context_assemble(args.project_id)
+        return run_context_assemble(args.project_id, strict=args.strict)
     if args.command == "generate-facts":
         return run_generate_facts(args.project_id)
     if args.command == "generate-business":
@@ -157,7 +159,7 @@ def main() -> int:
             serve=not args.no_serve,
         )
     if args.command == "run-main":
-        return run_main(args.project_id, skip_preview=args.skip_preview)
+        return run_main(args.project_id, skip_preview=args.skip_preview, strict=args.strict)
     if args.command == "sample-check":
         return run_sample_check()
     return 1

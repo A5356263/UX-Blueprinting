@@ -30,9 +30,9 @@ def _run_step(project_id: str, command_name: str, runner) -> int:
     return exit_code
 
 
-def run_main(project_id: str, skip_preview: bool = False) -> int:
+def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) -> int:
     steps = [
-        ("assemble", run_context_assemble),
+        ("assemble", lambda current_project_id: run_context_assemble(current_project_id, strict=strict)),
         ("generate-facts", run_generate_facts),
         ("gate-facts", run_facts_gate),
         ("generate-business", run_generate_business),

@@ -2,11 +2,11 @@
 
 ## Protocol
 
-- Protocol Name：Cross-AI Task Card
-- Protocol Version：v0.2
-- Task ID：{{TASK_ID}}
-- Task Name：{{TASK_NAME}}
-- Domain：{{DOMAIN}}
+- Protocol Name: Cross-AI Task Card
+- Protocol Version: v0.2
+- Task ID: {{TASK_ID}}
+- Task Name: {{TASK_NAME}}
+- Domain: {{DOMAIN}}
 
 ## Task Goal
 
@@ -17,7 +17,7 @@
 
 - 描述本次任务场景
 - 说明这是新建、补充、校对、重构还是审查任务
-- 说明本次任务主要落在：facts / business / experience 的哪一层，或覆盖全链路
+- 说明本次任务主要落在 facts / business / experience 的哪一层，或覆盖全链路
 
 ## Required Inputs
 
@@ -37,9 +37,9 @@
 
 1. 先读本文件
 2. 再读 `Required Inputs`
-3. facts 阶段仅做 input-first extraction（输入优先提取）
-4. business 阶段在 facts 基础上引入业务知识做 review（评审）
-5. experience 阶段在 business 基础上引入 guideline（设计指南）做 translation（转译）
+3. facts 阶段只做 input-first extraction
+4. business 阶段在 facts 基础上引入业务知识做 review
+5. experience 阶段在 business 基础上引入 guideline 做 translation
 6. 最后按 `Templates` 产出结果并按 `Checks` 自检
 
 ## Constraints
@@ -55,12 +55,33 @@
 ## Knowledge
 
 - knowledge/wiki/index.md
-- knowledge/wiki/summaries/{{DOMAIN}}/**
+- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
 
 ## Wiki
 
 - knowledge/wiki/index.md
-- knowledge/wiki/summaries/{{DOMAIN}}/**
+- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+
+## Knowledge Consumption Policy
+
+### Primary Knowledge Entry
+
+- knowledge/wiki/index.md
+- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+
+### Fallback Source
+
+- knowledge/raw/business/{{DOMAIN}}/
+
+### Fallback Conditions
+
+- 命中 `[GAP]`
+- 命中 `[CONFLICT]`
+- 摘要页未覆盖当前任务需要的对象、规则或路径
+
+### Disallowed Broad References
+
+- 不允许默认整目录装配到 context bundle
 
 ## Templates
 
@@ -84,8 +105,8 @@
 
 ## Result Locations
 
-- 执行中结果：projects/{{TASK_ID}}/workspace/
-- 归档结果：projects/{{TASK_ID}}/exports/final/
+- 执行中结果: projects/{{TASK_ID}}/workspace/
+- 归档结果: projects/{{TASK_ID}}/exports/final/
 
 ## Completion Criteria
 
@@ -126,11 +147,10 @@
 
 ### Boundary
 
-- mode：input-first extraction
-- knowledge role：calibration only
-- forbidden：
-  - promote unconfirmed knowledge as confirmed task facts
-  - replace task inputs with wiki / knowledge summaries
+- mode: input-first extraction
+- knowledge role: calibration only
+- forbidden: promote unconfirmed knowledge as confirmed task facts
+- forbidden: replace task inputs with wiki or knowledge summaries
 
 ## Business Output Requirements
 
@@ -164,11 +184,10 @@
 
 ### Boundary
 
-- mode：facts-first judgment
-- knowledge role：baseline establishment
-- forbidden：
-  - replace facts with knowledge-only conclusions
-  - output UI / implementation decisions in business blueprint
+- mode: facts-first judgment
+- knowledge role: baseline establishment
+- forbidden: replace facts with knowledge-only conclusions
+- forbidden: output UI or implementation decisions in business blueprint
 
 ## Experience Output Requirements
 
@@ -196,11 +215,10 @@
 
 ### Boundary
 
-- mode：business-first translation
-- knowledge role：business semantic guard + guideline-based derivation
-- forbidden：
-  - rewrite business rules in experience blueprint
-  - output high-fidelity visual specs or implementation details
+- mode: business-first translation
+- knowledge role: business semantic guard + guideline-based derivation
+- forbidden: rewrite business rules in experience blueprint
+- forbidden: output high-fidelity visual specs or implementation details
 
 ## Notes
 
