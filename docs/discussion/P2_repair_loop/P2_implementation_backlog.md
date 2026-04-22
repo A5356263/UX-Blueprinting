@@ -53,7 +53,7 @@
 
 ### 已有黄金样例
 优先以：
-- `projects/real-self-apply-v1/`
+- `examples/positive/real-self-apply-v1/`
 作为 P2 验证样例
 
 ---
@@ -250,7 +250,7 @@ projects/<project-id>/runtime/remediation/
 - `docs/runbook/task_execution_flow.md`
 - `docs/runbook/external_ai_quickstart.md`
 - `docs/acceptance/final-convergence-report.md`
-- 黄金样例 `projects/real-self-apply-v1/`
+- 黄金样例 `examples/positive/real-self-apply-v1/`
 
 ### 输出
 - 新增 `docs/runbook/repair_loop_flow.md`

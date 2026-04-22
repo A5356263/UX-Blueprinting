@@ -1,0 +1,379 @@
+{
+  "project_id": "_template",
+  "stage": "experience",
+  "status": "failed",
+  "can_proceed": false,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-04-19T13:13:21.581376+00:00",
+  "checked_files": [
+    "projects/_template/workspace/facts.md",
+    "projects/_template/workspace/business_blueprint.md",
+    "projects/_template/workspace/experience_blueprint.md",
+    "projects/_template/runtime/provenance.json",
+    "projects/_template/runtime/gates/business_gate_status.json"
+  ],
+  "blocker_count": 3,
+  "warning_count": 0,
+  "info_count": 3,
+  "issues": {
+    "blockers": [
+      "provenance: provenance.source_hash 缺失",
+      "provenance: provenance.task_card_hash 缺失",
+      "business 阶段未通过，不能进入体验蓝图阶段"
+    ],
+    "warnings": [],
+    "infos": [
+      "experience_blueprint.md 已承接 3 条事实",
+      "experience_blueprint.md 已承接 2 条业务判断",
+      "experience_blueprint.md 已引用 3 个设计原则 ID"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "message": "provenance: provenance.source_hash 缺失",
+      "target_artifacts": [
+        "projects/_template/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "provenance: provenance.source_hash 缺失"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "message": "provenance: provenance.task_card_hash 缺失",
+      "target_artifacts": [
+        "projects/_template/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "provenance: provenance.task_card_hash 缺失"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "business",
+      "severity": "blocker",
+      "category": "stage_blocked",
+      "message": "business 阶段未通过，不能进入体验蓝图阶段",
+      "target_artifacts": [
+        "projects/_template/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business 阶段未通过，不能进入体验蓝图阶段"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 已承接 3 条事实",
+      "target_artifacts": [
+        "projects/_template/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 已承接 3 条事实"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 已承接 2 条业务判断",
+      "target_artifacts": [
+        "projects/_template/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 已承接 2 条业务判断"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 已引用 3 个设计原则 ID",
+      "target_artifacts": [
+        "projects/_template/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/_template/workspace/facts.md",
+        "projects/_template/workspace/business_blueprint.md",
+        "projects/_template/workspace/experience_blueprint.md",
+        "projects/_template/runtime/provenance.json",
+        "projects/_template/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 已引用 3 个设计原则 ID"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/_template/workspace/facts.md",
+            "projects/_template/workspace/business_blueprint.md",
+            "projects/_template/workspace/experience_blueprint.md",
+            "projects/_template/runtime/provenance.json",
+            "projects/_template/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 2,
+            "page_count": 5,
+            "page_inventory_item_count": 5,
+            "expanded_page_blueprint_count": 5,
+            "region_map_count": 30,
+            "content_contract_item_count": 8,
+            "state_feedback_pair_count": 1,
+            "copy_contract_item_count": 5,
+            "trace_mapping_item_count": 5,
+            "business_judgment_consumed_count": 2,
+            "principle_ref_count": 3,
+            "exception_coverage": true
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "flow_count": 2,
+    "page_count": 5,
+    "page_inventory_item_count": 5,
+    "expanded_page_blueprint_count": 5,
+    "region_map_count": 30,
+    "content_contract_item_count": 8,
+    "state_feedback_pair_count": 1,
+    "copy_contract_item_count": 5,
+    "trace_mapping_item_count": 5,
+    "business_judgment_consumed_count": 2,
+    "principle_ref_count": 3,
+    "exception_coverage": true
+  }
+}

@@ -469,7 +469,7 @@ Repair Loop 不是泛泛记录错误，而是使用统一 issue 模型。
     {
       "unit_id": "repair-unit-001",
       "stage": "experience",
-      "target_artifact": "projects/real-self-apply-v1/workspace/experience_blueprint.md",
+      "target_artifact": "examples/positive/real-self-apply-v1/workspace/experience_blueprint.md",
       "issue_ids": ["EXP-TRACE-001", "EXP-STATE-002"],
       "repair_mode": "patch_current_artifact",
       "repair_goal": "补齐体验追踪映射与异常状态矩阵",

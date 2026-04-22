@@ -1,0 +1,20 @@
+{
+  "project_id": "_template",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "",
+  "task_card_hash": "",
+  "generated_at": "2026-04-19T13:15:29+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "generate-business",
+    "generate-experience",
+    "validate",
+    "preview",
+    "gate-business",
+    "gate-experience"
+  ]
+}

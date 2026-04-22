@@ -1,9 +1,0 @@
-{
-  "project_id": "demo-smoke-v1",
-  "task_name": "Demo Task",
-  "domain": "permission",
-  "status": "draft",
-  "project_role": "benchmark_negative",
-  "read_only": true,
-  "excluded_from_default_scan": true
-}

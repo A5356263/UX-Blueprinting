@@ -6,7 +6,7 @@
 - source_group: guidelines
 - status: active
 - confidence: medium
-- updated_at: 2026-04-19
+- updated_at: 2026-04-22
 - source_refs: [knowledge/raw/guidelines/principles/readability/principles.md]
 - related_summaries:
   - knowledge/wiki/summaries/guidelines/principles/accessibility/principles.md

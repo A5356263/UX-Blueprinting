@@ -1,0 +1,834 @@
+{
+  "project_id": "_template",
+  "meta": {
+    "title": "Experience Blueprint",
+    "subject": "体验蓝图浏览器预览",
+    "version": "v2",
+    "context": {
+      "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\_template\\workspace\\experience_blueprint.md",
+      "input_mode": "workspace_fallback"
+    },
+    "overview": {
+      "目标用户与角色": "目标用户与角色：当前任务链路中涉及的主要角色，以及需要共同评审该蓝图的设计 / 产品 / 业务角色。",
+      "体验目标": "体验目标：把 business 的当前动态结论翻译成可读的任务闭环、页面承载、状态反馈与文案职责。",
+      "任务边界": "任务边界：围绕当前输入推导出的主闭环、节点、页面、状态与解释责任展开，不预设固定页面集合。"
+    }
+  },
+  "global_flow": {
+    "lanes": [
+      {
+        "role": "超管",
+        "chain_ids": [
+          "TF-01",
+          "TF-02"
+        ]
+      }
+    ],
+    "chains": [
+      {
+        "chain_id": "TF-01",
+        "name": "生成 生成链路",
+        "role": "超管",
+        "path_type": "primary",
+        "is_primary": true,
+        "start": "当前任务评审角色",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-S01",
+        "goal": "得到可解释结果",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      },
+      {
+        "chain_id": "TF-02",
+        "name": "生成 当前任务",
+        "role": "超管",
+        "path_type": "secondary",
+        "is_primary": false,
+        "start": "设计评审角色",
+        "judgment": "从当前输入直接抽取，未做模板补全：EV-S03",
+        "goal": "得到可解释结果",
+        "failure_result": "进入阻断或补充链路",
+        "depends_on": [],
+        "page_refs": []
+      }
+    ],
+    "nodes": [
+      {
+        "node_id": "TF-01-N1",
+        "name": "当前任务评审角色",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N2",
+        "name": "Task Goal",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N3",
+        "name": "生成 生成链路",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-01-N4",
+        "name": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N1",
+        "name": "设计评审角色",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N2",
+        "name": "Task Scenario",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N3",
+        "name": "生成 当前任务",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      },
+      {
+        "node_id": "TF-02-N4",
+        "name": "当前任务属于 generation 内部的结构升级与生成质量优化。",
+        "type": "流程步骤",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "goal": "得到可解释结果",
+        "page_id": ""
+      }
+    ],
+    "edges": [
+      {
+        "from": "TF-01-N1",
+        "to": "TF-01-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-01-N2",
+        "to": "TF-01-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-01-N3",
+        "to": "TF-01-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-01"
+      },
+      {
+        "from": "TF-02-N1",
+        "to": "TF-02-N2",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N2",
+        "to": "TF-02-N3",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      },
+      {
+        "from": "TF-02-N3",
+        "to": "TF-02-N4",
+        "path_type": "success",
+        "label": "",
+        "role": "超管",
+        "chain_id": "TF-02"
+      }
+    ],
+    "dependencies": [],
+    "blockers": [
+      {
+        "id": "TF-01",
+        "name": "生成 生成链路",
+        "role": "超管",
+        "chain_id": "TF-01",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-S01",
+        "success_result": "得到可解释结果",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      },
+      {
+        "id": "TF-02",
+        "name": "生成 当前任务",
+        "role": "超管",
+        "chain_id": "TF-02",
+        "trigger": "从当前输入直接抽取，未做模板补全：EV-S03",
+        "success_result": "得到可解释结果",
+        "impact": "进入阻断或补充链路",
+        "failure_result": "进入阻断或补充链路",
+        "return_direction": ""
+      }
+    ]
+  },
+  "page_views": [
+    {
+      "page_id": "P-01",
+      "view_name": "生成 生成链路承载页",
+      "view_type": "页面",
+      "roles": [
+        "当前任务评审角色"
+      ],
+      "summary": "让用户在当前节点完成“生成 生成链路”，同时知道为什么要在这里承载。",
+      "entry": "从 当前任务评审角色 进入该闭环",
+      "exit": "进入 得到可解释结果 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 生成链路承载页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "生成 生成链路"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "进入 得到可解释结果 或 进入阻断或补充链路"
+        }
+      ],
+      "key_understanding": [
+        "生成 生成链路 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-01",
+          "purpose": "解释 生成 生成链路承载页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-01 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-02",
+          "purpose": "解释 生成 生成链路承载页 的状态与下一步",
+          "priority": "高",
+          "position": "P-01 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [
+        {
+          "state_id": "S-01",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "actions": "继续当前任务 / 查看解释 / 返回上一步",
+          "feedback": "生成 生成链路承载页 需要显式显示“待补充”与其上下文含义。",
+          "copy_feedback": "当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
+          "outcome": "完成当前状态对应的动作或进入下一个结果态。"
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "生成 生成链路承载页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "生成 生成链路反馈页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Fallback Knowledge Boundary",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-01",
+          "object": "生成 生成链路承载页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC-01, F-AC-02, F-S-01",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 生成链路承载页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。：GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-01",
+        "关键页面蓝图:P-01:页面目标",
+        "区块布局示意:P-01",
+        "内容与信息优先级合同:INFO-01",
+        "内容与信息优先级合同:INFO-02",
+        "状态与反馈矩阵:S-01",
+        "文案合同:COPY-01",
+        "文案合同:COPY-02",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "体验追踪映射:TR-01",
+        "开放问题与缺口:GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。"
+      ]
+    },
+    {
+      "page_id": "P-02",
+      "view_name": "生成 生成链路反馈页",
+      "view_type": "页面",
+      "roles": [
+        "当前任务评审角色"
+      ],
+      "summary": "让用户在当前节点完成“理解结果、状态与下一步”，同时知道为什么要在这里承载。",
+      "entry": "生成 生成链路 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 生成链路反馈页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "理解结果、状态与下一步"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "返回上一步或进入下一闭环"
+        }
+      ],
+      "key_understanding": [
+        "理解结果、状态与下一步 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-03",
+          "purpose": "解释 生成 生成链路反馈页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-02 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-04",
+          "purpose": "解释 生成 生成链路反馈页 的状态与下一步",
+          "priority": "高",
+          "position": "P-02 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Fallback Knowledge Boundary",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-02",
+          "object": "生成 生成链路反馈页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC-01, F-AC-02, F-S-01",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 生成链路反馈页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。：GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-02",
+        "关键页面蓝图:P-02:页面目标",
+        "区块布局示意:P-02",
+        "内容与信息优先级合同:INFO-03",
+        "内容与信息优先级合同:INFO-04",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "体验追踪映射:TR-02",
+        "开放问题与缺口:GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。"
+      ]
+    },
+    {
+      "page_id": "P-03",
+      "view_name": "生成 当前任务承载页",
+      "view_type": "页面",
+      "roles": [
+        "设计评审角色"
+      ],
+      "summary": "让用户在当前节点完成“生成 当前任务”，同时知道为什么要在这里承载。",
+      "entry": "从 设计评审角色 进入该闭环",
+      "exit": "进入 得到可解释结果 或 进入阻断或补充链路",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 当前任务承载页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "生成 当前任务"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "进入 得到可解释结果 或 进入阻断或补充链路"
+        }
+      ],
+      "key_understanding": [
+        "生成 当前任务 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-05",
+          "purpose": "解释 生成 当前任务承载页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-03 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-06",
+          "purpose": "解释 生成 当前任务承载页 的状态与下一步",
+          "priority": "高",
+          "position": "P-03 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [
+        {
+          "risk_id": "RSK-01",
+          "name": "待补充",
+          "trigger": "Fallback State",
+          "confusion_reason": "如果不解释 待补充，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-02",
+          "name": "异常场景2",
+          "trigger": "Fallback Knowledge Boundary",
+          "confusion_reason": "如果不解释 异常场景2，用户会不知道当前是治理阻断还是系统异常。",
+          "protection": "在 P-01 / P-02 / P-03 中显式提供阻断解释、处理方向与来源追踪入口。"
+        },
+        {
+          "risk_id": "RSK-03",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-01: 当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        },
+        {
+          "risk_id": "RSK-04",
+          "name": "输入不足会影响页面承载判断",
+          "trigger": "GAP-02: 当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。",
+          "confusion_reason": "用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
+          "protection": "在帮助与追踪承载里显式展示当前 gap 及其影响范围。"
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-03",
+          "object": "生成 当前任务承载页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC-01, F-AC-02, F-S-01",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 当前任务承载页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [
+        "GAP-03: 当前没有读取到可用的显式知识引用，当前只能依赖 source 输入做保守推断。：GAP-03: 当前没有读取到可用的显式知识引用，当前只能依赖 source 输入做保守推断。"
+      ],
+      "source_refs": [
+        "页面 / 窗口清单:P-03",
+        "关键页面蓝图:P-03:页面目标",
+        "区块布局示意:P-03",
+        "内容与信息优先级合同:INFO-05",
+        "内容与信息优先级合同:INFO-06",
+        "风险、疑惑点与保护策略:RSK-01",
+        "风险、疑惑点与保护策略:RSK-02",
+        "风险、疑惑点与保护策略:RSK-03",
+        "风险、疑惑点与保护策略:RSK-04",
+        "体验追踪映射:TR-03",
+        "开放问题与缺口:GAP-03: 当前没有读取到可用的显式知识引用，当前只能依赖 source 输入做保守推断。"
+      ]
+    },
+    {
+      "page_id": "P-04",
+      "view_name": "生成 当前任务反馈页",
+      "view_type": "页面",
+      "roles": [
+        "设计评审角色"
+      ],
+      "summary": "让用户在当前节点完成“理解结果、状态与下一步”，同时知道为什么要在这里承载。",
+      "entry": "生成 当前任务 执行后进入",
+      "exit": "返回上一步或进入下一闭环",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "生成 当前任务反馈页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "理解结果、状态与下一步"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "返回上一步或进入下一闭环"
+        }
+      ],
+      "key_understanding": [
+        "理解结果、状态与下一步 / 查看来源、规则或补充解释"
+      ],
+      "action_items": [],
+      "info_contract_items": [
+        {
+          "info_id": "INFO-07",
+          "purpose": "解释 生成 当前任务反馈页 的节点目标与边界",
+          "priority": "高",
+          "position": "P-04 首屏",
+          "trigger": "进入页面时",
+          "risk": "如果不前置解释，用户会把页面承载误解成固定模板页面。"
+        },
+        {
+          "info_id": "INFO-08",
+          "purpose": "解释 生成 当前任务反馈页 的状态与下一步",
+          "priority": "高",
+          "position": "P-04 主区或结果区",
+          "trigger": "操作前后",
+          "risk": "如果不解释状态，用户会不知道当前闭环是否完成。"
+        }
+      ],
+      "states": [],
+      "copy_items": [],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-04",
+          "object": "生成 当前任务反馈页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC-01, F-AC-02, F-S-01",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "生成 当前任务反馈页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-04",
+        "关键页面蓝图:P-04:页面目标",
+        "区块布局示意:P-04",
+        "内容与信息优先级合同:INFO-07",
+        "内容与信息优先级合同:INFO-08",
+        "体验追踪映射:TR-04"
+      ]
+    },
+    {
+      "page_id": "P-05",
+      "view_name": "帮助与追踪页",
+      "view_type": "抽屉",
+      "roles": [
+        "所有需要解释边界的角色"
+      ],
+      "summary": "让用户在当前节点完成“查看规则、来源、依赖与 gaps”，同时知道为什么要在这里承载。",
+      "entry": "从主页面或反馈页进入",
+      "exit": "关闭后回到原上下文",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "Header",
+          "block_type": "Main Area",
+          "summary": "帮助与追踪页 + 当前状态 + 帮助入口"
+        },
+        {
+          "label": "Intro",
+          "block_type": "Detail Area",
+          "summary": "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。"
+        },
+        {
+          "label": "Main",
+          "block_type": "Detail Area",
+          "summary": "查看规则、来源、依赖与 gaps"
+        },
+        {
+          "label": "Support",
+          "block_type": "Detail Area",
+          "summary": "规则说明 / 来源追踪 / 风险解释"
+        },
+        {
+          "label": "Footer",
+          "block_type": "Detail Area",
+          "summary": "关闭后回到原上下文"
+        }
+      ],
+      "key_understanding": [
+        "查看规则、来源、依赖与 gaps / 帮助当前角色回链判断依据"
+      ],
+      "action_items": [],
+      "info_contract_items": [],
+      "states": [],
+      "copy_items": [
+        {
+          "copy_id": "COPY-03",
+          "scene": "生成 当前任务承载页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        },
+        {
+          "copy_id": "COPY-04",
+          "scene": "生成 当前任务反馈页",
+          "copy_type": "说明文案",
+          "goal": "解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+          "required": "页面目标、关键边界、主要动作、是否存在阻断条件。",
+          "avoid": "不要只说“请操作”或“更方便”。",
+          "example": "页面文案要负责解释边界、状态变化和下一步，而不是只提示操作。"
+        }
+      ],
+      "risks": [],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [
+        {
+          "trace_id": "TR-05",
+          "object": "帮助与追踪页",
+          "business_judgment": "J-01, J-02",
+          "facts": "F-AC-01, F-AC-02, F-S-01",
+          "principles": "PR-01, PR-02, PR-03",
+          "note": "帮助与追踪页 的承载方式来自当前任务闭环，而不是预设页面骨架。"
+        }
+      ],
+      "open_items": [],
+      "gap_items": [],
+      "source_refs": [
+        "页面 / 窗口清单:P-05",
+        "关键页面蓝图:P-05:页面目标",
+        "区块布局示意:P-05",
+        "文案合同:COPY-03",
+        "文案合同:COPY-04",
+        "体验追踪映射:TR-05"
+      ]
+    }
+  ],
+  "global_context": {
+    "principles": [
+      {
+        "principle_id": "PR-01",
+        "label": "PR-01"
+      },
+      {
+        "principle_id": "PR-02",
+        "label": "PR-02"
+      },
+      {
+        "principle_id": "PR-03",
+        "label": "PR-03"
+      },
+      {
+        "principle_id": "PR-01",
+        "name": "业务约束转体验承载",
+        "reason": "体验层必须承接当前最终立场，而不是重新发明业务答案。"
+      },
+      {
+        "principle_id": "PR-02",
+        "name": "业务约束转体验承载",
+        "reason": "页面与流程要围绕当前事实中的真实闭环、真实状态与真实异常展开。"
+      },
+      {
+        "principle_id": "PR-03",
+        "name": "业务约束转体验承载",
+        "reason": "命中知识如何影响了承载方式、优先级与解释责任，需要在体验层继续可见。"
+      }
+    ],
+    "dependencies": [],
+    "risks": [],
+    "open_questions": [],
+    "gaps": [],
+    "notes": [
+      {
+        "type": "文案",
+        "content": "COPY-05 引用了未落盘页面: P-06"
+      }
+    ]
+  },
+  "unresolved_items": [],
+  "source_refs": [
+    "E:\\AI设计\\体验蓝图构建思路\\projects\\_template\\workspace\\experience_blueprint.md"
+  ]
+}

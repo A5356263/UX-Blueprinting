@@ -1,0 +1,26 @@
+{
+  "task_id": "_template",
+  "status": "pending",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "completed_outputs": [
+    "projects/_template/workspace/facts.md",
+    "projects/_template/workspace/business_blueprint.md",
+    "projects/_template/workspace/experience_blueprint.md",
+    "projects/_template/workspace/gap_list.md",
+    "projects/_template/workspace/check_report.md",
+    "projects/_template/workspace/check_status.json"
+  ],
+  "missing_outputs": [],
+  "generated_by": "packages.generation",
+  "updated_at": "",
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "generate-* 已完成正式初稿写入。"
+    ]
+  }
+}
