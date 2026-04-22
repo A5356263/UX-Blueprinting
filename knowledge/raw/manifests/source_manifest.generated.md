@@ -29,16 +29,13 @@
 | SRC-BIZ-0023 | 42 experience blueprint handoff | raw/business/permission/42_experience_blueprint_handoff.md | business | md | 2026-04-22 | active | auto-generated |
 | SRC-BIZ-0024 | README | raw/business/permission/README.md | business | md | 2026-04-22 | active | auto-generated |
 | SRC-BIZ-0025 | README | raw/business/README.md | business | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0001 | principles | raw/guidelines/principles/accessibility/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0002 | principles | raw/guidelines/principles/cognition/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0003 | principles | raw/guidelines/principles/flow_mode/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0004 | principles | raw/guidelines/principles/governance/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0005 | principles | raw/guidelines/principles/information_architecture/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0006 | principles | raw/guidelines/principles/quality/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0007 | principles | raw/guidelines/principles/readability/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0008 | README | raw/guidelines/principles/README.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0009 | principles | raw/guidelines/principles/usability/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0010 | principles | raw/guidelines/principles/visual/principles.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0011 | README | raw/guidelines/README.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0012 | task type index | raw/guidelines/task_type_index.md | guidelines | md | 2026-04-22 | active | auto-generated |
-| SRC-GDL-0013 | trigger index | raw/guidelines/trigger_index.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0001 | accessibility | raw/guidelines/accessibility.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0002 | cognition | raw/guidelines/cognition.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0003 | flow mode | raw/guidelines/flow_mode.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0004 | governance | raw/guidelines/governance.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0005 | information architecture | raw/guidelines/information_architecture.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0006 | quality | raw/guidelines/quality.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0007 | readability | raw/guidelines/readability.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0008 | README | raw/guidelines/README.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0009 | usability | raw/guidelines/usability.md | guidelines | md | 2026-04-22 | active | auto-generated |
+| SRC-GDL-0010 | visual | raw/guidelines/visual.md | guidelines | md | 2026-04-22 | active | auto-generated |

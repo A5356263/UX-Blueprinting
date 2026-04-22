@@ -1,4 +1,4 @@
-# knowledge/guidelines
+# knowledge/raw/guidelines
 
 本目录用于存放跨业务、跨产品复用的通用设计原则。
 
@@ -6,17 +6,21 @@
 
 ## 当前结构
 
-- `task_type_index.md`：按任务类型裁剪原则的第一入口
-- `trigger_index.md`：按场景与风险触发原则的入口
-- `principles/README.md`：原则目录总说明
-- `principles/*/principles.md`：该类原则的正文真源
+- `accessibility.md`
+- `cognition.md`
+- `flow_mode.md`
+- `governance.md`
+- `information_architecture.md`
+- `quality.md`
+- `readability.md`
+- `usability.md`
+- `visual.md`
 
 ## 使用方式
 
-1. 先在 `task_type_index.md` 中按任务类型确定应优先读哪些类别
-2. 再在 `trigger_index.md` 中按具体场景和风险缩小命中原则
-3. 最后到对应 `principles/*/principles.md` 读取正文
-4. 输出体验要求、风险点、自检问句时，只引用当前任务真正相关的原则
+1. 先通过 Wiki 命中机制定位相关 guideline 主题
+2. 再回查本目录命中的 `<topic>.md` 正文真源
+3. 输出体验要求、风险点、自检问句时，只引用当前任务真正相关的原则
 
 ## 边界
 
@@ -26,7 +30,6 @@
 
 ## 维护原则
 
-- 按原则类别维护，不再维护大一统合并正文
-- 优先更新 `task_type_index.md` 和 `trigger_index.md`，再补正文
-- 新增原则时，同步更新 `trigger_index.md`
-- 若任务类型消费方式变化，同步更新 `task_type_index.md`
+- 按主题文件维护，不维护 task/trigger 路由索引
+- 新增主题时，直接新增 `<topic>.md`
+- 调整主题内容后，需同步重建 Wiki summaries 与 index/overview/questions

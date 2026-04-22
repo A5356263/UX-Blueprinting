@@ -1,4 +1,4 @@
-{
+﻿{
   "task_id": "001",
   "resolved_from": "projects/001/runtime/task_card_resolved.json",
   "reference_count": 22,
@@ -95,7 +95,7 @@
       "requested_reference": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/governance/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/governance.md",
       "group": "knowledge_refs",
       "consumed_by": [
         "facts",
@@ -103,12 +103,12 @@
         "experience"
       ],
       "type": "file",
-      "source": "knowledge/wiki/summaries/guidelines/principles/governance/principles.md",
-      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/principles/governance/principles.md",
-      "requested_reference": "knowledge/wiki/summaries/guidelines/principles/governance/principles.md"
+      "source": "knowledge/wiki/summaries/guidelines/governance.md",
+      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/governance.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/governance.md"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
       "group": "knowledge_refs",
       "consumed_by": [
         "facts",
@@ -116,12 +116,12 @@
         "experience"
       ],
       "type": "file",
-      "source": "knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md",
-      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md",
-      "requested_reference": "knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md"
+      "source": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/information_architecture.md"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/usability/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/usability.md",
       "group": "knowledge_refs",
       "consumed_by": [
         "facts",
@@ -129,9 +129,9 @@
         "experience"
       ],
       "type": "file",
-      "source": "knowledge/wiki/summaries/guidelines/principles/usability/principles.md",
-      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/principles/usability/principles.md",
-      "requested_reference": "knowledge/wiki/summaries/guidelines/principles/usability/principles.md"
+      "source": "knowledge/wiki/summaries/guidelines/usability.md",
+      "destination": "projects/001/runtime/context_bundle/knowledge/wiki/summaries/guidelines/usability.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/usability.md"
     },
     {
       "reference": "knowledge/wiki/index.md",

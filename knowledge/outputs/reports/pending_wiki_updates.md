@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-04-22T10:52:38+00:00
+- generated_at_utc: 2026-04-22T12:12:24+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -34,7 +34,7 @@
 
 ```text
 raw_root=E:\AI设计\体验蓝图构建思路\knowledge\raw
-file_count=40
+file_count=37
 business/permission/00_domain_overview.md
 business/permission/01_scope_and_boundary.md
 business/permission/02_glossary.md
@@ -60,19 +60,16 @@ business/permission/41_business_blueprint_handoff.md
 business/permission/42_experience_blueprint_handoff.md
 business/permission/README.md
 business/README.md
-guidelines/principles/accessibility/principles.md
-guidelines/principles/cognition/principles.md
-guidelines/principles/flow_mode/principles.md
-guidelines/principles/governance/principles.md
-guidelines/principles/information_architecture/principles.md
-guidelines/principles/quality/principles.md
-guidelines/principles/readability/principles.md
-guidelines/principles/README.md
-guidelines/principles/usability/principles.md
-guidelines/principles/visual/principles.md
+guidelines/accessibility.md
+guidelines/cognition.md
+guidelines/flow_mode.md
+guidelines/governance.md
+guidelines/information_architecture.md
+guidelines/quality.md
+guidelines/readability.md
 guidelines/README.md
-guidelines/task_type_index.md
-guidelines/trigger_index.md
+guidelines/usability.md
+guidelines/visual.md
 manifests/source_manifest.generated.md
 manifests/source_manifest.md
 ```
@@ -81,14 +78,14 @@ manifests/source_manifest.md
 
 ```text
 written=E:\AI设计\体验蓝图构建思路\knowledge\raw\manifests\source_manifest.generated.md
-record_count=38
+record_count=35
 ```
 
 ### build_summaries.py
 
 ```text
 mode=apply
-summary_count=38
+summary_count=35
 wiki/summaries/business/permission/00_domain_overview.md
 wiki/summaries/business/permission/01_scope_and_boundary.md
 wiki/summaries/business/permission/02_glossary.md
@@ -114,19 +111,16 @@ wiki/summaries/business/permission/41_business_blueprint_handoff.md
 wiki/summaries/business/permission/42_experience_blueprint_handoff.md
 wiki/summaries/business/permission/README.md
 wiki/summaries/business/README.md
-wiki/summaries/guidelines/principles/accessibility/principles.md
-wiki/summaries/guidelines/principles/cognition/principles.md
-wiki/summaries/guidelines/principles/flow_mode/principles.md
-wiki/summaries/guidelines/principles/governance/principles.md
-wiki/summaries/guidelines/principles/information_architecture/principles.md
-wiki/summaries/guidelines/principles/quality/principles.md
-wiki/summaries/guidelines/principles/readability/principles.md
-wiki/summaries/guidelines/principles/README.md
-wiki/summaries/guidelines/principles/usability/principles.md
-wiki/summaries/guidelines/principles/visual/principles.md
+wiki/summaries/guidelines/accessibility.md
+wiki/summaries/guidelines/cognition.md
+wiki/summaries/guidelines/flow_mode.md
+wiki/summaries/guidelines/governance.md
+wiki/summaries/guidelines/information_architecture.md
+wiki/summaries/guidelines/quality.md
+wiki/summaries/guidelines/readability.md
 wiki/summaries/guidelines/README.md
-wiki/summaries/guidelines/task_type_index.md
-wiki/summaries/guidelines/trigger_index.md
+wiki/summaries/guidelines/usability.md
+wiki/summaries/guidelines/visual.md
 ```
 
 ### reindex_wiki.py

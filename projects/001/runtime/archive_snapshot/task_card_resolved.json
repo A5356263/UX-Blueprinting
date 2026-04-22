@@ -1,4 +1,4 @@
-{
+﻿{
   "task_id": "001",
   "protocol_name": "Cross-AI Task Card",
   "protocol_version": "v0.2",
@@ -24,9 +24,9 @@
     "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
     "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
     "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
-    "knowledge/wiki/summaries/guidelines/principles/governance/principles.md",
-    "knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md",
-    "knowledge/wiki/summaries/guidelines/principles/usability/principles.md"
+    "knowledge/wiki/summaries/guidelines/governance.md",
+    "knowledge/wiki/summaries/guidelines/information_architecture.md",
+    "knowledge/wiki/summaries/guidelines/usability.md"
   ],
   "wiki_refs": [
     "knowledge/wiki/index.md",
@@ -83,17 +83,17 @@
       "is_broad": "false"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/governance/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/governance.md",
       "kind": "file",
       "is_broad": "false"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
       "kind": "file",
       "is_broad": "false"
     },
     {
-      "reference": "knowledge/wiki/summaries/guidelines/principles/usability/principles.md",
+      "reference": "knowledge/wiki/summaries/guidelines/usability.md",
       "kind": "file",
       "is_broad": "false"
     }

@@ -44,45 +44,13 @@
 
 ## guidelines
 
-### principles/accessibility
-
-- [principles](summaries/guidelines/principles/accessibility/principles.md)
-
-### principles/cognition
-
-- [principles](summaries/guidelines/principles/cognition/principles.md)
-
-### principles/flow_mode
-
-- [principles](summaries/guidelines/principles/flow_mode/principles.md)
-
-### principles/governance
-
-- [principles](summaries/guidelines/principles/governance/principles.md)
-
-### principles/information_architecture
-
-- [principles](summaries/guidelines/principles/information_architecture/principles.md)
-
-### principles/quality
-
-- [principles](summaries/guidelines/principles/quality/principles.md)
-
-### principles/readability
-
-- [principles](summaries/guidelines/principles/readability/principles.md)
-
-### principles
-
-- [README](summaries/guidelines/principles/README.md)
-
-### principles/usability
-
-- [principles](summaries/guidelines/principles/usability/principles.md)
-
-### principles/visual
-
-- [principles](summaries/guidelines/principles/visual/principles.md)
+- [accessibility](summaries/guidelines/accessibility.md)
+- [cognition](summaries/guidelines/cognition.md)
+- [flow_mode](summaries/guidelines/flow_mode.md)
+- [governance](summaries/guidelines/governance.md)
+- [information_architecture](summaries/guidelines/information_architecture.md)
+- [quality](summaries/guidelines/quality.md)
+- [readability](summaries/guidelines/readability.md)
 - [README](summaries/guidelines/README.md)
-- [task_type_index](summaries/guidelines/task_type_index.md)
-- [trigger_index](summaries/guidelines/trigger_index.md)
+- [usability](summaries/guidelines/usability.md)
+- [visual](summaries/guidelines/visual.md)

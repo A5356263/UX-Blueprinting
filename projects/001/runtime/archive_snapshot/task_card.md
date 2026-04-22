@@ -1,4 +1,4 @@
-# Task Card
+﻿# Task Card
 
 ## Protocol
 
@@ -61,9 +61,9 @@
 - knowledge/wiki/summaries/business/permission/24_governance_state_model.md
 - knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md
 - knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md
-- knowledge/wiki/summaries/guidelines/principles/governance/principles.md
-- knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md
-- knowledge/wiki/summaries/guidelines/principles/usability/principles.md
+- knowledge/wiki/summaries/guidelines/governance.md
+- knowledge/wiki/summaries/guidelines/information_architecture.md
+- knowledge/wiki/summaries/guidelines/usability.md
 
 ## Wiki
 
@@ -234,3 +234,4 @@
 
 - 输入主文档来自 `test/需求文档.md` 的真实复制件。
 - 如有文档原文中的歧义或残缺，以 facts / business / experience 中显式 gap 的形式暴露，不做想当然补全。
+

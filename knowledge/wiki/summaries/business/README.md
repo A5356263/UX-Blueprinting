@@ -10,7 +10,6 @@
 - source_refs: [knowledge/raw/business/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/README.md
-  - knowledge/wiki/summaries/guidelines/principles/README.md
   - knowledge/wiki/summaries/guidelines/README.md
 
 ## 1. 这份原始资料讲什么
@@ -45,7 +44,6 @@
 ## 6. 相关摘要 / 建议继续阅读
 
 - knowledge/wiki/summaries/business/permission/README.md
-- knowledge/wiki/summaries/guidelines/principles/README.md
 - knowledge/wiki/summaries/guidelines/README.md
 
 > summary_path: knowledge/wiki/summaries/business/README.md

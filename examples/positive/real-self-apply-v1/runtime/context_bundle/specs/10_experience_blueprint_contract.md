@@ -101,7 +101,7 @@
 
 ### 4. 只读取命中的指南，不整包展开
 
-构建体验蓝图时，应优先遵循项目既有建议：先读 `knowledge/guidelines/task_type_index.md`，再按当前任务风险读 `knowledge/guidelines/trigger_index.md`，最后只读取命中的 `principles/*/principles.md`，不应整包展开全部指南。
+构建体验蓝图时，应优先通过 Wiki 命中相关 guideline 主题，再回查命中的 `knowledge/raw/guidelines/<topic>.md` 原文；不应整包展开全部指南。
 
 ### 5. 不得用设计偏好替代业务约束
 

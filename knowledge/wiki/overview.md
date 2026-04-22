@@ -8,9 +8,9 @@
 
 ## 当前概况
 
-- raw_total: 38
-- summary_total: 38
-- summary_coverage: 38/38
+- raw_total: 35
+- summary_total: 35
+- summary_coverage: 35/35
 - gap_count: 25
 - conflict_count: 0
 - question_marker_count: 0
@@ -19,11 +19,11 @@
 
 ## 最近更新的 Raw
 
+- raw/guidelines/README.md
 - raw/business/permission/10_capability_map.md
 - raw/business/permission/11_task_scenarios.md
 - raw/business/permission/12_query_and_configuration_paths.md
 - raw/business/permission/13_route_map.md
-- raw/business/permission/15_page_carrier_semantics.md
 
 ## 无 Summary 的 Raw
 

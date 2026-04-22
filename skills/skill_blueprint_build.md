@@ -21,9 +21,8 @@
 
 ## 使用建议
 
-- 构建体验蓝图时，先读 `knowledge/guidelines/task_type_index.md`
-- 再按当前任务风险读 `knowledge/guidelines/trigger_index.md`
-- 最后只读取命中的 `principles/*/principles.md`
+- 构建体验蓝图时，先通过 Wiki summary / index 命中相关 guideline 主题
+- 再回查命中的 guideline 原文主题文件（`knowledge/raw/guidelines/<topic>.md`）
 - 不整包展开全部设计原则
 
 ## 输出

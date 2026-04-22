@@ -1,19 +1,19 @@
 # 可读性与可理解性原则
 
-- page_id: PG-SUMMARY-GUIDELINES-GUIDELINES-PRINCIPLES-READABILITY-PRINCIPLES
+- page_id: PG-SUMMARY-GUIDELINES-GUIDELINES-READABILITY
 - page_type: summary
-- source_path: knowledge/raw/guidelines/principles/readability/principles.md
+- source_path: knowledge/raw/guidelines/readability.md
 - source_group: guidelines
 - status: active
 - confidence: medium
 - updated_at: 2026-04-22
-- source_refs: [knowledge/raw/guidelines/principles/readability/principles.md]
+- source_refs: [knowledge/raw/guidelines/readability.md]
 - related_summaries:
-  - knowledge/wiki/summaries/guidelines/principles/accessibility/principles.md
-  - knowledge/wiki/summaries/guidelines/principles/cognition/principles.md
-  - knowledge/wiki/summaries/guidelines/principles/flow_mode/principles.md
-  - knowledge/wiki/summaries/guidelines/principles/governance/principles.md
-  - knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md
+  - knowledge/wiki/summaries/guidelines/README.md
+  - knowledge/wiki/summaries/guidelines/accessibility.md
+  - knowledge/wiki/summaries/guidelines/cognition.md
+  - knowledge/wiki/summaries/guidelines/flow_mode.md
+  - knowledge/wiki/summaries/guidelines/governance.md
 
 ## 1. 这份原始资料讲什么
 
@@ -48,10 +48,10 @@
 
 ## 6. 相关摘要 / 建议继续阅读
 
-- knowledge/wiki/summaries/guidelines/principles/accessibility/principles.md
-- knowledge/wiki/summaries/guidelines/principles/cognition/principles.md
-- knowledge/wiki/summaries/guidelines/principles/flow_mode/principles.md
-- knowledge/wiki/summaries/guidelines/principles/governance/principles.md
-- knowledge/wiki/summaries/guidelines/principles/information_architecture/principles.md
+- knowledge/wiki/summaries/guidelines/README.md
+- knowledge/wiki/summaries/guidelines/accessibility.md
+- knowledge/wiki/summaries/guidelines/cognition.md
+- knowledge/wiki/summaries/guidelines/flow_mode.md
+- knowledge/wiki/summaries/guidelines/governance.md
 
-> summary_path: knowledge/wiki/summaries/guidelines/principles/readability/principles.md
+> summary_path: knowledge/wiki/summaries/guidelines/readability.md
