@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-22
+- updated_at: 2026-04-24
 - source_refs: [knowledge/raw/business/permission/30_experience_risk_patterns.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md
@@ -33,7 +33,7 @@
 - `TR-001` 可解释性优先：必须回答为什么有、为什么没有、来自哪里、谁改的、何时生效
 - `TR-002` 优先级必须外显：存在覆盖规则时必须声明最终判定链路
 - `TR-003` 概念不增殖：新增权限概念默认高风险，需明确收敛策略
-- `TR-004` 结果可验证：条件组、交集、动态规则必须定义可验证表达
+- `TR-004` 结果可验证：范围类型、条件组（组内交集/组间并集）、动态规则必须定义可验证表达
 - `TR-005` 查询闭环：至少具备按人查、按功能查、按变更查的一种闭环
 - `TR-006` 安全第一：高危、批量、不可逆操作必须标注审批、审计、回滚策略
 
@@ -43,7 +43,7 @@
 - RISK-001 入口选择困难
 - RISK-002 权限来源不透明
 - RISK-003 覆盖规则导致结果违背直觉
-- RISK-004 条件组与交集导致结果不可预测
+- RISK-004 范围类型与条件组心智不一致导致结果不可预测
 - RISK-005 跨模块散落导致查询分裂
 
 ## 5. 当前缺口 / 冲突 / 问题

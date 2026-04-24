@@ -17,6 +17,8 @@
 - `VISIBILITY.APP_NOT_VISIBLE`：应用维度不可见覆盖个人维度权限
 - `GRANT.NO_FUNCTION_GRANT`：可见但未配功能权限
 - `SCOPE.DATA_SCOPE_EMPTY`：数据权限为无或交集后为空
+- `SCOPE.CONDITION_GROUP_REQUIRED`：部分数据权限下未保留任何条件组
+- `SCOPE.CONDITION_REQUIRED`：条件组存在但组内无有效条件
 - `GOVERNANCE.PENDING_APPROVAL`：申请或变更在途，尚未生效
 - `BOUNDARY.OUT_OF_ADMIN_SCOPE`：子管理员范围隔离导致不可改或不可授予
 

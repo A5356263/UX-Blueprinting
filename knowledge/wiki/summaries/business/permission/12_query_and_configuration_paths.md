@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-22
+- updated_at: 2026-04-24
 - source_refs: [knowledge/raw/business/permission/12_query_and_configuration_paths.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md
@@ -47,8 +47,6 @@
 
 ## 5. 当前缺口 / 冲突 / 问题
 
-- [GAP] `
-- [GAP] `
 - [GAP] 按权限查 / 按功能点查现状承载待进一步核实
 - [GAP] 按角色查虽有角色管理承载，但独立查询语义与结果视图仍未完全明确
 - [GAP] 按变更查当前分散在权限域与审批域之间，权限域内缺少统一变更台账页

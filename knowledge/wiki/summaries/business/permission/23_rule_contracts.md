@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-22
+- updated_at: 2026-04-24
 - source_refs: [knowledge/raw/business/permission/23_rule_contracts.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md
@@ -42,8 +42,8 @@
 - R-001 可见性前置
 - R-002 不可见覆盖
 - R-003 功能权限前置数据权限
-- R-004 数据范围取交集
-- R-005 治理影响生效
+- R-004 数据范围范围类型前置
+- R-005 条件组计算规则
 
 ## 5. 当前缺口 / 冲突 / 问题
 

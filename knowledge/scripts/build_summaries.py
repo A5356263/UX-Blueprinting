@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 
 
-TAG_PATTERN = re.compile(r"\[(GAP|CONFLICT|QUESTION)\]\s*(.+)")
+TAG_PATTERN = re.compile(r"^\s*(?:-\s+)?\[(GAP|CONFLICT|QUESTION)\]\s*(.+?)\s*$")
 
 
 def list_raw_files(raw_root: Path) -> list[Path]:
@@ -129,7 +129,7 @@ def extract_terms(lines: list[str]) -> list[str]:
 def extract_tagged_items(lines: list[str]) -> list[str]:
     items: list[str] = []
     for line in lines:
-        match = TAG_PATTERN.search(line.strip())
+        match = TAG_PATTERN.match(line.strip())
         if match:
             items.append(f"[{match.group(1)}] {match.group(2).strip()}")
     if not items:

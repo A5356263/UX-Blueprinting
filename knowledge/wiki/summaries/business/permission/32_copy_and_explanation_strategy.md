@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-22
+- updated_at: 2026-04-24
 - source_refs: [knowledge/raw/business/permission/32_copy_and_explanation_strategy.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md

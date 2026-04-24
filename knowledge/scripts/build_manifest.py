@@ -15,7 +15,8 @@ def classify(path: Path) -> tuple[str, str]:
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     raw_root = root / "raw"
-    out = raw_root / "manifests" / "source_manifest.generated.md"
+    out_generated = raw_root / "manifests" / "source_manifest.generated.md"
+    out_canonical = raw_root / "manifests" / "source_manifest.md"
     rows: list[str] = []
     idx_map: dict[str, int] = {"SRC-BIZ": 0, "SRC-GDL": 0, "SRC-INB": 0}
     files = sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "manifests" not in p.parts)
@@ -38,8 +39,11 @@ def main() -> int:
         *rows,
         "",
     ]
-    out.write_text("\n".join(content), encoding="utf-8")
-    print(f"written={out}")
+    manifest_text = "\n".join(content)
+    out_generated.write_text(manifest_text, encoding="utf-8")
+    out_canonical.write_text(manifest_text, encoding="utf-8")
+    print(f"written={out_generated}")
+    print(f"written={out_canonical}")
     print(f"record_count={len(rows)}")
     return 0
 

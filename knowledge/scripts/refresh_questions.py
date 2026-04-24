@@ -5,13 +5,13 @@ from datetime import date
 from pathlib import Path
 
 
-TAG_PATTERN = re.compile(r"\[(GAP|CONFLICT|QUESTION)\]\s*(.+)")
+TAG_PATTERN = re.compile(r"^\s*(?:-\s+)?\[(GAP|CONFLICT|QUESTION)\]\s*(.+?)\s*$")
 
 
 def extract_questions(file: Path, root: Path) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []
     for line in file.read_text(encoding="utf-8").splitlines():
-        match = TAG_PATTERN.search(line.strip())
+        match = TAG_PATTERN.match(line.strip())
         if not match:
             continue
         items.append(

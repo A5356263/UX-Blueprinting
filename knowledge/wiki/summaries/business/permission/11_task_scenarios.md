@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-22
+- updated_at: 2026-04-24
 - source_refs: [knowledge/raw/business/permission/11_task_scenarios.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md
@@ -47,7 +47,6 @@
 
 ## 5. 当前缺口 / 冲突 / 问题
 
-- [GAP] 现有事实只明确了详情查看入口，未说明批量结果核对页
 - [GAP] 批量授权后的统一结果核对页尚未在现有页面事实中明确
 
 ## 6. 相关摘要 / 建议继续阅读
