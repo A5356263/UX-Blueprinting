@@ -92,6 +92,11 @@ Minimum fields:
 - `protocol_version`
 - `task_name`
 - `domain`
+- `task_goal`
+- `task_scenario`
+- `execution_constraints`
+- `read_order`
+- `notes`
 - `required_inputs`
 - `required_outputs`
 - `knowledge_refs`
@@ -113,12 +118,21 @@ Minimum fields:
 - `warnings`
 - `errors`
 
+## Runtime Semantic Fields
+
+- `task_goal`: Parsed from `## Task Goal`; required; describes the purpose and expected result of the task.
+- `task_scenario`: Parsed from `## Task Scenario`; optional; describes the current usage or business scenario.
+- `execution_constraints`: Parsed from `## Constraints`; required; defines hard execution boundaries.
+- `read_order`: Parsed from `## Read Order`; recommended; defines the preferred runtime consumption order.
+- `notes`: Parsed from `## Notes`; optional; records supplementary human-facing instructions.
+
 ## Warning Conditions
 
 The task card may still pass with warnings when:
 
 - `## Wiki` is missing but `## Knowledge` exists.
 - `## Read Order` is missing.
+- `## Read Order` exists but cannot be parsed into readable items.
 - A knowledge or wiki reference is directory-only or wildcard-based.
 - `## Knowledge Consumption Policy` is missing while broad references are present.
 - `## Platform Optimizations` exists but is empty.
@@ -131,5 +145,7 @@ The task card may still pass with warnings when:
 - `Required Outputs` is empty.
 - Any output path is outside `projects/<project-id>/workspace/`.
 - Any reference section exists but cannot be parsed into path entries.
+- `Task Goal` exists but cannot be parsed into readable items.
+- `Constraints` exists but cannot be parsed into readable items.
 - Any output requirement section is missing required subsections.
 - `task_card_resolved.json` is not generated.

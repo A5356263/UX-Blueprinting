@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
-from packages.common import get_project_source_dir
+from packages.common import get_project_runtime_dir, get_project_source_dir
 
 from .knowledge_loader import load_knowledge_notes
 from .schemas import (
@@ -43,10 +44,31 @@ def _normalize_line(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip(" -\t")
 
 
+def _read_json(path: Path) -> dict[str, object]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _runtime_contract_paths(project_id: str) -> dict[str, Path]:
+    runtime_dir = get_project_runtime_dir(project_id)
+    return {
+        "resolved": runtime_dir / "task_card_resolved.json",
+        "manifest": runtime_dir / "context_manifest.json",
+    }
+
+
+def _fallback_task_card_path(project_id: str) -> Path:
+    return get_project_source_dir(project_id) / "task_card.md"
+
+
 def _source_paths(project_id: str) -> list[Path]:
     source_dir = get_project_source_dir(project_id)
     return [
-        source_dir / "task_card.md",
         source_dir / "requirement.md",
         source_dir / "background.md",
     ]
@@ -85,10 +107,74 @@ def _extract_candidates(pattern: re.Pattern[str], text: str) -> list[str]:
     return results
 
 
-def _build_evidence_units(project_id: str) -> list[EvidenceUnit]:
+def _build_contract_evidence_units(project_id: str) -> list[EvidenceUnit]:
+    contract_paths = _runtime_contract_paths(project_id)
+    resolved = _read_json(contract_paths["resolved"])
+    manifest = _read_json(contract_paths["manifest"])
     units: list[EvidenceUnit] = []
     counter = 1
-    for path in _source_paths(project_id):
+
+    def append_items(values: object, heading: str, source_path: Path, base_categories: list[str]) -> None:
+        nonlocal counter
+        if not isinstance(values, list):
+            return
+        for value in values:
+            if not isinstance(value, str):
+                continue
+            text = _normalize_line(value)
+            if len(text) < 2:
+                continue
+            units.append(
+                EvidenceUnit(
+                    evidence_id=f"EV-R{counter:03d}",
+                    text=text,
+                    source_file=str(source_path).replace("\\", "/"),
+                    heading=heading,
+                    line_no=0,
+                    categories=sorted(set(base_categories + _classify_line(text))),
+                    actor_candidates=_extract_candidates(ROLE_PATTERN, text),
+                    object_candidates=_extract_candidates(OBJECT_PATTERN, text),
+                )
+            )
+            counter += 1
+
+    append_items(resolved.get("task_goal"), "Runtime Task Goal", contract_paths["resolved"], ["action", "object"])
+    append_items(resolved.get("task_scenario"), "Runtime Task Scenario", contract_paths["resolved"], ["scope", "dependency", "object"])
+    append_items(resolved.get("execution_constraints"), "Runtime Constraints", contract_paths["resolved"], ["rule", "scope"])
+    append_items(resolved.get("read_order"), "Runtime Read Order", contract_paths["resolved"], ["dependency", "action"])
+
+    task_contract = manifest.get("task_contract")
+    if isinstance(task_contract, dict):
+        for field in ("task_goal", "task_scenario", "execution_constraints", "read_order", "notes"):
+            append_items(task_contract.get(field), "Manifest Task Contract", contract_paths["manifest"], ["dependency", "scope"])
+
+    return units
+
+
+def _build_evidence_units(project_id: str) -> list[EvidenceUnit]:
+    units = _build_contract_evidence_units(project_id)
+    counter = len(units) + 1
+    source_paths = list(_source_paths(project_id))
+
+    if not units:
+        fallback_path = _fallback_task_card_path(project_id)
+        if fallback_path.exists():
+            units.append(
+                EvidenceUnit(
+                    evidence_id="EV-R000",
+                    text="Runtime 合同缺失，facts 临时回退读取 task_card.md；业务事实仍仅以 requirement.md 和 background.md 为主。",
+                    source_file=str(fallback_path).replace("\\", "/"),
+                    heading="Runtime Contract Fallback",
+                    line_no=0,
+                    categories=["dependency", "exception", "scope"],
+                    actor_candidates=[],
+                    object_candidates=["Runtime 合同", "task_card"],
+                )
+            )
+            counter += 1
+            source_paths.insert(0, fallback_path)
+
+    for path in source_paths:
         if not path.exists():
             continue
         heading_stack: list[str] = []
@@ -133,13 +219,14 @@ def _make_synthetic_unit(
     text: str,
     heading: str,
     categories: list[str],
+    source_file: str | None = None,
     actor_candidates: list[str] | None = None,
     object_candidates: list[str] | None = None,
 ) -> EvidenceUnit:
     return EvidenceUnit(
         evidence_id=evidence_id,
         text=text,
-        source_file=f"projects/{project_id}/source/task_card.md",
+        source_file=source_file or f"projects/{project_id}/runtime/task_card_resolved.json",
         heading=heading,
         line_no=0,
         categories=categories,
@@ -156,6 +243,9 @@ def _augment_with_synthetic_units(
     task_scenario: str,
     has_knowledge_notes: bool,
 ) -> list[EvidenceUnit]:
+    runtime_source = f"projects/{project_id}/runtime/task_card_resolved.json"
+    fallback_source = f"projects/{project_id}/source/task_card.md"
+    semantic_source = runtime_source if any("/runtime/" in unit.source_file for unit in units) else fallback_source
     synthetic_units = [
         _make_synthetic_unit(
             project_id,
@@ -163,6 +253,7 @@ def _augment_with_synthetic_units(
             task_goal,
             "Task Goal",
             ["action", "object"],
+            source_file=semantic_source,
             actor_candidates=["当前任务评审角色"],
             object_candidates=["生成链路"],
         ),
@@ -172,6 +263,7 @@ def _augment_with_synthetic_units(
             task_boundary,
             "Task Boundary",
             ["scope", "rule", "object"],
+            source_file=semantic_source,
             object_candidates=["任务边界"],
         ),
         _make_synthetic_unit(
@@ -180,6 +272,7 @@ def _augment_with_synthetic_units(
             task_scenario,
             "Task Scenario",
             ["action", "dependency", "object"],
+            source_file=semantic_source,
             actor_candidates=["设计评审角色"],
             object_candidates=["当前任务"],
         ),
@@ -189,6 +282,7 @@ def _augment_with_synthetic_units(
             "当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
             "Fallback State",
             ["state", "exception"],
+            source_file=semantic_source,
             actor_candidates=["当前任务评审角色"],
             object_candidates=["当前状态"],
         ),
@@ -201,6 +295,7 @@ def _augment_with_synthetic_units(
                 "当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。",
                 "Fallback Knowledge Boundary",
                 ["dependency", "exception"],
+                source_file=semantic_source,
                 object_candidates=["知识引用"],
             )
         )
@@ -518,7 +613,7 @@ def build_facts_model(project_id: str) -> FactsModel:
     all_fact_entries = actor_facts + object_facts + state_facts + action_facts + rule_facts + exception_facts + dependency_facts + scope_facts
     trace_links = _build_trace_links(evidence_units, all_fact_entries)
 
-    source_files = [str(path).replace("\\", "/") for path in _source_paths(project_id)[1:]]
+    source_files = [str(path).replace("\\", "/") for path in _source_paths(project_id)]
     if len(source_files) < 2:
         source_files = [
             f"projects/{project_id}/source/requirement.md",

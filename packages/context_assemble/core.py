@@ -196,10 +196,18 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     facts_req = resolved.get("facts_output_requirements", {})
     business_req = resolved.get("business_output_requirements", {})
     experience_req = resolved.get("experience_output_requirements", {})
+    task_contract = {
+        "task_goal": resolved.get("task_goal", []),
+        "task_scenario": resolved.get("task_scenario", []),
+        "execution_constraints": resolved.get("execution_constraints", []),
+        "read_order": resolved.get("read_order", []),
+        "notes": resolved.get("notes", []),
+    }
     manifest = {
         "task_id": task_id,
         "resolved_from": to_repo_relative(repo_root, resolved_path),
         "reference_count": len(copied),
+        "task_contract": task_contract,
         "references": copied,
         "warnings": warnings,
         "knowledge_entry_mode": "summary_first_with_raw_fallback",
@@ -208,6 +216,11 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "directory_refs_resolved_to_index": directory_refs_resolved_to_index,
         "directory_refs_fallback_copied": sorted(set(directory_refs_fallback_copied)),
         "narrowed_references": narrowed_references,
+        "stage_boundaries": {
+            "facts": facts_req.get("boundary", []),
+            "business": business_req.get("boundary", []),
+            "experience": experience_req.get("boundary", []),
+        },
         "facts_extraction_boundary": facts_req.get("boundary", []),
         "business_judgment_boundary": business_req.get("boundary", []),
         "experience_translation_boundary": experience_req.get("boundary", []),

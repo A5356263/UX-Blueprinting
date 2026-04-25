@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_project_source_dir
@@ -70,6 +71,21 @@ def parse_bullets(lines: list[str]) -> list[str]:
         stripped = line.strip()
         if stripped.startswith("- "):
             values.append(stripped[2:].strip())
+    return values
+
+
+def parse_text_items(lines: list[str]) -> list[str]:
+    values: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("- "):
+            values.append(stripped[2:].strip())
+            continue
+        match = re.match(r"^\d+[\.、]\s*(.+)$", stripped)
+        if match:
+            values.append(match.group(1).strip())
     return values
 
 
@@ -213,6 +229,11 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "protocol_version": protocol_version,
         "task_name": task_name,
         "domain": domain,
+        "task_goal": parse_text_items(sections.get("## Task Goal", [])),
+        "task_scenario": parse_text_items(sections.get("## Task Scenario", [])),
+        "execution_constraints": parse_text_items(sections.get("## Constraints", [])),
+        "read_order": parse_text_items(sections.get("## Read Order", [])),
+        "notes": parse_text_items(sections.get("## Notes", [])),
         "required_inputs": required_inputs,
         "required_outputs": required_outputs,
         "knowledge_refs": [],
@@ -239,6 +260,11 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "warnings": warnings,
         "errors": errors,
     }
+
+    if not resolved["task_goal"]:
+        errors.append("Task Goal is empty or unparseable")
+    if not resolved["execution_constraints"]:
+        errors.append("Constraints is empty or unparseable")
 
     for section, field in REFERENCE_SECTIONS.items():
         bullets = parse_bullets(sections.get(section, []))
@@ -270,6 +296,8 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         warnings.append("Wiki section is missing or empty; execution will rely on Knowledge directly")
     if "## Read Order" not in sections:
         warnings.append("Read Order section is missing")
+    elif not resolved["read_order"]:
+        warnings.append("Read Order section exists but no readable items were parsed")
     if has_directory_ref:
         warnings.append("Knowledge or Wiki references include directory-only paths; assembly must narrow them to stable entries when possible")
     if has_pattern_ref:

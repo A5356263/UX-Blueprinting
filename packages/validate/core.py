@@ -342,6 +342,71 @@ def read_json(path: Path) -> dict[str, object]:
         return {}
 
 
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str) and item.strip()]
+
+
+def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> None:
+    runtime_dir = get_project_runtime_dir(project_id)
+    resolved_path = runtime_dir / "task_card_resolved.json"
+    manifest_path = runtime_dir / "context_manifest.json"
+
+    resolved: dict[str, object] = {}
+    manifest: dict[str, object] = {}
+
+    if not resolved_path.exists():
+        add_issue(issues, "blocker", "缺少 runtime/task_card_resolved.json")
+    else:
+        resolved = read_json(resolved_path)
+        if not resolved:
+            add_issue(issues, "blocker", "runtime/task_card_resolved.json 不可读取或不是有效 JSON")
+        else:
+            resolved_errors = _string_list(resolved.get("errors"))
+            if resolved_errors:
+                add_issue(issues, "blocker", f"task_card_resolved.json 存在解析错误：{' | '.join(resolved_errors[:3])}")
+            if not _string_list(resolved.get("task_goal")):
+                add_issue(issues, "blocker", "task_card_resolved.json 缺少 task_goal")
+            if not _string_list(resolved.get("execution_constraints")):
+                add_issue(issues, "blocker", "task_card_resolved.json 缺少 execution_constraints")
+            if not _string_list(resolved.get("read_order")):
+                add_issue(issues, "warning", "task_card_resolved.json 缺少 read_order")
+
+    if not manifest_path.exists():
+        add_issue(issues, "blocker", "缺少 runtime/context_manifest.json")
+        return
+
+    manifest = read_json(manifest_path)
+    if not manifest:
+        add_issue(issues, "blocker", "runtime/context_manifest.json 不可读取或不是有效 JSON")
+        return
+
+    task_contract = manifest.get("task_contract")
+    if not isinstance(task_contract, dict):
+        add_issue(issues, "blocker", "context_manifest.json 缺少 task_contract")
+        return
+
+    if not _string_list(task_contract.get("task_goal")):
+        add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 task_goal")
+    if not _string_list(task_contract.get("execution_constraints")):
+        add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 execution_constraints")
+    if not _string_list(task_contract.get("read_order")):
+        add_issue(issues, "warning", "context_manifest.json.task_contract 缺少 read_order")
+
+    if resolved:
+        mismatched_fields: list[str] = []
+        for field in ("task_goal", "task_scenario", "execution_constraints", "read_order", "notes"):
+            if _string_list(resolved.get(field)) != _string_list(task_contract.get(field)):
+                mismatched_fields.append(field)
+        if mismatched_fields:
+            add_issue(
+                issues,
+                "warning",
+                f"context_manifest.json.task_contract 与 task_card_resolved.json 不一致：{', '.join(mismatched_fields)}",
+            )
+
+
 def extract_fact_ids(text: str) -> list[str]:
     return sorted(set(FACT_ID_PATTERN.findall(text)))
 
@@ -937,6 +1002,7 @@ def run_validate_outputs(project_id: str) -> int:
             "generate-experience",
         ],
     )
+    check_runtime_contract(project_id, issues)
     output_status_lines: list[str] = []
     completed_outputs: list[str] = []
     missing_outputs: list[str] = []
@@ -956,6 +1022,8 @@ def run_validate_outputs(project_id: str) -> int:
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
     experience_text = read_text(workspace_dir / "experience_blueprint.md")
+    if f"projects/{project_id}/source/task_card.md" in facts_text:
+        add_issue(issues, "warning", "facts.md 仍直接引用 source/task_card.md，可能存在双入口")
 
     for file_name, content in [
         ("facts.md", facts_text),
