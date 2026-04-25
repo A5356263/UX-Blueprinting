@@ -83,6 +83,34 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
     return refs
 
 
+def _load_reference_paths_from_plan(project_id: str, stage: str) -> list[str]:
+    manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
+    if not manifest_path.exists():
+        return []
+    import json
+
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    plan = payload.get("knowledge_consumption_plan")
+    if not isinstance(plan, dict):
+        return []
+
+    stage_plan = plan.get(stage)
+    if not isinstance(stage_plan, dict):
+        return []
+
+    refs: list[str] = []
+    if stage == "facts":
+        refs.extend([str(item) for item in stage_plan.get("required_wiki_refs", []) if isinstance(item, str)])
+    elif stage == "business":
+        refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
+        refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])
+    elif stage == "experience":
+        refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
+        refs.extend([str(item) for item in stage_plan.get("guideline_refs", []) if isinstance(item, str)])
+        refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])
+    return refs
+
+
 def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | None:
     path = repo_root / Path(ref_path.replace("/", "\\"))
     if not path.exists() or not path.is_file():
@@ -105,7 +133,11 @@ def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | 
 
 def load_knowledge_notes(project_id: str, stage: str) -> list[KnowledgeNote]:
     repo_root = get_repo_root()
-    raw_refs = _load_reference_paths_from_manifest(project_id, stage) or _load_reference_paths_from_task_card(project_id)
+    raw_refs = (
+        _load_reference_paths_from_plan(project_id, stage)
+        or _load_reference_paths_from_manifest(project_id, stage)
+        or _load_reference_paths_from_task_card(project_id)
+    )
     deduped: list[str] = []
     seen: set[str] = set()
     for ref in raw_refs:

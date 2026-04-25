@@ -5,7 +5,7 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 2
+- warning_count: 1
 - info_count: 1
 
 - project_id: 001
@@ -30,7 +30,6 @@
 ## Warnings
 
 - facts.md 可能越过阶段边界：包含 高保真视觉
-- facts.md 仍包含占位内容
 
 ## Infos
 

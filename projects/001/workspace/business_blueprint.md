@@ -10,19 +10,20 @@
 ## 领域基线
 
 - 当前命中的知识：
-- KN-01 Knowledge Wiki Index
-- KN-02 00_domain_overview
-- KN-03 11_task_scenarios
-- KN-04 20_decision_chain_contract
-- KN-05 24_governance_state_model
-- KN-06 31_experience_translation_requirements
-- KN-07 32_copy_and_explanation_strategy
+- KN-01 00_domain_overview
+- KN-02 11_task_scenarios
+- KN-03 20_decision_chain_contract
+- KN-04 24_governance_state_model
+- KN-05 31_experience_translation_requirements
+- KN-06 32_copy_and_explanation_strategy
+- KN-07 00_domain_overview
+- KN-08 11_task_scenarios
 - 基线结论：
-- BL-01: Knowledge Wiki Index：page_id: PG-SYSTEM-INDEX（来源：KN-01, knowledge/wiki/index.md）
-- BL-02: 00_domain_overview：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW（来源：KN-02, knowledge/wiki/summaries/business/permission/00_domain_overview.md）
-- BL-03: 11_task_scenarios：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-11_TASK_SCENARIOS（来源：KN-03, knowledge/wiki/summaries/business/permission/11_task_scenarios.md）
-- BL-04: 20_decision_chain_contract：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-20_DECISION_CHAIN_CONTRACT（来源：KN-04, knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md）
-- BL-05: 24_governance_state_model：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-24_GOVERNANCE_STATE_MODEL（来源：KN-05, knowledge/wiki/summaries/business/permission/24_governance_state_model.md）
+- BL-01: 00_domain_overview：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW（来源：KN-01, knowledge/wiki/summaries/business/permission/00_domain_overview.md）
+- BL-02: 11_task_scenarios：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-11_TASK_SCENARIOS（来源：KN-02, knowledge/wiki/summaries/business/permission/11_task_scenarios.md）
+- BL-03: 20_decision_chain_contract：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-20_DECISION_CHAIN_CONTRACT（来源：KN-03, knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md）
+- BL-04: 24_governance_state_model：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-24_GOVERNANCE_STATE_MODEL（来源：KN-04, knowledge/wiki/summaries/business/permission/24_governance_state_model.md）
+- BL-05: 31_experience_translation_requirements：page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-31_EXPERIENCE_TRANSLATION_REQUIREMENTS（来源：KN-05, knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md）
 - BL-06: 当前任务至少存在规则、依赖或异常证据，业务判断必须把治理边界纳入主链路。（来源：EV-R006）
 
 ## 方案意图与变更类型
@@ -43,7 +44,7 @@
 ### J-02 当前输入与命中知识是否形成稳定基线
 
 - 判断结论：较稳定
-- 主要依据：knowledge=KN-01 Knowledge Wiki Index; KN-02 00_domain_overview; KN-03 11_task_scenarios
+- 主要依据：knowledge=KN-01 00_domain_overview; KN-02 11_task_scenarios; KN-03 20_decision_chain_contract
 - 对比对象：没有知识基线时，业务判断只能停留在输入表层，难以形成领域立场。
 - 剩余缺口：GAP-01: 信息不足处保留 `[GAP]`
 

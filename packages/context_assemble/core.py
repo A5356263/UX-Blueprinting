@@ -7,6 +7,7 @@ import shutil
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_repo_root
+from packages.knowledge_consumption import build_knowledge_consumption_plan
 from packages.provenance import append_command_if_provenance_exists
 from packages.task_card_resolve import resolve_task_card_file
 
@@ -124,6 +125,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     warnings = list(resolved.get("warnings", []))
     primary_entries = [str(item) for item in resolved.get("primary_knowledge_entries", [])]
     fallback_refs = [str(item) for item in resolved.get("fallback_source_refs", [])]
+    knowledge_plan, source_ref_chains = build_knowledge_consumption_plan(resolved)
 
     consumption_map = {
         "knowledge_refs": ["facts", "business", "experience"],
@@ -132,16 +134,86 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "check_refs": ["gate", "validate"],
     }
 
-    reference_items: list[dict[str, object]] = []
+    reference_items_raw: list[dict[str, object]] = []
     for field in ("knowledge_refs", "wiki_refs", "template_refs", "check_refs"):
         for reference in resolved.get(field, []):
-            reference_items.append(
+            reference_items_raw.append(
                 {
                     "reference": str(reference),
                     "group": field,
                     "consumed_by": consumption_map[field],
                 }
             )
+
+    def append_stage_refs(refs: list[str], group: str, stage: str) -> None:
+        for ref in refs:
+            reference_items_raw.append(
+                {
+                    "reference": ref,
+                    "group": group,
+                    "consumed_by": [stage],
+                }
+            )
+
+    append_stage_refs(list(knowledge_plan["facts"].get("required_wiki_refs", [])), "wiki_refs", "facts")
+    append_stage_refs(list(knowledge_plan["business"].get("summary_refs", [])), "wiki_refs", "business")
+    append_stage_refs(list(knowledge_plan["business"].get("related_summary_refs", [])), "wiki_refs", "business")
+    append_stage_refs(list(knowledge_plan["experience"].get("summary_refs", [])), "wiki_refs", "experience")
+    append_stage_refs(list(knowledge_plan["experience"].get("guideline_refs", [])), "wiki_refs", "experience")
+    append_stage_refs(list(knowledge_plan["experience"].get("related_summary_refs", [])), "wiki_refs", "experience")
+
+    raw_route_by_ref: dict[str, dict[str, object]] = {}
+    for chain in source_ref_chains:
+        raw_ref = str(chain.get("raw", "")).strip()
+        stage = str(chain.get("stage", "")).strip()
+        summary = str(chain.get("summary", "")).strip()
+        if not raw_ref or not stage:
+            continue
+        route_meta = raw_route_by_ref.setdefault(
+            raw_ref,
+            {
+                "stages": [],
+                "summary": summary,
+                "reason": "source_refs",
+            },
+        )
+        if stage not in route_meta["stages"]:
+            route_meta["stages"].append(stage)
+        if summary and not route_meta.get("summary"):
+            route_meta["summary"] = summary
+
+    for raw_ref, route_meta in raw_route_by_ref.items():
+        reference_items_raw.append(
+            {
+                "reference": raw_ref,
+                "group": "raw_refs",
+                "consumed_by": route_meta["stages"],
+                "routed_from_summary": route_meta.get("summary", ""),
+                "route_reason": route_meta.get("reason", "source_refs"),
+            }
+        )
+
+    deduped_reference_items: dict[tuple[str, str], dict[str, object]] = {}
+    for item in reference_items_raw:
+        key = (str(item["group"]), str(item["reference"]))
+        existing = deduped_reference_items.get(key)
+        if existing is None:
+            deduped_reference_items[key] = {
+                "reference": str(item["reference"]),
+                "group": str(item["group"]),
+                "consumed_by": list(item.get("consumed_by", [])),
+                "routed_from_summary": str(item.get("routed_from_summary", "")),
+                "route_reason": str(item.get("route_reason", "")),
+            }
+            continue
+        merged_consumed_by = sorted(set(existing.get("consumed_by", []) + list(item.get("consumed_by", []))))
+        existing["consumed_by"] = merged_consumed_by
+        if not existing.get("routed_from_summary") and item.get("routed_from_summary"):
+            existing["routed_from_summary"] = item.get("routed_from_summary")
+        if not existing.get("route_reason") and item.get("route_reason"):
+            existing["route_reason"] = item.get("route_reason")
+
+    reference_items = list(deduped_reference_items.values())
 
     copied: list[dict[str, object]] = []
     directory_refs_detected: list[str] = []
@@ -164,6 +236,8 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 narrowed_references,
             )
             source_path = repo_root / Path(resolved_reference.replace("/", "\\"))
+            if str(item.get("group")) == "raw_refs" and source_path.is_dir():
+                raise ValueError(f"Raw reference must be file, not directory: {resolved_reference}")
             copied_item = dict(item)
             copied_item.update(copy_path(repo_root, context_bundle_dir, source_path, resolved_reference, resolved_type))
             copied_item["requested_reference"] = reference
@@ -208,6 +282,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "resolved_from": to_repo_relative(repo_root, resolved_path),
         "reference_count": len(copied),
         "task_contract": task_contract,
+        "knowledge_consumption_plan": knowledge_plan,
         "references": copied,
         "warnings": warnings,
         "knowledge_entry_mode": "summary_first_with_raw_fallback",
@@ -242,6 +317,24 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "fallback_sources_used": sorted(set(fallback_sources_used)),
         "narrowing_actions": narrowed_references,
         "broad_reference_warnings": broad_reference_warnings,
+        "stage_usage": {
+            "facts": {
+                "wiki_refs_used": list(knowledge_plan["facts"].get("required_wiki_refs", [])),
+                "raw_refs_used": [],
+                "raw_policy": "not_default",
+            },
+            "business": {
+                "wiki_refs_used": list(knowledge_plan["business"].get("summary_refs", [])),
+                "raw_refs_used": list(knowledge_plan["business"].get("raw_refs_from_source_refs", [])),
+                "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "business"],
+            },
+            "experience": {
+                "wiki_refs_used": list(knowledge_plan["experience"].get("summary_refs", []))
+                + list(knowledge_plan["experience"].get("guideline_refs", [])),
+                "raw_refs_used": list(knowledge_plan["experience"].get("raw_refs_from_source_refs", [])),
+                "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "experience"],
+            },
+        },
         "references": [
             {
                 "reference": item.get("reference"),
@@ -249,6 +342,8 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 "group": item.get("group"),
                 "type": item.get("type"),
                 "consumed_by": item.get("consumed_by"),
+                "routed_from_summary": item.get("routed_from_summary"),
+                "route_reason": item.get("route_reason"),
             }
             for item in copied
         ],

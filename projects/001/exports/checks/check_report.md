@@ -5,7 +5,7 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 5
+- warning_count: 4
 - info_count: 12
 
 ## Output Status
@@ -24,7 +24,6 @@
 ## Warnings
 
 - facts gate 状态为 warning
-- facts.md 仍包含占位内容
 - facts.md 可能越过阶段边界：包含 高保真视觉
 - 存在未被体验层消费的业务判断：J-03, J-04, J-05
 - 存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01

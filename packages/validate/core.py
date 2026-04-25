@@ -407,6 +407,59 @@ def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> No
             )
 
 
+def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, str]]) -> None:
+    runtime_dir = get_project_runtime_dir(project_id)
+    manifest = read_json(runtime_dir / "context_manifest.json")
+    usage_report = read_json(runtime_dir / "knowledge_usage_report.json")
+
+    plan = manifest.get("knowledge_consumption_plan")
+    if not isinstance(plan, dict):
+        add_issue(issues, "blocker", "context_manifest.json 缺少 knowledge_consumption_plan")
+        return
+
+    facts = plan.get("facts")
+    business = plan.get("business")
+    experience = plan.get("experience")
+    if not isinstance(facts, dict) or not isinstance(business, dict) or not isinstance(experience, dict):
+        add_issue(issues, "blocker", "knowledge_consumption_plan 结构不完整")
+        return
+
+    facts_required = _string_list(facts.get("required_wiki_refs"))
+    facts_raw = _string_list(facts.get("raw_refs_from_source_refs"))
+    business_raw = _string_list(business.get("raw_refs_from_source_refs"))
+    experience_raw = _string_list(experience.get("raw_refs_from_source_refs"))
+
+    if not facts_required:
+        add_issue(issues, "warning", "knowledge_consumption_plan.facts 缺少 required_wiki_refs")
+    if facts_raw:
+        add_issue(issues, "warning", "knowledge_consumption_plan.facts 不应默认读取 raw_refs_from_source_refs")
+    if "raw_refs_from_source_refs" not in business:
+        add_issue(issues, "warning", "knowledge_consumption_plan.business 缺少 raw_refs_from_source_refs")
+    if "raw_refs_from_source_refs" not in experience:
+        add_issue(issues, "warning", "knowledge_consumption_plan.experience 缺少 raw_refs_from_source_refs")
+
+    repo_root = get_repo_root()
+    for raw_ref in business_raw + experience_raw:
+        normalized = raw_ref.replace("\\", "/")
+        raw_path = repo_root / Path(normalized.replace("/", "\\"))
+        if normalized.endswith("/") or "." not in Path(normalized).name:
+            add_issue(issues, "blocker", f"raw ref 必须是文件，不能是目录：{normalized}")
+            continue
+        if raw_path.exists() and raw_path.is_dir():
+            add_issue(issues, "blocker", f"raw ref 指向目录，禁止装配：{normalized}")
+
+    stage_usage = usage_report.get("stage_usage")
+    if not isinstance(stage_usage, dict):
+        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 stage_usage")
+        return
+    business_usage = stage_usage.get("business")
+    experience_usage = stage_usage.get("experience")
+    if not isinstance(business_usage, dict) or "source_ref_chains" not in business_usage:
+        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 business.source_ref_chains")
+    if not isinstance(experience_usage, dict) or "source_ref_chains" not in experience_usage:
+        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 experience.source_ref_chains")
+
+
 def extract_fact_ids(text: str) -> list[str]:
     return sorted(set(FACT_ID_PATTERN.findall(text)))
 
@@ -1003,6 +1056,7 @@ def run_validate_outputs(project_id: str) -> int:
         ],
     )
     check_runtime_contract(project_id, issues)
+    check_knowledge_consumption_plan(project_id, issues)
     output_status_lines: list[str] = []
     completed_outputs: list[str] = []
     missing_outputs: list[str] = []

@@ -94,3 +94,13 @@ Context assembly must:
 - A reference cannot be copied into `context_bundle/`.
 - `context_manifest.json` is not generated.
 - strict mode encounters an unresolved broad reference.
+
+## Wiki 路由 Raw 消费
+
+- wiki summary 负责导航与定位，不直接替代原文证据层。
+- facts 阶段读取必要 wiki 用于术语和边界校准，默认不读取 raw。
+- business 阶段应沿命中 summary 的 `source_refs` 精确读取 raw 文件。
+- experience 阶段应沿命中 summary 与 guideline 的 `source_refs` 精确读取 raw 文件。
+- raw 引用必须是文件路径，禁止目录级装配。
+- `context_manifest.json` 应包含 `knowledge_consumption_plan`。
+- `knowledge_usage_report.json` 应记录 `source_ref_chains`。

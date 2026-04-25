@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-25T13:27:38.519201+00:00",
+  "updated_at": "2026-04-25T14:52:53.242882+00:00",
   "checked_files": [
     "projects/001/source/task_card.md",
     "projects/001/source/requirement.md",
@@ -16,13 +16,12 @@
     "projects/001/workspace/facts.md"
   ],
   "blocker_count": 0,
-  "warning_count": 2,
+  "warning_count": 1,
   "info_count": 1,
   "issues": {
     "blockers": [],
     "warnings": [
-      "facts.md 可能越过阶段边界：包含 高保真视觉",
-      "facts.md 仍包含占位内容"
+      "facts.md 可能越过阶段边界：包含 高保真视觉"
     ],
     "infos": [
       "facts.md 已提炼 57 条事实"
@@ -57,67 +56,6 @@
         {
           "type": "message",
           "value": "facts.md 可能越过阶段边界：包含 高保真视觉"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/001/source/task_card.md",
-            "projects/001/source/requirement.md",
-            "projects/001/source/background.md",
-            "projects/001/runtime/task_card_resolved.json",
-            "projects/001/runtime/context_manifest.json",
-            "projects/001/runtime/provenance.json",
-            "projects/001/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "fact_count": 57,
-            "dimension_coverage": {
-              "actor": 1,
-              "object": 1,
-              "state": 1,
-              "action": 1,
-              "rule": 1,
-              "exception": 1,
-              "dependency": 1,
-              "scope": 1
-            },
-            "traceable_fact_count": 57,
-            "gap_count": 9,
-            "knowledge_derived_fact_count": 0
-          }
-        }
-      ]
-    },
-    {
-      "source": "facts_gate",
-      "stage": "facts",
-      "severity": "warning",
-      "category": "placeholder_residue",
-      "message": "facts.md 仍包含占位内容",
-      "target_artifacts": [
-        "projects/001/workspace/facts.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/08_fact_extraction_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/001/source/task_card.md",
-        "projects/001/source/requirement.md",
-        "projects/001/source/background.md",
-        "projects/001/runtime/task_card_resolved.json",
-        "projects/001/runtime/context_manifest.json",
-        "projects/001/runtime/provenance.json",
-        "projects/001/workspace/facts.md"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "facts.md 仍包含占位内容"
         },
         {
           "type": "checked_files",

@@ -12,31 +12,17 @@
   - E:/AI设计/体验蓝图构建思路/projects/001/source/requirement.md
   - E:/AI设计/体验蓝图构建思路/projects/001/source/background.md
 - 显式引用：
-- knowledge/wiki/index.md
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
-- knowledge/wiki/summaries/business/permission/11_task_scenarios.md
-- knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md
-- knowledge/wiki/summaries/business/permission/24_governance_state_model.md
-- knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md
-- knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md
-- templates/facts.template.md
-- templates/business_blueprint.template.md
-- templates/experience_blueprint.template.md
-- templates/gap_list.template.md
-- templates/check_report.template.md
+- knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md
+- knowledge/wiki/summaries/business/permission/02_glossary.md
+- knowledge/wiki/summaries/business/permission/03_business_objects.md
+- knowledge/wiki/summaries/business/permission/04_object_relations.md
 - 知识校准命中：
-- KN-01: Knowledge Wiki Index -> page_id: PG-SYSTEM-INDEX；page_type: system；status: active
-- KN-02: 00_domain_overview -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW；page_type: summary；source_path: knowledge/raw/business/permission/00_domain_overview.md
-- KN-03: 11_task_scenarios -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-11_TASK_SCENARIOS；page_type: summary；source_path: knowledge/raw/business/permission/11_task_scenarios.md
-- KN-04: 20_decision_chain_contract -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-20_DECISION_CHAIN_CONTRACT；page_type: summary；source_path: knowledge/raw/business/permission/20_decision_chain_contract.md
-- KN-05: 24_governance_state_model -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-24_GOVERNANCE_STATE_MODEL；page_type: summary；source_path: knowledge/raw/business/permission/24_governance_state_model.md
-- KN-06: 31_experience_translation_requirements -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-31_EXPERIENCE_TRANSLATION_REQUIREMENTS；page_type: summary；source_path: knowledge/raw/business/permission/31_experience_translation_requirements.md
-- KN-07: 32_copy_and_explanation_strategy -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-32_COPY_AND_EXPLANATION_STRATEGY；page_type: summary；source_path: knowledge/raw/business/permission/32_copy_and_explanation_strategy.md
-- KN-11: Facts -> 任务目标：先明确本轮任务要解决什么问题。；任务边界：明确本次只覆盖什么，不覆盖什么。；输出用途：说明这些事实将如何支撑 business judgment 与 experience translation。
-- KN-12: Business Blueprint -> 先说清楚评审对象、评审边界、评审目标，以及承接了哪些 facts / rules / exceptions / gaps。；先建立 domain baseline，再进入判断。；baseline 应覆盖领域目标、稳定原则、底层逻辑、管理策略与治理边界。
-- KN-13: Experience Blueprint -> 先明确目标用户、体验目标、任务边界、不覆盖范围与 UI 讨论边界。；体验必须承接 business stance、关键规则、异常与设计原则。；先定义入口、主页面、结果页、帮助模块等承载关系，再写内容。
-- KN-14: Gap List -> <如无可填写 none>；<如无可填写 none>；<填写待补信息>
-- KN-15: Check Report -> status: <passed|warning|failed>；has_blocker: <true|false>；blocker_count: <number>
+- KN-01: 00_domain_overview -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW；page_type: summary；source_path: knowledge/raw/business/permission/00_domain_overview.md
+- KN-02: 01_scope_and_boundary -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-01_SCOPE_AND_BOUNDARY；page_type: summary；source_path: knowledge/raw/business/permission/01_scope_and_boundary.md
+- KN-03: 02_glossary -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-02_GLOSSARY；page_type: summary；source_path: knowledge/raw/business/permission/02_glossary.md
+- KN-04: 03_business_objects -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-03_BUSINESS_OBJECTS；page_type: summary；source_path: knowledge/raw/business/permission/03_business_objects.md
+- KN-05: 04_object_relations -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-04_OBJECT_RELATIONS；page_type: summary；source_path: knowledge/raw/business/permission/04_object_relations.md
 - 使用边界：
   - facts 阶段坚持 input-first extraction，知识只做术语与边界校准，不替代当前任务事实
 
@@ -48,8 +34,8 @@
 | T-02 | 员工自助申请权限 | 基于真实需求文档，生成一套围绕“员工自助申请权限、查询个人权限、对接审批流”的 facts、business、experience 正式产物。 | 当前任务中的直接承接对象，需要与其上下游关系分开理解。 | E:/AI设计/体验蓝图构建思路/projects/001/runtime/task_card_resolved.json |
 | T-03 | 查询个人权限 | 基于真实需求文档，生成一套围绕“员工自助申请权限、查询个人权限、对接审批流”的 facts、business、experience 正式产物。 | 当前任务中的直接承接对象，需要与其上下游关系分开理解。 | E:/AI设计/体验蓝图构建思路/projects/001/runtime/task_card_resolved.json |
 | T-04 | 正式产物 | 基于真实需求文档，生成一套围绕“员工自助申请权限、查询个人权限、对接审批流”的 facts、business、experience 正式产物。 | 当前任务中的直接承接对象，需要与其上下游关系分开理解。 | E:/AI设计/体验蓝图构建思路/projects/001/runtime/task_card_resolved.json |
-| T-05 | Knowledge Wiki Index | page_id: PG-SYSTEM-INDEX；page_type: system；status: active | 来自命中知识，只用于校准当前任务的术语边界。 | knowledge/wiki/index.md |
-| T-06 | 00_domain_overview | page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW；page_type: summary；source_path: knowledge/raw/business/permission/00_domain_overview.md | 来自命中知识，只用于校准当前任务的术语边界。 | knowledge/wiki/summaries/business/permission/00_domain_overview.md |
+| T-05 | 00_domain_overview | page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW；page_type: summary；source_path: knowledge/raw/business/permission/00_domain_overview.md | 来自命中知识，只用于校准当前任务的术语边界。 | knowledge/wiki/summaries/business/permission/00_domain_overview.md |
+| T-06 | 01_scope_and_boundary | page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-01_SCOPE_AND_BOUNDARY；page_type: summary；source_path: knowledge/raw/business/permission/01_scope_and_boundary.md | 来自命中知识，只用于校准当前任务的术语边界。 | knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md |
 
 ## 角色与对象清单
 

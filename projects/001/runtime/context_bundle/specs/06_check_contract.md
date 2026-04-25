@@ -129,3 +129,12 @@ Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 
 - Markdown 报告与 JSON 状态不一致
 - 存在 blocker 但未显式写出失败状态
 - 存在严重问题但无法从机器状态或报告中提取最小 issue 证据
+
+## 知识消费专项检查
+
+- `context_manifest.json` 必须包含 `knowledge_consumption_plan`。
+- `knowledge_consumption_plan.facts.required_wiki_refs` 应存在。
+- `knowledge_consumption_plan.facts.raw_refs_from_source_refs` 默认应为空。
+- `knowledge_consumption_plan.business.raw_refs_from_source_refs` 与 `knowledge_consumption_plan.experience.raw_refs_from_source_refs` 应存在。
+- 所有 raw refs 必须是文件，不得是目录引用。
+- `knowledge_usage_report.json` 必须包含 `stage_usage.business.source_ref_chains` 与 `stage_usage.experience.source_ref_chains`。
