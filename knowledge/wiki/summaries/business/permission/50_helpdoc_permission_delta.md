@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-24
+- updated_at: 2026-04-25
 - source_refs: [knowledge/raw/business/permission/50_helpdoc_permission_delta.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md

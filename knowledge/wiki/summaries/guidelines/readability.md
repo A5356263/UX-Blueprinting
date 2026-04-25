@@ -6,7 +6,7 @@
 - source_group: guidelines
 - status: active
 - confidence: medium
-- updated_at: 2026-04-24
+- updated_at: 2026-04-25
 - source_refs: [knowledge/raw/guidelines/readability.md]
 - related_summaries:
   - knowledge/wiki/summaries/guidelines/README.md

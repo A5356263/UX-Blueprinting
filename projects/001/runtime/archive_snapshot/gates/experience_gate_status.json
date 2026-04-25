@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-19T13:48:15.760751+00:00",
+  "updated_at": "2026-04-25T13:27:38.648365+00:00",
   "checked_files": [
     "projects/001/workspace/facts.md",
     "projects/001/workspace/business_blueprint.md",
@@ -23,7 +23,7 @@
       "business 阶段状态：passed",
       "experience_blueprint.md 已承接 3 条事实",
       "experience_blueprint.md 已承接 2 条业务判断",
-      "experience_blueprint.md 已引用 7 个设计原则 ID"
+      "experience_blueprint.md 已引用 6 个设计原则 ID"
     ]
   },
   "issue_details_version": "1.0",
@@ -77,7 +77,7 @@
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
-            "principle_ref_count": 7,
+            "principle_ref_count": 6,
             "exception_coverage": true
           }
         }
@@ -132,7 +132,7 @@
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
-            "principle_ref_count": 7,
+            "principle_ref_count": 6,
             "exception_coverage": true
           }
         }
@@ -187,7 +187,7 @@
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
-            "principle_ref_count": 7,
+            "principle_ref_count": 6,
             "exception_coverage": true
           }
         }
@@ -198,7 +198,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已引用 7 个设计原则 ID",
+      "message": "experience_blueprint.md 已引用 6 个设计原则 ID",
       "target_artifacts": [
         "projects/001/workspace/experience_blueprint.md"
       ],
@@ -217,7 +217,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已引用 7 个设计原则 ID"
+          "value": "experience_blueprint.md 已引用 6 个设计原则 ID"
         },
         {
           "type": "checked_files",
@@ -242,7 +242,7 @@
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
-            "principle_ref_count": 7,
+            "principle_ref_count": 6,
             "exception_coverage": true
           }
         }
@@ -260,7 +260,7 @@
     "copy_contract_item_count": 7,
     "trace_mapping_item_count": 6,
     "business_judgment_consumed_count": 2,
-    "principle_ref_count": 7,
+    "principle_ref_count": 6,
     "exception_coverage": true
   }
 }

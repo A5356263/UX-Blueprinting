@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-24
+- updated_at: 2026-04-25
 - source_refs: [knowledge/raw/business/security_management/10_security_watermark.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/security_management/00_domain_overview.md

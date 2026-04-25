@@ -15,7 +15,7 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-19T13:48:15.833234+00:00",
+  "updated_at": "2026-04-25T13:27:38.711282+00:00",
   "checked_files": [
     "projects/001/runtime/context_manifest.json",
     "projects/001/runtime/gates/business_gate_status.json",
@@ -49,7 +49,7 @@
       "coverage: orphan_judgment_count: 3",
       "coverage: orphan_page_count: 0",
       "experience gate 状态：passed",
-      "experience_blueprint.md 已引用 7 个设计原则 ID",
+      "experience_blueprint.md 已引用 6 个设计原则 ID",
       "experience_blueprint.md 已承接 2 条业务判断",
       "experience_blueprint.md 已承接 3 条事实"
     ]
@@ -115,7 +115,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -128,7 +128,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -202,7 +202,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -215,7 +215,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -289,7 +289,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -302,7 +302,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -375,7 +375,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -388,7 +388,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -461,7 +461,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -474,7 +474,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -548,7 +548,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -561,7 +561,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -635,7 +635,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -648,7 +648,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -721,7 +721,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -734,7 +734,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -807,7 +807,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -820,7 +820,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -893,7 +893,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -906,7 +906,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -979,7 +979,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -992,7 +992,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1065,7 +1065,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1078,7 +1078,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1151,7 +1151,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1164,7 +1164,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1238,7 +1238,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1251,7 +1251,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1271,7 +1271,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已引用 7 个设计原则 ID",
+      "message": "experience_blueprint.md 已引用 6 个设计原则 ID",
       "target_artifacts": [
         "projects/001/workspace/experience_blueprint.md"
       ],
@@ -1296,7 +1296,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已引用 7 个设计原则 ID"
+          "value": "experience_blueprint.md 已引用 6 个设计原则 ID"
         },
         {
           "type": "checked_files",
@@ -1325,7 +1325,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1338,7 +1338,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1412,7 +1412,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1425,7 +1425,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1499,7 +1499,7 @@
               "option_compare_count": 5,
               "value_assessment_item_count": 2,
               "risk_item_count": 5,
-              "unresolved_gap_count": 17
+              "unresolved_gap_count": 16
             },
             "experience_depth": {
               "flow_count": 6,
@@ -1512,7 +1512,7 @@
               "copy_contract_item_count": 7,
               "trace_mapping_item_count": 6,
               "business_judgment_consumed_count": 2,
-              "principle_ref_count": 7,
+              "principle_ref_count": 6,
               "exception_coverage": true
             },
             "coverage": {
@@ -1540,7 +1540,7 @@
       "option_compare_count": 5,
       "value_assessment_item_count": 2,
       "risk_item_count": 5,
-      "unresolved_gap_count": 17
+      "unresolved_gap_count": 16
     },
     "experience_depth": {
       "flow_count": 6,
@@ -1553,7 +1553,7 @@
       "copy_contract_item_count": 7,
       "trace_mapping_item_count": 6,
       "business_judgment_consumed_count": 2,
-      "principle_ref_count": 7,
+      "principle_ref_count": 6,
       "exception_coverage": true
     },
     "coverage": {

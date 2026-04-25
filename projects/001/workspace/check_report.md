@@ -40,7 +40,7 @@
 - coverage: orphan_judgment_count: 3
 - coverage: orphan_page_count: 0
 - experience gate 状态：passed
-- experience_blueprint.md 已引用 7 个设计原则 ID
+- experience_blueprint.md 已引用 6 个设计原则 ID
 - experience_blueprint.md 已承接 2 条业务判断
 - experience_blueprint.md 已承接 3 条事实
 

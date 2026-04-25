@@ -1,4 +1,4 @@
-﻿{
+{
   "task_id": "001",
   "generated_from": "projects/001/runtime/context_manifest.json",
   "mainline_knowledge_policy": "summary_first_with_raw_fallback",
