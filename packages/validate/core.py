@@ -47,19 +47,17 @@ STAGE_REQUIRED_HEADINGS = {
         "## 附录 E：链路自检信息",
     ],
     "experience_blueprint.md": [
-        "## 1. 一句话体验方案",
-        "## 2. 用户要完成什么事",
-        "## 3. 推荐页面和入口",
-        "## 4. 主流程怎么走",
-        "## 5. 关键页面怎么设计",
-        "## 6. 状态和异常怎么处理",
-        "## 7. 文案要解释什么",
-        "## 8. 风险和保护策略",
+        "## 1. 交互流程总览",
+        "## 2. 主交互流程",
+        "## 3. 次交互流程",
+        "## 4. 异常与阻断流程",
+        "## 5. 页面 / 弹窗 / 抽屉设计",
+        "## 6. 状态与反馈文案",
         "## 附录 A：上游依据",
-        "## 附录 B：信息架构明细",
+        "## 附录 B：原始信息架构与页面清单",
         "## 附录 C：页面 / 流程追踪映射",
         "## 附录 D：设计原则引用",
-        "## 附录 E：链路自检信息",
+        "## 附录 E：原始状态 / 文案 / 风险矩阵",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
@@ -103,7 +101,7 @@ FORBIDDEN_TERMS = {
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 一句话体验方案", "2. 用户要完成什么事", "附录 E：链路自检信息"},
+    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录 E：原始状态 / 文案 / 风险矩阵"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
@@ -148,7 +146,7 @@ RUNTIME_LEAKAGE_TERMS = [
 RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 一句话体验方案", "2. 用户要完成什么事", "附录 E：链路自检信息"},
+    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录 E：原始状态 / 文案 / 风险矩阵"},
 }
 
 DEFAULT_TRACKED_OUTPUTS = [
@@ -196,14 +194,12 @@ EXPERIENCE_CRITICAL_HINTS = [
     "帮助",
 ]
 EXPERIENCE_CORE_SECTION_TITLES = [
-    "1. 一句话体验方案",
-    "2. 用户要完成什么事",
-    "3. 推荐页面和入口",
-    "4. 主流程怎么走",
-    "5. 关键页面怎么设计",
-    "6. 状态和异常怎么处理",
-    "7. 文案要解释什么",
-    "8. 风险和保护策略",
+    "1. 交互流程总览",
+    "2. 主交互流程",
+    "3. 次交互流程",
+    "4. 异常与阻断流程",
+    "5. 页面 / 弹窗 / 抽屉设计",
+    "6. 状态与反馈文案",
 ]
 EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bEV-\d+\b", re.IGNORECASE), "核心区包含 EV 编号"),
@@ -1109,14 +1105,22 @@ def analyze_experience_blueprint(
     page_ids = extract_page_ids(experience_text)
     flow_ids = extract_flow_ids(experience_text)
 
-    flow_section = sections.get("4. 主流程怎么走", "") + "\n" + sections.get("附录 C：页面 / 流程追踪映射", "")
-    page_inventory_section = sections.get("3. 推荐页面和入口", "") + "\n" + sections.get("附录 B：信息架构明细", "")
-    key_page_section = sections.get("5. 关键页面怎么设计", "")
-    layout_section = sections.get("附录 B：信息架构明细", "")
-    content_contract_section = sections.get("附录 B：信息架构明细", "")
-    state_section = sections.get("6. 状态和异常怎么处理", "") + "\n" + sections.get("附录 E：链路自检信息", "")
-    copy_section = sections.get("7. 文案要解释什么", "") + "\n" + sections.get("附录 E：链路自检信息", "")
-    risk_section = sections.get("8. 风险和保护策略", "") + "\n" + sections.get("附录 E：链路自检信息", "")
+    overview_section = sections.get("1. 交互流程总览", "")
+    main_flow_section = sections.get("2. 主交互流程", "")
+    secondary_flow_section = sections.get("3. 次交互流程", "")
+    exception_flow_section = sections.get("4. 异常与阻断流程", "")
+    page_design_section = sections.get("5. 页面 / 弹窗 / 抽屉设计", "")
+    state_copy_section = sections.get("6. 状态与反馈文案", "")
+    appendix_b_section = sections.get("附录 B：原始信息架构与页面清单", "")
+    appendix_e_section = sections.get("附录 E：原始状态 / 文案 / 风险矩阵", "")
+    flow_section = "\n".join([main_flow_section, secondary_flow_section, sections.get("附录 C：页面 / 流程追踪映射", "")])
+    page_inventory_section = "\n".join([page_design_section, appendix_b_section])
+    key_page_section = page_design_section
+    layout_section = appendix_b_section
+    content_contract_section = appendix_b_section
+    state_section = "\n".join([state_copy_section, appendix_e_section])
+    copy_section = "\n".join([state_copy_section, appendix_e_section])
+    risk_section = "\n".join([exception_flow_section, appendix_e_section])
     trace_section = sections.get("附录 C：页面 / 流程追踪映射", "")
     core_text = get_experience_core_text(sections)
 
@@ -1140,7 +1144,7 @@ def analyze_experience_blueprint(
     principle_refs = extract_principle_refs(experience_text, fact_ids, judgment_ids, page_ids, flow_ids)
     principle_ref_count = len(principle_refs)
 
-    exception_text = "\n".join([flow_section, state_section, risk_section])
+    exception_text = "\n".join([overview_section, main_flow_section, secondary_flow_section, exception_flow_section, state_section, risk_section])
     has_exception_coverage = contains_any(
         exception_text,
         ["失败", "阻断", "拦截", "拒绝", "异常", "不可", "空态", "冲突", "审批中", "处理中", "关闭失败"],
@@ -1163,13 +1167,13 @@ def analyze_experience_blueprint(
         add_issue(issues, "info", f"experience_blueprint.md 已引用 {principle_ref_count} 个设计原则 ID")
 
     if flow_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少主流程说明")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少交互流程说明")
 
     if page_inventory_item_count == 0 and not page_ids:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少推荐页面和入口信息")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 弹窗 / 抽屉设计信息")
 
     if expanded_page_blueprint_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少关键页面展开说明")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 弹窗 / 抽屉展开说明")
 
     if region_map_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少附录中的区块布局示意")
@@ -1195,7 +1199,11 @@ def analyze_experience_blueprint(
         if pattern.search(core_text):
             add_issue(issues, "warning", f"experience_blueprint.md {message}")
 
-    repeated_page_names = find_repeated_page_names_in_core(sections.get("3. 推荐页面和入口", ""))
+    core_table_count = count_real_table_rows(core_text)
+    if core_table_count > 0:
+        add_issue(issues, "warning", "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达")
+
+    repeated_page_names = find_repeated_page_names_in_core(sections.get("5. 页面 / 弹窗 / 抽屉设计", ""))
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
@@ -1212,6 +1220,7 @@ def analyze_experience_blueprint(
         "business_judgment_consumed_count": len(referenced_judgments),
         "principle_ref_count": principle_ref_count,
         "exception_coverage": has_exception_coverage,
+        "core_table_count": core_table_count,
     }
     return metrics, issues
 
