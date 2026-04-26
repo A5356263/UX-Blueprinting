@@ -7,7 +7,7 @@
     "can_proceed": true,
     "next_stage": "business",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T09:41:39.184690+00:00",
+    "updated_at": "2026-04-26T12:18:30.004942+00:00",
     "checked_files": [
       "projects/003/source/task_card.md",
       "projects/003/source/requirement.md",
@@ -115,7 +115,7 @@
     "can_proceed": true,
     "next_stage": "experience",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T09:41:39.235998+00:00",
+    "updated_at": "2026-04-26T12:18:30.064585+00:00",
     "checked_files": [
       "projects/003/workspace/facts.md",
       "projects/003/workspace/business_blueprint.md",
@@ -255,7 +255,7 @@
     "can_proceed": true,
     "next_stage": "final-validate",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T09:41:39.295190+00:00",
+    "updated_at": "2026-04-26T12:18:30.128889+00:00",
     "checked_files": [
       "projects/003/workspace/facts.md",
       "projects/003/workspace/business_blueprint.md",
@@ -318,14 +318,14 @@
             "type": "metrics",
             "value": {
               "flow_count": 6,
-              "page_count": 13,
-              "page_inventory_item_count": 13,
+              "page_count": 9,
+              "page_inventory_item_count": 26,
               "expanded_page_blueprint_count": 6,
-              "region_map_count": 36,
-              "content_contract_item_count": 8,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 7,
-              "trace_mapping_item_count": 6,
+              "region_map_count": 45,
+              "content_contract_item_count": 26,
+              "state_feedback_pair_count": 14,
+              "copy_contract_item_count": 14,
+              "trace_mapping_item_count": 12,
               "business_judgment_consumed_count": 2,
               "principle_ref_count": 3,
               "exception_coverage": true
@@ -373,14 +373,14 @@
             "type": "metrics",
             "value": {
               "flow_count": 6,
-              "page_count": 13,
-              "page_inventory_item_count": 13,
+              "page_count": 9,
+              "page_inventory_item_count": 26,
               "expanded_page_blueprint_count": 6,
-              "region_map_count": 36,
-              "content_contract_item_count": 8,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 7,
-              "trace_mapping_item_count": 6,
+              "region_map_count": 45,
+              "content_contract_item_count": 26,
+              "state_feedback_pair_count": 14,
+              "copy_contract_item_count": 14,
+              "trace_mapping_item_count": 12,
               "business_judgment_consumed_count": 2,
               "principle_ref_count": 3,
               "exception_coverage": true
@@ -428,14 +428,14 @@
             "type": "metrics",
             "value": {
               "flow_count": 6,
-              "page_count": 13,
-              "page_inventory_item_count": 13,
+              "page_count": 9,
+              "page_inventory_item_count": 26,
               "expanded_page_blueprint_count": 6,
-              "region_map_count": 36,
-              "content_contract_item_count": 8,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 7,
-              "trace_mapping_item_count": 6,
+              "region_map_count": 45,
+              "content_contract_item_count": 26,
+              "state_feedback_pair_count": 14,
+              "copy_contract_item_count": 14,
+              "trace_mapping_item_count": 12,
               "business_judgment_consumed_count": 2,
               "principle_ref_count": 3,
               "exception_coverage": true
@@ -483,14 +483,14 @@
             "type": "metrics",
             "value": {
               "flow_count": 6,
-              "page_count": 13,
-              "page_inventory_item_count": 13,
+              "page_count": 9,
+              "page_inventory_item_count": 26,
               "expanded_page_blueprint_count": 6,
-              "region_map_count": 36,
-              "content_contract_item_count": 8,
-              "state_feedback_pair_count": 3,
-              "copy_contract_item_count": 7,
-              "trace_mapping_item_count": 6,
+              "region_map_count": 45,
+              "content_contract_item_count": 26,
+              "state_feedback_pair_count": 14,
+              "copy_contract_item_count": 14,
+              "trace_mapping_item_count": 12,
               "business_judgment_consumed_count": 2,
               "principle_ref_count": 3,
               "exception_coverage": true
@@ -501,14 +501,14 @@
     ],
     "metrics": {
       "flow_count": 6,
-      "page_count": 13,
-      "page_inventory_item_count": 13,
+      "page_count": 9,
+      "page_inventory_item_count": 26,
       "expanded_page_blueprint_count": 6,
-      "region_map_count": 36,
-      "content_contract_item_count": 8,
-      "state_feedback_pair_count": 3,
-      "copy_contract_item_count": 7,
-      "trace_mapping_item_count": 6,
+      "region_map_count": 45,
+      "content_contract_item_count": 26,
+      "state_feedback_pair_count": 14,
+      "copy_contract_item_count": 14,
+      "trace_mapping_item_count": 12,
       "business_judgment_consumed_count": 2,
       "principle_ref_count": 3,
       "exception_coverage": true
@@ -519,7 +519,7 @@
     "status": "warning",
     "has_blocker": false,
     "blocker_count": 0,
-    "warning_count": 2,
+    "warning_count": 3,
     "info_count": 13,
     "completed_outputs": [
       "projects/003/workspace/business_blueprint.md",
@@ -531,7 +531,7 @@
     ],
     "missing_outputs": [],
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T09:41:39.356271+00:00",
+    "updated_at": "2026-04-26T12:18:30.188633+00:00",
     "checked_files": [
       "projects/003/runtime/context_manifest.json",
       "projects/003/runtime/gates/business_gate_status.json",
@@ -549,6 +549,7 @@
     "issues": {
       "blockers": [],
       "warnings": [
+        "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点",
         "存在未被体验层消费的业务判断：J-01, J-02, J-05",
         "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06"
       ],
@@ -570,6 +571,95 @@
     },
     "issue_details_version": "1.0",
     "issue_details": [
+      {
+        "source": "validate",
+        "stage": "final",
+        "severity": "warning",
+        "category": "trace_missing",
+        "message": "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点",
+        "target_artifacts": [
+          "projects/003/workspace/check_status.json"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md"
+        ],
+        "checked_files": [
+          "projects/003/runtime/context_manifest.json",
+          "projects/003/runtime/gates/business_gate_status.json",
+          "projects/003/runtime/gates/experience_gate_status.json",
+          "projects/003/runtime/gates/facts_gate_status.json",
+          "projects/003/runtime/knowledge_usage_report.json",
+          "projects/003/runtime/task_card_resolved.json",
+          "projects/003/workspace/business_blueprint.md",
+          "projects/003/workspace/check_report.md",
+          "projects/003/workspace/check_status.json",
+          "projects/003/workspace/experience_blueprint.md",
+          "projects/003/workspace/facts.md",
+          "projects/003/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/003/runtime/context_manifest.json",
+              "projects/003/runtime/gates/business_gate_status.json",
+              "projects/003/runtime/gates/experience_gate_status.json",
+              "projects/003/runtime/gates/facts_gate_status.json",
+              "projects/003/runtime/knowledge_usage_report.json",
+              "projects/003/runtime/task_card_resolved.json",
+              "projects/003/workspace/business_blueprint.md",
+              "projects/003/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 5,
+                "facts_consumed_count": 12,
+                "judgment_traceable_count": 5,
+                "trace_mapping_item_count": 5,
+                "option_compare_count": 12,
+                "value_assessment_item_count": 10,
+                "risk_item_count": 3,
+                "unresolved_gap_count": 5,
+                "has_appendix_e": true
+              },
+              "experience_depth": {
+                "flow_count": 6,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
+                "expanded_page_blueprint_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
+                "business_judgment_consumed_count": 2,
+                "principle_ref_count": 3,
+                "exception_coverage": true
+              },
+              "coverage": {
+                "facts_covered_by_business": 12,
+                "facts_covered_by_experience": 3,
+                "business_judgments_consumed_by_experience": 2,
+                "orphan_fact_count": 46,
+                "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 0
+              }
+            }
+          }
+        ]
+      },
       {
         "source": "coverage",
         "stage": "final",
@@ -633,14 +723,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -651,8 +741,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -722,14 +812,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -740,8 +830,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -812,14 +902,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -830,8 +920,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -902,14 +992,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -920,8 +1010,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -991,14 +1081,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1009,8 +1099,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1080,14 +1170,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1098,8 +1188,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1169,14 +1259,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1187,8 +1277,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1258,14 +1348,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1276,8 +1366,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1347,14 +1437,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1365,8 +1455,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1436,14 +1526,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1454,8 +1544,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1526,14 +1616,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1544,8 +1634,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1616,14 +1706,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1634,8 +1724,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1706,14 +1796,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1724,8 +1814,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1796,14 +1886,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1814,8 +1904,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1886,14 +1976,14 @@
               },
               "experience_depth": {
                 "flow_count": 6,
-                "page_count": 13,
-                "page_inventory_item_count": 13,
+                "page_count": 9,
+                "page_inventory_item_count": 26,
                 "expanded_page_blueprint_count": 6,
-                "region_map_count": 36,
-                "content_contract_item_count": 8,
-                "state_feedback_pair_count": 3,
-                "copy_contract_item_count": 7,
-                "trace_mapping_item_count": 6,
+                "region_map_count": 45,
+                "content_contract_item_count": 26,
+                "state_feedback_pair_count": 14,
+                "copy_contract_item_count": 14,
+                "trace_mapping_item_count": 12,
                 "business_judgment_consumed_count": 2,
                 "principle_ref_count": 3,
                 "exception_coverage": true
@@ -1904,8 +1994,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
-                "critical_judgment_count": 5,
-                "critical_judgment_traced_count": 2,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 0,
                 "orphan_page_count": 0
               }
             }
@@ -1930,14 +2020,14 @@
       },
       "experience_depth": {
         "flow_count": 6,
-        "page_count": 13,
-        "page_inventory_item_count": 13,
+        "page_count": 9,
+        "page_inventory_item_count": 26,
         "expanded_page_blueprint_count": 6,
-        "region_map_count": 36,
-        "content_contract_item_count": 8,
-        "state_feedback_pair_count": 3,
-        "copy_contract_item_count": 7,
-        "trace_mapping_item_count": 6,
+        "region_map_count": 45,
+        "content_contract_item_count": 26,
+        "state_feedback_pair_count": 14,
+        "copy_contract_item_count": 14,
+        "trace_mapping_item_count": 12,
         "business_judgment_consumed_count": 2,
         "principle_ref_count": 3,
         "exception_coverage": true
@@ -1948,8 +2038,8 @@
         "business_judgments_consumed_by_experience": 2,
         "orphan_fact_count": 46,
         "orphan_judgment_count": 3,
-        "critical_judgment_count": 5,
-        "critical_judgment_traced_count": 2,
+        "critical_judgment_count": 4,
+        "critical_judgment_traced_count": 0,
         "orphan_page_count": 0
       }
     }

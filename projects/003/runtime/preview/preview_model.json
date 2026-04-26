@@ -1,0 +1,43 @@
+{
+  "project_id": "003",
+  "meta": {
+    "title": "Experience Blueprint",
+    "subject": "体验蓝图浏览器预览",
+    "version": "v2",
+    "context": {
+      "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\003\\exports\\final\\experience_blueprint.md",
+      "input_mode": "formal_export"
+    },
+    "overview": {
+      "目标用户与角色": "",
+      "体验目标": "",
+      "任务边界": ""
+    }
+  },
+  "global_flow": {
+    "lanes": [],
+    "chains": [],
+    "nodes": [],
+    "edges": [],
+    "dependencies": [],
+    "blockers": []
+  },
+  "page_views": [],
+  "global_context": {
+    "principles": [],
+    "dependencies": [],
+    "risks": [],
+    "open_questions": [],
+    "gaps": [],
+    "notes": []
+  },
+  "unresolved_items": [
+    {
+      "type": "page_inventory_missing",
+      "message": "未识别到页面 / 窗口清单，页面聚合无法稳定构建。"
+    }
+  ],
+  "source_refs": [
+    "E:\\AI设计\\体验蓝图构建思路\\projects\\003\\exports\\final\\experience_blueprint.md"
+  ]
+}

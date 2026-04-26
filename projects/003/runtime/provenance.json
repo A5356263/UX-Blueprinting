@@ -4,7 +4,7 @@
   "producer": "packages.generation",
   "source_hash": "b2813897c3282f83107e09ccf3b03f7b910b08fc6a3f7a5b4d4bd4756b07d790",
   "task_card_hash": "bc15857d7049e96c7ef6f3568cf1ffc42ae4e2f783512c076f826864be6a5016",
-  "generated_at": "2026-04-26T09:41:39+00:00",
+  "generated_at": "2026-04-26T12:18:30+00:00",
   "parent_project_id": "",
   "copied_from_project_id": "",
   "manual_patch_reason": "",
@@ -19,6 +19,7 @@
     "coverage",
     "archive",
     "run-main",
-    "assemble"
+    "assemble",
+    "preview"
   ]
 }

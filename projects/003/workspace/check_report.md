@@ -5,7 +5,7 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 2
+- warning_count: 3
 - info_count: 13
 
 ## Output Status
@@ -23,6 +23,7 @@
 
 ## Warnings
 
+- experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点
 - 存在未被体验层消费的业务判断：J-01, J-02, J-05
 - 存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06
 
