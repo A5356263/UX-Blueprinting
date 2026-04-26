@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from .readable_adapter import build_experience_readable_sections
+from .readable_adapter import InteractionNode, PageDesignSection, build_experience_interaction_map
 from .schemas import BusinessModel, ExperienceModel, FactsModel
 
 
@@ -66,6 +66,94 @@ def _plain_experience_term(text: str) -> str:
     for source, target in replacements.items():
         result = result.replace(source, target)
     return result
+
+
+def _render_interaction_nodes(nodes: list[InteractionNode], empty_text: str) -> str:
+    if not nodes:
+        return f"- {empty_text}"
+    parts: list[str] = []
+    for node in nodes:
+        copy_lines = _render_string_list(node.copy_strategy or ["待补充文案策略"])
+        state_lines = _render_string_list(node.state_notes or ["待补充状态说明"])
+        exception_lines = _render_string_list(node.exception_notes or ["待补充异常说明"])
+        parts.append(
+            "\n".join(
+                [
+                    f"### {node.title}",
+                    "",
+                    "用户动作：",
+                    node.user_action,
+                    "",
+                    "系统反馈：",
+                    node.system_feedback,
+                    "",
+                    "下一步：",
+                    node.next_step,
+                    "",
+                    "本节点需要前置解释：",
+                    copy_lines,
+                    "",
+                    "状态关注：",
+                    state_lines,
+                    "",
+                    "异常关注：",
+                    exception_lines,
+                ]
+            )
+        )
+    return "\n\n".join(parts)
+
+
+def _render_page_designs(sections: list[PageDesignSection]) -> str:
+    if not sections:
+        return "- 待补充页面 / 弹窗 / 抽屉设计"
+    blocks: list[str] = []
+    for section in sections:
+        structure_lines = _render_string_list(section.structure)
+        first_screen_lines = _render_string_list(section.first_screen)
+        primary_lines = _render_string_list(section.primary_actions)
+        secondary_lines = _render_string_list(section.secondary_actions)
+        state_lines = _render_string_list(section.state_feedbacks)
+        exception_lines = _render_string_list(section.exception_feedbacks)
+        copy_lines = _render_string_list(section.concrete_copy)
+        blocks.append(
+            "\n".join(
+                [
+                    f"### 页面：{section.title}",
+                    "",
+                    "页面目标：",
+                    section.page_goal,
+                    "",
+                    "进入条件：",
+                    section.entry_condition,
+                    "",
+                    "页面结构：",
+                    structure_lines,
+                    "",
+                    "首屏必须展示：",
+                    first_screen_lines,
+                    "",
+                    "主要操作：",
+                    primary_lines,
+                    "",
+                    "次要操作：",
+                    secondary_lines,
+                    "",
+                    "状态与反馈：",
+                    state_lines,
+                    "",
+                    "异常处理：",
+                    exception_lines,
+                    "",
+                    "具体文案：",
+                    copy_lines,
+                    "",
+                    "完成后去向：",
+                    section.next_step,
+                ]
+            )
+        )
+    return "\n\n".join(blocks)
 
 
 def render_facts_markdown(model: FactsModel) -> str:
@@ -414,14 +502,13 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.risk_id} | {item.name} | {item.trigger} | {item.confusion} | {item.protection} | {item.target} |"
         for item in model.risks
     )
-    readable = build_experience_readable_sections(model)
-    user_and_task_lines = _render_string_list(readable.users_and_tasks)
-    recommended_page_lines = _render_string_list(readable.page_groups)
-    flow_core_lines = _render_string_list(readable.flow_summary)
-    key_page_lines = "\n\n".join(readable.key_page_summaries) if readable.key_page_summaries else "- 待补充关键页面说明"
-    state_core_lines = _render_string_list(readable.state_summaries)
-    copy_core_lines = _render_string_list(readable.copy_summaries)
-    risk_core_lines = _render_string_list(readable.risk_summaries)
+    interaction_map = build_experience_interaction_map(model)
+    overview_lines = _render_string_list(interaction_map.overview)
+    main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
+    secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
+    exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
+    page_design_lines = _render_page_designs(interaction_map.page_designs)
+    state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
     layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     self_check_lines = _render_string_list(
         [
@@ -436,37 +523,29 @@ def render_experience_markdown(model: ExperienceModel) -> str:
     )
     return f"""# Experience Blueprint
 
-## 1. 一句话体验方案
+## 1. 交互流程总览
 
-- 体验方案：{_plain_experience_term(model.experience_goal)}
-- 当前任务边界：{_plain_experience_term(model.task_boundary)}
+{overview_lines}
 
-## 2. 用户要完成什么事
+## 2. 主交互流程
 
-{user_and_task_lines}
+{main_flow_lines}
 
-## 3. 推荐页面和入口
+## 3. 次交互流程
 
-{recommended_page_lines}
+{secondary_flow_lines}
 
-## 4. 主流程怎么走
+## 4. 异常与阻断流程
 
-{flow_core_lines}
+{exception_flow_lines}
 
-## 5. 关键页面怎么设计
-{key_page_lines}
+## 5. 页面 / 弹窗 / 抽屉设计
 
-## 6. 状态和异常怎么处理
+{page_design_lines}
 
-{state_core_lines}
+## 6. 状态与反馈文案
 
-## 7. 文案要解释什么
-
-{copy_core_lines}
-
-## 8. 风险和保护策略
-
-{risk_core_lines}
+{state_feedback_lines}
 
 ## 附录 A：上游依据
 
@@ -479,7 +558,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 - 开放问题与缺口：
 {_render_string_list(model.open_questions + model.gaps)}
 
-## 附录 B：信息架构明细
+## 附录 B：原始信息架构与页面清单
 
 | ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
 | --- | --- | --- | --- | --- | --- |
@@ -519,7 +598,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 | --- | --- | --- | --- |
 {principle_rows}
 
-## 附录 E：链路自检信息
+## 附录 E：原始状态 / 文案 / 风险矩阵
 
 ### coverage 与追踪摘要
 {self_check_lines}

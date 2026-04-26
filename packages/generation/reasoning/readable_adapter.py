@@ -38,6 +38,42 @@ class ReadableExperienceSections:
     risk_summaries: list[str] = field(default_factory=list)
 
 
+@dataclass(slots=True)
+class InteractionNode:
+    title: str
+    user_action: str
+    system_feedback: str
+    next_step: str
+    copy_strategy: list[str] = field(default_factory=list)
+    state_notes: list[str] = field(default_factory=list)
+    exception_notes: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class PageDesignSection:
+    title: str
+    page_goal: str
+    entry_condition: str
+    structure: list[str] = field(default_factory=list)
+    first_screen: list[str] = field(default_factory=list)
+    primary_actions: list[str] = field(default_factory=list)
+    secondary_actions: list[str] = field(default_factory=list)
+    state_feedbacks: list[str] = field(default_factory=list)
+    exception_feedbacks: list[str] = field(default_factory=list)
+    concrete_copy: list[str] = field(default_factory=list)
+    next_step: str = ""
+
+
+@dataclass(slots=True)
+class InteractionMapSections:
+    overview: list[str] = field(default_factory=list)
+    main_flow_nodes: list[InteractionNode] = field(default_factory=list)
+    secondary_flow_nodes: list[InteractionNode] = field(default_factory=list)
+    exception_flow_nodes: list[InteractionNode] = field(default_factory=list)
+    page_designs: list[PageDesignSection] = field(default_factory=list)
+    state_feedbacks: list[str] = field(default_factory=list)
+
+
 def clean_machine_trace(text: str) -> str:
     if not text:
         return ""
@@ -254,6 +290,212 @@ def _build_key_page_summary(page: PageBlueprint) -> str:
         f"- 首屏重点：{focus}\n"
         f"- 关键动作：{action_text or '待补充'}\n"
         f"- 需解释的风险：{risk_text or '待补充'}"
+    )
+
+
+def _pick_copy_strategy_lines(model: ExperienceModel, keywords: list[str]) -> list[str]:
+    selected: list[str] = []
+    for copy in model.copy_contracts:
+        merged = " ".join([copy.scenario, copy.semantic_goal, copy.required_info, copy.direction])
+        if keywords and not any(keyword and keyword in merged for keyword in keywords):
+            continue
+        selected.append(
+            f"需要解释“{hide_placeholder_in_core(copy.semantic_goal)}”，并前置“{hide_placeholder_in_core(copy.required_info)}”。"
+        )
+        if len(selected) >= 3:
+            break
+    if not selected and model.copy_contracts:
+        for copy in model.copy_contracts[:2]:
+            selected.append(
+                f"优先说明“{hide_placeholder_in_core(copy.required_info)}”，避免只给操作提示。"
+            )
+    return dedupe_by_semantic_key(selected) or ["先说明规则和边界，再给动作提示与下一步。"]
+
+
+def _pick_state_notes(model: ExperienceModel, keywords: list[str]) -> list[str]:
+    notes: list[str] = []
+    for state in model.state_feedbacks:
+        merged = " ".join([state.name, state.trigger, state.page_feedback, state.downstream])
+        if keywords and not any(keyword and keyword in merged for keyword in keywords):
+            continue
+        notes.append(
+            f"状态“{hide_placeholder_in_core(state.name)}”：{hide_placeholder_in_core(state.page_feedback)}"
+        )
+        if len(notes) >= 2:
+            break
+    return dedupe_by_semantic_key(notes)
+
+
+def _pick_exception_notes(model: ExperienceModel, keywords: list[str]) -> list[str]:
+    notes: list[str] = []
+    for risk in model.risks:
+        merged = " ".join([risk.name, risk.trigger, risk.confusion, risk.protection])
+        if keywords and not any(keyword and keyword in merged for keyword in keywords):
+            continue
+        notes.append(
+            f"异常“{hide_placeholder_in_core(risk.name)}”：{hide_placeholder_in_core(risk.protection)}"
+        )
+        if len(notes) >= 2:
+            break
+    return dedupe_by_semantic_key(notes)
+
+
+def _build_main_flow_nodes(model: ExperienceModel) -> list[InteractionNode]:
+    nodes: list[InteractionNode] = []
+    for index, flow in enumerate(model.task_flows[:4], start=1):
+        keywords = [flow.name, flow.start]
+        nodes.append(
+            InteractionNode(
+                title=f"节点 {index}：{hide_placeholder_in_core(flow.name)}",
+                user_action=f"{extract_readable_role(flow.start)}发起“{clean_duplicate_action(flow.name)}”。",
+                system_feedback=(
+                    f"系统按“{clean_machine_trace(flow.key_steps)}”推进，"
+                    f"成功时{hide_placeholder_in_core(flow.success_result)}，"
+                    f"受阻时{hide_placeholder_in_core(flow.failure_result)}。"
+                ),
+                next_step=hide_placeholder_in_core(flow.success_result),
+                copy_strategy=_pick_copy_strategy_lines(model, keywords),
+                state_notes=_pick_state_notes(model, keywords),
+                exception_notes=_pick_exception_notes(model, keywords),
+            )
+        )
+    return nodes
+
+
+def _build_secondary_flow_nodes(model: ExperienceModel) -> list[InteractionNode]:
+    nodes: list[InteractionNode] = []
+    candidate_pages = [
+        page for page in model.pages
+        if any(token in f"{page.name}{page.primary_task}" for token in ["查看", "记录", "详情", "帮助", "补充", "返回", "重试"])
+    ]
+    for index, page in enumerate(candidate_pages[:4], start=1):
+        keywords = [page.name, page.primary_task]
+        nodes.append(
+            InteractionNode(
+                title=f"流程 {index}：{shorten_readable_name(clean_machine_trace(page.name), max_len=24)}",
+                user_action=f"用户进入“{clean_machine_trace(page.name)}”，完成{clean_duplicate_action(page.primary_task)}。",
+                system_feedback=hide_placeholder_in_core(page.relation),
+                next_step=hide_placeholder_in_core(page.exit),
+                copy_strategy=_pick_copy_strategy_lines(model, keywords),
+                state_notes=_pick_state_notes(model, keywords),
+                exception_notes=_pick_exception_notes(model, keywords),
+            )
+        )
+    return nodes
+
+
+def _build_exception_flow_nodes(model: ExperienceModel) -> list[InteractionNode]:
+    nodes: list[InteractionNode] = []
+    for index, risk in enumerate(model.risks[:5], start=1):
+        keywords = [risk.name, risk.trigger]
+        nodes.append(
+            InteractionNode(
+                title=f"异常 {index}：{hide_placeholder_in_core(risk.name)}",
+                user_action=f"发生时机：{hide_placeholder_in_core(risk.trigger)}",
+                system_feedback=f"系统需解释：{hide_placeholder_in_core(risk.protection)}",
+                next_step="补充信息后重试，或返回上一步调整。",
+                copy_strategy=_pick_copy_strategy_lines(model, keywords),
+                state_notes=_pick_state_notes(model, keywords),
+                exception_notes=[hide_placeholder_in_core(risk.confusion)],
+            )
+        )
+    if not nodes:
+        nodes.append(
+            InteractionNode(
+                title="异常 1：关键阻断待补充",
+                user_action="当前输入里异常场景证据不足，需要补充触发条件。",
+                system_feedback="系统应先说明限制原因，再给出可执行替代路径。",
+                next_step="补充约束与状态后再进入主流程。",
+                copy_strategy=["失败时先解释原因、影响范围和可恢复路径。"],
+                state_notes=[],
+                exception_notes=["避免仅提示“失败”，应说明如何继续。"],
+            )
+        )
+    return nodes
+
+
+def _build_page_designs(model: ExperienceModel) -> list[PageDesignSection]:
+    sections: list[PageDesignSection] = []
+    for page in model.key_pages[:6]:
+        concrete_copy: list[str] = []
+        for copy in model.copy_contracts:
+            if page.name in copy.scenario or copy.scenario in page.name:
+                concrete_copy.append(f"页面说明：{hide_placeholder_in_core(copy.semantic_goal)}")
+                concrete_copy.append(f"主按钮：{hide_placeholder_in_core(copy.required_info)}")
+                concrete_copy.append(f"状态提示：{hide_placeholder_in_core(copy.direction)}")
+                if len(concrete_copy) >= 4:
+                    break
+        if not concrete_copy:
+            concrete_copy = [
+                f"页面说明：{hide_placeholder_in_core(page.copy_responsibility)}",
+                f"主按钮：继续{clean_duplicate_action(page.primary_task)}",
+                "失败反馈：请先处理提示问题后再重试。",
+            ]
+
+        sections.append(
+            PageDesignSection(
+                title=shorten_readable_name(clean_machine_trace(page.name), max_len=30),
+                page_goal=hide_placeholder_in_core(page.goal),
+                entry_condition=hide_placeholder_in_core(page.entry_condition),
+                structure=[
+                    f"任务区：{hide_placeholder_in_core(page.primary_task)}",
+                    f"说明区：{hide_placeholder_in_core(page.key_information)}",
+                    "反馈区：展示状态、结果与下一步入口",
+                ],
+                first_screen=[hide_placeholder_in_core(page.first_screen_focus)],
+                primary_actions=[clean_duplicate_action(item) for item in page.key_actions[:2] if clean_duplicate_action(item)],
+                secondary_actions=dedupe_by_semantic_key(
+                    [hide_placeholder_in_core(page.secondary_task)]
+                    + [clean_duplicate_action(item) for item in page.key_actions[2:] if clean_duplicate_action(item)]
+                ),
+                state_feedbacks=[hide_placeholder_in_core(item) for item in page.key_states[:3]],
+                exception_feedbacks=[hide_placeholder_in_core(item) for item in page.risks[:3]],
+                concrete_copy=dedupe_by_semantic_key(concrete_copy),
+                next_step=hide_placeholder_in_core(page.relation),
+            )
+        )
+    return sections
+
+
+def _build_state_feedback_summary(model: ExperienceModel) -> list[str]:
+    lines: list[str] = []
+    for state in model.state_feedbacks[:8]:
+        state_name = hide_placeholder_in_core(state.name)
+        trigger = hide_placeholder_in_core(state.trigger)
+        actions = clean_duplicate_action(state.available_actions)
+        feedback = hide_placeholder_in_core(state.page_feedback)
+        copy_tip = hide_placeholder_in_core(state.copy_feedback)
+        downstream = hide_placeholder_in_core(state.downstream)
+        lines.append(
+            (
+                f"状态“{state_name}”：触发于{trigger}；"
+                f"用户可{actions}；系统反馈为{feedback}；"
+                f"建议文案“{copy_tip}”；后续去向{downstream}。"
+            )
+        )
+    return dedupe_by_semantic_key(lines)
+
+
+def build_experience_interaction_map(model: ExperienceModel) -> InteractionMapSections:
+    main_nodes = _build_main_flow_nodes(model)
+    secondary_nodes = _build_secondary_flow_nodes(model)
+    exception_nodes = _build_exception_flow_nodes(model)
+    page_designs = _build_page_designs(model)
+    state_feedbacks = _build_state_feedback_summary(model)
+    overview = [
+        f"本次体验蓝图围绕“{hide_placeholder_in_core(model.experience_goal)}”组织交互流程。",
+        "主交互流程承接核心任务闭环，次交互流程承接查看说明与补充动作，异常流程承接失败与阻断处理。",
+        "页面入口和承载体已合并到流程节点中，避免按材料类型分散阅读。",
+    ]
+    if model.task_boundary:
+        overview.append(f"任务边界：{hide_placeholder_in_core(model.task_boundary)}")
+    return InteractionMapSections(
+        overview=dedupe_by_semantic_key(overview),
+        main_flow_nodes=main_nodes,
+        secondary_flow_nodes=secondary_nodes,
+        exception_flow_nodes=exception_nodes,
+        page_designs=page_designs,
+        state_feedbacks=state_feedbacks,
     )
 
 

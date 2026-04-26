@@ -1,0 +1,140 @@
+{
+  "project_id": "004",
+  "stage": "business",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-04-26T13:38:49.480739+00:00",
+  "checked_files": [
+    "projects/004/workspace/facts.md",
+    "projects/004/workspace/business_blueprint.md",
+    "projects/004/runtime/provenance.json",
+    "projects/004/runtime/gates/facts_gate_status.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 2,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "facts 阶段状态：passed",
+      "business_blueprint.md 已承接 12 条事实"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts 阶段状态：passed",
+      "target_artifacts": [
+        "projects/004/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/004/workspace/facts.md",
+        "projects/004/workspace/business_blueprint.md",
+        "projects/004/runtime/provenance.json",
+        "projects/004/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts 阶段状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/004/workspace/facts.md",
+            "projects/004/workspace/business_blueprint.md",
+            "projects/004/runtime/provenance.json",
+            "projects/004/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 5,
+            "facts_consumed_count": 12,
+            "judgment_traceable_count": 5,
+            "trace_mapping_item_count": 5,
+            "option_compare_count": 12,
+            "value_assessment_item_count": 10,
+            "risk_item_count": 3,
+            "unresolved_gap_count": 5,
+            "has_appendix_e": true
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 已承接 12 条事实",
+      "target_artifacts": [
+        "projects/004/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/004/workspace/facts.md",
+        "projects/004/workspace/business_blueprint.md",
+        "projects/004/runtime/provenance.json",
+        "projects/004/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 已承接 12 条事实"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/004/workspace/facts.md",
+            "projects/004/workspace/business_blueprint.md",
+            "projects/004/runtime/provenance.json",
+            "projects/004/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 5,
+            "facts_consumed_count": 12,
+            "judgment_traceable_count": 5,
+            "trace_mapping_item_count": 5,
+            "option_compare_count": 12,
+            "value_assessment_item_count": 10,
+            "risk_item_count": 3,
+            "unresolved_gap_count": 5,
+            "has_appendix_e": true
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "judgment_count": 5,
+    "facts_consumed_count": 12,
+    "judgment_traceable_count": 5,
+    "trace_mapping_item_count": 5,
+    "option_compare_count": 12,
+    "value_assessment_item_count": 10,
+    "risk_item_count": 3,
+    "unresolved_gap_count": 5,
+    "has_appendix_e": true
+  }
+}
