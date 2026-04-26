@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: warning
+- status: passed
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 1
+- warning_count: 0
 - info_count: 1
 
 - project_id: 001
@@ -29,8 +29,8 @@
 
 ## Warnings
 
-- facts.md 可能越过阶段边界：包含 高保真视觉
+- none
 
 ## Infos
 
-- facts.md 已提炼 58 条事实
+- facts.md 已提炼 49 条事实

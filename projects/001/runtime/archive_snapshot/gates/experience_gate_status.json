@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T03:50:57.709024+00:00",
+  "updated_at": "2026-04-26T06:51:56.713160+00:00",
   "checked_files": [
     "projects/001/workspace/facts.md",
     "projects/001/workspace/business_blueprint.md",
@@ -20,7 +20,7 @@
     "blockers": [],
     "warnings": [],
     "infos": [
-      "business 阶段状态：passed",
+      "business 阶段状态：warning",
       "experience_blueprint.md 已承接 3 条事实",
       "experience_blueprint.md 已承接 2 条业务判断",
       "experience_blueprint.md 已引用 6 个设计原则 ID"
@@ -33,7 +33,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "business 阶段状态：passed",
+      "message": "business 阶段状态：warning",
       "target_artifacts": [
         "projects/001/workspace/experience_blueprint.md"
       ],
@@ -52,7 +52,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "business 阶段状态：passed"
+          "value": "business 阶段状态：warning"
         },
         {
           "type": "checked_files",
@@ -73,7 +73,7 @@
             "expanded_page_blueprint_count": 6,
             "region_map_count": 36,
             "content_contract_item_count": 8,
-            "state_feedback_pair_count": 5,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
@@ -128,7 +128,7 @@
             "expanded_page_blueprint_count": 6,
             "region_map_count": 36,
             "content_contract_item_count": 8,
-            "state_feedback_pair_count": 5,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
@@ -183,7 +183,7 @@
             "expanded_page_blueprint_count": 6,
             "region_map_count": 36,
             "content_contract_item_count": 8,
-            "state_feedback_pair_count": 5,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
@@ -238,7 +238,7 @@
             "expanded_page_blueprint_count": 6,
             "region_map_count": 36,
             "content_contract_item_count": 8,
-            "state_feedback_pair_count": 5,
+            "state_feedback_pair_count": 4,
             "copy_contract_item_count": 7,
             "trace_mapping_item_count": 6,
             "business_judgment_consumed_count": 2,
@@ -256,7 +256,7 @@
     "expanded_page_blueprint_count": 6,
     "region_map_count": 36,
     "content_contract_item_count": 8,
-    "state_feedback_pair_count": 5,
+    "state_feedback_pair_count": 4,
     "copy_contract_item_count": 7,
     "trace_mapping_item_count": 6,
     "business_judgment_consumed_count": 2,

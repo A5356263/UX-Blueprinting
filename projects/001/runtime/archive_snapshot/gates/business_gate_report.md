@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
+- warning_count: 1
 - info_count: 2
 
 - project_id: 001
@@ -26,9 +26,9 @@
 
 ## Warnings
 
-- none
+- business_blueprint.md 未显式保留开放问题或缺口
 
 ## Infos
 
-- facts 阶段状态：warning
+- facts 阶段状态：passed
 - business_blueprint.md 已承接 12 条事实

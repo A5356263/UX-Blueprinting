@@ -1,0 +1,786 @@
+{
+  "task_id": "002",
+  "generated_from": "projects/002/runtime/context_manifest.json",
+  "mainline_knowledge_policy": "summary_first_with_raw_fallback",
+  "reference_summary": {
+    "knowledge_ref_count": 10,
+    "wiki_ref_count": 3,
+    "template_ref_count": 5,
+    "check_ref_count": 4
+  },
+  "primary_entries_used": [
+    "knowledge/wiki/index.md",
+    "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+    "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md"
+  ],
+  "fallback_sources_used": [],
+  "narrowing_actions": [],
+  "broad_reference_warnings": [],
+  "stage_usage": {
+    "facts": {
+      "wiki_refs_used": [
+        "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+        "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+        "knowledge/wiki/summaries/business/permission/02_glossary.md",
+        "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+        "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+        "knowledge/wiki/summaries/business/permission/README.md"
+      ],
+      "raw_refs_used": [],
+      "raw_policy": "not_default"
+    },
+    "business": {
+      "wiki_refs_used": [
+        "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+        "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+        "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+        "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+        "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+        "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md"
+      ],
+      "raw_refs_used": [
+        "knowledge/raw/business/permission/00_domain_overview.md",
+        "knowledge/raw/business/permission/11_task_scenarios.md",
+        "knowledge/raw/business/permission/20_decision_chain_contract.md",
+        "knowledge/raw/business/permission/24_governance_state_model.md",
+        "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+        "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+        "knowledge/raw/business/permission/01_scope_and_boundary.md",
+        "knowledge/raw/business/permission/02_glossary.md",
+        "knowledge/raw/business/permission/03_business_objects.md",
+        "knowledge/raw/business/permission/04_object_relations.md"
+      ],
+      "source_ref_chains": [
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+          "raw": "knowledge/raw/business/permission/00_domain_overview.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+          "raw": "knowledge/raw/business/permission/11_task_scenarios.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+          "raw": "knowledge/raw/business/permission/20_decision_chain_contract.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+          "raw": "knowledge/raw/business/permission/24_governance_state_model.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+          "raw": "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+          "raw": "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+          "raw": "knowledge/raw/business/permission/01_scope_and_boundary.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/02_glossary.md",
+          "raw": "knowledge/raw/business/permission/02_glossary.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+          "raw": "knowledge/raw/business/permission/03_business_objects.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "business",
+          "summary": "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+          "raw": "knowledge/raw/business/permission/04_object_relations.md",
+          "reason": "source_refs"
+        }
+      ]
+    },
+    "experience": {
+      "wiki_refs_used": [
+        "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+        "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+        "knowledge/wiki/summaries/guidelines/governance.md",
+        "knowledge/wiki/summaries/guidelines/information_architecture.md",
+        "knowledge/wiki/summaries/guidelines/usability.md"
+      ],
+      "raw_refs_used": [
+        "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+        "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+        "knowledge/raw/guidelines/governance.md",
+        "knowledge/raw/guidelines/information_architecture.md",
+        "knowledge/raw/guidelines/usability.md",
+        "knowledge/raw/business/permission/00_domain_overview.md",
+        "knowledge/raw/business/permission/01_scope_and_boundary.md",
+        "knowledge/raw/business/permission/02_glossary.md",
+        "knowledge/raw/business/permission/03_business_objects.md",
+        "knowledge/raw/business/permission/04_object_relations.md"
+      ],
+      "source_ref_chains": [
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+          "raw": "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+          "raw": "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/guidelines/governance.md",
+          "raw": "knowledge/raw/guidelines/governance.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+          "raw": "knowledge/raw/guidelines/information_architecture.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/guidelines/usability.md",
+          "raw": "knowledge/raw/guidelines/usability.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+          "raw": "knowledge/raw/business/permission/00_domain_overview.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+          "raw": "knowledge/raw/business/permission/01_scope_and_boundary.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/02_glossary.md",
+          "raw": "knowledge/raw/business/permission/02_glossary.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+          "raw": "knowledge/raw/business/permission/03_business_objects.md",
+          "reason": "source_refs"
+        },
+        {
+          "stage": "experience",
+          "summary": "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+          "raw": "knowledge/raw/business/permission/04_object_relations.md",
+          "reason": "source_refs"
+        }
+      ]
+    }
+  },
+  "references": [
+    {
+      "reference": "knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/governance.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/governance.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/usability.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/usability.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/02_glossary.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/02_glossary.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/README.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/README.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/10_capability_map.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/10_capability_map.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/governance.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/governance.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/guidelines/usability.md",
+      "requested_reference": "knowledge/wiki/summaries/guidelines/usability.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/raw/business/permission/00_domain_overview.md",
+      "requested_reference": "knowledge/raw/business/permission/00_domain_overview.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/11_task_scenarios.md",
+      "requested_reference": "knowledge/raw/business/permission/11_task_scenarios.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/11_task_scenarios.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/20_decision_chain_contract.md",
+      "requested_reference": "knowledge/raw/business/permission/20_decision_chain_contract.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/24_governance_state_model.md",
+      "requested_reference": "knowledge/raw/business/permission/24_governance_state_model.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/24_governance_state_model.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+      "requested_reference": "knowledge/raw/business/permission/31_experience_translation_requirements.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+      "requested_reference": "knowledge/raw/business/permission/32_copy_and_explanation_strategy.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/01_scope_and_boundary.md",
+      "requested_reference": "knowledge/raw/business/permission/01_scope_and_boundary.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/02_glossary.md",
+      "requested_reference": "knowledge/raw/business/permission/02_glossary.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/02_glossary.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/03_business_objects.md",
+      "requested_reference": "knowledge/raw/business/permission/03_business_objects.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/03_business_objects.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/business/permission/04_object_relations.md",
+      "requested_reference": "knowledge/raw/business/permission/04_object_relations.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/guidelines/governance.md",
+      "requested_reference": "knowledge/raw/guidelines/governance.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/guidelines/governance.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/guidelines/information_architecture.md",
+      "requested_reference": "knowledge/raw/guidelines/information_architecture.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/guidelines/information_architecture.md",
+      "route_reason": "source_refs"
+    },
+    {
+      "reference": "knowledge/raw/guidelines/usability.md",
+      "requested_reference": "knowledge/raw/guidelines/usability.md",
+      "group": "raw_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/guidelines/usability.md",
+      "route_reason": "source_refs"
+    }
+  ]
+}

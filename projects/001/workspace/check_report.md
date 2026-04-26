@@ -23,33 +23,33 @@
 
 ## Warnings
 
-- facts gate 状态为 warning
-- facts.md 可能越过阶段边界：包含 高保真视觉
-- 存在未被体验层消费的业务判断：J-03, J-04, J-05
+- business gate 状态为 warning
+- business_blueprint.md 未显式保留开放问题或缺口
+- 存在未被体验层消费的业务判断：J-03, J-04
 - 存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01
 
 ## Infos
 
-- business gate 状态：passed
 - business_blueprint.md 已承接 12 条事实
 - coverage: business_judgments_consumed_by_experience: 2
 - coverage: facts_covered_by_business: 12
 - coverage: facts_covered_by_experience: 3
-- coverage: orphan_fact_count: 43
-- coverage: orphan_judgment_count: 3
+- coverage: orphan_fact_count: 34
+- coverage: orphan_judgment_count: 2
 - coverage: orphan_page_count: 0
 - experience gate 状态：passed
 - experience_blueprint.md 已引用 6 个设计原则 ID
 - experience_blueprint.md 已承接 2 条业务判断
 - experience_blueprint.md 已承接 3 条事实
+- facts gate 状态：passed
 
 ## Coverage Check
 
 - facts_covered_by_business: 12
 - facts_covered_by_experience: 3
 - business_judgments_consumed_by_experience: 2
-- orphan_fact_count: 43
-- orphan_judgment_count: 3
+- orphan_fact_count: 34
+- orphan_judgment_count: 2
 - orphan_page_count: 0
 
 ## Machine Status

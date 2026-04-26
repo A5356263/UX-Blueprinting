@@ -795,7 +795,7 @@
   ],
   "warnings": [],
   "knowledge_entry_mode": "summary_first_with_raw_fallback",
-  "strict_mode": false,
+  "strict_mode": true,
   "directory_refs_detected": [],
   "directory_refs_resolved_to_index": [],
   "directory_refs_fallback_copied": [],
