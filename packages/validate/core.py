@@ -177,6 +177,26 @@ TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|(?:\s*:?-+:?\s*\|)+\s*$")
 PLACEHOLDER_PATTERN = re.compile(
     r"(<填写|{{TASK_ID}}|<project-id>|<角色名称>|<页面名称>|<术语>|<页面 / 子页 / 抽屉 / 弹窗 / 内嵌模块>)"
 )
+EXPERIENCE_CRITICAL_HINTS = [
+    "状态",
+    "异常",
+    "阻断",
+    "治理",
+    "依赖",
+    "风险",
+    "规则",
+    "审批",
+    "关闭",
+    "失败",
+    "成功",
+    "可操作",
+    "不可操作",
+    "二次确认",
+    "提示",
+    "反馈",
+    "文案",
+    "帮助",
+]
 
 
 def now_iso() -> str:
@@ -516,6 +536,25 @@ def extract_fact_ids(text: str) -> list[str]:
 
 def extract_judgment_ids(text: str) -> list[str]:
     return sorted(set(JUDGMENT_ID_PATTERN.findall(text)))
+
+
+def has_experience_critical_signal(text: str) -> bool:
+    if not text:
+        return False
+    return any(item in text for item in EXPERIENCE_CRITICAL_HINTS)
+
+
+def find_critical_judgment_ids(business_text: str, judgment_ids: list[str]) -> list[str]:
+    critical: list[str] = []
+    for judgment_id in judgment_ids:
+        for match in re.finditer(re.escape(judgment_id), business_text):
+            start = max(0, match.start() - 160)
+            end = min(len(business_text), match.end() + 160)
+            snippet = business_text[start:end]
+            if has_experience_critical_signal(snippet):
+                critical.append(judgment_id)
+                break
+    return sorted(set(critical))
 
 
 def extract_page_ids(text: str) -> list[str]:
@@ -1279,12 +1318,16 @@ def run_coverage_check(project_id: str) -> int:
     fact_ids = extract_fact_ids(facts_text)
     judgment_ids = extract_judgment_ids(business_text)
     page_ids = extract_page_ids(experience_text)
+    experience_sections = parse_h2_sections(experience_text)
+    experience_trace_section = experience_sections.get("体验追踪映射", "")
 
     facts_in_business = [item for item in fact_ids if item in business_text]
     facts_in_experience = [item for item in fact_ids if item in experience_text]
     orphan_facts = [item for item in fact_ids if item not in business_text and item not in experience_text]
     judgments_in_experience = [item for item in judgment_ids if item in experience_text]
     orphan_judgments = [item for item in judgment_ids if item not in experience_text]
+    critical_judgments = find_critical_judgment_ids(business_text, judgment_ids)
+    critical_judgments_in_trace = [item for item in critical_judgments if item in experience_trace_section]
 
     coverage_lines: list[str] = [
         f"facts_covered_by_business: {len(facts_in_business)}",
@@ -1305,6 +1348,8 @@ def run_coverage_check(project_id: str) -> int:
         warnings.append(f"存在未被后续消费的事实：{', '.join(orphan_facts[:6])}")
     if orphan_judgments:
         warnings.append(f"存在未被体验层消费的业务判断：{', '.join(orphan_judgments[:6])}")
+    if critical_judgments and not critical_judgments_in_trace:
+        warnings.append("experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点")
     if not page_ids:
         warnings.append("experience_blueprint.md 未发现页面 ID（P-xx），页面级消费不足")
 
@@ -1341,6 +1386,8 @@ def run_coverage_check(project_id: str) -> int:
         "business_judgments_consumed_by_experience": len(judgments_in_experience),
         "orphan_fact_count": len(orphan_facts),
         "orphan_judgment_count": len(orphan_judgments),
+        "critical_judgment_count": len(critical_judgments),
+        "critical_judgment_traced_count": len(critical_judgments_in_trace),
         "orphan_page_count": 0 if page_ids else 1,
     }
     checked_files = [str(item) for item in status_data.get("checked_files", []) if isinstance(item, str)]

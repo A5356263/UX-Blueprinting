@@ -44,17 +44,17 @@
     {
       "id": "F-AC01",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-AC02",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-AC03",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-AC04",
@@ -104,7 +104,7 @@
     {
       "id": "F-E01",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-O01",
@@ -199,12 +199,12 @@
     {
       "id": "F-S03",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-S04",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-SC01",
@@ -230,19 +230,19 @@
   "judgments": [
     {
       "id": "J-01",
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "J-02",
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "J-03",
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "J-04",
-      "in_experience": false
+      "in_experience": true
     }
   ],
   "pages": [

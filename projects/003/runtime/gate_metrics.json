@@ -7,7 +7,7 @@
     "can_proceed": true,
     "next_stage": "business",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T07:57:37.759065+00:00",
+    "updated_at": "2026-04-26T09:02:31.648274+00:00",
     "checked_files": [
       "projects/003/source/task_card.md",
       "projects/003/source/requirement.md",
@@ -115,7 +115,7 @@
     "can_proceed": true,
     "next_stage": "experience",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T07:57:37.832217+00:00",
+    "updated_at": "2026-04-26T09:02:31.699713+00:00",
     "checked_files": [
       "projects/003/workspace/facts.md",
       "projects/003/workspace/business_blueprint.md",
@@ -252,7 +252,7 @@
     "can_proceed": true,
     "next_stage": "final-validate",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T07:57:37.897983+00:00",
+    "updated_at": "2026-04-26T09:02:31.761170+00:00",
     "checked_files": [
       "projects/003/workspace/facts.md",
       "projects/003/workspace/business_blueprint.md",
@@ -528,7 +528,7 @@
     ],
     "missing_outputs": [],
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-26T07:57:37.986237+00:00",
+    "updated_at": "2026-04-26T09:02:31.822632+00:00",
     "checked_files": [
       "projects/003/runtime/context_manifest.json",
       "projects/003/runtime/gates/business_gate_status.json",
@@ -546,8 +546,8 @@
     "issues": {
       "blockers": [],
       "warnings": [
-        "存在未被体验层消费的业务判断：J-03, J-04, J-05",
-        "存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01"
+        "存在未被体验层消费的业务判断：J-01, J-02, J-05",
+        "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06"
       ],
       "infos": [
         "business gate 状态：passed",
@@ -572,7 +572,7 @@
         "stage": "final",
         "severity": "warning",
         "category": "coverage_gap",
-        "message": "存在未被体验层消费的业务判断：J-03, J-04, J-05",
+        "message": "存在未被体验层消费的业务判断：J-01, J-02, J-05",
         "target_artifacts": [
           "projects/003/workspace/check_status.json"
         ],
@@ -596,7 +596,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "存在未被体验层消费的业务判断：J-03, J-04, J-05"
+            "value": "存在未被体验层消费的业务判断：J-01, J-02, J-05"
           },
           {
             "type": "checked_files",
@@ -647,6 +647,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -658,7 +660,7 @@
         "stage": "final",
         "severity": "warning",
         "category": "coverage_gap",
-        "message": "存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01",
+        "message": "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06",
         "target_artifacts": [
           "projects/003/workspace/check_status.json"
         ],
@@ -682,7 +684,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01"
+            "value": "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06"
           },
           {
             "type": "checked_files",
@@ -733,6 +735,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -820,6 +824,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -907,6 +913,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -993,6 +1001,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1079,6 +1089,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1165,6 +1177,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1251,6 +1265,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1337,6 +1353,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1423,6 +1441,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1510,6 +1530,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1597,6 +1619,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1684,6 +1708,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1771,6 +1797,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1858,6 +1886,8 @@
                 "business_judgments_consumed_by_experience": 2,
                 "orphan_fact_count": 46,
                 "orphan_judgment_count": 3,
+                "critical_judgment_count": 4,
+                "critical_judgment_traced_count": 2,
                 "orphan_page_count": 0
               }
             }
@@ -1899,6 +1929,8 @@
         "business_judgments_consumed_by_experience": 2,
         "orphan_fact_count": 46,
         "orphan_judgment_count": 3,
+        "critical_judgment_count": 4,
+        "critical_judgment_traced_count": 2,
         "orphan_page_count": 0
       }
     }

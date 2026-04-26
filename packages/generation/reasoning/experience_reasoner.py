@@ -31,6 +31,97 @@ def _state_kind(name: str) -> str:
     return "default"
 
 
+EXPERIENCE_CRITICAL_KEYWORDS = [
+    "状态",
+    "异常",
+    "阻断",
+    "依赖",
+    "风险",
+    "规则",
+    "审批",
+    "关闭",
+    "失败",
+    "成功",
+    "可操作",
+    "不可操作",
+    "二次确认",
+    "提示",
+    "反馈",
+    "文案",
+    "帮助",
+]
+
+
+def _is_experience_critical_text(text: str) -> bool:
+    if not text:
+        return False
+    return any(keyword in text for keyword in EXPERIENCE_CRITICAL_KEYWORDS)
+
+
+def _select_experience_critical_judgments(business_model: BusinessModel, max_count: int = 4) -> list[str]:
+    selected: list[str] = []
+    fallback: list[str] = []
+    for judgment in business_model.judgments:
+        merged = " ".join(
+            [
+                judgment.title,
+                judgment.conclusion,
+                judgment.evidence,
+                judgment.comparison,
+                judgment.gap,
+            ]
+        )
+        if _is_experience_critical_text(merged):
+            selected.append(judgment.judgment_id)
+        else:
+            fallback.append(judgment.judgment_id)
+
+    result = selected[:max_count]
+    if len(result) < max_count:
+        for item in fallback:
+            if item in result:
+                continue
+            result.append(item)
+            if len(result) >= max_count:
+                break
+    return result
+
+
+def _select_experience_critical_facts(facts_model: FactsModel, max_count: int = 6) -> list[str]:
+    priority_buckets = [
+        facts_model.state_facts,
+        facts_model.exception_facts,
+        facts_model.rule_facts,
+        facts_model.action_facts,
+        facts_model.dependency_facts,
+    ]
+    selected: list[str] = []
+    fallback: list[str] = []
+    for bucket in priority_buckets:
+        for fact in bucket:
+            if _is_experience_critical_text(fact.text):
+                selected.append(fact.fact_id)
+            else:
+                fallback.append(fact.fact_id)
+
+    deduped_selected: list[str] = []
+    for item in selected:
+        if item not in deduped_selected:
+            deduped_selected.append(item)
+    deduped_fallback: list[str] = []
+    for item in fallback:
+        if item not in deduped_selected and item not in deduped_fallback:
+            deduped_fallback.append(item)
+
+    result = deduped_selected[:max_count]
+    if len(result) < max_count:
+        for item in deduped_fallback:
+            result.append(item)
+            if len(result) >= max_count:
+                break
+    return result
+
+
 def _build_principles(project_id: str, business_model: BusinessModel) -> list[PrincipleEntry]:
     notes = load_knowledge_notes(project_id, stage="experience")
     principles: list[PrincipleEntry] = []
@@ -330,8 +421,12 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
     )
 
     trace_links: list[ExperienceTraceEntry] = []
-    business_basis = [judgment.judgment_id for judgment in business_model.judgments[:4]] or ["POS-01"]
-    fact_basis = [fact.fact_id for fact in (facts_model.action_facts + facts_model.state_facts + facts_model.rule_facts)[:6]]
+    business_basis = _select_experience_critical_judgments(business_model, max_count=4)
+    if not business_basis:
+        business_basis = [judgment.judgment_id for judgment in business_model.judgments[:4]] or ["POS-01"]
+    fact_basis = _select_experience_critical_facts(facts_model, max_count=6)
+    if not fact_basis:
+        fact_basis = [fact.fact_id for fact in (facts_model.action_facts + facts_model.state_facts + facts_model.rule_facts)[:6]]
     principle_basis = [principle.principle_id for principle in principles[:3]]
     for page in pages[:6]:
         trace_links.append(
