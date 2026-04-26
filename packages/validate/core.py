@@ -33,20 +33,18 @@ STAGE_REQUIRED_HEADINGS = {
         "## 追踪映射",
     ],
     "business_blueprint.md": [
-        "## 评审对象与任务边界",
-        "## 领域基线",
-        "## 方案意图与变更类型",
-        "## 合理性判断",
-        "## 底层逻辑一致性判断",
-        "## 管理策略一致性判断",
-        "## 能力归位判断",
-        "## 价值、成本与认知负担评估",
-        "## 备选路径比较",
-        "## 最终业务立场",
-        "## 关键规则与依赖影响",
-        "## 风险与反模式",
-        "## 开放问题与缺口",
-        "## 判断追踪映射",
+        "## 1. 一句话结论",
+        "## 2. 为什么要做",
+        "## 3. 值不值得做",
+        "## 4. 怎么做更合理",
+        "## 5. 哪些不能随便做",
+        "## 6. 主要风险",
+        "## 7. 体验设计要注意什么",
+        "## 附录 A：事实承接",
+        "## 附录 B：命中知识与来源",
+        "## 附录 C：备选方案比较",
+        "## 附录 D：判断追踪映射",
+        "## 附录 E：链路自检信息",
     ],
     "experience_blueprint.md": [
         "## 体验目标与任务边界",
@@ -104,7 +102,7 @@ FORBIDDEN_TERMS = {
 }
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
-    "business_blueprint.md": {"评审对象与任务边界", "开放问题与缺口"},
+    "business_blueprint.md": {"附录 E：链路自检信息"},
     "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
@@ -149,7 +147,7 @@ RUNTIME_LEAKAGE_TERMS = [
 ]
 RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
-    "business_blueprint.md": {"评审对象与任务边界", "开放问题与缺口"},
+    "business_blueprint.md": {"附录 E：链路自检信息"},
     "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
 }
 
@@ -986,11 +984,12 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     judgment_ids = extract_judgment_ids(business_text)
     referenced_facts = [fact_id for fact_id in fact_ids if fact_id in business_text]
 
-    value_section = sections.get("价值、成本与认知负担评估", "")
-    option_section = sections.get("备选路径比较", "")
-    risk_section = sections.get("风险与反模式", "")
-    trace_section = sections.get("判断追踪映射", "")
-    stance_section = sections.get("最终业务立场", "")
+    stance_section = sections.get("1. 一句话结论", "")
+    value_section = sections.get("3. 值不值得做", "")
+    option_section = "\n".join([sections.get("4. 怎么做更合理", ""), sections.get("附录 C：备选方案比较", "")])
+    risk_section = sections.get("6. 主要风险", "")
+    trace_section = sections.get("附录 D：判断追踪映射", "")
+    appendix_e_section = sections.get("附录 E：链路自检信息", "")
 
     judgment_count = len(judgment_ids)
     option_compare_count = max(count_unique_matches(OPTION_ID_PATTERN, option_section), count_real_table_rows(option_section), count_real_list_items(option_section))
@@ -999,6 +998,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     judgment_traceable_count = len(sorted(set(JUDGMENT_ID_PATTERN.findall(trace_section))))
     trace_mapping_item_count = max(judgment_traceable_count, count_real_table_rows(trace_section), count_real_list_items(trace_section))
     unresolved_gap_count = business_text.count("GAP-") + business_text.count("OQ-")
+    has_appendix_e = bool(appendix_e_section.strip())
 
     if not judgment_ids:
         add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
@@ -1035,6 +1035,8 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
 
     if unresolved_gap_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 未显式保留开放问题或缺口")
+    if not has_appendix_e:
+        add_issue(issues, "warning", "business_blueprint.md 缺少附录 E（链路自检信息）")
 
     metrics = {
         "judgment_count": judgment_count,
@@ -1045,6 +1047,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
         "value_assessment_item_count": value_assessment_item_count,
         "risk_item_count": risk_item_count,
         "unresolved_gap_count": unresolved_gap_count,
+        "has_appendix_e": has_appendix_e,
     }
     return metrics, issues
 

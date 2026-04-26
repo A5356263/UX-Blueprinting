@@ -187,18 +187,15 @@ def render_facts_markdown(model: FactsModel) -> str:
 
 
 def render_business_markdown(model: BusinessModel) -> str:
-    compare_heading = "## \u5907\u9009\u8def\u5f84\u6bd4\u8f83"
-    baseline_lines = _render_string_list(
-        [f"{item.baseline_id}: {item.text}（来源：{', '.join(item.source_refs)}）" for item in model.baselines]
+    baseline_rows = "\n".join(
+        f"| {item.baseline_id} | {item.text} | {', '.join(item.source_refs)} |"
+        for item in model.baselines
     )
-    judgment_blocks = "\n\n".join(
-        f"""### {item.judgment_id} {item.title}
-
-- 判断结论：{item.conclusion}
-- 主要依据：{item.evidence}
-- 对比对象：{item.comparison}
-- 剩余缺口：{item.gap}"""
-        for item in model.judgments
+    judgment_core_lines = _render_string_list(
+        [f"{item.judgment_id} {item.title}：{item.conclusion}" for item in model.judgments]
+    )
+    option_summary_lines = _render_string_list(
+        [f"{item.option_id} {item.option}：{item.conclusion}（前提：{item.fit_condition}）" for item in model.placement_options]
     )
     option_rows = "\n".join(
         f"| {item.option_id} | {item.option} | {item.conclusion} | {item.fit_condition} | {item.benefit} | {item.tradeoff} | {item.why_not_final} |"
@@ -214,88 +211,106 @@ def render_business_markdown(model: BusinessModel) -> str:
     )
     knowledge_lines = _render_string_list(model.knowledge_hits)
     final_position_reason = _render_string_list(model.final_position_reason)
+    fact_lines = _render_string_list(model.fact_links)
+    adopted_rules = _render_string_list(model.adopted_rules)
+    adopted_dependencies = _render_string_list(model.adopted_dependencies)
+    open_gaps = _render_string_list(model.open_questions + model.gaps)
+    self_check_lines = _render_string_list(
+        [
+            f"judgment_count={len(model.judgments)}",
+            f"fact_ref_count={len(model.fact_links)}",
+            f"baseline_count={len(model.baselines)}",
+            f"option_count={len(model.placement_options)}",
+            f"risk_count={len(model.risks)}",
+            f"trace_count={len(model.trace_links)}",
+        ]
+    )
     return f"""# Business Blueprint
 
-## 评审对象与任务边界
+## 1. 一句话结论
+
+- 结论：{model.final_position}
+- 建议方向：{model.placement_options[0].option if model.placement_options else "待确认"}
+
+## 2. 为什么要做
+
+- 业务问题：{model.problem_statement}
+- 变更意图：{model.change_intent}
+- 目标与边界：{model.review_goal}
+
+## 3. 值不值得做
+
+- 收益与价值：
+{_render_string_list([f"{item.option_id} {item.option} -> {item.benefit}" for item in model.placement_options])}
+- 成本与代价：
+{_render_string_list([f"{item.option_id} {item.option} -> {item.tradeoff}" for item in model.placement_options])}
+
+## 4. 怎么做更合理
+
+- 当前建议：{model.placement_options[0].option if model.placement_options else "待确认"}
+- 可对照方案：
+{option_summary_lines}
+- 关键判断：
+{judgment_core_lines}
+
+## 5. 哪些不能随便做
+
+### 关键规则边界
+{adopted_rules}
+
+### 关键依赖边界
+{adopted_dependencies}
+
+## 6. 主要风险
+
+| risk_id | 风险 | 表现 | 后果 | 等级 | 缓解方向 |
+| --- | --- | --- | --- | --- | --- |
+{risk_rows}
+
+## 7. 体验设计要注意什么
+
+- 体验层承接要求：
+{_render_string_list(model.experience_constraints)}
+- 立场理由：
+{final_position_reason}
+
+## 附录 A：事实承接
 
 - 评审对象：{model.review_target}
 - 评审边界：{model.review_boundary}
-- 评审目标：{model.review_goal}
-- 直接承接事实：{', '.join(model.fact_links)}
-
-## 领域基线
-
-- 当前命中的知识：
-{knowledge_lines}
-- 基线结论：
-{baseline_lines}
-
-## 方案意图与变更类型
-
-- 问题与意图：{model.problem_statement}
-- 方案意图：{model.change_intent}
 - 变更类型：{model.change_type}
-- 当前触发点：{model.trigger}
+- 触发背景：{model.trigger}
+- F-xx 承接列表：
+{fact_lines}
 
-## 合理性判断
-{judgment_blocks}
+## 附录 B：命中知识与来源
 
-## 底层逻辑一致性判断
+- 命中知识：
+{knowledge_lines}
 
-- 这一轮判断不再预设固定判断集合，而是围绕当前输入里真实存在的规则、依赖、状态与缺口展开。
-- 如果当前输入缺少某类证据，则该维度降级为缺口，而不是回填固定答案。
+| baseline_id | 基线结论 | source_path |
+| --- | --- | --- |
+{baseline_rows}
 
-## 管理策略一致性判断
-
-- 当前管理策略判断建立在“命中知识如何影响基线”和“规则 / 异常如何进入闭环”上，而不是复用上一轮产物的结论。
-- 只要当前输入变化，管理策略判断就应跟着变化。
-
-## 能力归位判断
+## 附录 C：备选方案比较
 
 | option_id | 方案 | 当前结论 | 适用前提 | 主要收益 | 主要代价 / 风险 | 为什么不是最终立场 |
 | --- | --- | --- | --- | --- | --- | --- |
 {option_rows}
 
-## 价值、成本与认知负担评估
+## 附录 D：判断追踪映射
 
-- 当前不再输出固定 VC 模板表，而是把价值、成本与认知负担收束到归位比较和最终立场理由中。
-- 如果后续真实输入需要更细的价值 / 成本展开，应由当前 evidence 与命中知识显现，而不是复用预设表格。
-
-{compare_heading}
-
-- 以下比较延续能力归位判断中的方案项，避免只写最终结论而没有显式比较。
-{_render_string_list([f"{item.option_id}: {item.option} | {item.conclusion} | {item.fit_condition}" for item in model.placement_options])}
-
-## 最终业务立场
-
-- 最终结论：{model.final_position}
-- 立场说明：
-{final_position_reason}
-- 对体验层的输入要求：
-{_render_string_list(model.experience_constraints)}
-
-## 关键规则与依赖影响
-
-### 被继承或放大的关键规则
-{_render_string_list(model.adopted_rules)}
-
-### 被继承或放大的关键依赖
-{_render_string_list(model.adopted_dependencies)}
-
-## 风险与反模式
-
-| risk_id | 风险 / 反模式 | 表现 | 后果 | 当前判断 | 缓解方向 |
-| --- | --- | --- | --- | --- | --- |
-{risk_rows}
-
-## 开放问题与缺口
-{_render_string_list(model.open_questions + model.gaps)}
-
-## 判断追踪映射
-
-| judgment_id | 对应章节 | 结论 | facts 依据 | 基线 / 策略依据 | 对比对象 | 剩余缺口 |
+| judgment_id | 对应判断 | 结论 | facts 依据 | 基线 / 策略依据 | 对比对象 | 剩余缺口 |
 | --- | --- | --- | --- | --- | --- | --- |
 {trace_rows}
+
+## 附录 E：链路自检信息
+
+### coverage 与追踪摘要
+{self_check_lines}
+
+### 开放问题与缺口（OQ / GAP）
+{open_gaps}
 """
 
 

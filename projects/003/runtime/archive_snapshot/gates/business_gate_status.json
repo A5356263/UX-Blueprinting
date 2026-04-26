@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "experience",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T09:02:31.699713+00:00",
+  "updated_at": "2026-04-26T09:41:39.235998+00:00",
   "checked_files": [
     "projects/003/workspace/facts.md",
     "projects/003/workspace/business_blueprint.md",
@@ -66,10 +66,11 @@
             "facts_consumed_count": 12,
             "judgment_traceable_count": 5,
             "trace_mapping_item_count": 5,
-            "option_compare_count": 5,
-            "value_assessment_item_count": 2,
+            "option_compare_count": 12,
+            "value_assessment_item_count": 10,
             "risk_item_count": 3,
-            "unresolved_gap_count": 9
+            "unresolved_gap_count": 5,
+            "has_appendix_e": true
           }
         }
       ]
@@ -115,10 +116,11 @@
             "facts_consumed_count": 12,
             "judgment_traceable_count": 5,
             "trace_mapping_item_count": 5,
-            "option_compare_count": 5,
-            "value_assessment_item_count": 2,
+            "option_compare_count": 12,
+            "value_assessment_item_count": 10,
             "risk_item_count": 3,
-            "unresolved_gap_count": 9
+            "unresolved_gap_count": 5,
+            "has_appendix_e": true
           }
         }
       ]
@@ -129,9 +131,10 @@
     "facts_consumed_count": 12,
     "judgment_traceable_count": 5,
     "trace_mapping_item_count": 5,
-    "option_compare_count": 5,
-    "value_assessment_item_count": 2,
+    "option_compare_count": 12,
+    "value_assessment_item_count": 10,
     "risk_item_count": 3,
-    "unresolved_gap_count": 9
+    "unresolved_gap_count": 5,
+    "has_appendix_e": true
   }
 }

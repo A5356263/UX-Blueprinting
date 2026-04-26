@@ -110,7 +110,7 @@ def _build_dynamic_judgments(facts_model: FactsModel, baselines: list[BaselineEn
                 title="问题与意图是否足以支撑当前改造",
                 conclusion="成立" if len(facts_model.gaps) <= 3 else "部分成立",
                 evidence=f"task_goal={facts_model.task_goal}; facts={', '.join(_fact_ids(facts_model)[:4])}",
-                comparison="若问题与意图不清晰，生成会继续退回到固定模板或固定话术。",
+                comparison="若问题与意图不清晰，结论容易停留在表层描述，难以形成稳定业务判断。",
                 gap=facts_model.gaps[0] if facts_model.gaps else "当前意图层证据基本可用。",
             )
         )
@@ -154,7 +154,7 @@ def _build_dynamic_judgments(facts_model: FactsModel, baselines: list[BaselineEn
                 title="信息充分性是否足够下最终立场",
                 conclusion="可下保守立场" if len(facts_model.gaps) <= 2 else "需要保守收敛",
                 evidence=f"gaps={'; '.join(facts_model.gaps[:2])}",
-                comparison="信息不足时允许结论更保守，但不能回退到旧模板结论。",
+                comparison="信息不足时允许结论更保守，但仍需保持可追溯的当前任务判断。",
                 gap=facts_model.gaps[0],
             )
         )
@@ -208,7 +208,7 @@ def _final_position_from_options(options: list[PlacementOption], facts_model: Fa
         return (
             "事实不足，当前只适合输出保守判断，不适合写死强立场。",
             [
-                "当前 gaps 较多，强行给出肯定结论只会把旧模板答案换个位置继续输出。",
+                "当前 gaps 较多，强行给出肯定结论会放大误判风险。",
                 "在信息进一步补足前，应保持问题、风险和约束对后续阶段可见。",
             ],
         )
@@ -217,7 +217,7 @@ def _final_position_from_options(options: list[PlacementOption], facts_model: Fa
         [
             f"当前 change_type 更接近：{_derive_change_type(facts_model)}。",
             f"现有对象数={len(facts_model.objects)}、流程数={len(facts_model.flows)}、规则数={len(facts_model.rules)}，说明它不是单纯说明文案问题。",
-            "命中知识已经参与基线建立与路径比较，因此结论不再只是旧模板判断的复写。",
+            "命中知识已经参与基线建立与路径比较，因此结论具备当前任务语境下的可解释性。",
         ],
     )
 
@@ -280,13 +280,13 @@ def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessMo
         project_id=project_id,
         review_target="当前任务要求形成的业务能力与其承载方式，不预设固定结论。",
         review_boundary="本次只评审当前输入能否支撑稳定的业务立场，以及知识如何影响这个立场。",
-        review_goal="先完成业务判断，再沉淀业务蓝图，让 business blueprint 成为当前任务的动态结论，而不是兼容旧模板的载体。",
+        review_goal="先完成业务判断，再沉淀业务蓝图，让 business blueprint 成为当前任务的可读结论与承接输入。",
         fact_links=fact_links,
         knowledge_hits=knowledge_hits,
         problem_statement=facts_model.task_scenario,
         change_intent=facts_model.task_goal,
         change_type=_derive_change_type(facts_model),
-        trigger="当前系统已经有推理骨架，但仍需把历史固定结论式表述改成基于当前输入的动态推导。",
+        trigger="当前任务要求业务判断与承接信息同时可读、可追溯，并与输入证据保持一致。",
         baselines=baselines,
         judgments=judgments,
         placement_options=placement_options,

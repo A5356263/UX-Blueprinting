@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T09:02:22.640235+00:00",
+  "updated_at": "2026-04-26T09:41:28.778536+00:00",
   "checked_files": [
     "projects/002/source/task_card.md",
     "projects/002/source/requirement.md",
