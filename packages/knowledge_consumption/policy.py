@@ -1,14 +1,9 @@
 from __future__ import annotations
 
-FACTS_REQUIRED_WIKI_BY_DOMAIN = {
-    "permission": [
-        "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
-        "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
-        "knowledge/wiki/summaries/business/permission/02_glossary.md",
-        "knowledge/wiki/summaries/business/permission/03_business_objects.md",
-        "knowledge/wiki/summaries/business/permission/04_object_relations.md",
-    ]
-}
+from .domain_registry import build_facts_required_wiki_by_domain
+
+
+FACTS_REQUIRED_WIKI_BY_DOMAIN = build_facts_required_wiki_by_domain()
 
 DEFAULT_KNOWLEDGE_BUDGET = {
     "facts": {"max_summary_refs": 8, "max_raw_refs": 0, "max_related_summaries": 2},

@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-25
+- updated_at: 2026-04-26
 - source_refs: [knowledge/raw/business/account_and_enterprise_lifecycle/11_enterprise_creation_and_certification.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md

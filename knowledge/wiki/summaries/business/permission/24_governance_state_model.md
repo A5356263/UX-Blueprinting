@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-25
+- updated_at: 2026-04-26
 - source_refs: [knowledge/raw/business/permission/24_governance_state_model.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/permission/00_domain_overview.md

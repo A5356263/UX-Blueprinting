@@ -23,7 +23,8 @@
         "knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md",
         "knowledge/wiki/summaries/business/permission/02_glossary.md",
         "knowledge/wiki/summaries/business/permission/03_business_objects.md",
-        "knowledge/wiki/summaries/business/permission/04_object_relations.md"
+        "knowledge/wiki/summaries/business/permission/04_object_relations.md",
+        "knowledge/wiki/summaries/business/permission/README.md"
       ],
       "raw_refs_used": [],
       "raw_policy": "not_default"
@@ -526,6 +527,17 @@
       "consumed_by": [
         "business",
         "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/README.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/README.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
         "facts"
       ],
       "routed_from_summary": "",

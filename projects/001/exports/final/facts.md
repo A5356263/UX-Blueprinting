@@ -17,12 +17,14 @@
 - knowledge/wiki/summaries/business/permission/02_glossary.md
 - knowledge/wiki/summaries/business/permission/03_business_objects.md
 - knowledge/wiki/summaries/business/permission/04_object_relations.md
+- knowledge/wiki/summaries/business/permission/README.md
 - 知识校准命中：
 - KN-01: 00_domain_overview -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-00_DOMAIN_OVERVIEW；page_type: summary；source_path: knowledge/raw/business/permission/00_domain_overview.md
 - KN-02: 01_scope_and_boundary -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-01_SCOPE_AND_BOUNDARY；page_type: summary；source_path: knowledge/raw/business/permission/01_scope_and_boundary.md
 - KN-03: 02_glossary -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-02_GLOSSARY；page_type: summary；source_path: knowledge/raw/business/permission/02_glossary.md
 - KN-04: 03_business_objects -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-03_BUSINESS_OBJECTS；page_type: summary；source_path: knowledge/raw/business/permission/03_business_objects.md
 - KN-05: 04_object_relations -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-04_OBJECT_RELATIONS；page_type: summary；source_path: knowledge/raw/business/permission/04_object_relations.md
+- KN-06: permission -> page_id: PG-SUMMARY-BUSINESS-BUSINESS-PERMISSION-README；page_type: summary；source_path: knowledge/raw/business/permission/README.md
 - 使用边界：
   - facts 阶段坚持 input-first extraction，知识只做术语与边界校准，不替代当前任务事实
 

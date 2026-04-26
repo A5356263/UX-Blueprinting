@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-25
+- updated_at: 2026-04-26
 - source_refs: [knowledge/raw/business/workspace_and_global_entry/11_global_navigation_and_service_entry.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/workspace_and_global_entry/00_domain_overview.md

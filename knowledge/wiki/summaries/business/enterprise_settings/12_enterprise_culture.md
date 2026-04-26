@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-25
+- updated_at: 2026-04-26
 - source_refs: [knowledge/raw/business/enterprise_settings/12_enterprise_culture.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/enterprise_settings/00_domain_overview.md

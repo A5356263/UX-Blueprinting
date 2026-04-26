@@ -7,7 +7,7 @@
     "can_proceed": true,
     "next_stage": "business",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-25T14:52:53.242882+00:00",
+    "updated_at": "2026-04-25T16:47:19.626106+00:00",
     "checked_files": [
       "projects/001/source/task_card.md",
       "projects/001/source/requirement.md",
@@ -178,7 +178,7 @@
     "can_proceed": true,
     "next_stage": "experience",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-25T14:52:53.296055+00:00",
+    "updated_at": "2026-04-25T16:47:19.679082+00:00",
     "checked_files": [
       "projects/001/workspace/facts.md",
       "projects/001/workspace/business_blueprint.md",
@@ -315,7 +315,7 @@
     "can_proceed": true,
     "next_stage": "final-validate",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-25T14:52:53.361403+00:00",
+    "updated_at": "2026-04-25T16:47:19.748698+00:00",
     "checked_files": [
       "projects/001/workspace/facts.md",
       "projects/001/workspace/business_blueprint.md",
@@ -591,7 +591,7 @@
     ],
     "missing_outputs": [],
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-25T14:52:53.437282+00:00",
+    "updated_at": "2026-04-25T16:47:19.817338+00:00",
     "checked_files": [
       "projects/001/runtime/context_manifest.json",
       "projects/001/runtime/gates/business_gate_status.json",
