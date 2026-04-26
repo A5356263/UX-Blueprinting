@@ -52,6 +52,7 @@ def _normalize_flow_name(name: str) -> str:
 
 
 EXPERIENCE_CRITICAL_KEYWORDS = [
+    "治理",
     "状态",
     "异常",
     "阻断",
@@ -453,7 +454,10 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
     )
 
     trace_links: list[ExperienceTraceEntry] = []
-    business_basis = _select_experience_critical_judgments(business_model, max_count=4)
+    business_basis = _select_experience_critical_judgments(
+        business_model,
+        max_count=max(4, min(6, len(business_model.judgments))),
+    )
     if not business_basis:
         business_basis = [judgment.judgment_id for judgment in business_model.judgments[:4]] or ["POS-01"]
     fact_basis = _select_experience_critical_facts(facts_model, max_count=6)
@@ -465,10 +469,13 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
             ExperienceTraceEntry(
                 trace_id=f"TR-{len(trace_links) + 1:02d}",
                 object_name=page.name,
-                business_basis=", ".join(business_basis[:2]),
+                business_basis=", ".join(business_basis),
                 fact_basis=", ".join(fact_basis[:3]),
                 principle_basis=", ".join(principle_basis),
-                note=f"{page.name} 的页面安排来自当前任务流程，而不是预设页面模板。",
+                note=(
+                    f"{page.name} 承接状态/异常/治理/依赖类判断，"
+                    "并落到页面入口、流程分支、状态反馈、风险保护和文案解释。"
+                ),
             )
         )
 

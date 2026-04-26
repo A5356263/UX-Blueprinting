@@ -211,6 +211,9 @@ EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"source[_ ]?path", re.IGNORECASE), "核心区包含 source_path"),
     (re.compile(r"(?:从当前输入直接抽取|未做模板补全)"), "核心区暴露了生成过程提示语"),
     (re.compile(r"(?:状态\d+|异常场景\d+)"), "核心区包含占位词（状态2/异常场景3）"),
+    (re.compile(r"(?:未命名状态|未命名异常场景)"), "核心区包含未命名占位词"),
+    (re.compile(r"(?:配置\s+配置|查看\s+查看|提交\s+提交|申请\s+申请|审批\s+审批|关闭\s+关闭)"), "核心区存在重复动词表达"),
+    (re.compile(r"[\u4e00-\u9fff]{20,}(?:管理员|审批人|申请人|负责人|运营人员|财务|人事|用户|客户|成员|子管理员|超管|员工)"), "核心区存在过长角色句"),
 ]
 
 
@@ -1376,7 +1379,11 @@ def run_coverage_check(project_id: str) -> int:
     judgment_ids = extract_judgment_ids(business_text)
     page_ids = extract_page_ids(experience_text)
     experience_sections = parse_h2_sections(experience_text)
-    experience_trace_section = experience_sections.get("体验追踪映射", "")
+    experience_trace_section = (
+        experience_sections.get("附录 C：页面 / 流程追踪映射", "")
+        or experience_sections.get("页面 / 流程追踪映射", "")
+        or experience_sections.get("体验追踪映射", "")
+    )
 
     facts_in_business = [item for item in fact_ids if item in business_text]
     facts_in_experience = [item for item in fact_ids if item in experience_text]

@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T12:18:30.128889+00:00",
+  "updated_at": "2026-04-26T12:39:13.477732+00:00",
   "checked_files": [
     "projects/003/workspace/facts.md",
     "projects/003/workspace/business_blueprint.md",
@@ -22,7 +22,7 @@
     "infos": [
       "business 阶段状态：passed",
       "experience_blueprint.md 已承接 3 条事实",
-      "experience_blueprint.md 已承接 2 条业务判断",
+      "experience_blueprint.md 已承接 5 条业务判断",
       "experience_blueprint.md 已引用 3 个设计原则 ID"
     ]
   },
@@ -76,7 +76,7 @@
             "state_feedback_pair_count": 14,
             "copy_contract_item_count": 14,
             "trace_mapping_item_count": 12,
-            "business_judgment_consumed_count": 2,
+            "business_judgment_consumed_count": 5,
             "principle_ref_count": 3,
             "exception_coverage": true
           }
@@ -131,7 +131,7 @@
             "state_feedback_pair_count": 14,
             "copy_contract_item_count": 14,
             "trace_mapping_item_count": 12,
-            "business_judgment_consumed_count": 2,
+            "business_judgment_consumed_count": 5,
             "principle_ref_count": 3,
             "exception_coverage": true
           }
@@ -143,7 +143,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 已承接 2 条业务判断",
+      "message": "experience_blueprint.md 已承接 5 条业务判断",
       "target_artifacts": [
         "projects/003/workspace/experience_blueprint.md"
       ],
@@ -162,7 +162,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 已承接 2 条业务判断"
+          "value": "experience_blueprint.md 已承接 5 条业务判断"
         },
         {
           "type": "checked_files",
@@ -186,7 +186,7 @@
             "state_feedback_pair_count": 14,
             "copy_contract_item_count": 14,
             "trace_mapping_item_count": 12,
-            "business_judgment_consumed_count": 2,
+            "business_judgment_consumed_count": 5,
             "principle_ref_count": 3,
             "exception_coverage": true
           }
@@ -241,7 +241,7 @@
             "state_feedback_pair_count": 14,
             "copy_contract_item_count": 14,
             "trace_mapping_item_count": 12,
-            "business_judgment_consumed_count": 2,
+            "business_judgment_consumed_count": 5,
             "principle_ref_count": 3,
             "exception_coverage": true
           }
@@ -259,7 +259,7 @@
     "state_feedback_pair_count": 14,
     "copy_contract_item_count": 14,
     "trace_mapping_item_count": 12,
-    "business_judgment_consumed_count": 2,
+    "business_judgment_consumed_count": 5,
     "principle_ref_count": 3,
     "exception_coverage": true
   }

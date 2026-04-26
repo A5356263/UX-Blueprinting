@@ -451,10 +451,6 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 
 ## 4. 主流程怎么走
 
-```text
-{_plain_experience_term(model.flow_overview_diagram)}
-```
-
 {flow_core_lines}
 
 ## 5. 关键页面怎么设计

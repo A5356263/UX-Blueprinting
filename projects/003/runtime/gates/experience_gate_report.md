@@ -33,5 +33,5 @@
 
 - business 阶段状态：passed
 - experience_blueprint.md 已承接 3 条事实
-- experience_blueprint.md 已承接 2 条业务判断
+- experience_blueprint.md 已承接 5 条业务判断
 - experience_blueprint.md 已引用 3 个设计原则 ID
