@@ -1,0 +1,275 @@
+{
+  "project_id": "005",
+  "version": "1.0",
+  "overview": {
+    "target_users": "超级管理员、审批人、员工",
+    "experience_goal": "让员工可自助查询与申请权限，同时保持企业治理边界与审批可控。",
+    "task_boundary": "覆盖自助申请权限模式、我的权限、申请权限与审批结果反馈。"
+  },
+  "role_flows": [
+    {
+      "flow_id": "FLOW-MAIN-01",
+      "flow_type": "main",
+      "role": "员工",
+      "title": "员工发起权限申请并接收结果",
+      "summary": "员工在申请权限抽屉提交申请，审批后收到结果通知。",
+      "nodes": [
+        {
+          "node_id": "NODE-01",
+          "title": "进入申请权限抽屉",
+          "carrier": {
+            "type": "drawer",
+            "name": "申请权限抽屉"
+          },
+          "user_action": "填写申请原因并选择申请角色或功能权限。",
+          "system_feedback": "实时校验申请范围、必填项和角色限制规则。",
+          "next_step": "提交申请并进入审批中状态。",
+          "copy_strategy": [
+            "明确告知申请范围来自管理端配置。",
+            "校验失败提示必须给出可执行修复动作。"
+          ],
+          "states": [
+            {
+              "name": "审批中",
+              "meaning": "申请已提交，等待审批处理",
+              "feedback": "展示审批状态与撤销入口"
+            }
+          ],
+          "exceptions": [
+            {
+              "name": "校验不通过",
+              "trigger": "命中资金用户/子管理员/实名等校验规则",
+              "feedback": "阻断提交并展示具体规则原因",
+              "next_step": "返回当前抽屉修正后重试"
+            }
+          ],
+          "trace_refs": {
+            "fact_refs": [
+              "F-APPLY-01"
+            ],
+            "judgment_refs": [
+              "J-RULE-01"
+            ],
+            "principle_refs": [
+              "PR-CLEAR-01"
+            ]
+          }
+        },
+        {
+          "node_id": "NODE-02",
+          "title": "查看申请记录与结果",
+          "carrier": {
+            "type": "page",
+            "name": "申请记录页"
+          },
+          "user_action": "按日期和审批状态筛选申请记录，查看申请内容详情。",
+          "system_feedback": "返回审批状态（已通过/已拒绝/审批中/已撤销）并提供可撤销操作。",
+          "next_step": "根据审批结果进入生效或修订流程。",
+          "copy_strategy": [
+            "状态文案必须与审批状态枚举一致。",
+            "审批拒绝需展示可理解的驳回信息。"
+          ],
+          "state_refs": [
+            "已通过",
+            "已拒绝",
+            "审批中",
+            "已撤销"
+          ],
+          "exception_refs": [
+            "审批超时"
+          ],
+          "trace_refs": {
+            "fact_refs": [
+              "F-RECORD-01"
+            ],
+            "judgment_refs": [
+              "J-STATE-01"
+            ],
+            "principle_refs": [
+              "PR-TRACE-01"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "flow_id": "FLOW-SECONDARY-01",
+      "flow_type": "secondary",
+      "role": "超级管理员",
+      "title": "配置自助申请权限模式",
+      "summary": "管理员开启模式并配置申请方式、范围和审批流程。",
+      "nodes": [
+        {
+          "node_id": "NODE-03",
+          "title": "配置并启用模式",
+          "carrier": {
+            "type": "page",
+            "name": "自助申请模式设置页"
+          },
+          "user_action": "选择申请角色/申请功能权限，配置范围与审批流程并启用。",
+          "system_feedback": "校验互斥模式是否开启，成功后提示启用结果并刷新已开启状态。",
+          "next_step": "员工侧开放我的权限和申请权限入口。",
+          "copy_strategy": [
+            "互斥模式冲突提示必须直给原因。",
+            "启用成功反馈包含后续入口变化提示。"
+          ],
+          "states": [
+            {
+              "name": "已开启",
+              "meaning": "员工可自助查询和申请权限",
+              "feedback": "展示关闭模式和编辑按钮"
+            }
+          ],
+          "exceptions": [
+            {
+              "name": "模式冲突",
+              "trigger": "双管理员互审模式或权限变更审批模式已开启",
+              "feedback": "禁止启用并显示冲突模式名称",
+              "next_step": "管理员处理冲突后再尝试启用"
+            }
+          ],
+          "trace_refs": {
+            "fact_refs": [
+              "F-ENABLE-01"
+            ],
+            "judgment_refs": [
+              "J-CONFLICT-01"
+            ],
+            "principle_refs": [
+              "PR-SAFE-01"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "page_designs": [
+    {
+      "page_id": "PAGE-01",
+      "carrier_type": "page",
+      "title": "自助申请模式设置页",
+      "purpose": "管理员配置员工可申请权限的方式、范围与审批流程。",
+      "entry": "权限管理模式入口点击立即启用进入。",
+      "modules": [
+        "申请方式配置",
+        "角色/应用范围配置",
+        "审批流程配置",
+        "启用与编辑操作区"
+      ],
+      "primary_actions": [
+        "启用模式",
+        "确认编辑",
+        "关闭模式"
+      ],
+      "secondary_actions": [
+        "取消编辑",
+        "查看帮助文档"
+      ],
+      "states": [
+        "未开启",
+        "已开启",
+        "编辑中"
+      ],
+      "exceptions": [
+        "模式冲突禁止启用",
+        "在途流程导致关闭失败"
+      ],
+      "concrete_copy": [
+        {
+          "type": "说明文案",
+          "text": "员工可自助申请权限，工作流审批通过后系统自动分配权限。"
+        },
+        {
+          "type": "冲突提示",
+          "text": "企业已开启双管理员互审模式，不能同时开启此模式。"
+        }
+      ]
+    },
+    {
+      "page_id": "PAGE-02",
+      "carrier_type": "page",
+      "title": "我的权限页",
+      "purpose": "员工查看当前功能权限、数据权限和角色。",
+      "entry": "个人中心“我的权限”入口进入。",
+      "modules": [
+        "功能权限 Tab",
+        "数据权限 Tab",
+        "角色 Tab",
+        "空态提示区"
+      ],
+      "primary_actions": [
+        "切换权限 Tab",
+        "查看权限详情"
+      ],
+      "secondary_actions": [
+        "返回个人中心"
+      ],
+      "states": [
+        "有权限数据",
+        "无权限数据"
+      ],
+      "exceptions": [
+        "权限数据加载失败"
+      ],
+      "concrete_copy": [
+        {
+          "type": "空态提示",
+          "text": "您没有功能权限。"
+        },
+        {
+          "type": "空态提示",
+          "text": "您没有关联的角色。"
+        }
+      ]
+    },
+    {
+      "page_id": "PAGE-03",
+      "carrier_type": "drawer",
+      "title": "申请权限抽屉",
+      "purpose": "员工填写申请原因并提交角色/功能权限申请。",
+      "entry": "员工点击申请权限按钮后打开。",
+      "modules": [
+        "申请人信息",
+        "申请原因输入",
+        "申请功能权限组件",
+        "申请角色列表"
+      ],
+      "primary_actions": [
+        "提交申请",
+        "撤销申请"
+      ],
+      "secondary_actions": [
+        "查看申请详情"
+      ],
+      "states": [
+        "待填写",
+        "已提交审批中"
+      ],
+      "exceptions": [
+        "必填校验失败",
+        "角色/权限规则校验失败"
+      ],
+      "concrete_copy": [
+        {
+          "type": "原因占位提示",
+          "text": "请填写申请原因。"
+        },
+        {
+          "type": "申请范围说明",
+          "text": "提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。"
+        }
+      ]
+    }
+  ],
+  "quality_notes": {
+    "fallback_used": false,
+    "warnings": [],
+    "open_questions": [
+      "帮助文档链接尚未提供，后续需补齐。",
+      "关闭模式时在途流程的处理 SLA 需进一步明确。"
+    ],
+    "gaps": [
+      "OA 可发起人范围与默认复核人员策略仍待业务确认。"
+    ]
+  }
+}

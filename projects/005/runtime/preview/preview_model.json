@@ -1,0 +1,543 @@
+{
+  "project_id": "005",
+  "meta": {
+    "title": "体验蓝图浏览器预览（interaction_map）",
+    "subject": "体验蓝图浏览器预览",
+    "version": "v3",
+    "context": {
+      "source_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\005\\workspace\\interaction_map.json",
+      "input_mode": "interaction_map_json"
+    },
+    "overview": {
+      "目标用户与角色": "超级管理员、审批人、员工",
+      "体验目标": "让员工可自助查询与申请权限，同时保持企业治理边界与审批可控。",
+      "任务边界": "覆盖自助申请权限模式、我的权限、申请权限与审批结果反馈。"
+    }
+  },
+  "global_flow": {
+    "lanes": [
+      {
+        "role": "员工",
+        "chain_ids": [
+          "FLOW-MAIN-01"
+        ]
+      },
+      {
+        "role": "超级管理员",
+        "chain_ids": [
+          "FLOW-SECONDARY-01"
+        ]
+      }
+    ],
+    "chains": [
+      {
+        "chain_id": "FLOW-MAIN-01",
+        "name": "员工发起权限申请并接收结果",
+        "role": "员工",
+        "path_type": "primary",
+        "is_primary": true,
+        "start": "员工在申请权限抽屉提交申请，审批后收到结果通知。",
+        "judgment": "",
+        "goal": "员工在申请权限抽屉提交申请，审批后收到结果通知。",
+        "failure_result": "",
+        "depends_on": [],
+        "page_refs": [
+          "申请权限抽屉",
+          "申请记录页"
+        ]
+      },
+      {
+        "chain_id": "FLOW-SECONDARY-01",
+        "name": "配置自助申请权限模式",
+        "role": "超级管理员",
+        "path_type": "secondary",
+        "is_primary": false,
+        "start": "管理员开启模式并配置申请方式、范围和审批流程。",
+        "judgment": "",
+        "goal": "管理员开启模式并配置申请方式、范围和审批流程。",
+        "failure_result": "",
+        "depends_on": [],
+        "page_refs": [
+          "自助申请模式设置页"
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "node_id": "NODE-01",
+        "name": "进入申请权限抽屉",
+        "type": "drawer节点",
+        "role": "员工",
+        "chain_id": "FLOW-MAIN-01",
+        "goal": "提交申请并进入审批中状态。",
+        "page_id": "申请权限抽屉"
+      },
+      {
+        "node_id": "NODE-02",
+        "name": "查看申请记录与结果",
+        "type": "page节点",
+        "role": "员工",
+        "chain_id": "FLOW-MAIN-01",
+        "goal": "根据审批结果进入生效或修订流程。",
+        "page_id": "申请记录页"
+      },
+      {
+        "node_id": "NODE-03",
+        "name": "配置并启用模式",
+        "type": "page节点",
+        "role": "超级管理员",
+        "chain_id": "FLOW-SECONDARY-01",
+        "goal": "员工侧开放我的权限和申请权限入口。",
+        "page_id": "自助申请模式设置页"
+      }
+    ],
+    "edges": [],
+    "dependencies": [],
+    "blockers": [
+      {
+        "id": "NODE-01",
+        "name": "校验不通过",
+        "role": "员工",
+        "chain_id": "FLOW-MAIN-01",
+        "trigger": "命中资金用户/子管理员/实名等校验规则",
+        "success_result": "提交申请并进入审批中状态。",
+        "impact": "阻断提交并展示具体规则原因",
+        "failure_result": "返回当前抽屉修正后重试",
+        "return_direction": ""
+      },
+      {
+        "id": "NODE-03",
+        "name": "模式冲突",
+        "role": "超级管理员",
+        "chain_id": "FLOW-SECONDARY-01",
+        "trigger": "双管理员互审模式或权限变更审批模式已开启",
+        "success_result": "员工侧开放我的权限和申请权限入口。",
+        "impact": "禁止启用并显示冲突模式名称",
+        "failure_result": "管理员处理冲突后再尝试启用",
+        "return_direction": ""
+      }
+    ]
+  },
+  "page_views": [
+    {
+      "page_id": "PAGE-01",
+      "view_name": "自助申请模式设置页",
+      "view_type": "页面",
+      "roles": [],
+      "summary": "管理员配置员工可申请权限的方式、范围与审批流程。",
+      "entry": "权限管理模式入口点击立即启用进入。",
+      "exit": "",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "申请方式配置",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "角色/应用范围配置",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "审批流程配置",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "启用与编辑操作区",
+          "block_type": "Main Area",
+          "summary": ""
+        }
+      ],
+      "key_understanding": [
+        "申请方式配置",
+        "角色/应用范围配置",
+        "审批流程配置",
+        "启用与编辑操作区"
+      ],
+      "action_items": [
+        {
+          "action_id": "",
+          "name": "启用模式",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        },
+        {
+          "action_id": "",
+          "name": "确认编辑",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        },
+        {
+          "action_id": "",
+          "name": "关闭模式",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        }
+      ],
+      "info_contract_items": [],
+      "states": [
+        {
+          "state_id": "",
+          "name": "未开启",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        },
+        {
+          "state_id": "",
+          "name": "已开启",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        },
+        {
+          "state_id": "",
+          "name": "编辑中",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "自助申请模式设置页",
+          "copy_type": "说明文案",
+          "goal": "员工可自助申请权限，工作流审批通过后系统自动分配权限。",
+          "required": "",
+          "avoid": "",
+          "example": "员工可自助申请权限，工作流审批通过后系统自动分配权限。"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "自助申请模式设置页",
+          "copy_type": "冲突提示",
+          "goal": "企业已开启双管理员互审模式，不能同时开启此模式。",
+          "required": "",
+          "avoid": "",
+          "example": "企业已开启双管理员互审模式，不能同时开启此模式。"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "",
+          "name": "模式冲突禁止启用",
+          "trigger": "",
+          "confusion_reason": "",
+          "protection": ""
+        },
+        {
+          "risk_id": "",
+          "name": "在途流程导致关闭失败",
+          "trigger": "",
+          "confusion_reason": "",
+          "protection": ""
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [
+        "帮助文档链接尚未提供，后续需补齐。",
+        "关闭模式时在途流程的处理 SLA 需进一步明确。"
+      ],
+      "gap_items": [
+        "OA 可发起人范围与默认复核人员策略仍待业务确认。"
+      ],
+      "source_refs": [
+        "interaction_map.json"
+      ]
+    },
+    {
+      "page_id": "PAGE-02",
+      "view_name": "我的权限页",
+      "view_type": "页面",
+      "roles": [],
+      "summary": "员工查看当前功能权限、数据权限和角色。",
+      "entry": "个人中心“我的权限”入口进入。",
+      "exit": "",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "功能权限 Tab",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "数据权限 Tab",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "角色 Tab",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "空态提示区",
+          "block_type": "Main Area",
+          "summary": ""
+        }
+      ],
+      "key_understanding": [
+        "功能权限 Tab",
+        "数据权限 Tab",
+        "角色 Tab",
+        "空态提示区"
+      ],
+      "action_items": [
+        {
+          "action_id": "",
+          "name": "切换权限 Tab",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        },
+        {
+          "action_id": "",
+          "name": "查看权限详情",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        }
+      ],
+      "info_contract_items": [],
+      "states": [
+        {
+          "state_id": "",
+          "name": "有权限数据",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        },
+        {
+          "state_id": "",
+          "name": "无权限数据",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "我的权限页",
+          "copy_type": "空态提示",
+          "goal": "您没有功能权限。",
+          "required": "",
+          "avoid": "",
+          "example": "您没有功能权限。"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "我的权限页",
+          "copy_type": "空态提示",
+          "goal": "您没有关联的角色。",
+          "required": "",
+          "avoid": "",
+          "example": "您没有关联的角色。"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "",
+          "name": "权限数据加载失败",
+          "trigger": "",
+          "confusion_reason": "",
+          "protection": ""
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [
+        "帮助文档链接尚未提供，后续需补齐。",
+        "关闭模式时在途流程的处理 SLA 需进一步明确。"
+      ],
+      "gap_items": [
+        "OA 可发起人范围与默认复核人员策略仍待业务确认。"
+      ],
+      "source_refs": [
+        "interaction_map.json"
+      ]
+    },
+    {
+      "page_id": "PAGE-03",
+      "view_name": "申请权限抽屉",
+      "view_type": "抽屉",
+      "roles": [],
+      "summary": "员工填写申请原因并提交角色/功能权限申请。",
+      "entry": "员工点击申请权限按钮后打开。",
+      "exit": "",
+      "upstream_links": [],
+      "downstream_links": [],
+      "sketch_blocks": [
+        {
+          "label": "申请人信息",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "申请原因输入",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "申请功能权限组件",
+          "block_type": "Main Area",
+          "summary": ""
+        },
+        {
+          "label": "申请角色列表",
+          "block_type": "Main Area",
+          "summary": ""
+        }
+      ],
+      "key_understanding": [
+        "申请人信息",
+        "申请原因输入",
+        "申请功能权限组件",
+        "申请角色列表"
+      ],
+      "action_items": [
+        {
+          "action_id": "",
+          "name": "提交申请",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        },
+        {
+          "action_id": "",
+          "name": "撤销申请",
+          "trigger": "",
+          "feedback": "",
+          "outcome": "",
+          "protection": ""
+        }
+      ],
+      "info_contract_items": [],
+      "states": [
+        {
+          "state_id": "",
+          "name": "待填写",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        },
+        {
+          "state_id": "",
+          "name": "已提交审批中",
+          "trigger": "",
+          "actions": "",
+          "feedback": "",
+          "copy_feedback": "",
+          "outcome": ""
+        }
+      ],
+      "copy_items": [
+        {
+          "copy_id": "COPY-01",
+          "scene": "申请权限抽屉",
+          "copy_type": "原因占位提示",
+          "goal": "请填写申请原因。",
+          "required": "",
+          "avoid": "",
+          "example": "请填写申请原因。"
+        },
+        {
+          "copy_id": "COPY-02",
+          "scene": "申请权限抽屉",
+          "copy_type": "申请范围说明",
+          "goal": "提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。",
+          "required": "",
+          "avoid": "",
+          "example": "提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。"
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "",
+          "name": "必填校验失败",
+          "trigger": "",
+          "confusion_reason": "",
+          "protection": ""
+        },
+        {
+          "risk_id": "",
+          "name": "角色/权限规则校验失败",
+          "trigger": "",
+          "confusion_reason": "",
+          "protection": ""
+        }
+      ],
+      "blockers": [],
+      "principles": [],
+      "design_patterns": [],
+      "trace_items": [],
+      "open_items": [
+        "帮助文档链接尚未提供，后续需补齐。",
+        "关闭模式时在途流程的处理 SLA 需进一步明确。"
+      ],
+      "gap_items": [
+        "OA 可发起人范围与默认复核人员策略仍待业务确认。"
+      ],
+      "source_refs": [
+        "interaction_map.json"
+      ]
+    }
+  ],
+  "global_context": {
+    "principles": [],
+    "dependencies": [],
+    "risks": [],
+    "open_questions": [
+      {
+        "id": "OQ-01",
+        "content": "帮助文档链接尚未提供，后续需补齐。"
+      },
+      {
+        "id": "OQ-02",
+        "content": "关闭模式时在途流程的处理 SLA 需进一步明确。"
+      }
+    ],
+    "gaps": [
+      {
+        "id": "GAP-01",
+        "content": "OA 可发起人范围与默认复核人员策略仍待业务确认。"
+      }
+    ],
+    "notes": []
+  },
+  "unresolved_items": [],
+  "source_refs": [
+    "E:\\AI设计\\体验蓝图构建思路\\projects\\005\\workspace\\interaction_map.json"
+  ]
+}

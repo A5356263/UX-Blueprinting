@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
 from .readable_adapter import InteractionNode, PageDesignSection, build_experience_interaction_map
+from .interaction_map_schema import load_interaction_map_payload, validate_interaction_map_payload
 from .schemas import BusinessModel, ExperienceModel, FactsModel
 
 
@@ -154,6 +156,123 @@ def _render_page_designs(sections: list[PageDesignSection]) -> str:
             )
         )
     return "\n\n".join(blocks)
+
+
+def _string_lines(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _extract_node_states(node: dict[str, Any]) -> list[str]:
+    lines: list[str] = []
+    for item in node.get("states", []) if isinstance(node.get("states"), list) else []:
+        if isinstance(item, dict):
+            name = str(item.get("name") or "").strip()
+            meaning = str(item.get("meaning") or "").strip()
+            feedback = str(item.get("feedback") or "").strip()
+            line = "；".join(part for part in [name, meaning, feedback] if part)
+            if line:
+                lines.append(line)
+        elif isinstance(item, str) and item.strip():
+            lines.append(item.strip())
+    lines.extend(_string_lines(node.get("state_refs")))
+    return lines
+
+
+def _extract_node_exceptions(node: dict[str, Any]) -> list[str]:
+    lines: list[str] = []
+    for item in node.get("exceptions", []) if isinstance(node.get("exceptions"), list) else []:
+        if isinstance(item, dict):
+            name = str(item.get("name") or "").strip()
+            trigger = str(item.get("trigger") or "").strip()
+            feedback = str(item.get("feedback") or "").strip()
+            next_step = str(item.get("next_step") or "").strip()
+            line = "；".join(part for part in [name, trigger, feedback, next_step] if part)
+            if line:
+                lines.append(line)
+        elif isinstance(item, str) and item.strip():
+            lines.append(item.strip())
+    lines.extend(_string_lines(node.get("exception_refs")))
+    return lines
+
+
+def _extract_copy_lines(item: dict[str, Any]) -> list[str]:
+    lines: list[str] = []
+    for entry in item.get("concrete_copy", []) if isinstance(item.get("concrete_copy"), list) else []:
+        if isinstance(entry, dict):
+            copy_type = str(entry.get("type") or "").strip()
+            copy_text = str(entry.get("text") or "").strip()
+            if copy_type and copy_text:
+                lines.append(f"{copy_type}：{copy_text}")
+            elif copy_text:
+                lines.append(copy_text)
+        elif isinstance(entry, str) and entry.strip():
+            lines.append(entry.strip())
+    return lines
+
+
+def _build_interaction_from_payload(
+    payload: dict[str, Any],
+) -> tuple[list[str], list[InteractionNode], list[InteractionNode], list[InteractionNode], list[PageDesignSection], list[str]]:
+    overview = _string_lines(payload.get("overview", {}).get("summary") if isinstance(payload.get("overview"), dict) else [])
+    role_flows = payload.get("role_flows") if isinstance(payload.get("role_flows"), list) else []
+    main_nodes: list[InteractionNode] = []
+    secondary_nodes: list[InteractionNode] = []
+    exception_nodes: list[InteractionNode] = []
+    state_feedbacks: list[str] = []
+    for flow in role_flows:
+        if not isinstance(flow, dict):
+            continue
+        flow_title = str(flow.get("title") or flow.get("summary") or flow.get("flow_id") or "未命名流程").strip()
+        flow_type = str(flow.get("flow_type") or "secondary")
+        for node in flow.get("nodes", []) if isinstance(flow.get("nodes"), list) else []:
+            if not isinstance(node, dict):
+                continue
+            carrier = node.get("carrier") if isinstance(node.get("carrier"), dict) else {}
+            carrier_name = str(carrier.get("name") or "").strip()
+            title = str(node.get("title") or node.get("node_id") or "未命名节点").strip()
+            if carrier_name:
+                title = f"{title}（{carrier_name}）"
+            state_notes = _extract_node_states(node)
+            exception_notes = _extract_node_exceptions(node)
+            role_node = InteractionNode(
+                title=f"{flow_title} / {title}",
+                user_action=str(node.get("user_action") or "待补充用户动作"),
+                system_feedback=str(node.get("system_feedback") or "待补充系统反馈"),
+                next_step=str(node.get("next_step") or "待补充下一步"),
+                copy_strategy=_string_lines(node.get("copy_strategy")),
+                state_notes=state_notes,
+                exception_notes=exception_notes,
+            )
+            if flow_type == "main":
+                main_nodes.append(role_node)
+            elif flow_type == "exception":
+                exception_nodes.append(role_node)
+            else:
+                secondary_nodes.append(role_node)
+            state_feedbacks.extend(state_notes)
+
+    page_designs: list[PageDesignSection] = []
+    for page in payload.get("page_designs", []) if isinstance(payload.get("page_designs"), list) else []:
+        if not isinstance(page, dict):
+            continue
+        page_designs.append(
+            PageDesignSection(
+                title=str(page.get("title") or page.get("page_id") or "未命名页面"),
+                page_goal=str(page.get("purpose") or "待补充页面目标"),
+                entry_condition=str(page.get("entry") or "待补充进入条件"),
+                structure=_string_lines(page.get("modules")),
+                first_screen=_string_lines(page.get("modules"))[:3],
+                primary_actions=_string_lines(page.get("primary_actions")),
+                secondary_actions=_string_lines(page.get("secondary_actions")),
+                state_feedbacks=_string_lines(page.get("states")),
+                exception_feedbacks=_string_lines(page.get("exceptions")),
+                concrete_copy=_extract_copy_lines(page),
+                next_step=str(page.get("next_step") or "待补充完成后去向"),
+            )
+        )
+    return overview, main_nodes, secondary_nodes, exception_nodes, page_designs, state_feedbacks
 
 
 def render_facts_markdown(model: FactsModel) -> str:
@@ -502,13 +621,45 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.risk_id} | {item.name} | {item.trigger} | {item.confusion} | {item.protection} | {item.target} |"
         for item in model.risks
     )
-    interaction_map = build_experience_interaction_map(model)
-    overview_lines = _render_string_list(interaction_map.overview)
-    main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
-    secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
-    exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
-    page_design_lines = _render_page_designs(interaction_map.page_designs)
-    state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
+    map_warnings: list[str] = []
+    payload = load_interaction_map_payload(model.project_id)
+    if payload is not None:
+        blockers, warnings = validate_interaction_map_payload(payload)
+        map_warnings.extend([f"interaction_map {item}" for item in warnings[:6]])
+        if blockers:
+            map_warnings.insert(0, "interaction_map 校验未通过，已回退到代码推导结构。")
+            map_warnings.extend([f"interaction_map blocker: {item}" for item in blockers[:3]])
+            interaction_map = build_experience_interaction_map(model)
+            overview_lines = _render_string_list(interaction_map.overview)
+            main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
+            secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
+            exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
+            page_design_lines = _render_page_designs(interaction_map.page_designs)
+            state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
+        else:
+            (
+                overview_items,
+                main_nodes,
+                secondary_nodes,
+                exception_nodes,
+                page_sections,
+                state_items,
+            ) = _build_interaction_from_payload(payload)
+            overview_lines = _render_string_list(overview_items or ["优先渲染 interaction_map.json（AI 生成）。"])
+            main_flow_lines = _render_interaction_nodes(main_nodes, "待补充主交互流程")
+            secondary_flow_lines = _render_interaction_nodes(secondary_nodes, "待补充次交互流程")
+            exception_flow_lines = _render_interaction_nodes(exception_nodes, "待补充异常与阻断流程")
+            page_design_lines = _render_page_designs(page_sections)
+            state_feedback_lines = _render_string_list(state_items)
+    else:
+        map_warnings.append("未检测到 interaction_map.json，已回退到代码推导结构。")
+        interaction_map = build_experience_interaction_map(model)
+        overview_lines = _render_string_list(interaction_map.overview)
+        main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
+        secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
+        exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
+        page_design_lines = _render_page_designs(interaction_map.page_designs)
+        state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
     layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     self_check_lines = _render_string_list(
         [
@@ -526,6 +677,9 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 ## 1. 交互流程总览
 
 {overview_lines}
+
+### interaction_map 消费状态
+{_render_string_list(map_warnings)}
 
 ## 2. 主交互流程
 

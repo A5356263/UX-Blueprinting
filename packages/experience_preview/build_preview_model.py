@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,187 @@ def _read_blueprint_source(project_id: str) -> tuple[Path, str]:
         if path.exists():
             return path, path.read_text(encoding="utf-8")
     raise SystemExit(f"Missing experience blueprint for preview: {project_dir}")
+
+
+def _read_interaction_map_source(project_id: str) -> tuple[Path, dict[str, Any]] | None:
+    candidates = [
+        get_project_exports_dir(project_id) / "final" / "interaction_map.json",
+        get_project_workspace_dir(project_id) / "interaction_map.json",
+    ]
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return path, payload
+    return None
+
+
+def _as_list_strings(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _build_preview_model_from_interaction_map(project_id: str, source_path: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    role_flows = payload.get("role_flows") if isinstance(payload.get("role_flows"), list) else []
+    page_designs = payload.get("page_designs") if isinstance(payload.get("page_designs"), list) else []
+    overview = payload.get("overview") if isinstance(payload.get("overview"), dict) else {}
+    quality_notes = payload.get("quality_notes") if isinstance(payload.get("quality_notes"), dict) else {}
+
+    lanes: dict[str, dict[str, Any]] = {}
+    chains: list[dict[str, Any]] = []
+    nodes: list[dict[str, Any]] = []
+    blockers: list[dict[str, Any]] = []
+    for flow_index, flow in enumerate(role_flows, start=1):
+        if not isinstance(flow, dict):
+            continue
+        chain_id = str(flow.get("flow_id") or f"FLOW-{flow_index:02d}")
+        role = str(flow.get("role") or "未命名角色")
+        flow_type = str(flow.get("flow_type") or "secondary")
+        chain = {
+            "chain_id": chain_id,
+            "name": str(flow.get("title") or chain_id),
+            "role": role,
+            "path_type": "primary" if flow_type == "main" else flow_type,
+            "is_primary": flow_type == "main",
+            "start": str(flow.get("summary") or ""),
+            "judgment": "",
+            "goal": str(flow.get("summary") or ""),
+            "failure_result": "",
+            "depends_on": [],
+            "page_refs": [],
+        }
+        chain_nodes = flow.get("nodes") if isinstance(flow.get("nodes"), list) else []
+        for node_index, node in enumerate(chain_nodes, start=1):
+            if not isinstance(node, dict):
+                continue
+            node_id = str(node.get("node_id") or f"{chain_id}-N{node_index}")
+            carrier = node.get("carrier") if isinstance(node.get("carrier"), dict) else {}
+            page_id = str(carrier.get("name") or "")
+            if page_id:
+                chain["page_refs"].append(page_id)
+            nodes.append(
+                {
+                    "node_id": node_id,
+                    "name": str(node.get("title") or node_id),
+                    "type": f"{str(carrier.get('type') or '节点')}节点",
+                    "role": role,
+                    "chain_id": chain_id,
+                    "goal": str(node.get("next_step") or chain["goal"]),
+                    "page_id": page_id,
+                }
+            )
+            for item in node.get("exceptions", []) if isinstance(node.get("exceptions"), list) else []:
+                if not isinstance(item, dict):
+                    continue
+                blockers.append(
+                    {
+                        "id": node_id,
+                        "name": str(item.get("name") or "异常"),
+                        "role": role,
+                        "chain_id": chain_id,
+                        "trigger": str(item.get("trigger") or ""),
+                        "success_result": str(node.get("next_step") or ""),
+                        "impact": str(item.get("feedback") or ""),
+                        "failure_result": str(item.get("next_step") or ""),
+                        "return_direction": "",
+                    }
+                )
+        chain["page_refs"] = _dedupe_strings([str(item) for item in chain["page_refs"] if item])
+        chains.append(chain)
+        lanes.setdefault(role, {"role": role, "chain_ids": []})
+        lanes[role]["chain_ids"].append(chain_id)
+
+    page_views: list[dict[str, Any]] = []
+    for page_index, page in enumerate(page_designs, start=1):
+        if not isinstance(page, dict):
+            continue
+        page_id = str(page.get("page_id") or f"P-{page_index:02d}")
+        view_name = str(page.get("title") or page_id)
+        view_type = _infer_view_type(view_name, str(page.get("carrier_type") or ""))
+        states = [{"state_id": "", "name": state, "trigger": "", "actions": "", "feedback": "", "copy_feedback": "", "outcome": ""} for state in _as_list_strings(page.get("states"))]
+        copy_items: list[dict[str, Any]] = []
+        for item_index, item in enumerate(page.get("concrete_copy", []) if isinstance(page.get("concrete_copy"), list) else [], start=1):
+            if isinstance(item, dict):
+                copy_items.append(
+                    {
+                        "copy_id": f"COPY-{item_index:02d}",
+                        "scene": view_name,
+                        "copy_type": str(item.get("type") or ""),
+                        "goal": str(item.get("text") or ""),
+                        "required": "",
+                        "avoid": "",
+                        "example": str(item.get("text") or ""),
+                    }
+                )
+        page_views.append(
+            {
+                "page_id": page_id,
+                "view_name": view_name,
+                "view_type": view_type,
+                "roles": _as_list_strings(overview.get("target_roles")),
+                "summary": str(page.get("purpose") or ""),
+                "entry": str(page.get("entry") or ""),
+                "exit": str(page.get("next_step") or ""),
+                "upstream_links": [],
+                "downstream_links": [],
+                "sketch_blocks": [{"label": module, "block_type": "Main Area", "summary": ""} for module in _as_list_strings(page.get("modules"))],
+                "key_understanding": _as_list_strings(page.get("modules")),
+                "action_items": [{"action_id": "", "name": action, "trigger": "", "feedback": "", "outcome": "", "protection": ""} for action in _as_list_strings(page.get("primary_actions"))],
+                "info_contract_items": [],
+                "states": states,
+                "copy_items": copy_items,
+                "risks": [{"risk_id": "", "name": item, "trigger": "", "confusion_reason": "", "protection": ""} for item in _as_list_strings(page.get("exceptions"))],
+                "blockers": [],
+                "principles": [],
+                "design_patterns": [],
+                "trace_items": [],
+                "open_items": _as_list_strings(quality_notes.get("open_questions")),
+                "gap_items": _as_list_strings(quality_notes.get("gaps")),
+                "source_refs": ["interaction_map.json"],
+            }
+        )
+
+    return {
+        "project_id": project_id,
+        "meta": {
+            "title": "体验蓝图浏览器预览（interaction_map）",
+            "subject": "体验蓝图浏览器预览",
+            "version": "v3",
+            "context": {
+                "source_blueprint": str(source_path),
+                "input_mode": "interaction_map_json",
+            },
+            "overview": {
+                "目标用户与角色": str(overview.get("target_users") or ""),
+                "体验目标": str(overview.get("experience_goal") or ""),
+                "任务边界": str(overview.get("task_boundary") or ""),
+            },
+        },
+        "global_flow": {
+            "lanes": list(lanes.values()),
+            "chains": chains,
+            "nodes": nodes,
+            "edges": [],
+            "dependencies": [],
+            "blockers": blockers,
+        },
+        "page_views": page_views,
+        "global_context": {
+            "principles": [],
+            "dependencies": [],
+            "risks": [],
+            "open_questions": [{"id": f"OQ-{index + 1:02d}", "content": item} for index, item in enumerate(_as_list_strings(quality_notes.get("open_questions")))],
+            "gaps": [{"id": f"GAP-{index + 1:02d}", "content": item} for index, item in enumerate(_as_list_strings(quality_notes.get("gaps")))],
+            "notes": [{"type": "interaction_map", "content": item} for item in _as_list_strings(quality_notes.get("warnings"))],
+        },
+        "unresolved_items": [],
+        "source_refs": [str(source_path)],
+    }
 
 
 def _split_sections(text: str) -> dict[str, str]:
@@ -754,6 +936,14 @@ def _finalize_pages(page_index: dict[str, dict[str, Any]], unresolved_items: lis
 
 
 def build_preview_model(project_id: str) -> dict[str, Any]:
+    interaction_source = _read_interaction_map_source(project_id)
+    if interaction_source is not None:
+        source_path, payload = interaction_source
+        role_flows = payload.get("role_flows") if isinstance(payload.get("role_flows"), list) else []
+        page_designs = payload.get("page_designs") if isinstance(payload.get("page_designs"), list) else []
+        if role_flows and page_designs:
+            return _build_preview_model_from_interaction_map(project_id, source_path, payload)
+
     source_path, text = _read_blueprint_source(project_id)
     sections = _split_sections(text)
     page_index = _build_page_index(sections)

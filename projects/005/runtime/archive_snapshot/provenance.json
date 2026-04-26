@@ -1,0 +1,24 @@
+{
+  "project_id": "005",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "eeb20bb4396c9a60db4bcfdae622bb1f86e3b9502b0b553dff9ff47f04b36cf8",
+  "task_card_hash": "79e1d5eb023d000653a37bca14686b7b6aef4a65f93929e5f56e2128c0c377cc",
+  "generated_at": "2026-04-26T15:32:37+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "prepare-experience-map",
+    "generate-experience",
+    "validate-experience-map",
+    "assemble",
+    "gate-experience",
+    "validate",
+    "coverage"
+  ]
+}

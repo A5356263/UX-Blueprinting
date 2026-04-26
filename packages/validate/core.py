@@ -13,6 +13,7 @@ from packages.common import (
     get_project_workspace_dir,
     get_repo_root,
 )
+from packages.generation.reasoning import load_interaction_map_payload, validate_interaction_map_payload
 from packages.provenance import append_command_if_provenance_exists, validate_provenance
 
 
@@ -153,6 +154,7 @@ DEFAULT_TRACKED_OUTPUTS = [
     "projects/{project_id}/workspace/facts.md",
     "projects/{project_id}/workspace/business_blueprint.md",
     "projects/{project_id}/workspace/experience_blueprint.md",
+    "projects/{project_id}/workspace/interaction_map.json",
     "projects/{project_id}/workspace/gap_list.md",
     "projects/{project_id}/workspace/check_report.md",
     "projects/{project_id}/workspace/check_status.json",
@@ -1225,6 +1227,54 @@ def analyze_experience_blueprint(
     return metrics, issues
 
 
+def analyze_interaction_map(project_id: str) -> tuple[dict[str, object], list[tuple[str, str]]]:
+    issues: list[tuple[str, str]] = []
+    payload = load_interaction_map_payload(project_id)
+    if payload is None:
+        add_issue(issues, "blocker", "interaction_map.json 缺失或不可读取")
+        return {"exists": False}, issues
+
+    blockers, warnings = validate_interaction_map_payload(payload)
+    for item in blockers:
+        add_issue(issues, "blocker", f"interaction_map: {item}")
+    for item in warnings:
+        add_issue(issues, "warning", f"interaction_map: {item}")
+
+    role_flows = payload.get("role_flows") if isinstance(payload.get("role_flows"), list) else []
+    page_designs = payload.get("page_designs") if isinstance(payload.get("page_designs"), list) else []
+    node_count = 0
+    flow_type_counter = {"main": 0, "secondary": 0, "exception": 0}
+    for flow in role_flows:
+        if not isinstance(flow, dict):
+            continue
+        flow_type = str(flow.get("flow_type") or "")
+        if flow_type in flow_type_counter:
+            flow_type_counter[flow_type] += 1
+        node_count += len(flow.get("nodes")) if isinstance(flow.get("nodes"), list) else 0
+    page_with_copy = 0
+    for page in page_designs:
+        if not isinstance(page, dict):
+            continue
+        if isinstance(page.get("concrete_copy"), list) and page.get("concrete_copy"):
+            page_with_copy += 1
+
+    quality_notes = payload.get("quality_notes") if isinstance(payload.get("quality_notes"), dict) else {}
+    fallback_used = bool(quality_notes.get("fallback_used"))
+    if fallback_used:
+        add_issue(issues, "warning", "interaction_map 仍处于 fallback_used 状态")
+
+    metrics = {
+        "exists": True,
+        "role_flow_count": len(role_flows),
+        "node_count": node_count,
+        "page_design_count": len(page_designs),
+        "page_with_copy_count": page_with_copy,
+        "flow_type_counter": flow_type_counter,
+        "fallback_used": fallback_used,
+    }
+    return metrics, issues
+
+
 def run_validate_outputs(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -1250,7 +1300,9 @@ def run_validate_outputs(project_id: str) -> int:
         required_commands=[
             "generate-facts",
             "generate-business",
+            "prepare-experience-map",
             "generate-experience",
+            "validate-experience-map",
         ],
     )
     check_runtime_contract(project_id, issues)
@@ -1295,6 +1347,7 @@ def run_validate_outputs(project_id: str) -> int:
 
     business_metrics: dict[str, object] = {}
     experience_metrics: dict[str, object] = {}
+    interaction_map_metrics: dict[str, object] = {}
 
     if facts_text and business_text:
         business_metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
@@ -1305,6 +1358,10 @@ def run_validate_outputs(project_id: str) -> int:
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
+
+    interaction_map_metrics, interaction_map_issues = analyze_interaction_map(project_id)
+    extend_issues(issues, interaction_map_issues)
+    checked_files.append(f"projects/{project_id}/workspace/interaction_map.json")
 
     has_directory_ref = bool(resolved.get("has_directory_ref"))
     requires_narrowing = bool(resolved.get("requires_narrowing"))
@@ -1350,6 +1407,7 @@ def run_validate_outputs(project_id: str) -> int:
         "missing_output_count": len(missing_outputs),
         "business_depth": business_metrics,
         "experience_depth": experience_metrics,
+        "interaction_map": interaction_map_metrics,
     }
     payload = build_final_payload(
         project_id,

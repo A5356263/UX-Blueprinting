@@ -7,7 +7,13 @@ from packages.archive import run_archive_artifacts
 from packages.common import get_examples_root_dir, get_project_runtime_dir
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
-from packages.generation import run_generate_business, run_generate_experience, run_generate_facts
+from packages.generation import (
+    run_generate_business,
+    run_generate_experience,
+    run_generate_facts,
+    run_prepare_experience_map,
+    run_validate_experience_map,
+)
 from packages.provenance import append_command_if_provenance_exists
 from packages.validate import (
     run_business_gate,
@@ -31,7 +37,9 @@ def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) 
         ("gate-facts", run_facts_gate),
         ("generate-business", run_generate_business),
         ("gate-business", run_business_gate),
+        ("prepare-experience-map", run_prepare_experience_map),
         ("generate-experience", run_generate_experience),
+        ("validate-experience-map", run_validate_experience_map),
         ("gate-experience", run_experience_gate),
         ("validate", run_validate_outputs),
         ("coverage", run_coverage_check),

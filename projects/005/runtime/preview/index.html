@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>体验蓝图浏览器预览（interaction_map）</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-top">
+        <h1>体验蓝图浏览器预览（interaction_map）</h1>
+      </div>
+      <dl class="hero-detail"><div class="hero-detail-row"><dt>只读说明</dt><dd>该页面仅用于本地阅读正式体验蓝图的派生预览，不回写正式蓝图，也不新增业务语义。</dd></div><div class="hero-detail-row"><dt>项目</dt><dd>005</dd></div><div class="hero-detail-row"><dt>来源</dt><dd>E:\AI设计\体验蓝图构建思路\projects\005\workspace\interaction_map.json</dd></div><div class="hero-detail-row"><dt>目标用户与角色</dt><dd>超级管理员、审批人、员工</dd></div><div class="hero-detail-row"><dt>体验目标</dt><dd>让员工可自助查询与申请权限，同时保持企业治理边界与审批可控。</dd></div><div class="hero-detail-row"><dt>任务边界</dt><dd>覆盖自助申请权限模式、我的权限、申请权限与审批结果反馈。</dd></div></dl>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="section-title">全局流程总览</h2>
+          </div>
+        </div>
+        <div class="lane-list"><section class="lane"><div class="lane-head"><h3>员工</h3><span class="lane-meta">1 条链路</span></div><div class="chain-list"><section class="chain"><div class="chain-head"><div><h4>员工发起权限申请并接收结果</h4><p class="chain-goal">员工在申请权限抽屉提交申请，审批后收到结果通知。</p></div><div class="chain-badges"><span class="tiny-chip primary">主链路</span><span class="tiny-chip">FLOW-MAIN-01</span></div></div><div class="node-row"><div class="flow-node"><small>drawer节点</small><strong>进入申请权限抽屉</strong><div class="node-meta"><span class="node-chip">申请权限抽屉</span></div></div><div class="flow-arrow">→</div><div class="flow-node"><small>page节点</small><strong>查看申请记录与结果</strong><div class="node-meta"><span class="node-chip">申请记录页</span></div></div></div><div class="chain-judgment"><h5>判断说明</h5><div class="judgment-lines"><span>依赖 / 前提：员工在申请权限抽屉提交申请，审批后收到结果通知。</span></div></div></section></div></section><section class="lane"><div class="lane-head"><h3>超级管理员</h3><span class="lane-meta">1 条链路</span></div><div class="chain-list"><section class="chain"><div class="chain-head"><div><h4>配置自助申请权限模式</h4><p class="chain-goal">管理员开启模式并配置申请方式、范围和审批流程。</p></div><div class="chain-badges"><span class="tiny-chip secondary">辅助链路</span><span class="tiny-chip">FLOW-SECONDARY-01</span></div></div><div class="node-row"><div class="flow-node"><small>page节点</small><strong>配置并启用模式</strong><div class="node-meta"><span class="node-chip">自助申请模式设置页</span></div></div></div><div class="chain-judgment"><h5>判断说明</h5><div class="judgment-lines"><span>依赖 / 前提：管理员开启模式并配置申请方式、范围和审批流程。</span></div></div></section></div></section></div>
+        <div class="flow-legend">
+          <span class="legend-chip">按角色分泳道</span>
+          <span class="legend-chip">按链路分组</span>
+        </div>
+      </section>
+
+      <section class="panel"><div class="panel-header"><div><h2 class="section-title">全局待确认</h2></div></div><ul class="confirm-list"><li><strong>OQ-01</strong> 帮助文档链接尚未提供，后续需补齐。</li><li><strong>OQ-02</strong> 关闭模式时在途流程的处理 SLA 需进一步明确。</li><li><strong>GAP-01</strong> OA 可发起人范围与默认复核人员策略仍待业务确认。</li></ul></section>
+
+      
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="section-title">页面预览卡</h2>
+          </div>
+        </div>
+        <div class="pages"><article class="page-card"><div class="page-card-head"><div class="page-card-title"><span class="page-type">页面</span><h3>自助申请模式设置页</h3></div><span class="page-code">PAGE-01</span></div><div class="page-card-grid"><div class="page-main"><section class="info-block"><h4>线框草图</h4><div class="sketch-shell page"><div class="sketch-label">页面线框草图</div><div class="sketch-grid"><div class="sketch-block">申请方式配置</div><div class="sketch-block">角色/应用范围配置</div><div class="sketch-block">审批流程配置</div><div class="sketch-block">启用与编辑操作区</div></div></div></section><section class="info-block"><h4>页面信息</h4><dl class="meta-list"><div class="meta-row"><dt>编号</dt><dd>PAGE-01</dd></div><div class="meta-row"><dt>入口</dt><dd>权限管理模式入口点击立即启用进入。</dd></div></dl></section><section class="info-block"><h4>页面摘要</h4><p>管理员配置员工可申请权限的方式、范围与审批流程。</p></section><section class="info-block"><h4>关键理解</h4><ul class="bullet-list"><li>申请方式配置</li><li>角色/应用范围配置</li><li>审批流程配置</li><li>启用与编辑操作区</li></ul><ul class="detail-list"><li><strong>启用模式</strong></li><li><strong>确认编辑</strong></li><li><strong>关闭模式</strong></li></ul></section><section class="info-block"><h4>来源说明</h4><details><summary>来源说明（1）</summary><ul class="source-list"><li>interaction_map.json</li></ul></details></section></div><div class="page-side"><section class="info-block"><h4>状态与反馈</h4><ul class="detail-list"><li><strong>未开启</strong></li><li><strong>已开启</strong></li><li><strong>编辑中</strong></li></ul></section><section class="info-block"><h4>文案</h4><ul class="detail-list"><li><strong>COPY-01 自助申请模式设置页</strong><span>文案类型：说明文案</span><span>语义目标：员工可自助申请权限，工作流审批通过后系统自动分配权限。</span><span>示例方向：员工可自助申请权限，工作流审批通过后系统自动分配权限。</span></li><li><strong>COPY-02 自助申请模式设置页</strong><span>文案类型：冲突提示</span><span>语义目标：企业已开启双管理员互审模式，不能同时开启此模式。</span><span>示例方向：企业已开启双管理员互审模式，不能同时开启此模式。</span></li></ul></section><section class="info-block"><h4>风险与阻断</h4><ul class="detail-list"><li><strong>模式冲突禁止启用</strong></li><li><strong>在途流程导致关闭失败</strong></li></ul></section><section class="info-block"><h4>模式与追踪</h4><ul class="detail-list"><li><strong>页面</strong><span>承载模式：页面</span></li></ul></section><section class="info-block"><h4>待确认项</h4><ul class="bullet-list"><li>帮助文档链接尚未提供，后续需补齐。</li><li>关闭模式时在途流程的处理 SLA 需进一步明确。</li><li>OA 可发起人范围与默认复核人员策略仍待业务确认。</li></ul></section></div></div></article><article class="page-card"><div class="page-card-head"><div class="page-card-title"><span class="page-type">页面</span><h3>我的权限页</h3></div><span class="page-code">PAGE-02</span></div><div class="page-card-grid"><div class="page-main"><section class="info-block"><h4>线框草图</h4><div class="sketch-shell page"><div class="sketch-label">页面线框草图</div><div class="sketch-grid"><div class="sketch-block">功能权限 Tab</div><div class="sketch-block">数据权限 Tab</div><div class="sketch-block">角色 Tab</div><div class="sketch-block">空态提示区</div></div></div></section><section class="info-block"><h4>页面信息</h4><dl class="meta-list"><div class="meta-row"><dt>编号</dt><dd>PAGE-02</dd></div><div class="meta-row"><dt>入口</dt><dd>个人中心“我的权限”入口进入。</dd></div></dl></section><section class="info-block"><h4>页面摘要</h4><p>员工查看当前功能权限、数据权限和角色。</p></section><section class="info-block"><h4>关键理解</h4><ul class="bullet-list"><li>功能权限 Tab</li><li>数据权限 Tab</li><li>角色 Tab</li><li>空态提示区</li></ul><ul class="detail-list"><li><strong>切换权限 Tab</strong></li><li><strong>查看权限详情</strong></li></ul></section><section class="info-block"><h4>来源说明</h4><details><summary>来源说明（1）</summary><ul class="source-list"><li>interaction_map.json</li></ul></details></section></div><div class="page-side"><section class="info-block"><h4>状态与反馈</h4><ul class="detail-list"><li><strong>有权限数据</strong></li><li><strong>无权限数据</strong></li></ul></section><section class="info-block"><h4>文案</h4><ul class="detail-list"><li><strong>COPY-01 我的权限页</strong><span>文案类型：空态提示</span><span>语义目标：您没有功能权限。</span><span>示例方向：您没有功能权限。</span></li><li><strong>COPY-02 我的权限页</strong><span>文案类型：空态提示</span><span>语义目标：您没有关联的角色。</span><span>示例方向：您没有关联的角色。</span></li></ul></section><section class="info-block"><h4>风险与阻断</h4><ul class="detail-list"><li><strong>权限数据加载失败</strong></li></ul></section><section class="info-block"><h4>模式与追踪</h4><ul class="detail-list"><li><strong>页面</strong><span>承载模式：页面</span></li></ul></section><section class="info-block"><h4>待确认项</h4><ul class="bullet-list"><li>帮助文档链接尚未提供，后续需补齐。</li><li>关闭模式时在途流程的处理 SLA 需进一步明确。</li><li>OA 可发起人范围与默认复核人员策略仍待业务确认。</li></ul></section></div></div></article><article class="page-card"><div class="page-card-head"><div class="page-card-title"><span class="page-type">抽屉</span><h3>申请权限抽屉</h3></div><span class="page-code">PAGE-03</span></div><div class="page-card-grid"><div class="page-main"><section class="info-block"><h4>线框草图</h4><div class="sketch-shell drawer"><div class="sketch-label">抽屉线框草图</div><div class="sketch-grid"><div class="sketch-block">申请人信息</div><div class="sketch-block">申请原因输入</div><div class="sketch-block">申请功能权限组件</div><div class="sketch-block">申请角色列表</div></div></div></section><section class="info-block"><h4>页面信息</h4><dl class="meta-list"><div class="meta-row"><dt>编号</dt><dd>PAGE-03</dd></div><div class="meta-row"><dt>入口</dt><dd>员工点击申请权限按钮后打开。</dd></div></dl></section><section class="info-block"><h4>页面摘要</h4><p>员工填写申请原因并提交角色/功能权限申请。</p></section><section class="info-block"><h4>关键理解</h4><ul class="bullet-list"><li>申请人信息</li><li>申请原因输入</li><li>申请功能权限组件</li><li>申请角色列表</li></ul><ul class="detail-list"><li><strong>提交申请</strong></li><li><strong>撤销申请</strong></li></ul></section><section class="info-block"><h4>来源说明</h4><details><summary>来源说明（1）</summary><ul class="source-list"><li>interaction_map.json</li></ul></details></section></div><div class="page-side"><section class="info-block"><h4>状态与反馈</h4><ul class="detail-list"><li><strong>待填写</strong></li><li><strong>已提交审批中</strong></li></ul></section><section class="info-block"><h4>文案</h4><ul class="detail-list"><li><strong>COPY-01 申请权限抽屉</strong><span>文案类型：原因占位提示</span><span>语义目标：请填写申请原因。</span><span>示例方向：请填写申请原因。</span></li><li><strong>COPY-02 申请权限抽屉</strong><span>文案类型：申请范围说明</span><span>语义目标：提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。</span><span>示例方向：提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。</span></li></ul></section><section class="info-block"><h4>风险与阻断</h4><ul class="detail-list"><li><strong>必填校验失败</strong></li><li><strong>角色/权限规则校验失败</strong></li></ul></section><section class="info-block"><h4>模式与追踪</h4><ul class="detail-list"><li><strong>抽屉</strong><span>承载模式：抽屉</span></li></ul></section><section class="info-block"><h4>待确认项</h4><ul class="bullet-list"><li>帮助文档链接尚未提供，后续需补齐。</li><li>关闭模式时在途流程的处理 SLA 需进一步明确。</li><li>OA 可发起人范围与默认复核人员策略仍待业务确认。</li></ul></section></div></div></article></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="section-title">调试信息</h2>
+          </div>
+        </div>
+        <details>
+          <summary>展开 preview_model.json</summary>
+          <pre>{
+  &quot;project_id&quot;: &quot;005&quot;,
+  &quot;meta&quot;: {
+    &quot;title&quot;: &quot;体验蓝图浏览器预览（interaction_map）&quot;,
+    &quot;subject&quot;: &quot;体验蓝图浏览器预览&quot;,
+    &quot;version&quot;: &quot;v3&quot;,
+    &quot;context&quot;: {
+      &quot;source_blueprint&quot;: &quot;E:\\AI设计\\体验蓝图构建思路\\projects\\005\\workspace\\interaction_map.json&quot;,
+      &quot;input_mode&quot;: &quot;interaction_map_json&quot;
+    },
+    &quot;overview&quot;: {
+      &quot;目标用户与角色&quot;: &quot;超级管理员、审批人、员工&quot;,
+      &quot;体验目标&quot;: &quot;让员工可自助查询与申请权限，同时保持企业治理边界与审批可控。&quot;,
+      &quot;任务边界&quot;: &quot;覆盖自助申请权限模式、我的权限、申请权限与审批结果反馈。&quot;
+    }
+  },
+  &quot;global_flow&quot;: {
+    &quot;lanes&quot;: [
+      {
+        &quot;role&quot;: &quot;员工&quot;,
+        &quot;chain_ids&quot;: [
+          &quot;FLOW-MAIN-01&quot;
+        ]
+      },
+      {
+        &quot;role&quot;: &quot;超级管理员&quot;,
+        &quot;chain_ids&quot;: [
+          &quot;FLOW-SECONDARY-01&quot;
+        ]
+      }
+    ],
+    &quot;chains&quot;: [
+      {
+        &quot;chain_id&quot;: &quot;FLOW-MAIN-01&quot;,
+        &quot;name&quot;: &quot;员工发起权限申请并接收结果&quot;,
+        &quot;role&quot;: &quot;员工&quot;,
+        &quot;path_type&quot;: &quot;primary&quot;,
+        &quot;is_primary&quot;: true,
+        &quot;start&quot;: &quot;员工在申请权限抽屉提交申请，审批后收到结果通知。&quot;,
+        &quot;judgment&quot;: &quot;&quot;,
+        &quot;goal&quot;: &quot;员工在申请权限抽屉提交申请，审批后收到结果通知。&quot;,
+        &quot;failure_result&quot;: &quot;&quot;,
+        &quot;depends_on&quot;: [],
+        &quot;page_refs&quot;: [
+          &quot;申请权限抽屉&quot;,
+          &quot;申请记录页&quot;
+        ]
+      },
+      {
+        &quot;chain_id&quot;: &quot;FLOW-SECONDARY-01&quot;,
+        &quot;name&quot;: &quot;配置自助申请权限模式&quot;,
+        &quot;role&quot;: &quot;超级管理员&quot;,
+        &quot;path_type&quot;: &quot;secondary&quot;,
+        &quot;is_primary&quot;: false,
+        &quot;start&quot;: &quot;管理员开启模式并配置申请方式、范围和审批流程。&quot;,
+        &quot;judgment&quot;: &quot;&quot;,
+        &quot;goal&quot;: &quot;管理员开启模式并配置申请方式、范围和审批流程。&quot;,
+        &quot;failure_result&quot;: &quot;&quot;,
+        &quot;depends_on&quot;: [],
+        &quot;page_refs&quot;: [
+          &quot;自助申请模式设置页&quot;
+        ]
+      }
+    ],
+    &quot;nodes&quot;: [
+      {
+        &quot;node_id&quot;: &quot;NODE-01&quot;,
+        &quot;name&quot;: &quot;进入申请权限抽屉&quot;,
+        &quot;type&quot;: &quot;drawer节点&quot;,
+        &quot;role&quot;: &quot;员工&quot;,
+        &quot;chain_id&quot;: &quot;FLOW-MAIN-01&quot;,
+        &quot;goal&quot;: &quot;提交申请并进入审批中状态。&quot;,
+        &quot;page_id&quot;: &quot;申请权限抽屉&quot;
+      },
+      {
+        &quot;node_id&quot;: &quot;NODE-02&quot;,
+        &quot;name&quot;: &quot;查看申请记录与结果&quot;,
+        &quot;type&quot;: &quot;page节点&quot;,
+        &quot;role&quot;: &quot;员工&quot;,
+        &quot;chain_id&quot;: &quot;FLOW-MAIN-01&quot;,
+        &quot;goal&quot;: &quot;根据审批结果进入生效或修订流程。&quot;,
+        &quot;page_id&quot;: &quot;申请记录页&quot;
+      },
+      {
+        &quot;node_id&quot;: &quot;NODE-03&quot;,
+        &quot;name&quot;: &quot;配置并启用模式&quot;,
+        &quot;type&quot;: &quot;page节点&quot;,
+        &quot;role&quot;: &quot;超级管理员&quot;,
+        &quot;chain_id&quot;: &quot;FLOW-SECONDARY-01&quot;,
+        &quot;goal&quot;: &quot;员工侧开放我的权限和申请权限入口。&quot;,
+        &quot;page_id&quot;: &quot;自助申请模式设置页&quot;
+      }
+    ],
+    &quot;edges&quot;: [],
+    &quot;dependencies&quot;: [],
+    &quot;blockers&quot;: [
+      {
+        &quot;id&quot;: &quot;NODE-01&quot;,
+        &quot;name&quot;: &quot;校验不通过&quot;,
+        &quot;role&quot;: &quot;员工&quot;,
+        &quot;chain_id&quot;: &quot;FLOW-MAIN-01&quot;,
+        &quot;trigger&quot;: &quot;命中资金用户/子管理员/实名等校验规则&quot;,
+        &quot;success_result&quot;: &quot;提交申请并进入审批中状态。&quot;,
+        &quot;impact&quot;: &quot;阻断提交并展示具体规则原因&quot;,
+        &quot;failure_result&quot;: &quot;返回当前抽屉修正后重试&quot;,
+        &quot;return_direction&quot;: &quot;&quot;
+      },
+      {
+        &quot;id&quot;: &quot;NODE-03&quot;,
+        &quot;name&quot;: &quot;模式冲突&quot;,
+        &quot;role&quot;: &quot;超级管理员&quot;,
+        &quot;chain_id&quot;: &quot;FLOW-SECONDARY-01&quot;,
+        &quot;trigger&quot;: &quot;双管理员互审模式或权限变更审批模式已开启&quot;,
+        &quot;success_result&quot;: &quot;员工侧开放我的权限和申请权限入口。&quot;,
+        &quot;impact&quot;: &quot;禁止启用并显示冲突模式名称&quot;,
+        &quot;failure_result&quot;: &quot;管理员处理冲突后再尝试启用&quot;,
+        &quot;return_direction&quot;: &quot;&quot;
+      }
+    ]
+  },
+  &quot;page_views&quot;: [
+    {
+      &quot;page_id&quot;: &quot;PAGE-01&quot;,
+      &quot;view_name&quot;: &quot;自助申请模式设置页&quot;,
+      &quot;view_type&quot;: &quot;页面&quot;,
+      &quot;roles&quot;: [],
+      &quot;summary&quot;: &quot;管理员配置员工可申请权限的方式、范围与审批流程。&quot;,
+      &quot;entry&quot;: &quot;权限管理模式入口点击立即启用进入。&quot;,
+      &quot;exit&quot;: &quot;&quot;,
+      &quot;upstream_links&quot;: [],
+      &quot;downstream_links&quot;: [],
+      &quot;sketch_blocks&quot;: [
+        {
+          &quot;label&quot;: &quot;申请方式配置&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;角色/应用范围配置&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;审批流程配置&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;启用与编辑操作区&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        }
+      ],
+      &quot;key_understanding&quot;: [
+        &quot;申请方式配置&quot;,
+        &quot;角色/应用范围配置&quot;,
+        &quot;审批流程配置&quot;,
+        &quot;启用与编辑操作区&quot;
+      ],
+      &quot;action_items&quot;: [
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;启用模式&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;确认编辑&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;关闭模式&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;info_contract_items&quot;: [],
+      &quot;states&quot;: [
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;未开启&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        },
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;已开启&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        },
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;编辑中&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        }
+      ],
+      &quot;copy_items&quot;: [
+        {
+          &quot;copy_id&quot;: &quot;COPY-01&quot;,
+          &quot;scene&quot;: &quot;自助申请模式设置页&quot;,
+          &quot;copy_type&quot;: &quot;说明文案&quot;,
+          &quot;goal&quot;: &quot;员工可自助申请权限，工作流审批通过后系统自动分配权限。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;员工可自助申请权限，工作流审批通过后系统自动分配权限。&quot;
+        },
+        {
+          &quot;copy_id&quot;: &quot;COPY-02&quot;,
+          &quot;scene&quot;: &quot;自助申请模式设置页&quot;,
+          &quot;copy_type&quot;: &quot;冲突提示&quot;,
+          &quot;goal&quot;: &quot;企业已开启双管理员互审模式，不能同时开启此模式。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;企业已开启双管理员互审模式，不能同时开启此模式。&quot;
+        }
+      ],
+      &quot;risks&quot;: [
+        {
+          &quot;risk_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;模式冲突禁止启用&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;confusion_reason&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;risk_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;在途流程导致关闭失败&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;confusion_reason&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;blockers&quot;: [],
+      &quot;principles&quot;: [],
+      &quot;design_patterns&quot;: [],
+      &quot;trace_items&quot;: [],
+      &quot;open_items&quot;: [
+        &quot;帮助文档链接尚未提供，后续需补齐。&quot;,
+        &quot;关闭模式时在途流程的处理 SLA 需进一步明确。&quot;
+      ],
+      &quot;gap_items&quot;: [
+        &quot;OA 可发起人范围与默认复核人员策略仍待业务确认。&quot;
+      ],
+      &quot;source_refs&quot;: [
+        &quot;interaction_map.json&quot;
+      ]
+    },
+    {
+      &quot;page_id&quot;: &quot;PAGE-02&quot;,
+      &quot;view_name&quot;: &quot;我的权限页&quot;,
+      &quot;view_type&quot;: &quot;页面&quot;,
+      &quot;roles&quot;: [],
+      &quot;summary&quot;: &quot;员工查看当前功能权限、数据权限和角色。&quot;,
+      &quot;entry&quot;: &quot;个人中心“我的权限”入口进入。&quot;,
+      &quot;exit&quot;: &quot;&quot;,
+      &quot;upstream_links&quot;: [],
+      &quot;downstream_links&quot;: [],
+      &quot;sketch_blocks&quot;: [
+        {
+          &quot;label&quot;: &quot;功能权限 Tab&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;数据权限 Tab&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;角色 Tab&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;空态提示区&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        }
+      ],
+      &quot;key_understanding&quot;: [
+        &quot;功能权限 Tab&quot;,
+        &quot;数据权限 Tab&quot;,
+        &quot;角色 Tab&quot;,
+        &quot;空态提示区&quot;
+      ],
+      &quot;action_items&quot;: [
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;切换权限 Tab&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;查看权限详情&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;info_contract_items&quot;: [],
+      &quot;states&quot;: [
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;有权限数据&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        },
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;无权限数据&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        }
+      ],
+      &quot;copy_items&quot;: [
+        {
+          &quot;copy_id&quot;: &quot;COPY-01&quot;,
+          &quot;scene&quot;: &quot;我的权限页&quot;,
+          &quot;copy_type&quot;: &quot;空态提示&quot;,
+          &quot;goal&quot;: &quot;您没有功能权限。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;您没有功能权限。&quot;
+        },
+        {
+          &quot;copy_id&quot;: &quot;COPY-02&quot;,
+          &quot;scene&quot;: &quot;我的权限页&quot;,
+          &quot;copy_type&quot;: &quot;空态提示&quot;,
+          &quot;goal&quot;: &quot;您没有关联的角色。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;您没有关联的角色。&quot;
+        }
+      ],
+      &quot;risks&quot;: [
+        {
+          &quot;risk_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;权限数据加载失败&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;confusion_reason&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;blockers&quot;: [],
+      &quot;principles&quot;: [],
+      &quot;design_patterns&quot;: [],
+      &quot;trace_items&quot;: [],
+      &quot;open_items&quot;: [
+        &quot;帮助文档链接尚未提供，后续需补齐。&quot;,
+        &quot;关闭模式时在途流程的处理 SLA 需进一步明确。&quot;
+      ],
+      &quot;gap_items&quot;: [
+        &quot;OA 可发起人范围与默认复核人员策略仍待业务确认。&quot;
+      ],
+      &quot;source_refs&quot;: [
+        &quot;interaction_map.json&quot;
+      ]
+    },
+    {
+      &quot;page_id&quot;: &quot;PAGE-03&quot;,
+      &quot;view_name&quot;: &quot;申请权限抽屉&quot;,
+      &quot;view_type&quot;: &quot;抽屉&quot;,
+      &quot;roles&quot;: [],
+      &quot;summary&quot;: &quot;员工填写申请原因并提交角色/功能权限申请。&quot;,
+      &quot;entry&quot;: &quot;员工点击申请权限按钮后打开。&quot;,
+      &quot;exit&quot;: &quot;&quot;,
+      &quot;upstream_links&quot;: [],
+      &quot;downstream_links&quot;: [],
+      &quot;sketch_blocks&quot;: [
+        {
+          &quot;label&quot;: &quot;申请人信息&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;申请原因输入&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;申请功能权限组件&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        },
+        {
+          &quot;label&quot;: &quot;申请角色列表&quot;,
+          &quot;block_type&quot;: &quot;Main Area&quot;,
+          &quot;summary&quot;: &quot;&quot;
+        }
+      ],
+      &quot;key_understanding&quot;: [
+        &quot;申请人信息&quot;,
+        &quot;申请原因输入&quot;,
+        &quot;申请功能权限组件&quot;,
+        &quot;申请角色列表&quot;
+      ],
+      &quot;action_items&quot;: [
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;提交申请&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;action_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;撤销申请&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;info_contract_items&quot;: [],
+      &quot;states&quot;: [
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;待填写&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        },
+        {
+          &quot;state_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;已提交审批中&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;actions&quot;: &quot;&quot;,
+          &quot;feedback&quot;: &quot;&quot;,
+          &quot;copy_feedback&quot;: &quot;&quot;,
+          &quot;outcome&quot;: &quot;&quot;
+        }
+      ],
+      &quot;copy_items&quot;: [
+        {
+          &quot;copy_id&quot;: &quot;COPY-01&quot;,
+          &quot;scene&quot;: &quot;申请权限抽屉&quot;,
+          &quot;copy_type&quot;: &quot;原因占位提示&quot;,
+          &quot;goal&quot;: &quot;请填写申请原因。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;请填写申请原因。&quot;
+        },
+        {
+          &quot;copy_id&quot;: &quot;COPY-02&quot;,
+          &quot;scene&quot;: &quot;申请权限抽屉&quot;,
+          &quot;copy_type&quot;: &quot;申请范围说明&quot;,
+          &quot;goal&quot;: &quot;提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。&quot;,
+          &quot;required&quot;: &quot;&quot;,
+          &quot;avoid&quot;: &quot;&quot;,
+          &quot;example&quot;: &quot;提交申请后默认申请功能的所有数据权限，如需部分数据权限请联系企业管理员。&quot;
+        }
+      ],
+      &quot;risks&quot;: [
+        {
+          &quot;risk_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;必填校验失败&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;confusion_reason&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        },
+        {
+          &quot;risk_id&quot;: &quot;&quot;,
+          &quot;name&quot;: &quot;角色/权限规则校验失败&quot;,
+          &quot;trigger&quot;: &quot;&quot;,
+          &quot;confusion_reason&quot;: &quot;&quot;,
+          &quot;protection&quot;: &quot;&quot;
+        }
+      ],
+      &quot;blockers&quot;: [],
+      &quot;principles&quot;: [],
+      &quot;design_patterns&quot;: [],
+      &quot;trace_items&quot;: [],
+      &quot;open_items&quot;: [
+        &quot;帮助文档链接尚未提供，后续需补齐。&quot;,
+        &quot;关闭模式时在途流程的处理 SLA 需进一步明确。&quot;
+      ],
+      &quot;gap_items&quot;: [
+        &quot;OA 可发起人范围与默认复核人员策略仍待业务确认。&quot;
+      ],
+      &quot;source_refs&quot;: [
+        &quot;interaction_map.json&quot;
+      ]
+    }
+  ],
+  &quot;global_context&quot;: {
+    &quot;principles&quot;: [],
+    &quot;dependencies&quot;: [],
+    &quot;risks&quot;: [],
+    &quot;open_questions&quot;: [
+      {
+        &quot;id&quot;: &quot;OQ-01&quot;,
+        &quot;content&quot;: &quot;帮助文档链接尚未提供，后续需补齐。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;OQ-02&quot;,
+        &quot;content&quot;: &quot;关闭模式时在途流程的处理 SLA 需进一步明确。&quot;
+      }
+    ],
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;GAP-01&quot;,
+        &quot;content&quot;: &quot;OA 可发起人范围与默认复核人员策略仍待业务确认。&quot;
+      }
+    ],
+    &quot;notes&quot;: []
+  },
+  &quot;unresolved_items&quot;: [],
+  &quot;source_refs&quot;: [
+    &quot;E:\\AI设计\\体验蓝图构建思路\\projects\\005\\workspace\\interaction_map.json&quot;
+  ]
+}</pre>
+        </details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

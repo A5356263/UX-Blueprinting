@@ -13,6 +13,8 @@ from .reasoning import (
     render_experience_markdown,
     render_facts_markdown,
     render_gap_list,
+    run_prepare_experience_map as _run_prepare_experience_map,
+    run_validate_experience_map as _run_validate_experience_map,
 )
 
 
@@ -50,3 +52,17 @@ def run_generate_experience(project_id: str) -> int:
     upsert_generated_provenance(project_id, "packages.generation", "generate-experience")
     print(f"Generated experience blueprint: {get_project_workspace_dir(project_id) / 'experience_blueprint.md'}")
     return 0
+
+
+def run_prepare_experience_map(project_id: str) -> int:
+    exit_code = _run_prepare_experience_map(project_id)
+    if exit_code == 0:
+        upsert_generated_provenance(project_id, "packages.generation", "prepare-experience-map")
+    return exit_code
+
+
+def run_validate_experience_map(project_id: str) -> int:
+    exit_code = _run_validate_experience_map(project_id)
+    if exit_code == 0:
+        upsert_generated_provenance(project_id, "packages.generation", "validate-experience-map")
+    return exit_code
