@@ -13,7 +13,6 @@ from packages.common import (
     get_project_workspace_dir,
     get_repo_root,
 )
-from packages.generation.reasoning import load_interaction_map_payload, validate_interaction_map_payload
 from packages.provenance import append_command_if_provenance_exists, validate_provenance
 
 
@@ -48,17 +47,14 @@ STAGE_REQUIRED_HEADINGS = {
         "## 附录 E：链路自检信息",
     ],
     "experience_blueprint.md": [
-        "## 1. 交互流程总览",
+        "## 1. 体验结论",
         "## 2. 主交互流程",
         "## 3. 次交互流程",
         "## 4. 异常与阻断流程",
         "## 5. 页面 / 弹窗 / 抽屉设计",
         "## 6. 状态与反馈文案",
-        "## 附录 A：上游依据",
-        "## 附录 B：原始信息架构与页面清单",
-        "## 附录 C：页面 / 流程追踪映射",
-        "## 附录 D：设计原则引用",
-        "## 附录 E：原始状态 / 文案 / 风险矩阵",
+        "## 7. 待确认问题",
+        "## 附录：依据与追踪",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
@@ -86,23 +82,17 @@ FORBIDDEN_TERMS = {
         "SQL",
         "React 组件实现",
         "前端实现方案",
-        "## 阶段定位",
-        "## 体验范围与边界",
-        "## 用户与场景清单",
-        "## 信息架构",
-        "## 核心任务流",
-        "## 页面蓝图",
-        "## 风险场景与体验保护",
-        "## 原则引用与映射",
-        "## 开放问题",
-        "## 不进入本阶段的内容",
-        "## 体验要求",
+        "Runtime Task Goal",
+        "source_path",
+        "EV-",
+        "从当前输入直接抽取",
+        "未做模板补全",
     ],
 }
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录 E：原始状态 / 文案 / 风险矩阵"},
+    "experience_blueprint.md": {"1. 体验结论", "2. 主交互流程", "附录：依据与追踪"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
@@ -154,7 +144,6 @@ DEFAULT_TRACKED_OUTPUTS = [
     "projects/{project_id}/workspace/facts.md",
     "projects/{project_id}/workspace/business_blueprint.md",
     "projects/{project_id}/workspace/experience_blueprint.md",
-    "projects/{project_id}/workspace/interaction_map.json",
     "projects/{project_id}/workspace/gap_list.md",
     "projects/{project_id}/workspace/check_report.md",
     "projects/{project_id}/workspace/check_status.json",
@@ -196,7 +185,7 @@ EXPERIENCE_CRITICAL_HINTS = [
     "帮助",
 ]
 EXPERIENCE_CORE_SECTION_TITLES = [
-    "1. 交互流程总览",
+    "1. 体验结论",
     "2. 主交互流程",
     "3. 次交互流程",
     "4. 异常与阻断流程",
@@ -205,13 +194,11 @@ EXPERIENCE_CORE_SECTION_TITLES = [
 ]
 EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bEV-\d+\b", re.IGNORECASE), "核心区包含 EV 编号"),
-    (re.compile(r"\b(?:P|TF|TR)-\d+\b", re.IGNORECASE), "核心区包含 P/TF/TR 编号"),
     (re.compile(r"source[_ ]?path", re.IGNORECASE), "核心区包含 source_path"),
     (re.compile(r"(?:从当前输入直接抽取|未做模板补全)"), "核心区暴露了生成过程提示语"),
-    (re.compile(r"(?:状态\d+|异常场景\d+)"), "核心区包含占位词（状态2/异常场景3）"),
-    (re.compile(r"(?:未命名状态|未命名异常场景)"), "核心区包含未命名占位词"),
-    (re.compile(r"(?:配置\s+配置|查看\s+查看|提交\s+提交|申请\s+申请|审批\s+审批|关闭\s+关闭)"), "核心区存在重复动词表达"),
-    (re.compile(r"[\u4e00-\u9fff]{20,}(?:管理员|审批人|申请人|负责人|运营人员|财务|人事|用户|客户|成员|子管理员|超管|员工)"), "核心区存在过长角色句"),
+    (re.compile(r"(?:配置\s+支持配置|查看\s+查看权限)"), "核心区存在明显机器化表达"),
+    (re.compile(r"(?:提交\s+目前企业的员工权限分配均由权限)"), "核心区存在明显机器化表达"),
+    (re.compile(r"(?:生成基于当前真实需求文档承载页)"), "核心区存在明显机器化表达"),
 ]
 
 
@@ -1096,106 +1083,50 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
 
 
 def analyze_experience_blueprint(
-    facts_text: str,
-    business_text: str,
+    _facts_text: str,
+    _business_text: str,
     experience_text: str,
 ) -> tuple[dict[str, object], list[tuple[str, str]]]:
     issues: list[tuple[str, str]] = []
     sections = parse_h2_sections(experience_text)
-    fact_ids = extract_fact_ids(facts_text)
-    judgment_ids = extract_judgment_ids(business_text)
-    page_ids = extract_page_ids(experience_text)
-    flow_ids = extract_flow_ids(experience_text)
-
-    overview_section = sections.get("1. 交互流程总览", "")
     main_flow_section = sections.get("2. 主交互流程", "")
     secondary_flow_section = sections.get("3. 次交互流程", "")
     exception_flow_section = sections.get("4. 异常与阻断流程", "")
     page_design_section = sections.get("5. 页面 / 弹窗 / 抽屉设计", "")
     state_copy_section = sections.get("6. 状态与反馈文案", "")
-    appendix_b_section = sections.get("附录 B：原始信息架构与页面清单", "")
-    appendix_e_section = sections.get("附录 E：原始状态 / 文案 / 风险矩阵", "")
-    flow_section = "\n".join([main_flow_section, secondary_flow_section, sections.get("附录 C：页面 / 流程追踪映射", "")])
-    page_inventory_section = "\n".join([page_design_section, appendix_b_section])
-    key_page_section = page_design_section
-    layout_section = appendix_b_section
-    content_contract_section = appendix_b_section
-    state_section = "\n".join([state_copy_section, appendix_e_section])
-    copy_section = "\n".join([state_copy_section, appendix_e_section])
-    risk_section = "\n".join([exception_flow_section, appendix_e_section])
-    trace_section = sections.get("附录 C：页面 / 流程追踪映射", "")
+    pending_section = sections.get("7. 待确认问题", "")
+    appendix_section = sections.get("附录：依据与追踪", "")
     core_text = get_experience_core_text(sections)
 
-    flow_count = max(len(flow_ids), count_real_table_rows(flow_section), count_real_list_items(flow_section))
-    page_inventory_item_count = max(count_real_table_rows(page_inventory_section), count_real_list_items(page_inventory_section))
-    expanded_page_blueprint_count = max(
-        count_expanded_page_blueprints(key_page_section),
-        len(re.findall(r"^###\s+", key_page_section, re.MULTILINE)),
-    )
-    region_map_count = count_text_diagrams(layout_section)
-    content_contract_item_count = max(count_real_table_rows(content_contract_section), count_real_list_items(content_contract_section))
-    state_feedback_pair_count = max(count_real_table_rows(state_section), count_real_list_items(state_section))
-    copy_contract_item_count = max(count_real_table_rows(copy_section), count_real_list_items(copy_section))
-    trace_mapping_item_count = max(
-        count_unique_matches(TRACE_ID_PATTERN, trace_section),
-        count_real_table_rows(trace_section),
-        count_real_list_items(trace_section),
-    )
-    referenced_facts = [item for item in fact_ids if item in experience_text]
-    referenced_judgments = [item for item in judgment_ids if item in experience_text]
-    principle_refs = extract_principle_refs(experience_text, fact_ids, judgment_ids, page_ids, flow_ids)
-    principle_ref_count = len(principle_refs)
+    flow_section = "\n".join([main_flow_section, secondary_flow_section])
+    flow_count = max(count_real_table_rows(flow_section), count_real_list_items(flow_section))
+    page_inventory_item_count = max(count_real_table_rows(page_design_section), count_real_list_items(page_design_section))
+    state_feedback_pair_count = max(count_real_table_rows(state_copy_section), count_real_list_items(state_copy_section))
+    appendix_item_count = max(count_real_table_rows(appendix_section), count_real_list_items(appendix_section))
 
-    exception_text = "\n".join([overview_section, main_flow_section, secondary_flow_section, exception_flow_section, state_section, risk_section])
+    exception_text = "\n".join([main_flow_section, secondary_flow_section, exception_flow_section, state_copy_section])
     has_exception_coverage = contains_any(
         exception_text,
         ["失败", "阻断", "拦截", "拒绝", "异常", "不可", "空态", "冲突", "审批中", "处理中", "关闭失败"],
     )
-    has_success_coverage = contains_any(exception_text, ["成功", "生效", "通过", "已开启", "完成", "可启用"])
-
-    if not referenced_facts:
-        add_issue(issues, "blocker", "experience_blueprint.md 未显式承接 facts ID")
-    else:
-        add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_facts)} 条事实")
-
-    if not referenced_judgments:
-        add_issue(issues, "warning", "experience_blueprint.md 尚未显式承接业务判断 ID（J-xx / POS-xx）")
-    else:
-        add_issue(issues, "info", f"experience_blueprint.md 已承接 {len(referenced_judgments)} 条业务判断")
-
-    if principle_ref_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 未显式引用设计原则")
-    else:
-        add_issue(issues, "info", f"experience_blueprint.md 已引用 {principle_ref_count} 个设计原则 ID")
 
     if flow_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少交互流程说明")
 
-    if page_inventory_item_count == 0 and not page_ids:
+    if page_inventory_item_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 弹窗 / 抽屉设计信息")
-
-    if expanded_page_blueprint_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 弹窗 / 抽屉展开说明")
-
-    if region_map_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少附录中的区块布局示意")
-
-    if content_contract_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少信息优先级合同")
 
     if state_feedback_pair_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与异常处理信息")
 
-    if copy_contract_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少文案解释要求")
+    if count_real_list_items(pending_section) == 0:
+        add_issue(issues, "warning", "experience_blueprint.md 待确认问题为空，建议显式标注不确定项")
 
-    if trace_mapping_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 流程追踪映射")
+    if appendix_item_count == 0:
+        add_issue(issues, "warning", "experience_blueprint.md 附录：依据与追踪内容偏少")
 
     if not has_exception_coverage:
         add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
-    elif not has_success_coverage:
-        add_issue(issues, "warning", "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱")
 
     for pattern, message in EXPERIENCE_MACHINE_LINE_PATTERNS:
         if pattern.search(core_text):
@@ -1210,67 +1141,12 @@ def analyze_experience_blueprint(
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
     metrics = {
-        "flow_count": len(flow_ids),
-        "page_count": len(page_ids),
+        "flow_count": flow_count,
         "page_inventory_item_count": page_inventory_item_count,
-        "expanded_page_blueprint_count": expanded_page_blueprint_count,
-        "region_map_count": region_map_count,
-        "content_contract_item_count": content_contract_item_count,
         "state_feedback_pair_count": state_feedback_pair_count,
-        "copy_contract_item_count": copy_contract_item_count,
-        "trace_mapping_item_count": trace_mapping_item_count,
-        "business_judgment_consumed_count": len(referenced_judgments),
-        "principle_ref_count": principle_ref_count,
+        "appendix_item_count": appendix_item_count,
         "exception_coverage": has_exception_coverage,
         "core_table_count": core_table_count,
-    }
-    return metrics, issues
-
-
-def analyze_interaction_map(project_id: str) -> tuple[dict[str, object], list[tuple[str, str]]]:
-    issues: list[tuple[str, str]] = []
-    payload = load_interaction_map_payload(project_id)
-    if payload is None:
-        add_issue(issues, "blocker", "interaction_map.json 缺失或不可读取")
-        return {"exists": False}, issues
-
-    blockers, warnings = validate_interaction_map_payload(payload)
-    for item in blockers:
-        add_issue(issues, "blocker", f"interaction_map: {item}")
-    for item in warnings:
-        add_issue(issues, "warning", f"interaction_map: {item}")
-
-    role_flows = payload.get("role_flows") if isinstance(payload.get("role_flows"), list) else []
-    page_designs = payload.get("page_designs") if isinstance(payload.get("page_designs"), list) else []
-    node_count = 0
-    flow_type_counter = {"main": 0, "secondary": 0, "exception": 0}
-    for flow in role_flows:
-        if not isinstance(flow, dict):
-            continue
-        flow_type = str(flow.get("flow_type") or "")
-        if flow_type in flow_type_counter:
-            flow_type_counter[flow_type] += 1
-        node_count += len(flow.get("nodes")) if isinstance(flow.get("nodes"), list) else 0
-    page_with_copy = 0
-    for page in page_designs:
-        if not isinstance(page, dict):
-            continue
-        if isinstance(page.get("concrete_copy"), list) and page.get("concrete_copy"):
-            page_with_copy += 1
-
-    quality_notes = payload.get("quality_notes") if isinstance(payload.get("quality_notes"), dict) else {}
-    fallback_used = bool(quality_notes.get("fallback_used"))
-    if fallback_used:
-        add_issue(issues, "warning", "interaction_map 仍处于 fallback_used 状态")
-
-    metrics = {
-        "exists": True,
-        "role_flow_count": len(role_flows),
-        "node_count": node_count,
-        "page_design_count": len(page_designs),
-        "page_with_copy_count": page_with_copy,
-        "flow_type_counter": flow_type_counter,
-        "fallback_used": fallback_used,
     }
     return metrics, issues
 
@@ -1300,9 +1176,7 @@ def run_validate_outputs(project_id: str) -> int:
         required_commands=[
             "generate-facts",
             "generate-business",
-            "prepare-experience-map",
             "generate-experience",
-            "validate-experience-map",
         ],
     )
     check_runtime_contract(project_id, issues)
@@ -1347,7 +1221,6 @@ def run_validate_outputs(project_id: str) -> int:
 
     business_metrics: dict[str, object] = {}
     experience_metrics: dict[str, object] = {}
-    interaction_map_metrics: dict[str, object] = {}
 
     if facts_text and business_text:
         business_metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
@@ -1358,10 +1231,6 @@ def run_validate_outputs(project_id: str) -> int:
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
-
-    interaction_map_metrics, interaction_map_issues = analyze_interaction_map(project_id)
-    extend_issues(issues, interaction_map_issues)
-    checked_files.append(f"projects/{project_id}/workspace/interaction_map.json")
 
     has_directory_ref = bool(resolved.get("has_directory_ref"))
     requires_narrowing = bool(resolved.get("requires_narrowing"))
@@ -1407,7 +1276,6 @@ def run_validate_outputs(project_id: str) -> int:
         "missing_output_count": len(missing_outputs),
         "business_depth": business_metrics,
         "experience_depth": experience_metrics,
-        "interaction_map": interaction_map_metrics,
     }
     payload = build_final_payload(
         project_id,

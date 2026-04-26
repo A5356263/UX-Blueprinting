@@ -3,8 +3,6 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from .readable_adapter import InteractionNode, PageDesignSection, build_experience_interaction_map
-from .interaction_map_schema import load_interaction_map_payload, validate_interaction_map_payload
 from .schemas import BusinessModel, ExperienceModel, FactsModel
 
 
@@ -621,45 +619,28 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.risk_id} | {item.name} | {item.trigger} | {item.confusion} | {item.protection} | {item.target} |"
         for item in model.risks
     )
-    map_warnings: list[str] = []
-    payload = load_interaction_map_payload(model.project_id)
-    if payload is not None:
-        blockers, warnings = validate_interaction_map_payload(payload)
-        map_warnings.extend([f"interaction_map {item}" for item in warnings[:6]])
-        if blockers:
-            map_warnings.insert(0, "interaction_map 校验未通过，已回退到代码推导结构。")
-            map_warnings.extend([f"interaction_map blocker: {item}" for item in blockers[:3]])
-            interaction_map = build_experience_interaction_map(model)
-            overview_lines = _render_string_list(interaction_map.overview)
-            main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
-            secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
-            exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
-            page_design_lines = _render_page_designs(interaction_map.page_designs)
-            state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
-        else:
-            (
-                overview_items,
-                main_nodes,
-                secondary_nodes,
-                exception_nodes,
-                page_sections,
-                state_items,
-            ) = _build_interaction_from_payload(payload)
-            overview_lines = _render_string_list(overview_items or ["优先渲染 interaction_map.json（AI 生成）。"])
-            main_flow_lines = _render_interaction_nodes(main_nodes, "待补充主交互流程")
-            secondary_flow_lines = _render_interaction_nodes(secondary_nodes, "待补充次交互流程")
-            exception_flow_lines = _render_interaction_nodes(exception_nodes, "待补充异常与阻断流程")
-            page_design_lines = _render_page_designs(page_sections)
-            state_feedback_lines = _render_string_list(state_items)
-    else:
-        map_warnings.append("未检测到 interaction_map.json，已回退到代码推导结构。")
-        interaction_map = build_experience_interaction_map(model)
-        overview_lines = _render_string_list(interaction_map.overview)
-        main_flow_lines = _render_interaction_nodes(interaction_map.main_flow_nodes, "待补充主交互流程")
-        secondary_flow_lines = _render_interaction_nodes(interaction_map.secondary_flow_nodes, "待补充次交互流程")
-        exception_flow_lines = _render_interaction_nodes(interaction_map.exception_flow_nodes, "待补充异常与阻断流程")
-        page_design_lines = _render_page_designs(interaction_map.page_designs)
-        state_feedback_lines = _render_string_list(interaction_map.state_feedbacks)
+    overview_lines = _render_string_list(
+        [
+            f"目标用户与角色：{model.target_users}",
+            f"体验目标：{model.experience_goal}",
+            f"任务边界：{model.task_boundary}",
+        ]
+    )
+    main_flow_lines = _render_string_list(
+        [f"{item.flow_id} {item.name}：{item.key_steps}" for item in model.task_flows[:4]]
+    )
+    secondary_flow_lines = _render_string_list(
+        [f"{item.page_id} {item.name}：{item.relation}" for item in model.pages[:4]]
+    )
+    exception_flow_lines = _render_string_list(
+        [f"{item.risk_id} {item.name}：{item.protection}" for item in model.risks[:6]]
+    )
+    page_design_lines = _render_string_list(
+        [f"{item.page_id} {item.name}：{item.primary_task}" for item in model.pages[:10]]
+    )
+    state_feedback_lines = _render_string_list(
+        [f"{item.state_id} {item.name}：{item.copy_feedback}" for item in model.state_feedbacks[:10]]
+    )
     layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     self_check_lines = _render_string_list(
         [
@@ -677,9 +658,6 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 ## 1. 交互流程总览
 
 {overview_lines}
-
-### interaction_map 消费状态
-{_render_string_list(map_warnings)}
 
 ## 2. 主交互流程
 

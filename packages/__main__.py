@@ -10,8 +10,6 @@ from packages.generation import (
     run_generate_business,
     run_generate_experience,
     run_generate_facts,
-    run_prepare_experience_map,
-    run_validate_experience_map,
 )
 from packages.mainline import run_main, run_sample_check
 from packages.memory_layer import run_memory_accept, run_memory_extract, run_memory_summary
@@ -48,12 +46,6 @@ def main() -> int:
 
     generate_experience = subparsers.add_parser("generate-experience")
     generate_experience.add_argument("project_id")
-
-    prepare_experience_map = subparsers.add_parser("prepare-experience-map")
-    prepare_experience_map.add_argument("project_id")
-
-    validate_experience_map = subparsers.add_parser("validate-experience-map")
-    validate_experience_map.add_argument("project_id")
 
     validate = subparsers.add_parser("validate")
     validate.add_argument("project_id")
@@ -131,10 +123,6 @@ def main() -> int:
         return run_generate_business(args.project_id)
     if args.command == "generate-experience":
         return run_generate_experience(args.project_id)
-    if args.command == "prepare-experience-map":
-        return run_prepare_experience_map(args.project_id)
-    if args.command == "validate-experience-map":
-        return run_validate_experience_map(args.project_id)
     if args.command == "validate":
         return run_validate_outputs(args.project_id)
     if args.command == "coverage":

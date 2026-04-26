@@ -11,8 +11,6 @@ from packages.generation import (
     run_generate_business,
     run_generate_experience,
     run_generate_facts,
-    run_prepare_experience_map,
-    run_validate_experience_map,
 )
 from packages.provenance import append_command_if_provenance_exists
 from packages.validate import (
@@ -37,9 +35,7 @@ def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) 
         ("gate-facts", run_facts_gate),
         ("generate-business", run_generate_business),
         ("gate-business", run_business_gate),
-        ("prepare-experience-map", run_prepare_experience_map),
         ("generate-experience", run_generate_experience),
-        ("validate-experience-map", run_validate_experience_map),
         ("gate-experience", run_experience_gate),
         ("validate", run_validate_outputs),
         ("coverage", run_coverage_check),
