@@ -102,6 +102,56 @@ FORBIDDEN_TERMS = {
         "## 体验要求",
     ],
 }
+FORBIDDEN_TERM_ALLOWED_SECTIONS = {
+    "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
+    "business_blueprint.md": {"评审对象与任务边界", "开放问题与缺口"},
+    "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
+}
+BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
+
+FACTS_RUNTIME_SOURCE_ALLOWED_SECTIONS = {
+    "任务意图",
+    "事实来源说明",
+    "范围与非范围",
+    "已知约束",
+    "开放问题与缺口",
+}
+FACTS_RUNTIME_SOURCE_BLOCKED_SECTIONS = {
+    "术语与对象边界",
+    "角色与对象清单",
+    "原子事实清单",
+    "规则矩阵",
+    "状态模型",
+    "动作与流程事实",
+    "异常与拦截清单",
+    "依赖清单",
+    "追踪映射",
+}
+RUNTIME_SOURCE_REF_MARKERS = [
+    "task_card_resolved.json",
+    "context_manifest.json",
+    "task_card.md",
+]
+RUNTIME_LEAKAGE_TERMS = [
+    "facts 阶段不得",
+    "business 阶段不得",
+    "experience 阶段不得",
+    "不得用聊天回复替代正式文档产物",
+    "不得输出 UI 方案",
+    "输出 UI 方案",
+    "高保真视觉稿",
+    "任务执行链路",
+    "当前真实需求文档承载页",
+    "输出反馈页",
+    "任务合同页面",
+    "正式生成链路",
+    "generation 结构",
+]
+RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
+    "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
+    "business_blueprint.md": {"评审对象与任务边界", "开放问题与缺口"},
+    "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
+}
 
 DEFAULT_TRACKED_OUTPUTS = [
     "projects/{project_id}/workspace/facts.md",
@@ -565,18 +615,29 @@ def check_required_headings(file_name: str, content: str, issues: list[tuple[str
 
 
 def check_forbidden_terms(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
+    sections = parse_h2_sections(content)
+    allowed_sections = FORBIDDEN_TERM_ALLOWED_SECTIONS.get(file_name, set())
     for term in FORBIDDEN_TERMS.get(file_name, []):
         if term.startswith("## "):
             if re.search(rf"(?m)^{re.escape(term)}\s*$", content):
                 add_issue(issues, "warning", f"{file_name} 可能仍沿用旧口径：{term}")
             continue
-        for line in content.splitlines():
-            if term not in line:
+        flagged = False
+        for section_name, section_text in sections.items():
+            if term not in section_text:
                 continue
-            if any(flag in line for flag in ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围"]):
+            if section_name in allowed_sections:
                 continue
-            add_issue(issues, "warning", f"{file_name} 可能越过阶段边界：包含 {term}")
-            break
+            for line in section_text.splitlines():
+                if term not in line:
+                    continue
+                if any(flag in line for flag in BOUNDARY_DECLARATION_FLAGS):
+                    continue
+                add_issue(issues, "warning", f"{file_name} 可能越过阶段边界：包含 {term}")
+                flagged = True
+                break
+            if flagged:
+                break
 
 
 def check_placeholders(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
@@ -827,12 +888,41 @@ def compute_dimension_coverage(facts_text: str) -> dict[str, int]:
 
 def evaluate_facts_source_legality(project_id: str, facts_text: str) -> tuple[int, int]:
     required_sources = [
-        f"projects/{project_id}/source/requirement.md",
-        f"projects/{project_id}/source/background.md",
+        [f"projects/{project_id}/source/requirement.md", "/requirement.md", "\\requirement.md"],
+        [f"projects/{project_id}/source/background.md", "/background.md", "\\background.md"],
     ]
-    source_hits = sum(1 for item in required_sources if item in facts_text)
+    source_hits = sum(1 for markers in required_sources if any(marker in facts_text for marker in markers))
     knowledge_hits = facts_text.count("knowledge/") + facts_text.count("wiki/")
     return source_hits, knowledge_hits
+
+
+def check_facts_source_guard(project_id: str, facts_text: str, issues: list[tuple[str, str]]) -> None:
+    sections = parse_h2_sections(facts_text)
+    for section_name in FACTS_RUNTIME_SOURCE_BLOCKED_SECTIONS:
+        section_text = sections.get(section_name, "")
+        if not section_text:
+            continue
+        hits = [marker for marker in RUNTIME_SOURCE_REF_MARKERS if marker in section_text]
+        if hits:
+            add_issue(
+                issues,
+                "warning",
+                f"facts.md 的业务事实章节“{section_name}”不应引用 runtime/source task card 来源：{', '.join(hits)}",
+            )
+
+
+def check_runtime_leakage_guard(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
+    allowed_sections = RUNTIME_LEAKAGE_ALLOWED_SECTIONS.get(file_name, set())
+    for section_name, section_text in parse_h2_sections(content).items():
+        if section_name in allowed_sections or not section_text:
+            continue
+        hits = [term for term in RUNTIME_LEAKAGE_TERMS if term in section_text]
+        if hits:
+            add_issue(
+                issues,
+                "warning",
+                f"{file_name} 的“{section_name}”疑似混入执行合同语句：{', '.join(sorted(set(hits))[:4])}",
+            )
 
 
 def check_status_report_consistency(status_data: dict[str, object], report_text: str, issues: list[tuple[str, str]]) -> None:
@@ -1090,7 +1180,10 @@ def run_validate_outputs(project_id: str) -> int:
         check_required_headings(file_name, content, issues)
         check_forbidden_terms(file_name, content, issues)
         check_placeholders(file_name, content, issues)
+        check_runtime_leakage_guard(file_name, content, issues)
         checked_files.append(f"projects/{project_id}/workspace/{file_name}")
+    if facts_text:
+        check_facts_source_guard(project_id, facts_text, issues)
 
     business_metrics: dict[str, object] = {}
     experience_metrics: dict[str, object] = {}
@@ -1313,6 +1406,8 @@ def run_facts_gate(project_id: str) -> int:
         check_required_headings("facts.md", facts_text, issues)
         check_forbidden_terms("facts.md", facts_text, issues)
         check_placeholders("facts.md", facts_text, issues)
+        check_runtime_leakage_guard("facts.md", facts_text, issues)
+        check_facts_source_guard(project_id, facts_text, issues)
 
         fact_ids = extract_fact_ids(facts_text)
         if not fact_ids:
@@ -1410,6 +1505,7 @@ def run_business_gate(project_id: str) -> int:
         check_required_headings("business_blueprint.md", business_text, issues)
         check_forbidden_terms("business_blueprint.md", business_text, issues)
         check_placeholders("business_blueprint.md", business_text, issues)
+        check_runtime_leakage_guard("business_blueprint.md", business_text, issues)
         metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
         extend_issues(issues, business_depth_issues)
     else:
@@ -1470,6 +1566,7 @@ def run_experience_gate(project_id: str) -> int:
         check_required_headings("experience_blueprint.md", experience_text, issues)
         check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_placeholders("experience_blueprint.md", experience_text, issues)
+        check_runtime_leakage_guard("experience_blueprint.md", experience_text, issues)
         metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
     else:

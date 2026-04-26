@@ -25,6 +25,7 @@ from .schemas import (
 
 
 HEADING_RE = re.compile(r"^(#+)\s+(.+?)\s*$")
+LIST_ITEM_RE = re.compile(r"^\s*(?:[-*]|\d+\.)\s+(.*)$")
 ROLE_PATTERN = re.compile(r"[A-Za-z0-9_\-\u4e00-\u9fff]{1,20}(?:用户|人员|成员|管理员|审批人|负责人|团队|角色|系统|设计师|产品经理|运营|开发|评审方|管理方|协作方)")
 OBJECT_PATTERN = re.compile(r"[A-Za-z0-9_\-\u4e00-\u9fff]{1,24}(?:页面|能力|流程|规则|状态|任务|模板|蓝图|文档|配置|结果|记录|权限|模块|知识库|索引|摘要|产物|窗口)")
 RULE_WORDS = ("必须", "不能", "禁止", "不得", "需要", "应", "校验", "约束", "限制", "应当")
@@ -74,6 +75,20 @@ def _source_paths(project_id: str) -> list[Path]:
     ]
 
 
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [_normalize_line(item) for item in value if isinstance(item, str) and _normalize_line(item)]
+
+
+def _prefer_string_list(*values: object) -> list[str]:
+    for value in values:
+        items = _string_list(value)
+        if items:
+            return items
+    return []
+
+
 def _classify_line(text: str) -> list[str]:
     categories: list[str] = []
     if any(word in text for word in RULE_WORDS):
@@ -107,73 +122,75 @@ def _extract_candidates(pattern: re.Pattern[str], text: str) -> list[str]:
     return results
 
 
-def _build_contract_evidence_units(project_id: str) -> list[EvidenceUnit]:
+def _parse_task_card_sections(path: Path) -> dict[str, list[str]]:
+    if not path.exists():
+        return {}
+    sections: dict[str, list[str]] = {}
+    current_heading = ""
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        stripped = raw_line.rstrip()
+        heading_match = HEADING_RE.match(stripped.strip())
+        if heading_match and len(heading_match.group(1)) == 2:
+            current_heading = heading_match.group(2).strip()
+            sections.setdefault(current_heading, [])
+            continue
+        list_match = LIST_ITEM_RE.match(stripped)
+        if not current_heading or not list_match:
+            continue
+        text = _normalize_line(list_match.group(1))
+        if text:
+            sections.setdefault(current_heading, []).append(text)
+    return sections
+
+
+def _load_runtime_contract_context(project_id: str) -> dict[str, object]:
     contract_paths = _runtime_contract_paths(project_id)
     resolved = _read_json(contract_paths["resolved"])
     manifest = _read_json(contract_paths["manifest"])
+    task_contract = manifest.get("task_contract")
+    manifest_contract = task_contract if isinstance(task_contract, dict) else {}
+    fallback_path = _fallback_task_card_path(project_id)
+    fallback_sections = _parse_task_card_sections(fallback_path)
+    contract_sources = [
+        str(path).replace("\\", "/")
+        for path in (contract_paths["resolved"], contract_paths["manifest"])
+        if path.exists()
+    ]
+    return {
+        "task_goal": _prefer_string_list(
+            resolved.get("task_goal"),
+            manifest_contract.get("task_goal"),
+            fallback_sections.get("Task Goal"),
+        ),
+        "task_scenario": _prefer_string_list(
+            resolved.get("task_scenario"),
+            manifest_contract.get("task_scenario"),
+            fallback_sections.get("Task Scenario"),
+        ),
+        "execution_constraints": _prefer_string_list(
+            resolved.get("execution_constraints"),
+            manifest_contract.get("execution_constraints"),
+            fallback_sections.get("Constraints"),
+        ),
+        "read_order": _prefer_string_list(
+            resolved.get("read_order"),
+            manifest_contract.get("read_order"),
+            fallback_sections.get("Read Order"),
+        ),
+        "notes": _prefer_string_list(
+            resolved.get("notes"),
+            manifest_contract.get("notes"),
+            fallback_sections.get("Notes"),
+        ),
+        "contract_sources": contract_sources,
+        "fallback_task_card": str(fallback_path).replace("\\", "/") if fallback_path.exists() else "",
+    }
+
+
+def _build_business_evidence_units(project_id: str) -> list[EvidenceUnit]:
     units: list[EvidenceUnit] = []
     counter = 1
-
-    def append_items(values: object, heading: str, source_path: Path, base_categories: list[str]) -> None:
-        nonlocal counter
-        if not isinstance(values, list):
-            return
-        for value in values:
-            if not isinstance(value, str):
-                continue
-            text = _normalize_line(value)
-            if len(text) < 2:
-                continue
-            units.append(
-                EvidenceUnit(
-                    evidence_id=f"EV-R{counter:03d}",
-                    text=text,
-                    source_file=str(source_path).replace("\\", "/"),
-                    heading=heading,
-                    line_no=0,
-                    categories=sorted(set(base_categories + _classify_line(text))),
-                    actor_candidates=_extract_candidates(ROLE_PATTERN, text),
-                    object_candidates=_extract_candidates(OBJECT_PATTERN, text),
-                )
-            )
-            counter += 1
-
-    append_items(resolved.get("task_goal"), "Runtime Task Goal", contract_paths["resolved"], ["action", "object"])
-    append_items(resolved.get("task_scenario"), "Runtime Task Scenario", contract_paths["resolved"], ["scope", "dependency", "object"])
-    append_items(resolved.get("execution_constraints"), "Runtime Constraints", contract_paths["resolved"], ["rule", "scope"])
-    append_items(resolved.get("read_order"), "Runtime Read Order", contract_paths["resolved"], ["dependency", "action"])
-
-    task_contract = manifest.get("task_contract")
-    if isinstance(task_contract, dict):
-        for field in ("task_goal", "task_scenario", "execution_constraints", "read_order", "notes"):
-            append_items(task_contract.get(field), "Manifest Task Contract", contract_paths["manifest"], ["dependency", "scope"])
-
-    return units
-
-
-def _build_evidence_units(project_id: str) -> list[EvidenceUnit]:
-    units = _build_contract_evidence_units(project_id)
-    counter = len(units) + 1
     source_paths = list(_source_paths(project_id))
-
-    if not units:
-        fallback_path = _fallback_task_card_path(project_id)
-        if fallback_path.exists():
-            units.append(
-                EvidenceUnit(
-                    evidence_id="EV-R000",
-                    text="Runtime 合同缺失，facts 临时回退读取 task_card.md；业务事实仍仅以 requirement.md 和 background.md 为主。",
-                    source_file=str(fallback_path).replace("\\", "/"),
-                    heading="Runtime Contract Fallback",
-                    line_no=0,
-                    categories=["dependency", "exception", "scope"],
-                    actor_candidates=[],
-                    object_candidates=["Runtime 合同", "task_card"],
-                )
-            )
-            counter += 1
-            source_paths.insert(0, fallback_path)
-
     for path in source_paths:
         if not path.exists():
             continue
@@ -206,6 +223,10 @@ def _build_evidence_units(project_id: str) -> list[EvidenceUnit]:
     return units
 
 
+def _build_evidence_units(project_id: str) -> list[EvidenceUnit]:
+    return _build_business_evidence_units(project_id)
+
+
 def _find_first_line(units: list[EvidenceUnit], keywords: tuple[str, ...], fallback: str) -> str:
     for unit in units:
         if any(keyword in unit.text for keyword in keywords):
@@ -213,94 +234,12 @@ def _find_first_line(units: list[EvidenceUnit], keywords: tuple[str, ...], fallb
     return fallback
 
 
-def _make_synthetic_unit(
-    project_id: str,
-    evidence_id: str,
-    text: str,
-    heading: str,
-    categories: list[str],
-    source_file: str | None = None,
-    actor_candidates: list[str] | None = None,
-    object_candidates: list[str] | None = None,
-) -> EvidenceUnit:
-    return EvidenceUnit(
-        evidence_id=evidence_id,
-        text=text,
-        source_file=source_file or f"projects/{project_id}/runtime/task_card_resolved.json",
-        heading=heading,
-        line_no=0,
-        categories=categories,
-        actor_candidates=actor_candidates or _extract_candidates(ROLE_PATTERN, text),
-        object_candidates=object_candidates or _extract_candidates(OBJECT_PATTERN, text),
-    )
-
-
-def _augment_with_synthetic_units(
-    project_id: str,
-    units: list[EvidenceUnit],
-    task_goal: str,
-    task_boundary: str,
-    task_scenario: str,
-    has_knowledge_notes: bool,
-) -> list[EvidenceUnit]:
-    runtime_source = f"projects/{project_id}/runtime/task_card_resolved.json"
-    fallback_source = f"projects/{project_id}/source/task_card.md"
-    semantic_source = runtime_source if any("/runtime/" in unit.source_file for unit in units) else fallback_source
-    synthetic_units = [
-        _make_synthetic_unit(
-            project_id,
-            "EV-S01",
-            task_goal,
-            "Task Goal",
-            ["action", "object"],
-            source_file=semantic_source,
-            actor_candidates=["当前任务评审角色"],
-            object_candidates=["生成链路"],
-        ),
-        _make_synthetic_unit(
-            project_id,
-            "EV-S02",
-            task_boundary,
-            "Task Boundary",
-            ["scope", "rule", "object"],
-            source_file=semantic_source,
-            object_candidates=["任务边界"],
-        ),
-        _make_synthetic_unit(
-            project_id,
-            "EV-S03",
-            task_scenario,
-            "Task Scenario",
-            ["action", "dependency", "object"],
-            source_file=semantic_source,
-            actor_candidates=["设计评审角色"],
-            object_candidates=["当前任务"],
-        ),
-        _make_synthetic_unit(
-            project_id,
-            "EV-S04",
-            "当前状态是待补充，信息不足时需要保持保守输出并显式保留 gap。",
-            "Fallback State",
-            ["state", "exception"],
-            source_file=semantic_source,
-            actor_candidates=["当前任务评审角色"],
-            object_candidates=["当前状态"],
-        ),
-    ]
-    if not has_knowledge_notes:
-        synthetic_units.append(
-            _make_synthetic_unit(
-                project_id,
-                "EV-S05",
-                "当前没有显式知识引用，判断只能以 source 输入为主，并把知识缺口作为 dependency gap 暴露。",
-                "Fallback Knowledge Boundary",
-                ["dependency", "exception"],
-                source_file=semantic_source,
-                object_candidates=["知识引用"],
-            )
-        )
-    existing_ids = {unit.evidence_id for unit in units}
-    return units + [unit for unit in synthetic_units if unit.evidence_id not in existing_ids]
+def _first_nonempty(values: list[str]) -> str:
+    for value in values:
+        text = _normalize_line(value)
+        if text:
+            return text
+    return ""
 
 
 def _pick_units(units: list[EvidenceUnit], category: str, limit: int) -> list[EvidenceUnit]:
@@ -317,6 +256,50 @@ def _dedupe_strings(values: list[str]) -> list[str]:
         seen.add(cleaned)
         results.append(cleaned)
     return results
+
+
+def _derive_task_goal(contract_context: dict[str, object], business_units: list[EvidenceUnit]) -> str:
+    goal = _first_nonempty(contract_context.get("task_goal", []))
+    if goal:
+        return goal
+    return _find_first_line(
+        business_units,
+        ("目标", "解决", "优化", "提升", "改成", "推理"),
+        "当前任务需要先澄清真实需求，再为后续业务判断与体验转译提供可追溯事实。",
+    )
+
+
+def _derive_task_scenario(contract_context: dict[str, object], business_units: list[EvidenceUnit]) -> str:
+    scenario = _first_nonempty(contract_context.get("task_scenario", []))
+    if scenario:
+        return scenario
+    return _find_first_line(
+        business_units,
+        ("场景", "背景", "当前", "流程"),
+        "当前任务属于基于 requirement/background 进行事实抽取与边界澄清的场景。",
+    )
+
+
+def _derive_task_boundary(contract_context: dict[str, object], business_units: list[EvidenceUnit]) -> str:
+    for candidate in list(contract_context.get("execution_constraints", [])) + list(contract_context.get("notes", [])):
+        text = _normalize_line(candidate)
+        if text:
+            return text
+    return _find_first_line(
+        business_units,
+        ("边界", "范围", "仅", "不覆盖", "不包含"),
+        "facts 只抽取 requirement.md 与 background.md 中的真实业务事实，任务合同仅用于说明边界。",
+    )
+
+
+def _build_constraints(contract_context: dict[str, object]) -> list[str]:
+    constraints = [f"C-{index:02d}: {item}" for index, item in enumerate(list(contract_context.get("execution_constraints", []))[:6], start=1)]
+    if constraints:
+        return constraints
+    return [
+        "C-01: facts 以 requirement.md 与 background.md 为业务事实主来源。",
+        "C-02: wiki 只做术语与边界校准，不替代当前任务事实。",
+    ]
 
 
 def _build_actors(units: list[EvidenceUnit]) -> list[ActorEntry]:
@@ -549,30 +532,11 @@ def _build_trace_links(units: list[EvidenceUnit], fact_entries: list[FactEntry])
 def build_facts_model(project_id: str) -> FactsModel:
     evidence_units = _build_evidence_units(project_id)
     knowledge_notes = load_knowledge_notes(project_id, stage="facts")
+    contract_context = _load_runtime_contract_context(project_id)
 
-    task_goal = _find_first_line(
-        evidence_units,
-        ("目标", "解决", "优化", "提升", "改成", "推理式"),
-        "当前任务需要先判断再生成，并把输出建立在当前输入与命中知识之上。",
-    )
-    task_boundary = _find_first_line(
-        evidence_units,
-        ("边界", "范围", "仅", "不覆盖", "不包含"),
-        "本次聚焦 generation 内部生成逻辑，不扩展到高保真视觉与实现细节。",
-    )
-    task_scenario = _find_first_line(
-        evidence_units,
-        ("场景", "重构", "优化", "改造"),
-        "当前任务属于 generation 内部的结构升级与生成质量优化。",
-    )
-    evidence_units = _augment_with_synthetic_units(
-        project_id,
-        evidence_units,
-        task_goal,
-        task_boundary,
-        task_scenario,
-        has_knowledge_notes=bool(knowledge_notes),
-    )
+    task_goal = _derive_task_goal(contract_context, evidence_units)
+    task_boundary = _derive_task_boundary(contract_context, evidence_units)
+    task_scenario = _derive_task_scenario(contract_context, evidence_units)
 
     actors = _build_actors(evidence_units)
     objects = _build_objects(evidence_units)
@@ -604,11 +568,14 @@ def build_facts_model(project_id: str) -> FactsModel:
 
     if not knowledge_notes:
         gaps.append(f"GAP-{len(gaps) + 1:02d}: 当前没有读取到可用的显式知识引用，当前只能依赖 source 输入做保守推断。")
+    if not contract_context.get("contract_sources"):
+        fallback_task_card = str(contract_context.get("fallback_task_card", ""))
+        if fallback_task_card:
+            gaps.append(f"GAP-{len(gaps) + 1:02d}: Runtime 合同缺失，当前仅用 task_card.md 回填任务说明，业务事实仍只来自 requirement/background。")
+        else:
+            gaps.append(f"GAP-{len(gaps) + 1:02d}: Runtime 合同缺失，当前任务意图与边界只能基于已有输入做保守整理。")
 
-    constraints = [
-        "C-01: 事实层以 source 输入为主，知识只做术语与边界校准。",
-        "C-02: 当前输入不足时保留 gap，不用通用模板句替代真实事实。",
-    ]
+    constraints = _build_constraints(contract_context)
 
     all_fact_entries = actor_facts + object_facts + state_facts + action_facts + rule_facts + exception_facts + dependency_facts + scope_facts
     trace_links = _build_trace_links(evidence_units, all_fact_entries)
@@ -646,7 +613,7 @@ def build_facts_model(project_id: str) -> FactsModel:
         flows=flows,
         exceptions=exceptions,
         dependencies=dependencies,
-        in_scope=in_scope or ["IN-01: 当前输入主要聚焦 generation 的正式生成链路与其判断边界。"],
+        in_scope=in_scope or ["IN-01: 当前输入主要聚焦正式产物生成过程及其边界说明。"],
         out_of_scope=out_of_scope or ["OUT-01: 当前输入没有要求进入高保真视觉设计与实现细节。"],
         constraints=constraints,
         open_questions=_dedupe_strings(open_questions)[:8],

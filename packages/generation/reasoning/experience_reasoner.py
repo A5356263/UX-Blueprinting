@@ -350,7 +350,7 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
         target_users="当前任务链路中涉及的主要角色，以及需要共同评审该蓝图的设计 / 产品 / 业务角色。",
         experience_goal="把 business 的当前动态结论翻译成可读的任务闭环、页面承载、状态反馈与文案职责。",
         task_boundary="围绕当前输入推导出的主闭环、节点、页面、状态与解释责任展开，不预设固定页面集合。",
-        excluded_scope="不输出高保真视觉、不直接给出前端实现、不让 preview 反向决定 generation 结构。",
+        excluded_scope="不输出高保真视觉、不直接给出前端实现、不让 preview 反向决定正式产物结构。",
         ui_boundary="当前蓝图足以支持页面承载、信息优先级、状态反馈和文案职责讨论。",
         business_basis=[business_model.final_position] + business_model.final_position_reason[:2],
         rule_basis=business_model.adopted_rules[:],

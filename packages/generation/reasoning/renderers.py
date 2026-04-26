@@ -20,6 +20,13 @@ def _render_fact_list(entries: list[object]) -> str:
 def render_facts_markdown(model: FactsModel) -> str:
     references = _render_string_list(model.explicit_references)
     note_lines = _render_string_list([f"{item.note_id}: {item.title} -> {item.summary}" for item in model.knowledge_notes])
+    primary_sources = _render_string_list(model.source_files[:2])
+    contract_sources = _render_string_list(
+        [
+            f"projects/{model.project_id}/runtime/task_card_resolved.json",
+            f"projects/{model.project_id}/runtime/context_manifest.json",
+        ]
+    )
     terminology_rows = "\n".join(
         f"| {item.term_id} | {item.term} | {item.meaning} | {item.boundary} | {item.source} |" for item in model.terminology
     )
@@ -64,14 +71,17 @@ def render_facts_markdown(model: FactsModel) -> str:
 ## 事实来源说明
 
 - 主输入：
-  - {model.source_files[0]}
-  - {model.source_files[1]}
+{primary_sources}
+- 任务合同：
+{contract_sources}
 - 显式引用：
 {references}
 - 知识校准命中：
 {note_lines}
 - 使用边界：
-  - facts 阶段坚持 input-first extraction，知识只做术语与边界校准，不替代当前任务事实
+  - facts 的业务事实只从 requirement.md / background.md 抽取
+  - task_card_resolved.json / context_manifest.json 仅用于任务意图、任务边界与执行约束说明
+  - wiki 只做术语与边界校准，不替代当前任务事实
 
 ## 术语与对象边界
 
@@ -232,12 +242,12 @@ def render_business_markdown(model: BusinessModel) -> str:
 
 ## 底层逻辑一致性判断
 
-- 这一轮判断不再预设固定 judgment 集合，而是围绕当前输入里真实存在的规则、依赖、状态与 gaps 展开。
-- 如果当前输入缺少某类证据，则该维度降级为 gap，而不是回填固定答案。
+- 这一轮判断不再预设固定判断集合，而是围绕当前输入里真实存在的规则、依赖、状态与缺口展开。
+- 如果当前输入缺少某类证据，则该维度降级为缺口，而不是回填固定答案。
 
 ## 管理策略一致性判断
 
-- 当前管理策略判断建立在“命中知识如何影响基线”和“规则 / 异常如何进入闭环”上，而不是复用上一轮 generation 的结论。
+- 当前管理策略判断建立在“命中知识如何影响基线”和“规则 / 异常如何进入闭环”上，而不是复用上一轮产物的结论。
 - 只要当前输入变化，管理策略判断就应跟着变化。
 
 ## 能力归位判断
@@ -451,7 +461,7 @@ def render_gap_list() -> str:
 
 ## Warnings
 
-- 当前 generation 已切到真正按输入与命中知识推理的方向，但如果 source 证据不足，输出会主动变“保守”而不是回退到旧模板。
+- 当前产物生成已切到真正按输入与命中知识推理的方向，但如果来源证据不足，输出会主动变“保守”而不是回退到旧模板。
 
 ## 待补信息
 

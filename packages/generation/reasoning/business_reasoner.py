@@ -163,18 +163,18 @@ def _build_dynamic_judgments(facts_model: FactsModel, baselines: list[BaselineEn
 
 def _score_options(facts_model: FactsModel, change_type: str) -> list[PlacementOption]:
     candidate_specs = [
-        ("独立生成能力", "适合对象、规则、状态和输出链路都需要单独建模时", "边界清晰，便于持续迭代", "模块数量与建模成本会上升"),
-        ("并入既有生成链路", "适合当前变化更像既有链路增强而不是新能力时", "主链不分裂，使用成本更低", "容易再次被既有模板结构吞没"),
+        ("独立成型能力", "适合对象、规则、状态和输出结构都需要单独建模时", "边界清晰，便于持续迭代", "模块数量与建模成本会上升"),
+        ("并入既有能力结构", "适合当前变化更像既有能力增强而不是新能力时", "主链不分裂，使用成本更低", "容易再次被既有模板结构吞没"),
         ("收敛为规则 / 配置层", "适合动作较少、规则较多、更多是边界治理时", "可以降低页面和链路复杂度", "表达力可能不足，体验层承载空间变小"),
         ("暂不下最终立场", "适合 gaps 较多、知识命中较弱时", "避免过度结论化", "短期无法给出强推进结论"),
     ]
     scores = {spec[0]: 0 for spec in candidate_specs}
     if "新增" in change_type:
-        scores["独立生成能力"] += 2
+        scores["独立成型能力"] += 2
     if "重构" in change_type or "升级" in change_type:
-        scores["并入既有生成链路"] += 2
+        scores["并入既有能力结构"] += 2
     if len(facts_model.objects) >= 3 or len(facts_model.flows) >= 2:
-        scores["独立生成能力"] += 2
+        scores["独立成型能力"] += 2
     if len(facts_model.rules) >= len(facts_model.action_facts) and len(facts_model.action_facts) <= 2:
         scores["收敛为规则 / 配置层"] += 2
     if len(facts_model.gaps) >= 3:
@@ -182,7 +182,7 @@ def _score_options(facts_model: FactsModel, change_type: str) -> list[PlacementO
     if not facts_model.action_facts:
         scores["暂不下最终立场"] += 2
         scores["收敛为规则 / 配置层"] += 1
-    scores["并入既有生成链路"] += 1
+    scores["并入既有能力结构"] += 1
 
     ranked = sorted(candidate_specs, key=lambda item: scores[item[0]], reverse=True)
     options: list[PlacementOption] = []
@@ -217,7 +217,7 @@ def _final_position_from_options(options: list[PlacementOption], facts_model: Fa
         [
             f"当前 change_type 更接近：{_derive_change_type(facts_model)}。",
             f"现有对象数={len(facts_model.objects)}、流程数={len(facts_model.flows)}、规则数={len(facts_model.rules)}，说明它不是单纯说明文案问题。",
-            "命中知识已经参与基线建立与路径比较，因此结论不再只是固定 judgment 的复写。",
+            "命中知识已经参与基线建立与路径比较，因此结论不再只是旧模板判断的复写。",
         ],
     )
 
@@ -240,7 +240,7 @@ def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessMo
                 risk_id=f"RSK-{len(risks) + 1:02d}",
                 name="信息缺口会让业务结论失稳",
                 manifestation=gap,
-                consequence="如果继续写死固定立场，输出会再次退化成模板答案。",
+                consequence="如果继续写死单一路径结论，输出会再次退化成模板答案。",
                 level="高" if len(facts_model.gaps) >= 3 else "中",
                 mitigation="保留 gap，并让最终立场与体验约束一起显式降级。",
             )
@@ -278,15 +278,15 @@ def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessMo
 
     return BusinessModel(
         project_id=project_id,
-        review_target="当前任务要求生成的业务能力与其生成机制，不预设固定结论。",
+        review_target="当前任务要求形成的业务能力与其承载方式，不预设固定结论。",
         review_boundary="本次只评审当前输入能否支撑稳定的业务立场，以及知识如何影响这个立场。",
-        review_goal="先判断，再生成，让 business blueprint 成为当前任务的动态结论，而不是兼容旧模板的载体。",
+        review_goal="先完成业务判断，再沉淀业务蓝图，让 business blueprint 成为当前任务的动态结论，而不是兼容旧模板的载体。",
         fact_links=fact_links,
         knowledge_hits=knowledge_hits,
         problem_statement=facts_model.task_scenario,
         change_intent=facts_model.task_goal,
         change_type=_derive_change_type(facts_model),
-        trigger="当前系统已经有推理骨架，但仍需把固定 judgment、固定立场和固定路径改成动态推导。",
+        trigger="当前系统已经有推理骨架，但仍需把历史固定结论式表述改成基于当前输入的动态推导。",
         baselines=baselines,
         judgments=judgments,
         placement_options=placement_options,
