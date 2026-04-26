@@ -5,34 +5,35 @@
   "task_name": "员工自助申请与查询权限能力设计",
   "domain": "permission",
   "task_goal": [
-    "基于真实需求文档，生成一套围绕“员工自助申请权限、查询个人权限、对接审批流”的 facts、business、experience 正式产物。",
-    "本次输出主要服务于权限域业务评审、产品方案收敛与体验蓝图设计。"
+    "基于当前真实需求文档，重新建立“员工自助申请与查询权限能力设计”任务身份，并生成 facts、business、experience 正式产物。",
+    "本次输出主要服务于权限域产品方案评审、业务判断收敛与体验蓝图构建。"
   ],
   "task_scenario": [
-    "当前任务场景是企业权限管理从“管理员统一分配”向“员工自助申请 + 审批通过后自动生效”升级的方案设计。",
-    "本次任务属于新能力设计与全链路蓝图生成，不是实现细节拆解，也不是高保真设计。",
+    "当前任务场景是企业权限管理从“管理员统一分配”升级为“员工可自助申请权限、查询权限，并在审批通过后自动生效”的真实产品方案设计。",
+    "本次任务属于新任务从零建模，不是旧项目重跑，不是产物复制，也不是只校对已有结果。",
     "本次任务覆盖 facts / business / experience 全链路。"
   ],
   "execution_constraints": [
     "不得臆造业务事实",
     "信息不足处保留 `[GAP]`",
-    "正式产物必须写入 `workspace/`",
+    "正式产出必须写入 `workspace/`",
     "不得用聊天回复替代正式文档产物",
     "facts 阶段不得把引用知识提升为当前任务的已确认事实",
-    "business 阶段不得输出研发实现方案",
-    "experience 阶段不得输出高保真视觉稿或前端代码方案"
+    "business 阶段不得输出 UI 方案或实现方案",
+    "experience 阶段不得输出高保真视觉稿或研发实现细节"
   ],
   "read_order": [
     "先读本文件",
     "再读 `Required Inputs`",
     "facts 阶段只做 input-first extraction",
-    "business 阶段在 facts 基础上引入权限域知识做 review",
-    "experience 阶段在 business 基础上引入原则与体验约束做 translation",
+    "business 阶段在 facts 基础上引入业务知识做 review",
+    "experience 阶段在 business 基础上引入 guideline 做 translation",
     "最后按 `Templates` 产出结果并按 `Checks` 自检"
   ],
   "notes": [
-    "输入主文档来自 `test/需求文档.md` 的真实复制件。",
-    "如有文档原文中的歧义或残缺，以 facts / business / experience 中显式 gap 的形式暴露，不做想当然补全。"
+    "当前任务输入真源为 `test/权限需求文档.md` 的真实复制件。",
+    "本次任务必须从当前输入重新建立任务身份，不得默认沿用历史任务产物。",
+    "如输入文档存在歧义、缺失或冲突，必须在正式产物中显式暴露为 gap，不得自行补齐为既定事实。"
   ],
   "required_inputs": [
     "projects/001/source/requirement.md",

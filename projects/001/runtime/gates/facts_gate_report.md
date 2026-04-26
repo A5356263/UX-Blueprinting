@@ -33,4 +33,4 @@
 
 ## Infos
 
-- facts.md 已提炼 57 条事实
+- facts.md 已提炼 58 条事实

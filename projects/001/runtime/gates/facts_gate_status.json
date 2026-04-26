@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-25T16:47:19.626106+00:00",
+  "updated_at": "2026-04-26T03:50:57.567213+00:00",
   "checked_files": [
     "projects/001/source/task_card.md",
     "projects/001/source/requirement.md",
@@ -24,7 +24,7 @@
       "facts.md 可能越过阶段边界：包含 高保真视觉"
     ],
     "infos": [
-      "facts.md 已提炼 57 条事实"
+      "facts.md 已提炼 58 条事实"
     ]
   },
   "issue_details_version": "1.0",
@@ -72,7 +72,7 @@
         {
           "type": "metrics",
           "value": {
-            "fact_count": 57,
+            "fact_count": 58,
             "dimension_coverage": {
               "actor": 1,
               "object": 1,
@@ -83,8 +83,8 @@
               "dependency": 1,
               "scope": 1
             },
-            "traceable_fact_count": 57,
-            "gap_count": 9,
+            "traceable_fact_count": 58,
+            "gap_count": 10,
             "knowledge_derived_fact_count": 0
           }
         }
@@ -95,7 +95,7 @@
       "stage": "facts",
       "severity": "info",
       "category": "quality_gap",
-      "message": "facts.md 已提炼 57 条事实",
+      "message": "facts.md 已提炼 58 条事实",
       "target_artifacts": [
         "projects/001/workspace/facts.md"
       ],
@@ -116,7 +116,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "facts.md 已提炼 57 条事实"
+          "value": "facts.md 已提炼 58 条事实"
         },
         {
           "type": "checked_files",
@@ -133,7 +133,7 @@
         {
           "type": "metrics",
           "value": {
-            "fact_count": 57,
+            "fact_count": 58,
             "dimension_coverage": {
               "actor": 1,
               "object": 1,
@@ -144,8 +144,8 @@
               "dependency": 1,
               "scope": 1
             },
-            "traceable_fact_count": 57,
-            "gap_count": 9,
+            "traceable_fact_count": 58,
+            "gap_count": 10,
             "knowledge_derived_fact_count": 0
           }
         }
@@ -153,7 +153,7 @@
     }
   ],
   "metrics": {
-    "fact_count": 57,
+    "fact_count": 58,
     "dimension_coverage": {
       "actor": 1,
       "object": 1,
@@ -164,8 +164,8 @@
       "dependency": 1,
       "scope": 1
     },
-    "traceable_fact_count": 57,
-    "gap_count": 9,
+    "traceable_fact_count": 58,
+    "gap_count": 10,
     "knowledge_derived_fact_count": 0
   }
 }

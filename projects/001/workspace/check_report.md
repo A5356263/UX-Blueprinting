@@ -35,7 +35,7 @@
 - coverage: business_judgments_consumed_by_experience: 2
 - coverage: facts_covered_by_business: 12
 - coverage: facts_covered_by_experience: 3
-- coverage: orphan_fact_count: 42
+- coverage: orphan_fact_count: 43
 - coverage: orphan_judgment_count: 3
 - coverage: orphan_page_count: 0
 - experience gate 状态：passed
@@ -48,7 +48,7 @@
 - facts_covered_by_business: 12
 - facts_covered_by_experience: 3
 - business_judgments_consumed_by_experience: 2
-- orphan_fact_count: 42
+- orphan_fact_count: 43
 - orphan_judgment_count: 3
 - orphan_page_count: 0
 
