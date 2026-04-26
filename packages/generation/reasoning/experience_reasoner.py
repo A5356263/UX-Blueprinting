@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from .knowledge_loader import load_knowledge_notes
 from .schemas import (
     BusinessModel,
@@ -29,6 +31,24 @@ def _state_kind(name: str) -> str:
     if "启用" in name or "打开" in name:
         return "active"
     return "default"
+
+
+def _normalize_slot_text(text: str, fallback: str) -> str:
+    candidate = (text or "").strip()
+    if not candidate:
+        return fallback
+    if re.fullmatch(r"(状态\d+|异常场景\d+|待补充)", candidate):
+        return fallback
+    if candidate == "失败":
+        return "失败状态"
+    return candidate
+
+
+def _normalize_flow_name(name: str) -> str:
+    cleaned = _normalize_slot_text(name, "执行主任务")
+    if cleaned.endswith("任务页") or cleaned.endswith("结果说明页"):
+        cleaned = cleaned.replace("任务页", "").replace("结果说明页", "")
+    return cleaned.strip() or "执行主任务"
 
 
 EXPERIENCE_CRITICAL_KEYWORDS = [
@@ -187,28 +207,39 @@ def _build_task_flows(facts_model: FactsModel) -> list[TaskFlowEntry]:
 
 def _build_pages(flows: list[TaskFlowEntry], facts_model: FactsModel) -> list[PageEntry]:
     pages: list[PageEntry] = []
+    dedupe_keys: set[tuple[str, str, str]] = set()
     for flow in flows:
-        pages.append(
-            PageEntry(
-                page_id=f"P-{len(pages) + 1:02d}",
-                name=f"{flow.name}任务页",
-                page_type="页面",
-                target_user=flow.start,
-                primary_task=flow.name,
-                entry=f"从 {flow.start} 进入该流程",
-                exit=f"进入 {flow.success_result} 或 {flow.failure_result}",
-                relation="对应当前流程的主任务节点",
-            )
-        )
-        if facts_model.states or facts_model.exceptions:
+        flow_name = _normalize_flow_name(flow.name)
+        target_user = _normalize_slot_text(flow.start, "当前角色")
+        primary_task = _normalize_slot_text(flow_name, "执行主任务")
+        main_key = (target_user, primary_task, "主页面")
+        if main_key not in dedupe_keys:
+            dedupe_keys.add(main_key)
             pages.append(
                 PageEntry(
                     page_id=f"P-{len(pages) + 1:02d}",
-                    name=f"{flow.name}结果说明页",
+                    name=f"{target_user}{primary_task}主页面",
+                    page_type="页面",
+                    target_user=target_user,
+                    primary_task=primary_task,
+                    entry=f"从 {target_user} 的任务入口进入",
+                    exit=f"进入 {flow.success_result} 或 {flow.failure_result}",
+                    relation="对应当前流程的主任务节点",
+                )
+            )
+        if facts_model.states or facts_model.exceptions:
+            result_key = (target_user, primary_task, "结果页")
+            if result_key in dedupe_keys:
+                continue
+            dedupe_keys.add(result_key)
+            pages.append(
+                PageEntry(
+                    page_id=f"P-{len(pages) + 1:02d}",
+                    name=f"{target_user}{primary_task}结果说明页",
                     page_type="结果页 / 详情页",
-                    target_user=flow.start,
+                    target_user=target_user,
                     primary_task="理解结果、状态与下一步",
-                    entry=f"{flow.name} 执行后进入",
+                    entry=f"{flow_name} 执行后进入",
                     exit="返回上一步或进入下一流程",
                     relation="对应当前流程的结果解释节点",
                 )
@@ -304,16 +335,17 @@ def _build_state_feedbacks(facts_model: FactsModel, pages: list[PageEntry]) -> l
     page_name = pages[0].name if pages else "当前任务页"
     feedbacks: list[StateFeedbackEntry] = []
     for state in facts_model.states[:6]:
-        kind = _state_kind(state.name)
+        state_name = _normalize_slot_text(state.name, "未命名状态（需补充）")
+        kind = _state_kind(state_name)
         feedbacks.append(
             StateFeedbackEntry(
                 state_id=state.state_id,
-                name=state.name,
-                trigger=state.enter_condition,
+                name=state_name,
+                trigger=_normalize_slot_text(state.enter_condition, "触发条件待补充"),
                 available_actions="继续当前任务 / 查看解释 / 返回上一步" if kind != "success" else "查看结果 / 进入下一步",
-                page_feedback=f"{page_name} 需要显式显示“{state.name}”与其上下文含义。",
-                copy_feedback=state.description,
-                downstream=state.exit_condition,
+                page_feedback=f"{page_name} 需要显式显示“{state_name}”与其上下文含义。",
+                copy_feedback=_normalize_slot_text(state.description, "文案需要解释状态含义和下一步。"),
+                downstream=_normalize_slot_text(state.exit_condition, "下一步待补充"),
             )
         )
     if not feedbacks:

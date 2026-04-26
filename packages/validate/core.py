@@ -195,6 +195,23 @@ EXPERIENCE_CRITICAL_HINTS = [
     "文案",
     "帮助",
 ]
+EXPERIENCE_CORE_SECTION_TITLES = [
+    "1. 一句话体验方案",
+    "2. 用户要完成什么事",
+    "3. 推荐页面和入口",
+    "4. 主流程怎么走",
+    "5. 关键页面怎么设计",
+    "6. 状态和异常怎么处理",
+    "7. 文案要解释什么",
+    "8. 风险和保护策略",
+]
+EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\bEV-\d+\b", re.IGNORECASE), "核心区包含 EV 编号"),
+    (re.compile(r"\b(?:P|TF|TR)-\d+\b", re.IGNORECASE), "核心区包含 P/TF/TR 编号"),
+    (re.compile(r"source[_ ]?path", re.IGNORECASE), "核心区包含 source_path"),
+    (re.compile(r"(?:从当前输入直接抽取|未做模板补全)"), "核心区暴露了生成过程提示语"),
+    (re.compile(r"(?:状态\d+|异常场景\d+)"), "核心区包含占位词（状态2/异常场景3）"),
+]
 
 
 def now_iso() -> str:
@@ -576,6 +593,31 @@ def parse_h2_sections(content: str) -> dict[str, str]:
         end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
         sections[title] = content[start:end].strip()
     return sections
+
+
+def get_experience_core_text(sections: dict[str, str]) -> str:
+    return "\n".join(sections.get(title, "") for title in EXPERIENCE_CORE_SECTION_TITLES)
+
+
+def find_repeated_page_names_in_core(section_text: str) -> list[str]:
+    candidates: list[str] = []
+    for line in section_text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("- "):
+            continue
+        content = stripped[2:].strip()
+        if "（" in content:
+            content = content.split("（", 1)[0].strip()
+        if "：" in content:
+            content = content.split("：", 1)[-1].strip()
+        normalized = re.sub(r"[^\w\u4e00-\u9fff]", "", content)
+        if len(normalized) < 6:
+            continue
+        candidates.append(normalized)
+    if len(candidates) < 4:
+        return []
+    repeats = {item for item in candidates if candidates.count(item) >= 3}
+    return sorted(repeats)
 
 
 def get_section(content: str, heading: str) -> str:
@@ -1073,6 +1115,7 @@ def analyze_experience_blueprint(
     copy_section = sections.get("7. 文案要解释什么", "") + "\n" + sections.get("附录 E：链路自检信息", "")
     risk_section = sections.get("8. 风险和保护策略", "") + "\n" + sections.get("附录 E：链路自检信息", "")
     trace_section = sections.get("附录 C：页面 / 流程追踪映射", "")
+    core_text = get_experience_core_text(sections)
 
     flow_count = max(len(flow_ids), count_real_table_rows(flow_section), count_real_list_items(flow_section))
     page_inventory_item_count = max(count_real_table_rows(page_inventory_section), count_real_list_items(page_inventory_section))
@@ -1144,6 +1187,14 @@ def analyze_experience_blueprint(
         add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
     elif not has_success_coverage:
         add_issue(issues, "warning", "experience_blueprint.md 异常态覆盖存在，但成功态 / 完成态表达仍偏弱")
+
+    for pattern, message in EXPERIENCE_MACHINE_LINE_PATTERNS:
+        if pattern.search(core_text):
+            add_issue(issues, "warning", f"experience_blueprint.md {message}")
+
+    repeated_page_names = find_repeated_page_names_in_core(sections.get("3. 推荐页面和入口", ""))
+    if repeated_page_names:
+        add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
     metrics = {
         "flow_count": len(flow_ids),

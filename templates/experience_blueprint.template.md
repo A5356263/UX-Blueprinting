@@ -3,6 +3,7 @@
 > 本模板约束 `experience_blueprint.md` 的最终章节，不代表内部生成方式。
 > 生成阶段应先形成 experience model，再渲染为本文档结构。
 > 核心区优先服务体验设计评审，必须使用体验设计师能直接理解的大白话；编号、追踪、source_path 与 coverage 信息放入附录。
+> 核心区不得直接展开原始 `ExperienceModel` 字段，必须先做可读化整理（去机器编号、去 source_path、去占位词、去明显重复）。
 
 ## 1. 一句话体验方案
 

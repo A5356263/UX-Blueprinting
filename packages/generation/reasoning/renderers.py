@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+from .readable_adapter import build_experience_readable_sections
 from .schemas import BusinessModel, ExperienceModel, FactsModel
 
 
@@ -413,43 +414,14 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.risk_id} | {item.name} | {item.trigger} | {item.confusion} | {item.protection} | {item.target} |"
         for item in model.risks
     )
-    recommended_page_lines = _render_string_list(
-        [f"{item.name}（入口：{_plain_experience_term(item.entry)}）" for item in model.pages[:6]]
-    )
-    flow_core_lines = _render_string_list(
-        [
-            f"{_plain_experience_term(item.name)}：{_plain_experience_term(item.start)} -> {_plain_experience_term(item.key_steps)}；成功后 {_plain_experience_term(item.success_result)}，失败时 {_plain_experience_term(item.failure_result)}"
-            for item in model.task_flows[:6]
-        ]
-    )
-    key_page_lines = "\n\n".join(
-        f"""### {item.name}
-- 页面要承担的任务：{_plain_experience_term(item.primary_task)}
-- 谁会进入：{_plain_experience_term(item.entry_condition)}
-- 首屏先说明：{_plain_experience_term(item.first_screen_focus)}
-- 关键信息：{_plain_experience_term(item.key_information)}
-- 关键动作：{_render_string_list([_plain_experience_term(action) for action in item.key_actions])}
-- 风险与解释：{_render_string_list([_plain_experience_term(risk) for risk in item.risks])}"""
-        for item in model.key_pages[:4]
-    )
-    state_core_lines = _render_string_list(
-        [
-            f"状态“{_plain_experience_term(item.name)}”：触发条件={_plain_experience_term(item.trigger)}；页面反馈={_plain_experience_term(item.page_feedback)}；下一步={_plain_experience_term(item.downstream)}"
-            for item in model.state_feedbacks[:6]
-        ]
-    )
-    copy_core_lines = _render_string_list(
-        [
-            f"{_plain_experience_term(item.scenario)}：要说明{_plain_experience_term(item.semantic_goal)}，至少包含{_plain_experience_term(item.required_info)}"
-            for item in model.copy_contracts[:6]
-        ]
-    )
-    risk_core_lines = _render_string_list(
-        [
-            f"风险：{_plain_experience_term(item.name)}；触发：{_plain_experience_term(item.trigger)}；保护：{_plain_experience_term(item.protection)}"
-            for item in model.risks[:6]
-        ]
-    )
+    readable = build_experience_readable_sections(model)
+    user_and_task_lines = _render_string_list(readable.users_and_tasks)
+    recommended_page_lines = _render_string_list(readable.page_groups)
+    flow_core_lines = _render_string_list(readable.flow_summary)
+    key_page_lines = "\n\n".join(readable.key_page_summaries) if readable.key_page_summaries else "- 待补充关键页面说明"
+    state_core_lines = _render_string_list(readable.state_summaries)
+    copy_core_lines = _render_string_list(readable.copy_summaries)
+    risk_core_lines = _render_string_list(readable.risk_summaries)
     layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     self_check_lines = _render_string_list(
         [
@@ -471,9 +443,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 
 ## 2. 用户要完成什么事
 
-- 目标用户：{_plain_experience_term(model.target_users)}
-- 用户要完成的核心任务：{_plain_experience_term(model.experience_goal)}
-- 本轮不展开内容：{_plain_experience_term(model.excluded_scope)}
+{user_and_task_lines}
 
 ## 3. 推荐页面和入口
 

@@ -272,6 +272,7 @@ business（业务层）暴露的风险不能停留在抽象层。本阶段必须
 - `附录 E：链路自检信息`
 
 - 核心区（1-8）优先服务人工评审，必须使用体验设计师可直接理解的大白话。
+- 核心区（1-8）不是原始 `ExperienceModel` 字段的直接展开，必须经过可读化整理后输出。
 - 附录区（A-E）保留 `P-xx / TF-xx / PR-xx / TR-xx / J-xx / F-xx / source_path / trace / coverage / warning / gap` 等机器可读信息。
 - 页面名称和流程说明必须由当前 facts / business judgment 动态生成，不得写死具体业务域页面名。
 
