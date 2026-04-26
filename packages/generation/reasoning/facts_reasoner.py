@@ -567,7 +567,7 @@ def build_facts_model(project_id: str) -> FactsModel:
             gaps.append(f"GAP-{len(gaps) + 1:02d}: {unit.text}")
 
     if not knowledge_notes:
-        gaps.append(f"GAP-{len(gaps) + 1:02d}: 当前没有读取到可用的显式知识引用，当前只能依赖 source 输入做保守推断。")
+        gaps.append(f"GAP-{len(gaps) + 1:02d}: 当前没有读取到可用的显式知识引用，当前只能依赖任务原始输入做保守推断。")
     if not contract_context.get("contract_sources"):
         fallback_task_card = str(contract_context.get("fallback_task_card", ""))
         if fallback_task_card:

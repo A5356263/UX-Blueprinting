@@ -135,7 +135,7 @@ def _build_principles(project_id: str, business_model: BusinessModel) -> list[Pr
                     principle_id=f"PR-{len(principles) + 1:02d}",
                     name=note.title,
                     reason=signal,
-                    applied_to="页面承载、信息优先级、状态解释或文案职责",
+                    applied_to="页面任务分工、信息优先级、状态解释或文案职责",
                 )
             )
             if len(principles) >= 6:
@@ -145,9 +145,9 @@ def _build_principles(project_id: str, business_model: BusinessModel) -> list[Pr
             principles.append(
                 PrincipleEntry(
                     principle_id=f"PR-{len(principles) + 1:02d}",
-                    name="业务约束转体验承载",
+                    name="业务约束转体验方案",
                     reason=line,
-                    applied_to="页面承载与解释责任",
+                    applied_to="页面任务分工与解释责任",
                 )
             )
     return principles
@@ -157,8 +157,8 @@ def _build_task_flows(facts_model: FactsModel) -> list[TaskFlowEntry]:
     flows: list[TaskFlowEntry] = []
     if facts_model.flows:
         for flow in facts_model.flows:
-            success_name = next((state.name for state in facts_model.states if _state_kind(state.name) == "success"), "得到可解释结果")
-            failure_name = next((state.name for state in facts_model.states if _state_kind(state.name) == "blocker"), "进入阻断或补充链路")
+            success_name = next((state.name for state in facts_model.states if _state_kind(state.name) == "success"), "展示成功结果和下一步")
+            failure_name = next((state.name for state in facts_model.states if _state_kind(state.name) == "blocker"), "说明失败原因并给出处理办法")
             flows.append(
                 TaskFlowEntry(
                     flow_id=f"TF-{len(flows) + 1:02d}",
@@ -174,12 +174,12 @@ def _build_task_flows(facts_model: FactsModel) -> list[TaskFlowEntry]:
         flows.append(
             TaskFlowEntry(
                 flow_id="TF-01",
-                name="当前任务主闭环",
-                start="从 source 输入进入",
+                    name="当前任务主流程",
+                    start="从当前需求输入进入",
                 key_steps="理解任务目标 -> 组织判断 -> 产出正式蓝图",
-                key_decision="当前没有足够的动作证据，只能按保守主闭环展开。",
+                    key_decision="当前没有足够的动作证据，只能按保守主流程展开。",
                 success_result="形成当前阶段正式产物",
-                failure_result="进入 gap 与待确认链路",
+                    failure_result="说明缺口并给出待确认项",
             )
         )
     return flows
@@ -191,26 +191,26 @@ def _build_pages(flows: list[TaskFlowEntry], facts_model: FactsModel) -> list[Pa
         pages.append(
             PageEntry(
                 page_id=f"P-{len(pages) + 1:02d}",
-                name=f"{flow.name}承载页",
+                name=f"{flow.name}任务页",
                 page_type="页面",
                 target_user=flow.start,
                 primary_task=flow.name,
-                entry=f"从 {flow.start} 进入该闭环",
+                entry=f"从 {flow.start} 进入该流程",
                 exit=f"进入 {flow.success_result} 或 {flow.failure_result}",
-                relation=f"承接 {flow.flow_id} 的主任务节点",
+                relation="对应当前流程的主任务节点",
             )
         )
         if facts_model.states or facts_model.exceptions:
             pages.append(
                 PageEntry(
                     page_id=f"P-{len(pages) + 1:02d}",
-                    name=f"{flow.name}反馈页",
+                    name=f"{flow.name}结果说明页",
                     page_type="结果页 / 详情页",
                     target_user=flow.start,
                     primary_task="理解结果、状态与下一步",
                     entry=f"{flow.name} 执行后进入",
-                    exit="返回上一步或进入下一闭环",
-                    relation=f"承接 {flow.flow_id} 的结果解释节点",
+                    exit="返回上一步或进入下一流程",
+                    relation="对应当前流程的结果解释节点",
                 )
             )
     if facts_model.dependencies or facts_model.gaps:
@@ -223,7 +223,7 @@ def _build_pages(flows: list[TaskFlowEntry], facts_model: FactsModel) -> list[Pa
                 primary_task="查看规则、来源、依赖与 gaps",
                 entry="从主页面或反馈页进入",
                 exit="关闭后回到原上下文",
-                relation="作为辅助承载，解释为什么当前结构要这样展开",
+                relation="作为辅助说明区，解释为什么当前结构要这样展开",
             )
         )
     return pages
@@ -244,7 +244,7 @@ def _layout_for_page(page: PageEntry, facts_model: FactsModel) -> str:
 
 def _build_key_pages(pages: list[PageEntry], facts_model: FactsModel) -> list[PageBlueprint]:
     blueprints: list[PageBlueprint] = []
-    shared_states = [state.name for state in facts_model.states[:4]] or ["当前闭环状态"]
+    shared_states = [state.name for state in facts_model.states[:4]] or ["当前流程状态"]
     shared_risks = [exception.scenario for exception in facts_model.exceptions[:3]] or facts_model.gaps[:2] or ["输入不足时要显式解释不确定性"]
     for page in pages[:6]:
         primary_action = page.primary_task
@@ -253,7 +253,7 @@ def _build_key_pages(pages: list[PageEntry], facts_model: FactsModel) -> list[Pa
             PageBlueprint(
                 page_id=page.page_id,
                 name=page.name,
-                goal=f"让用户在当前节点完成“{page.primary_task}”，同时知道为什么要在这里承载。",
+                goal=f"让用户在当前节点完成“{page.primary_task}”，同时知道为什么要在这里完成这一步。",
                 target_user=page.target_user,
                 entry_condition=page.entry,
                 primary_task=primary_action,
@@ -282,7 +282,7 @@ def _build_info_contracts(key_pages: list[PageBlueprint]) -> list[InfoContractEn
                 priority="高",
                 placement=f"{page.page_id} 首屏",
                 trigger="进入页面时",
-                hidden_risk="如果不前置解释，用户会把页面承载误解成固定模板页面。",
+                hidden_risk="如果不前置解释，用户会误解当前页面该做什么。",
             )
         )
         contracts.append(
@@ -292,7 +292,7 @@ def _build_info_contracts(key_pages: list[PageBlueprint]) -> list[InfoContractEn
                 priority="高",
                 placement=f"{page.page_id} 主区或结果区",
                 trigger="操作前后",
-                hidden_risk="如果不解释状态，用户会不知道当前闭环是否完成。",
+                hidden_risk="如果不解释状态，用户会不知道当前流程是否完成。",
             )
         )
         if len(contracts) >= 8:
@@ -301,7 +301,7 @@ def _build_info_contracts(key_pages: list[PageBlueprint]) -> list[InfoContractEn
 
 
 def _build_state_feedbacks(facts_model: FactsModel, pages: list[PageEntry]) -> list[StateFeedbackEntry]:
-    page_name = pages[0].name if pages else "当前承载页"
+    page_name = pages[0].name if pages else "当前任务页"
     feedbacks: list[StateFeedbackEntry] = []
     for state in facts_model.states[:6]:
         kind = _state_kind(state.name)
@@ -339,7 +339,7 @@ def _build_copy_contracts(key_pages: list[PageBlueprint], state_feedbacks: list[
                 copy_id=f"COPY-{len(contracts) + 1:02d}",
                 scenario=page.name,
                 copy_type="说明文案",
-                semantic_goal="解释为什么当前闭环要在这里承载，以及用户现在要做什么。",
+                semantic_goal="解释为什么当前流程要在这里完成，以及用户现在要做什么。",
                 required_info="页面目标、关键边界、主要动作、是否存在阻断条件。",
                 forbidden_style="不要只说“请操作”或“更方便”。",
                 direction=page.copy_responsibility,
@@ -378,10 +378,10 @@ def _build_risks(facts_model: FactsModel, pages: list[PageEntry]) -> list[Experi
         risks.append(
             ExperienceRiskEntry(
                 risk_id=f"RSK-{len(risks) + 1:02d}",
-                name="输入不足会影响页面承载判断",
+                name="输入不足会影响页面方案判断",
                 trigger=gap,
                 confusion="用户可能会把当前页面结构误解为固定答案，而不是保守推导结果。",
-                protection="在帮助与追踪承载里显式展示当前 gap 及其影响范围。",
+                protection="在帮助与追踪区里显式展示当前 gap 及其影响范围。",
                 target=targets,
             )
         )
@@ -414,7 +414,7 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
     ia_diagram = "\n".join(
         [pages[0].name]
         + [f"└── {page.name}" for page in pages[1:]]
-    ) if pages else "当前任务没有形成稳定页面集合，只能保守输出体验闭环。"
+    ) if pages else "当前任务没有形成稳定页面集合，只能先给出保守体验流程。"
 
     flow_overview_diagram = "\n".join(
         [f"{flow.start} -> {flow.name} -> {flow.success_result} / {flow.failure_result}" for flow in task_flows]
@@ -436,17 +436,17 @@ def build_experience_model(project_id: str, facts_model: FactsModel, business_mo
                 business_basis=", ".join(business_basis[:2]),
                 fact_basis=", ".join(fact_basis[:3]),
                 principle_basis=", ".join(principle_basis),
-                note=f"{page.name} 的承载方式来自当前任务闭环，而不是预设页面骨架。",
+                note=f"{page.name} 的页面安排来自当前任务流程，而不是预设页面模板。",
             )
         )
 
     return ExperienceModel(
         project_id=project_id,
         target_users="当前任务链路中涉及的主要角色，以及需要共同评审该蓝图的设计 / 产品 / 业务角色。",
-        experience_goal="把 business 的当前动态结论翻译成可读的任务闭环、页面承载、状态反馈与文案职责。",
-        task_boundary="围绕当前输入推导出的主闭环、节点、页面、状态与解释责任展开，不预设固定页面集合。",
-        excluded_scope="不输出高保真视觉、不直接给出前端实现、不让 preview 反向决定正式产物结构。",
-        ui_boundary="当前蓝图足以支持页面承载、信息优先级、状态反馈和文案职责讨论。",
+        experience_goal="把 business 的当前结论转成可读的流程方案、页面任务分工、状态反馈与文案职责。",
+        task_boundary="围绕当前输入推导出的主流程、节点、页面、状态与解释责任展开，不预设固定页面集合。",
+        excluded_scope="不输出高保真视觉，不直接给出前端实现，不让演示稿反向影响正式结构。",
+        ui_boundary="当前蓝图足以支持页面任务分工、信息优先级、状态反馈和文案职责讨论。",
         business_basis=[business_model.final_position] + business_model.final_position_reason[:2],
         rule_basis=business_model.adopted_rules[:],
         risk_basis=[risk.name for risk in business_model.risks[:3]],

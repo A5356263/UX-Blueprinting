@@ -17,6 +17,56 @@ def _render_fact_list(entries: list[object]) -> str:
     return "\n".join(f"- {item.fact_id}: {item.text} (source: {item.source_ref})" for item in entries)
 
 
+def _plain_business_term(text: str) -> str:
+    replacements = {
+        "独立成型能力": "单独做成一个完整功能",
+        "并入既有能力结构": "放到已有功能里扩展",
+        "收敛为规则 / 配置层": "不单独做页面，只做成配置项",
+        "暂不下最终立场": "信息还不够，先不定方案",
+        "能力归位": "这个需求应该放在哪里做",
+        "治理边界": "哪些地方不能随便放开",
+        "依赖边界": "做这件事前需要满足什么条件",
+        "依赖条件": "做这件事前需要满足什么条件",
+        "反模式": "容易踩坑的做法",
+        "认知负担": "用户理解和学习成本",
+        "当前输入驱动的能力调整": "根据这次需求得出的调整",
+    }
+    result = text
+    for source, target in replacements.items():
+        result = result.replace(source, target)
+    return result
+
+
+def _plain_dependency_line(text: str) -> str:
+    cleaned = _plain_business_term(text)
+    if ":" in cleaned:
+        cleaned = cleaned.split(":", 1)[1].strip()
+    cleaned = cleaned.replace("->", "，")
+    return cleaned
+
+
+def _plain_rule_line(text: str) -> str:
+    cleaned = _plain_business_term(text)
+    if ":" in cleaned:
+        cleaned = cleaned.split(":", 1)[1].strip()
+    cleaned = cleaned.replace("->", "，")
+    return cleaned
+
+
+def _plain_experience_term(text: str) -> str:
+    replacements = {
+        "任务闭环": "完整操作流程",
+        "页面承载": "这个页面要承担的任务",
+        "得到可解释结果": "展示成功结果和下一步",
+        "进入阻断或补充链路": "告诉用户失败原因和处理办法",
+        "preview 反向决定": "演示稿反向影响正式结构",
+    }
+    result = _plain_business_term(text)
+    for source, target in replacements.items():
+        result = result.replace(source, target)
+    return result
+
+
 def render_facts_markdown(model: FactsModel) -> str:
     references = _render_string_list(model.explicit_references)
     note_lines = _render_string_list([f"{item.note_id}: {item.title} -> {item.summary}" for item in model.knowledge_notes])
@@ -191,29 +241,36 @@ def render_business_markdown(model: BusinessModel) -> str:
         f"| {item.baseline_id} | {item.text} | {', '.join(item.source_refs)} |"
         for item in model.baselines
     )
-    judgment_core_lines = _render_string_list(
-        [f"{item.judgment_id} {item.title}：{item.conclusion}" for item in model.judgments]
-    )
+    judgment_core_lines = _render_string_list([f"{item.title}：{_plain_business_term(item.conclusion)}" for item in model.judgments])
     option_summary_lines = _render_string_list(
-        [f"{item.option_id} {item.option}：{item.conclusion}（前提：{item.fit_condition}）" for item in model.placement_options]
+        [
+            f"{_plain_business_term(item.option)}：{_plain_business_term(item.conclusion)}（适用条件：{_plain_business_term(item.fit_condition)}）"
+            for item in model.placement_options
+        ]
     )
     option_rows = "\n".join(
         f"| {item.option_id} | {item.option} | {item.conclusion} | {item.fit_condition} | {item.benefit} | {item.tradeoff} | {item.why_not_final} |"
         for item in model.placement_options
     )
     risk_rows = "\n".join(
-        f"| {item.risk_id} | {item.name} | {item.manifestation} | {item.consequence} | {item.level} | {item.mitigation} |"
-        for item in model.risks
+        f"| {item.risk_id} | {item.name} | {item.manifestation} | {item.consequence} | {item.level} | {item.mitigation} |" for item in model.risks
+    )
+    risk_core_lines = _render_string_list(
+        [
+            f"风险：{_plain_business_term(item.name)}；影响：{_plain_business_term(item.consequence)}；建议：{_plain_business_term(item.mitigation)}"
+            for item in model.risks
+        ]
     )
     trace_rows = "\n".join(
         f"| {item.judgment_id} | {item.section} | {item.conclusion} | {item.facts_basis} | {item.baseline_basis} | {item.comparison} | {item.remaining_gap} |"
         for item in model.trace_links
     )
     knowledge_lines = _render_string_list(model.knowledge_hits)
-    final_position_reason = _render_string_list(model.final_position_reason)
+    final_position_reason = _render_string_list([_plain_business_term(item) for item in model.final_position_reason])
     fact_lines = _render_string_list(model.fact_links)
-    adopted_rules = _render_string_list(model.adopted_rules)
-    adopted_dependencies = _render_string_list(model.adopted_dependencies)
+    adopted_rules = _render_string_list([_plain_rule_line(item) for item in model.adopted_rules])
+    adopted_dependencies = _render_string_list([_plain_dependency_line(item) for item in model.adopted_dependencies])
+    raw_dependencies = _render_string_list(model.adopted_dependencies)
     open_gaps = _render_string_list(model.open_questions + model.gaps)
     self_check_lines = _render_string_list(
         [
@@ -229,8 +286,8 @@ def render_business_markdown(model: BusinessModel) -> str:
 
 ## 1. 一句话结论
 
-- 结论：{model.final_position}
-- 建议方向：{model.placement_options[0].option if model.placement_options else "待确认"}
+- 结论：{_plain_business_term(model.final_position)}
+- 建议方向：{_plain_business_term(model.placement_options[0].option) if model.placement_options else "待确认"}
 
 ## 2. 为什么要做
 
@@ -241,13 +298,13 @@ def render_business_markdown(model: BusinessModel) -> str:
 ## 3. 值不值得做
 
 - 收益与价值：
-{_render_string_list([f"{item.option_id} {item.option} -> {item.benefit}" for item in model.placement_options])}
+{_render_string_list([f"{_plain_business_term(item.option)}：{_plain_business_term(item.benefit)}" for item in model.placement_options])}
 - 成本与代价：
-{_render_string_list([f"{item.option_id} {item.option} -> {item.tradeoff}" for item in model.placement_options])}
+{_render_string_list([f"{_plain_business_term(item.option)}：{_plain_business_term(item.tradeoff)}" for item in model.placement_options])}
 
 ## 4. 怎么做更合理
 
-- 当前建议：{model.placement_options[0].option if model.placement_options else "待确认"}
+- 当前建议：{_plain_business_term(model.placement_options[0].option) if model.placement_options else "待确认"}
 - 可对照方案：
 {option_summary_lines}
 - 关键判断：
@@ -255,17 +312,15 @@ def render_business_markdown(model: BusinessModel) -> str:
 
 ## 5. 哪些不能随便做
 
-### 关键规则边界
+### 关键规则限制
 {adopted_rules}
 
-### 关键依赖边界
+### 前置条件与限制
 {adopted_dependencies}
 
 ## 6. 主要风险
 
-| risk_id | 风险 | 表现 | 后果 | 等级 | 缓解方向 |
-| --- | --- | --- | --- | --- | --- |
-{risk_rows}
+{risk_core_lines}
 
 ## 7. 体验设计要注意什么
 
@@ -282,6 +337,8 @@ def render_business_markdown(model: BusinessModel) -> str:
 - 触发背景：{model.trigger}
 - F-xx 承接列表：
 {fact_lines}
+- DEP-xx 原始依赖项：
+{raw_dependencies}
 
 ## 附录 B：命中知识与来源
 
@@ -311,6 +368,11 @@ def render_business_markdown(model: BusinessModel) -> str:
 
 ### 开放问题与缺口（OQ / GAP）
 {open_gaps}
+
+### 风险原始追踪（RSK）
+| risk_id | 风险 | 表现 | 后果 | 等级 | 缓解方向 |
+| --- | --- | --- | --- | --- | --- |
+{risk_rows}
 """
 
 
@@ -331,30 +393,10 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.page_id} | {item.name} | {item.page_type} | {item.target_user} | {item.primary_task} | {item.entry} | {item.exit} | {item.relation} |"
         for item in model.pages
     )
-    key_page_sections = "\n\n".join(
-        f"""### {item.page_id} {item.name}
-
-#### 页面目标
-- 页面目标：{item.goal}
-- 用户为什么来这里：{item.entry_condition}
-- 首屏先看什么：{item.first_screen_focus}
-- 主任务 / 次任务：{item.primary_task} / {item.secondary_task}
-
-#### 页面信息结构
-- 关键信息：{item.key_information}
-- 页面状态：{', '.join(item.key_states)}
-- 阅读顺序：{item.reading_order}
-- 风险点：{', '.join(item.risks)}
-- 文案责任：{item.copy_responsibility}
-- 承接原则：{principle_ids}
-
-#### 关键动作与关系
-- 关键动作：{', '.join(item.key_actions)}
-- 上下游关系：{item.relation}
-"""
-        for item in model.key_pages
+    trace_rows = "\n".join(
+        f"| {item.trace_id} | {item.object_name} | {item.business_basis} | {item.fact_basis} | {item.principle_basis} | {item.note} |"
+        for item in model.trace_links
     )
-    layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
     info_rows = "\n".join(
         f"| {item.info_id} | {item.purpose} | {item.priority} | {item.placement} | {item.trigger} | {item.hidden_risk} |"
         for item in model.info_contracts
@@ -371,34 +413,107 @@ def render_experience_markdown(model: ExperienceModel) -> str:
         f"| {item.risk_id} | {item.name} | {item.trigger} | {item.confusion} | {item.protection} | {item.target} |"
         for item in model.risks
     )
-    trace_rows = "\n".join(
-        f"| {item.trace_id} | {item.object_name} | {item.business_basis} | {item.fact_basis} | {item.principle_basis} | {item.note} |"
-        for item in model.trace_links
+    recommended_page_lines = _render_string_list(
+        [f"{item.name}（入口：{_plain_experience_term(item.entry)}）" for item in model.pages[:6]]
+    )
+    flow_core_lines = _render_string_list(
+        [
+            f"{_plain_experience_term(item.name)}：{_plain_experience_term(item.start)} -> {_plain_experience_term(item.key_steps)}；成功后 {_plain_experience_term(item.success_result)}，失败时 {_plain_experience_term(item.failure_result)}"
+            for item in model.task_flows[:6]
+        ]
+    )
+    key_page_lines = "\n\n".join(
+        f"""### {item.name}
+- 页面要承担的任务：{_plain_experience_term(item.primary_task)}
+- 谁会进入：{_plain_experience_term(item.entry_condition)}
+- 首屏先说明：{_plain_experience_term(item.first_screen_focus)}
+- 关键信息：{_plain_experience_term(item.key_information)}
+- 关键动作：{_render_string_list([_plain_experience_term(action) for action in item.key_actions])}
+- 风险与解释：{_render_string_list([_plain_experience_term(risk) for risk in item.risks])}"""
+        for item in model.key_pages[:4]
+    )
+    state_core_lines = _render_string_list(
+        [
+            f"状态“{_plain_experience_term(item.name)}”：触发条件={_plain_experience_term(item.trigger)}；页面反馈={_plain_experience_term(item.page_feedback)}；下一步={_plain_experience_term(item.downstream)}"
+            for item in model.state_feedbacks[:6]
+        ]
+    )
+    copy_core_lines = _render_string_list(
+        [
+            f"{_plain_experience_term(item.scenario)}：要说明{_plain_experience_term(item.semantic_goal)}，至少包含{_plain_experience_term(item.required_info)}"
+            for item in model.copy_contracts[:6]
+        ]
+    )
+    risk_core_lines = _render_string_list(
+        [
+            f"风险：{_plain_experience_term(item.name)}；触发：{_plain_experience_term(item.trigger)}；保护：{_plain_experience_term(item.protection)}"
+            for item in model.risks[:6]
+        ]
+    )
+    layout_sections = "\n\n".join(f"### {item.page_id} {item.name}\n\n```text\n{item.layout_diagram}\n```" for item in model.key_pages)
+    self_check_lines = _render_string_list(
+        [
+            f"page_count={len(model.pages)}",
+            f"flow_count={len(model.task_flows)}",
+            f"key_page_count={len(model.key_pages)}",
+            f"state_count={len(model.state_feedbacks)}",
+            f"copy_count={len(model.copy_contracts)}",
+            f"risk_count={len(model.risks)}",
+            f"trace_count={len(model.trace_links)}",
+        ]
     )
     return f"""# Experience Blueprint
 
-## 体验目标与任务边界
+## 1. 一句话体验方案
 
-- 目标用户与角色：{model.target_users}
-- 体验目标：{model.experience_goal}
-- 任务边界：{model.task_boundary}
-- 不覆盖范围：{model.excluded_scope}
-- UI 讨论边界：{model.ui_boundary}
+- 体验方案：{_plain_experience_term(model.experience_goal)}
+- 当前任务边界：{_plain_experience_term(model.task_boundary)}
 
-## 体验推导依据
+## 2. 用户要完成什么事
 
-### 上游业务立场与关键规则
-{_render_string_list(model.business_basis + model.rule_basis + model.risk_basis)}
+- 目标用户：{_plain_experience_term(model.target_users)}
+- 用户要完成的核心任务：{_plain_experience_term(model.experience_goal)}
+- 本轮不展开内容：{_plain_experience_term(model.excluded_scope)}
 
-### 已命中的设计原则
+## 3. 推荐页面和入口
 
-- 原则引用：{principle_ids}
+{recommended_page_lines}
 
-| principle_id | 原则名称 | 命中原因 | 作用位置 |
-| --- | --- | --- | --- |
-{principle_rows}
+## 4. 主流程怎么走
 
-## 信息架构总览
+```text
+{_plain_experience_term(model.flow_overview_diagram)}
+```
+
+{flow_core_lines}
+
+## 5. 关键页面怎么设计
+{key_page_lines}
+
+## 6. 状态和异常怎么处理
+
+{state_core_lines}
+
+## 7. 文案要解释什么
+
+{copy_core_lines}
+
+## 8. 风险和保护策略
+
+{risk_core_lines}
+
+## 附录 A：上游依据
+
+- 上游业务判断：
+{_render_string_list([_plain_experience_term(item) for item in model.business_basis])}
+- 上游规则限制：
+{_render_string_list([_plain_experience_term(item) for item in model.rule_basis])}
+- 上游风险：
+{_render_string_list([_plain_experience_term(item) for item in model.risk_basis])}
+- 开放问题与缺口：
+{_render_string_list(model.open_questions + model.gaps)}
+
+## 附录 B：信息架构明细
 
 | ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
 | --- | --- | --- | --- | --- | --- |
@@ -408,62 +523,55 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 {model.ia_diagram}
 ```
 
-## 任务流蓝图
-
-### 任务闭环总览
-```text
-{model.flow_overview_diagram}
-```
-
-### 各闭环节点
-| flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
-| --- | --- | --- | --- | --- | --- | --- |
-{flow_rows}
-
-## 页面 / 窗口清单
-
 | page_id | 名称 | 类型 | 目标用户 | 主任务 | 入口 | 退出方式 | 上下游关系 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 {page_rows}
 
-## 关键页面蓝图
-{key_page_sections}
-
-## 区块布局示意
+### 区块布局示意
 {layout_sections}
 
-## 内容与信息优先级合同
-
+### 内容与信息优先级合同
 | info_item | 信息目的 | 优先级 | 推荐位置 | 触发时机 | 不展示风险 |
 | --- | --- | --- | --- | --- | --- |
 {info_rows}
 
-## 状态与反馈矩阵
+## 附录 C：页面 / 流程追踪映射
 
-| state_id | 状态名称 | 触发条件 | 可用动作 | 页面反馈 | 文案反馈 | 下游结果 |
+| flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
 | --- | --- | --- | --- | --- | --- | --- |
-{state_rows}
-
-## 文案合同
-
-| copy_id | 场景 | 文案类型 | 语义目标 | 必含信息 | 禁止写法 | 示例方向 |
-| --- | --- | --- | --- | --- | --- | --- |
-{copy_rows}
-
-## 风险、疑惑点与保护策略
-
-| risk_id | 风险 / 疑惑点 | 触发场景 | 用户为什么会困惑 / 出错 | 保护策略 | 对应页面 / 流程 / 文案 |
-| --- | --- | --- | --- | --- | --- |
-{risk_rows}
-
-## 开放问题与缺口
-{_render_string_list(model.open_questions + model.gaps)}
-
-## 体验追踪映射
+{flow_rows}
 
 | trace_id | 页面 / 流程 / 文案对象 | 承接业务判断 | 承接事实 / 规则 / 异常 | 承接原则 | 说明 |
 | --- | --- | --- | --- | --- | --- |
 {trace_rows}
+
+## 附录 D：设计原则引用
+
+- 原则引用：{principle_ids}
+
+| principle_id | 原则名称 | 命中原因 | 作用位置 |
+| --- | --- | --- | --- |
+{principle_rows}
+
+## 附录 E：链路自检信息
+
+### coverage 与追踪摘要
+{self_check_lines}
+
+### 状态与反馈矩阵（原始）
+| state_id | 状态名称 | 触发条件 | 可用动作 | 页面反馈 | 文案反馈 | 下游结果 |
+| --- | --- | --- | --- | --- | --- | --- |
+{state_rows}
+
+### 文案合同（原始）
+| copy_id | 场景 | 文案类型 | 语义目标 | 必含信息 | 禁止写法 | 示例方向 |
+| --- | --- | --- | --- | --- | --- | --- |
+{copy_rows}
+
+### 风险追踪（RSK）
+| risk_id | 风险 / 疑惑点 | 触发场景 | 用户为什么会困惑 / 出错 | 保护策略 | 对应页面 / 流程 / 文案 |
+| --- | --- | --- | --- | --- | --- |
+{risk_rows}
 """
 
 
@@ -480,7 +588,7 @@ def render_gap_list() -> str:
 
 ## 待补信息
 
-- 补充更具体的任务 source 输入，以便 facts / business / experience 形成更稳定的动态结论。
+- 补充更具体的任务原始输入，以便 facts / business / experience 形成更稳定的动态结论。
 """
 
 

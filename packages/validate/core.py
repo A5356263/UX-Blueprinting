@@ -47,19 +47,19 @@ STAGE_REQUIRED_HEADINGS = {
         "## 附录 E：链路自检信息",
     ],
     "experience_blueprint.md": [
-        "## 体验目标与任务边界",
-        "## 体验推导依据",
-        "## 信息架构总览",
-        "## 任务流蓝图",
-        "## 页面 / 窗口清单",
-        "## 关键页面蓝图",
-        "## 区块布局示意",
-        "## 内容与信息优先级合同",
-        "## 状态与反馈矩阵",
-        "## 文案合同",
-        "## 风险、疑惑点与保护策略",
-        "## 开放问题与缺口",
-        "## 体验追踪映射",
+        "## 1. 一句话体验方案",
+        "## 2. 用户要完成什么事",
+        "## 3. 推荐页面和入口",
+        "## 4. 主流程怎么走",
+        "## 5. 关键页面怎么设计",
+        "## 6. 状态和异常怎么处理",
+        "## 7. 文案要解释什么",
+        "## 8. 风险和保护策略",
+        "## 附录 A：上游依据",
+        "## 附录 B：信息架构明细",
+        "## 附录 C：页面 / 流程追踪映射",
+        "## 附录 D：设计原则引用",
+        "## 附录 E：链路自检信息",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
@@ -103,7 +103,7 @@ FORBIDDEN_TERMS = {
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
+    "experience_blueprint.md": {"1. 一句话体验方案", "2. 用户要完成什么事", "附录 E：链路自检信息"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
@@ -148,7 +148,7 @@ RUNTIME_LEAKAGE_TERMS = [
 RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"体验目标与任务边界", "开放问题与缺口"},
+    "experience_blueprint.md": {"1. 一句话体验方案", "2. 用户要完成什么事", "附录 E：链路自检信息"},
 }
 
 DEFAULT_TRACKED_OUTPUTS = [
@@ -1064,19 +1064,22 @@ def analyze_experience_blueprint(
     page_ids = extract_page_ids(experience_text)
     flow_ids = extract_flow_ids(experience_text)
 
-    flow_section = sections.get("任务流蓝图", "")
-    page_inventory_section = sections.get("页面 / 窗口清单", "")
-    key_page_section = sections.get("关键页面蓝图", "")
-    layout_section = sections.get("区块布局示意", "")
-    content_contract_section = sections.get("内容与信息优先级合同", "")
-    state_section = sections.get("状态与反馈矩阵", "")
-    copy_section = sections.get("文案合同", "")
-    risk_section = sections.get("风险、疑惑点与保护策略", "")
-    trace_section = sections.get("体验追踪映射", "")
+    flow_section = sections.get("4. 主流程怎么走", "") + "\n" + sections.get("附录 C：页面 / 流程追踪映射", "")
+    page_inventory_section = sections.get("3. 推荐页面和入口", "") + "\n" + sections.get("附录 B：信息架构明细", "")
+    key_page_section = sections.get("5. 关键页面怎么设计", "")
+    layout_section = sections.get("附录 B：信息架构明细", "")
+    content_contract_section = sections.get("附录 B：信息架构明细", "")
+    state_section = sections.get("6. 状态和异常怎么处理", "") + "\n" + sections.get("附录 E：链路自检信息", "")
+    copy_section = sections.get("7. 文案要解释什么", "") + "\n" + sections.get("附录 E：链路自检信息", "")
+    risk_section = sections.get("8. 风险和保护策略", "") + "\n" + sections.get("附录 E：链路自检信息", "")
+    trace_section = sections.get("附录 C：页面 / 流程追踪映射", "")
 
     flow_count = max(len(flow_ids), count_real_table_rows(flow_section), count_real_list_items(flow_section))
     page_inventory_item_count = max(count_real_table_rows(page_inventory_section), count_real_list_items(page_inventory_section))
-    expanded_page_blueprint_count = count_expanded_page_blueprints(key_page_section)
+    expanded_page_blueprint_count = max(
+        count_expanded_page_blueprints(key_page_section),
+        len(re.findall(r"^###\s+", key_page_section, re.MULTILINE)),
+    )
     region_map_count = count_text_diagrams(layout_section)
     content_contract_item_count = max(count_real_table_rows(content_contract_section), count_real_list_items(content_contract_section))
     state_feedback_pair_count = max(count_real_table_rows(state_section), count_real_list_items(state_section))
@@ -1114,28 +1117,28 @@ def analyze_experience_blueprint(
         add_issue(issues, "info", f"experience_blueprint.md 已引用 {principle_ref_count} 个设计原则 ID")
 
     if flow_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少任务流蓝图")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少主流程说明")
 
     if page_inventory_item_count == 0 and not page_ids:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 窗口清单")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少推荐页面和入口信息")
 
     if expanded_page_blueprint_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 只有页面清单，没有逐页展开的关键页面蓝图")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少关键页面展开说明")
 
     if region_map_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少区块布局示意")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少附录中的区块布局示意")
 
     if content_contract_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少内容与信息优先级合同")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少信息优先级合同")
 
     if state_feedback_pair_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与反馈矩阵")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与异常处理信息")
 
     if copy_contract_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少文案合同")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少文案解释要求")
 
     if trace_mapping_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少体验追踪映射")
+        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 流程追踪映射")
 
     if not has_exception_coverage:
         add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
