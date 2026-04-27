@@ -67,6 +67,37 @@ textarea {
   gap: 16px;
 }
 
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tab-btn {
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  border-color: rgba(31, 107, 91, 0.35);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
 .hero {
   padding: 16px 18px;
   margin-bottom: 16px;
@@ -634,6 +665,81 @@ details summary {
   color: var(--text-muted);
 }
 
+.business-sections {
+  display: grid;
+  gap: 12px;
+}
+
+.business-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.business-card h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.compare-list {
+  display: grid;
+  gap: 10px;
+}
+
+.compare-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  padding: 10px 12px;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  margin-bottom: 6px;
+}
+
+.status-chip.done {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-color: rgba(31, 107, 91, 0.2);
+}
+
+.status-chip.partial {
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-color: rgba(138, 90, 20, 0.2);
+}
+
+.status-chip.todo {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: rgba(139, 58, 58, 0.2);
+}
+
+.status-chip.pending {
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+}
+
+.warning-list {
+  display: grid;
+  gap: 8px;
+}
+
+.warning-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
 code,
 pre {
   font-family: Consolas, "Courier New", monospace;
@@ -1145,6 +1251,7 @@ def _render_page_card(page: dict[str, Any]) -> str:
 def render_preview_html(model: dict[str, Any]) -> str:
     meta = model.get("meta", {})
     global_context = model.get("global_context", {})
+    business_preview = model.get("business_preview", {})
     overview = meta.get("overview", {})
     global_principles_html = _render_bullet_list(
         [_normalize_text(item.get("label") or item.get("principle_id")) for item in global_context.get("principles", [])]
@@ -1174,13 +1281,36 @@ def render_preview_html(model: dict[str, Any]) -> str:
 
     flow_html = _render_flow(model)
     page_cards = "".join(_render_page_card(page) for page in model.get("page_views", []))
-    debug_payload = html.escape(json_dumps(model))
     global_reference_body = "".join(
         [
             _render_section("原则引用", global_principles_html),
             _render_section("信息优先级", global_notes_html),
         ]
     )
+    experience_tab_html = (
+        "<div class=\"layout\">"
+        "<section class=\"panel\">"
+        "<div class=\"panel-header\"><div><h2 class=\"section-title\">全局流程总览</h2></div></div>"
+        f"{flow_html}"
+        "<div class=\"flow-legend\">"
+        "<span class=\"legend-chip\">按角色分泳道</span>"
+        "<span class=\"legend-chip\">按链路分组</span>"
+        "</div>"
+        "</section>"
+        f"{_render_section_panel('全局待确认', _render_global_confirm_list(pending_global_items))}"
+        f"{_render_section_panel('全局原文补充', global_reference_body)}"
+        "<section class=\"panel\">"
+        "<div class=\"panel-header\"><div><h2 class=\"section-title\">页面预览卡</h2></div></div>"
+        f"<div class=\"pages\">{page_cards or '<p class=\"empty-note\">无可渲染页面。</p>'}</div>"
+        "</section>"
+        "</div>"
+    )
+    business_tab_html = _render_business_sections(business_preview)
+    handover_tab_html = _render_handover_matrix(model.get("handover_matrix", []))
+    warnings_tab_html = _render_warnings(model)
+    source_context = meta.get("context", {})
+    source_business = _normalize_text(source_context.get("source_business_blueprint"))
+    source_experience = _normalize_text(source_context.get("source_experience_blueprint"))
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1194,61 +1324,124 @@ def render_preview_html(model: dict[str, Any]) -> str:
   <main class="page">
     <section class="hero">
       <div class="hero-top">
-        <h1>{_escape(_normalize_text(meta.get("title") or "体验蓝图预览"))}</h1>
+        <h1>{_escape(_normalize_text(meta.get("title") or "蓝图预览"))}</h1>
       </div>
       {_render_hero_rows([
-          ("只读说明", "该页面仅用于本地阅读正式体验蓝图的派生预览，不回写正式蓝图，也不新增业务语义。"),
+          ("只读说明", "该页面仅用于本地阅读正式蓝图的派生预览，不回写正式蓝图，也不新增业务语义。"),
           ("项目", _normalize_text(model.get("project_id") or "")),
-          ("来源", _normalize_text(meta.get("context", {}).get("source_blueprint") or "")),
+          ("Business 来源", source_business),
+          ("Experience 来源", source_experience),
           ("目标用户与角色", _normalize_text(overview.get("目标用户与角色") or "").replace("目标用户与角色：", "", 1)),
           ("体验目标", _normalize_text(overview.get("体验目标") or "").replace("体验目标：", "", 1)),
           ("任务边界", _normalize_text(overview.get("任务边界") or "").replace("任务边界：", "", 1)),
       ])}
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="business">Business Blueprint</button>
+        <button class="tab-btn" data-tab="experience">Experience Blueprint</button>
+        <button class="tab-btn" data-tab="handover">承接对照</button>
+        <button class="tab-btn" data-tab="warnings">Warnings / Gaps</button>
+      </div>
     </section>
-
-    <div class="layout">
-      <section class="panel">
-        <div class="panel-header">
-          <div>
-            <h2 class="section-title">全局流程总览</h2>
-          </div>
-        </div>
-        {flow_html}
-        <div class="flow-legend">
-          <span class="legend-chip">按角色分泳道</span>
-          <span class="legend-chip">按链路分组</span>
-        </div>
-      </section>
-
-      {_render_section_panel("全局待确认", _render_global_confirm_list(pending_global_items))}
-
-      {_render_section_panel("全局原文补充", global_reference_body)}
-
-      <section class="panel">
-        <div class="panel-header">
-          <div>
-            <h2 class="section-title">页面预览卡</h2>
-          </div>
-        </div>
-        <div class="pages">{page_cards or '<p class="empty-note">无可渲染页面。</p>'}</div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-header">
-          <div>
-            <h2 class="section-title">调试信息</h2>
-          </div>
-        </div>
-        <details>
-          <summary>展开 preview_model.json</summary>
-          <pre>{debug_payload}</pre>
-        </details>
-      </section>
+    <div class="tab-panel active" data-panel="business">
+      {business_tab_html}
+    </div>
+    <div class="tab-panel" data-panel="experience">
+      {experience_tab_html}
+    </div>
+    <div class="tab-panel" data-panel="handover">
+      {handover_tab_html}
+    </div>
+    <div class="tab-panel" data-panel="warnings">
+      {warnings_tab_html}
     </div>
   </main>
+  <script>
+    const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+    const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+    tabButtons.forEach((button) => {{
+      button.addEventListener("click", () => {{
+        const tabId = button.dataset.tab;
+        tabButtons.forEach((item) => item.classList.toggle("active", item === button));
+        tabPanels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === tabId));
+      }});
+    }});
+  </script>
 </body>
 </html>
 """
+
+
+def _render_business_sections(business_preview: dict[str, Any]) -> str:
+    sections = business_preview.get("sections", [])
+    cards: list[str] = []
+    for section in sections:
+        title = _normalize_text(section.get("title") or "")
+        items = _render_bullet_list([str(item) for item in section.get("items", [])])
+        if not title or not items:
+            continue
+        cards.append(f'<article class="business-card"><h3>{_escape(title)}</h3>{items}</article>')
+    if not cards:
+        body = '<p class="empty-note">未读取到 business_blueprint.md 或未识别到可展示章节。</p>'
+    else:
+        body = f'<div class="business-sections">{"".join(cards)}</div>'
+    return _render_section_panel("Business 蓝图摘要", body, "只读展示业务结论、推荐方案、规则边界、风险与承接要求。")
+
+
+def _status_chip_class(status: str) -> str:
+    normalized = _normalize_text(status)
+    if normalized == "已承接":
+        return "done"
+    if normalized == "部分承接":
+        return "partial"
+    if normalized == "未承接":
+        return "todo"
+    return "pending"
+
+
+def _render_handover_matrix(rows: list[dict[str, Any]]) -> str:
+    entries: list[str] = []
+    for row in rows:
+        requirement = _normalize_text(row.get("requirement") or "")
+        status = _normalize_text(row.get("status") or "待确认")
+        evidence = _normalize_text(row.get("evidence") or "")
+        if not requirement:
+            continue
+        entries.append(
+            "<article class=\"compare-item\">"
+            f"<span class=\"status-chip {_status_chip_class(status)}\">{_escape(status)}</span>"
+            f"<p><strong>业务承接要求：</strong>{_escape(requirement)}</p>"
+            f"<p><strong>体验承接证据：</strong>{_escape(evidence or '未识别到稳定证据')}</p>"
+            "</article>"
+        )
+    body = f'<div class="compare-list">{"".join(entries)}</div>' if entries else '<p class="empty-note">暂无可对照的承接要求。</p>'
+    return _render_section_panel("承接对照", body, "用于阅读辅助，不参与主链路 Gate。")
+
+
+def _render_warnings(model: dict[str, Any]) -> str:
+    warnings: list[str] = []
+    global_context = model.get("global_context", {})
+    for item in model.get("unresolved_items", []):
+        warnings.append(f"未解析项：{_normalize_text(item.get('message') or item.get('type') or '')}")
+    for item in global_context.get("risks", []):
+        warnings.append(f"全局风险：{_normalize_text(item.get('name') or item.get('risk_id') or '')}")
+    for item in global_context.get("open_questions", []):
+        warnings.append(f"开放问题：{_normalize_text(item.get('content') or item.get('id') or '')}")
+    for item in global_context.get("gaps", []):
+        warnings.append(f"全局缺口：{_normalize_text(item.get('content') or item.get('id') or '')}")
+    for item in model.get("handover_matrix", []):
+        status = _normalize_text(item.get("status") or "")
+        if status in {"未承接", "部分承接", "待确认"}:
+            warnings.append(
+                f"承接风险（{status}）：{_normalize_text(item.get('requirement') or '')}"
+            )
+    values = _dedupe_strings(warnings)
+    if not values:
+        body = '<p class="empty-note">暂无显式 warnings / gaps。</p>'
+    else:
+        body = '<div class="warning-list">' + "".join(
+            f'<div class="warning-item">{_escape(item)}</div>' for item in values
+        ) + "</div>"
+    return _render_section_panel("Warnings / Gaps", body, "聚合全局风险、开放问题、缺口与承接不足项。")
 
 
 def _render_global_confirm_list(items: list[str]) -> str:

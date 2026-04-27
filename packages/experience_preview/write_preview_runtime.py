@@ -35,9 +35,10 @@ def write_preview_runtime(
         "preview_url": preview_url,
         "ready_state": ready_state,
         "page_count": len(model.get("page_views", [])),
-        "global_note_count": len(model.get("global_notes", [])),
+        "global_note_count": len(model.get("global_context", {}).get("notes", [])),
         "unresolved_count": len(model.get("unresolved_items", [])),
-        "source_blueprint": model.get("meta", {}).get("context", {}).get("source_blueprint", ""),
+        "source_business_blueprint": model.get("meta", {}).get("context", {}).get("source_business_blueprint", ""),
+        "source_experience_blueprint": model.get("meta", {}).get("context", {}).get("source_experience_blueprint", ""),
     }
     runtime_path = preview_dir / "preview_runtime.json"
     runtime_path.write_text(json.dumps(runtime_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -47,7 +48,8 @@ def write_preview_runtime(
         "",
         f"- project_id: `{project_id}`",
         f"- generated_at: `{runtime_payload['generated_at']}`",
-        f"- source_blueprint: `{runtime_payload['source_blueprint']}`",
+        f"- source_business_blueprint: `{runtime_payload['source_business_blueprint']}`",
+        f"- source_experience_blueprint: `{runtime_payload['source_experience_blueprint']}`",
         f"- ready_state: `{ready_state}`",
         f"- preview_url: `{preview_url or 'N/A'}`",
         f"- page_count: `{runtime_payload['page_count']}`",

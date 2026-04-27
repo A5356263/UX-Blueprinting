@@ -31,7 +31,7 @@ def run_experience_preview(project_id: str, host: str = "127.0.0.1", port: int =
             preview_url="",
         )
         append_command_if_provenance_exists(project_id, "preview")
-        print("体验蓝图预览已生成。")
+        print("蓝图预览已生成。")
         print(f"预览输出目录：{preview_dir}")
         return 0
 
@@ -48,8 +48,8 @@ def run_experience_preview(project_id: str, host: str = "127.0.0.1", port: int =
             preview_url=preview_url,
         )
         append_command_if_provenance_exists(project_id, "preview")
-        print("体验蓝图预览已生成。", flush=True)
+        print("蓝图预览已生成。", flush=True)
         print(f"本地预览地址：{preview_url}", flush=True)
-        print("可在浏览器中直接打开查看全局流程图与页面预览卡。", flush=True)
+        print("可在浏览器中直接打开查看 Business / Experience / 承接对照。", flush=True)
         httpd.serve_forever()
     return 0

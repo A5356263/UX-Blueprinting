@@ -31,6 +31,17 @@ def _read_blueprint_source(project_id: str) -> tuple[Path, str]:
     raise SystemExit(f"Missing experience blueprint for preview: {project_dir}")
 
 
+def _read_business_blueprint_source(project_id: str) -> tuple[Path | None, str]:
+    candidates = [
+        get_project_exports_dir(project_id) / "final" / "business_blueprint.md",
+        get_project_workspace_dir(project_id) / "business_blueprint.md",
+    ]
+    for path in candidates:
+        if path.exists():
+            return path, path.read_text(encoding="utf-8")
+    return None, ""
+
+
 def _as_list_strings(value: object) -> list[str]:
     if not isinstance(value, list):
         return []
@@ -77,6 +88,51 @@ def _extract_overview(section_text: str) -> dict[str, str]:
             if line.startswith(prefix):
                 result[key] = line
     return result
+
+
+def _pick_section_text(sections: dict[str, str], keyword: str) -> str:
+    for title, body in sections.items():
+        if keyword in title:
+            return body
+    return ""
+
+
+def _extract_business_preview(business_text: str) -> dict[str, Any]:
+    if not business_text.strip():
+        return {
+            "sections": [],
+            "handover_requirements": [],
+            "open_questions": [],
+        }
+    sections = _split_sections(business_text)
+    title_mapping = [
+        ("一句话结论", "一句话结论"),
+        ("需求是否成立", "需求是否成立"),
+        ("值不值得做", "值不值得做"),
+        ("能力形态判断", "能力形态判断"),
+        ("推荐业务方案", "推荐业务方案"),
+        ("规则和边界", "规则和边界"),
+        ("主要风险与保护策略", "主要风险与保护策略"),
+        ("方案承接要求", "方案承接要求"),
+        ("待确认问题", "待确认问题"),
+    ]
+    section_cards: list[dict[str, Any]] = []
+    for keyword, label in title_mapping:
+        body = _pick_section_text(sections, keyword)
+        if not body.strip():
+            continue
+        section_cards.append(
+            {
+                "key": keyword,
+                "title": label,
+                "items": _parse_bullets(body),
+            }
+        )
+    return {
+        "sections": section_cards,
+        "handover_requirements": _parse_bullets(_pick_section_text(sections, "方案承接要求")),
+        "open_questions": _parse_bullets(_pick_section_text(sections, "待确认问题")),
+    }
 
 
 def _normalize(value: str) -> str:
@@ -161,6 +217,56 @@ def _dedupe_dicts(items: list[dict[str, Any]], key_fields: list[str]) -> list[di
         seen.add(marker)
         result.append(item)
     return result
+
+
+def _normalize_for_match(text: str) -> str:
+    compact = re.sub(r"\s+", "", text).lower()
+    return re.sub(r"[，。；：、“”\"'（）()【】\[\]\-_/·,.!?！？]", "", compact)
+
+
+def _extract_tokens(text: str) -> list[str]:
+    parts = re.split(r"[，。；：、\s\-/|（）()【】\[\],.!?！？]+", text)
+    return [part.strip().lower() for part in parts if len(part.strip()) >= 2]
+
+
+def _build_handover_matrix(
+    requirements: list[str],
+    experience_text: str,
+    trace_items: list[str],
+) -> list[dict[str, str]]:
+    normalized_experience = _normalize_for_match(experience_text)
+    trace_corpus = " ".join(trace_items)
+    normalized_trace = _normalize_for_match(trace_corpus)
+    rows: list[dict[str, str]] = []
+    for requirement in _dedupe_strings(requirements):
+        raw = requirement.strip()
+        normalized_req = _normalize_for_match(raw)
+        tokens = _extract_tokens(raw)
+        matched_token_count = sum(
+            1
+            for token in tokens
+            if token and (_normalize_for_match(token) in normalized_experience or _normalize_for_match(token) in normalized_trace)
+        )
+        if not raw or "待确认" in raw or raw.lower() in {"none", "暂无"}:
+            status = "待确认"
+            evidence = "业务蓝图标记为待确认项"
+        elif normalized_req and (normalized_req in normalized_experience or normalized_req in normalized_trace):
+            status = "已承接"
+            evidence = "体验蓝图中存在同义完整描述"
+        elif matched_token_count >= max(2, min(4, len(tokens))):
+            status = "部分承接"
+            evidence = "体验蓝图中命中部分关键要素"
+        else:
+            status = "未承接"
+            evidence = "体验蓝图未检索到稳定对应项"
+        rows.append(
+            {
+                "requirement": raw,
+                "status": status,
+                "evidence": evidence,
+            }
+        )
+    return rows
 
 
 def _empty_page(page_id: str, view_name: str, view_type: str, roles: list[str], summary: str, entry: str, exit_text: str, relation: str) -> dict[str, Any]:
@@ -762,7 +868,9 @@ def _finalize_pages(page_index: dict[str, dict[str, Any]], unresolved_items: lis
 
 def build_preview_model(project_id: str) -> dict[str, Any]:
     source_path, text = _read_blueprint_source(project_id)
+    business_source_path, business_text = _read_business_blueprint_source(project_id)
     sections = _split_sections(text)
+    business_preview = _extract_business_preview(business_text)
     page_index = _build_page_index(sections)
     ia_index = _build_ia_index(sections)
     overview = _extract_overview(sections.get("体验目标与任务边界", ""))
@@ -798,6 +906,26 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
     _apply_open_questions(page_index, sections, global_context)
 
     pages = _finalize_pages(page_index, unresolved_items)
+    trace_corpus: list[str] = []
+    for page in pages:
+        for item in page.get("trace_items", []):
+            trace_corpus.append(
+                " ".join(
+                    [
+                        str(item.get("trace_id") or ""),
+                        str(item.get("object") or ""),
+                        str(item.get("business_judgment") or ""),
+                        str(item.get("facts") or ""),
+                        str(item.get("principles") or ""),
+                        str(item.get("note") or ""),
+                    ]
+                )
+            )
+    handover_matrix = _build_handover_matrix(
+        business_preview.get("handover_requirements", []),
+        text,
+        trace_corpus,
+    )
     for key in list(global_context.keys()):
         if key == "notes":
             global_context[key] = _dedupe_dicts(list(global_context[key]), ["type", "content"])
@@ -810,14 +938,17 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
         "project_id": project_id,
         "meta": {
             "title": _extract_title(text, source_path),
-            "subject": "体验蓝图浏览器预览",
+            "subject": "蓝图浏览器预览",
             "version": "v2",
             "context": {
-                "source_blueprint": str(source_path),
+                "source_experience_blueprint": str(source_path),
+                "source_business_blueprint": str(business_source_path) if business_source_path else "",
                 "input_mode": "formal_export" if "exports" in str(source_path) else "workspace_fallback",
             },
             "overview": overview,
         },
+        "business_preview": business_preview,
+        "handover_matrix": handover_matrix,
         "global_flow": global_flow,
         "page_views": pages,
         "global_context": global_context,

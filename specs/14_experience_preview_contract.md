@@ -1,8 +1,8 @@
-# 体验蓝图预览层合同
+# 蓝图预览层合同
 
 ## 目标
 
-定义体验蓝图预览层 V2 的正式落地方式，使其在不改变主链路定位的前提下，从“章节顺序渲染器”升级为“页面中心 + 角色流程中心”的体验蓝图还原器。
+定义蓝图预览层 V2 的正式落地方式，使其在不改变主链路定位的前提下，统一承载 Business 与 Experience 的只读预览，并支持承接对照与风险提示视图。
 
 ## 定位
 
@@ -15,12 +15,14 @@
 
 ## 输入合同
 
-预览层标准输入为以下任一文件：
+预览层标准输入为以下文件集合：
 
 1. `projects/<project-id>/exports/final/experience_blueprint.md`
 2. `projects/<project-id>/workspace/experience_blueprint.md`
+3. `projects/<project-id>/exports/final/business_blueprint.md`
+4. `projects/<project-id>/workspace/business_blueprint.md`
 
-优先读取 `exports/final/experience_blueprint.md`；仅当归档版不存在时，才允许降级读取 `workspace/experience_blueprint.md`。
+优先读取 `exports/final/*.md`；仅当归档版不存在时，才允许降级读取 `workspace/*.md`。
 
 ## 输出合同
 
@@ -48,6 +50,8 @@ V2 预览模型必须升级为：
 preview_document_v2
 - project_id
 - meta
+- business_preview
+- handover_matrix[]
 - global_flow
 - page_views[]
 - global_context
@@ -146,7 +150,14 @@ global_context
 
 ## 渲染规则
 
-每张页面卡必须稳定输出以下固定顺序：
+统一 `index.html` 顶部必须提供以下 Tab：
+
+1. Business Blueprint
+2. Experience Blueprint
+3. 承接对照
+4. Warnings / Gaps
+
+Experience 页面卡必须稳定输出以下固定顺序：
 
 1. 页面摘要
 2. 线框草图
@@ -158,12 +169,18 @@ global_context
 8. 开放问题 / 缺口
 9. 来源说明（可折叠）
 
+Business / 承接 / Warnings 约束：
+
+- Business Tab 优先展示：一句话结论、推荐业务方案、规则边界、风险保护、方案承接要求、待确认问题
+- 承接对照 Tab 以“业务承接要求 -> 体验承接状态”方式展示，状态至少包含：已承接 / 部分承接 / 未承接 / 待确认
+- Warnings Tab 聚合 unresolved、全局风险、开放问题、全局缺口与承接不足项
+
 额外约束：
 
 - 当 `page_id == view_name` 时，不得重复输出页面 ID
 - 页面摘要不得重复标题语义
 - 自动降级提示不得淹没蓝图原始内容
-- 默认页面不再直接展示整段 `preview_model.json`
+- 默认页面不直接展示整段 `preview_model.json`
 - 全局区块必须拆分为：全局流程总览、全局原则、全局依赖 / 前提、全局风险、全局开放问题、全局缺口、待人工确认
 
 ## 执行入口
