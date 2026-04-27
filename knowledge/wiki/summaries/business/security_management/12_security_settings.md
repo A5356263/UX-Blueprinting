@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/security_management/12_security_settings.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/security_management/00_domain_overview.md

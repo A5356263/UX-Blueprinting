@@ -1,9 +1,0 @@
-{
-  "project_id": "002",
-  "task_name": "员工自助申请与查询权限能力设计",
-  "domain": "permission",
-  "status": "draft",
-  "project_role": "real_project",
-  "read_only": false,
-  "excluded_from_default_scan": false
-}

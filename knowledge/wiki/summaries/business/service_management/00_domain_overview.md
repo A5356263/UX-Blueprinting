@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/service_management/00_domain_overview.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/service_management/10_service_personnel_authorization.md

@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/project_background/04_product_advantages_and_service_model.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/project_background/00_domain_overview.md

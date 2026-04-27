@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/app_management/11_application_assembly.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/app_management/00_domain_overview.md

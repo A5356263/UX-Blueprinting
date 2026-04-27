@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/project_background/05_management_console_capability_overview.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/project_background/00_domain_overview.md

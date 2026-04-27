@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-26
+- updated_at: 2026-04-27
 - source_refs: [knowledge/raw/business/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/README.md
