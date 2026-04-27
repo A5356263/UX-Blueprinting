@@ -1,12 +1,3 @@
-# Requirement
-
-- Project ID: 003
-- Task Name: 员工自助申请与查询权限能力设计
-- Domain: permission
-- Source: test/权限需求文档.md
-
-## 原始需求正文
-
 # 权限需求文档
 
 ## 1. 需求概述

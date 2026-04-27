@@ -5,19 +5,19 @@
 - Protocol Name: Cross-AI Task Card
 - Protocol Version: v0.2
 - Task ID: 003
-- Task Name: 员工自助申请与查询权限能力设计
+- Task Name: 员工自助申请与查询权限（新任务003）
 - Domain: permission
 
 ## Task Goal
 
-- 解决企业员工权限分配效率低下的问题，通过支持员工自助申请和查询权限来分散权限管理工作
-- 本次输出服务于产品功能设计和用户体验设计评审
+- 基于 `projects/003/source/requirement.md` 与 `projects/003/source/background.md` 的当前输入，从零构建“员工自助申请与查询权限”任务的 facts / business / experience 全链路产物。
+- 本次输出主要服务于产品评审、业务评审与体验评审，目标是形成可评审、可追踪、可落地的蓝图文档。
 
 ## Task Scenario
 
-- 本次任务场景：基于权限需求文档，设计员工自助申请权限的功能方案
-- 这是新建任务，需要从零开始建立完整的功能设计方案
-- 本次任务覆盖全链路：从事实提取到业务蓝图再到体验设计
+- 任务场景：企业权限管理从“管理员集中分配”扩展到“员工自助申请 + 自助查询”，需覆盖模式启停、申请流程、角色/应用范围、审批与结果反馈。
+- 任务类型：新建任务（项目 `003`），必须按当前输入重新建立任务身份，不得沿用历史任务产物作为默认结论。
+- 覆盖范围：覆盖 facts / business / experience 全链路。
 
 ## Required Inputs
 

@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T12:18:30.004942+00:00",
+  "updated_at": "2026-04-27T00:33:34.858447+00:00",
   "checked_files": [
     "projects/003/source/task_card.md",
     "projects/003/source/requirement.md",
@@ -22,7 +22,7 @@
     "blockers": [],
     "warnings": [],
     "infos": [
-      "facts.md 已提炼 61 条事实"
+      "facts.md 已提炼 62 条事实"
     ]
   },
   "issue_details_version": "1.0",
@@ -32,7 +32,7 @@
       "stage": "facts",
       "severity": "info",
       "category": "quality_gap",
-      "message": "facts.md 已提炼 61 条事实",
+      "message": "facts.md 已提炼 62 条事实",
       "target_artifacts": [
         "projects/003/workspace/facts.md"
       ],
@@ -53,7 +53,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "facts.md 已提炼 61 条事实"
+          "value": "facts.md 已提炼 62 条事实"
         },
         {
           "type": "checked_files",
@@ -70,7 +70,7 @@
         {
           "type": "metrics",
           "value": {
-            "fact_count": 61,
+            "fact_count": 62,
             "dimension_coverage": {
               "actor": 1,
               "object": 1,
@@ -81,8 +81,8 @@
               "dependency": 1,
               "scope": 1
             },
-            "traceable_fact_count": 61,
-            "gap_count": 2,
+            "traceable_fact_count": 62,
+            "gap_count": 1,
             "knowledge_derived_fact_count": 0
           }
         }
@@ -90,7 +90,7 @@
     }
   ],
   "metrics": {
-    "fact_count": 61,
+    "fact_count": 62,
     "dimension_coverage": {
       "actor": 1,
       "object": 1,
@@ -101,8 +101,8 @@
       "dependency": 1,
       "scope": 1
     },
-    "traceable_fact_count": 61,
-    "gap_count": 2,
+    "traceable_fact_count": 62,
+    "gap_count": 1,
     "knowledge_derived_fact_count": 0
   }
 }

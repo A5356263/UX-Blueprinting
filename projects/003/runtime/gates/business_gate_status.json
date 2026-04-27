@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "experience",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-26T12:18:30.064585+00:00",
+  "updated_at": "2026-04-27T00:33:34.902559+00:00",
   "checked_files": [
     "projects/003/workspace/facts.md",
     "projects/003/workspace/business_blueprint.md",
@@ -62,15 +62,18 @@
         {
           "type": "metrics",
           "value": {
-            "judgment_count": 5,
+            "judgment_count": 4,
             "facts_consumed_count": 12,
-            "judgment_traceable_count": 5,
-            "trace_mapping_item_count": 5,
-            "option_compare_count": 12,
+            "judgment_traceable_count": 4,
+            "trace_mapping_item_count": 37,
+            "option_compare_count": 47,
             "value_assessment_item_count": 10,
-            "risk_item_count": 3,
-            "unresolved_gap_count": 5,
-            "has_appendix_e": true
+            "risk_item_count": 2,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 10,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
           }
         }
       ]
@@ -112,29 +115,35 @@
         {
           "type": "metrics",
           "value": {
-            "judgment_count": 5,
+            "judgment_count": 4,
             "facts_consumed_count": 12,
-            "judgment_traceable_count": 5,
-            "trace_mapping_item_count": 5,
-            "option_compare_count": 12,
+            "judgment_traceable_count": 4,
+            "trace_mapping_item_count": 37,
+            "option_compare_count": 47,
             "value_assessment_item_count": 10,
-            "risk_item_count": 3,
-            "unresolved_gap_count": 5,
-            "has_appendix_e": true
+            "risk_item_count": 2,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 10,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
           }
         }
       ]
     }
   ],
   "metrics": {
-    "judgment_count": 5,
+    "judgment_count": 4,
     "facts_consumed_count": 12,
-    "judgment_traceable_count": 5,
-    "trace_mapping_item_count": 5,
-    "option_compare_count": 12,
+    "judgment_traceable_count": 4,
+    "trace_mapping_item_count": 37,
+    "option_compare_count": 47,
     "value_assessment_item_count": 10,
-    "risk_item_count": 3,
-    "unresolved_gap_count": 5,
-    "has_appendix_e": true
+    "risk_item_count": 2,
+    "unresolved_gap_count": 0,
+    "has_appendix": true,
+    "handover_item_count": 10,
+    "handover_keyword_count": 5,
+    "has_handover_empty_talk": false
   }
 }

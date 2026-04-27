@@ -44,52 +44,52 @@
     {
       "id": "F-AC01",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC02",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC03",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC04",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC05",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC06",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC07",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-AC08",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-D01",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-D02",
       "in_business": false,
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "F-D03",
@@ -143,6 +143,11 @@
     },
     {
       "id": "F-E05",
+      "in_business": false,
+      "in_experience": false
+    },
+    {
+      "id": "F-E06",
       "in_business": false,
       "in_experience": false
     },
@@ -239,7 +244,7 @@
     {
       "id": "F-S03",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-S04",
@@ -249,12 +254,12 @@
     {
       "id": "F-S05",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-S06",
       "in_business": false,
-      "in_experience": true
+      "in_experience": false
     },
     {
       "id": "F-S07",
@@ -310,11 +315,11 @@
   "judgments": [
     {
       "id": "J-01",
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "J-02",
-      "in_experience": false
+      "in_experience": true
     },
     {
       "id": "J-03",
@@ -323,10 +328,6 @@
     {
       "id": "J-04",
       "in_experience": true
-    },
-    {
-      "id": "J-05",
-      "in_experience": false
     }
   ],
   "pages": [
@@ -347,15 +348,6 @@
     },
     {
       "id": "P-06"
-    },
-    {
-      "id": "P-07"
-    },
-    {
-      "id": "P-08"
-    },
-    {
-      "id": "P-09"
     }
   ]
 }
