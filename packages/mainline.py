@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from packages.archive import run_archive_artifacts
-from packages.common import get_examples_root_dir, get_project_runtime_dir
+from packages.common import get_examples_root_dir, get_project_preview_dir, get_project_runtime_dir
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
 from packages.generation import (
@@ -61,6 +61,15 @@ def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) 
     if preview_code != 0:
         print("Preview failed after archive, but mainline remains successful.")
         return 0
+    preview_runtime = _read_json(get_project_preview_dir(project_id) / "preview_runtime.json")
+    preview_url = str(preview_runtime.get("preview_url") or "").strip()
+    output_path = str(preview_runtime.get("output_path") or "").strip()
+    if preview_url:
+        print(f"本地预览地址：{preview_url}")
+    else:
+        fallback_output = output_path or f"projects/{project_id}/runtime/preview/index.html"
+        print("Preview 已生成，但当前环境未启动本地服务。")
+        print(f"静态预览文件：{fallback_output}")
     append_command_if_provenance_exists(project_id, "preview")
     return 0
 

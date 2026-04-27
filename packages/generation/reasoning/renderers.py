@@ -661,9 +661,15 @@ def render_experience_markdown(model: ExperienceModel) -> str:
     )
     return f"""# Experience Blueprint
 
-## 1. 交互流程总览
+## 1. 体验结论
 
 {overview_lines}
+- 上游业务判断承接：
+{_render_string_list([_plain_experience_term(item) for item in model.business_basis])}
+- 上游规则边界承接：
+{_render_string_list([_plain_experience_term(item) for item in model.rule_basis])}
+- 上游风险承接：
+{_render_string_list([_plain_experience_term(item) for item in model.risk_basis])}
 
 ## 2. 主交互流程
 
@@ -681,23 +687,25 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 
 {page_design_lines}
 
+### 区块布局示意
+{layout_sections}
+
+### 内容与信息优先级合同
+| info_item | 信息目的 | 优先级 | 推荐位置 | 触发时机 | 不展示风险 |
+| --- | --- | --- | --- | --- | --- |
+{info_rows}
+
 ## 6. 状态与反馈文案
 
 {state_feedback_lines}
 
-## 附录 A：上游依据
+## 7. 待确认问题
 
-- 上游业务判断：
-{_render_string_list([_plain_experience_term(item) for item in model.business_basis])}
-- 上游规则限制：
-{_render_string_list([_plain_experience_term(item) for item in model.rule_basis])}
-- 上游风险：
-{_render_string_list([_plain_experience_term(item) for item in model.risk_basis])}
-- 开放问题与缺口：
 {_render_string_list(model.open_questions + model.gaps)}
 
-## 附录 B：原始信息架构与页面清单
+## 附录：依据与追踪
 
+### A. 信息架构与页面清单
 | ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
 | --- | --- | --- | --- | --- | --- |
 {ia_rows}
@@ -710,16 +718,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 | --- | --- | --- | --- | --- | --- | --- | --- |
 {page_rows}
 
-### 区块布局示意
-{layout_sections}
-
-### 内容与信息优先级合同
-| info_item | 信息目的 | 优先级 | 推荐位置 | 触发时机 | 不展示风险 |
-| --- | --- | --- | --- | --- | --- |
-{info_rows}
-
-## 附录 C：页面 / 流程追踪映射
-
+### B. 页面 / 流程追踪映射
 | flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
 | --- | --- | --- | --- | --- | --- | --- |
 {flow_rows}
@@ -728,16 +727,14 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 | --- | --- | --- | --- | --- | --- |
 {trace_rows}
 
-## 附录 D：设计原则引用
-
+### C. 设计原则引用
 - 原则引用：{principle_ids}
 
 | principle_id | 原则名称 | 命中原因 | 作用位置 |
 | --- | --- | --- | --- |
 {principle_rows}
 
-## 附录 E：原始状态 / 文案 / 风险矩阵
-
+### D. 状态 / 文案 / 风险矩阵
 ### coverage 与追踪摘要
 {self_check_lines}
 

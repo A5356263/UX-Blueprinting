@@ -1,4 +1,4 @@
-﻿# 体验蓝图构建合同（主链路收缩版）
+# 体验蓝图构建合同（主链路收缩版）
 
 ## 目标
 
@@ -26,7 +26,7 @@
   - 可选：`projects/<project-id>/workspace/gap_list.md`
 - 输出：
   - `projects/<project-id>/workspace/experience_blueprint.md`
-  - `projects/<project-id>/runtime/experience_blueprint_input.md`
+  - 调试可选：`projects/<project-id>/runtime/debug/experience_prompt_preview.md`（不参与主链路）
 
 ## 承接边界
 

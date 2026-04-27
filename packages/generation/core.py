@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_project_workspace_dir
@@ -7,10 +8,12 @@ from packages.provenance import upsert_generated_provenance
 
 from .reasoning import (
     build_business_model,
+    build_experience_model,
     build_facts_model,
     render_business_markdown,
     render_check_report,
     render_check_status,
+    render_experience_markdown,
     render_facts_markdown,
     render_gap_list,
 )
@@ -82,11 +85,30 @@ def _extract_markdown_section(text: str, heading: str) -> list[str]:
     return collected
 
 
-def _build_experience_blueprint_input(project_id: str) -> str:
+def _build_experience_prompt_preview(project_id: str) -> str:
     task_card_text = _read_source_file(project_id, "task_card.md")
     facts_text = _read_workspace_file(project_id, "facts.md")
     business_text = _read_workspace_file(project_id, "business_blueprint.md")
     gap_text = _read_workspace_file(project_id, "gap_list.md")
+    runtime_dir = get_project_runtime_dir(project_id)
+    context_manifest_path = runtime_dir / "context_manifest.json"
+    contract_path = Path("specs/10_experience_blueprint_contract.md")
+    template_path = Path("templates/experience_blueprint.template.md")
+    guideline_refs: list[str] = []
+    if context_manifest_path.exists():
+        try:
+            payload = json.loads(context_manifest_path.read_text(encoding="utf-8"))
+            plan = payload.get("knowledge_consumption_plan")
+            if isinstance(plan, dict):
+                experience_plan = plan.get("experience")
+                if isinstance(experience_plan, dict):
+                    guideline_refs = [
+                        str(item).replace("\\", "/")
+                        for item in experience_plan.get("guideline_refs", [])
+                        if isinstance(item, str) and str(item).strip()
+                    ]
+        except json.JSONDecodeError:
+            guideline_refs = []
 
     task_lines = _extract_bullets(task_card_text, limit=8)
     facts_lines = _first_lines(facts_text, limit=12)
@@ -114,8 +136,11 @@ def _build_experience_blueprint_input(project_id: str) -> str:
     if not gap_lines:
         gap_lines = ["当前暂无显式待确认问题，需在生成时主动暴露不确定项。"]
 
+    guideline_lines = "\n".join(f"- {line}" for line in guideline_refs) if guideline_refs else "- 当前任务未命中显式指南导航，将按业务承接要求保守生成。"
     return (
-        "# Experience Blueprint 输入包\n\n"
+        "# Experience Prompt 预览（仅调试）\n\n"
+        "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
+        f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/business_blueprint.md`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
         "## 1. 任务目标\n\n"
         + "\n".join(f"- {line}" for line in task_lines)
         + "\n\n## 2. facts 摘要\n\n"
@@ -125,14 +150,16 @@ def _build_experience_blueprint_input(project_id: str) -> str:
             f"### {section_title}\n" + "\n".join(f"- {line}" for line in section_lines)
             for section_title, section_lines in business_sections
         )
-        + "\n\n## 4. 设计原则摘要\n\n"
+        + "\n\n## 4. 设计指南导航（按需消费）\n\n"
+        + guideline_lines
+        + "\n\n## 5. 设计原则摘要\n\n"
         "- 先写主流程，再补次流程与异常阻断流程。\n"
         "- 页面/弹窗/抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
         "- 禁止重做事实抽取、业务判断或需求全文重读。\n\n"
-        "## 5. 待确认问题\n\n"
+        "## 6. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
-        + "\n\n## 6. 输出模板要求\n\n"
+        + "\n\n## 7. 输出模板要求\n\n"
         "- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
         "  - `## 1. 体验结论`\n"
@@ -144,6 +171,61 @@ def _build_experience_blueprint_input(project_id: str) -> str:
         "  - `## 7. 待确认问题`\n"
         "  - `## 附录：依据与追踪`\n"
     )
+
+
+def _update_experience_guideline_usage(project_id: str) -> None:
+    runtime_dir = get_project_runtime_dir(project_id)
+    usage_report_path = runtime_dir / "knowledge_usage_report.json"
+    manifest_path = runtime_dir / "context_manifest.json"
+    if not usage_report_path.exists() or not manifest_path.exists():
+        return
+
+    try:
+        usage_report = json.loads(usage_report_path.read_text(encoding="utf-8"))
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+
+    plan = manifest.get("knowledge_consumption_plan")
+    if not isinstance(plan, dict):
+        return
+    experience_plan = plan.get("experience")
+    if not isinstance(experience_plan, dict):
+        return
+
+    guideline_refs = [
+        str(item).replace("\\", "/")
+        for item in experience_plan.get("guideline_refs", [])
+        if isinstance(item, str) and str(item).strip()
+    ]
+    guideline_raw_refs = [
+        str(item).replace("\\", "/")
+        for item in experience_plan.get("raw_refs_from_source_refs", [])
+        if isinstance(item, str) and "/guidelines/" in str(item).replace("\\", "/").lower()
+    ]
+
+    business_text = _read_workspace_file(project_id, "business_blueprint.md")
+    reasons: list[str] = []
+    if any(token in business_text for token in ("状态", "反馈", "异常", "阻断")):
+        reasons.append("业务方案涉及状态反馈与异常阻断，需要补充反馈类设计指南。")
+    if any(token in business_text for token in ("文案", "说明", "提示")):
+        reasons.append("业务方案包含解释责任与提示语义，需要补充文案表达类设计指南。")
+    if any(token in business_text for token in ("页面", "弹窗", "抽屉", "列表")):
+        reasons.append("业务方案包含页面承载要求，需要补充容器与信息结构类设计指南。")
+    if not reasons and guideline_refs:
+        reasons.append("按方案承接要求补充通用交互设计指南，避免体验表达脱离业务边界。")
+
+    stage_usage = usage_report.setdefault("stage_usage", {})
+    if not isinstance(stage_usage, dict):
+        return
+    experience_usage = stage_usage.setdefault("experience", {})
+    if not isinstance(experience_usage, dict):
+        return
+
+    experience_usage["guideline_refs_used"] = guideline_refs
+    experience_usage["guideline_raw_refs_used"] = guideline_raw_refs
+    experience_usage["guideline_selection_reason"] = reasons
+    usage_report_path.write_text(json.dumps(usage_report, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def run_generate_facts(project_id: str) -> int:
@@ -169,14 +251,26 @@ def run_generate_business(project_id: str) -> int:
 def run_generate_experience(project_id: str) -> int:
     runtime_dir = get_project_runtime_dir(project_id)
     runtime_dir.mkdir(parents=True, exist_ok=True)
-    input_path = runtime_dir / "experience_blueprint_input.md"
-    input_path.write_text(_build_experience_blueprint_input(project_id), encoding="utf-8")
-
     experience_path = get_project_workspace_dir(project_id) / "experience_blueprint.md"
+    debug_dir = runtime_dir / "debug"
+    debug_dir.mkdir(parents=True, exist_ok=True)
+    debug_prompt_path = debug_dir / "experience_prompt_preview.md"
+    debug_prompt_path.write_text(_build_experience_prompt_preview(project_id), encoding="utf-8")
+
+    facts_model = build_facts_model(project_id)
+    business_model = build_business_model(project_id, facts_model)
+    experience_model = build_experience_model(project_id, facts_model, business_model)
+    experience_markdown = render_experience_markdown(experience_model)
+    if not experience_markdown.strip():
+        print("ERROR: experience_blueprint.md 未生成，generate-experience 未完成。")
+        return 1
+    _write_workspace_file(project_id, "experience_blueprint.md", experience_markdown)
+    if not experience_path.exists():
+        print("ERROR: experience_blueprint.md 未生成，generate-experience 未完成。")
+        return 1
+
+    _update_experience_guideline_usage(project_id)
     upsert_generated_provenance(project_id, "packages.generation", "generate-experience")
-    print(f"已生成输入包: {input_path}")
-    if experience_path.exists():
-        print(f"检测到已有体验蓝图: {experience_path}")
-        return 0
-    print("请根据 runtime/experience_blueprint_input.md 生成 workspace/experience_blueprint.md")
+    print(f"已生成体验蓝图: {experience_path}")
+    print(f"调试预览文件（不参与主链路）: {debug_prompt_path}")
     return 0

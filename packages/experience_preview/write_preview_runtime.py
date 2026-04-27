@@ -30,6 +30,7 @@ def write_preview_runtime(
         "project_id": project_id,
         "generated_at": now_iso(),
         "output_dir": str(preview_dir),
+        "output_path": str(preview_dir / "index.html"),
         "server_host": host,
         "server_port": port,
         "preview_url": preview_url,

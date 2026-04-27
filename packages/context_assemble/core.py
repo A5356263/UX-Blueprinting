@@ -333,6 +333,13 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 + list(knowledge_plan["experience"].get("guideline_refs", [])),
                 "raw_refs_used": list(knowledge_plan["experience"].get("raw_refs_from_source_refs", [])),
                 "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "experience"],
+                "guideline_refs_used": list(knowledge_plan["experience"].get("guideline_refs", [])),
+                "guideline_raw_refs_used": [
+                    str(item).replace("\\", "/")
+                    for item in knowledge_plan["experience"].get("raw_refs_from_source_refs", [])
+                    if isinstance(item, str) and "/guidelines/" in str(item).replace("\\", "/").lower()
+                ],
+                "guideline_selection_reason": [],
             },
         },
         "references": [
