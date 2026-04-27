@@ -5,19 +5,19 @@
 - Protocol Name: Cross-AI Task Card
 - Protocol Version: v0.2
 - Task ID: 001
-- Task Name: 员工自助申请与查询权限能力设计
+- Task Name: 权限自助申请全链路蓝图
 - Domain: permission
 
 ## Task Goal
 
-- 基于当前真实需求文档，重新建立“员工自助申请与查询权限能力设计”任务身份，并生成 facts、business、experience 正式产物。
-- 本次输出主要服务于权限域产品方案评审、业务判断收敛与体验蓝图构建。
+- 基于真实需求文档，构建“员工自助申请权限”从事实提炼到业务判断再到体验转译的全链路蓝图。
+- 本次输出服务于权限产品方案评审、实施可行性评审与后续体验方案落地对齐。
 
 ## Task Scenario
 
-- 当前任务场景是企业权限管理从“管理员统一分配”升级为“员工可自助申请权限、查询权限，并在审批通过后自动生效”的真实产品方案设计。
-- 本次任务属于新任务从零建模，不是旧项目重跑，不是产物复制，也不是只校对已有结果。
-- 本次任务覆盖 facts / business / experience 全链路。
+- 场景：中大型企业希望降低超管集中授权压力，支持员工查看个人权限并发起权限申请，经审批后生效。
+- 任务类型：新建任务，从零建立 `projects/001` 身份与产物，不沿用历史任务结论。
+- 执行范围：覆盖 facts / business / experience 全链路，并输出检查结果。
 
 ## Required Inputs
 
@@ -56,20 +56,11 @@
 
 - knowledge/wiki/index.md
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
-- knowledge/wiki/summaries/business/permission/11_task_scenarios.md
-- knowledge/wiki/summaries/business/permission/20_decision_chain_contract.md
-- knowledge/wiki/summaries/business/permission/24_governance_state_model.md
-- knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md
-- knowledge/wiki/summaries/business/permission/32_copy_and_explanation_strategy.md
-- knowledge/wiki/summaries/guidelines/governance.md
-- knowledge/wiki/summaries/guidelines/information_architecture.md
-- knowledge/wiki/summaries/guidelines/usability.md
 
 ## Wiki
 
 - knowledge/wiki/index.md
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
-- knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md
 
 ## Knowledge Consumption Policy
 
@@ -77,7 +68,6 @@
 
 - knowledge/wiki/index.md
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
-- knowledge/wiki/summaries/business/permission/31_experience_translation_requirements.md
 
 ### Fallback Source
 
@@ -87,7 +77,7 @@
 
 - 命中 `[GAP]`
 - 命中 `[CONFLICT]`
-- 摘要页未覆盖当前任务所需的对象、规则、审批链或页面承载语义
+- 摘要页未覆盖当前任务需要的对象、规则或路径
 
 ### Disallowed Broad References
 
@@ -232,6 +222,5 @@
 
 ## Notes
 
-- 当前任务输入真源为 `test/权限需求文档.md` 的真实复制件。
-- 本次任务必须从当前输入重新建立任务身份，不得默认沿用历史任务产物。
-- 如输入文档存在歧义、缺失或冲突，必须在正式产物中显式暴露为 gap，不得自行补齐为既定事实。
+- 本任务输入以 `projects/001/source/requirement.md` 为唯一事实来源；知识库仅用于校准与补充判断。
+- 若需求中存在未明确审批规则、敏感权限清单或埋点口径，需在产物中显式标记 `[GAP]`。

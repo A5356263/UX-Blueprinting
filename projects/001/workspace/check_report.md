@@ -5,8 +5,8 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 4
-- info_count: 12
+- warning_count: 6
+- info_count: 9
 
 ## Output Status
 
@@ -23,33 +23,32 @@
 
 ## Warnings
 
-- business gate 状态为 warning
-- business_blueprint.md 未显式保留开放问题或缺口
-- 存在未被体验层消费的业务判断：J-03, J-04
-- 存在未被后续消费的事实：F-AC04, F-AC05, F-AC06, F-AC07, F-AC08, F-D01
+- experience gate 状态为 warning
+- experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点
+- experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达
+- experience_blueprint.md 核心区存在明显机器化表达
+- experience_blueprint.md 核心区页面名重复较多，建议继续语义去重
+- 存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06
 
 ## Infos
 
+- business gate 状态：passed
 - business_blueprint.md 已承接 12 条事实
-- coverage: business_judgments_consumed_by_experience: 2
+- coverage: business_judgments_consumed_by_experience: 4
 - coverage: facts_covered_by_business: 12
 - coverage: facts_covered_by_experience: 3
-- coverage: orphan_fact_count: 34
-- coverage: orphan_judgment_count: 2
+- coverage: orphan_fact_count: 45
+- coverage: orphan_judgment_count: 0
 - coverage: orphan_page_count: 0
-- experience gate 状态：passed
-- experience_blueprint.md 已引用 6 个设计原则 ID
-- experience_blueprint.md 已承接 2 条业务判断
-- experience_blueprint.md 已承接 3 条事实
 - facts gate 状态：passed
 
 ## Coverage Check
 
 - facts_covered_by_business: 12
 - facts_covered_by_experience: 3
-- business_judgments_consumed_by_experience: 2
-- orphan_fact_count: 34
-- orphan_judgment_count: 2
+- business_judgments_consumed_by_experience: 4
+- orphan_fact_count: 45
+- orphan_judgment_count: 0
 - orphan_page_count: 0
 
 ## Machine Status

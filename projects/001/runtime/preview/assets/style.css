@@ -58,6 +58,37 @@ textarea {
   gap: 16px;
 }
 
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tab-btn {
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  border-color: rgba(31, 107, 91, 0.35);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
 .hero {
   padding: 16px 18px;
   margin-bottom: 16px;
@@ -623,6 +654,81 @@ details summary {
   font-size: 12px;
   line-height: 1.6;
   color: var(--text-muted);
+}
+
+.business-sections {
+  display: grid;
+  gap: 12px;
+}
+
+.business-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.business-card h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.compare-list {
+  display: grid;
+  gap: 10px;
+}
+
+.compare-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  padding: 10px 12px;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  margin-bottom: 6px;
+}
+
+.status-chip.done {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-color: rgba(31, 107, 91, 0.2);
+}
+
+.status-chip.partial {
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-color: rgba(138, 90, 20, 0.2);
+}
+
+.status-chip.todo {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: rgba(139, 58, 58, 0.2);
+}
+
+.status-chip.pending {
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+}
+
+.warning-list {
+  display: grid;
+  gap: 8px;
+}
+
+.warning-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.76);
 }
 
 code,

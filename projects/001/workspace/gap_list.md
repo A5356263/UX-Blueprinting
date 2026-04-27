@@ -10,4 +10,4 @@
 
 ## 待补信息
 
-- 补充更具体的任务 source 输入，以便 facts / business / experience 形成更稳定的动态结论。
+- 补充更具体的任务原始输入，以便 facts / business / experience 形成更稳定的动态结论。

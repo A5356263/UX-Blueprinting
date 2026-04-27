@@ -2,11 +2,11 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
-- info_count: 4
+- warning_count: 4
+- info_count: 1
 
 - project_id: 001
 - stage: experience
@@ -27,11 +27,11 @@
 
 ## Warnings
 
-- none
+- experience_blueprint.md 核心区存在明显机器化表达
+- experience_blueprint.md 核心区存在明显机器化表达
+- experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达
+- experience_blueprint.md 核心区页面名重复较多，建议继续语义去重
 
 ## Infos
 
-- business 阶段状态：warning
-- experience_blueprint.md 已承接 3 条事实
-- experience_blueprint.md 已承接 2 条业务判断
-- experience_blueprint.md 已引用 6 个设计原则 ID
+- business 阶段状态：passed
