@@ -495,11 +495,12 @@ def render_business_markdown(model: BusinessModel) -> str:
 - 结论：{_plain_business_term(model.final_position)}
 - 建议方向：{_plain_business_term(model.placement_options[0].option) if model.placement_options else "待确认"}
 
-## 2. 为什么要做
+## 2. 需求是否成立
 
-- 业务问题：{model.problem_statement}
+- 问题与场景：{model.problem_statement}
 - 变更意图：{model.change_intent}
-- 目标与边界：{model.review_goal}
+- 当前判断：
+{judgment_core_lines}
 
 ## 3. 值不值得做
 
@@ -508,15 +509,23 @@ def render_business_markdown(model: BusinessModel) -> str:
 - 成本与代价：
 {_render_string_list([f"{_plain_business_term(item.option)}：{_plain_business_term(item.tradeoff)}" for item in model.placement_options])}
 
-## 4. 怎么做更合理
+## 4. 应该做成什么能力形态
 
-- 当前建议：{_plain_business_term(model.placement_options[0].option) if model.placement_options else "待确认"}
-- 可对照方案：
+- 当前建议形态：{_plain_business_term(model.placement_options[0].option) if model.placement_options else "待确认"}
+- 备选路径比较：
 {option_summary_lines}
-- 关键判断：
-{judgment_core_lines}
+- 立场理由：
+{final_position_reason}
 
-## 5. 哪些不能随便做
+## 5. 推荐业务方案
+
+- 目标与边界：{model.review_goal}
+- 推荐方案骨架：
+{_render_string_list(model.final_position_reason)}
+- 角色与流程承接：
+{_render_string_list(model.experience_constraints[:3])}
+
+## 6. 必须守住的规则和边界
 
 ### 关键规则限制
 {adopted_rules}
@@ -524,19 +533,21 @@ def render_business_markdown(model: BusinessModel) -> str:
 ### 前置条件与限制
 {adopted_dependencies}
 
-## 6. 主要风险
+## 7. 主要风险与保护策略
 
 {risk_core_lines}
 
-## 7. 体验设计要注意什么
+## 8. 方案承接要求
 
-- 体验层承接要求：
 {_render_string_list(model.experience_constraints)}
-- 立场理由：
-{final_position_reason}
 
-## 附录 A：事实承接
+## 9. 待确认问题
 
+{_render_string_list(model.open_questions + model.gaps)}
+
+## 附录：事实、知识与判断追踪
+
+### 事实承接
 - 评审对象：{model.review_target}
 - 评审边界：{model.review_boundary}
 - 变更类型：{model.change_type}
@@ -546,8 +557,7 @@ def render_business_markdown(model: BusinessModel) -> str:
 - DEP-xx 原始依赖项：
 {raw_dependencies}
 
-## 附录 B：命中知识与来源
-
+### 命中知识与来源
 - 命中知识：
 {knowledge_lines}
 
@@ -555,21 +565,17 @@ def render_business_markdown(model: BusinessModel) -> str:
 | --- | --- | --- |
 {baseline_rows}
 
-## 附录 C：备选方案比较
-
+### 备选方案比较
 | option_id | 方案 | 当前结论 | 适用前提 | 主要收益 | 主要代价 / 风险 | 为什么不是最终立场 |
 | --- | --- | --- | --- | --- | --- | --- |
 {option_rows}
 
-## 附录 D：判断追踪映射
-
+### 判断追踪映射
 | judgment_id | 对应判断 | 结论 | facts 依据 | 基线 / 策略依据 | 对比对象 | 剩余缺口 |
 | --- | --- | --- | --- | --- | --- | --- |
 {trace_rows}
 
-## 附录 E：链路自检信息
-
-### coverage 与追踪摘要
+### 链路自检信息
 {self_check_lines}
 
 ### 开放问题与缺口（OQ / GAP）

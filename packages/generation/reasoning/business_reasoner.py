@@ -222,6 +222,45 @@ def _final_position_from_options(options: list[PlacementOption], facts_model: Fa
     )
 
 
+def _build_handover_requirements(
+    facts_model: FactsModel,
+    placement_options: list[PlacementOption],
+    risks: list[RiskEntry],
+) -> list[str]:
+    role_names = _dedupe_strings([item.name for item in facts_model.actors[:6]])
+    flow_lines = _dedupe_strings([f"{item.actor} -> {item.action} -> {item.result}" for item in facts_model.flows[:5]])
+    secondary_flows = _dedupe_strings([f"{item.actor}：{item.action}" for item in facts_model.flows[5:8]])
+    exception_lines = _dedupe_strings([item.outcome for item in facts_model.exceptions[:5]])
+    state_lines = _dedupe_strings([f"{item.name}：{item.description}" for item in facts_model.states[:5]])
+    pre_info = _dedupe_strings([item.name for item in facts_model.dependencies[:5]] + [item.name for item in facts_model.rules[:3]])
+    record_lines = _dedupe_strings([item.name for item in facts_model.objects[:5]])
+    risk_lines = _dedupe_strings([f"{item.name}（{item.level}）" for item in risks[:5]])
+    suggest_lines = _dedupe_strings(
+        [
+            f"优先按“{placement_options[0].option}”组织承载路径，避免并行堆叠多个入口。"
+            if placement_options
+            else "当前能力形态未稳定，建议先按最小闭环拆解。"
+        ]
+    )
+    pending_lines = _dedupe_strings(facts_model.open_questions[:3] + facts_model.gaps[:3])
+
+    def _line(prefix: str, values: list[str], fallback: str) -> str:
+        return f"{prefix}：{('；'.join(values[:3])) if values else fallback}"
+
+    return [
+        _line("必须覆盖的角色", role_names, "当前输入尚未明确完整角色，需先确认"),
+        _line("必须闭环的主流程", flow_lines, "当前输入流程事实不足，需补齐主流程"),
+        _line("必须补充的次流程", secondary_flows, "需补齐撤回、重试、查看记录等次流程"),
+        _line("必须处理的异常", exception_lines, "至少覆盖失败、阻断、权限不足等异常"),
+        _line("必须解释的状态", state_lines, "至少解释处理中、成功、失败等关键状态"),
+        _line("必须前置的信息", pre_info, "需在入口或关键节点前置说明规则与依赖"),
+        _line("必须沉淀的记录", record_lines, "需沉淀申请、审批、结果、异常处理记录"),
+        _line("必须保护的风险", risk_lines, "需给出范围控制、二次确认和失败解释策略"),
+        _line("可作为设计建议补齐的内容", suggest_lines, "可补充帮助入口、文案策略和解释提示"),
+        _line("必须待确认的问题", pending_lines, "当前暂无显式待确认项，需在评审中再次确认"),
+    ]
+
+
 def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessModel:
     notes = load_knowledge_notes(project_id, stage="business") or facts_model.knowledge_notes
     fact_links = _fact_ids(facts_model)
@@ -257,11 +296,7 @@ def build_business_model(project_id: str, facts_model: FactsModel) -> BusinessMo
             )
         )
 
-    experience_constraints = [
-        "体验层必须承接当前最终立场，而不是重新发明业务答案。",
-        "页面与流程要围绕当前事实中的真实闭环、真实状态与真实异常展开。",
-        "命中知识如何影响了承载方式、优先级与解释责任，需要在体验层继续可见。",
-    ]
+    experience_constraints = _build_handover_requirements(facts_model, placement_options, risks)
     trace_links: list[BusinessTraceEntry] = []
     for judgment in judgments:
         trace_links.append(

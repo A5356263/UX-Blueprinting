@@ -34,17 +34,15 @@ STAGE_REQUIRED_HEADINGS = {
     ],
     "business_blueprint.md": [
         "## 1. 一句话结论",
-        "## 2. 为什么要做",
+        "## 2. 需求是否成立",
         "## 3. 值不值得做",
-        "## 4. 怎么做更合理",
-        "## 5. 哪些不能随便做",
-        "## 6. 主要风险",
-        "## 7. 体验设计要注意什么",
-        "## 附录 A：事实承接",
-        "## 附录 B：命中知识与来源",
-        "## 附录 C：备选方案比较",
-        "## 附录 D：判断追踪映射",
-        "## 附录 E：链路自检信息",
+        "## 4. 应该做成什么能力形态",
+        "## 5. 推荐业务方案",
+        "## 6. 必须守住的规则和边界",
+        "## 7. 主要风险与保护策略",
+        "## 8. 方案承接要求",
+        "## 9. 待确认问题",
+        "## 附录：事实、知识与判断追踪",
     ],
     "experience_blueprint.md": [
         "## 1. 体验结论",
@@ -69,6 +67,7 @@ FORBIDDEN_TERMS = {
         "前端实现",
     ],
     "business_blueprint.md": [
+        "## 7. 体验设计要注意什么",
         "页面区块布局",
         "高保真视觉",
         "组件开发实现",
@@ -1016,10 +1015,15 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
 
     stance_section = sections.get("1. 一句话结论", "")
     value_section = sections.get("3. 值不值得做", "")
-    option_section = "\n".join([sections.get("4. 怎么做更合理", ""), sections.get("附录 C：备选方案比较", "")])
-    risk_section = sections.get("6. 主要风险", "")
-    trace_section = sections.get("附录 D：判断追踪映射", "")
-    appendix_e_section = sections.get("附录 E：链路自检信息", "")
+    capability_section = sections.get("4. 应该做成什么能力形态", "")
+    plan_section = sections.get("5. 推荐业务方案", "")
+    boundary_section = sections.get("6. 必须守住的规则和边界", "")
+    risk_section = sections.get("7. 主要风险与保护策略", "")
+    handover_section = sections.get("8. 方案承接要求", "")
+    pending_section = sections.get("9. 待确认问题", "")
+    appendix_section = sections.get("附录：事实、知识与判断追踪", "")
+    option_section = "\n".join([capability_section, appendix_section])
+    trace_section = appendix_section
 
     judgment_count = len(judgment_ids)
     option_compare_count = max(count_unique_matches(OPTION_ID_PATTERN, option_section), count_real_table_rows(option_section), count_real_list_items(option_section))
@@ -1028,7 +1032,10 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     judgment_traceable_count = len(sorted(set(JUDGMENT_ID_PATTERN.findall(trace_section))))
     trace_mapping_item_count = max(judgment_traceable_count, count_real_table_rows(trace_section), count_real_list_items(trace_section))
     unresolved_gap_count = business_text.count("GAP-") + business_text.count("OQ-")
-    has_appendix_e = bool(appendix_e_section.strip())
+    has_appendix = bool(appendix_section.strip())
+    handover_keyword_count = count_keywords_present(handover_section, ["角色", "流程", "状态", "异常", "风险"])
+    handover_item_count = max(count_real_table_rows(handover_section), count_real_list_items(handover_section))
+    has_handover_empty_talk = contains_any(handover_section, ["后续根据实际情况设计", "按实际情况调整", "后续再细化", "待后续补齐"])
 
     if not judgment_ids:
         add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
@@ -1055,6 +1062,19 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     if risk_item_count == 0:
         add_issue(issues, "blocker", "business_blueprint.md 缺少风险与反模式单列")
 
+    if count_real_list_items(plan_section) == 0 and count_real_table_rows(plan_section) == 0:
+        add_issue(issues, "blocker", "business_blueprint.md 缺少推荐业务方案的可执行内容")
+
+    if count_real_list_items(boundary_section) == 0 and count_real_table_rows(boundary_section) == 0:
+        add_issue(issues, "warning", "business_blueprint.md 规则与边界描述偏少")
+
+    if handover_item_count == 0:
+        add_issue(issues, "blocker", "business_blueprint.md 缺少方案承接要求")
+    elif handover_keyword_count < 3:
+        add_issue(issues, "warning", "business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类")
+    if has_handover_empty_talk:
+        add_issue(issues, "warning", "business_blueprint.md 方案承接要求存在空话，建议改为可执行要求")
+
     if not trace_section.strip():
         add_issue(issues, "warning", "business_blueprint.md 缺少有效的判断追踪映射内容")
     elif judgment_traceable_count == 0:
@@ -1063,10 +1083,10 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     if not stance_section.strip():
         add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
 
-    if unresolved_gap_count == 0:
+    if not pending_section.strip() and unresolved_gap_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 未显式保留开放问题或缺口")
-    if not has_appendix_e:
-        add_issue(issues, "warning", "business_blueprint.md 缺少附录 E（链路自检信息）")
+    if not has_appendix:
+        add_issue(issues, "warning", "business_blueprint.md 缺少附录（事实、知识与判断追踪）")
 
     metrics = {
         "judgment_count": judgment_count,
@@ -1077,7 +1097,10 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
         "value_assessment_item_count": value_assessment_item_count,
         "risk_item_count": risk_item_count,
         "unresolved_gap_count": unresolved_gap_count,
-        "has_appendix_e": has_appendix_e,
+        "has_appendix": has_appendix,
+        "handover_item_count": handover_item_count,
+        "handover_keyword_count": handover_keyword_count,
+        "has_handover_empty_talk": has_handover_empty_talk,
     }
     return metrics, issues
 

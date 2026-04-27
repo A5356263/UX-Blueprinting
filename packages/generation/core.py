@@ -55,10 +55,31 @@ def _first_lines(text: str, limit: int = 12) -> list[str]:
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
             continue
-        result.append(stripped)
+        result.append(stripped[2:].strip() if stripped.startswith("- ") else stripped)
         if len(result) >= limit:
             break
     return result
+
+
+def _extract_markdown_section(text: str, heading: str) -> list[str]:
+    lines = text.splitlines()
+    collecting = False
+    collected: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped == heading:
+            collecting = True
+            continue
+        if collecting and stripped.startswith("## "):
+            break
+        if not collecting:
+            continue
+        if not stripped:
+            continue
+        if stripped.startswith("#"):
+            continue
+        collected.append(stripped[2:].strip() if stripped.startswith("- ") else stripped)
+    return collected
 
 
 def _build_experience_blueprint_input(project_id: str) -> str:
@@ -69,15 +90,27 @@ def _build_experience_blueprint_input(project_id: str) -> str:
 
     task_lines = _extract_bullets(task_card_text, limit=8)
     facts_lines = _first_lines(facts_text, limit=12)
-    business_lines = _first_lines(business_text, limit=12)
+    business_section_titles = [
+        "## 5. 推荐业务方案",
+        "## 6. 必须守住的规则和边界",
+        "## 7. 主要风险与保护策略",
+        "## 8. 方案承接要求",
+        "## 9. 待确认问题",
+    ]
+    business_sections: list[tuple[str, list[str]]] = []
+    for title in business_section_titles:
+        section_lines = _extract_markdown_section(business_text, title)
+        if section_lines:
+            business_sections.append((title.replace("## ", "", 1), section_lines[:12]))
     gap_lines = _extract_bullets(gap_text, limit=8)
 
     if not task_lines:
         task_lines = ["请结合当前任务上下文补全任务目标。"]
     if not facts_lines:
         facts_lines = ["facts.md 暂缺或内容不足，请先补齐 facts。"]
-    if not business_lines:
-        business_lines = ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"]
+    if not business_sections:
+        fallback = _first_lines(business_text, limit=12)
+        business_sections = [("business 核心判断", fallback)] if fallback else [("business 核心判断", ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"])]
     if not gap_lines:
         gap_lines = ["当前暂无显式待确认问题，需在生成时主动暴露不确定项。"]
 
@@ -87,8 +120,11 @@ def _build_experience_blueprint_input(project_id: str) -> str:
         + "\n".join(f"- {line}" for line in task_lines)
         + "\n\n## 2. facts 摘要\n\n"
         + "\n".join(f"- {line}" for line in facts_lines)
-        + "\n\n## 3. business 核心判断\n\n"
-        + "\n".join(f"- {line}" for line in business_lines)
+        + "\n\n## 3. business 核心判断与承接要求\n\n"
+        + "\n\n".join(
+            f"### {section_title}\n" + "\n".join(f"- {line}" for line in section_lines)
+            for section_title, section_lines in business_sections
+        )
         + "\n\n## 4. 设计原则摘要\n\n"
         "- 先写主流程，再补次流程与异常阻断流程。\n"
         "- 页面/弹窗/抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
