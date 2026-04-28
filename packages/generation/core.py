@@ -7,14 +7,8 @@ from packages.common import get_project_runtime_dir, get_project_workspace_dir
 from packages.provenance import upsert_generated_provenance
 
 from .reasoning import (
-    build_business_model,
-    build_experience_model,
-    build_facts_model,
-    render_business_markdown,
     render_check_report,
     render_check_status,
-    render_experience_markdown,
-    render_facts_markdown,
     render_gap_list,
 )
 
@@ -162,14 +156,13 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         + "\n\n## 7. 输出模板要求\n\n"
         "- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
-        "  - `## 1. 体验结论`\n"
+        "  - `## 1. 交互流程总览`\n"
         "  - `## 2. 主交互流程`\n"
         "  - `## 3. 次交互流程`\n"
         "  - `## 4. 异常与阻断流程`\n"
         "  - `## 5. 页面 / 弹窗 / 抽屉设计`\n"
         "  - `## 6. 状态与反馈文案`\n"
         "  - `## 7. 待确认问题`\n"
-        "  - `## 附录：依据与追踪`\n"
     )
 
 
@@ -229,48 +222,60 @@ def _update_experience_guideline_usage(project_id: str) -> None:
 
 
 def run_generate_facts(project_id: str) -> int:
-    facts_model = build_facts_model(project_id)
-    _write_workspace_file(project_id, "facts.md", render_facts_markdown(facts_model))
-    _write_workspace_file(project_id, "gap_list.md", render_gap_list())
-    _write_workspace_file(project_id, "check_report.md", render_check_report())
-    _write_workspace_file(project_id, "check_status.json", render_check_status(project_id))
-    upsert_generated_provenance(project_id, "packages.generation", "generate-facts")
-    print(f"Generated facts: {get_project_workspace_dir(project_id) / 'facts.md'}")
-    return 0
+    workspace_dir = get_project_workspace_dir(project_id)
+    facts_path = workspace_dir / "facts.md"
+
+    if facts_path.exists():
+        upsert_generated_provenance(project_id, "packages.generation", "generate-facts")
+        print(f"facts.md 已存在: {facts_path}")
+        return 0
+
+    print("facts.md 不存在，请 AI 根据以下文件生成：")
+    print("  - specs/08_fact_extraction_contract.md")
+    print("  - templates/facts.template.md")
+    print(f"  - projects/{project_id}/source/requirement.md")
+    print(f"  - projects/{project_id}/source/background.md")
+    return 1
 
 
 def run_generate_business(project_id: str) -> int:
-    facts_model = build_facts_model(project_id)
-    business_model = build_business_model(project_id, facts_model)
-    _write_workspace_file(project_id, "business_blueprint.md", render_business_markdown(business_model))
-    upsert_generated_provenance(project_id, "packages.generation", "generate-business")
-    print(f"Generated business blueprint: {get_project_workspace_dir(project_id) / 'business_blueprint.md'}")
-    return 0
+    workspace_dir = get_project_workspace_dir(project_id)
+    business_path = workspace_dir / "business_blueprint.md"
+
+    if business_path.exists():
+        upsert_generated_provenance(project_id, "packages.generation", "generate-business")
+        print(f"business_blueprint.md 已存在: {business_path}")
+        return 0
+
+    print("business_blueprint.md 不存在，请 AI 根据以下文件生成：")
+    print("  - specs/09_business_blueprint_contract.md")
+    print("  - templates/business_blueprint.template.md")
+    print(f"  - projects/{project_id}/workspace/facts.md")
+    return 1
 
 
 def run_generate_experience(project_id: str) -> int:
     runtime_dir = get_project_runtime_dir(project_id)
     runtime_dir.mkdir(parents=True, exist_ok=True)
-    experience_path = get_project_workspace_dir(project_id) / "experience_blueprint.md"
+    workspace_dir = get_project_workspace_dir(project_id)
+    experience_path = workspace_dir / "experience_blueprint.md"
+
+    if not experience_path.exists():
+        print("experience_blueprint.md 不存在，请 AI 根据以下文件生成：")
+        print("  - specs/10_experience_blueprint_contract.md")
+        print("  - templates/experience_blueprint.template.md")
+        print(f"  - projects/{project_id}/workspace/facts.md")
+        print(f"  - projects/{project_id}/workspace/business_blueprint.md")
+        print(f"  参考示例: test/Experience_Blueprint 理想效果.md")
+        return 1
+
     debug_dir = runtime_dir / "debug"
     debug_dir.mkdir(parents=True, exist_ok=True)
     debug_prompt_path = debug_dir / "experience_prompt_preview.md"
     debug_prompt_path.write_text(_build_experience_prompt_preview(project_id), encoding="utf-8")
 
-    facts_model = build_facts_model(project_id)
-    business_model = build_business_model(project_id, facts_model)
-    experience_model = build_experience_model(project_id, facts_model, business_model)
-    experience_markdown = render_experience_markdown(experience_model)
-    if not experience_markdown.strip():
-        print("ERROR: experience_blueprint.md 未生成，generate-experience 未完成。")
-        return 1
-    _write_workspace_file(project_id, "experience_blueprint.md", experience_markdown)
-    if not experience_path.exists():
-        print("ERROR: experience_blueprint.md 未生成，generate-experience 未完成。")
-        return 1
-
     _update_experience_guideline_usage(project_id)
     upsert_generated_provenance(project_id, "packages.generation", "generate-experience")
-    print(f"已生成体验蓝图: {experience_path}")
+    print(f"experience_blueprint.md 已存在: {experience_path}")
     print(f"调试预览文件（不参与主链路）: {debug_prompt_path}")
     return 0

@@ -14,6 +14,9 @@
 当用户提出新的任务编号、新目录、新真实需求或新一轮执行时，AI 必须按新任务处理。
 
 新任务的默认起点是：
+1. 查看 `projects/` 下已有 ID，按已有最大 ID 往后顺延（如已有 001，则新建 002）
+2. 在 `projects/<id>/source/` 下写入 `requirement.md`、`background.md`、`task_card.md`
+3. 读取 task_card.md，按其中的 Read Order、Contracts、Templates 执行全链路
 新任务开始时，AI 必须从当前输入重新理解任务，不得沿用历史任务产物
 
 ## 禁止默认复用
