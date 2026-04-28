@@ -21,9 +21,6 @@ The following level-2 sections must exist and must be machine-parseable:
 - `## Checks`
 - `## Result Locations`
 - `## Completion Criteria`
-- `## Facts Output Requirements`
-- `## Business Output Requirements`
-- `## Experience Output Requirements`
 
 The following sections are recommended but optional:
 
@@ -33,6 +30,9 @@ The following sections are recommended but optional:
 - `## Wiki`
 - `## Knowledge Consumption Policy`
 - `## Platform Optimizations`
+- `## Facts Output Requirements`
+- `## Business Output Requirements`
+- `## Experience Output Requirements`
 - `## Notes`
 
 ## Protocol Fields
@@ -54,7 +54,7 @@ It may additionally include:
 - Absolute paths are not allowed.
 - URLs are not allowed in place of repository files.
 - Every `Required Outputs` entry must stay under `projects/<project-id>/workspace/`.
-- `Result Locations` must explicitly include both `workspace` viewing locations and final export locations.
+- `Result Locations` must explicitly include both workspace viewing locations and final export locations.
 
 ## Knowledge Reference Rules
 
@@ -72,13 +72,6 @@ When `## Knowledge Consumption Policy` exists, it should be structured with bull
 - `Fallback Conditions`
 - `Disallowed Broad References`
 
-Expected semantics:
-
-- `Primary Knowledge Entry` lists the preferred wiki or summary entry pages.
-- `Fallback Source` lists raw-source directories or files that may be used only when narrowing fails or coverage is insufficient.
-- `Fallback Conditions` states when fallback is allowed, such as `[GAP]`, `[CONFLICT]`, or uncovered details.
-- `Disallowed Broad References` states broad-reference modes that must not be copied by default.
-
 ## Parse Output
 
 Execution must generate:
@@ -90,13 +83,13 @@ Minimum fields:
 - `task_id`
 - `protocol_name`
 - `protocol_version`
-- `task_name`
-- `domain`
+- `task_name` (optional)
+- `domain` (optional)
 - `task_goal`
-- `task_scenario`
+- `task_scenario` (optional)
 - `execution_constraints`
-- `read_order`
-- `notes`
+- `read_order` (optional)
+- `notes` (optional)
 - `required_inputs`
 - `required_outputs`
 - `knowledge_refs`
@@ -112,9 +105,9 @@ Minimum fields:
 - `requires_narrowing`
 - `result_locations`
 - `completion_criteria`
-- `facts_output_requirements`
-- `business_output_requirements`
-- `experience_output_requirements`
+- `facts_output_requirements` (optional — parsed from `## Facts Output Requirements` if present)
+- `business_output_requirements` (optional — parsed from `## Business Output Requirements` if present)
+- `experience_output_requirements` (optional — parsed from `## Experience Output Requirements` if present)
 - `warnings`
 - `errors`
 
@@ -125,6 +118,10 @@ Minimum fields:
 - `execution_constraints`: Parsed from `## Constraints`; required; defines hard execution boundaries.
 - `read_order`: Parsed from `## Read Order`; recommended; defines the preferred runtime consumption order.
 - `notes`: Parsed from `## Notes`; optional; records supplementary human-facing instructions.
+
+## Output Requirements
+
+`## Facts Output Requirements`, `## Business Output Requirements`, and `## Experience Output Requirements` are optional sections. When present, they should reference their respective contract files (`specs/08_*`, `specs/09_*`, `specs/10_*`) and provide brief guidance. They should not enumerate exhaustive required subsections or prescribe ID numbering systems.
 
 ## Warning Conditions
 
@@ -147,5 +144,4 @@ The task card may still pass with warnings when:
 - Any reference section exists but cannot be parsed into path entries.
 - `Task Goal` exists but cannot be parsed into readable items.
 - `Constraints` exists but cannot be parsed into readable items.
-- Any output requirement section is missing required subsections.
 - `task_card_resolved.json` is not generated.

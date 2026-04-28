@@ -37,9 +37,9 @@
 
 1. 先读本文件
 2. 再读 `Required Inputs`
-3. facts 阶段只做 input-first extraction
-4. business 阶段在 facts 基础上引入业务知识做 review
-5. experience 阶段在 business 基础上引入 guideline 做 translation
+3. facts 阶段：理解需求，用自然语言重述（详见 `specs/08_fact_extraction_contract.md`）
+4. business 阶段：基于 facts 做业务判断（详见 `specs/09_business_blueprint_contract.md`）
+5. experience 阶段：基于 facts 和 business 做体验转译（详见 `specs/10_experience_blueprint_contract.md`）
 6. 最后按 `Templates` 产出结果并按 `Checks` 自检
 
 ## Constraints
@@ -116,111 +116,33 @@
 
 ## Facts Output Requirements
 
-### Required Sections
+产出规范见 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`。
 
-- 任务意图
-- 事实来源说明
-- 术语与对象边界
-- 角色与对象清单
-- 原子事实清单
-- 规则矩阵
-- 状态模型
-- 动作与流程事实
-- 异常与拦截清单
-- 依赖清单
-- 范围与非范围
-- 开放问题与缺口
-- 追踪映射
-
-### Recommended ID Prefixes
-
-- F
-- C
-- R
-- S
-- A
-- EX
-- D
-- SC
-- OQ
-- GAP
-
-### Boundary
-
-- mode: input-first extraction
-- knowledge role: calibration only
-- forbidden: promote unconfirmed knowledge as confirmed task facts
-- forbidden: replace task inputs with wiki or knowledge summaries
+核心要求：
+- 用自然语言理解和重述需求，不切碎原文，不填表，不用 ID 编号
+- 禁止把引用知识提升为当前任务的已确认事实
+- 信息不足处保留 `[GAP]`
 
 ## Business Output Requirements
 
-### Required Sections
+产出规范见 `specs/09_business_blueprint_contract.md` 和 `templates/business_blueprint.template.md`。
 
-- 评审对象与任务边界
-- 领域基线
-- 方案意图与变更类型
-- 合理性判断
-- 底层逻辑一致性判断
-- 管理策略一致性判断
-- 能力归位判断
-- 价值、成本与认知负担评估
-- 备选路径比较
-- 最终业务立场
-- 关键规则与依赖影响
-- 风险与反模式
-- 开放问题与缺口
-- 判断追踪映射
-
-### Recommended ID Prefixes
-
-- J
-- BL
-- POS
-- OPT
-- RSK
-- AP
-- OQ
-- GAP
-
-### Boundary
-
-- mode: facts-first judgment
-- knowledge role: baseline establishment
-- forbidden: replace facts with knowledge-only conclusions
-- forbidden: output UI or implementation decisions in business blueprint
+核心要求：
+- 用业务分析师的自然语言做判断，不复制 facts 碎片
+- 禁止输出 UI 方案或实现方案
+- 方案承接要求必须具体、可执行
 
 ## Experience Output Requirements
 
-### Required Sections
+产出规范见 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`。
 
-- 体验目标与任务边界
-- 体验推导依据
-- 信息架构总览
-- 任务流蓝图
-- 页面 / 窗口清单
-- 关键页面蓝图
-- 区块布局示意
-- 内容与信息优先级合同
-- 状态与反馈矩阵
-- 文案合同
-- 风险、疑惑点与保护策略
-- 开放问题与缺口
-- 体验追踪映射
-
-### Recommended ID Prefixes
-
-- EXP
-- OQ
-- GAP
-
-### Boundary
-
-- mode: business-first translation
-- knowledge role: business semantic guard + guideline-based derivation
-- forbidden: rewrite business rules in experience blueprint
-- forbidden: output high-fidelity visual specs or implementation details
+核心要求：
+- 每个交互节点写清用户动作、系统反馈、前置解释、具体文案、下一步
+- 文案必须是可直接展示的文本，禁止元指令
+- 禁止输出高保真视觉稿或研发实现细节
+- 参考示例：`test/Experience_Blueprint 理想效果.md`
 
 ## Notes
 
 - 当前为模板占位，可按任务补充
-- 若任务明确只做到某一阶段，可在 `Task Scenario` 中标注并在 `Required Outputs` 中裁剪，但必须保持协议可解析
+- 若任务明确只做到某一阶段，可在 `Task Scenario` 中标注并在 `Required Outputs` 中裁剪

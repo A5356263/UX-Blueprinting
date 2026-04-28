@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-04-27T09:08:29.226994+00:00",
+  "updated_at": "2026-04-27T14:06:25.956024+00:00",
   "checked_files": [
     "projects/001/workspace/facts.md",
     "projects/001/workspace/business_blueprint.md",
@@ -14,18 +14,15 @@
     "projects/001/runtime/gates/business_gate_status.json"
   ],
   "blocker_count": 0,
-  "warning_count": 4,
+  "warning_count": 1,
   "info_count": 1,
   "issues": {
     "blockers": [],
     "warnings": [
-      "experience_blueprint.md 核心区存在明显机器化表达",
-      "experience_blueprint.md 核心区存在明显机器化表达",
-      "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
-      "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重"
+      "experience_blueprint.md 附录：依据与追踪内容偏少"
     ],
     "infos": [
-      "business 阶段状态：passed"
+      "business 阶段状态：warning"
     ]
   },
   "issue_details_version": "1.0",
@@ -35,7 +32,7 @@
       "stage": "experience",
       "severity": "warning",
       "category": "quality_gap",
-      "message": "experience_blueprint.md 核心区存在明显机器化表达",
+      "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
       "target_artifacts": [
         "projects/001/workspace/experience_blueprint.md"
       ],
@@ -54,7 +51,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "experience_blueprint.md 核心区存在明显机器化表达"
+          "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
         },
         {
           "type": "checked_files",
@@ -69,159 +66,12 @@
         {
           "type": "metrics",
           "value": {
-            "flow_count": 8,
-            "page_inventory_item_count": 9,
+            "flow_count": 49,
+            "page_inventory_item_count": 37,
             "state_feedback_pair_count": 3,
-            "appendix_item_count": 46,
+            "appendix_item_count": 0,
             "exception_coverage": true,
-            "core_table_count": 8
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 核心区存在明显机器化表达",
-      "target_artifacts": [
-        "projects/001/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/001/workspace/facts.md",
-        "projects/001/workspace/business_blueprint.md",
-        "projects/001/workspace/experience_blueprint.md",
-        "projects/001/runtime/provenance.json",
-        "projects/001/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 核心区存在明显机器化表达"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/001/workspace/facts.md",
-            "projects/001/workspace/business_blueprint.md",
-            "projects/001/workspace/experience_blueprint.md",
-            "projects/001/runtime/provenance.json",
-            "projects/001/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 8,
-            "page_inventory_item_count": 9,
-            "state_feedback_pair_count": 3,
-            "appendix_item_count": 46,
-            "exception_coverage": true,
-            "core_table_count": 8
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
-      "target_artifacts": [
-        "projects/001/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/001/workspace/facts.md",
-        "projects/001/workspace/business_blueprint.md",
-        "projects/001/workspace/experience_blueprint.md",
-        "projects/001/runtime/provenance.json",
-        "projects/001/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/001/workspace/facts.md",
-            "projects/001/workspace/business_blueprint.md",
-            "projects/001/workspace/experience_blueprint.md",
-            "projects/001/runtime/provenance.json",
-            "projects/001/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 8,
-            "page_inventory_item_count": 9,
-            "state_feedback_pair_count": 3,
-            "appendix_item_count": 46,
-            "exception_coverage": true,
-            "core_table_count": 8
-          }
-        }
-      ]
-    },
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重",
-      "target_artifacts": [
-        "projects/001/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/001/workspace/facts.md",
-        "projects/001/workspace/business_blueprint.md",
-        "projects/001/workspace/experience_blueprint.md",
-        "projects/001/runtime/provenance.json",
-        "projects/001/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/001/workspace/facts.md",
-            "projects/001/workspace/business_blueprint.md",
-            "projects/001/workspace/experience_blueprint.md",
-            "projects/001/runtime/provenance.json",
-            "projects/001/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 8,
-            "page_inventory_item_count": 9,
-            "state_feedback_pair_count": 3,
-            "appendix_item_count": 46,
-            "exception_coverage": true,
-            "core_table_count": 8
+            "core_table_count": 0
           }
         }
       ]
@@ -231,7 +81,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "business 阶段状态：passed",
+      "message": "business 阶段状态：warning",
       "target_artifacts": [
         "projects/001/workspace/experience_blueprint.md"
       ],
@@ -250,7 +100,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "business 阶段状态：passed"
+          "value": "business 阶段状态：warning"
         },
         {
           "type": "checked_files",
@@ -265,23 +115,23 @@
         {
           "type": "metrics",
           "value": {
-            "flow_count": 8,
-            "page_inventory_item_count": 9,
+            "flow_count": 49,
+            "page_inventory_item_count": 37,
             "state_feedback_pair_count": 3,
-            "appendix_item_count": 46,
+            "appendix_item_count": 0,
             "exception_coverage": true,
-            "core_table_count": 8
+            "core_table_count": 0
           }
         }
       ]
     }
   ],
   "metrics": {
-    "flow_count": 8,
-    "page_inventory_item_count": 9,
+    "flow_count": 49,
+    "page_inventory_item_count": 37,
     "state_feedback_pair_count": 3,
-    "appendix_item_count": 46,
+    "appendix_item_count": 0,
     "exception_coverage": true,
-    "core_table_count": 8
+    "core_table_count": 0
   }
 }

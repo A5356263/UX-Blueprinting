@@ -6,7 +6,7 @@
 - source_group: guidelines
 - status: active
 - confidence: medium
-- updated_at: 2026-04-27
+- updated_at: 2026-04-28
 - source_refs: [knowledge/raw/guidelines/usability.md]
 - related_summaries:
   - knowledge/wiki/summaries/guidelines/README.md

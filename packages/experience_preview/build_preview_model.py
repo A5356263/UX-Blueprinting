@@ -326,7 +326,7 @@ def _build_page_index(sections: dict[str, str]) -> dict[str, dict[str, Any]]:
 
 
 def _build_ia_index(sections: dict[str, str]) -> dict[str, dict[str, Any]]:
-    rows = _parse_markdown_table(sections.get("信息架构总览", ""))
+    rows = _parse_markdown_table(sections.get("1. 交互流程总览", ""))
     ia_index: dict[str, dict[str, Any]] = {}
     for row in rows:
         ia_id = (row.get("ia_node") or row.get("IA节点") or row.get("节点") or "").strip().upper()
@@ -589,7 +589,7 @@ def _copy_binding_hint(copy_id: str, scene: str) -> list[str]:
 
 
 def _apply_copy_items(page_index: dict[str, dict[str, Any]], sections: dict[str, str], global_context: dict[str, list[Any]]) -> None:
-    rows = _parse_markdown_table(sections.get("文案合同", ""))
+    rows = _parse_markdown_table(sections.get("6. 状态与反馈文案", ""))
     for row in rows:
         item = {
             "copy_id": row.get("copy_id", "").strip(),
@@ -616,7 +616,7 @@ def _apply_copy_items(page_index: dict[str, dict[str, Any]], sections: dict[str,
             )
             continue
         for page_id in valid_page_ids:
-            _append_page_dict(page_index[page_id], "copy_items", item, ["copy_id"], f"文案合同:{item['copy_id']}")
+            _append_page_dict(page_index[page_id], "copy_items", item, ["copy_id"], f"状态与反馈文案:{item['copy_id']}")
 
 
 def _apply_risks(page_index: dict[str, dict[str, Any]], sections: dict[str, str], global_context: dict[str, list[Any]]) -> None:
@@ -664,7 +664,7 @@ def _apply_principles(page_index: dict[str, dict[str, Any]], sections: dict[str,
 
 
 def _apply_trace(page_index: dict[str, dict[str, Any]], sections: dict[str, str]) -> None:
-    rows = _parse_markdown_table(sections.get("体验追踪映射", ""))
+    rows = _parse_markdown_table(sections.get("附录：依据与追踪", ""))
     for row in rows:
         item = {
             "trace_id": row.get("trace_id", "").strip(),
@@ -681,10 +681,8 @@ def _apply_trace(page_index: dict[str, dict[str, Any]], sections: dict[str, str]
 
 def _open_item_binding_hint(text: str) -> list[str]:
     hints: list[str] = []
-    if "功能权限申请" in text:
-        hints.append("P-05")
-    if "审批人" in text or "审批流" in text:
-        hints.append("P-01")
+    # Domain-agnostic: bind items to pages based on generic structural cues
+    # No hardcoded domain-specific keywords
     return hints
 
 

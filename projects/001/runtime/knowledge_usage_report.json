@@ -4,7 +4,7 @@
   "mainline_knowledge_policy": "summary_first_with_raw_fallback",
   "reference_summary": {
     "knowledge_ref_count": 2,
-    "wiki_ref_count": 2,
+    "wiki_ref_count": 0,
     "template_ref_count": 5,
     "check_ref_count": 4
   },
@@ -131,11 +131,7 @@
       ],
       "guideline_refs_used": [],
       "guideline_raw_refs_used": [],
-      "guideline_selection_reason": [
-        "业务方案涉及状态反馈与异常阻断，需要补充反馈类设计指南。",
-        "业务方案包含解释责任与提示语义，需要补充文案表达类设计指南。",
-        "业务方案包含页面承载要求，需要补充容器与信息结构类设计指南。"
-      ]
+      "guideline_selection_reason": []
     }
   },
   "references": [
@@ -161,32 +157,6 @@
         "facts",
         "business",
         "experience"
-      ],
-      "routed_from_summary": "",
-      "route_reason": ""
-    },
-    {
-      "reference": "knowledge/wiki/index.md",
-      "requested_reference": "knowledge/wiki/index.md",
-      "group": "wiki_refs",
-      "type": "file",
-      "consumed_by": [
-        "facts",
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "",
-      "route_reason": ""
-    },
-    {
-      "reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
-      "requested_reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
-      "group": "wiki_refs",
-      "type": "file",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
       ],
       "routed_from_summary": "",
       "route_reason": ""
@@ -300,6 +270,19 @@
       "consumed_by": [
         "gate",
         "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "requested_reference": "knowledge/wiki/summaries/business/permission/00_domain_overview.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
       ],
       "routed_from_summary": "",
       "route_reason": ""

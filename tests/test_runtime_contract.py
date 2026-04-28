@@ -202,8 +202,8 @@ class RuntimeContractTests(unittest.TestCase):
 
     def test_facts_model_uses_runtime_contract_for_task_intent_only(self) -> None:
         self.write_project_file("source/task_card.md", make_task_card(self.project_id))
-        self.write_project_file("source/requirement.md", "# Requirement\n\n员工提交权限申请，系统触发审批流。\n")
-        self.write_project_file("source/background.md", "# Background\n\n审批通过后自动生效。\n")
+        self.write_project_file("source/requirement.md", "# Requirement\n\n用户提交操作请求，系统触发审核流程。\n")
+        self.write_project_file("source/background.md", "# Background\n\n审核通过后自动生效。\n")
         self.write_project_file(
             "runtime/task_card_resolved.json",
             json.dumps(

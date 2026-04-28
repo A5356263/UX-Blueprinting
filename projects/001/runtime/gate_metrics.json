@@ -7,7 +7,7 @@
     "can_proceed": true,
     "next_stage": "business",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-27T09:08:29.075396+00:00",
+    "updated_at": "2026-04-27T14:02:15.002346+00:00",
     "checked_files": [
       "projects/001/source/task_card.md",
       "projects/001/source/requirement.md",
@@ -19,22 +19,117 @@
     ],
     "blocker_count": 0,
     "warning_count": 0,
-    "info_count": 1,
+    "info_count": 0,
     "issues": {
       "blockers": [],
       "warnings": [],
+      "infos": []
+    },
+    "issue_details_version": "1.0",
+    "issue_details": [],
+    "metrics": {
+      "dimension_coverage": {
+        "overview": 1,
+        "features": 1,
+        "rules": 1,
+        "states": 1,
+        "exceptions": 1,
+        "dependencies": 1,
+        "gaps": 1
+      },
+      "gap_count": 9,
+      "knowledge_derived_fact_count": 0
+    }
+  },
+  "business_gate": {
+    "project_id": "001",
+    "stage": "business",
+    "status": "warning",
+    "can_proceed": true,
+    "next_stage": "experience",
+    "generated_by": "packages.validate",
+    "updated_at": "2026-04-27T14:05:14.908841+00:00",
+    "checked_files": [
+      "projects/001/workspace/facts.md",
+      "projects/001/workspace/business_blueprint.md",
+      "projects/001/runtime/provenance.json",
+      "projects/001/runtime/gates/facts_gate_status.json"
+    ],
+    "blocker_count": 0,
+    "warning_count": 3,
+    "info_count": 1,
+    "issues": {
+      "blockers": [],
+      "warnings": [
+        "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
+        "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
+        "business_blueprint.md 判断依据未覆盖足够的核心判断"
+      ],
       "infos": [
-        "facts.md 已提炼 60 条事实"
+        "facts 阶段状态：passed"
       ]
     },
     "issue_details_version": "1.0",
     "issue_details": [
       {
-        "source": "facts_gate",
-        "stage": "facts",
-        "severity": "info",
+        "source": "business_gate",
+        "stage": "business",
+        "severity": "warning",
         "category": "quality_gap",
-        "message": "facts.md 已提炼 60 条事实",
+        "message": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
+        "target_artifacts": [
+          "projects/001/workspace/business_blueprint.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/09_business_blueprint_contract.md",
+          "specs/11_repair_loop_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/runtime/provenance.json",
+          "projects/001/runtime/gates/facts_gate_status.json"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/workspace/facts.md",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/runtime/provenance.json",
+              "projects/001/runtime/gates/facts_gate_status.json"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "judgment_count": 0,
+              "facts_consumed_count": 0,
+              "judgment_traceable_count": 0,
+              "trace_mapping_item_count": 0,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 7,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "handover_item_count": 13,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            }
+          }
+        ]
+      },
+      {
+        "source": "business_gate",
+        "stage": "facts",
+        "severity": "warning",
+        "category": "quality_gap",
+        "message": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
         "target_artifacts": [
           "projects/001/workspace/facts.md"
         ],
@@ -44,97 +139,97 @@
           "specs/11_repair_loop_contract.md"
         ],
         "checked_files": [
-          "projects/001/source/task_card.md",
-          "projects/001/source/requirement.md",
-          "projects/001/source/background.md",
-          "projects/001/runtime/task_card_resolved.json",
-          "projects/001/runtime/context_manifest.json",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/business_blueprint.md",
           "projects/001/runtime/provenance.json",
-          "projects/001/workspace/facts.md"
+          "projects/001/runtime/gates/facts_gate_status.json"
         ],
         "evidence": [
           {
             "type": "message",
-            "value": "facts.md 已提炼 60 条事实"
+            "value": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）"
           },
           {
             "type": "checked_files",
             "value": [
-              "projects/001/source/task_card.md",
-              "projects/001/source/requirement.md",
-              "projects/001/source/background.md",
-              "projects/001/runtime/task_card_resolved.json",
-              "projects/001/runtime/context_manifest.json",
+              "projects/001/workspace/facts.md",
+              "projects/001/workspace/business_blueprint.md",
               "projects/001/runtime/provenance.json",
-              "projects/001/workspace/facts.md"
+              "projects/001/runtime/gates/facts_gate_status.json"
             ]
           },
           {
             "type": "metrics",
             "value": {
-              "fact_count": 60,
-              "dimension_coverage": {
-                "actor": 1,
-                "object": 1,
-                "state": 1,
-                "action": 1,
-                "rule": 1,
-                "exception": 1,
-                "dependency": 1,
-                "scope": 1
-              },
-              "traceable_fact_count": 60,
-              "gap_count": 1,
-              "knowledge_derived_fact_count": 0
+              "judgment_count": 0,
+              "facts_consumed_count": 0,
+              "judgment_traceable_count": 0,
+              "trace_mapping_item_count": 0,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 7,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "handover_item_count": 13,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
             }
           }
         ]
-      }
-    ],
-    "metrics": {
-      "fact_count": 60,
-      "dimension_coverage": {
-        "actor": 1,
-        "object": 1,
-        "state": 1,
-        "action": 1,
-        "rule": 1,
-        "exception": 1,
-        "dependency": 1,
-        "scope": 1
       },
-      "traceable_fact_count": 60,
-      "gap_count": 1,
-      "knowledge_derived_fact_count": 0
-    }
-  },
-  "business_gate": {
-    "project_id": "001",
-    "stage": "business",
-    "status": "passed",
-    "can_proceed": true,
-    "next_stage": "experience",
-    "generated_by": "packages.validate",
-    "updated_at": "2026-04-27T09:08:29.143831+00:00",
-    "checked_files": [
-      "projects/001/workspace/facts.md",
-      "projects/001/workspace/business_blueprint.md",
-      "projects/001/runtime/provenance.json",
-      "projects/001/runtime/gates/facts_gate_status.json"
-    ],
-    "blocker_count": 0,
-    "warning_count": 0,
-    "info_count": 2,
-    "issues": {
-      "blockers": [],
-      "warnings": [],
-      "infos": [
-        "facts 阶段状态：passed",
-        "business_blueprint.md 已承接 12 条事实"
-      ]
-    },
-    "issue_details_version": "1.0",
-    "issue_details": [
+      {
+        "source": "business_gate",
+        "stage": "business",
+        "severity": "warning",
+        "category": "quality_gap",
+        "message": "business_blueprint.md 判断依据未覆盖足够的核心判断",
+        "target_artifacts": [
+          "projects/001/workspace/business_blueprint.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/09_business_blueprint_contract.md",
+          "specs/11_repair_loop_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/runtime/provenance.json",
+          "projects/001/runtime/gates/facts_gate_status.json"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "business_blueprint.md 判断依据未覆盖足够的核心判断"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/workspace/facts.md",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/runtime/provenance.json",
+              "projects/001/runtime/gates/facts_gate_status.json"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "judgment_count": 0,
+              "facts_consumed_count": 0,
+              "judgment_traceable_count": 0,
+              "trace_mapping_item_count": 0,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 7,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "handover_item_count": 13,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            }
+          }
+        ]
+      },
       {
         "source": "business_gate",
         "stage": "business",
@@ -172,69 +267,16 @@
           {
             "type": "metrics",
             "value": {
-              "judgment_count": 4,
-              "facts_consumed_count": 12,
-              "judgment_traceable_count": 4,
-              "trace_mapping_item_count": 37,
-              "option_compare_count": 47,
-              "value_assessment_item_count": 10,
-              "risk_item_count": 2,
+              "judgment_count": 0,
+              "facts_consumed_count": 0,
+              "judgment_traceable_count": 0,
+              "trace_mapping_item_count": 0,
+              "option_compare_count": 3,
+              "value_assessment_item_count": 7,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "handover_item_count": 10,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            }
-          }
-        ]
-      },
-      {
-        "source": "business_gate",
-        "stage": "business",
-        "severity": "info",
-        "category": "quality_gap",
-        "message": "business_blueprint.md 已承接 12 条事实",
-        "target_artifacts": [
-          "projects/001/workspace/business_blueprint.md"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md",
-          "specs/09_business_blueprint_contract.md",
-          "specs/11_repair_loop_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/runtime/provenance.json",
-          "projects/001/runtime/gates/facts_gate_status.json"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "business_blueprint.md 已承接 12 条事实"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/workspace/facts.md",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/runtime/provenance.json",
-              "projects/001/runtime/gates/facts_gate_status.json"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "judgment_count": 4,
-              "facts_consumed_count": 12,
-              "judgment_traceable_count": 4,
-              "trace_mapping_item_count": 37,
-              "option_compare_count": 47,
-              "value_assessment_item_count": 10,
-              "risk_item_count": 2,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "handover_item_count": 10,
+              "handover_item_count": 13,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             }
@@ -243,16 +285,16 @@
       }
     ],
     "metrics": {
-      "judgment_count": 4,
-      "facts_consumed_count": 12,
-      "judgment_traceable_count": 4,
-      "trace_mapping_item_count": 37,
-      "option_compare_count": 47,
-      "value_assessment_item_count": 10,
-      "risk_item_count": 2,
+      "judgment_count": 0,
+      "facts_consumed_count": 0,
+      "judgment_traceable_count": 0,
+      "trace_mapping_item_count": 0,
+      "option_compare_count": 3,
+      "value_assessment_item_count": 7,
+      "risk_item_count": 5,
       "unresolved_gap_count": 0,
       "has_appendix": true,
-      "handover_item_count": 10,
+      "handover_item_count": 13,
       "handover_keyword_count": 5,
       "has_handover_empty_talk": false
     }
@@ -264,7 +306,7 @@
     "can_proceed": true,
     "next_stage": "final-validate",
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-27T09:08:29.226994+00:00",
+    "updated_at": "2026-04-27T14:06:25.956024+00:00",
     "checked_files": [
       "projects/001/workspace/facts.md",
       "projects/001/workspace/business_blueprint.md",
@@ -273,18 +315,15 @@
       "projects/001/runtime/gates/business_gate_status.json"
     ],
     "blocker_count": 0,
-    "warning_count": 4,
+    "warning_count": 1,
     "info_count": 1,
     "issues": {
       "blockers": [],
       "warnings": [
-        "experience_blueprint.md 核心区存在明显机器化表达",
-        "experience_blueprint.md 核心区存在明显机器化表达",
-        "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
-        "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重"
+        "experience_blueprint.md 附录：依据与追踪内容偏少"
       ],
       "infos": [
-        "business 阶段状态：passed"
+        "business 阶段状态：warning"
       ]
     },
     "issue_details_version": "1.0",
@@ -294,7 +333,7 @@
         "stage": "experience",
         "severity": "warning",
         "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区存在明显机器化表达",
+        "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
         "target_artifacts": [
           "projects/001/workspace/experience_blueprint.md"
         ],
@@ -313,7 +352,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "experience_blueprint.md 核心区存在明显机器化表达"
+            "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
           },
           {
             "type": "checked_files",
@@ -328,159 +367,12 @@
           {
             "type": "metrics",
             "value": {
-              "flow_count": 8,
-              "page_inventory_item_count": 9,
+              "flow_count": 49,
+              "page_inventory_item_count": 37,
               "state_feedback_pair_count": 3,
-              "appendix_item_count": 46,
+              "appendix_item_count": 0,
               "exception_coverage": true,
-              "core_table_count": 8
-            }
-          }
-        ]
-      },
-      {
-        "source": "experience_gate",
-        "stage": "experience",
-        "severity": "warning",
-        "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区存在明显机器化表达",
-        "target_artifacts": [
-          "projects/001/workspace/experience_blueprint.md"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md",
-          "specs/10_experience_blueprint_contract.md",
-          "specs/11_repair_loop_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/runtime/provenance.json",
-          "projects/001/runtime/gates/business_gate_status.json"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "experience_blueprint.md 核心区存在明显机器化表达"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/workspace/facts.md",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/experience_blueprint.md",
-              "projects/001/runtime/provenance.json",
-              "projects/001/runtime/gates/business_gate_status.json"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "flow_count": 8,
-              "page_inventory_item_count": 9,
-              "state_feedback_pair_count": 3,
-              "appendix_item_count": 46,
-              "exception_coverage": true,
-              "core_table_count": 8
-            }
-          }
-        ]
-      },
-      {
-        "source": "experience_gate",
-        "stage": "experience",
-        "severity": "warning",
-        "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
-        "target_artifacts": [
-          "projects/001/workspace/experience_blueprint.md"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md",
-          "specs/10_experience_blueprint_contract.md",
-          "specs/11_repair_loop_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/runtime/provenance.json",
-          "projects/001/runtime/gates/business_gate_status.json"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/workspace/facts.md",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/experience_blueprint.md",
-              "projects/001/runtime/provenance.json",
-              "projects/001/runtime/gates/business_gate_status.json"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "flow_count": 8,
-              "page_inventory_item_count": 9,
-              "state_feedback_pair_count": 3,
-              "appendix_item_count": 46,
-              "exception_coverage": true,
-              "core_table_count": 8
-            }
-          }
-        ]
-      },
-      {
-        "source": "experience_gate",
-        "stage": "experience",
-        "severity": "warning",
-        "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重",
-        "target_artifacts": [
-          "projects/001/workspace/experience_blueprint.md"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md",
-          "specs/10_experience_blueprint_contract.md",
-          "specs/11_repair_loop_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/runtime/provenance.json",
-          "projects/001/runtime/gates/business_gate_status.json"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/workspace/facts.md",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/experience_blueprint.md",
-              "projects/001/runtime/provenance.json",
-              "projects/001/runtime/gates/business_gate_status.json"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "flow_count": 8,
-              "page_inventory_item_count": 9,
-              "state_feedback_pair_count": 3,
-              "appendix_item_count": 46,
-              "exception_coverage": true,
-              "core_table_count": 8
+              "core_table_count": 0
             }
           }
         ]
@@ -490,7 +382,7 @@
         "stage": "experience",
         "severity": "info",
         "category": "quality_gap",
-        "message": "business 阶段状态：passed",
+        "message": "business 阶段状态：warning",
         "target_artifacts": [
           "projects/001/workspace/experience_blueprint.md"
         ],
@@ -509,7 +401,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "business 阶段状态：passed"
+            "value": "business 阶段状态：warning"
           },
           {
             "type": "checked_files",
@@ -524,33 +416,33 @@
           {
             "type": "metrics",
             "value": {
-              "flow_count": 8,
-              "page_inventory_item_count": 9,
+              "flow_count": 49,
+              "page_inventory_item_count": 37,
               "state_feedback_pair_count": 3,
-              "appendix_item_count": 46,
+              "appendix_item_count": 0,
               "exception_coverage": true,
-              "core_table_count": 8
+              "core_table_count": 0
             }
           }
         ]
       }
     ],
     "metrics": {
-      "flow_count": 8,
-      "page_inventory_item_count": 9,
+      "flow_count": 49,
+      "page_inventory_item_count": 37,
       "state_feedback_pair_count": 3,
-      "appendix_item_count": 46,
+      "appendix_item_count": 0,
       "exception_coverage": true,
-      "core_table_count": 8
+      "core_table_count": 0
     }
   },
   "final_check_status": {
     "task_id": "001",
-    "status": "warning",
-    "has_blocker": false,
-    "blocker_count": 0,
-    "warning_count": 6,
-    "info_count": 9,
+    "status": "failed",
+    "has_blocker": true,
+    "blocker_count": 1,
+    "warning_count": 8,
+    "info_count": 8,
     "completed_outputs": [
       "projects/001/workspace/business_blueprint.md",
       "projects/001/workspace/check_report.md",
@@ -561,7 +453,7 @@
     ],
     "missing_outputs": [],
     "generated_by": "packages.validate",
-    "updated_at": "2026-04-27T09:08:29.299395+00:00",
+    "updated_at": "2026-04-27T14:07:30.560027+00:00",
     "checked_files": [
       "projects/001/runtime/context_manifest.json",
       "projects/001/runtime/gates/business_gate_status.json",
@@ -577,29 +469,380 @@
       "projects/001/workspace/gap_list.md"
     ],
     "issues": {
-      "blockers": [],
+      "blockers": [
+        "facts.md 未提取到事实 ID，无法完成覆盖检查"
+      ],
       "warnings": [
+        "business gate 状态为 warning",
+        "business_blueprint.md 判断依据未覆盖足够的核心判断",
+        "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
         "experience gate 状态为 warning",
-        "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点",
-        "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
-        "experience_blueprint.md 核心区存在明显机器化表达",
-        "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重",
-        "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06"
+        "experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足",
+        "experience_blueprint.md 附录：依据与追踪内容偏少",
+        "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
+        "final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系"
       ],
       "infos": [
-        "business gate 状态：passed",
-        "business_blueprint.md 已承接 12 条事实",
-        "coverage: business_judgments_consumed_by_experience: 4",
-        "coverage: facts_covered_by_business: 12",
-        "coverage: facts_covered_by_experience: 3",
-        "coverage: orphan_fact_count: 45",
+        "coverage: business_judgments_consumed_by_experience: 0",
+        "coverage: facts_covered_by_business: 0",
+        "coverage: facts_covered_by_experience: 0",
+        "coverage: orphan_fact_count: 0",
         "coverage: orphan_judgment_count: 0",
-        "coverage: orphan_page_count: 0",
-        "facts gate 状态：passed"
+        "coverage: orphan_page_count: 1",
+        "facts gate 状态：passed",
+        "facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准"
       ]
     },
     "issue_details_version": "1.0",
     "issue_details": [
+      {
+        "source": "validate",
+        "stage": "facts",
+        "severity": "blocker",
+        "category": "coverage_gap",
+        "message": "facts.md 未提取到事实 ID，无法完成覆盖检查",
+        "target_artifacts": [
+          "projects/001/workspace/facts.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/08_fact_extraction_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/runtime/context_manifest.json",
+          "projects/001/runtime/gates/business_gate_status.json",
+          "projects/001/runtime/gates/experience_gate_status.json",
+          "projects/001/runtime/gates/facts_gate_status.json",
+          "projects/001/runtime/knowledge_usage_report.json",
+          "projects/001/runtime/task_card_resolved.json",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/workspace/check_report.md",
+          "projects/001/workspace/check_status.json",
+          "projects/001/workspace/experience_blueprint.md",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "facts.md 未提取到事实 ID，无法完成覆盖检查"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/runtime/context_manifest.json",
+              "projects/001/runtime/gates/business_gate_status.json",
+              "projects/001/runtime/gates/experience_gate_status.json",
+              "projects/001/runtime/gates/facts_gate_status.json",
+              "projects/001/runtime/knowledge_usage_report.json",
+              "projects/001/runtime/task_card_resolved.json",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
+                "unresolved_gap_count": 0,
+                "has_appendix": true,
+                "handover_item_count": 13,
+                "handover_keyword_count": 5,
+                "has_handover_empty_talk": false
+              },
+              "experience_depth": {
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
+                "state_feedback_pair_count": 3,
+                "appendix_item_count": 0,
+                "exception_coverage": true,
+                "core_table_count": 0
+              },
+              "coverage": {
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
+                "orphan_judgment_count": 0,
+                "critical_judgment_count": 0,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "source": "validate",
+        "stage": "business",
+        "severity": "warning",
+        "category": "quality_gap",
+        "message": "business gate 状态为 warning",
+        "target_artifacts": [
+          "projects/001/workspace/business_blueprint.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/09_business_blueprint_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/runtime/context_manifest.json",
+          "projects/001/runtime/gates/business_gate_status.json",
+          "projects/001/runtime/gates/experience_gate_status.json",
+          "projects/001/runtime/gates/facts_gate_status.json",
+          "projects/001/runtime/knowledge_usage_report.json",
+          "projects/001/runtime/task_card_resolved.json",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/workspace/check_report.md",
+          "projects/001/workspace/check_status.json",
+          "projects/001/workspace/experience_blueprint.md",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "business gate 状态为 warning"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/runtime/context_manifest.json",
+              "projects/001/runtime/gates/business_gate_status.json",
+              "projects/001/runtime/gates/experience_gate_status.json",
+              "projects/001/runtime/gates/facts_gate_status.json",
+              "projects/001/runtime/knowledge_usage_report.json",
+              "projects/001/runtime/task_card_resolved.json",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
+                "unresolved_gap_count": 0,
+                "has_appendix": true,
+                "handover_item_count": 13,
+                "handover_keyword_count": 5,
+                "has_handover_empty_talk": false
+              },
+              "experience_depth": {
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
+                "state_feedback_pair_count": 3,
+                "appendix_item_count": 0,
+                "exception_coverage": true,
+                "core_table_count": 0
+              },
+              "coverage": {
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
+                "orphan_judgment_count": 0,
+                "critical_judgment_count": 0,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "source": "validate",
+        "stage": "business",
+        "severity": "warning",
+        "category": "quality_gap",
+        "message": "business_blueprint.md 判断依据未覆盖足够的核心判断",
+        "target_artifacts": [
+          "projects/001/workspace/business_blueprint.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/09_business_blueprint_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/runtime/context_manifest.json",
+          "projects/001/runtime/gates/business_gate_status.json",
+          "projects/001/runtime/gates/experience_gate_status.json",
+          "projects/001/runtime/gates/facts_gate_status.json",
+          "projects/001/runtime/knowledge_usage_report.json",
+          "projects/001/runtime/task_card_resolved.json",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/workspace/check_report.md",
+          "projects/001/workspace/check_status.json",
+          "projects/001/workspace/experience_blueprint.md",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "business_blueprint.md 判断依据未覆盖足够的核心判断"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/runtime/context_manifest.json",
+              "projects/001/runtime/gates/business_gate_status.json",
+              "projects/001/runtime/gates/experience_gate_status.json",
+              "projects/001/runtime/gates/facts_gate_status.json",
+              "projects/001/runtime/knowledge_usage_report.json",
+              "projects/001/runtime/task_card_resolved.json",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
+                "unresolved_gap_count": 0,
+                "has_appendix": true,
+                "handover_item_count": 13,
+                "handover_keyword_count": 5,
+                "has_handover_empty_talk": false
+              },
+              "experience_depth": {
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
+                "state_feedback_pair_count": 3,
+                "appendix_item_count": 0,
+                "exception_coverage": true,
+                "core_table_count": 0
+              },
+              "coverage": {
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
+                "orphan_judgment_count": 0,
+                "critical_judgment_count": 0,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "source": "validate",
+        "stage": "business",
+        "severity": "warning",
+        "category": "quality_gap",
+        "message": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
+        "target_artifacts": [
+          "projects/001/workspace/business_blueprint.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/09_business_blueprint_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/runtime/context_manifest.json",
+          "projects/001/runtime/gates/business_gate_status.json",
+          "projects/001/runtime/gates/experience_gate_status.json",
+          "projects/001/runtime/gates/facts_gate_status.json",
+          "projects/001/runtime/knowledge_usage_report.json",
+          "projects/001/runtime/task_card_resolved.json",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/workspace/check_report.md",
+          "projects/001/workspace/check_status.json",
+          "projects/001/workspace/experience_blueprint.md",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/runtime/context_manifest.json",
+              "projects/001/runtime/gates/business_gate_status.json",
+              "projects/001/runtime/gates/experience_gate_status.json",
+              "projects/001/runtime/gates/facts_gate_status.json",
+              "projects/001/runtime/knowledge_usage_report.json",
+              "projects/001/runtime/task_card_resolved.json",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
+                "unresolved_gap_count": 0,
+                "has_appendix": true,
+                "handover_item_count": 13,
+                "handover_keyword_count": 5,
+                "has_handover_empty_talk": false
+              },
+              "experience_depth": {
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
+                "state_feedback_pair_count": 3,
+                "appendix_item_count": 0,
+                "exception_coverage": true,
+                "core_table_count": 0
+              },
+              "coverage": {
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
+                "orphan_judgment_count": 0,
+                "critical_judgment_count": 0,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 1
+              }
+            }
+          }
+        ]
+      },
       {
         "source": "validate",
         "stage": "experience",
@@ -652,122 +895,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "validate",
-        "stage": "final",
-        "severity": "warning",
-        "category": "trace_missing",
-        "message": "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点",
-        "target_artifacts": [
-          "projects/001/workspace/check_status.json"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/runtime/context_manifest.json",
-          "projects/001/runtime/gates/business_gate_status.json",
-          "projects/001/runtime/gates/experience_gate_status.json",
-          "projects/001/runtime/gates/facts_gate_status.json",
-          "projects/001/runtime/knowledge_usage_report.json",
-          "projects/001/runtime/task_card_resolved.json",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/check_report.md",
-          "projects/001/workspace/check_status.json",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/gap_list.md"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/runtime/context_manifest.json",
-              "projects/001/runtime/gates/business_gate_status.json",
-              "projects/001/runtime/gates/experience_gate_status.json",
-              "projects/001/runtime/gates/facts_gate_status.json",
-              "projects/001/runtime/knowledge_usage_report.json",
-              "projects/001/runtime/task_card_resolved.json",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/check_report.md"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "required_output_count": 6,
-              "completed_output_count": 6,
-              "missing_output_count": 0,
-              "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
-                "unresolved_gap_count": 0,
-                "has_appendix": true,
-                "handover_item_count": 10,
-                "handover_keyword_count": 5,
-                "has_handover_empty_talk": false
-              },
-              "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
-                "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
-                "exception_coverage": true,
-                "core_table_count": 8
-              },
-              "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
-                "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
-                "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -777,8 +934,8 @@
         "source": "validate",
         "stage": "experience",
         "severity": "warning",
-        "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
+        "category": "depth_insufficient",
+        "message": "experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足",
         "target_artifacts": [
           "projects/001/workspace/experience_blueprint.md"
         ],
@@ -803,7 +960,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
+            "value": "experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足"
           },
           {
             "type": "checked_files",
@@ -825,36 +982,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -865,7 +1022,7 @@
         "stage": "experience",
         "severity": "warning",
         "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区存在明显机器化表达",
+        "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
         "target_artifacts": [
           "projects/001/workspace/experience_blueprint.md"
         ],
@@ -890,7 +1047,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "experience_blueprint.md 核心区存在明显机器化表达"
+            "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
           },
           {
             "type": "checked_files",
@@ -912,36 +1069,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -949,16 +1106,16 @@
       },
       {
         "source": "validate",
-        "stage": "experience",
+        "stage": "facts",
         "severity": "warning",
         "category": "quality_gap",
-        "message": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重",
+        "message": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
         "target_artifacts": [
-          "projects/001/workspace/experience_blueprint.md"
+          "projects/001/workspace/facts.md"
         ],
         "violated_contract_refs": [
           "specs/06_check_contract.md",
-          "specs/10_experience_blueprint_contract.md"
+          "specs/08_fact_extraction_contract.md"
         ],
         "checked_files": [
           "projects/001/runtime/context_manifest.json",
@@ -977,7 +1134,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重"
+            "value": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）"
           },
           {
             "type": "checked_files",
@@ -999,122 +1156,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "coverage",
-        "stage": "final",
-        "severity": "warning",
-        "category": "coverage_gap",
-        "message": "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06",
-        "target_artifacts": [
-          "projects/001/workspace/check_status.json"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/runtime/context_manifest.json",
-          "projects/001/runtime/gates/business_gate_status.json",
-          "projects/001/runtime/gates/experience_gate_status.json",
-          "projects/001/runtime/gates/facts_gate_status.json",
-          "projects/001/runtime/knowledge_usage_report.json",
-          "projects/001/runtime/task_card_resolved.json",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/check_report.md",
-          "projects/001/workspace/check_status.json",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/gap_list.md"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/runtime/context_manifest.json",
-              "projects/001/runtime/gates/business_gate_status.json",
-              "projects/001/runtime/gates/experience_gate_status.json",
-              "projects/001/runtime/gates/facts_gate_status.json",
-              "projects/001/runtime/knowledge_usage_report.json",
-              "projects/001/runtime/task_card_resolved.json",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/check_report.md"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "required_output_count": 6,
-              "completed_output_count": 6,
-              "missing_output_count": 0,
-              "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
-                "unresolved_gap_count": 0,
-                "has_appendix": true,
-                "handover_item_count": 10,
-                "handover_keyword_count": 5,
-                "has_handover_empty_talk": false
-              },
-              "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
-                "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
-                "exception_coverage": true,
-                "core_table_count": 8
-              },
-              "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
-                "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
-                "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1123,9 +1194,9 @@
       {
         "source": "validate",
         "stage": "business",
-        "severity": "info",
+        "severity": "warning",
         "category": "quality_gap",
-        "message": "business gate 状态：passed",
+        "message": "final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系",
         "target_artifacts": [
           "projects/001/workspace/business_blueprint.md"
         ],
@@ -1150,7 +1221,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "business gate 状态：passed"
+            "value": "final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系"
           },
           {
             "type": "checked_files",
@@ -1172,123 +1243,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "validate",
-        "stage": "business",
-        "severity": "info",
-        "category": "quality_gap",
-        "message": "business_blueprint.md 已承接 12 条事实",
-        "target_artifacts": [
-          "projects/001/workspace/business_blueprint.md"
-        ],
-        "violated_contract_refs": [
-          "specs/06_check_contract.md",
-          "specs/09_business_blueprint_contract.md"
-        ],
-        "checked_files": [
-          "projects/001/runtime/context_manifest.json",
-          "projects/001/runtime/gates/business_gate_status.json",
-          "projects/001/runtime/gates/experience_gate_status.json",
-          "projects/001/runtime/gates/facts_gate_status.json",
-          "projects/001/runtime/knowledge_usage_report.json",
-          "projects/001/runtime/task_card_resolved.json",
-          "projects/001/workspace/business_blueprint.md",
-          "projects/001/workspace/check_report.md",
-          "projects/001/workspace/check_status.json",
-          "projects/001/workspace/experience_blueprint.md",
-          "projects/001/workspace/facts.md",
-          "projects/001/workspace/gap_list.md"
-        ],
-        "evidence": [
-          {
-            "type": "message",
-            "value": "business_blueprint.md 已承接 12 条事实"
-          },
-          {
-            "type": "checked_files",
-            "value": [
-              "projects/001/runtime/context_manifest.json",
-              "projects/001/runtime/gates/business_gate_status.json",
-              "projects/001/runtime/gates/experience_gate_status.json",
-              "projects/001/runtime/gates/facts_gate_status.json",
-              "projects/001/runtime/knowledge_usage_report.json",
-              "projects/001/runtime/task_card_resolved.json",
-              "projects/001/workspace/business_blueprint.md",
-              "projects/001/workspace/check_report.md"
-            ]
-          },
-          {
-            "type": "metrics",
-            "value": {
-              "required_output_count": 6,
-              "completed_output_count": 6,
-              "missing_output_count": 0,
-              "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
-                "unresolved_gap_count": 0,
-                "has_appendix": true,
-                "handover_item_count": 10,
-                "handover_keyword_count": 5,
-                "has_handover_empty_talk": false
-              },
-              "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
-                "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
-                "exception_coverage": true,
-                "core_table_count": 8
-              },
-              "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
-                "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
-                "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1299,7 +1283,7 @@
         "stage": "final",
         "severity": "info",
         "category": "coverage_gap",
-        "message": "coverage: business_judgments_consumed_by_experience: 4",
+        "message": "coverage: business_judgments_consumed_by_experience: 0",
         "target_artifacts": [
           "projects/001/workspace/check_status.json"
         ],
@@ -1323,7 +1307,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "coverage: business_judgments_consumed_by_experience: 4"
+            "value": "coverage: business_judgments_consumed_by_experience: 0"
           },
           {
             "type": "checked_files",
@@ -1345,36 +1329,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1385,7 +1369,7 @@
         "stage": "final",
         "severity": "info",
         "category": "coverage_gap",
-        "message": "coverage: facts_covered_by_business: 12",
+        "message": "coverage: facts_covered_by_business: 0",
         "target_artifacts": [
           "projects/001/workspace/check_status.json"
         ],
@@ -1409,7 +1393,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "coverage: facts_covered_by_business: 12"
+            "value": "coverage: facts_covered_by_business: 0"
           },
           {
             "type": "checked_files",
@@ -1431,36 +1415,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1471,7 +1455,7 @@
         "stage": "final",
         "severity": "info",
         "category": "coverage_gap",
-        "message": "coverage: facts_covered_by_experience: 3",
+        "message": "coverage: facts_covered_by_experience: 0",
         "target_artifacts": [
           "projects/001/workspace/check_status.json"
         ],
@@ -1495,7 +1479,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "coverage: facts_covered_by_experience: 3"
+            "value": "coverage: facts_covered_by_experience: 0"
           },
           {
             "type": "checked_files",
@@ -1517,36 +1501,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1557,7 +1541,7 @@
         "stage": "final",
         "severity": "info",
         "category": "coverage_gap",
-        "message": "coverage: orphan_fact_count: 45",
+        "message": "coverage: orphan_fact_count: 0",
         "target_artifacts": [
           "projects/001/workspace/check_status.json"
         ],
@@ -1581,7 +1565,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "coverage: orphan_fact_count: 45"
+            "value": "coverage: orphan_fact_count: 0"
           },
           {
             "type": "checked_files",
@@ -1603,36 +1587,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1689,36 +1673,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1729,7 +1713,7 @@
         "stage": "final",
         "severity": "info",
         "category": "coverage_gap",
-        "message": "coverage: orphan_page_count: 0",
+        "message": "coverage: orphan_page_count: 1",
         "target_artifacts": [
           "projects/001/workspace/check_status.json"
         ],
@@ -1753,7 +1737,7 @@
         "evidence": [
           {
             "type": "message",
-            "value": "coverage: orphan_page_count: 0"
+            "value": "coverage: orphan_page_count: 1"
           },
           {
             "type": "checked_files",
@@ -1775,36 +1759,36 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
               }
             }
           }
@@ -1862,36 +1846,123 @@
               "completed_output_count": 6,
               "missing_output_count": 0,
               "business_depth": {
-                "judgment_count": 4,
-                "facts_consumed_count": 12,
-                "judgment_traceable_count": 4,
-                "trace_mapping_item_count": 37,
-                "option_compare_count": 47,
-                "value_assessment_item_count": 10,
-                "risk_item_count": 2,
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
                 "unresolved_gap_count": 0,
                 "has_appendix": true,
-                "handover_item_count": 10,
+                "handover_item_count": 13,
                 "handover_keyword_count": 5,
                 "has_handover_empty_talk": false
               },
               "experience_depth": {
-                "flow_count": 8,
-                "page_inventory_item_count": 9,
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
                 "state_feedback_pair_count": 3,
-                "appendix_item_count": 46,
+                "appendix_item_count": 0,
                 "exception_coverage": true,
-                "core_table_count": 8
+                "core_table_count": 0
               },
               "coverage": {
-                "facts_covered_by_business": 12,
-                "facts_covered_by_experience": 3,
-                "business_judgments_consumed_by_experience": 4,
-                "orphan_fact_count": 45,
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
                 "orphan_judgment_count": 0,
-                "critical_judgment_count": 3,
+                "critical_judgment_count": 0,
                 "critical_judgment_traced_count": 0,
-                "orphan_page_count": 0
+                "orphan_page_count": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "source": "validate",
+        "stage": "facts",
+        "severity": "info",
+        "category": "coverage_gap",
+        "message": "facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准",
+        "target_artifacts": [
+          "projects/001/workspace/facts.md"
+        ],
+        "violated_contract_refs": [
+          "specs/06_check_contract.md",
+          "specs/08_fact_extraction_contract.md"
+        ],
+        "checked_files": [
+          "projects/001/runtime/context_manifest.json",
+          "projects/001/runtime/gates/business_gate_status.json",
+          "projects/001/runtime/gates/experience_gate_status.json",
+          "projects/001/runtime/gates/facts_gate_status.json",
+          "projects/001/runtime/knowledge_usage_report.json",
+          "projects/001/runtime/task_card_resolved.json",
+          "projects/001/workspace/business_blueprint.md",
+          "projects/001/workspace/check_report.md",
+          "projects/001/workspace/check_status.json",
+          "projects/001/workspace/experience_blueprint.md",
+          "projects/001/workspace/facts.md",
+          "projects/001/workspace/gap_list.md"
+        ],
+        "evidence": [
+          {
+            "type": "message",
+            "value": "facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准"
+          },
+          {
+            "type": "checked_files",
+            "value": [
+              "projects/001/runtime/context_manifest.json",
+              "projects/001/runtime/gates/business_gate_status.json",
+              "projects/001/runtime/gates/experience_gate_status.json",
+              "projects/001/runtime/gates/facts_gate_status.json",
+              "projects/001/runtime/knowledge_usage_report.json",
+              "projects/001/runtime/task_card_resolved.json",
+              "projects/001/workspace/business_blueprint.md",
+              "projects/001/workspace/check_report.md"
+            ]
+          },
+          {
+            "type": "metrics",
+            "value": {
+              "required_output_count": 6,
+              "completed_output_count": 6,
+              "missing_output_count": 0,
+              "business_depth": {
+                "judgment_count": 0,
+                "facts_consumed_count": 0,
+                "judgment_traceable_count": 0,
+                "trace_mapping_item_count": 0,
+                "option_compare_count": 3,
+                "value_assessment_item_count": 7,
+                "risk_item_count": 5,
+                "unresolved_gap_count": 0,
+                "has_appendix": true,
+                "handover_item_count": 13,
+                "handover_keyword_count": 5,
+                "has_handover_empty_talk": false
+              },
+              "experience_depth": {
+                "flow_count": 49,
+                "page_inventory_item_count": 37,
+                "state_feedback_pair_count": 3,
+                "appendix_item_count": 0,
+                "exception_coverage": true,
+                "core_table_count": 0
+              },
+              "coverage": {
+                "facts_covered_by_business": 0,
+                "facts_covered_by_experience": 0,
+                "business_judgments_consumed_by_experience": 0,
+                "orphan_fact_count": 0,
+                "orphan_judgment_count": 0,
+                "critical_judgment_count": 0,
+                "critical_judgment_traced_count": 0,
+                "orphan_page_count": 1
               }
             }
           }
@@ -1903,36 +1974,36 @@
       "completed_output_count": 6,
       "missing_output_count": 0,
       "business_depth": {
-        "judgment_count": 4,
-        "facts_consumed_count": 12,
-        "judgment_traceable_count": 4,
-        "trace_mapping_item_count": 37,
-        "option_compare_count": 47,
-        "value_assessment_item_count": 10,
-        "risk_item_count": 2,
+        "judgment_count": 0,
+        "facts_consumed_count": 0,
+        "judgment_traceable_count": 0,
+        "trace_mapping_item_count": 0,
+        "option_compare_count": 3,
+        "value_assessment_item_count": 7,
+        "risk_item_count": 5,
         "unresolved_gap_count": 0,
         "has_appendix": true,
-        "handover_item_count": 10,
+        "handover_item_count": 13,
         "handover_keyword_count": 5,
         "has_handover_empty_talk": false
       },
       "experience_depth": {
-        "flow_count": 8,
-        "page_inventory_item_count": 9,
+        "flow_count": 49,
+        "page_inventory_item_count": 37,
         "state_feedback_pair_count": 3,
-        "appendix_item_count": 46,
+        "appendix_item_count": 0,
         "exception_coverage": true,
-        "core_table_count": 8
+        "core_table_count": 0
       },
       "coverage": {
-        "facts_covered_by_business": 12,
-        "facts_covered_by_experience": 3,
-        "business_judgments_consumed_by_experience": 4,
-        "orphan_fact_count": 45,
+        "facts_covered_by_business": 0,
+        "facts_covered_by_experience": 0,
+        "business_judgments_consumed_by_experience": 0,
+        "orphan_fact_count": 0,
         "orphan_judgment_count": 0,
-        "critical_judgment_count": 3,
+        "critical_judgment_count": 0,
         "critical_judgment_traced_count": 0,
-        "orphan_page_count": 0
+        "orphan_page_count": 1
       }
     }
   }

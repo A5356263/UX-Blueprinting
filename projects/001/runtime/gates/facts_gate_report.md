@@ -6,7 +6,7 @@
 - has_blocker: false
 - blocker_count: 0
 - warning_count: 0
-- info_count: 1
+- info_count: 0
 
 - project_id: 001
 - stage: facts
@@ -33,4 +33,4 @@
 
 ## Infos
 
-- facts.md 已提炼 60 条事实
+- none

@@ -318,127 +318,48 @@ def render_facts_markdown(model: FactsModel) -> str:
     )
     return f"""# Facts
 
-## 任务意图
+## 任务概述
 
 - 任务目标：{model.task_goal}
 - 任务边界：{model.task_boundary}
-- 输出用途：{model.output_purpose}
+- 涉及角色：{_render_string_list([f"{item.name}：{item.responsibility}" for item in model.actors])}
 
-## 事实来源说明
+## 功能范围
 
-- 主输入：
-{primary_sources}
-- 任务合同：
-{contract_sources}
-- 显式引用：
-{references}
-- 知识校准命中：
-{note_lines}
-- 使用边界：
-  - facts 的业务事实只从 requirement.md / background.md 抽取
-  - task_card_resolved.json / context_manifest.json 仅用于任务意图、任务边界与执行约束说明
-  - wiki 只做术语与边界校准，不替代当前任务事实
+{_render_string_list([f"{item.name}：{item.description}" for item in model.objects])}
 
-## 术语与对象边界
+## 关键业务规则
 
-| term_id | 术语 | 当前任务中的含义 | 边界说明 | 来源 |
-| --- | --- | --- | --- | --- |
-{terminology_rows}
-
-## 角色与对象清单
-
-### 角色清单
-
-| actor_id | 角色 | 角色类型 | 当前职责 / 影响 | 来源 |
-| --- | --- | --- | --- | --- |
-{actor_rows}
-
-### 对象清单
-
-| object_id | 对象 | 对象类型 | 当前任务中的说明 | 来源 |
-| --- | --- | --- | --- | --- |
-{object_rows}
-
-## 原子事实清单
-
-### Actor Facts
-{_render_fact_list(model.actor_facts)}
-
-### Object Facts
-{_render_fact_list(model.object_facts)}
-
-### State Facts
-{_render_fact_list(model.state_facts)}
-
-### Action Facts
-{_render_fact_list(model.action_facts)}
-
-### Rule Facts
 {_render_fact_list(model.rule_facts)}
 
-### Exception Facts
+## 状态流转
+
+{_render_fact_list(model.state_facts)}
+
+## 异常与边界
+
 {_render_fact_list(model.exception_facts)}
 
-### Dependency Facts
+## 依赖与前置条件
+
 {_render_fact_list(model.dependency_facts)}
-
-### Scope Facts
-{_render_fact_list(model.scope_facts)}
-
-## 规则矩阵
-
-| rule_id | 规则名称 | trigger（触发条件） | subject（作用对象） | precondition（前置条件） | result（结果） | failure / block（失败或拦截） | source_ref |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-{rule_rows}
-
-## 状态模型
-
-| state_id | 状态 | 进入条件 | 退出条件 | 阻断条件 | 说明 | source_ref |
-| --- | --- | --- | --- | --- | --- | --- |
-{state_rows}
-
-## 动作与流程事实
-
-| flow_id | 发起角色 | 动作 | 前置条件 | 后续动作 / 结果 | 备注 | source_ref |
-| --- | --- | --- | --- | --- | --- | --- |
-{flow_rows}
-
-## 异常与拦截清单
-
-| exception_id | 场景 | 触发条件 | 系统结果 / 提示 | 影响对象 | source_ref |
-| --- | --- | --- | --- | --- | --- |
-{exception_rows}
-
-## 依赖清单
-
-| dependency_id | 依赖项 | 类型 | 当前作用 | 当前确认度 | source_ref |
-| --- | --- | --- | --- | --- | --- |
-{dependency_rows}
-
-## 范围与非范围
-
-### 本次明确范围
-{_render_string_list(model.in_scope)}
-
-### 本次明确非范围 / 暂不展开
-{_render_string_list(model.out_of_scope)}
-
-## 已知约束
-{_render_string_list(model.constraints)}
 
 ## 开放问题与缺口
 
-### Open Questions
-{_render_string_list(model.open_questions)}
+{_render_string_list(model.open_questions + model.gaps)}
 
-### Gaps
-{_render_string_list(model.gaps)}
+## 功能范围
 
-## 追踪映射
+{_render_fact_list(model.scope_facts)}
 
-| fact_or_unit_id | 类型 | 对应原文位置 | 主要来源文件 | 备注 |
-| --- | --- | --- | --- | --- |
-{trace_rows}
+### 本次范围
+{_render_string_list(model.in_scope)}
+
+### 非范围
+{_render_string_list(model.out_of_scope)}
+
+### 已知约束
+{_render_string_list(model.constraints)}
 """
 
 
@@ -552,36 +473,28 @@ def render_business_markdown(model: BusinessModel) -> str:
 - 评审边界：{model.review_boundary}
 - 变更类型：{model.change_type}
 - 触发背景：{model.trigger}
-- F-xx 承接列表：
-{fact_lines}
-- DEP-xx 原始依赖项：
-{raw_dependencies}
 
 ### 命中知识与来源
 - 命中知识：
 {knowledge_lines}
-
-| baseline_id | 基线结论 | source_path |
-| --- | --- | --- |
-{baseline_rows}
 
 ### 备选方案比较
 | option_id | 方案 | 当前结论 | 适用前提 | 主要收益 | 主要代价 / 风险 | 为什么不是最终立场 |
 | --- | --- | --- | --- | --- | --- | --- |
 {option_rows}
 
-### 判断追踪映射
-| judgment_id | 对应判断 | 结论 | facts 依据 | 基线 / 策略依据 | 对比对象 | 剩余缺口 |
-| --- | --- | --- | --- | --- | --- | --- |
+### 判断依据
+| judgment_id | 对应判断 | 结论 | 依据说明 | 剩余缺口 |
+| --- | --- | --- | --- | --- |
 {trace_rows}
 
 ### 链路自检信息
 {self_check_lines}
 
-### 开放问题与缺口（OQ / GAP）
+### 开放问题与缺口
 {open_gaps}
 
-### 风险原始追踪（RSK）
+### 风险追踪
 | risk_id | 风险 | 表现 | 后果 | 等级 | 缓解方向 |
 | --- | --- | --- | --- | --- | --- |
 {risk_rows}
@@ -705,11 +618,7 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 
 ## 附录：依据与追踪
 
-### A. 信息架构与页面清单
-| ia_node | 类型 | 面向角色 | 入口 | 承接对象 / 主任务 | 与其他节点关系 |
-| --- | --- | --- | --- | --- | --- |
-{ia_rows}
-
+### A. 页面清单
 ```text
 {model.ia_diagram}
 ```
@@ -718,38 +627,30 @@ def render_experience_markdown(model: ExperienceModel) -> str:
 | --- | --- | --- | --- | --- | --- | --- | --- |
 {page_rows}
 
-### B. 页面 / 流程追踪映射
-| flow_id | 流程名称 | 起点 | 关键步骤 | 关键判断 / 阻断 | 成功结果 | 失败 / 异常结果 |
-| --- | --- | --- | --- | --- | --- | --- |
-{flow_rows}
-
-| trace_id | 页面 / 流程 / 文案对象 | 承接业务判断 | 承接事实 / 规则 / 异常 | 承接原则 | 说明 |
+### B. 流程追踪
+| flow_id | 流程名称 | 起点 | 关键步骤 | 成功结果 | 失败 / 异常结果 |
 | --- | --- | --- | --- | --- | --- |
-{trace_rows}
+{flow_rows}
 
 ### C. 设计原则引用
 - 原则引用：{principle_ids}
 
-| principle_id | 原则名称 | 命中原因 | 作用位置 |
-| --- | --- | --- | --- |
-{principle_rows}
-
-### D. 状态 / 文案 / 风险矩阵
+### D. 状态 / 文案 / 风险
 ### coverage 与追踪摘要
 {self_check_lines}
 
-### 状态与反馈矩阵（原始）
-| state_id | 状态名称 | 触发条件 | 可用动作 | 页面反馈 | 文案反馈 | 下游结果 |
-| --- | --- | --- | --- | --- | --- | --- |
+### 状态与反馈
+| state_id | 状态名称 | 触发条件 | 可用动作 | 页面反馈 | 下游结果 |
+| --- | --- | --- | --- | --- | --- |
 {state_rows}
 
-### 文案合同（原始）
+### 文案
 | copy_id | 场景 | 文案类型 | 语义目标 | 必含信息 | 禁止写法 | 示例方向 |
 | --- | --- | --- | --- | --- | --- | --- |
 {copy_rows}
 
-### 风险追踪（RSK）
-| risk_id | 风险 / 疑惑点 | 触发场景 | 用户为什么会困惑 / 出错 | 保护策略 | 对应页面 / 流程 / 文案 |
+### 风险追踪
+| risk_id | 风险 / 疑惑点 | 触发场景 | 困惑原因 | 保护策略 | 对应页面 |
 | --- | --- | --- | --- | --- | --- |
 {risk_rows}
 """

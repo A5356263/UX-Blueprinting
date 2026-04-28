@@ -2,11 +2,11 @@
 
 ## Summary
 
-- status: warning
-- has_blocker: false
-- blocker_count: 0
-- warning_count: 6
-- info_count: 9
+- status: failed
+- has_blocker: true
+- blocker_count: 1
+- warning_count: 8
+- info_count: 8
 
 ## Output Status
 
@@ -19,37 +19,38 @@
 
 ## Blockers
 
-- none
+- facts.md 未提取到事实 ID，无法完成覆盖检查
 
 ## Warnings
 
+- business gate 状态为 warning
+- business_blueprint.md 判断依据未覆盖足够的核心判断
+- business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据
 - experience gate 状态为 warning
-- experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点
-- experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达
-- experience_blueprint.md 核心区存在明显机器化表达
-- experience_blueprint.md 核心区页面名重复较多，建议继续语义去重
-- 存在未被后续消费的事实：F-AC01, F-AC02, F-AC03, F-AC04, F-AC05, F-AC06
+- experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足
+- experience_blueprint.md 附录：依据与追踪内容偏少
+- facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）
+- final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系
 
 ## Infos
 
-- business gate 状态：passed
-- business_blueprint.md 已承接 12 条事实
-- coverage: business_judgments_consumed_by_experience: 4
-- coverage: facts_covered_by_business: 12
-- coverage: facts_covered_by_experience: 3
-- coverage: orphan_fact_count: 45
+- coverage: business_judgments_consumed_by_experience: 0
+- coverage: facts_covered_by_business: 0
+- coverage: facts_covered_by_experience: 0
+- coverage: orphan_fact_count: 0
 - coverage: orphan_judgment_count: 0
-- coverage: orphan_page_count: 0
+- coverage: orphan_page_count: 1
 - facts gate 状态：passed
+- facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准
 
 ## Coverage Check
 
-- facts_covered_by_business: 12
-- facts_covered_by_experience: 3
-- business_judgments_consumed_by_experience: 4
-- orphan_fact_count: 45
+- facts_covered_by_business: 0
+- facts_covered_by_experience: 0
+- business_judgments_consumed_by_experience: 0
+- orphan_fact_count: 0
 - orphan_judgment_count: 0
-- orphan_page_count: 0
+- orphan_page_count: 1
 
 ## Machine Status
 

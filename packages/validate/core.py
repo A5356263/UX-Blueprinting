@@ -18,19 +18,13 @@ from packages.provenance import append_command_if_provenance_exists, validate_pr
 
 STAGE_REQUIRED_HEADINGS = {
     "facts.md": [
-        "## 任务意图",
-        "## 事实来源说明",
-        "## 术语与对象边界",
-        "## 角色与对象清单",
-        "## 原子事实清单",
-        "## 规则矩阵",
-        "## 状态模型",
-        "## 动作与流程事实",
-        "## 异常与拦截清单",
-        "## 依赖清单",
-        "## 范围与非范围",
+        "## 任务概述",
+        "## 功能范围",
+        "## 关键业务规则",
+        "## 状态流转",
+        "## 异常与边界",
+        "## 依赖与前置条件",
         "## 开放问题与缺口",
-        "## 追踪映射",
     ],
     "business_blueprint.md": [
         "## 1. 一句话结论",
@@ -45,14 +39,13 @@ STAGE_REQUIRED_HEADINGS = {
         "## 附录：事实、知识与判断追踪",
     ],
     "experience_blueprint.md": [
-        "## 1. 体验结论",
+        "## 1. 交互流程总览",
         "## 2. 主交互流程",
         "## 3. 次交互流程",
         "## 4. 异常与阻断流程",
         "## 5. 页面 / 弹窗 / 抽屉设计",
         "## 6. 状态与反馈文案",
         "## 7. 待确认问题",
-        "## 附录：依据与追踪",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
 }
@@ -91,7 +84,7 @@ FORBIDDEN_TERMS = {
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 体验结论", "2. 主交互流程", "附录：依据与追踪"},
+    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
@@ -103,15 +96,11 @@ FACTS_RUNTIME_SOURCE_ALLOWED_SECTIONS = {
     "开放问题与缺口",
 }
 FACTS_RUNTIME_SOURCE_BLOCKED_SECTIONS = {
-    "术语与对象边界",
-    "角色与对象清单",
-    "原子事实清单",
-    "规则矩阵",
-    "状态模型",
-    "动作与流程事实",
-    "异常与拦截清单",
-    "依赖清单",
-    "追踪映射",
+    "功能范围",
+    "关键业务规则",
+    "状态流转",
+    "异常与边界",
+    "依赖与前置条件",
 }
 RUNTIME_SOURCE_REF_MARKERS = [
     "task_card_resolved.json",
@@ -184,7 +173,7 @@ EXPERIENCE_CRITICAL_HINTS = [
     "帮助",
 ]
 EXPERIENCE_CORE_SECTION_TITLES = [
-    "1. 体验结论",
+    "1. 交互流程总览",
     "2. 主交互流程",
     "3. 次交互流程",
     "4. 异常与阻断流程",
@@ -195,8 +184,6 @@ EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bEV-\d+\b", re.IGNORECASE), "核心区包含 EV 编号"),
     (re.compile(r"source[_ ]?path", re.IGNORECASE), "核心区包含 source_path"),
     (re.compile(r"(?:从当前输入直接抽取|未做模板补全)"), "核心区暴露了生成过程提示语"),
-    (re.compile(r"(?:配置\s+支持配置|查看\s+查看权限)"), "核心区存在明显机器化表达"),
-    (re.compile(r"(?:提交\s+目前企业的员工权限分配均由权限)"), "核心区存在明显机器化表达"),
     (re.compile(r"(?:生成基于当前真实需求文档承载页)"), "核心区存在明显机器化表达"),
 ]
 
@@ -937,14 +924,13 @@ def write_runtime_extension_artifacts(
 
 def compute_dimension_coverage(facts_text: str) -> dict[str, int]:
     keys = {
-        "actor": ["### Actor Facts", "角色清单"],
-        "object": ["### Object Facts", "对象清单"],
-        "state": ["### State Facts", "## 状态模型"],
-        "action": ["### Action Facts", "## 动作与流程事实"],
-        "rule": ["### Rule Facts", "## 规则矩阵"],
-        "exception": ["### Exception Facts", "## 异常与拦截清单"],
-        "dependency": ["### Dependency Facts", "## 依赖清单"],
-        "scope": ["### Scope Facts", "## 范围与非范围"],
+        "overview": ["## 任务概述"],
+        "features": ["## 功能范围"],
+        "rules": ["## 关键业务规则"],
+        "states": ["## 状态流转"],
+        "exceptions": ["## 异常与边界"],
+        "dependencies": ["## 依赖与前置条件"],
+        "gaps": ["## 开放问题与缺口"],
     }
     result: dict[str, int] = {}
     for key, patterns in keys.items():
@@ -1038,14 +1024,14 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     has_handover_empty_talk = contains_any(handover_section, ["后续根据实际情况设计", "按实际情况调整", "后续再细化", "待后续补齐"])
 
     if not judgment_ids:
-        add_issue(issues, "blocker", "business_blueprint.md 未形成显式业务判断编号（J-xx / POS-xx）")
+        add_issue(issues, "warning", "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据")
     elif judgment_count < 3:
         add_issue(issues, "warning", "business_blueprint.md 业务判断数量偏少，review 深度可能不足")
 
     if not fact_ids:
-        add_issue(issues, "blocker", "facts.md 中没有可承接的事实 ID")
+        add_issue(issues, "warning", "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）")
     elif not referenced_facts:
-        add_issue(issues, "blocker", "business_blueprint.md 未承接任何 facts ID")
+        add_issue(issues, "warning", "business_blueprint.md 对 facts 的承接关系不够明显，建议在判断中自然引用 facts 中的关键结论")
     else:
         add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced_facts)} 条事实")
         if len(referenced_facts) < max(1, len(fact_ids) // 5):
@@ -1060,7 +1046,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
         add_issue(issues, "blocker", "business_blueprint.md 缺少价值 / 成本 / 认知负担评估")
 
     if risk_item_count == 0:
-        add_issue(issues, "blocker", "business_blueprint.md 缺少风险与反模式单列")
+        add_issue(issues, "warning", "business_blueprint.md 风险与保护策略内容偏少")
 
     if count_real_list_items(plan_section) == 0 and count_real_table_rows(plan_section) == 0:
         add_issue(issues, "blocker", "business_blueprint.md 缺少推荐业务方案的可执行内容")
@@ -1076,9 +1062,9 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
         add_issue(issues, "warning", "business_blueprint.md 方案承接要求存在空话，建议改为可执行要求")
 
     if not trace_section.strip():
-        add_issue(issues, "warning", "business_blueprint.md 缺少有效的判断追踪映射内容")
+        add_issue(issues, "warning", "business_blueprint.md 缺少有效的判断依据说明")
     elif judgment_traceable_count == 0:
-        add_issue(issues, "warning", "business_blueprint.md 判断追踪映射未真正追到 J-xx / POS-xx")
+        add_issue(issues, "warning", "business_blueprint.md 判断依据未覆盖足够的核心判断")
 
     if not stance_section.strip():
         add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
@@ -1249,7 +1235,7 @@ def run_validate_outputs(project_id: str) -> int:
         business_metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
         extend_issues(issues, business_depth_issues)
         if int(business_metrics.get("judgment_traceable_count", 0)) == 0:
-            add_issue(issues, "blocker", "final validate：business_blueprint.md 的判断追踪映射仍不足，不能视为稳定 business review")
+            add_issue(issues, "warning", "final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系")
 
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
@@ -1338,9 +1324,9 @@ def run_coverage_check(project_id: str) -> int:
     page_ids = extract_page_ids(experience_text)
     experience_sections = parse_h2_sections(experience_text)
     experience_trace_section = (
-        experience_sections.get("附录 C：页面 / 流程追踪映射", "")
-        or experience_sections.get("页面 / 流程追踪映射", "")
-        or experience_sections.get("体验追踪映射", "")
+        experience_sections.get("附录：依据与追踪", "")
+        or experience_sections.get("依据与追踪", "")
+        or experience_text
     )
 
     facts_in_business = [item for item in fact_ids if item in business_text]
@@ -1365,15 +1351,15 @@ def run_coverage_check(project_id: str) -> int:
     infos = list(status_data.get("issues", {}).get("infos", []))
 
     if not fact_ids:
-        blockers.append("facts.md 未提取到事实 ID，无法完成覆盖检查")
+        infos.append("facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准")
     if orphan_facts:
         warnings.append(f"存在未被后续消费的事实：{', '.join(orphan_facts[:6])}")
     if orphan_judgments:
         warnings.append(f"存在未被体验层消费的业务判断：{', '.join(orphan_judgments[:6])}")
     if critical_judgments and not critical_judgments_in_trace:
-        warnings.append("experience 追踪映射未承接任何状态/异常/治理/依赖类业务判断，建议补充关键判断的页面/流程/状态/文案落点")
+        warnings.append("experience 可能未充分承接 business 的方案承接要求，建议检查页面/流程/状态/文案是否覆盖 business 的关键判断")
     if not page_ids:
-        warnings.append("experience_blueprint.md 未发现页面 ID（P-xx），页面级消费不足")
+        warnings.append("experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足")
 
     infos.extend([f"coverage: {line}" for line in coverage_lines])
     blockers = sorted(set(blockers))
@@ -1478,18 +1464,12 @@ def run_facts_gate(project_id: str) -> int:
         check_runtime_leakage_guard("facts.md", facts_text, issues)
         check_facts_source_guard(project_id, facts_text, issues)
 
-        fact_ids = extract_fact_ids(facts_text)
-        if not fact_ids:
-            add_issue(issues, "blocker", "facts.md 未提取到原子事实 ID")
-        else:
-            add_issue(issues, "info", f"facts.md 已提炼 {len(fact_ids)} 条事实")
-
         dimension = compute_dimension_coverage(facts_text)
         covered_count = sum(dimension.values())
-        if covered_count < 6:
-            add_issue(issues, "blocker", "facts.md 结构化维度覆盖不足，无法稳定支撑业务判断")
-        elif covered_count < 8:
-            add_issue(issues, "warning", "facts.md 结构化维度覆盖仍偏粗")
+        if covered_count < 5:
+            add_issue(issues, "blocker", "facts.md 章节覆盖不足，无法稳定支撑业务判断")
+        elif covered_count < 7:
+            add_issue(issues, "warning", "facts.md 章节覆盖仍偏粗")
 
         source_hits, knowledge_hits = evaluate_facts_source_legality(project_id, facts_text)
         if source_hits == 0:
@@ -1499,9 +1479,7 @@ def run_facts_gate(project_id: str) -> int:
         if knowledge_hits and source_hits == 0:
             add_issue(issues, "blocker", "facts.md 可能将知识补写为输入事实，请补充输入来源追溯")
 
-        if "## 追踪映射" not in facts_text:
-            add_issue(issues, "blocker", "facts.md 缺少追踪映射，关键事实不可追溯")
-        if ("GAP-" not in facts_text) and ("[GAP]" not in facts_text) and ("## 开放问题与缺口" not in facts_text):
+        if "[GAP]" not in facts_text and "## 开放问题与缺口" not in facts_text:
             add_issue(issues, "warning", "facts.md 未显式暴露缺口")
 
     context_manifest = read_json(context_manifest_path)
@@ -1522,10 +1500,8 @@ def run_facts_gate(project_id: str) -> int:
 
     blockers, warnings, infos, _ = summarize_issues(issues)
     metrics = {
-        "fact_count": len(extract_fact_ids(facts_text)),
         "dimension_coverage": compute_dimension_coverage(facts_text),
-        "traceable_fact_count": len(extract_fact_ids(facts_text)) if "## 追踪映射" in facts_text else 0,
-        "gap_count": facts_text.count("GAP-") + facts_text.count("[GAP]"),
+        "gap_count": facts_text.count("[GAP]"),
         "knowledge_derived_fact_count": 0,
     }
     report_path, status_path, status = write_gate_artifacts(

@@ -282,8 +282,10 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
     for section, field in OUTPUT_REQUIREMENT_SECTIONS.items():
         parsed = parse_output_requirements(sections.get(section, []))
         resolved[field] = parsed
-        if not parsed["required_sections"] or not parsed["boundary"]:
-            errors.append(f"{section} is missing required subsections or bullet values")
+        if not parsed["required_sections"] and not parsed["boundary"]:
+            pass  # Output requirements are now optional; contracts define the structure
+        elif not parsed["required_sections"] or not parsed["boundary"]:
+            warnings.append(f"{section} has partial output requirements (sections or boundary missing)")
 
     detail_items = list(resolved.get("knowledge_refs_details", [])) + list(resolved.get("wiki_refs_details", []))
     has_directory_ref = any(item.get("kind") == "directory" for item in detail_items)

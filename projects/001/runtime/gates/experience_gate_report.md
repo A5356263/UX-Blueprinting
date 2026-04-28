@@ -5,7 +5,7 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 4
+- warning_count: 1
 - info_count: 1
 
 - project_id: 001
@@ -27,11 +27,8 @@
 
 ## Warnings
 
-- experience_blueprint.md 核心区存在明显机器化表达
-- experience_blueprint.md 核心区存在明显机器化表达
-- experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达
-- experience_blueprint.md 核心区页面名重复较多，建议继续语义去重
+- experience_blueprint.md 附录：依据与追踪内容偏少
 
 ## Infos
 
-- business 阶段状态：passed
+- business 阶段状态：warning

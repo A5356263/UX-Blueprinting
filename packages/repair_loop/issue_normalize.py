@@ -11,50 +11,33 @@ from packages.repair_loop.issue_collect import read_text, repo_rel
 
 EXPECTED_HEADINGS = {
     "facts": [
-        "任务意图",
-        "事实来源说明",
-        "术语与对象边界",
-        "角色与对象清单",
-        "原子事实清单",
-        "规则矩阵",
-        "状态模型",
-        "动作与流程事实",
-        "异常与拦截清单",
-        "依赖清单",
-        "范围与非范围",
+        "任务概述",
+        "功能范围",
+        "关键业务规则",
+        "状态流转",
+        "异常与边界",
+        "依赖与前置条件",
         "开放问题与缺口",
-        "追踪映射",
     ],
     "business": [
-        "评审对象与任务边界",
-        "领域基线",
-        "方案意图与变更类型",
-        "合理性判断",
-        "底层逻辑一致性判断",
-        "管理策略一致性判断",
-        "能力归位判断",
-        "价值、成本与认知负担评估",
-        "备选路径比较",
-        "最终业务立场",
-        "关键规则与依赖影响",
-        "风险与反模式",
-        "开放问题与缺口",
-        "判断追踪映射",
+        "1. 一句话结论",
+        "2. 需求是否成立",
+        "3. 值不值得做",
+        "4. 应该做成什么能力形态",
+        "5. 推荐业务方案",
+        "6. 必须守住的规则和边界",
+        "7. 主要风险与保护策略",
+        "8. 方案承接要求",
+        "9. 待确认问题",
     ],
     "experience": [
-        "体验目标与任务边界",
-        "体验推导依据",
-        "信息架构总览",
-        "任务流蓝图",
-        "页面 / 窗口清单",
-        "关键页面蓝图",
-        "区块布局示意",
-        "内容与信息优先级合同",
-        "状态与反馈矩阵",
-        "文案合同",
-        "风险、疑惑点与保护策略",
-        "开放问题与缺口",
-        "体验追踪映射",
+        "1. 交互流程总览",
+        "2. 主交互流程",
+        "3. 次交互流程",
+        "4. 异常与阻断流程",
+        "5. 页面 / 弹窗 / 抽屉设计",
+        "6. 状态与反馈文案",
+        "7. 待确认问题",
     ],
 }
 
@@ -201,7 +184,7 @@ def _infer_category(raw_issue: dict[str, Any], project_id: str, stage: str) -> t
         return "trace_missing", inspection
     if "state" in lowered or "状态" in message or "exception" in lowered or "happy path" in lowered:
         return "state_model_gap", inspection
-    if "copy" in lowered or "文案合同" in message:
+    if "copy" in lowered or "文案" in message or "反馈文案" in message:
         return "copy_contract_gap", inspection
     if "placeholder" in lowered:
         return "placeholder_residue", inspection
@@ -324,7 +307,7 @@ def _suggested_actions(category: str, targets: list[str], inspection: dict[str, 
     elif category == "state_model_gap":
         actions.append(f"补齐 {target_name} 的失败态、阻断态或处理中状态")
     elif category == "copy_contract_gap":
-        actions.append(f"补齐 {target_name} 的文案合同或文案边界说明")
+        actions.append(f"补齐 {target_name} 的状态与反馈文案")
     elif category == "boundary_violation":
         actions.append(f"删除 {target_name} 中越出当前阶段边界的内容")
     elif category == "runtime_staleness":

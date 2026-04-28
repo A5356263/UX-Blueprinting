@@ -1,9 +1,0 @@
-{
-  "project_id": "001",
-  "task_name": "权限自助申请全链路蓝图",
-  "domain": "permission",
-  "status": "draft",
-  "project_role": "real_project",
-  "read_only": false,
-  "excluded_from_default_scan": false
-}

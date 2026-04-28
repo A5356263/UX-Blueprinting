@@ -39,7 +39,7 @@
 
 - 事实阶段不过：先检查 `source/` 是否写入真实输入，而非占位文本
 - 业务或体验阶段不过：先看 `runtime/gates/facts_gate_report.md`、`business_gate_report.md`、`experience_gate_report.md`
-- 覆盖检查告警：检查 `facts.md` 中事实 ID 是否在蓝图中被显式引用
+- 覆盖检查告警：检查 `facts.md` 中的关键业务规则、角色和异常是否在 business 和 experience 中充分承接
 
 ## 执行入口
 
