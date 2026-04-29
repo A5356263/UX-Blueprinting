@@ -1,20 +1,9 @@
-# Skill 输入输出说明
+# Skill 输入输出说明（已废弃）
 
-本文件用于解释当前平台优化层中的 skill 分工。  
-它不是正式规则真源，也不构成跨 AI 主线依赖。
+`skills/` 目录已于 2026-04-28 移除。原 skill 文件定义的内容已完全被以下 specs 合同文件覆盖：
 
-## skill_requirements_refine
+- **原 skill_requirements_refine** → `specs/08_fact_extraction_contract.md`
+- **原 skill_blueprint_build（业务部分）** → `specs/09_business_blueprint_contract.md`
+- **原 skill_blueprint_build（体验部分）** → `specs/10_experience_blueprint_contract.md`
 
-- 输入：原始需求、Task Card、必要背景
-- 输出：`facts.md`
-- 边界：不做业务规则与体验方案判断
-
-## skill_blueprint_build
-
-- 输入：`facts.md`、Task Card、业务知识、设计指南
-- 输出：`business_blueprint.md`、`experience_blueprint.md`
-- 边界：信息不足时保留开放问题，不擅自补造事实
-
-## 说明
-
-如果没有 skill，项目主线仍然应能依赖 `specs/`、`packages/`、`projects/`、`knowledge/` 与 `templates/` 执行。
+项目主线依赖 `specs/`、`packages/`、`projects/`、`knowledge/` 与 `templates/` 执行。

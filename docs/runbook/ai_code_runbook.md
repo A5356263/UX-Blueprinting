@@ -3,7 +3,7 @@
 ## 执行顺序
 
 1. 读取 `task_card.md`
-2. 读取对应 skill
+2. 读取对应 specs 合同文件（如 08/09/10）
 3. 读取所需 knowledge 与 templates
 4. 产出到 `workspace/`
 5. 运行检查与归档脚本

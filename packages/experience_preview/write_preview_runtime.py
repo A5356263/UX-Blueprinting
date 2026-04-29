@@ -26,6 +26,11 @@ def write_preview_runtime(
     model_path = preview_dir / "preview_model.json"
     model_path.write_text(json.dumps(model, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
+    business_section_count = len(model.get("business", {}).get("sections", []))
+    experience_section_count = len(model.get("experience", {}).get("sections", []))
+    flow_count = len(model.get("experience", {}).get("flows", []))
+    page_count = len(model.get("experience", {}).get("pages", []))
+
     runtime_payload = {
         "project_id": project_id,
         "generated_at": now_iso(),
@@ -35,17 +40,18 @@ def write_preview_runtime(
         "server_port": port,
         "preview_url": preview_url,
         "ready_state": ready_state,
-        "page_count": len(model.get("page_views", [])),
-        "global_note_count": len(model.get("global_context", {}).get("notes", [])),
-        "unresolved_count": len(model.get("unresolved_items", [])),
-        "source_business_blueprint": model.get("meta", {}).get("context", {}).get("source_business_blueprint", ""),
-        "source_experience_blueprint": model.get("meta", {}).get("context", {}).get("source_experience_blueprint", ""),
+        "business_section_count": business_section_count,
+        "experience_section_count": experience_section_count,
+        "flow_count": flow_count,
+        "page_count": page_count,
+        "source_business_blueprint": model.get("meta", {}).get("source_business", ""),
+        "source_experience_blueprint": model.get("meta", {}).get("source_experience", ""),
     }
     runtime_path = preview_dir / "preview_runtime.json"
     runtime_path.write_text(json.dumps(runtime_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     build_log = [
-        "# 体验蓝图预览构建日志",
+        "# 蓝图预览构建日志",
         "",
         f"- project_id: `{project_id}`",
         f"- generated_at: `{runtime_payload['generated_at']}`",
@@ -53,9 +59,10 @@ def write_preview_runtime(
         f"- source_experience_blueprint: `{runtime_payload['source_experience_blueprint']}`",
         f"- ready_state: `{ready_state}`",
         f"- preview_url: `{preview_url or 'N/A'}`",
-        f"- page_count: `{runtime_payload['page_count']}`",
-        f"- global_note_count: `{runtime_payload['global_note_count']}`",
-        f"- unresolved_count: `{runtime_payload['unresolved_count']}`",
+        f"- business_section_count: `{business_section_count}`",
+        f"- experience_section_count: `{experience_section_count}`",
+        f"- flow_count: `{flow_count}`",
+        f"- page_count: `{page_count}`",
     ]
     (preview_dir / "preview_build_log.md").write_text("\n".join(build_log) + "\n", encoding="utf-8")
     return runtime_path

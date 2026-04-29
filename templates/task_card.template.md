@@ -37,10 +37,11 @@
 
 1. 先读本文件
 2. 再读 `Required Inputs`
-3. facts 阶段：理解需求，用自然语言重述（详见 `specs/08_fact_extraction_contract.md`）
-4. business 阶段：基于 facts 做业务判断（详见 `specs/09_business_blueprint_contract.md`）
-5. experience 阶段：基于 facts 和 business 做体验转译（详见 `specs/10_experience_blueprint_contract.md`）
-6. 最后按 `Templates` 产出结果并按 `Checks` 自检
+3. 生成 facts.md（详见 `specs/08_fact_extraction_contract.md`）→ 运行 `python -m packages gate-facts {{TASK_ID}}`，通过才能进入下一步
+4. 生成 business_blueprint.md（详见 `specs/09_business_blueprint_contract.md`）→ 运行 `python -m packages gate-business {{TASK_ID}}`，通过才能进入下一步
+5. 生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience {{TASK_ID}}`，通过才能进入下一步
+6. 运行 `python -m packages validate {{TASK_ID}}` 和 `python -m packages coverage {{TASK_ID}}`
+7. 运行 `python -m packages archive {{TASK_ID}}`（产物镜像到 exports/）
 
 ## Constraints
 
@@ -51,6 +52,7 @@
 - facts 阶段不得把引用知识提升为当前任务的已确认事实
 - business 阶段不得输出 UI 方案或实现方案
 - experience 阶段不得输出高保真视觉稿或研发实现细节
+- **阶段门禁**：每个阶段必须 gate 通过后才能进入下一阶段。不得在 facts gate 通过前生成 business_blueprint.md，不得在 business gate 通过前生成 experience_blueprint.md。不得一次性写完所有产物再回头补 gate。
 
 ## Knowledge
 
@@ -61,6 +63,10 @@
 
 - knowledge/wiki/index.md
 - knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+
+## Design Guidelines
+
+- knowledge/wiki/summaries/guidelines/README.md
 
 ## Knowledge Consumption Policy
 
@@ -97,11 +103,6 @@
 - specs/08_fact_extraction_contract.md
 - specs/09_business_blueprint_contract.md
 - specs/10_experience_blueprint_contract.md
-
-## Platform Optimizations
-
-- skills/skill_requirements_refine.md
-- skills/skill_blueprint_build.md
 
 ## Result Locations
 
@@ -140,7 +141,6 @@
 - 每个交互节点写清用户动作、系统反馈、前置解释、具体文案、下一步
 - 文案必须是可直接展示的文本，禁止元指令
 - 禁止输出高保真视觉稿或研发实现细节
-- 参考示例：`test/Experience_Blueprint 理想效果.md`
 
 ## Notes
 

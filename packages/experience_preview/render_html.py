@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import html
-import re
+import html as html_mod
 from pathlib import Path
 from typing import Any
 
-
-STYLE_CSS = """
+STYLE_CSS = r"""
 :root {
   --bg: #f2f0e8;
   --panel: #fffdf8;
@@ -25,1461 +23,575 @@ STYLE_CSS = """
   --danger: #8b3a3a;
   --danger-soft: #f8e4e1;
   --shadow: 0 10px 28px rgba(63, 49, 30, 0.08);
+  --radius: 8px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top right, rgba(31, 107, 91, 0.08), transparent 24%),
-    linear-gradient(180deg, #f7f4ed 0%, var(--bg) 100%);
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(180deg, #f7f4ed 0%, var(--bg) 100%);
   color: var(--text);
+  line-height: 1.7;
 }
 
-body,
-button,
-input,
-textarea {
-  font: inherit;
-}
+.app { display: flex; min-height: 100vh; }
 
-.page {
-  width: min(1400px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 20px 0 40px;
-}
-
-.hero,
-.panel,
-.page-card {
+/* ---- sidebar ---- */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-}
-
-.layout {
-  display: grid;
-  gap: 16px;
-}
-
-.tab-nav {
+  border-right: 1px solid var(--line);
+  padding: 24px 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.tab-btn {
-  border: 1px solid var(--line);
-  background: var(--panel-subtle);
-  color: var(--text);
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  cursor: pointer;
+.sidebar-header {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--line);
 }
 
-.tab-btn.active {
-  border-color: rgba(31, 107, 91, 0.35);
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-}
-
-.tab-panel {
-  display: none;
-}
-
-.tab-panel.active {
-  display: block;
-}
-
-.hero {
-  padding: 16px 18px;
-  margin-bottom: 16px;
-}
-
-.hero-top {
-  margin-bottom: 8px;
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: 24px;
-  line-height: 1.2;
-}
-
-.hero p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-muted);
-}
-
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.meta span,
-.hero-detail dt,
-.hero-detail dd,
-.legend-chip,
-.tiny-chip,
-.node-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--panel-subtle);
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.hero-detail {
-  margin-top: 10px;
-  display: grid;
-  gap: 6px;
-}
-
-.hero-detail-row {
-  display: grid;
-  grid-template-columns: 92px 1fr;
-  gap: 8px;
-  align-items: start;
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.hero-detail dt,
-.hero-detail dd {
-  margin: 0;
-  min-height: unset;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.hero-detail dt {
-  color: var(--text-soft);
-}
-
-.hero-detail dd {
-  color: var(--text);
-}
-
-.panel {
-  padding: 16px;
-}
-
-.panel-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.section-title {
-  margin: 0;
+.sidebar-header h2 {
+  margin: 0 0 4px;
   font-size: 18px;
-  line-height: 1.3;
-}
-
-.section-desc {
-  margin: 4px 0 0;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.lane-list {
-  display: grid;
-  gap: 12px;
-}
-
-.lane {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.62);
-}
-
-.lane-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.lane h3 {
-  margin: 0;
-  font-size: 16px;
-}
-
-.lane-meta {
-  font-size: 11px;
-  color: var(--text-soft);
-}
-
-.chain-list {
-  display: grid;
-  gap: 10px;
-}
-
-.chain {
-  padding: 12px;
-  border: 1px solid rgba(31, 107, 91, 0.14);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(226, 241, 235, 0.88), rgba(255, 255, 255, 0.96));
-}
-
-.chain-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.chain-head h4 {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.35;
-}
-
-.chain-goal {
-  margin: 4px 0 0;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-muted);
-}
-
-.chain-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.tiny-chip.primary {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  border-color: rgba(31, 107, 91, 0.16);
-}
-
-.tiny-chip.secondary {
-  color: var(--warn);
-  background: var(--warn-soft);
-  border-color: rgba(138, 90, 20, 0.16);
-}
-
-.node-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: stretch;
-  margin-top: 10px;
-}
-
-.flow-arrow {
-  align-self: center;
-  color: var(--text-soft);
-  font-size: 16px;
-}
-
-.flow-node {
-  flex: 1 1 156px;
-  min-width: 156px;
-  max-width: 220px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(31, 107, 91, 0.16);
-  background: var(--panel-strong);
-}
-
-.flow-node small {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--text-soft);
-}
-
-.flow-node strong {
-  display: block;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.flow-node p {
-  margin: 6px 0 0;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-muted);
-}
-
-.flow-node .node-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.flow-node .node-note {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(199, 188, 167, 0.8);
-}
-
-.flow-node.decision {
-  border-color: rgba(138, 90, 20, 0.22);
-  background: linear-gradient(180deg, #fff9ef 0%, #fffcf5 100%);
-}
-
-.flow-node.decision strong {
-  color: #7b4f11;
-}
-
-.decision-branches {
-  display: grid;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.decision-branches span {
-  display: block;
-  padding: 6px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.decision-pass {
-  background: rgba(31, 107, 91, 0.08);
   color: var(--accent-strong);
 }
 
-.decision-stop {
-  background: rgba(139, 58, 58, 0.08);
-  color: var(--danger);
-}
-
-.flow-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.chain-judgment {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(216, 209, 194, 0.9);
-}
-
-.chain-judgment h5 {
-  margin: 0 0 8px;
+.project-badge {
   font-size: 12px;
-  line-height: 1.4;
-  color: var(--text-soft);
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 4px;
 }
 
-.judgment-lines {
-  display: grid;
+.sidebar-tabs {
+  display: flex;
+  padding: 12px 12px 0;
   gap: 4px;
 }
 
-.judgment-lines span {
-  display: block;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.legend-chip {
-  color: var(--text-muted);
-}
-
-.confirm-list,
-.page-list,
-.detail-list,
-.source-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.confirm-list {
-  display: grid;
-  gap: 8px;
-}
-
-.confirm-list li {
-  padding: 10px 12px;
-  border-radius: 12px;
+.tab-btn {
+  flex: 1;
+  padding: 8px 4px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.7);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.confirm-list strong {
-  color: var(--accent-strong);
-}
-
-.pages {
-  display: grid;
-  gap: 14px;
-}
-
-.page-card {
-  padding: 16px;
-}
-
-.page-card-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.page-card-title {
-  display: grid;
-  gap: 8px;
-}
-
-.page-card h3 {
-  margin: 0;
-  font-size: 20px;
-  line-height: 1.3;
-}
-
-.page-code {
-  font-size: 11px;
-  color: var(--text-soft);
-}
-
-.page-type {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  min-height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(31, 107, 91, 0.14);
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.page-card-grid {
-  display: grid;
-  grid-template-columns: minmax(300px, 1.05fr) minmax(360px, 1.25fr);
-  gap: 14px;
-}
-
-.page-main,
-.page-side {
-  display: grid;
-  gap: 0;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.76);
-}
-
-.page-side {
   background: var(--panel-subtle);
-}
-
-.info-block {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.info-block + .info-block {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(216, 209, 194, 0.9);
-}
-
-.info-block h4 {
-  margin: 0 0 8px;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.info-block p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.65;
   color: var(--text-muted);
-}
-
-.meta-list {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-}
-
-.meta-row {
-  display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 10px;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.meta-row dt {
-  margin: 0;
-  color: var(--text-soft);
-}
-
-.meta-row dd {
-  margin: 0;
-  color: var(--text);
-}
-
-.detail-list {
-  display: grid;
-  gap: 8px;
-}
-
-.detail-list li {
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.detail-list strong {
-  display: block;
-  margin-bottom: 4px;
   font-size: 13px;
-  line-height: 1.45;
-}
-
-.detail-list span {
-  display: block;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.bullet-list {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 6px;
-}
-
-.bullet-list li {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--text);
-}
-
-.empty-note {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-soft);
-}
-
-.sketch-shell {
-  border: 1px dashed var(--line-strong);
-  border-radius: 14px;
-  background: linear-gradient(180deg, #fffdf8 0%, #faf6ee 100%);
-  padding: 12px;
-}
-
-.sketch-shell.drawer {
-  margin-left: 36px;
-}
-
-.sketch-shell.modal {
-  max-width: 280px;
-}
-
-.sketch-label {
-  font-size: 11px;
-  color: var(--text-soft);
-  margin-bottom: 8px;
-}
-
-.sketch-grid {
-  display: grid;
-  gap: 8px;
-}
-
-.sketch-block {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid #d6ccb7;
-  background: rgba(255, 255, 255, 0.86);
-  font-size: 12px;
-  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.15s;
   text-align: center;
 }
 
-details {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.82);
+.tab-btn.active {
+  background: var(--panel-strong);
+  color: var(--accent-strong);
+  border-bottom-color: var(--panel-strong);
+  font-weight: 600;
 }
 
-details summary {
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.nav-section { padding: 0 20px; }
+
+.nav-item {
+  display: block;
+  padding: 5px 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 1px 0;
+  transition: all 0.12s;
   cursor: pointer;
-  padding: 10px 12px;
+}
+
+.nav-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
+.nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+.nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+.nav-divider {
+  font-size: 11px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 12px 4px;
+  font-weight: 600;
+}
+
+/* ---- main content ---- */
+.content {
+  flex: 1;
+  padding: 32px 40px 80px;
+  max-width: 960px;
+}
+
+.content-panel { display: block; }
+.content-panel.hidden { display: none; }
+
+.section-block {
+  margin-bottom: 36px;
+  scroll-margin-top: 24px;
+}
+
+.section-heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+}
+
+.section-heading.level-2 {
+  font-size: 16px;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading.level-3 {
+  font-size: 15px;
+  color: var(--text-muted);
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.section-body { font-size: 15px; }
+
+.section-body p { margin: 0 0 10px; }
+.section-body ul {
+  margin: 8px 0 16px;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.section-body ul li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  margin: 2px 0;
+}
+
+.section-body ul li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.section-body strong { color: var(--accent-strong); font-weight: 600; }
+.section-body code {
+  background: var(--panel-subtle);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+}
+
+.section-body pre {
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---- flow groups ---- */
+.flow-group { margin-bottom: 28px; }
+
+.flow-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 16px;
+  padding: 8px 14px;
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--accent);
+}
+
+/* ---- node cards ---- */
+.node-card {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(63, 49, 30, 0.04);
+}
+
+.node-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.node-field {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.node-field-label {
+  min-width: 72px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--text);
-}
-
-.source-list {
-  display: grid;
-  gap: 6px;
-  padding: 0 12px 12px;
-}
-
-.source-list li {
-  font-size: 12px;
-  line-height: 1.6;
   color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding-top: 2px;
 }
 
-.business-sections {
-  display: grid;
-  gap: 12px;
-}
-
-.business-card {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.75);
-}
-
-.business-card h3 {
-  margin: 0 0 8px;
+.node-field-value {
+  flex: 1;
   font-size: 14px;
 }
 
-.compare-list {
-  display: grid;
-  gap: 10px;
-}
+.node-field-value p { margin: 0; }
 
-.compare-item {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.84);
-  padding: 10px 12px;
-}
-
-.status-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  border: 1px solid var(--line);
-  margin-bottom: 6px;
-}
-
-.status-chip.done {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  border-color: rgba(31, 107, 91, 0.2);
-}
-
-.status-chip.partial {
-  color: var(--warn);
-  background: var(--warn-soft);
-  border-color: rgba(138, 90, 20, 0.2);
-}
-
-.status-chip.todo {
-  color: var(--danger);
-  background: var(--danger-soft);
-  border-color: rgba(139, 58, 58, 0.2);
-}
-
-.status-chip.pending {
+.node-desc {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 14px;
   color: var(--text-muted);
-  background: var(--panel-subtle);
 }
 
-.warning-list {
+/* ---- page cards ---- */
+.page-card {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(63, 49, 30, 0.04);
+}
+
+.page-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-card-name .icon { font-size: 18px; }
+
+.page-card-desc { font-size: 14px; }
+.page-card-desc p { margin: 0 0 6px; }
+
+/* ---- states list ---- */
+.states-list {
+  list-style: none;
+  padding: 0;
   display: grid;
   gap: 8px;
 }
 
-.warning-item {
+.state-item {
+  background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.76);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 14px;
+  box-shadow: 0 1px 4px rgba(63, 49, 30, 0.03);
 }
 
-code,
-pre {
-  font-family: Consolas, "Courier New", monospace;
-}
+.state-item strong { color: var(--accent-strong); }
 
-pre {
-  margin: 0;
-  padding: 0 12px 12px;
-  overflow: auto;
-  background: transparent;
-  color: var(--text);
+/* ---- footer ---- */
+.preview-footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
   font-size: 12px;
-  line-height: 1.55;
+  color: var(--text-soft);
 }
 
-@media (max-width: 1024px) {
-  .page-card-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .flow-node {
-    max-width: none;
-  }
+/* ---- responsive ---- */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 20px 16px 60px; }
 }
-
-@media (max-width: 720px) {
-  .page {
-    width: min(100% - 20px, 100%);
-    padding: 12px 0 28px;
-  }
-
-  .hero,
-  .panel,
-  .page-card {
-    border-radius: 16px;
-  }
-
-  .hero,
-  .panel,
-  .page-card {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
-  .hero-top,
-  .panel-header,
-  .lane-head,
-  .chain-head,
-  .page-card-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .meta-row {
-    grid-template-columns: 1fr;
-    gap: 2px;
-  }
-
-  .sketch-shell.drawer {
-    margin-left: 0;
-  }
-}
-""".strip()
-
-_IDENTIFIER_RE = re.compile(r"^(?P<code>[A-Za-z]{1,4}-\d{2})(?:\s+(?P<label>.+))?$")
-_TRAILING_PUNCTUATION = "。．.、，,；;：:！!？?"
+"""
 
 
-def _escape(value: Any) -> str:
-    return html.escape(str(value))
+def _field_label(key: str) -> str:
+    labels = {
+        "user_action": "用户动作",
+        "system_feedback": "系统反馈",
+        "explanation": "前置解释",
+        "copy_text": "页面文案",
+        "success_copy": "成功文案",
+        "error_copy": "异常提示",
+        "failure_copy": "失败反馈",
+        "buttons": "按钮",
+        "next_step": "下一步",
+        "options_note": "选项说明",
+    }
+    return labels.get(key, key)
 
 
-def _normalize_text(value: Any) -> str:
-    text = str(value or "").strip()
-    return re.sub(r"\s+", " ", text)
-
-
-def _canonical_text(value: Any) -> str:
-    return _normalize_text(value).rstrip(_TRAILING_PUNCTUATION).lower()
-
-
-def _dedupe_strings(items: list[str]) -> list[str]:
-    seen: set[str] = set()
-    result: list[str] = []
-    for item in items:
-        cleaned = _normalize_text(item)
-        if not cleaned:
-            continue
-        marker = _canonical_text(cleaned)
-        if marker in seen:
-            continue
-        seen.add(marker)
-        result.append(cleaned)
-    return result
-
-
-def _render_chips(items: list[str], chip_class: str = "node-chip") -> str:
-    values = _dedupe_strings(items)
-    if not values:
-        return ""
-    return "".join(f'<span class="{chip_class}">{_escape(item)}</span>' for item in values)
-
-
-def _render_bullet_list(items: list[str]) -> str:
-    values = _dedupe_strings(items)
-    if not values:
-        return ""
-    entries = "".join(f"<li>{_escape(item)}</li>" for item in values)
-    return f'<ul class="bullet-list">{entries}</ul>'
-
-
-def _render_detail_list(items: list[str]) -> str:
-    values = _dedupe_strings(items)
-    if not values:
-        return ""
-    entries = "".join(
-        f"<li><strong>{_escape(_split_title_and_body(item)[0])}</strong><span>{_escape(_split_title_and_body(item)[1])}</span></li>"
-        for item in values
-    )
-    return f'<ul class="detail-list">{entries}</ul>'
-
-
-def _render_named_items(items: list[dict[str, Any]], formatter) -> str:
-    if not items:
-        return ""
-    entries = "".join(f"<li>{formatter(item)}</li>" for item in items)
-    return f'<ul class="detail-list">{entries}</ul>'
-
-
-def _render_meta_rows(rows: list[tuple[str, str]]) -> str:
-    filtered_rows = [(label, value) for label, value in rows if _normalize_text(value)]
-    if not filtered_rows:
-        return ""
-    entries = "".join(
-        "<div class=\"meta-row\">"
-        f"<dt>{_escape(label)}</dt>"
-        f"<dd>{_escape(value)}</dd>"
-        "</div>"
-        for label, value in filtered_rows
-    )
-    return f'<dl class="meta-list">{entries}</dl>'
-
-
-def _render_hero_rows(rows: list[tuple[str, str]]) -> str:
-    filtered_rows = [(label, value) for label, value in rows if _normalize_text(value)]
-    if not filtered_rows:
-        return ""
-    entries = "".join(
-        "<div class=\"hero-detail-row\">"
-        f"<dt>{_escape(label)}</dt>"
-        f"<dd>{_escape(value)}</dd>"
-        "</div>"
-        for label, value in filtered_rows
-    )
-    return f'<dl class="hero-detail">{entries}</dl>'
-
-
-def _render_section(title: str, body: str) -> str:
-    if not body:
-        return ""
-    return f'<section class="info-block"><h4>{_escape(title)}</h4>{body}</section>'
-
-
-def _render_source_details(items: list[str]) -> str:
-    values = _dedupe_strings(items)
-    if not values:
-        return ""
-    entries = "".join(f"<li>{_escape(item)}</li>" for item in values)
-    return (
-        "<details>"
-        f"<summary>来源说明（{len(values)}）</summary>"
-        f'<ul class="source-list">{entries}</ul>'
-        "</details>"
-    )
-
-
-def _split_code_and_label(value: str) -> tuple[str, str]:
-    text = _normalize_text(value)
-    match = _IDENTIFIER_RE.match(text)
-    if not match:
-        return "", text
-    return _normalize_text(match.group("code")), _normalize_text(match.group("label"))
-
-
-def _split_title_and_body(value: str) -> tuple[str, str]:
-    text = _normalize_text(value)
-    if "：" in text:
-        title, body = text.split("：", 1)
-    elif ":" in text:
-        title, body = text.split(":", 1)
-    else:
-        return text, ""
-    return _normalize_text(title), _normalize_text(body)
-
-
-def _clean_roles(items: list[str]) -> list[str]:
-    return _dedupe_strings([_normalize_text(item).rstrip(_TRAILING_PUNCTUATION) for item in items])
-
-
-def _path_label(chain: dict[str, Any]) -> str:
-    if chain.get("is_primary"):
-        return "主链路"
-    if str(chain.get("path_type") or "").lower() == "secondary":
-        return "辅助链路"
-    return _normalize_text(chain.get("path_type") or "链路")
-
-
-def _derive_node_title(node: dict[str, Any], page_names: dict[str, str] | None = None) -> tuple[str, str]:
-    code, label = _split_code_and_label(str(node.get("name") or ""))
-    if label:
-        return code, label
-    if code:
-        return code, code
-    return "", _normalize_text(node.get("name") or "未命名节点")
-
-
-def _render_pairs(pairs: list[tuple[str, str]]) -> str:
-    rows = [(label, _normalize_text(value)) for label, value in pairs if _normalize_text(value)]
-    if not rows:
-        return ""
-    return "".join(f"<span>{_escape(label)}：{_escape(value)}</span>" for label, value in rows)
-
-
-def _render_structured_list(items: list[dict[str, Any]], title_builder, field_builder) -> str:
-    if not items:
-        return ""
-    entries: list[str] = []
-    for item in items:
-        title = _normalize_text(title_builder(item))
-        fields = field_builder(item)
-        field_html = _render_pairs(fields)
-        if not title and not field_html:
-            continue
-        entries.append(
-            "<li>"
-            + (f"<strong>{_escape(title)}</strong>" if title else "")
-            + field_html
-            + "</li>"
-        )
-    if not entries:
-        return ""
-    return f'<ul class="detail-list">{"".join(entries)}</ul>'
-
-
-def _render_sketch_blocks(page: dict[str, Any]) -> str:
-    blocks = page.get("sketch_blocks", [])
-    if not blocks:
-        return ""
-
-    view_type = _normalize_text(page.get("view_type") or "页面")
-    shell_class = "page"
-    if view_type == "抽屉":
-        shell_class = "drawer"
-    elif view_type == "弹窗":
-        shell_class = "modal"
-    elif view_type == "子页面":
-        shell_class = "subpage"
-
-    rendered_blocks = "".join(
-        f'<div class="sketch-block">{_escape(_normalize_text(block.get("label") or "未命名区块"))}</div>'
-        for block in blocks
-    )
-    return (
-        f'<div class="sketch-shell {shell_class}">'
-        f'<div class="sketch-label">{_escape(view_type)}线框草图</div>'
-        f'<div class="sketch-grid">{rendered_blocks}</div>'
-        "</div>"
-    )
-
-
-def _render_flow(model: dict[str, Any]) -> str:
-    global_flow = model.get("global_flow", {})
-    lanes = global_flow.get("lanes", [])
-    chains = {chain.get("chain_id"): chain for chain in global_flow.get("chains", [])}
-
-    if not lanes:
-        return '<p class="empty-note">暂无流程可展示。</p>'
-
-    lane_html: list[str] = []
-    nodes = global_flow.get("nodes", [])
-    for lane in lanes:
-        chain_html: list[str] = []
-        chain_ids = [_normalize_text(item) for item in lane.get("chain_ids", []) if _normalize_text(item)]
-        for chain_id in chain_ids:
-            chain = chains.get(chain_id, {})
-            chain_nodes = [node for node in nodes if _normalize_text(node.get("chain_id")) == chain_id]
-            node_parts: list[str] = []
-
-            for index, node in enumerate(chain_nodes):
-                code, title = _derive_node_title(node, {})
-                node_meta: list[str] = []
-                page_id = _normalize_text(node.get("page_id"))
-                if code and code != title:
-                    node_meta.append(code)
-                if page_id:
-                    node_meta.append(page_id)
-                node_parts.append(
-                    "<div class=\"flow-node\">"
-                    f"<small>{_escape(_normalize_text(node.get('type') or '节点'))}</small>"
-                    f"<strong>{_escape(title or '未命名节点')}</strong>"
-                    + (f'<div class="node-meta">{_render_chips(node_meta)}</div>' if node_meta else "")
-                    + "</div>"
-                )
-                if index < len(chain_nodes) - 1:
-                    node_parts.append('<div class="flow-arrow">→</div>')
-
-            node_row_html = "".join(node_parts) if node_parts else '<p class="empty-note">暂无链路节点。</p>'
-            chain_judgment_html = _render_chain_judgment(chain)
-
-            chain_html.append(
-                "<section class=\"chain\">"
-                "<div class=\"chain-head\">"
-                "<div>"
-                f"<h4>{_escape(_normalize_text(chain.get('name') or chain_id))}</h4>"
-                f"<p class=\"chain-goal\">{_escape(_normalize_text(chain.get('goal') or ''))}</p>"
-                "</div>"
-                "<div class=\"chain-badges\">"
-                f'<span class="tiny-chip {"primary" if chain.get("is_primary") else "secondary"}">{_escape(_path_label(chain))}</span>'
-                f'<span class="tiny-chip">{_escape(chain_id)}</span>'
-                "</div>"
-                "</div>"
-                f'<div class="node-row">{node_row_html}</div>'
-                f"{chain_judgment_html}"
-                "</section>"
+def _render_node_card(node: dict[str, Any]) -> str:
+    parts = [f'<h4 class="node-name">{html_mod.escape(node.get("name", ""))}</h4>']
+    field_order = ["user_action", "system_feedback", "explanation", "copy_text", "success_copy", "error_copy", "failure_copy", "options_note", "buttons", "next_step"]
+    for key in field_order:
+        value = node.get(key, "")
+        if value:
+            label = _field_label(key)
+            parts.append(
+                f'<div class="node-field">'
+                f'<span class="node-field-label">{label}</span>'
+                f'<span class="node-field-value">{_inline_text(value)}</span>'
+                f"</div>"
             )
-
-        lane_body_html = "".join(chain_html) if chain_html else '<p class="empty-note">暂无链路。</p>'
-        lane_html.append(
-            "<section class=\"lane\">"
-            "<div class=\"lane-head\">"
-            f"<h3>{_escape(_normalize_text(lane.get('role') or '未命名角色'))}</h3>"
-            f"<span class=\"lane-meta\">{len(chain_html)} 条链路</span>"
-            "</div>"
-            f'<div class="chain-list">{lane_body_html}</div>'
-            "</section>"
-        )
-
-    return f'<div class="lane-list">{"".join(lane_html)}</div>'
+    if node.get("description_html"):
+        parts.append(f'<div class="node-desc">{node["description_html"]}</div>')
+    return f'<div class="node-card">{"\n".join(parts)}</div>'
 
 
-def _render_chain_judgment(chain: dict[str, Any]) -> str:
-    lines = _render_pairs(
-        [
-            ("依赖 / 前提", chain.get("start")),
-            ("判断 / 阻断", chain.get("judgment")),
-            ("失败后去向 / 回退关系", chain.get("failure_result")),
-        ]
-    )
-    if not lines:
-        return ""
-    return (
-        '<div class="chain-judgment">'
-        "<h5>判断说明</h5>"
-        f'<div class="judgment-lines">{lines}</div>'
-        "</div>"
-    )
+def _inline_text(text: str) -> str:
+    text = html_mod.escape(text)
+    text = text.replace("**", "")
+    text = text.replace("\n", "<br>")
+    return text
 
 
-def _render_page_card(page: dict[str, Any]) -> str:
-    page_id = _normalize_text(page.get("page_id"))
-    view_name = _normalize_text(page.get("view_name") or "未命名页面")
-    roles = " / ".join(_clean_roles([str(role) for role in page.get("roles", [])]))
-    meta_rows = _render_meta_rows(
-        [
-            ("编号", page_id),
-            ("角色", roles),
-            ("入口", _normalize_text(page.get("entry"))),
-            ("退出", _normalize_text(page.get("exit"))),
-        ]
-    )
-
-    summary = _normalize_text(page.get("summary"))
-    if summary == view_name:
-        summary = ""
-
-    key_understanding_blocks: list[str] = []
-    understanding_html = _render_bullet_list([str(item) for item in page.get("key_understanding", [])])
-    if understanding_html:
-        key_understanding_blocks.append(understanding_html)
-
-    action_html = _render_structured_list(
-        page.get("action_items", []),
-        lambda item: f"{_normalize_text(item.get('action_id'))} { _normalize_text(item.get('name')) }".strip(),
-        lambda item: [
-            ("触发条件", item.get("trigger")),
-            ("即时反馈", item.get("feedback")),
-            ("后续结果", item.get("outcome")),
-            ("风险保护", item.get("protection")),
-        ],
-    )
-    if action_html:
-        key_understanding_blocks.append(action_html)
-
-    info_contract_html = _render_structured_list(
-        page.get("info_contract_items", []),
-        lambda item: f"{_normalize_text(item.get('info_id'))} { _normalize_text(item.get('purpose')) }".strip(),
-        lambda item: [
-            ("优先级", item.get("priority")),
-            ("推荐位置", item.get("position")),
-            ("触发时机", item.get("trigger")),
-            ("不展示风险", item.get("risk")),
-        ],
-    )
-    if info_contract_html:
-        key_understanding_blocks.append(info_contract_html)
-
-    left_sections = "".join(
-        [
-            _render_section("线框草图", _render_sketch_blocks(page)),
-            _render_section("页面信息", meta_rows),
-            _render_section("页面摘要", f"<p>{_escape(summary)}</p>" if summary else ""),
-            _render_section("关键理解", "".join(key_understanding_blocks)),
-            _render_section("来源说明", _render_source_details([str(item) for item in page.get("source_refs", [])])),
-        ]
-    )
-
-    states_html = _render_structured_list(
-        page.get("states", []),
-        lambda item: f"{_normalize_text(item.get('state_id'))} {_normalize_text(item.get('name'))}".strip(),
-        lambda item: [
-            ("触发条件", item.get("trigger")),
-            ("可用动作", item.get("actions")),
-            ("页面反馈", item.get("feedback")),
-            ("文案反馈", item.get("copy_feedback")),
-            ("下游结果", item.get("outcome")),
-        ],
-    )
-
-    copy_html = _render_structured_list(
-        page.get("copy_items", []),
-        lambda item: f"{_normalize_text(item.get('copy_id'))} {_normalize_text(item.get('scene'))}".strip(),
-        lambda item: [
-            ("文案类型", item.get("copy_type")),
-            ("语义目标", item.get("goal")),
-            ("必含信息", item.get("required")),
-            ("禁止写法", item.get("avoid")),
-            ("示例方向", item.get("example")),
-        ],
-    )
-
-    risk_html = _render_structured_list(
-        page.get("risks", []),
-        lambda item: f"{_normalize_text(item.get('risk_id'))} {_normalize_text(item.get('name'))}".strip(),
-        lambda item: [
-            ("触发场景", item.get("trigger")),
-            ("困惑原因", item.get("confusion_reason")),
-            ("保护策略", item.get("protection")),
-        ],
-    )
-
-    blocker_html = _render_structured_list(
-        page.get("blockers", []),
-        lambda item: f"{_normalize_text(item.get('id'))} {_normalize_text(item.get('name'))}".strip(),
-        lambda item: [
-            ("触发条件", item.get("trigger")),
-            ("影响", item.get("impact")),
-        ],
-    )
-
-    principle_html = _render_structured_list(
-        page.get("principles", []),
-        lambda item: f"{_normalize_text(item.get('principle_id'))} {_normalize_text(item.get('name'))}".strip(),
-        lambda item: [("命中原因", item.get("reason"))],
-    )
-
-    mode_trace_html = _render_structured_list(
-        [{"mode": page.get("view_type")}] + list(page.get("trace_items", [])),
-        lambda item: _normalize_text(item.get("mode")) if item.get("mode") else f"{_normalize_text(item.get('trace_id'))} {_normalize_text(item.get('object'))}".strip(),
-        lambda item: [("承载模式", item.get("mode"))] if item.get("mode") else [
-            ("承接业务判断", item.get("business_judgment")),
-            ("承接事实 / 规则 / 异常", item.get("facts")),
-            ("承接原则", item.get("principles")),
-            ("说明", item.get("note")),
-        ],
-    )
-
-    pending_items = _dedupe_strings(
-        [str(item) for item in page.get("open_items", [])] + [str(item) for item in page.get("gap_items", [])]
-    )
-
-    right_sections = "".join(
-        [
-            _render_section("状态与反馈", states_html),
-            _render_section("文案", copy_html),
-            _render_section("风险与阻断", "".join([risk_html, blocker_html])),
-            _render_section("原则", principle_html),
-            _render_section("模式与追踪", mode_trace_html),
-            _render_section("待确认项", _render_bullet_list(pending_items)),
-        ]
-    )
-
-    return (
-        "<article class=\"page-card\">"
-        "<div class=\"page-card-head\">"
-        "<div class=\"page-card-title\">"
-        f"<span class=\"page-type\">{_escape(_normalize_text(page.get('view_type') or '页面'))}</span>"
-        f"<h3>{_escape(view_name)}</h3>"
-        "</div>"
-        + (f'<span class="page-code">{_escape(page_id)}</span>' if page_id else "")
-        + "</div>"
-        "<div class=\"page-card-grid\">"
-        f'<div class="page-main">{left_sections}</div>'
-        f'<div class="page-side">{right_sections}</div>'
-        "</div>"
-        "</article>"
-    )
+def _render_sections(sections: list[dict[str, Any]]) -> str:
+    parts: list[str] = []
+    for s in sections:
+        level_class = f"level-{s['level']}" if s["level"] > 1 else ""
+        parts.append(f'<div class="section-block" id="{s["anchor"]}">')
+        parts.append(f'<h2 class="section-heading {level_class}">{html_mod.escape(s["heading"])}</h2>')
+        parts.append(f'<div class="section-body">{s["body_html"]}</div>')
+        parts.append("</div>")
+    return "\n".join(parts)
 
 
-def render_preview_html(model: dict[str, Any]) -> str:
-    meta = model.get("meta", {})
-    global_context = model.get("global_context", {})
-    business_preview = model.get("business_preview", {})
-    overview = meta.get("overview", {})
-    global_principles_html = _render_bullet_list(
-        [_normalize_text(item.get("label") or item.get("principle_id")) for item in global_context.get("principles", [])]
-    )
-    global_notes_html = _render_structured_list(
-        global_context.get("notes", []),
-        lambda item: _normalize_text(item.get("type")),
-        lambda item: [
-            ("内容", item.get("content")),
-            ("推荐位置", item.get("position")),
-        ],
-    )
+def _render_nav_items(sections: list[dict[str, Any]]) -> str:
+    parts: list[str] = []
+    for s in sections:
+        cls = f"level-{s['level']}" if s["level"] > 1 else ""
+        parts.append(f'<a class="nav-item {cls}" data-target="{s["anchor"]}">{html_mod.escape(s["heading"])}</a>')
+    return "\n".join(parts)
 
-    pending_global_items = []
-    for item in global_context.get("open_questions", []):
-        pending_global_items.append(
-            f"{_normalize_text(item.get('id') or 'OQ')}：{_normalize_text(item.get('content') or item.get('label') or '无直接项')}"
-        )
-    for item in global_context.get("gaps", []):
-        pending_global_items.append(
-            f"{_normalize_text(item.get('id') or 'GAP')}：{_normalize_text(item.get('content') or item.get('label') or '无直接项')}"
-        )
-    for item in model.get("unresolved_items", []):
-        pending_global_items.append(
-            f"{_normalize_text(item.get('type') or '待确认')}：{_normalize_text(item.get('message') or '无直接项')}"
-        )
 
-    flow_html = _render_flow(model)
-    page_cards = "".join(_render_page_card(page) for page in model.get("page_views", []))
-    global_reference_body = "".join(
-        [
-            _render_section("原则引用", global_principles_html),
-            _render_section("信息优先级", global_notes_html),
-        ]
-    )
-    experience_tab_html = (
-        "<div class=\"layout\">"
-        "<section class=\"panel\">"
-        "<div class=\"panel-header\"><div><h2 class=\"section-title\">全局流程总览</h2></div></div>"
-        f"{flow_html}"
-        "<div class=\"flow-legend\">"
-        "<span class=\"legend-chip\">按角色分泳道</span>"
-        "<span class=\"legend-chip\">按链路分组</span>"
-        "</div>"
-        "</section>"
-        f"{_render_section_panel('全局待确认', _render_global_confirm_list(pending_global_items))}"
-        f"{_render_section_panel('全局原文补充', global_reference_body)}"
-        "<section class=\"panel\">"
-        "<div class=\"panel-header\"><div><h2 class=\"section-title\">页面预览卡</h2></div></div>"
-        f"<div class=\"pages\">{page_cards or '<p class=\"empty-note\">无可渲染页面。</p>'}</div>"
-        "</section>"
-        "</div>"
-    )
-    business_tab_html = _render_business_sections(business_preview)
-    handover_tab_html = _render_handover_matrix(model.get("handover_matrix", []))
-    warnings_tab_html = _render_warnings(model)
-    source_context = meta.get("context", {})
-    source_business = _normalize_text(source_context.get("source_business_blueprint"))
-    source_experience = _normalize_text(source_context.get("source_experience_blueprint"))
+def _render_business(model: dict[str, Any]) -> str:
+    biz = model["business"]
+    sections_html = _render_sections(biz["sections"])
+    return f"""
+    <div class="content-panel" id="content-business">
+      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(biz['title'])}</h1>
+      {sections_html}
+    </div>"""
+
+
+def _render_experience(model: dict[str, Any]) -> str:
+    exp = model["experience"]
+    sections = exp["sections"]
+    flows = exp["flows"]
+    pages = exp["pages"]
+    states = exp["states"]
+
+    parts: list[str] = []
+    parts.append(f"""<div class="content-panel hidden" id="content-experience">
+      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp['title'])}</h1>""")
+
+    flow_section_indices = set()
+    page_section_index = None
+    state_section_index = None
+
+    for i, s in enumerate(sections):
+        heading = s["heading"]
+        if any(kw in heading for kw in ["主交互流程", "次交互流程"]):
+            flow_section_indices.add(i)
+        if any(kw in heading for kw in ["页面", "弹窗", "抽屉"]):
+            page_section_index = i
+        if any(kw in heading for kw in ["状态", "反馈文案"]):
+            state_section_index = i
+
+    for i, s in enumerate(sections):
+        if i in flow_section_indices:
+            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
+            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
+
+            relevant_flows = [f for f in flows if _flow_matches_section(f["name"], s["heading"])]
+            if not relevant_flows:
+                relevant_flows = [f for f in flows if not _flow_matches_any_section(f["name"], [sections[j]["heading"] for j in flow_section_indices if j != i])]
+
+            for flow in relevant_flows:
+                parts.append(f'<div class="flow-group">')
+                parts.append(f'<h3 class="flow-name">{html_mod.escape(flow["name"])}</h3>')
+                for node in flow.get("nodes", []):
+                    if node.get("_has_fields"):
+                        parts.append(_render_node_card(node))
+                    else:
+                        parts.append(f'<div class="section-body">{node.get("description_html", "")}</div>')
+                if flow.get("body_html"):
+                    parts.append(f'<div class="section-body">{flow["body_html"]}</div>')
+                parts.append("</div>")
+
+            if not relevant_flows:
+                parts.append(f'<div class="section-body">{s["body_html"]}</div>')
+            parts.append("</div>")
+
+        elif i == page_section_index and pages:
+            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
+            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
+            for p in pages:
+                icon = _page_icon(p["name"])
+                parts.append(
+                    f'<div class="page-card">'
+                    f'<div class="page-card-name"><span class="icon">{icon}</span>{html_mod.escape(p["name"])}</div>'
+                    f'<div class="page-card-desc">{p["desc_html"]}</div>'
+                    f"</div>"
+                )
+            parts.append("</div>")
+
+        elif i == state_section_index and states:
+            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
+            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
+            parts.append('<ul class="states-list">')
+            for st in states:
+                parts.append(f'<li class="state-item">{_inline_text(st)}</li>')
+            parts.append("</ul>")
+            parts.append("</div>")
+
+        else:
+            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
+            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
+            parts.append(f'<div class="section-body">{s["body_html"]}</div>')
+            parts.append("</div>")
+
+    parts.append("</div>")
+    return "\n".join(parts)
+
+
+def _page_icon(name: str) -> str:
+    n = name.lower()
+    if "抽屉" in n:
+        return "　"
+    if "弹窗" in n:
+        return "▣"
+    return "□"
+
+
+def _flow_matches_section(flow_name: str, section_heading: str) -> bool:
+    fn = flow_name.replace("流程 ", "").replace("流程", "")
+    sh = section_heading.replace("主交互流程", "").replace("次交互流程", "").strip()
+    return fn[0:4] in sh if fn and sh else True
+
+
+def _flow_matches_any_section(flow_name: str, section_headings: list[str]) -> bool:
+    return any(_flow_matches_section(flow_name, sh) for sh in section_headings)
+
+
+def _render_html(model: dict[str, Any]) -> str:
+    project_id = model["project_id"]
+    business_nav = _render_nav_items(model["business"]["sections"])
+    experience_nav = _render_nav_items(model["experience"]["sections"])
+    business_content = _render_business(model)
+    experience_content = _render_experience(model)
+    meta = model["meta"]
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{_escape(_normalize_text(meta.get("title") or "体验蓝图预览"))}</title>
-  <link rel="stylesheet" href="./assets/style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓝图预览 — {html_mod.escape(project_id)}</title>
+<link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-  <main class="page">
-    <section class="hero">
-      <div class="hero-top">
-        <h1>{_escape(_normalize_text(meta.get("title") or "蓝图预览"))}</h1>
-      </div>
-      {_render_hero_rows([
-          ("只读说明", "该页面仅用于本地阅读正式蓝图的派生预览，不回写正式蓝图，也不新增业务语义。"),
-          ("项目", _normalize_text(model.get("project_id") or "")),
-          ("Business 来源", source_business),
-          ("Experience 来源", source_experience),
-          ("目标用户与角色", _normalize_text(overview.get("目标用户与角色") or "").replace("目标用户与角色：", "", 1)),
-          ("体验目标", _normalize_text(overview.get("体验目标") or "").replace("体验目标：", "", 1)),
-          ("任务边界", _normalize_text(overview.get("任务边界") or "").replace("任务边界：", "", 1)),
-      ])}
-      <div class="tab-nav">
-        <button class="tab-btn active" data-tab="business">Business Blueprint</button>
-        <button class="tab-btn" data-tab="experience">Experience Blueprint</button>
-        <button class="tab-btn" data-tab="handover">承接对照</button>
-        <button class="tab-btn" data-tab="warnings">Warnings / Gaps</button>
-      </div>
-    </section>
-    <div class="tab-panel active" data-panel="business">
-      {business_tab_html}
-    </div>
-    <div class="tab-panel" data-panel="experience">
-      {experience_tab_html}
-    </div>
-    <div class="tab-panel" data-panel="handover">
-      {handover_tab_html}
-    </div>
-    <div class="tab-panel" data-panel="warnings">
-      {warnings_tab_html}
-    </div>
-  </main>
-  <script>
-    const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
-    const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
-    tabButtons.forEach((button) => {{
-      button.addEventListener("click", () => {{
-        const tabId = button.dataset.tab;
-        tabButtons.forEach((item) => item.classList.toggle("active", item === button));
-        tabPanels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === tabId));
-      }});
+<div class="app">
+
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>蓝图预览</h2>
+    <span class="project-badge">{html_mod.escape(project_id)}</span>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" data-panel="business">业务蓝图</button>
+    <button class="tab-btn" data-panel="experience">体验蓝图</button>
+  </div>
+  <div class="sidebar-nav" id="nav-business">
+    <div class="nav-section">{business_nav}</div>
+  </div>
+  <div class="sidebar-nav hidden" id="nav-experience">
+    <div class="nav-section">{experience_nav}</div>
+  </div>
+</nav>
+
+<main class="content">
+  {business_content}
+  {experience_content}
+  <footer class="preview-footer">
+    来源：{html_mod.escape(meta.get('source_experience', ''))} &nbsp;|&nbsp; 版本 {html_mod.escape(meta.get('version', ''))}
+  </footer>
+</main>
+
+</div>
+<script>
+(function() {{
+  var tabs = document.querySelectorAll('.tab-btn');
+  var navBusiness = document.getElementById('nav-business');
+  var navExperience = document.getElementById('nav-experience');
+  var contentBusiness = document.getElementById('content-business');
+  var contentExperience = document.getElementById('content-experience');
+  var current = 'business';
+
+  function switchPanel(name) {{
+    current = name;
+    tabs.forEach(function(t) {{ t.classList.toggle('active', t.dataset.panel === name); }});
+    navBusiness.classList.toggle('hidden', name !== 'business');
+    navExperience.classList.toggle('hidden', name !== 'experience');
+    contentBusiness.classList.toggle('hidden', name !== 'business');
+    contentExperience.classList.toggle('hidden', name !== 'experience');
+  }}
+
+  tabs.forEach(function(t) {{
+    t.addEventListener('click', function() {{ switchPanel(t.dataset.panel); }});
+  }});
+
+  document.querySelectorAll('.nav-item').forEach(function(item) {{
+    item.addEventListener('click', function(e) {{
+      e.preventDefault();
+      var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
+      if (panel !== current) switchPanel(panel);
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }});
-  </script>
+  }});
+}})();
+</script>
 </body>
-</html>
-"""
+</html>"""
 
 
-def _render_business_sections(business_preview: dict[str, Any]) -> str:
-    sections = business_preview.get("sections", [])
-    cards: list[str] = []
-    for section in sections:
-        title = _normalize_text(section.get("title") or "")
-        items = _render_bullet_list([str(item) for item in section.get("items", [])])
-        if not title or not items:
-            continue
-        cards.append(f'<article class="business-card"><h3>{_escape(title)}</h3>{items}</article>')
-    if not cards:
-        body = '<p class="empty-note">未读取到 business_blueprint.md 或未识别到可展示章节。</p>'
-    else:
-        body = f'<div class="business-sections">{"".join(cards)}</div>'
-    return _render_section_panel("Business 蓝图摘要", body, "只读展示业务结论、推荐方案、规则边界、风险与承接要求。")
-
-
-def _status_chip_class(status: str) -> str:
-    normalized = _normalize_text(status)
-    if normalized == "已承接":
-        return "done"
-    if normalized == "部分承接":
-        return "partial"
-    if normalized == "未承接":
-        return "todo"
-    return "pending"
-
-
-def _render_handover_matrix(rows: list[dict[str, Any]]) -> str:
-    entries: list[str] = []
-    for row in rows:
-        requirement = _normalize_text(row.get("requirement") or "")
-        status = _normalize_text(row.get("status") or "待确认")
-        evidence = _normalize_text(row.get("evidence") or "")
-        if not requirement:
-            continue
-        entries.append(
-            "<article class=\"compare-item\">"
-            f"<span class=\"status-chip {_status_chip_class(status)}\">{_escape(status)}</span>"
-            f"<p><strong>业务承接要求：</strong>{_escape(requirement)}</p>"
-            f"<p><strong>体验承接证据：</strong>{_escape(evidence or '未识别到稳定证据')}</p>"
-            "</article>"
-        )
-    body = f'<div class="compare-list">{"".join(entries)}</div>' if entries else '<p class="empty-note">暂无可对照的承接要求。</p>'
-    return _render_section_panel("承接对照", body, "用于阅读辅助，不参与主链路 Gate。")
-
-
-def _render_warnings(model: dict[str, Any]) -> str:
-    warnings: list[str] = []
-    global_context = model.get("global_context", {})
-    for item in model.get("unresolved_items", []):
-        warnings.append(f"未解析项：{_normalize_text(item.get('message') or item.get('type') or '')}")
-    for item in global_context.get("risks", []):
-        warnings.append(f"全局风险：{_normalize_text(item.get('name') or item.get('risk_id') or '')}")
-    for item in global_context.get("open_questions", []):
-        warnings.append(f"开放问题：{_normalize_text(item.get('content') or item.get('id') or '')}")
-    for item in global_context.get("gaps", []):
-        warnings.append(f"全局缺口：{_normalize_text(item.get('content') or item.get('id') or '')}")
-    for item in model.get("handover_matrix", []):
-        status = _normalize_text(item.get("status") or "")
-        if status in {"未承接", "部分承接", "待确认"}:
-            warnings.append(
-                f"承接风险（{status}）：{_normalize_text(item.get('requirement') or '')}"
-            )
-    values = _dedupe_strings(warnings)
-    if not values:
-        body = '<p class="empty-note">暂无显式 warnings / gaps。</p>'
-    else:
-        body = '<div class="warning-list">' + "".join(
-            f'<div class="warning-item">{_escape(item)}</div>' for item in values
-        ) + "</div>"
-    return _render_section_panel("Warnings / Gaps", body, "聚合全局风险、开放问题、缺口与承接不足项。")
-
-
-def _render_global_confirm_list(items: list[str]) -> str:
-    values = _dedupe_strings(items)
-    if not values:
-        return ""
-    entries = "".join(
-        f"<li><strong>{_escape(_split_title_and_body(item)[0])}</strong> {_escape(_split_title_and_body(item)[1])}</li>"
-        for item in values
-    )
-    return f'<ul class="confirm-list">{entries}</ul>'
-
-
-def _render_section_panel(title: str, body: str, desc: str = "") -> str:
-    if not body:
-        return ""
-    desc_html = f"<p class=\"section-desc\">{_escape(desc)}</p>" if _normalize_text(desc) else ""
-    return (
-        "<section class=\"panel\">"
-        "<div class=\"panel-header\">"
-        "<div>"
-        f"<h2 class=\"section-title\">{_escape(title)}</h2>"
-        f"{desc_html}"
-        "</div>"
-        "</div>"
-        f"{body}"
-        "</section>"
-    )
-
-
-def json_dumps(payload: dict[str, Any]) -> str:
-    import json
-
-    return json.dumps(payload, ensure_ascii=False, indent=2)
-
-
-def write_preview_site(output_dir: Path, model: dict[str, Any]) -> None:
-    assets_dir = output_dir / "assets"
+def write_preview_site(preview_dir: Path, model: dict[str, Any]) -> None:
+    assets_dir = preview_dir / "assets"
     assets_dir.mkdir(parents=True, exist_ok=True)
-    (assets_dir / "style.css").write_text(STYLE_CSS + "\n", encoding="utf-8")
-    (output_dir / "index.html").write_text(render_preview_html(model), encoding="utf-8")
+    (assets_dir / "style.css").write_text(STYLE_CSS, encoding="utf-8")
+    (preview_dir / "index.html").write_text(_render_html(model), encoding="utf-8")
