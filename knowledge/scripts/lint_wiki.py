@@ -13,6 +13,7 @@ REQUIRED_SUMMARY_FIELDS = [
     "updated_at:",
     "source_refs:",
     "related_summaries:",
+    "semantic_status:",
 ]
 
 # FORBIDDEN_OLD_TITLES 是迁移期检查项。
@@ -98,6 +99,10 @@ def main() -> int:
         # active summary 不应包含占位符文本
         if "- status: active" in text and PLACEHOLDER_TEXT in text:
             issues.append(f"active_summary_has_placeholder:{rel}")
+
+        # ai_generated 不应含占位符文本
+        if "- semantic_status: ai_generated" in text and PLACEHOLDER_TEXT in text:
+            issues.append(f"ai_generated_has_placeholder:{rel}")
 
     index_file = root / "wiki" / "index.md"
     if index_file.exists():

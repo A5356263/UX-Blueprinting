@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/app_management/00_domain_overview.md]
 - related_summaries:
@@ -17,27 +20,30 @@
 
 ## 1. 知识定位
 
-应用管理域用于沉淀企业已启用应用治理、应用可见范围和组装应用相关知识。
+定义应用管理域的职责范围：回答「应用管理域管什么」这一判断问题。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要理解或使用本业务域的知识进行方案设计或判断时
+- 需要判断某个功能或概念是否属于应用管理域时
+- 需要了解应用管理域的整体定位时
+- 需要区分应用管理域与权限域的边界时
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 待从 raw 中进一步确认覆盖内容的具体分类
+- 应用管理域的核心沉淀内容：企业已启用应用治理、应用可见范围、组装应用
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 各子模块的具体规则和操作流程（需查对应子模块 raw）
 
 ## 4. 可直接使用的稳定结论
 
-- 待从 raw 中进一步确认可直接使用的稳定结论。
+- 应用管理域覆盖三大主题：应用治理、应用可见范围、组装应用
+- 应用管理域不记录用户授权算法和审批流程内部实现细节
 
 ## 5. 必须回查 raw 的情况
 

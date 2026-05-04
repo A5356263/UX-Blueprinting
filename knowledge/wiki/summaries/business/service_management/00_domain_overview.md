@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/service_management/00_domain_overview.md]
 - related_summaries:
@@ -17,27 +20,30 @@
 
 ## 1. 知识定位
 
-服务管理域用于沉淀企业邀请服务人员、配置服务时间和授权范围、并记录服务行为的相关知识。
+定义服务管理域的职责范围：回答「服务管理域管什么」这一判断问题。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要理解或使用本业务域的知识进行方案设计或判断时
+- 需要判断某个功能或概念是否属于服务管理域时
+- 需要了解服务管理域的整体定位和范围时
+- 需要区分服务管理域与成员域、权限域的边界时
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 待从 raw 中进一步确认覆盖内容的具体分类
+- 服务管理域的核心内容：邀请服务人员、配置服务时间和授权范围、记录服务行为
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 各子模块的具体规则和操作流程（需查对应子模块 raw）
 
 ## 4. 可直接使用的稳定结论
 
-- 待从 raw 中进一步确认可直接使用的稳定结论。
+- 服务管理域覆盖三大主题：服务人员邀请接入、授权范围配置、服务行为记录
+- 服务管理域不承载通用权限算法和成员域主链路知识
 
 ## 5. 必须回查 raw 的情况
 

@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/project_background/02_platform_roles_and_terminals.md]
 - related_summaries:
@@ -17,27 +20,33 @@
 
 ## 1. 知识定位
 
-平台使用角色分为管理员和成员。
+平台角色分工与支持终端的定义，用于判断某类操作属于管理员职责还是成员职责，以及确认平台终端覆盖范围。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要理解或使用本业务域的知识进行方案设计或判断时
+- 当任务涉及需要区分管理员与成员的能力边界和职责分工时
+- 当任务涉及需要确认平台支持的终端类型（网页端/PC端/移动端）时
+- 当任务涉及用户注册、创建企业、加入企业等基础流程的角色判断时
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 章节：1. 管理员, 2. 成员, 3. 支持终端
+- 角色：管理员职责（注册/认证/创建企业/邀请员工/分配权限/平台治理）、成员职责（注册/认证/加入企业/授权范围内使用平台）
+- 终端：网页端、PC端（Windows/Linux/MacOS）、移动端（Android/iOS/鸿蒙）
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 本 raw 不涉及具体权限配置细节、角色权限矩阵或后台授权操作流程
 
 ## 4. 可直接使用的稳定结论
 
-- 待从 raw 中进一步确认可直接使用的稳定结论。
+- 管理员负责注册账号与实名认证、创建企业与认证企业、企业初始化、邀请员工加入、分配用户权限和平台级配置与治理
+- 成员负责注册账号、按需实名认证、加入企业、在授权范围内使用平台与业务应用
+- 平台支持网页端、PC端（Windows/Linux/MacOS）和移动端（Android/iOS/鸿蒙）三类终端
+- 用户登录后可创建企业或加入企业
 
 ## 5. 必须回查 raw 的情况
 

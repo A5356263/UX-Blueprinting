@@ -73,7 +73,7 @@ def main() -> int:
 
 
 def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None:
-    """生成语义待处理报告，分类：待 AI 生成 / 待 AI 复核 / 已完成。"""
+    """生成语义待处理报告，基于 semantic_status 分类。"""
     PLACEHOLDER = "待 AI Code 读取 raw 后生成。"
 
     pending_generate: list[str] = []
@@ -84,20 +84,20 @@ def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None
         text = sf.read_text(encoding="utf-8")
         rel = sf.relative_to(root).as_posix()
         has_placeholder = PLACEHOLDER in text
-        status = "draft"
-        confidence = "low"
+        semantic_status = ""
         for line in text.splitlines():
-            if line.strip().startswith("- status:"):
-                status = line.split(":", 1)[1].strip()
-            if line.strip().startswith("- confidence:"):
-                confidence = line.split(":", 1)[1].strip()
+            if line.strip().startswith("- semantic_status:"):
+                semantic_status = line.split(":", 1)[1].strip()
 
-        if has_placeholder:
-            pending_generate.append(f"- summary_path: knowledge/{rel}")
-        elif status == "draft" or confidence == "low":
-            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: status={status}, confidence={confidence}")
-        else:
+        if not semantic_status or semantic_status == "pending" or has_placeholder:
+            reason = "missing" if not semantic_status else semantic_status
+            pending_generate.append(f"- summary_path: knowledge/{rel}\n  - reason: semantic_status={reason}")
+        elif semantic_status == "needs_review":
+            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: semantic_status=needs_review")
+        elif semantic_status == "ai_generated" and not has_placeholder:
             completed.append(f"- knowledge/{rel}")
+        else:
+            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: unexpected state")
 
     report_lines = [
         "# Pending Semantic Summaries",

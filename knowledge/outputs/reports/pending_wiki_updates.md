@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-04T14:25:31+00:00
+- generated_at_utc: 2026-05-04T15:10:49+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -236,7 +236,7 @@ reindexed=knowledge/wiki/index.md
 
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
-question_count=9
+question_count=11
 ```
 
 ### refresh_overview.py

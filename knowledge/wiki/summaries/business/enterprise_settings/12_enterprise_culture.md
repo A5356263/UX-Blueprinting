@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/enterprise_settings/12_enterprise_culture.md]
 - related_summaries:
@@ -17,28 +20,35 @@
 
 ## 1. 知识定位
 
-企业文化用于承接企业品牌与文化展示。
+描述企业 logo 和企业文化墙的配置规则，回答「企业如何在平台上进行品牌与文化展示」这一判断问题。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要理解或使用本业务域的知识进行方案设计或判断时
+- 需要上传或更换企业 logo 时
+- 需要配置 PC 端或移动端企业文化墙时
+- 需要了解企业 logo 的技术规格要求时
+- 需要增强员工品牌识别和归属感时
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 页面：1. 维护入口
-- 章节：2. 企业 logo 配置, 3. 企业文化墙配置
+- 企业 logo 配置：支持上传，建议尺寸 120*120、格式 JPG/JPEG/PNG、大小 2M 以内
+- 企业文化墙配置：支持同时调整 PC 端和移动端文化墙，内容可在员工端查看
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 企业文化墙的具体内容编辑方式
+- logo 审核流程
 
 ## 4. 可直接使用的稳定结论
 
-- 路径：管理后台 -> 企业设置 -> 企业文化
+- 维护入口：管理后台 -> 企业设置 -> 企业文化
+- 企业 logo 建议规格：尺寸 120*120、格式 JPG/JPEG/PNG、大小 2M 以内
+- 支持 PC 端和移动端企业文化墙分别配置
+- 企业文化内容可在员工端查看，用于增强品牌识别和归属感
 
 ## 5. 必须回查 raw 的情况
 

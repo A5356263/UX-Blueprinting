@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/permission/03_business_objects.md]
 - related_summaries:
@@ -17,34 +20,34 @@
 
 ## 1. 知识定位
 
-本文件围绕「主体对象」组织内容，具体知识定位待从 raw 中进一步确认。
+定义权限域中六类核心业务对象（主体、资源、动作、范围、来源、治理因子、状态）的最小属性集合，为判定链路和规则合同提供标准化的对象定义基础。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要明确业务对象定义及其关系边界
-- 涉及治理模式、审批链路或审计追溯
-- 需要明确领域、能力或对象的边界与不适用范围
+- 需要明确权限域中各业务对象的准确定义和最小属性字段
+- 设计权限判定链路时需要知道输入对象的结构
+- 需要区分来源对象（source）和治理修饰因子（modifier）的属性差异
+- 为权限审计或追溯功能定义数据模型字段
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 对象：主体对象, 资源对象, 动作对象, 范围对象, 来源对象
+- 六类核心业务对象：subject（主体）、resource（资源）、action（动作）、scope（范围）、source（来源）、modifier（治理因子）、state（状态）
+- 每类对象包含定义、典型实例和最小属性集合
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 对象之间的具体关系规则（在 04_object_relations 中定义）
+- 判定链路中如何使用这些对象（在 20_decision_chain_contract 中定义）
 
 ## 4. 可直接使用的稳定结论
 
-- 定义：权限结果的承受者或操作者
-- 典型实例：用户、成员、子管理员
-- 定义：被访问、被查看、被配置或被操作的对象
-- 典型实例：应用、菜单、操作点、数据对象
-- 定义：主体对资源执行的行为
-- 典型实例：查看、编辑、导出、审批
+- 六类核心对象及其最小属性：subject（subject_id/subject_type/org_scope/role_refs）、resource（resource_id/resource_type/parent_resource_id/app_id）、action（action_code/action_name/action_level）、scope（scope_type/scope_expression/scope_result）、source（source_enum/source_ref/source_priority）、modifier（modifier_type/modifier_state/modifier_ref）、state（state_code/effective_flag/actor_responsibility）
+- source 是参与解释权限结果的授予来源，modifier 是影响生效与边界的修饰因子，二者必须区分
+- 典型实例：subject=用户/成员/子管理员，resource=应用/菜单/操作点/数据对象，action=查看/编辑/导出/审批
 
 ## 5. 必须回查 raw 的情况
 

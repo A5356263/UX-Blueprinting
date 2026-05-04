@@ -88,3 +88,21 @@
 - question_type: CONFLICT
 - text: 当前帮助文档仍存在以下数据权限表述，是否与现有 permission 真源一致，需进一步核对：
 - updated_at: 2026-05-04
+
+### Q-0010
+
+- question_id: Q-0010
+- source_path: knowledge/raw/business/permission/50_helpdoc_permission_delta.md
+- summary_path: knowledge/wiki/summaries/business/permission/50_helpdoc_permission_delta.md
+- question_type: CONFLICT
+- text: ：帮助文档中数据权限旧口径（维度 Tab + 默认全部数据权限 + 多维度取交集）与现有 permission 真源的"范围类型+条件组"模型存在冲突
+- updated_at: 2026-05-04
+
+### Q-0011
+
+- question_id: Q-0011
+- source_path: knowledge/raw/business/permission/50_helpdoc_permission_delta.md
+- summary_path: knowledge/wiki/summaries/business/permission/50_helpdoc_permission_delta.md
+- question_type: CONFLICT
+- text: 数据权限旧口径（"每个功能至少选一个维度、多维度取交集、未设置维度默认全部数据权限"）与现有真源的"范围类型+条件组"模型不一致，需核对后再决定是否覆盖
+- updated_at: 2026-05-04

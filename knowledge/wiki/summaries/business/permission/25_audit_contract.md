@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/permission/25_audit_contract.md]
 - related_summaries:
@@ -17,34 +20,33 @@
 
 ## 1. 知识定位
 
-确保按变更查的闭环可用，支持追溯“谁在何时对谁做了什么、是否审批、何时生效”。
+定义权限审计的最低字段集合（9 个必填字段），确保按变更查的闭环可用，支持追溯”谁在何时对谁做了什么、是否审批、何时生效”，为审计功能和合规检查提供数据模型基础。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要理解或引用正式规则、判定链路或决策合同
-- 判断权限、配置或状态裁决的生效逻辑与优先级
-- 涉及治理模式、审批链路或审计追溯
+- 设计权限审计功能的数据模型或日志结构
+- 需要追溯某个权限变更的完整历史链路
+- 评估现有系统的审计能力是否满足最低字段要求
+- 需要确定操作类型（grant/revoke/edit/batch）和审批状态应如何记录
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 章节：1) 目的, 2) 最低审计字段集合
+- 审计目的：支持追溯”谁在何时对谁做了什么、是否审批、何时生效”
+- 9 个最低审计字段：who/ to_whom/ what/ where/ when/ why/ approval/ outcome/ snapshot
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 审计日志的存储实现、具体审计查询页面设计
 
 ## 4. 可直接使用的稳定结论
 
-- `who`：操作者，如 `operator_id`、`operator_role`
-- `to_whom`：被操作对象，如 `subject_id`、`target_user_id`
-- `what`：操作类型，如 `grant`、`revoke`、`edit`、`batch`
-- `where`：作用域，如 `app_id`、`role_id`、`org_scope`
-- `when`：发生时间与生效时间
-- `approval`：是否需要审批、实例 id、当前状态
+- 最低审计字段 9 个：who（操作者）、to_whom（被操作对象）、what（操作类型 grant/revoke/edit/batch）、where（作用域）、when（发生时间与生效时间）、why（原因或备注）、approval（是否需要审批+实例 id+当前状态）、outcome（结果+conflict_reason_code）、snapshot（evaluatable_snapshot）
+- 审计必须覆盖操作结果和冲突原因码（outcome + conflict_reason_code），不仅是操作记录
+- 审计必须包含可验算快照（evaluatable_snapshot），支持事后追溯验证
 
 ## 5. 必须回查 raw 的情况
 

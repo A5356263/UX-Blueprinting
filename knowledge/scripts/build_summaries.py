@@ -177,6 +177,14 @@ def extract_confidence(text: str) -> str:
     return "low"
 
 
+def extract_semantic_status(text: str) -> str:
+    """从已有 summary 元数据中提取 semantic_status。"""
+    for line in text.splitlines():
+        if line.strip().startswith("- semantic_status:"):
+            return line.split(":", 1)[1].strip()
+    return "pending"
+
+
 # ---- 核心生成函数 ----
 
 def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path], force_regenerate: bool = False) -> str:
@@ -204,6 +212,7 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         s4 = existing_sections.get("s4_conclusions", PLACEHOLDER_TEXT)
         status = extract_status(existing_text)
         confidence = extract_confidence(existing_text)
+        semantic_status = extract_semantic_status(existing_text)
     else:
         # ---- 骨架模式：占位符 ----
         s1 = PLACEHOLDER_TEXT
@@ -212,6 +221,7 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         s4 = PLACEHOLDER_TEXT
         status = "draft"
         confidence = "low"
+        semantic_status = "pending"
 
     # 组装 summary
     s1_body = _format_section_body(s1)
@@ -228,6 +238,9 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         f"- source_group: {group}",
         f"- status: {status}",
         f"- confidence: {confidence}",
+        "- summary_role: ai_route_card",
+        f"- semantic_status: {semantic_status}",
+        f"- semantic_updated_at: {today_str}",
         f"- updated_at: {today_str}",
         f"- source_refs: [{rel_source}]",
         "- related_summaries:",

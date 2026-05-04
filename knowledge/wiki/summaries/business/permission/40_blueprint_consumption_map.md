@@ -6,6 +6,9 @@
 - source_group: business
 - status: active
 - confidence: medium
+- summary_role: ai_route_card
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-04
 - updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/permission/40_blueprint_consumption_map.md]
 - related_summaries:
@@ -17,27 +20,34 @@
 
 ## 1. 知识定位
 
-本文件围绕「业务蓝图主要消费」组织内容，具体知识定位待从 raw 中进一步确认。
+定义权限域各知识文件分别被业务蓝图和体验蓝图消费的映射关系，以及双向共用的文件清单，用于在构建蓝图时快速定位应读取哪些知识文件。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 涉及体验蓝图的构建或业务到体验的转译
+- 构建业务蓝图时需要确定应从权限知识库消费哪些文件
+- 构建体验蓝图时需要确定应从权限知识库消费哪些文件
+- 需要区分哪些文件仅服务于业务蓝图、哪些仅服务于体验蓝图、哪些双向共用
+- 需要评估蓝图所需知识的覆盖完整性
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 章节：业务蓝图主要消费, 体验蓝图主要消费, 双向共用
+- 业务蓝图消费清单（12 个文件）：00_domain_overview、01_scope_and_boundary、03_business_objects、10_capability_map、11_task_scenarios、12_query_and_configuration_paths、20_decision_chain_contract、21_source_model、22_conflict_reason_codes、23_rule_contracts、24_governance_state_model、25_audit_contract
+- 体验蓝图消费清单（9 个文件）：01_scope_and_boundary、02_glossary、12_query_and_configuration_paths、14_actor_boundary、20_decision_chain_contract、22_conflict_reason_codes、30_experience_risk_patterns、31_experience_translation_requirements、32_copy_and_explanation_strategy
+- 双向共用清单（4 个文件）：13_route_map、21_source_model、24_governance_state_model、25_audit_contract
 
 不涉及：
 
-- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+- 各文件的具体内容和规则细节
 
 ## 4. 可直接使用的稳定结论
 
-- 待从 raw 中进一步确认可直接使用的稳定结论。
+- 业务蓝图至少需消费 12 个权限知识文件，体验蓝图至少需消费 9 个
+- 双向共用的 4 个文件（13_route_map、21_source_model、24_governance_state_model、25_audit_contract）对两种蓝图都是必读
+- 业务蓝图侧重消费能力地图、任务场景、判定链路和规则合同（10-25 号文件），体验蓝图侧重消费术语表、角色边界、风险模式和转译要求（02/14/30-32 号文件）
 
 ## 5. 必须回查 raw 的情况
 
