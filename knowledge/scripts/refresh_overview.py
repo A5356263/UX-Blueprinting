@@ -5,10 +5,14 @@ from pathlib import Path
 
 
 def count_markers(files: list[Path], marker: str) -> int:
+    """只统计以 [MARKER] 开头的真实问题标记行，忽略正文中普通提及。"""
     count = 0
     for file in files:
         try:
-            count += file.read_text(encoding="utf-8").count(marker)
+            for line in file.read_text(encoding="utf-8").splitlines():
+                stripped = line.strip().lstrip("- ").strip()
+                if stripped.startswith(marker):
+                    count += 1
         except UnicodeDecodeError:
             continue
     return count

@@ -15,6 +15,9 @@ REQUIRED_SUMMARY_FIELDS = [
     "related_summaries:",
 ]
 
+# FORBIDDEN_OLD_TITLES 是迁移期检查项。
+# 用于防止旧 summary 模板（机械摘要型）残留。
+# 后续 summary 全量稳定后，可移除或改为可选检查（如 --check-legacy-summary）。
 FORBIDDEN_OLD_TITLES = [
     "这份原始资料讲什么",
     "适用范围 / 不适用范围",

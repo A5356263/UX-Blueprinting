@@ -11,9 +11,9 @@
 - raw_total: 86
 - summary_total: 86
 - summary_coverage: 86/86
-- gap_count: 108
-- conflict_count: 89
-- question_marker_count: 86
+- gap_count: 16
+- conflict_count: 2
+- question_marker_count: 0
 - raw_without_summary: 0
 - questions_total: 9
 
