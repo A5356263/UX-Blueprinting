@@ -15,42 +15,50 @@
   - knowledge/wiki/summaries/business/enterprise_settings/README.md
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/11_enterprise_creation_and_certification.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-企业登录页个性化配置用于让企业拥有专属登录页展示。 路径：管理后台 -> 企业设置 -> 企业文化 -> 企业登录页配置 该能力通常需要联系专属客户经理或服务人员申请开通。
+企业登录页个性化配置用于让企业拥有专属登录页展示。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 判断某个能力由哪个页面承载
+- 判断页面承担配置、查询、解释还是治理职责
+- 需要明确领域、能力或对象的边界与不适用范围
 
-## 3. 关键事实
+## 3. 覆盖内容
+
+本 raw 覆盖：
+
+- 页面：1. 维护入口, 4. Web 页面可配置项, 5. H5 页面可配置项
+- 章节：2. 开通方式, 3. 支持范围, 6. 使用效果
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
 
 - 路径：管理后台 -> 企业设置 -> 企业文化 -> 企业登录页配置
-- 支持配置：
-- Web 登录页
-- H5 登录页
-- 登录背景图
-- 网页名
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- 1. 维护入口
-- 2. 开通方式
-- 3. 支持范围
-- 4. Web 页面可配置项
-- 5. H5 页面可配置项
-- 6. 使用效果
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/enterprise_settings/00_domain_overview.md
 - knowledge/wiki/summaries/business/enterprise_settings/10_enterprise_information_display.md

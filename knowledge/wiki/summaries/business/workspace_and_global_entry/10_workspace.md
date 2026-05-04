@@ -15,40 +15,48 @@
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/10_enablement_paths.md
   - knowledge/wiki/summaries/business/app_management/10_application_management.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-工作台用于展示功能应用、待办消息、企业文化，并提供帮助与支持入口。 工作台主要承载： 员工可在工作台上：
+工作台用于展示功能应用、待办消息、企业文化，并提供帮助与支持入口。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 需要理解或使用本业务域的知识进行方案设计或判断时
 
-## 3. 关键事实
+## 3. 覆盖内容
 
-- 工作台主要承载：
-- 全部应用
-- 快捷访问
-- 企业有权限访问的应用入口
-- 待办
-- 通知
+本 raw 覆盖：
 
-## 4. 关键术语 / 关键对象
+- 页面：1. 应用入口
+- 章节：2. 待办与消息, 3. 企业文化, 4. 个人化设置
 
-- 1. 应用入口
-- 2. 待办与消息
-- 3. 企业文化
-- 4. 个人化设置
+不涉及：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
+
+- 待从 raw 中进一步确认可直接使用的稳定结论。
+
+## 5. 必须回查 raw 的情况
+
+以下情况不能只读 summary：
+
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/workspace_and_global_entry/00_domain_overview.md
 - knowledge/wiki/summaries/business/workspace_and_global_entry/11_global_navigation_and_service_entry.md

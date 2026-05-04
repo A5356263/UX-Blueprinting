@@ -15,42 +15,51 @@
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/11_enterprise_creation_and_certification.md
   - knowledge/wiki/summaries/business/enterprise_settings/11_enterprise_login_page_customization.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-应用组装用于把已有功能菜单重新编排成企业自己的新应用入口。 路径：管理后台 -> 工作台 -> 应用管理 -> 组装应用 组装应用时可配置：
+应用组装用于把已有功能菜单重新编排成企业自己的新应用入口。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 需要理解业务流程或任务场景的完整路径
+- 涉及治理模式、审批链路或审计追溯
 
-## 3. 关键事实
+## 3. 覆盖内容
 
-- 原应用功能较多，企业只想展示其中一部分
-- 常用功能在二级或三级菜单中隐藏较深，希望提升访问效率
+本 raw 覆盖：
+
+- 页面：2. 维护入口
+- 规则：7. 后续治理
+- 章节：1. 适用场景, 3. 组装方式, 4. 基本配置, 5. 菜单配置, 6. 保存与发布
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
+
 - 路径：管理后台 -> 工作台 -> 应用管理 -> 组装应用
-- 自定义组装
-- 从模板组装
-- 组装应用时可配置：
+- 组装应用与原应用相互独立：
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- 1. 适用场景
-- 2. 维护入口
-- 3. 组装方式
-- 4. 基本配置
-- 5. 菜单配置
-- 6. 保存与发布
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/app_management/00_domain_overview.md
 - knowledge/wiki/summaries/business/app_management/10_application_management.md

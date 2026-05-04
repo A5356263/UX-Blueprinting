@@ -15,39 +15,53 @@
   - knowledge/wiki/summaries/guidelines/flow_mode.md
   - knowledge/wiki/summaries/guidelines/governance.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-本摘要对应原始资料《信息架构与可发现性原则》，用于提供快速理解入口。
+定义并阐述「IA-01 信息气味（Information Scent）」相关的设计原则、触发条件、推导输出与自检标准。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 guidelines 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 评估信息架构、导航结构或内容可发现性
+- 需要理解页面、对象或规则的语义定义与解释方式
 
-## 3. 关键事实
+## 3. 覆盖内容
 
-- 来源：信息觅食理论
+本 raw 覆盖：
+
+- 原则：IA-01 信息气味（Information Scent）, IA-02 分块（Chunking）, IA-03 单一语义源（Single Source of Meaning）
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
+
 - 定义：用户用线索判断入口是否值得点、内容是否匹配预期。
 - 触发：导航命名、列表摘要、搜索结果、配置入口。
 - 推导输出：入口命名可预测；结果提供范围/来源/状态等线索。
 - 文档落点：IA｜命名｜列表信息要求
 - 自检问句：用户能否在点击前判断点进去会得到什么？
+- 反模式：入口名含糊、点进去才发现不相关。
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- IA-01 信息气味（Information Scent）
-- IA-02 分块（Chunking）
-- IA-03 单一语义源（Single Source of Meaning）
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/guidelines/README.md
 - knowledge/wiki/summaries/guidelines/accessibility.md

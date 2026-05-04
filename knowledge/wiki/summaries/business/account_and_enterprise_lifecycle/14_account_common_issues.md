@@ -15,40 +15,48 @@
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/12_enterprise_status_and_change.md
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/13_super_administrator_change.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-本文件整理账号与企业使用中的常见问题。 会。企业认证审核完成后，管理员会收到审核结果短信通知，包括： 表示当前企业认证审核正在处理中。
+本文件整理账号与企业使用中的常见问题。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 需要理解或使用本业务域的知识进行方案设计或判断时
 
-## 3. 关键事实
+## 3. 覆盖内容
+
+本 raw 覆盖：
+
+- 章节：1. 企业认证审核完成后，管理员是否会收到短信, 2. 企业认证时系统提示“新增认证中”, 3. 如何添加快捷访问, 4. 上传营业执照后识别信息有误怎么办, 5. 企业认证时是否可以上传营业执照原件照片
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
 
 - 会。企业认证审核完成后，管理员会收到审核结果短信通知，包括：
-- 认证通过
-- 驳回原因
 - 路径：工作台首页 -> 设置
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- 1. 企业认证审核完成后，管理员是否会收到短信
-- 2. 企业认证时系统提示“新增认证中”
-- 3. 如何添加快捷访问
-- 4. 上传营业执照后识别信息有误怎么办
-- 5. 企业认证时是否可以上传营业执照原件照片
-- 6. 一个用户可以创建并认证多家企业吗
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md
 - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/10_enablement_paths.md

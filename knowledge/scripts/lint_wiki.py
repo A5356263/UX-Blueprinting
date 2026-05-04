@@ -15,6 +15,14 @@ REQUIRED_SUMMARY_FIELDS = [
     "related_summaries:",
 ]
 
+FORBIDDEN_OLD_TITLES = [
+    "这份原始资料讲什么",
+    "适用范围 / 不适用范围",
+    "关键事实",
+    "关键术语 / 关键对象",
+    "相关摘要 / 建议继续阅读",
+]
+
 
 def summary_path_for(root: Path, raw_file: Path) -> Path:
     rel = raw_file.relative_to(root / "raw")
@@ -78,6 +86,9 @@ def main() -> int:
             related_rel = related.replace("knowledge/wiki/summaries/", "")
             if related_rel not in summary_lookup:
                 issues.append(f"broken_related_summary:{rel}:{related}")
+        for old_title in FORBIDDEN_OLD_TITLES:
+            if old_title in text:
+                issues.append(f"forbidden_old_title:{rel}:{old_title}")
 
     index_file = root / "wiki" / "index.md"
     if index_file.exists():

@@ -61,71 +61,6 @@ def nonempty_content_lines(lines: list[str]) -> list[str]:
     return cleaned
 
 
-def extract_intro(lines: list[str], fallback_title: str) -> str:
-    content = nonempty_content_lines(lines)
-    intro_parts: list[str] = []
-    for line in content:
-        if line.startswith(("-", "*")) or re.match(r"^\d+\.", line):
-            continue
-        intro_parts.append(line)
-        if len(" ".join(intro_parts)) >= 140:
-            break
-    if intro_parts:
-        return " ".join(intro_parts[:3])
-    return f"本摘要对应原始资料《{fallback_title}》，用于提供快速理解入口。"
-
-
-def extract_scope(lines: list[str], group: str) -> tuple[list[str], list[str]]:
-    applies: list[str] = []
-    not_applies: list[str] = []
-    for line in nonempty_content_lines(lines):
-        if "适用" in line and len(applies) < 3:
-            applies.append(line)
-        elif "不适用" in line and len(not_applies) < 3:
-            not_applies.append(line)
-    if not applies:
-        applies.append("适用于快速判断该原始资料是否与当前任务相关。")
-        applies.append(f"适用于构建 {group} 领域的背景理解与阅读入口。")
-    if not not_applies:
-        not_applies.append("不适用于替代原文证据、细节条款或最终业务裁决。")
-    return applies[:3], not_applies[:3]
-
-
-def extract_key_facts(lines: list[str]) -> list[str]:
-    facts: list[str] = []
-    for line in nonempty_content_lines(lines):
-        if TAG_PATTERN.search(line):
-            continue
-        if line.startswith(("-", "*")):
-            facts.append(line.lstrip("-* ").strip())
-        elif "：" in line or ":" in line:
-            facts.append(line)
-        if len(facts) >= 6:
-            break
-    if not facts:
-        facts.append("原文以结构化说明为主，建议回查 raw 获取完整事实细节。")
-    return facts[:6]
-
-
-def extract_terms(lines: list[str]) -> list[str]:
-    terms: list[str] = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("## "):
-            term = stripped[3:].strip()
-            if term and term not in terms:
-                terms.append(term)
-        elif stripped.startswith("### "):
-            term = stripped[4:].strip()
-            if term and term not in terms:
-                terms.append(term)
-        if len(terms) >= 6:
-            break
-    if not terms:
-        terms.append("建议回查原文章节标题与列表项，确认关键对象。")
-    return terms[:6]
-
-
 def extract_tagged_items(lines: list[str]) -> list[str]:
     items: list[str] = []
     for line in lines:
@@ -156,19 +91,202 @@ def related_summaries_for(root: Path, raw_file: Path, all_raw_files: list[Path],
     return related[:max_items]
 
 
+# ---- 新增：轻量路由生成函数 ----
+
+def build_knowledge_position(lines: list[str], title: str, group: str) -> str:
+    """基于标题、首段内容、领域归属，说明这份 raw 主要解决什么判断问题。"""
+    content = nonempty_content_lines(lines)
+    first_text = ""
+    for line in content:
+        if not line.startswith(("-", "*")) and not re.match(r"^\d+\.", line):
+            first_text = line
+            break
+    if first_text:
+        return first_text
+
+    # 回退：使用第一个 ## 标题来描述定位
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            heading = stripped[3:].strip()
+            if group == "guidelines":
+                return f"定义并阐述「{heading}」相关的设计原则、触发条件、推导输出与自检标准。"
+            return f"本文件围绕「{heading}」组织内容，具体知识定位待从 raw 中进一步确认。"
+
+    group_label = "业务" if group == "business" else "设计指南" if group == "guidelines" else "待分类"
+    return f"本文件属于 {group_label} 领域，具体知识定位待从 raw 中进一步确认。"
+
+
+def build_task_triggers(lines: list[str], title: str, group: str) -> list[str]:
+    """基于文件名、章节标题、领域上下文，列出哪些任务问题会触发本 raw。"""
+    triggers: list[str] = []
+    headings: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            headings.append(stripped[3:].strip())
+
+    title_lower = title.lower()
+    all_text = " ".join(headings).lower() + " " + title_lower
+
+    if any(kw in all_text for kw in ["能力", "capability", "承载", "页面"]):
+        triggers.append("判断某个能力由哪个页面承载")
+        triggers.append("判断页面承担配置、查询、解释还是治理职责")
+    if any(kw in all_text for kw in ["规则", "rule", "决策", "decision", "合同", "contract"]):
+        triggers.append("需要理解或引用正式规则、判定链路或决策合同")
+        triggers.append("判断权限、配置或状态裁决的生效逻辑与优先级")
+    if any(kw in all_text for kw in ["对象", "object", "关系", "relation"]):
+        triggers.append("需要明确业务对象定义及其关系边界")
+    if any(kw in all_text for kw in ["流程", "flow", "场景", "scenario", "任务"]):
+        triggers.append("需要理解业务流程或任务场景的完整路径")
+    if any(kw in all_text for kw in ["治理", "governance", "审计", "audit"]):
+        triggers.append("涉及治理模式、审批链路或审计追溯")
+    if any(kw in all_text for kw in ["可用", "usability", "交互", "效率"]):
+        triggers.append("评估交互方案的可用性、效率或操作合理性")
+        triggers.append("将设计原则转化为具体的设计决策或自检标准")
+    if any(kw in all_text for kw in ["信息架构", "ia", "导航", "可发现"]):
+        triggers.append("评估信息架构、导航结构或内容可发现性")
+    if any(kw in all_text for kw in ["视觉", "visual", "可读", "readability"]):
+        triggers.append("评估视觉呈现或文本可读性")
+    if any(kw in all_text for kw in ["认知", "cognition"]):
+        triggers.append("评估认知负担或理解成本")
+    if any(kw in all_text for kw in ["权限", "permission"]):
+        triggers.append("涉及权限域的方案设计、配置、查询或排障")
+    if any(kw in all_text for kw in ["边界", "范围", "scope", "boundary"]):
+        triggers.append("需要明确领域、能力或对象的边界与不适用范围")
+    if any(kw in all_text for kw in ["体验", "experience", "蓝图", "blueprint"]):
+        triggers.append("涉及体验蓝图的构建或业务到体验的转译")
+    if any(kw in all_text for kw in ["语义", "semantic", "解释"]):
+        triggers.append("需要理解页面、对象或规则的语义定义与解释方式")
+
+    if group == "business" and len(triggers) == 0:
+        triggers.append("需要理解或使用本业务域的知识进行方案设计或判断时")
+    elif group == "guidelines" and len(triggers) == 0:
+        triggers.append("需要引用设计原则对方案进行自检或评审时")
+
+    if not triggers:
+        triggers.append("待从 raw 中进一步确认更精确的任务触发线索")
+
+    return triggers[:8]
+
+
+def build_coverage(lines: list[str]) -> tuple[list[str], list[str]]:
+    """解析章节标题结构，列出覆盖内容和不涉及内容。"""
+    headings: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            headings.append(stripped[3:].strip())
+
+    objects: list[str] = []
+    capabilities: list[str] = []
+    pages: list[str] = []
+    rules: list[str] = []
+    states: list[str] = []
+    risks: list[str] = []
+    principles: list[str] = []
+    uncategorized: list[str] = []
+
+    for heading in headings:
+        h_lower = heading.lower()
+        if any(kw in h_lower for kw in ["对象", "object", "术语", "glossary", "实体", "entity"]):
+            objects.append(heading)
+        elif any(kw in h_lower for kw in ["能力", "capability", "功能", "feature", "承载"]):
+            capabilities.append(heading)
+        elif any(kw in h_lower for kw in ["页面", "page", "入口"]):
+            pages.append(heading)
+        elif any(kw in h_lower for kw in ["规则", "rule", "合同", "contract", "决策", "decision", "治理", "governance", "边界"]):
+            rules.append(heading)
+        elif any(kw in h_lower for kw in ["状态", "state", "生效", "生命周期"]):
+            states.append(heading)
+        elif any(kw in h_lower for kw in ["风险", "risk", "冲突", "conflict", "反模式", "缺口", "gap"]):
+            risks.append(heading)
+        elif any(kw in h_lower for kw in ["系列", "原则", "principle", "启发式", "标准", "ia-", "u-", "iso-", "i-"]):
+            principles.append(heading)
+        else:
+            uncategorized.append(heading)
+
+    covered: list[str] = []
+    if objects:
+        covered.append(f"对象：{', '.join(objects[:5])}")
+    if capabilities:
+        covered.append(f"能力：{', '.join(capabilities[:5])}")
+    if pages:
+        covered.append(f"页面：{', '.join(pages[:5])}")
+    if principles:
+        covered.append(f"原则：{', '.join(principles[:5])}")
+    if rules:
+        covered.append(f"规则：{', '.join(rules[:5])}")
+    if states:
+        covered.append(f"状态：{', '.join(states[:5])}")
+    if risks:
+        covered.append(f"风险：{', '.join(risks[:5])}")
+    if uncategorized:
+        covered.append(f"章节：{', '.join(uncategorized[:5])}")
+
+    if not covered:
+        covered.append("待从 raw 中进一步确认覆盖内容的具体分类")
+
+    not_covered = ["本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源"]
+
+    return covered, not_covered
+
+
+def build_stable_conclusions(lines: list[str]) -> list[str]:
+    """提取 raw 中结构化的确定性陈述作为可直接使用的稳定结论。"""
+    conclusions: list[str] = []
+    content = nonempty_content_lines(lines)
+
+    for line in content:
+        if TAG_PATTERN.search(line):
+            continue
+        # 跳过孤立标题/标签行（如 "页面承载：" 后面没有实质内容）
+        stripped = line.lstrip("-* ").strip()
+        if len(stripped) <= 12 and ("：" in stripped or ":" in stripped):
+            continue
+        if ("：" in line or ":" in line) and not line.startswith(("-", "*")):
+            conclusions.append(line)
+        elif line.startswith(("-", "*")) and ("：" in line or ":" in line or "是" in line):
+            candidate = line.lstrip("-* ").strip()
+            if len(candidate) > 12:
+                conclusions.append(candidate)
+        if len(conclusions) >= 6:
+            break
+
+    if not conclusions:
+        conclusions.append("待从 raw 中进一步确认可直接使用的稳定结论。")
+
+    return conclusions[:6]
+
+
+def build_raw_lookup_rules() -> list[str]:
+    """返回必须回查 raw 的通用规则。"""
+    return [
+        "需要完整规则细节或精确条款时",
+        "需要正式证据或原文引用时",
+        "需要页面或流程的完整描述时",
+        "涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时",
+        "summary 无法覆盖当前判断点或信息量不足时",
+    ]
+
+
+# ---- 核心生成函数 ----
+
 def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path]) -> str:
     lines = raw_file.read_text(encoding="utf-8").splitlines()
     group = source_group_for(raw_file)
     title = title_for(lines, raw_file)
-    applies, not_applies = extract_scope(lines, group)
     summary_path = summary_path_for(root, raw_file)
     rel_source = f"knowledge/{raw_file.relative_to(root).as_posix()}"
     related = related_summaries_for(root, raw_file, all_raw_files)
     tagged = extract_tagged_items(lines)
-    facts = extract_key_facts(lines)
-    terms = extract_terms(lines)
-    intro = extract_intro(lines, title)
+    position = build_knowledge_position(lines, title, group)
+    triggers = build_task_triggers(lines, title, group)
+    covered, not_covered = build_coverage(lines)
+    conclusions = build_stable_conclusions(lines)
+    lookup_rules = build_raw_lookup_rules()
     related_lines = related if related else ["none"]
+
     content = [
         f"# {title}",
         "",
@@ -183,31 +301,43 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path])
         "- related_summaries:",
         *([f"  - {item}" for item in related_lines]),
         "",
-        "## 1. 这份原始资料讲什么",
+        "## 1. 知识定位",
         "",
-        intro,
+        position,
         "",
-        "## 2. 适用范围 / 不适用范围",
+        "## 2. 任务触发线索",
         "",
-        "### 适用范围",
-        *([f"- {item}" for item in applies]),
+        "当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：",
         "",
-        "### 不适用范围",
-        *([f"- {item}" for item in not_applies]),
+        *([f"- {item}" for item in triggers]),
         "",
-        "## 3. 关键事实",
+        "## 3. 覆盖内容",
         "",
-        *([f"- {item}" for item in facts]),
+        "本 raw 覆盖：",
         "",
-        "## 4. 关键术语 / 关键对象",
+        *([f"- {item}" for item in covered]),
         "",
-        *([f"- {item}" for item in terms]),
+        "不涉及：",
         "",
-        "## 5. 当前缺口 / 冲突 / 问题",
+        *([f"- {item}" for item in not_covered]),
+        "",
+        "## 4. 可直接使用的稳定结论",
+        "",
+        *([f"- {item}" for item in conclusions]),
+        "",
+        "## 5. 必须回查 raw 的情况",
+        "",
+        "以下情况不能只读 summary：",
+        "",
+        *([f"- {item}" for item in lookup_rules]),
+        "",
+        "## 6. 缺口 / 冲突 / 不确定项",
         "",
         *([f"- {item}" for item in tagged]),
         "",
-        "## 6. 相关摘要 / 建议继续阅读",
+        "## 7. 邻近阅读",
+        "",
+        "弱指向 3-5 个相关 summary。",
         "",
         *([f"- {item}" for item in related_lines]),
         "",

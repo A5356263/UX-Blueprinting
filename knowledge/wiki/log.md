@@ -246,3 +246,21 @@
 - reason: 对齐 2026-04-18 的轻量化方案，统一为 raw -> summary -> system pages 的默认链路。
 - risk_level: medium
 - rollback_hint: 如需回退，只能依赖 Git 历史恢复旧目录、旧脚本与旧 specs；当前仓库不再保留 legacy 兼容层。
+
+## LOG-2026-05-04-0001
+
+- log_id: LOG-2026-05-04-0001
+- timestamp: 2026-05-04T00:00:00+08:00
+- action_type: update
+- operator: ai
+- touched_files:
+  - knowledge/scripts/build_summaries.py
+  - knowledge/LLM.md
+  - knowledge/wiki/summaries/**
+  - knowledge/wiki/index.md
+  - knowledge/wiki/overview.md
+  - knowledge/wiki/questions.md
+- summary: 将 summary 从"机械摘要型 Wiki"优化为"AI 路由型知识入口"。移除旧提取函数（extract_intro/extract_scope/extract_key_facts/extract_terms），新增轻量路由生成函数（build_knowledge_position/build_task_triggers/build_coverage/build_stable_conclusions/build_raw_lookup_rules），模板从旧 6 段结构替换为新 7 段路由结构。
+- reason: 对齐 input/knowledge_optimization_plan.md 的优化方案，让 raw 保持事实真源，summary 成为 AI 路由卡而非替代品。
+- risk_level: low
+- rollback_hint: 回滚 build_summaries.py 和 LLM.md 到改造前版本，重新运行 update_wiki.py --apply 即可恢复旧 summary 格式。

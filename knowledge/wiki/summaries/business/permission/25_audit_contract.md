@@ -15,38 +15,54 @@
   - knowledge/wiki/summaries/business/permission/03_business_objects.md
   - knowledge/wiki/summaries/business/permission/04_object_relations.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
 确保按变更查的闭环可用，支持追溯“谁在何时对谁做了什么、是否审批、何时生效”。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 需要理解或引用正式规则、判定链路或决策合同
+- 判断权限、配置或状态裁决的生效逻辑与优先级
+- 涉及治理模式、审批链路或审计追溯
 
-## 3. 关键事实
+## 3. 覆盖内容
+
+本 raw 覆盖：
+
+- 章节：1) 目的, 2) 最低审计字段集合
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
 
 - `who`：操作者，如 `operator_id`、`operator_role`
 - `to_whom`：被操作对象，如 `subject_id`、`target_user_id`
 - `what`：操作类型，如 `grant`、`revoke`、`edit`、`batch`
 - `where`：作用域，如 `app_id`、`role_id`、`org_scope`
 - `when`：发生时间与生效时间
-- `why`：原因或备注
+- `approval`：是否需要审批、实例 id、当前状态
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- 1) 目的
-- 2) 最低审计字段集合
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
 - knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md

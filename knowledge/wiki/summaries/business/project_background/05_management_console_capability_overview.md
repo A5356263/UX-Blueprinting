@@ -15,42 +15,50 @@
   - knowledge/wiki/summaries/business/project_background/03_product_capability_landscape.md
   - knowledge/wiki/summaries/business/project_background/04_product_advantages_and_service_model.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
-管理后台是企业管理员使用平台的基础管理入口，主要覆盖初始化配置与日常管理两个阶段。 一般由超级管理员完成，典型操作包括： 由超级管理员或其他管理员持续执行，典型领域包括：
+管理后台是企业管理员使用平台的基础管理入口，主要覆盖初始化配置与日常管理两个阶段。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 判断某个能力由哪个页面承载
+- 判断页面承担配置、查询、解释还是治理职责
 
-## 3. 关键事实
+## 3. 覆盖内容
+
+本 raw 覆盖：
+
+- 能力：3. 主要菜单能力概览
+- 章节：1. 初始化配置阶段, 2. 日常管理阶段
+
+不涉及：
+
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
 
 - 一般由超级管理员完成，典型操作包括：
-- 创建基础组织
-- 邀请其他管理员加入企业
-- 开启应用
-- 分配管理权限
 - 由超级管理员或其他管理员持续执行，典型领域包括：
 
-## 4. 关键术语 / 关键对象
+## 5. 必须回查 raw 的情况
 
-- 1. 初始化配置阶段
-- 2. 日常管理阶段
-- 3. 主要菜单能力概览
-- 组织
-- 通用权限管理
-- 工作台
+以下情况不能只读 summary：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/project_background/00_domain_overview.md
 - knowledge/wiki/summaries/business/project_background/01_product_positioning.md

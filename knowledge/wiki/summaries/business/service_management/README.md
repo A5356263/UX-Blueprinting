@@ -15,41 +15,48 @@
   - knowledge/wiki/summaries/business/app_management/README.md
   - knowledge/wiki/summaries/business/approval_management/README.md
 
-## 1. 这份原始资料讲什么
+## 1. 知识定位
 
 这是服务管理业务知识库的结构化目录，用于沉淀企业邀请服务人员、配置服务时间和授权范围、并记录服务行为的相关知识。
 
-## 2. 适用范围 / 不适用范围
+## 2. 任务触发线索
 
-### 适用范围
-- 适用于快速判断该原始资料是否与当前任务相关。
-- 适用于构建 business 领域的背景理解与阅读入口。
+当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-### 不适用范围
-- 不适用于替代原文证据、细节条款或最终业务裁决。
+- 需要理解或使用本业务域的知识进行方案设计或判断时
 
-## 3. 关键事实
+## 3. 覆盖内容
 
-- 先读 `00_domain_overview.md` 了解服务管理域边界
-- 再读 `10_service_personnel_authorization.md` 理解服务人员授权与服务治理
-- 只记录服务人员接入、授权范围和服务治理知识
-- 不在本目录中写通用权限算法或成员域主链路知识
-- 尽量复用已有服务管理术语，避免新增服务治理概念
-- 新知识优先落到对应编号模块，不回写为大一统长文
+本 raw 覆盖：
 
-## 4. 关键术语 / 关键对象
+- 原则：维护原则, 迁移原则
+- 章节：这是什么, 怎么用, 阅读顺序
 
-- 这是什么
-- 怎么用
-- 阅读顺序
-- 维护原则
-- 迁移原则
+不涉及：
 
-## 5. 当前缺口 / 冲突 / 问题
+- 本 raw 未显式覆盖的内容需回查其他相关 raw 或补充来源
+
+## 4. 可直接使用的稳定结论
+
+- 待从 raw 中进一步确认可直接使用的稳定结论。
+
+## 5. 必须回查 raw 的情况
+
+以下情况不能只读 summary：
+
+- 需要完整规则细节或精确条款时
+- 需要正式证据或原文引用时
+- 需要页面或流程的完整描述时
+- 涉及 [GAP] / [CONFLICT] / [QUESTION] 标记项时
+- summary 无法覆盖当前判断点或信息量不足时
+
+## 6. 缺口 / 冲突 / 不确定项
 
 - none
 
-## 6. 相关摘要 / 建议继续阅读
+## 7. 邻近阅读
+
+弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/business/service_management/00_domain_overview.md
 - knowledge/wiki/summaries/business/service_management/10_service_personnel_authorization.md
