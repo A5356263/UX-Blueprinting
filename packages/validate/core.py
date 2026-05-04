@@ -1038,24 +1038,24 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
             add_issue(issues, "warning", "business_blueprint.md 对 facts 的显式承接偏弱")
 
     if option_compare_count == 0:
-        add_issue(issues, "blocker", "business_blueprint.md 缺少显式备选路径比较")
+        add_issue(issues, "warning", "business_blueprint.md 备选路径比较检测不到结构化内容，请确认已用自然语言表达")
     elif option_compare_count < 2:
         add_issue(issues, "warning", "business_blueprint.md 备选路径比较仍偏少，建议至少保留两个以上可比方案")
 
     if value_assessment_item_count == 0 or count_keywords_present(value_section, ["价值", "成本", "认知"]) < 2:
-        add_issue(issues, "blocker", "business_blueprint.md 缺少价值 / 成本 / 认知负担评估")
+        add_issue(issues, "warning", "business_blueprint.md 价值/成本/认知负担评估检测不到结构化内容，请确认已在自然语言中覆盖")
 
     if risk_item_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 风险与保护策略内容偏少")
 
     if count_real_list_items(plan_section) == 0 and count_real_table_rows(plan_section) == 0:
-        add_issue(issues, "blocker", "business_blueprint.md 缺少推荐业务方案的可执行内容")
+        add_issue(issues, "warning", "business_blueprint.md 推荐业务方案检测不到结构化内容，请确认已用自然语言表达")
 
     if count_real_list_items(boundary_section) == 0 and count_real_table_rows(boundary_section) == 0:
         add_issue(issues, "warning", "business_blueprint.md 规则与边界描述偏少")
 
     if handover_item_count == 0:
-        add_issue(issues, "blocker", "business_blueprint.md 缺少方案承接要求")
+        add_issue(issues, "warning", "business_blueprint.md 方案承接要求检测不到结构化内容，请确认已用自然语言表达")
     elif handover_keyword_count < 3:
         add_issue(issues, "warning", "business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类")
     if has_handover_empty_talk:
@@ -1120,10 +1120,10 @@ def analyze_experience_blueprint(
     )
 
     if flow_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少交互流程说明")
+        add_issue(issues, "warning", "experience_blueprint.md 交互流程检测不到结构化内容，请确认已用自然语言写清各节点")
 
     if page_inventory_item_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少页面 / 弹窗 / 抽屉设计信息")
+        add_issue(issues, "warning", "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面")
 
     if state_feedback_pair_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与异常处理信息")

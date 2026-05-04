@@ -11,13 +11,12 @@
 3. `workspace/business_blueprint.md`：查看业务判断
 4. `workspace/experience_blueprint.md`：查看体验转译
 5. `workspace/check_report.md`：确认检查结果
-6. `workspace/memory_summary.md`：查看本次沉淀的质量经验摘要
 
 ## 目录分工
 
 - `source/`：人读输入层（需求、背景、任务卡）
-- `workspace/`：人读结果层（facts、业务蓝图、体验蓝图、检查报告、memory 摘要）
-- `runtime/`：机器运行层（解析产物、上下文包、gate 状态、memory 候选）
+- `workspace/`：人读结果层（facts、业务蓝图、体验蓝图、检查报告）
+- `runtime/`：机器运行层（解析产物、上下文包、gate 状态）
 - `exports/`：可选交付镜像层（最终文档与检查结果）
 
 ## 可读性约定
@@ -32,8 +31,7 @@
 2. 在 `source/background.md` 补充背景与约束
 3. 按执行入口依次运行命令
 4. 在 `workspace/` 查看三份主产物与检查报告
-5. 如需沉淀质量经验，再运行 memory 命令并查看 `workspace/memory_summary.md`
-6. 需要交付镜像时再执行 `archive`
+5. 需要交付镜像时再执行 `archive`
 
 ## 常见卡点定位
 
@@ -51,8 +49,5 @@ python -m packages gate-business <project-id>
 python -m packages gate-experience <project-id>
 python -m packages validate <project-id>
 python -m packages coverage <project-id>
-python -m packages memory-extract <project-id>
-python -m packages memory-accept <project-id>
-python -m packages memory-summary <project-id>
 python -m packages archive <project-id>
 ```

@@ -4,10 +4,7 @@
 
 本文件只用于约束 AI 在新任务开始时避免沿用旧任务惯性。
 
-本文件不约束源码修改，不替代 `AGENTS.md`，不参与 facts / business / experience 的正式判断。
-
-读取本文件时，不要求 AI 同时读取 `AGENTS.md`。  
-只有当任务涉及修改项目源码、规则或结构时，才需要再读取并遵守 `AGENTS.md`。
+本文件不约束源码修改，不参与 facts / business / experience 的正式判断。
 
 ## 核心原则
 

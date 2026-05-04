@@ -340,3 +340,38 @@ pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pe
 [2026-04-28T12:04:54+00:00] update_exit_code=0
 [2026-04-28T12:04:54+00:00] update_stdout=status=ok
 pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-04-29T00:38:56+00:00] daemon_started pid=10596 interval=20
+[2026-04-29T00:38:56+00:00] trigger_summary_refresh changed_count=86
+[2026-04-29T00:38:59+00:00] update_exit_code=0
+[2026-04-29T00:38:59+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-04-29T12:36:03+00:00] daemon_started pid=5544 interval=20
+[2026-04-29T12:36:03+00:00] trigger_summary_refresh changed_count=86
+[2026-04-29T12:36:06+00:00] update_exit_code=0
+[2026-04-29T12:36:06+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-04-30T01:04:12+00:00] daemon_started pid=13328 interval=20
+[2026-04-30T01:04:12+00:00] trigger_summary_refresh changed_count=86
+[2026-04-30T01:04:15+00:00] update_exit_code=0
+[2026-04-30T01:04:15+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-04-30T07:01:34+00:00] daemon_started pid=10388 interval=20
+[2026-04-30T07:01:34+00:00] trigger_summary_refresh changed_count=86
+[2026-04-30T07:01:37+00:00] update_exit_code=0
+[2026-04-30T07:01:37+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-04-30T12:11:55+00:00] daemon_started pid=6812 interval=20
+[2026-04-30T12:11:55+00:00] trigger_summary_refresh changed_count=86
+[2026-04-30T12:11:58+00:00] update_exit_code=0
+[2026-04-30T12:11:58+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-05-03T06:32:24+00:00] daemon_started pid=10256 interval=20
+[2026-05-03T06:32:24+00:00] trigger_summary_refresh changed_count=86
+[2026-05-03T06:32:27+00:00] update_exit_code=0
+[2026-05-03T06:32:27+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-05-04T05:56:49+00:00] daemon_started pid=6720 interval=20
+[2026-05-04T05:56:49+00:00] trigger_summary_refresh changed_count=86
+[2026-05-04T05:56:52+00:00] update_exit_code=0
+[2026-05-04T05:56:52+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md

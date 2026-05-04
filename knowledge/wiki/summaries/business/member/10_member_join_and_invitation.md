@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-28
+- updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/member/10_member_join_and_invitation.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/member/00_domain_overview.md

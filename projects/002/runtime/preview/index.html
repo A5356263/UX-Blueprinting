@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓝图预览 — 002</title>
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<div class="app">
+
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>蓝图预览</h2>
+    <span class="project-badge">002</span>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" data-panel="business">业务蓝图</button>
+    <button class="tab-btn" data-panel="experience">体验蓝图</button>
+  </div>
+  <div class="sidebar-nav" id="nav-business">
+    <div class="nav-section"><a class="nav-item " data-target="1-一句话结论">1. 一句话结论</a>
+<a class="nav-item " data-target="2-需求是否成立">2. 需求是否成立</a>
+<a class="nav-item " data-target="3-值不值得做">3. 值不值得做</a>
+<a class="nav-item " data-target="4-应该做成什么能力形态">4. 应该做成什么能力形态</a>
+<a class="nav-item " data-target="5-推荐业务方案">5. 推荐业务方案</a>
+<a class="nav-item " data-target="6-必须守住的规则和边界">6. 必须守住的规则和边界</a>
+<a class="nav-item " data-target="7-主要风险与保护策略">7. 主要风险与保护策略</a>
+<a class="nav-item " data-target="8-方案承接要求">8. 方案承接要求</a>
+<a class="nav-item " data-target="9-待确认问题">9. 待确认问题</a>
+<a class="nav-item " data-target="附录-事实-知识与判断追踪">附录：事实、知识与判断追踪</a></div>
+  </div>
+  <div class="sidebar-nav hidden" id="nav-experience">
+    <div class="nav-section"><a class="nav-item " data-target="1-交互流程总览">1. 交互流程总览</a>
+<a class="nav-item " data-target="2-主交互流程">2. 主交互流程</a>
+<a class="nav-item " data-target="3-次交互流程">3. 次交互流程</a>
+<a class="nav-item " data-target="4-异常与阻断流程">4. 异常与阻断流程</a>
+<a class="nav-item " data-target="5-页面-弹窗-抽屉设计">5. 页面 / 弹窗 / 抽屉设计</a>
+<a class="nav-item " data-target="6-状态与反馈文案">6. 状态与反馈文案</a>
+<a class="nav-item " data-target="7-待确认问题">7. 待确认问题</a></div>
+  </div>
+</nav>
+
+<main class="content">
+  
+    <div class="content-panel" id="content-business">
+      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">Business Blueprint</h1>
+      <div class="section-block" id="1-一句话结论">
+<h2 class="section-heading ">1. 一句话结论</h2>
+<div class="section-body"><p>需求成立，值得做。建议将&quot;自助申请权限&quot;作为独立功能模块建设，包含管理端配置、员工端查看和申请、审批端处理三条角色链路。核心风险点在互斥模式校验、在途流程阻断、以及审批规则细则缺口。</p></div>
+</div>
+<div class="section-block" id="2-需求是否成立">
+<h2 class="section-heading ">2. 需求是否成立</h2>
+<div class="section-body"><p>成立。中大型企业中超管集中管理权限的负担真实存在。员工多、流动大，每次变动都要超管操作。支持自助申请和查看能将工作分散到员工端，同时审批链路保留管控。用户调研 10 人中 6 人认为有价值，竞品金蝶已有类似功能。但小企业培训成本高是推广层面的约束——功能适用场景偏向中大型、组织相对稳定的企业。</p></div>
+</div>
+<div class="section-block" id="3-值不值得做">
+<h2 class="section-heading ">3. 值不值得做</h2>
+<div class="section-body"><p>收益：降低超管集中授权工作量，提升分配效率；员工可自助查看权限减少沟通成本；审批保留管控不失控。成本：开发需新增管理端配置、员工端查看和申请、审批流程对接、申请记录；培训成本可通过页面引导降低。综合判断收益大于成本。</p></div>
+</div>
+<div class="section-block" id="4-应该做成什么能力形态">
+<h2 class="section-heading ">4. 应该做成什么能力形态</h2>
+<div class="section-body"><p>推荐独立功能模块。理由：需求包含三角色完整闭环（管理员配置 → 员工申请 → 审批人审批），有独立状态机和互斥规则，对象和流程复杂度足够支撑独立模块。如果嵌入现有流程，互斥校验、范围配置、审批流程会混入现有界面增加认知负担。</p>
+<p>备选路径：扩展现有权限管理（在现有流程中增加&quot;允许员工申请&quot;选项，边界易模糊，不推荐）。</p></div>
+</div>
+<div class="section-block" id="5-推荐业务方案">
+<h2 class="section-heading ">5. 推荐业务方案</h2>
+<div class="section-body"><p>角色与职责：</p>
+<ul><li>超管：开启和配置自助申请权限模式，选择申请方式、配置可申请范围、配置审批流程，可关闭和编辑</li></ul>
+
+<ul><li>员工：查看自己权限（功能权限/数据权限/角色），提交权限申请，查看申请记录，撤销审批中的申请</li></ul>
+
+<ul><li>审批人（预设为组织负责人）：收到待办，同意或拒绝申请</li></ul>
+<p>主流程闭环：<br>1. 超管进入权限管理模式 → 校验互斥 → 配置三步（申请方式/范围/审批）→ 开启 → 模式生效<br>2. 员工进入个人中心 → 我的权限 → 申请权限 → 填写内容 → 提交 → 审批流程<br>3. 审批人收到待办 → 同意/拒绝 → 系统自动分配权限<br>4. 员工查看申请记录跟踪状态</p></div>
+</div>
+<div class="section-block" id="6-必须守住的规则和边界">
+<h2 class="section-heading ">6. 必须守住的规则和边界</h2>
+<div class="section-body"><ul><li>与双管理员互审模式、权限变更审批模式互斥，启用和开启时均需校验</li><li>关闭模式时存在在途审批流程则阻断关闭</li><li>员工只能申请配置范围内的角色或应用，已停用角色不可申请</li><li>审批不可绕过，即使超管开启了模式</li><li>资金用户、子管理员权限、实名要求等特殊校验在提交时生效</li><li>服务人员不展示&quot;我的权限&quot;入口</li><li>仅审批中可撤销，已通过/已拒绝/已撤销不可操作</li></ul></div>
+</div>
+<div class="section-block" id="7-主要风险与保护策略">
+<h2 class="section-heading ">7. 主要风险与保护策略</h2>
+<div class="section-body"><ul><li>互斥模式冲突：启用前清晰提示冲突原因，超管知情决策</li><li>在途流程阻断关闭：明确告知在途流程数量和涉及审批人，帮助推动处理</li><li>申请超出授权范围：前端只展示可申请内容，提交时后端再次校验</li><li>培训成本导致使用率低：页面足够直观降低学习门槛，提供帮助文档入口</li><li>审批规则不明确 [GAP]：对接审批引擎前需确认多级审批、会签、超时处理规则</li></ul></div>
+</div>
+<div class="section-block" id="8-方案承接要求">
+<h2 class="section-heading ">8. 方案承接要求</h2>
+<div class="section-body"><p>必须覆盖的角色：超管（配置端）、员工（申请端和查看端）、审批人（审批端）</p>
+<p>必须闭环的主流程：超管配置（校验→三步设置→开启→已开启状态）、员工申请（查看权限→申请→提交→等待结果）、审批人处理（收到待办→同意/拒绝）</p>
+<p>必须处理的异常：互斥模式冲突阻断、在途流程关闭阻断、提交校验失败、空状态</p>
+<p>必须解释的状态：模式未启用/设置中/已开启/编辑中，申请审批中/已通过/已拒绝/已撤销，关闭失败</p>
+<p>必须保护的风险：互斥冲突、在途阻断、范围约束、特殊身份校验</p>
+<p>设计建议：设置页采用步骤式引导降低认知负担，申请抽屉前置说明权限分配规则，空状态引导去申请权限</p></div>
+</div>
+<div class="section-block" id="9-待确认问题">
+<h2 class="section-heading ">9. 待确认问题</h2>
+<div class="section-body"><ul><li>审批流程具体规则未明确（多级审批、会签、超时处理）</li><li>敏感角色和敏感组织是否需要排除</li><li>埋点口径和事件清单未提供</li><li>操作记录字段和展示方式未明确</li><li>OA 审批&quot;可发起人去掉&quot;和&quot;默认复核人员风险&quot;含义待确认</li><li>帮助文档内容需产品侧补充</li><li>权限组件第 2-18 条规则需要文档支持</li></ul></div>
+</div>
+<div class="section-block" id="附录-事实-知识与判断追踪">
+<h2 class="section-heading ">附录：事实、知识与判断追踪</h2>
+<div class="section-body"><p>本次判断基于 facts.md 中提炼的需求概述、功能范围、关键业务规则、状态流转和异常边界，以及 knowledge/wiki/summaries/business/permission/ 提供的权限域术语和对象关系校准。备选方案已在&quot;应该做成什么能力形态&quot;中比较。待确认事项均为 [GAP]，需产品和技术侧进一步确认。</p></div>
+</div>
+    </div>
+  <div class="content-panel hidden" id="content-experience">
+      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">Experience Blueprint</h1>
+<div class="section-block" id="1-交互流程总览">
+<h2 class="section-heading">1. 交互流程总览</h2>
+<div class="section-body"><p>本次体验围绕三类用户展开：</p>
+<p><strong>超管 / 权限管理员</strong>：在权限管理模式中开启并配置&quot;自助申请权限模式&quot;，决定员工能申请什么类型的权限、能申请哪些角色或应用、由谁审批。</p>
+<p><strong>员工</strong>：在个人中心查看自己当前拥有的权限，在需要时提交权限申请，跟踪申请进度。</p>
+<p><strong>审批人</strong>：收到审批待办后，同意或拒绝员工的权限申请。</p>
+<p>主流程分为三条：</p>
+<ul><li>超管配置流程：进入权限管理模式 → 点击立即启用 → 选择申请方式 → 配置可申请范围 → 配置审批流程 → 开启成功</li><li>员工申请流程：进入个人中心 → 我的权限 → 申请权限 → 填写申请内容 → 提交申请 → 查看申请记录</li><li>审批人审批流程：收到待办 → 同意或拒绝</li></ul>
+<p>异常流程重点关注：</p>
+<ul><li>互斥模式已开启时不能启用自助申请权限模式</li></ul>
+
+<ul><li>关闭模式时存在在途审批流程，关闭失败</li></ul>
+
+<ul><li>员工提交申请时校验不通过</li></ul>
+
+<ul><li>申请记录的各种状态反馈（审批中、已通过、已拒绝、已撤销）</li></ul></div>
+</div>
+<div class="section-block" id="2-主交互流程">
+<h2 class="section-heading">2. 主交互流程</h2>
+<div class="flow-group">
+<h3 class="flow-name">流程 A：超管开启自助申请权限模式</h3>
+<div class="node-card"><h4 class="node-name">节点 A1：进入权限管理模式页</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管进入管理后台的权限管理模式页面，了解&quot;自助申请权限模式&quot;的作用。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">页面展示说明——员工可自助查询和申请权限，审批通过后系统自动分配权限。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">开启后员工会看到&quot;我的权限&quot;入口；权限申请通过后系统自动分配无需超管手动操作；该模式不能与&quot;双管理员互审模式&quot;和&quot;权限变更审批模式&quot;同时开启。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`员工可自助申请权限，工作流审批通过后，系统将自动分配权限。`</span></div>
+<div class="node-field"><span class="node-field-label">按钮</span><span class="node-field-value">`立即启用`（主按钮）、`了解更多`（链接按钮，跳转帮助文档）</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">超管点击&quot;立即启用&quot;。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 A2：点击&quot;立即启用&quot;— 互斥校验</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管点击&quot;立即启用&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">校验企业是否已开启互斥模式。未开启时进入设置页（模式此时仍未启用）。已开启时阻断。</span></div>
+<div class="node-field"><span class="node-field-label">异常提示</span><span class="node-field-value">`企业已开启「双管理员互审模式」，不能同时开启此模式。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">通过则进入设置页，阻断则需先关闭互斥模式后重试。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 A3：设置页 — 选择申请方式</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管在设置页第一步选择员工可申请的权限类型。<br><br>两个互斥选项：&quot;申请角色&quot;和&quot;申请功能权限&quot;。默认选中&quot;申请角色&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">选择&quot;申请角色&quot;适合主要通过角色授权的企业，申请通过后自动关联角色；选择&quot;申请功能权限&quot;适合主要按应用和功能直接授权的企业，申请通过后自动获得功能权限。此选择决定后续员工申请页面的内容类型。</span></div>
+<div class="node-field"><span class="node-field-label">选项说明</span><span class="node-field-value">```<br>申请角色：申请通过后，员工将自动关联上申请角色。适合企业主要通过角色授权的场景。<br>申请功能权限：申请通过后，员工将自动获得对应功能权限。适合企业主要按应用和功能直接授权的场景。<br>```</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入第二步。</span></div>
+<div class="node-desc"><p>两个互斥选项：&quot;申请角色&quot;和&quot;申请功能权限&quot;。默认选中&quot;申请角色&quot;。</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A4：设置页 — 配置可申请范围</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">根据第一步选择，配置角色范围或应用范围。<br><br>选&quot;申请角色&quot;：设置角色范围（全部角色/部分角色），选择&quot;部分角色&quot;时打开弹窗，支持搜索、分页，展示角色名称/说明/状态。设置项&quot;后续新增角色自动加入&quot;默认勾选。<br><br>选&quot;申请功能权限&quot;：设置应用范围（全部应用/部分应用），选择&quot;部分应用&quot;时打开弹窗，支持搜索、分页，展示应用名称/终端/启用状态。设置项&quot;后续新增应用自动加入&quot;默认勾选。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工只能申请这里配置的范围；已启用和已停用的均在可选范围；新增的自动加入可减少后续维护。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`请选择允许员工自助申请的角色。未包含在范围内的角色，员工无法提交申请。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入第三步。</span></div>
+<div class="node-desc"><p>选&quot;申请角色&quot;：设置角色范围（全部角色/部分角色），选择&quot;部分角色&quot;时打开弹窗，支持搜索、分页，展示角色名称/说明/状态。设置项&quot;后续新增角色自动加入&quot;默认勾选。</p>
+<p>选&quot;申请功能权限&quot;：设置应用范围（全部应用/部分应用），选择&quot;部分应用&quot;时打开弹窗，支持搜索、分页，展示应用名称/终端/启用状态。设置项&quot;后续新增应用自动加入&quot;默认勾选。</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A5：设置页 — 配置审批流程</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">查看或修改审批流程。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">默认预设审批人为员工所在组织的组织负责人。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工提交后进入审批流程，审批通过后系统才分配权限。可点击&quot;修改审批流程&quot;调整。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`系统已预设「员工申请权限」时的审批流程，默认审批人为员工所在组织的组织负责人。如需调整，可点击修改审批流程。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">点击底部&quot;开启&quot;。</span></div>
+<div class="node-desc"><p>主要操作：<code>修改审批流程</code>（打开子页面）</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A6：点击&quot;开启&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">完成配置后点击&quot;开启&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">再次校验互斥模式。通过后 toast 提示成功，页面刷新为已开启状态，个人中心增加&quot;我的权限&quot;入口。</span></div>
+<div class="node-field"><span class="node-field-label">成功文案</span><span class="node-field-value">`自助申请权限模式已开启。`</span></div>
+<div class="node-field"><span class="node-field-label">按钮</span><span class="node-field-value">`关闭模式`、`编辑`、`帮助文档`</span></div>
+<div class="node-desc"><p>已开启状态提示：<code>此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。</code></p></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 B：员工查看权限</h3>
+<div class="node-card"><h4 class="node-name">节点 B1：进入个人中心</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工进入个人中心。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">已开启模式的企业用户在&quot;我的企业&quot;下方展示&quot;我的权限&quot;入口。未开启不展示，服务人员不展示。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 B2：进入&quot;我的权限&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工点击&quot;我的权限&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">进入独立页面，包含三个 tab：功能权限（默认选中）、数据权限、角色。</span></div>
+<div class="node-desc"><p>空状态文案：<code>您没有功能权限。</code> / <code>您没有数据权限。</code> / <code>您没有关联的角色。</code></p></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 C：员工申请权限</h3>
+<div class="node-card"><h4 class="node-name">节点 C1：点击&quot;申请权限&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工点击&quot;申请权限&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">打开&quot;申请权限&quot;抽屉。展示申请人（默认当前用户不可编辑）、申请原因（必填，最多 500 字，提示&quot;请填写申请原因&quot;）、申请内容区（根据管理端配置展示角色或功能权限）、提交按钮。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 C2：填写申请内容</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">选择要申请的权限或角色，填写申请原因。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工只能选择配置范围内的内容；申请功能权限时默认申请全部数据权限。<br><br>功能权限提示：`提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。`</span></div>
+<div class="node-desc"><p>功能权限提示：<code>提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。</code></p></div></div>
+<div class="node-card"><h4 class="node-name">节点 C3：提交申请</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">点击&quot;提交&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">校验权限后发起审批流程。<br><br>成功反馈：`申请已提交，请等待审批。`</span></div>
+<div class="node-field"><span class="node-field-label">失败反馈</span><span class="node-field-value">`当前申请内容不满足授权条件，请调整申请内容后重新提交。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入申请记录查看进度。</span></div>
+<div class="node-desc"><p>成功反馈：<code>申请已提交，请等待审批。</code></p></div></div>
+<div class="node-card"><h4 class="node-name">节点 C4：查看申请记录</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">进入申请记录页。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">筛选项（申请日期、审批状态：已通过/已拒绝/审批中/已撤销），列表（申请时间、申请原因、申请内容、审批状态、操作）。审批中可撤销，其他状态不可操作。</span></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 D：超管编辑已开启模式</h3>
+<div class="section-body"><p>点击&quot;编辑&quot;→ 页面进入可编辑状态 → 隐藏&quot;关闭模式&quot;和&quot;编辑&quot;，底部展示&quot;取消编辑&quot;和&quot;确认编辑&quot;→ 确认后 toast <code>编辑成功。</code></p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 E：超管关闭模式</h3>
+<div class="section-body"><p>点击&quot;关闭模式&quot;→ 二次确认弹窗（标题&quot;关闭模式&quot;，正文&quot;关闭模式后，员工将无法自助查询和申请权限，请确认是否关闭自助申请模式？&quot;，按钮&quot;不关闭&quot;/&quot;确认关闭&quot;）→ 校验在途流程 → 通过则 toast <code>关闭「自助申请权限模式」成功</code>，不通过则弹窗&quot;关闭失败&quot;。</p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 F：员工查看申请详情</h3>
+<div class="section-body"><p>申请记录中点击&quot;查看详情&quot;（仅申请功能权限时出现）→ 静态详情抽屉展示当时提交的权限范围和申请原因。</p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 G：员工撤销申请</h3>
+<div class="section-body"><p>审批中状态的申请点击&quot;撤销&quot;→ 状态变更为&quot;已撤销&quot;，撤销按钮消失。</p></div>
+</div>
+</div>
+<div class="section-block" id="3-次交互流程">
+<h2 class="section-heading">3. 次交互流程</h2>
+<div class="flow-group">
+<h3 class="flow-name">流程 A：超管开启自助申请权限模式</h3>
+<div class="node-card"><h4 class="node-name">节点 A1：进入权限管理模式页</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管进入管理后台的权限管理模式页面，了解&quot;自助申请权限模式&quot;的作用。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">页面展示说明——员工可自助查询和申请权限，审批通过后系统自动分配权限。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">开启后员工会看到&quot;我的权限&quot;入口；权限申请通过后系统自动分配无需超管手动操作；该模式不能与&quot;双管理员互审模式&quot;和&quot;权限变更审批模式&quot;同时开启。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`员工可自助申请权限，工作流审批通过后，系统将自动分配权限。`</span></div>
+<div class="node-field"><span class="node-field-label">按钮</span><span class="node-field-value">`立即启用`（主按钮）、`了解更多`（链接按钮，跳转帮助文档）</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">超管点击&quot;立即启用&quot;。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 A2：点击&quot;立即启用&quot;— 互斥校验</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管点击&quot;立即启用&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">校验企业是否已开启互斥模式。未开启时进入设置页（模式此时仍未启用）。已开启时阻断。</span></div>
+<div class="node-field"><span class="node-field-label">异常提示</span><span class="node-field-value">`企业已开启「双管理员互审模式」，不能同时开启此模式。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">通过则进入设置页，阻断则需先关闭互斥模式后重试。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 A3：设置页 — 选择申请方式</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">超管在设置页第一步选择员工可申请的权限类型。<br><br>两个互斥选项：&quot;申请角色&quot;和&quot;申请功能权限&quot;。默认选中&quot;申请角色&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">选择&quot;申请角色&quot;适合主要通过角色授权的企业，申请通过后自动关联角色；选择&quot;申请功能权限&quot;适合主要按应用和功能直接授权的企业，申请通过后自动获得功能权限。此选择决定后续员工申请页面的内容类型。</span></div>
+<div class="node-field"><span class="node-field-label">选项说明</span><span class="node-field-value">```<br>申请角色：申请通过后，员工将自动关联上申请角色。适合企业主要通过角色授权的场景。<br>申请功能权限：申请通过后，员工将自动获得对应功能权限。适合企业主要按应用和功能直接授权的场景。<br>```</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入第二步。</span></div>
+<div class="node-desc"><p>两个互斥选项：&quot;申请角色&quot;和&quot;申请功能权限&quot;。默认选中&quot;申请角色&quot;。</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A4：设置页 — 配置可申请范围</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">根据第一步选择，配置角色范围或应用范围。<br><br>选&quot;申请角色&quot;：设置角色范围（全部角色/部分角色），选择&quot;部分角色&quot;时打开弹窗，支持搜索、分页，展示角色名称/说明/状态。设置项&quot;后续新增角色自动加入&quot;默认勾选。<br><br>选&quot;申请功能权限&quot;：设置应用范围（全部应用/部分应用），选择&quot;部分应用&quot;时打开弹窗，支持搜索、分页，展示应用名称/终端/启用状态。设置项&quot;后续新增应用自动加入&quot;默认勾选。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工只能申请这里配置的范围；已启用和已停用的均在可选范围；新增的自动加入可减少后续维护。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`请选择允许员工自助申请的角色。未包含在范围内的角色，员工无法提交申请。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入第三步。</span></div>
+<div class="node-desc"><p>选&quot;申请角色&quot;：设置角色范围（全部角色/部分角色），选择&quot;部分角色&quot;时打开弹窗，支持搜索、分页，展示角色名称/说明/状态。设置项&quot;后续新增角色自动加入&quot;默认勾选。</p>
+<p>选&quot;申请功能权限&quot;：设置应用范围（全部应用/部分应用），选择&quot;部分应用&quot;时打开弹窗，支持搜索、分页，展示应用名称/终端/启用状态。设置项&quot;后续新增应用自动加入&quot;默认勾选。</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A5：设置页 — 配置审批流程</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">查看或修改审批流程。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">默认预设审批人为员工所在组织的组织负责人。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工提交后进入审批流程，审批通过后系统才分配权限。可点击&quot;修改审批流程&quot;调整。</span></div>
+<div class="node-field"><span class="node-field-label">页面文案</span><span class="node-field-value">`系统已预设「员工申请权限」时的审批流程，默认审批人为员工所在组织的组织负责人。如需调整，可点击修改审批流程。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">点击底部&quot;开启&quot;。</span></div>
+<div class="node-desc"><p>主要操作：<code>修改审批流程</code>（打开子页面）</p></div></div>
+<div class="node-card"><h4 class="node-name">节点 A6：点击&quot;开启&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">完成配置后点击&quot;开启&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">再次校验互斥模式。通过后 toast 提示成功，页面刷新为已开启状态，个人中心增加&quot;我的权限&quot;入口。</span></div>
+<div class="node-field"><span class="node-field-label">成功文案</span><span class="node-field-value">`自助申请权限模式已开启。`</span></div>
+<div class="node-field"><span class="node-field-label">按钮</span><span class="node-field-value">`关闭模式`、`编辑`、`帮助文档`</span></div>
+<div class="node-desc"><p>已开启状态提示：<code>此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。</code></p></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 B：员工查看权限</h3>
+<div class="node-card"><h4 class="node-name">节点 B1：进入个人中心</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工进入个人中心。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">已开启模式的企业用户在&quot;我的企业&quot;下方展示&quot;我的权限&quot;入口。未开启不展示，服务人员不展示。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 B2：进入&quot;我的权限&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工点击&quot;我的权限&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">进入独立页面，包含三个 tab：功能权限（默认选中）、数据权限、角色。</span></div>
+<div class="node-desc"><p>空状态文案：<code>您没有功能权限。</code> / <code>您没有数据权限。</code> / <code>您没有关联的角色。</code></p></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 C：员工申请权限</h3>
+<div class="node-card"><h4 class="node-name">节点 C1：点击&quot;申请权限&quot;</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">员工点击&quot;申请权限&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">打开&quot;申请权限&quot;抽屉。展示申请人（默认当前用户不可编辑）、申请原因（必填，最多 500 字，提示&quot;请填写申请原因&quot;）、申请内容区（根据管理端配置展示角色或功能权限）、提交按钮。</span></div></div>
+<div class="node-card"><h4 class="node-name">节点 C2：填写申请内容</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">选择要申请的权限或角色，填写申请原因。</span></div>
+<div class="node-field"><span class="node-field-label">前置解释</span><span class="node-field-value">员工只能选择配置范围内的内容；申请功能权限时默认申请全部数据权限。<br><br>功能权限提示：`提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。`</span></div>
+<div class="node-desc"><p>功能权限提示：<code>提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。</code></p></div></div>
+<div class="node-card"><h4 class="node-name">节点 C3：提交申请</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">点击&quot;提交&quot;。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">校验权限后发起审批流程。<br><br>成功反馈：`申请已提交，请等待审批。`</span></div>
+<div class="node-field"><span class="node-field-label">失败反馈</span><span class="node-field-value">`当前申请内容不满足授权条件，请调整申请内容后重新提交。`</span></div>
+<div class="node-field"><span class="node-field-label">下一步</span><span class="node-field-value">进入申请记录查看进度。</span></div>
+<div class="node-desc"><p>成功反馈：<code>申请已提交，请等待审批。</code></p></div></div>
+<div class="node-card"><h4 class="node-name">节点 C4：查看申请记录</h4>
+<div class="node-field"><span class="node-field-label">用户动作</span><span class="node-field-value">进入申请记录页。</span></div>
+<div class="node-field"><span class="node-field-label">系统反馈</span><span class="node-field-value">筛选项（申请日期、审批状态：已通过/已拒绝/审批中/已撤销），列表（申请时间、申请原因、申请内容、审批状态、操作）。审批中可撤销，其他状态不可操作。</span></div></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 D：超管编辑已开启模式</h3>
+<div class="section-body"><p>点击&quot;编辑&quot;→ 页面进入可编辑状态 → 隐藏&quot;关闭模式&quot;和&quot;编辑&quot;，底部展示&quot;取消编辑&quot;和&quot;确认编辑&quot;→ 确认后 toast <code>编辑成功。</code></p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 E：超管关闭模式</h3>
+<div class="section-body"><p>点击&quot;关闭模式&quot;→ 二次确认弹窗（标题&quot;关闭模式&quot;，正文&quot;关闭模式后，员工将无法自助查询和申请权限，请确认是否关闭自助申请模式？&quot;，按钮&quot;不关闭&quot;/&quot;确认关闭&quot;）→ 校验在途流程 → 通过则 toast <code>关闭「自助申请权限模式」成功</code>，不通过则弹窗&quot;关闭失败&quot;。</p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 F：员工查看申请详情</h3>
+<div class="section-body"><p>申请记录中点击&quot;查看详情&quot;（仅申请功能权限时出现）→ 静态详情抽屉展示当时提交的权限范围和申请原因。</p></div>
+</div>
+<div class="flow-group">
+<h3 class="flow-name">流程 G：员工撤销申请</h3>
+<div class="section-body"><p>审批中状态的申请点击&quot;撤销&quot;→ 状态变更为&quot;已撤销&quot;，撤销按钮消失。</p></div>
+</div>
+</div>
+<div class="section-block" id="4-异常与阻断流程">
+<h2 class="section-heading">4. 异常与阻断流程</h2>
+<div class="section-body"><p>### 异常 1：互斥模式已开启</p>
+<p>发生时机：超管点击&quot;立即启用&quot;或&quot;开启&quot;时。触发条件：企业已开启&quot;双管理员互审模式&quot;或&quot;权限变更审批模式&quot;。系统反馈：<code>企业已开启「双管理员互审模式」，不能同时开启此模式。</code>用户下一步：先关闭互斥模式再重试。</p>
+<p>### 异常 2：关闭模式时存在在途审批</p>
+<p>发生时机：超管确认关闭模式。触发条件：存在未完成的申请审批流程。弹窗标题&quot;关闭失败&quot;，正文<code>当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。</code>按钮&quot;知道了&quot;。用户下一步：等待审批完成后再关闭。</p>
+<p>### 异常 3：提交申请时校验不通过</p>
+<p>发生时机：员工点击&quot;提交&quot;。触发条件：资金用户校验、子管理员模式权限校验、实名要求校验、特殊身份默认权限校验不通过。系统反馈：<code>当前申请内容不满足授权条件，请调整申请内容后重新提交。</code>用户下一步：调整申请内容重新提交，无法自行处理则联系管理员。</p></div>
+</div>
+<div class="section-block" id="5-页面-弹窗-抽屉设计">
+<h2 class="section-heading">5. 页面 / 弹窗 / 抽屉设计</h2>
+<div class="page-card"><div class="page-card-name"><span class="icon">□</span>页面：自助申请权限模式介绍页</div><div class="page-card-desc"><p>页面目标：让超管了解该模式并决定是否启用。结构：模式说明区 + 互斥规则提示 + 操作区。文案：<code>员工可自助申请权限，工作流审批通过后，系统将自动分配权限。</code>按钮：<code>立即启用</code>（主）、<code>了解更多</code>（次）。</p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">□</span>页面：自助申请权限模式设置页</div><div class="page-card-desc"><p>页面目标：三步式引导超管完成配置。结构：选择申请方式 → 配置范围 → 配置审批流程 → 底部操作区。按钮：<code>取消</code>、<code>开启</code>（主）、<code>修改审批流程</code>（链接）。成功反馈：<code>自助申请权限模式已开启。</code>失败反馈：<code>企业已开启「双管理员互审模式」，不能同时开启此模式。</code></p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">□</span>页面：已开启状态页</div><div class="page-card-desc"><p>页面目标：确认模式状态，支持关闭或编辑。提示语：<code>此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。</code>按钮：<code>关闭模式</code>、<code>编辑</code>、<code>帮助文档</code>。</p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">▣</span>弹窗：关闭模式二次确认</div><div class="page-card-desc"><p>标题：<code>关闭模式</code>。正文：<code>关闭模式后，员工将无法自助查询和申请权限，请确认是否关闭自助申请模式？</code>按钮：<code>不关闭</code> / <code>确认关闭</code>。</p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">▣</span>弹窗：关闭失败提示</div><div class="page-card-desc"><p>标题：<code>关闭失败</code>。正文：<code>当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。</code>按钮：<code>知道了</code>。</p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">　</span>抽屉：申请权限</div><div class="page-card-desc"><p>页面目标：让员工提交权限申请。结构：申请人（默认当前用户不可编辑）+ 申请原因（必填，500 字上限）+ 申请内容区 + 操作区。按钮：<code>提交</code>（主）、<code>取消</code>。成功反馈：<code>申请已提交，请等待审批。</code>失败反馈：<code>当前申请内容不满足授权条件，请调整后重新提交。</code></p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">□</span>页面：我的权限</div><div class="page-card-desc"><p>页面目标：展示员工当前权限和角色。结构：三个 tab（功能权限/数据权限/角色，默认功能权限）+ 申请权限入口 + 申请记录入口。空状态：<code>您没有功能权限。</code> / <code>您没有数据权限。</code> / <code>您没有关联的角色。</code></p></div></div>
+<div class="page-card"><div class="page-card-name"><span class="icon">□</span>页面：申请记录</div><div class="page-card-desc"><p>页面目标：查看申请进度。结构：筛选区（申请日期、审批状态）+ 列表区 + 分页。审批状态：<code>审批中</code>、<code>已通过</code>、<code>已拒绝</code>、<code>已撤销</code>。操作规则：仅审批中可撤销。</p></div></div>
+</div>
+<div class="section-block" id="6-状态与反馈文案">
+<h2 class="section-heading">6. 状态与反馈文案</h2>
+<ul class="states-list">
+<li class="state-item">模式未启用：尚未开启，超管可点击&quot;立即启用&quot;进入设置</li>
+<li class="state-item">设置中：已进入设置页但未开启，员工端暂不可见</li>
+<li class="state-item">已开启：`此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。`</li>
+<li class="state-item">审批中：`申请已提交，请等待审批。`员工可撤销</li>
+<li class="state-item">已通过：`申请已通过，权限已生效。`</li>
+<li class="state-item">已拒绝：`申请已拒绝。你可以查看拒绝原因后重新提交申请。`</li>
+<li class="state-item">已撤销：员工主动撤销，不可恢复，需重新提交</li>
+<li class="state-item">关闭失败：`当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。`</li>
+</ul>
+</div>
+<div class="section-block" id="7-待确认问题">
+<h2 class="section-heading">7. 待确认问题</h2>
+<div class="section-body"><ul><li>审批流程具体规则未明确（多级审批、会签、超时处理），影响审批端交互设计</li><li>敏感角色和敏感组织清单未提供，如需排除需要对应配置界面</li><li>埋点口径未提供，当前方案暂不涉及埋点交互</li><li>操作记录展示方式和字段未明确</li><li>帮助文档内容需产品侧补充</li><li>OA 审批&quot;可发起人去掉&quot;和&quot;默认复核人员风险&quot;含义待确认</li></ul></div>
+</div>
+</div>
+  <footer class="preview-footer">
+    来源：E:\AI设计\体验蓝图构建思路\projects\002\workspace\experience_blueprint.md &nbsp;|&nbsp; 版本 v3
+  </footer>
+</main>
+
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-btn');
+  var navBusiness = document.getElementById('nav-business');
+  var navExperience = document.getElementById('nav-experience');
+  var contentBusiness = document.getElementById('content-business');
+  var contentExperience = document.getElementById('content-experience');
+  var current = 'business';
+
+  function switchPanel(name) {
+    current = name;
+    tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === name); });
+    navBusiness.classList.toggle('hidden', name !== 'business');
+    navExperience.classList.toggle('hidden', name !== 'experience');
+    contentBusiness.classList.toggle('hidden', name !== 'business');
+    contentExperience.classList.toggle('hidden', name !== 'experience');
+  }
+
+  tabs.forEach(function(t) {
+    t.addEventListener('click', function() { switchPanel(t.dataset.panel); });
+  });
+
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
+      if (panel !== current) switchPanel(panel);
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

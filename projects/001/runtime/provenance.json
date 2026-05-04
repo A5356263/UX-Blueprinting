@@ -13,7 +13,8 @@
     "gate-business",
     "gate-experience",
     "validate",
-    "coverage"
+    "coverage",
+    "preview"
   ],
   "created_at": "2026-04-27T14:00:00Z",
   "updated_at": "2026-04-27T14:00:00Z"

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from packages.common import get_repo_root
+from packages.common import get_knowledge_root_dir, get_repo_root
 
 
 FACTS_REQUIRED_WIKI_CANDIDATES = [
@@ -31,7 +31,7 @@ def _to_repo_relative(repo_root: Path, path: Path) -> str:
 
 def build_facts_required_wiki_by_domain() -> dict[str, list[str]]:
     repo_root = get_repo_root()
-    business_root = repo_root / "knowledge" / "wiki" / "summaries" / "business"
+    business_root = get_knowledge_root_dir() / "wiki" / "summaries" / "business"
     result: dict[str, list[str]] = {}
 
     if not business_root.exists() or not business_root.is_dir():

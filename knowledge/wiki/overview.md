@@ -4,7 +4,7 @@
 - page_type: system
 - status: active
 - confidence: medium
-- updated_at: 2026-04-28
+- updated_at: 2026-05-04
 
 ## 当前概况
 

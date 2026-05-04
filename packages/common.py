@@ -1,15 +1,46 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 
+def _env_path(env_var: str, default: Path) -> Path:
+    value = os.environ.get(env_var)
+    return Path(value).resolve() if value else default
+
+
 def get_repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
+    default = Path(__file__).resolve().parent.parent
+    return _env_path("UXB_ROOT", default)
+
+
+def get_projects_root_dir() -> Path:
+    return _env_path("UXB_PROJECTS_DIR", get_repo_root() / "projects")
+
+
+def get_knowledge_root_dir() -> Path:
+    return _env_path("UXB_KNOWLEDGE_DIR", get_repo_root() / "knowledge")
+
+
+def get_specs_root_dir() -> Path:
+    return _env_path("UXB_SPECS_DIR", get_repo_root() / "specs")
+
+
+def get_templates_root_dir() -> Path:
+    return _env_path("UXB_TEMPLATES_DIR", get_repo_root() / "templates")
+
+
+def get_memory_root_dir() -> Path:
+    return _env_path("UXB_MEMORY_DIR", get_repo_root() / "memory")
+
+
+def get_examples_root_dir() -> Path:
+    return _env_path("UXB_EXAMPLES_DIR", get_repo_root() / "packages" / "examples")
 
 
 def get_project_dir(project_id: str) -> Path:
-    return get_repo_root() / "projects" / project_id
+    return get_projects_root_dir() / project_id
 
 
 def get_project_source_dir(project_id: str) -> Path:
@@ -44,14 +75,6 @@ def get_project_memory_dir(project_id: str) -> Path:
     return get_project_runtime_dir(project_id) / "memory"
 
 
-def get_memory_root_dir() -> Path:
-    return get_repo_root() / "memory"
-
-
-def get_examples_root_dir() -> Path:
-    return get_repo_root() / "examples"
-
-
 def get_project_meta_path(project_id: str) -> Path:
     return get_project_dir(project_id) / "meta.json"
 
@@ -75,7 +98,7 @@ def write_project_meta(project_id: str, payload: dict[str, object]) -> Path:
 
 
 def list_project_ids(include_excluded: bool = False) -> list[str]:
-    projects_root = get_repo_root() / "projects"
+    projects_root = get_projects_root_dir()
     if not projects_root.exists():
         return []
     project_ids: list[str] = []

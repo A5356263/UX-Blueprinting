@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_project_workspace_dir
+from packages.common import get_project_runtime_dir, get_project_workspace_dir, get_specs_root_dir, get_templates_root_dir
 from packages.provenance import upsert_generated_provenance
 
 from .reasoning import (
@@ -86,8 +86,8 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     gap_text = _read_workspace_file(project_id, "gap_list.md")
     runtime_dir = get_project_runtime_dir(project_id)
     context_manifest_path = runtime_dir / "context_manifest.json"
-    contract_path = Path("specs/10_experience_blueprint_contract.md")
-    template_path = Path("templates/experience_blueprint.template.md")
+    contract_path = get_specs_root_dir() / "10_experience_blueprint_contract.md"
+    template_path = get_templates_root_dir() / "experience_blueprint.template.md"
     guideline_refs: list[str] = []
     if context_manifest_path.exists():
         try:

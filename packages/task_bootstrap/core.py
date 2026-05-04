@@ -4,12 +4,13 @@ import json
 from pathlib import Path
 
 from packages.common import (
+    get_knowledge_root_dir,
     get_project_dir,
     get_project_exports_dir,
     get_project_gates_dir,
     get_project_source_dir,
     get_project_workspace_dir,
-    get_repo_root,
+    get_templates_root_dir,
 )
 
 
@@ -25,8 +26,7 @@ TEMPLATE_MAP = {
 
 
 def _resolve_domain_knowledge_ref(domain: str) -> str:
-    repo_root = get_repo_root()
-    candidate = repo_root / "knowledge" / "wiki" / "topics" / f"{domain}-domain-index.md"
+    candidate = get_knowledge_root_dir() / "wiki" / "topics" / f"{domain}-domain-index.md"
     if candidate.exists():
         return f"knowledge/wiki/topics/{domain}-domain-index.md"
     return "knowledge/wiki/topics/README.md"
@@ -54,8 +54,7 @@ def run_task_bootstrap(
     domain: str = "permission",
     force: bool = False,
 ) -> int:
-    repo_root = get_repo_root()
-    templates_dir = repo_root / "templates"
+    templates_dir = get_templates_root_dir()
     project_dir = get_project_dir(project_id)
     source_dir = get_project_source_dir(project_id)
     workspace_dir = get_project_workspace_dir(project_id)

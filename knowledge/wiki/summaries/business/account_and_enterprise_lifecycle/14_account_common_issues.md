@@ -6,7 +6,7 @@
 - source_group: business
 - status: active
 - confidence: medium
-- updated_at: 2026-04-28
+- updated_at: 2026-05-04
 - source_refs: [knowledge/raw/business/account_and_enterprise_lifecycle/14_account_common_issues.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md

@@ -28,6 +28,7 @@ The following sections are recommended but optional:
 - `## Read Order`
 - `## Knowledge`
 - `## Wiki`
+- `## Design Guidelines`
 - `## Knowledge Consumption Policy`
 - `## Platform Optimizations`
 - `## Facts Output Requirements`
