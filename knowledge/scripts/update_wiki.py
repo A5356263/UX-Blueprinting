@@ -168,6 +168,7 @@ def main() -> int:
         ("reindex_wiki.py", []),
         ("refresh_questions.py", []),
         ("refresh_overview.py", []),
+        ("refresh_semantic_summary_report.py", []),
         ("lint_wiki.py", []),
     ]
     results: list[StepResult] = []
