@@ -64,7 +64,66 @@ def main() -> int:
     )
     (root / "wiki" / "overview.md").write_text(content, encoding="utf-8")
     print("refreshed=knowledge/wiki/overview.md")
+
+    # 生成语义待处理报告
+    build_pending_semantic_report(root, summary_files)
+    print("refreshed=knowledge/outputs/reports/pending_semantic_summaries.md")
+
     return 0
+
+
+def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None:
+    """生成语义待处理报告，分类：待 AI 生成 / 待 AI 复核 / 已完成。"""
+    PLACEHOLDER = "待 AI Code 读取 raw 后生成。"
+
+    pending_generate: list[str] = []
+    pending_review: list[str] = []
+    completed: list[str] = []
+
+    for sf in summary_files:
+        text = sf.read_text(encoding="utf-8")
+        rel = sf.relative_to(root).as_posix()
+        has_placeholder = PLACEHOLDER in text
+        status = "draft"
+        confidence = "low"
+        for line in text.splitlines():
+            if line.strip().startswith("- status:"):
+                status = line.split(":", 1)[1].strip()
+            if line.strip().startswith("- confidence:"):
+                confidence = line.split(":", 1)[1].strip()
+
+        if has_placeholder:
+            pending_generate.append(f"- summary_path: knowledge/{rel}")
+        elif status == "draft" or confidence == "low":
+            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: status={status}, confidence={confidence}")
+        else:
+            completed.append(f"- knowledge/{rel}")
+
+    report_lines = [
+        "# Pending Semantic Summaries",
+        "",
+        f"- total: {len(summary_files)}",
+        f"- pending_generate: {len(pending_generate)}",
+        f"- pending_review: {len(pending_review)}",
+        f"- completed: {len(completed)}",
+        "",
+        "## 待 AI 生成",
+        "",
+        *(pending_generate if pending_generate else ["- none"]),
+        "",
+        "## 待 AI 复核",
+        "",
+        *(pending_review if pending_review else ["- none"]),
+        "",
+        "## 已完成",
+        "",
+        *(completed if completed else ["- none"]),
+        "",
+    ]
+
+    report_path = root / "outputs" / "reports" / "pending_semantic_summaries.md"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("\n".join(report_lines), encoding="utf-8")
 
 
 if __name__ == "__main__":

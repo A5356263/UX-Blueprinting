@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-04T13:58:35+00:00
+- generated_at_utc: 2026-05-04T14:25:31+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -242,7 +242,8 @@ question_count=9
 ### refresh_overview.py
 
 ```text
-refreshed=knowledge/wiki/overview.md
+refreshed=knowledge/wiki/overview.md
+refreshed=knowledge/outputs/reports/pending_semantic_summaries.md
 ```
 
 ### lint_wiki.py

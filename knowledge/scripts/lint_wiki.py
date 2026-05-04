@@ -26,6 +26,8 @@ FORBIDDEN_OLD_TITLES = [
     "相关摘要 / 建议继续阅读",
 ]
 
+PLACEHOLDER_TEXT = "待 AI Code 读取 raw 后生成。"
+
 
 def summary_path_for(root: Path, raw_file: Path) -> Path:
     rel = raw_file.relative_to(root / "raw")
@@ -92,6 +94,10 @@ def main() -> int:
         for old_title in FORBIDDEN_OLD_TITLES:
             if old_title in text:
                 issues.append(f"forbidden_old_title:{rel}:{old_title}")
+
+        # active summary 不应包含占位符文本
+        if "- status: active" in text and PLACEHOLDER_TEXT in text:
+            issues.append(f"active_summary_has_placeholder:{rel}")
 
     index_file = root / "wiki" / "index.md"
     if index_file.exists():
