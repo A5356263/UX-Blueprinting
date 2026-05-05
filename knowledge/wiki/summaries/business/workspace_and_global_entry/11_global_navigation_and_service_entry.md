@@ -8,8 +8,8 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-04
-- updated_at: 2026-05-04
+- semantic_updated_at: 2026-05-05
+- updated_at: 2026-05-05
 - source_refs: [knowledge/raw/business/workspace_and_global_entry/11_global_navigation_and_service_entry.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/workspace_and_global_entry/00_domain_overview.md
