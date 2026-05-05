@@ -16,7 +16,7 @@
   - knowledge/wiki/summaries/business/approval_management/README.md
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md
   - knowledge/wiki/summaries/business/app_management/00_domain_overview.md
-  - knowledge/wiki/summaries/business/enterprise_settings/00_domain_overview.md
+  - knowledge/wiki/summaries/business/collaboration/00_domain_overview.md
 
 ## 1. 知识定位
 
@@ -67,6 +67,6 @@
 - knowledge/wiki/summaries/business/approval_management/README.md
 - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md
 - knowledge/wiki/summaries/business/app_management/00_domain_overview.md
-- knowledge/wiki/summaries/business/enterprise_settings/00_domain_overview.md
+- knowledge/wiki/summaries/business/collaboration/00_domain_overview.md
 
 > summary_path: knowledge/wiki/summaries/business/approval_management/00_domain_overview.md

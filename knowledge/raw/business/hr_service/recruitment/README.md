@@ -1,0 +1,13 @@
+# recruitment
+
+招聘管理子域，对应薪福通帮助中心"人事服务 > 招聘管理"模块。沉淀Moka招聘系统集成相关知识。
+
+## 怎么用
+
+- 先读 `00_domain_overview.md` 了解招聘管理子域边界
+- 再读 `10_recruitment_management.md` 理解Moka集成全流程
+
+## 维护原则
+
+- 只记录帮助中心"招聘管理"模块中的产品知识
+- 招聘→入职的信息衔接也关联到 employee_management/16_employment_lifecycle

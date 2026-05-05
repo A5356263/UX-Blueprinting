@@ -15,8 +15,8 @@
   - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/README.md
   - knowledge/wiki/summaries/business/app_management/README.md
   - knowledge/wiki/summaries/business/approval_management/README.md
-  - knowledge/wiki/summaries/business/enterprise_settings/README.md
-  - knowledge/wiki/summaries/business/member/README.md
+  - knowledge/wiki/summaries/business/collaboration/collaboration_tools/README.md
+  - knowledge/wiki/summaries/business/collaboration/README.md
 
 ## 1. 知识定位
 
@@ -66,7 +66,7 @@
 - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/README.md
 - knowledge/wiki/summaries/business/app_management/README.md
 - knowledge/wiki/summaries/business/approval_management/README.md
-- knowledge/wiki/summaries/business/enterprise_settings/README.md
-- knowledge/wiki/summaries/business/member/README.md
+- knowledge/wiki/summaries/business/collaboration/collaboration_tools/README.md
+- knowledge/wiki/summaries/business/collaboration/README.md
 
 > summary_path: knowledge/wiki/summaries/business/README.md

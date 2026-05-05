@@ -128,6 +128,93 @@
 - [10_service_personnel_authorization](summaries/business/service_management/10_service_personnel_authorization.md)
 - [README](summaries/business/service_management/README.md)
 
+### 其他
+
+#### collaboration
+
+- [00_domain_overview](summaries/business/collaboration/00_domain_overview.md)
+
+##### collaboration_tools
+
+- [00_domain_overview](summaries/business/collaboration/collaboration_tools/00_domain_overview.md)
+- [10_collaboration_tools](summaries/business/collaboration/collaboration_tools/10_collaboration_tools.md)
+- [README](summaries/business/collaboration/collaboration_tools/README.md)
+- [README](summaries/business/collaboration/README.md)
+
+##### smart_reports
+
+- [00_domain_overview](summaries/business/collaboration/smart_reports/00_domain_overview.md)
+- [10_smart_reports](summaries/business/collaboration/smart_reports/10_smart_reports.md)
+- [README](summaries/business/collaboration/smart_reports/README.md)
+
+#### expense
+
+- [00_domain_overview](summaries/business/expense/00_domain_overview.md)
+
+##### corporate_payment
+
+- [00_domain_overview](summaries/business/expense/corporate_payment/00_domain_overview.md)
+- [10_corporate_payment](summaries/business/expense/corporate_payment/10_corporate_payment.md)
+- [README](summaries/business/expense/corporate_payment/README.md)
+
+##### daily_reimbursement
+
+- [00_domain_overview](summaries/business/expense/daily_reimbursement/00_domain_overview.md)
+- [10_daily_reimbursement](summaries/business/expense/daily_reimbursement/10_daily_reimbursement.md)
+- [README](summaries/business/expense/daily_reimbursement/README.md)
+
+##### general_config
+
+- [00_domain_overview](summaries/business/expense/general_config/00_domain_overview.md)
+- [10_general_config](summaries/business/expense/general_config/10_general_config.md)
+- [README](summaries/business/expense/general_config/README.md)
+- [README](summaries/business/expense/README.md)
+
+##### travel_service
+
+- [00_domain_overview](summaries/business/expense/travel_service/00_domain_overview.md)
+- [10_travel_service](summaries/business/expense/travel_service/10_travel_service.md)
+- [README](summaries/business/expense/travel_service/README.md)
+
+#### hr_service
+
+- [00_domain_overview](summaries/business/hr_service/00_domain_overview.md)
+
+##### attendance
+
+- [00_domain_overview](summaries/business/hr_service/attendance/00_domain_overview.md)
+- [10_attendance_management](summaries/business/hr_service/attendance/10_attendance_management.md)
+- [README](summaries/business/hr_service/attendance/README.md)
+
+##### customer_management
+
+- [00_domain_overview](summaries/business/hr_service/customer_management/00_domain_overview.md)
+- [10_customer_management](summaries/business/hr_service/customer_management/10_customer_management.md)
+- [README](summaries/business/hr_service/customer_management/README.md)
+
+##### employee_management
+
+- [00_domain_overview](summaries/business/hr_service/employee_management/00_domain_overview.md)
+- [14_employee_roster](summaries/business/hr_service/employee_management/14_employee_roster.md)
+- [15_contract_management](summaries/business/hr_service/employee_management/15_contract_management.md)
+- [16_employment_lifecycle](summaries/business/hr_service/employee_management/16_employment_lifecycle.md)
+- [50_faq](summaries/business/hr_service/employee_management/50_faq.md)
+- [README](summaries/business/hr_service/employee_management/README.md)
+
+##### org_management
+
+- [00_domain_overview](summaries/business/hr_service/org_management/00_domain_overview.md)
+- [13_headcount_management](summaries/business/hr_service/org_management/13_headcount_management.md)
+- [14_position_and_rank_management](summaries/business/hr_service/org_management/14_position_and_rank_management.md)
+- [README](summaries/business/hr_service/org_management/README.md)
+- [README](summaries/business/hr_service/README.md)
+
+##### recruitment
+
+- [00_domain_overview](summaries/business/hr_service/recruitment/00_domain_overview.md)
+- [10_recruitment_management](summaries/business/hr_service/recruitment/10_recruitment_management.md)
+- [README](summaries/business/hr_service/recruitment/README.md)
+
 ## guidelines
 
 - [accessibility](summaries/guidelines/accessibility.md)
