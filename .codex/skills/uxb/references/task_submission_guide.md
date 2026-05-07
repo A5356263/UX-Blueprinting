@@ -1,74 +1,123 @@
 # Task Submission Guide
 
-Use this guide when a discussion is ready to become a formal UXB task.
+当咨询已经成熟到可以变成正式 UXB 任务时，用这个 guide。
 
-## Core Rule
+## 核心规则
 
-Chat history is not formal input.
+聊天记录不是正式输入。
 
-Formal input must be a cleaned-up task summary produced from the conversation and explicitly confirmed by the user.
+正式输入必须先被整理成一份用户可确认的任务摘要，再进入主链路。
 
-## Why a Summary Is Required
+## 为什么一定要先写摘要
 
-Raw chat usually contains:
+原始聊天通常混着这些东西：
 
-- temporary ideas
-- repeated revisions
-- spoken phrasing
-- uncertain judgments
-- background details
-- the actual execution goal mixed together
+- 临时想法
+- 反复修改
+- 口语化表达
+- 还没定的判断
+- 背景信息
+- 真正要执行的目标
 
-Do not pour the raw conversation directly into the project.
+不要把原始聊天直接倒进 `projects/`。
 
-## When to Write the Summary
+## 什么时候该写任务摘要
 
-Write the summary when the request is clear enough, or when the uploaded material is complete enough, to become a real UXB task.
+满足下面任一类情况，就该先整理摘要：
 
-At that point, tell the user that you will first shape the request into an executable task summary for confirmation.
+1. 用户给出了比较完整的新需求或需求文档。
+2. 诊断咨询后，用户明确认可判断，并要求输出正式蓝图。
+3. 用户明确说要“走主链路 / 创建任务 / 输出正式材料”。
+4. 现有信息已经足够形成一个真实 UXB 任务。
 
-## What the Summary Must Cover
+不满足这些条件时，优先停留在知识问答或诊断咨询，不要硬转任务。
 
-Even if the user-facing wording stays plain, the internal structure must cover:
+## 从诊断咨询转正式任务
 
-1. What this task is solving.
-2. What the user truly cares about.
-3. What is already known.
-4. Which points are still uncertain but not blocking.
-5. What execution depth is recommended:
+从诊断转正式任务时，至少要同时满足：
+
+- 用户已经认可当前诊断方向，或明确接受你给出的切入点。
+- 本轮目标已经清楚到可以写成产物。
+- 你能说明这轮是要输出业务蓝图、体验蓝图，还是更浅层的正式材料。
+
+推荐话术：
+
+```text
+如果你认可这个判断，我可以先把它整理成一份正式 UXB 任务。你确认后，我再开始输出业务蓝图和体验蓝图。
+```
+
+不要问用户“是否切换到正式蓝图任务态”。
+
+## 新需求文档转正式任务
+
+用户给需求文档时，不要直接执行。
+
+先做这几步：
+
+1. 先阅读文档。
+2. 先指出明显风险、缺口、未决点。
+3. 判断当前信息是否已经足够转成正式任务。
+4. 整理任务摘要。
+5. 等用户确认后再执行。
+
+## 任务摘要必须覆盖什么
+
+即使对用户的话术很自然，摘要也必须覆盖这些内容：
+
+1. 本次任务要解决什么。
+2. 用户真正关心什么。
+3. 目前已经明确的事实。
+4. 哪些点还不确定，但不阻塞先做。
+5. 建议执行深度：
    - facts
    - business
    - experience
-   - or the full chain
-6. A suggested task name.
-7. A suggested `project-id`.
+   - full chain
+6. 建议任务名。
+7. 建议 `project-id`。
 
-## Confirmation Gate
+## 确认门槛
 
-Execution may start only after clear confirmation signals such as:
+只有用户明确表达下面这类确认意图后，才能开始执行：
 
-- ok
-- confirm
-- start
-- create the task
-- execute this
-- run it
-- generate the formal output
+- 好，开始
+- 确认
+- 创建任务
+- 走主链路
+- 开始生成正式产物
 
-Until then:
+在确认之前：
 
-- do not create the project
-- do not write formal task artifacts
-- do not run the main UXB flow
+- 不创建项目目录
+- 不写正式任务产物
+- 不运行 UXB 主链路
 
-## User-Facing Tone
+## 正式产物与知识库的边界
 
-Do not present the summary like a robotic intake form.
+正式任务的产物进入：
 
-Instead, keep it conversational and concrete:
+```text
+projects/<project-id>/
+```
 
-- what this round mainly needs to solve
-- what the user really cares about
-- what is already clear
-- what remains uncertain but does not block progress
-- what you recommend doing in this round
+正式任务产物不自动进入 knowledge。
+
+如果蓝图中有值得复用的稳定规则、流程依赖或体验原则：
+
+1. 先提取为知识候选。
+2. 放进 `知识候选区/` 对应子目录。
+3. 等用户确认后，再进入正式知识库维护。
+
+不要把蓝图整份直接入库。
+
+## 用户可感知的话术
+
+不要把摘要写成冷冰冰的 intake 表单。
+
+应该更像：
+
+- 这次主要要解决什么
+- 你真正关心什么
+- 目前哪些已经明确
+- 哪些还不确定但不影响先推进
+- 我建议这轮先做到什么程度

@@ -1,82 +1,121 @@
 # Knowledge Usage Guide
 
-Use this guide when consultation or task shaping needs repository knowledge.
+当知识问答、诊断咨询、任务成型需要用到仓库知识时，用这个 guide。
 
-## Goal
+## 目标
 
-Find the right knowledge for the current question without bulk-loading `knowledge/`.
+用尽量小的读取范围，找到当前问题真正需要的知识，不把 `knowledge/` 整棵树一股脑读进来。
 
-## Core Rules
+## 核心规则
 
-- Identify the question before reading knowledge.
-- Start from navigation and summaries.
-- Read detailed source material only when needed.
-- If uncertain, state the uncertainty or confirm with the user.
+- 先判断用户到底在问什么，再决定读什么。
+- 从导航和 summary 开始，不要一上来翻 raw。
+- 知识是为了支撑判断，不是为了把文件内容搬运给用户。
+- 如果现有知识不足，直接说明不确定点。
 
-## Entry Point
+## 知识问答态怎么读
 
-Start from:
+知识问答态优先处理这些问题：
+
+- 操作方式
+- 规则解释
+- 前置条件
+- 流程关系
+- 状态含义
+- 模块依赖
+
+默认步骤：
+
+1. 从 `knowledge/wiki/index.md` 开始。
+2. 先找导航、route card、summary、索引、域入口文档。
+3. 只有 summary 不够时，才继续往 raw 深挖。
+4. 如果仍然不能确认，就明确告诉用户哪些点还不确定。
+
+## 读取入口
+
+从这里开始：
 
 ```text
 knowledge/wiki/index.md
 ```
 
-Then narrow down through the current repo structure, such as:
+然后按当前仓库结构逐层缩小范围，例如：
 
-- navigation pages
-- route cards
-- indexes
-- summaries
-- domain README files
+- navigation 页面
+- route card
+- index
+- summary
+- 业务域 README
 
-Do not assume older structures are still valid. Trust the current repository layout.
+不要假设旧目录结构还有效，以当前仓库实际结构为准。
 
-## Scope Control
+## 范围控制
 
-Never read the whole `knowledge/` tree by default just to save effort.
+不要为了省事默认读取整个 `knowledge/`。
 
-Shrink the search scope step by step based on:
+缩小范围时优先看这些线索：
 
-- business objects
-- user roles
-- actions
-- state changes
-- exception cases
-- module names
-- page or flow names
-- rules, permissions, approvals, configuration, feedback, or copy concerns
+- 业务对象
+- 用户角色
+- 用户动作
+- 状态变化
+- 异常场景
+- 模块名
+- 页面名
+- 流程名
+- 权限、审批、配置、反馈、文案类问题
 
-## Ambiguous Terms
+## 有歧义时怎么处理
 
-If one phrase could point to several domains, explain the ambiguity in plain Chinese before overcommitting.
+如果一句话可能落到多个业务域，先用自然语言说明你的当前理解，不要直接过度承诺。
 
-Example pattern:
+示例：
 
-- "I am currently interpreting this as configuration approval. If you mean contract approval or HR approval, the judgment would change."
+```text
+我现在先把这里理解成配置审批。如果你说的是合同审批或 HR 审批，判断会不一样。
+```
 
-Only ask for confirmation when the ambiguity materially changes the advice.
+只有当歧义会明显影响建议时，再向用户确认。
 
 ## Summary First, Raw Later
 
-Prefer:
+优先读：
 
-- summary files
-- route cards
-- module descriptions
-- overview files
+- summary 文件
+- route card
+- 模块描述
+- 概览入口
 
-Read more detailed source material only when:
+只有下面这些情况再读更细的 raw：
 
-- the summary is insufficient
-- evidence is needed
-- the user explicitly asks for source-level traceability
+- summary 不够
+- 需要证据
+- 用户要求可追溯来源
 
-## How to Use Knowledge in Replies
+## 用户纠错时的处理
 
-Use knowledge to improve judgment, not to mechanically quote repo file paths back at the user.
+如果用户纠正了现有知识：
 
-Prefer user-facing phrasing like:
+1. 先修正当前回答。
+2. 不直接覆盖 knowledge。
+3. 如果这条纠正看起来是稳定规则，可以自然询问是否记入知识候选区。
+4. 用户确认后，再创建候选文件。
+5. 候选未确认前，不当成正式稳定知识。
 
-- "Based on the current project knowledge, this looks more like a state explanation problem than only a button design problem."
+不要把聊天原文直接写入 knowledge，也不要一边纠错一边直接触发入库。
 
-Avoid file-dump phrasing unless the user asks for exact sources.
+## 在回复里怎么使用知识
+
+优先把知识转成用户能直接理解的判断，比如：
+
+```text
+按当前项目知识看，这更像是状态说明没有交代清楚，不只是按钮位置问题。
+```
+
+避免：
+
+- 大段贴文件内容
+- 机械报文件路径
+- 把知识库当搜索结果清单扔给用户
+
+如果用户明确要来源，再补充具体文件线索。
