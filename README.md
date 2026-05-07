@@ -18,6 +18,16 @@
 - `templates/`：固定模板
 - `docs/`：解释、讨论、runbook
 
+## 跨平台启动建议
+
+- 标准入口始终是 `python -m packages`
+- Windows 优先使用 `python -m packages`，如果本机没有 `python`，再使用 `py -3 -m packages`
+- macOS / Linux 优先使用 `python3 -m packages`
+- 也可以使用仓库根目录的薄转发脚本：
+  - `bash run_packages.sh <command> ...`
+  - `powershell -ExecutionPolicy Bypass -File .\\run_packages.ps1 <command> ...`
+- `run_packages.sh` 和 `run_packages.ps1` 只是便捷入口，不替代正式主链路
+
 ## 最小使用方式
 
 ```bash

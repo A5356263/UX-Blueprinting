@@ -82,6 +82,9 @@
 - [10_organization_architecture](summaries/business/organization/10_organization_architecture.md)
 - [11_legal_entities](summaries/business/organization/11_legal_entities.md)
 - [12_cost_centers](summaries/business/organization/12_cost_centers.md)
+- [13_function_and_view_model](summaries/business/organization/13_function_and_view_model.md)
+- [14_member_binding_and_scope_generation](summaries/business/organization/14_member_binding_and_scope_generation.md)
+- [15_runtime_flow_and_legacy_mapping](summaries/business/organization/15_runtime_flow_and_legacy_mapping.md)
 - [README](summaries/business/organization/README.md)
 
 #### member

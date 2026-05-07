@@ -8,8 +8,8 @@
 - confidence: low
 - summary_role: ai_route_card
 - semantic_status: pending
-- semantic_updated_at: 2026-05-05
-- updated_at: 2026-05-05
+- semantic_updated_at: 2026-05-07
+- updated_at: 2026-05-07
 - source_refs: [knowledge/raw/business/expense/general_config/10_general_config.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/expense/general_config/00_domain_overview.md

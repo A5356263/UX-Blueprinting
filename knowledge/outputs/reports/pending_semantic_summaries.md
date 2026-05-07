@@ -1,13 +1,14 @@
 # Pending Semantic Summaries
 
-- total: 86
-- pending_generate: 0
+- total: 132
+- pending_generate: 1
 - pending_review: 0
-- completed: 86
+- completed: 131
 
 ## 待 AI 生成
 
-- none
+- summary_path: knowledge/wiki/summaries/business/expense/general_config/10_general_config.md
+  - reason: semantic_status=pending
 
 ## 待 AI 复核
 
@@ -30,11 +31,53 @@
 - knowledge/wiki/summaries/business/approval_management/00_domain_overview.md
 - knowledge/wiki/summaries/business/approval_management/10_approval_management.md
 - knowledge/wiki/summaries/business/approval_management/README.md
+- knowledge/wiki/summaries/business/collaboration/00_domain_overview.md
+- knowledge/wiki/summaries/business/collaboration/collaboration_tools/00_domain_overview.md
+- knowledge/wiki/summaries/business/collaboration/collaboration_tools/10_collaboration_tools.md
+- knowledge/wiki/summaries/business/collaboration/collaboration_tools/README.md
+- knowledge/wiki/summaries/business/collaboration/README.md
+- knowledge/wiki/summaries/business/collaboration/smart_reports/00_domain_overview.md
+- knowledge/wiki/summaries/business/collaboration/smart_reports/10_smart_reports.md
+- knowledge/wiki/summaries/business/collaboration/smart_reports/README.md
 - knowledge/wiki/summaries/business/enterprise_settings/00_domain_overview.md
 - knowledge/wiki/summaries/business/enterprise_settings/10_enterprise_information_display.md
 - knowledge/wiki/summaries/business/enterprise_settings/11_enterprise_login_page_customization.md
 - knowledge/wiki/summaries/business/enterprise_settings/12_enterprise_culture.md
 - knowledge/wiki/summaries/business/enterprise_settings/README.md
+- knowledge/wiki/summaries/business/expense/00_domain_overview.md
+- knowledge/wiki/summaries/business/expense/corporate_payment/00_domain_overview.md
+- knowledge/wiki/summaries/business/expense/corporate_payment/10_corporate_payment.md
+- knowledge/wiki/summaries/business/expense/corporate_payment/README.md
+- knowledge/wiki/summaries/business/expense/daily_reimbursement/00_domain_overview.md
+- knowledge/wiki/summaries/business/expense/daily_reimbursement/10_daily_reimbursement.md
+- knowledge/wiki/summaries/business/expense/daily_reimbursement/README.md
+- knowledge/wiki/summaries/business/expense/general_config/00_domain_overview.md
+- knowledge/wiki/summaries/business/expense/general_config/README.md
+- knowledge/wiki/summaries/business/expense/README.md
+- knowledge/wiki/summaries/business/expense/travel_service/00_domain_overview.md
+- knowledge/wiki/summaries/business/expense/travel_service/10_travel_service.md
+- knowledge/wiki/summaries/business/expense/travel_service/README.md
+- knowledge/wiki/summaries/business/hr_service/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/attendance/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/attendance/10_attendance_management.md
+- knowledge/wiki/summaries/business/hr_service/attendance/README.md
+- knowledge/wiki/summaries/business/hr_service/customer_management/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/customer_management/10_customer_management.md
+- knowledge/wiki/summaries/business/hr_service/customer_management/README.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/14_employee_roster.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/15_contract_management.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/16_employment_lifecycle.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/50_faq.md
+- knowledge/wiki/summaries/business/hr_service/employee_management/README.md
+- knowledge/wiki/summaries/business/hr_service/org_management/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/org_management/13_headcount_management.md
+- knowledge/wiki/summaries/business/hr_service/org_management/14_position_and_rank_management.md
+- knowledge/wiki/summaries/business/hr_service/org_management/README.md
+- knowledge/wiki/summaries/business/hr_service/README.md
+- knowledge/wiki/summaries/business/hr_service/recruitment/00_domain_overview.md
+- knowledge/wiki/summaries/business/hr_service/recruitment/10_recruitment_management.md
+- knowledge/wiki/summaries/business/hr_service/recruitment/README.md
 - knowledge/wiki/summaries/business/member/00_domain_overview.md
 - knowledge/wiki/summaries/business/member/10_member_join_and_invitation.md
 - knowledge/wiki/summaries/business/member/11_member_exit_and_offboarding.md
@@ -45,6 +88,9 @@
 - knowledge/wiki/summaries/business/organization/10_organization_architecture.md
 - knowledge/wiki/summaries/business/organization/11_legal_entities.md
 - knowledge/wiki/summaries/business/organization/12_cost_centers.md
+- knowledge/wiki/summaries/business/organization/13_function_and_view_model.md
+- knowledge/wiki/summaries/business/organization/14_member_binding_and_scope_generation.md
+- knowledge/wiki/summaries/business/organization/15_runtime_flow_and_legacy_mapping.md
 - knowledge/wiki/summaries/business/organization/README.md
 - knowledge/wiki/summaries/business/permission/00_domain_overview.md
 - knowledge/wiki/summaries/business/permission/01_scope_and_boundary.md

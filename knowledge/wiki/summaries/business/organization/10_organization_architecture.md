@@ -8,49 +8,48 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-05
-- updated_at: 2026-05-05
+- semantic_updated_at: 2026-05-07
+- updated_at: 2026-05-07
 - source_refs: [knowledge/raw/business/organization/10_organization_architecture.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/organization/00_domain_overview.md
   - knowledge/wiki/summaries/business/organization/11_legal_entities.md
   - knowledge/wiki/summaries/business/organization/12_cost_centers.md
-  - knowledge/wiki/summaries/business/organization/README.md
-  - knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/10_enablement_paths.md
+  - knowledge/wiki/summaries/business/organization/13_function_and_view_model.md
+  - knowledge/wiki/summaries/business/organization/14_member_binding_and_scope_generation.md
 
 ## 1. 知识定位
 
-描述组织架构的维护方式和导入规则，回答「如何创建和管理企业层级组织」这一判断问题。
+说明组织架构在新平台组织底座中的角色，回答“行政组织如何从旧结构主数据迁入多维组织并参与范围生成”。
 
 ## 2. 任务触发线索
 
 当任务涉及以下问题时，应优先读取本 summary，并按需回查 raw：
 
-- 需要创建或维护组织架构时
-- 需要选择导入方式（单个新增/全路径导入/普通导入）时
-- 需要了解组织架构的基础字段设置时
-- 涉及组织架构的批量导入规则时
+- 需要理解旧组织架构在新模型中的归位位置时
+- 需要确认行政组织如何进入多维组织底座时
+- 需要核对组织架构现有维护入口、字段和导入规则时
+- 需要判断组织架构与成员模块的边界时
 
 ## 3. 覆盖内容
 
 本 raw 覆盖：
 
-- 两个维护入口：管理后台（组织->组织架构）、人事薪税侧对接入口
-- 组织基础设置：预设字段（组织名称、组织类型、上级组织），支持自定义字段
-- 三种新增方式：单个新增（适合简单场景）、全路径导入（使用 `/` 分隔符，自动创建层级，默认部门类型）、普通导入（通过上级组织编码识别层级，根组织编码默认 `0000`）
+- 新定位：组织架构默认归位到 `行政职能 / 组织架构视图`
+- 多维组织中的作用：提供行政组织维度、参与视图汇总、成员挂载与范围计算
+- 既有维护入口、基础字段、单个新增、全路径导入、普通导入规则
 
 不涉及：
 
-- 人事薪税侧的具体对接流程
-- 组织架构的删除和归档操作
+- 人事薪税侧对接细节
+- 成员生命周期或授权规则
 
 ## 4. 可直接使用的稳定结论
 
-- 组织架构用于维护企业层级关系与组织基础属性
-- 两个维护入口：管理后台「组织->组织架构」和人事薪税侧对接入口
-- 全路径导入时使用 `/` 作为组织分隔符，组织类型不填则默认部门类型
-- 普通导入时组织编码、组织名称、上级组织编码为必填
-- 根组织编码默认为 `0000`，若已修改则以修改后编码为准
+- 组织架构已不再代表整个组织域，只是多维组织中的核心来源之一
+- 原组织架构的默认语义位置是 `行政职能 / 组织架构视图`
+- 行政组织数据会影响成员挂载、组织范围与业务过滤等后续链路
+- 菜单拆分后，组织架构归组织模块，成员主体归成员模块
 
 ## 5. 必须回查 raw 的情况
 
@@ -73,7 +72,7 @@
 - knowledge/wiki/summaries/business/organization/00_domain_overview.md
 - knowledge/wiki/summaries/business/organization/11_legal_entities.md
 - knowledge/wiki/summaries/business/organization/12_cost_centers.md
-- knowledge/wiki/summaries/business/organization/README.md
-- knowledge/wiki/summaries/business/account_and_enterprise_lifecycle/10_enablement_paths.md
+- knowledge/wiki/summaries/business/organization/13_function_and_view_model.md
+- knowledge/wiki/summaries/business/organization/14_member_binding_and_scope_generation.md
 
 > summary_path: knowledge/wiki/summaries/business/organization/10_organization_architecture.md

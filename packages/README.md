@@ -27,6 +27,16 @@
 - `memory_layer/`：质量经验提取、接受与摘要生成
 - `experience_preview/`：体验蓝图预览层生成与本地地址交付
 
+## 跨平台运行建议
+
+- 标准入口保持为 `python -m packages`
+- Windows 上优先使用 `python -m packages`，如果本机没有 `python`，再使用 `py -3 -m packages`
+- macOS / Linux 上优先使用 `python3 -m packages`
+- 仓库根目录提供两个薄转发脚本：
+  - `bash run_packages.sh <command> ...`
+  - `powershell -ExecutionPolicy Bypass -File .\\run_packages.ps1 <command> ...`
+- 这些脚本只负责选择可用 Python 入口，不改变任何命令语义
+
 ## 运行方式
 
 ```bash

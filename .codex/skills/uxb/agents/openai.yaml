@@ -1,0 +1,4 @@
+interface:
+  display_name: "UXB"
+  short_description: "Consult first, shape tasks, then run UXB."
+  default_prompt: "Use $uxb to discuss this UXB idea, shape it into a task, and only execute after I confirm."

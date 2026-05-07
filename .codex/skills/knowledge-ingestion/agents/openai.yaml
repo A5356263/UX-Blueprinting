@@ -1,0 +1,4 @@
+interface:
+  display_name: "Knowledge Ingestion"
+  short_description: "Merge new material into repo knowledge safely."
+  default_prompt: "Use $knowledge-ingestion to merge this material into the project knowledge base safely."

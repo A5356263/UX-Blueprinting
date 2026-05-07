@@ -369,7 +369,8 @@ def _render_node_card(node: dict[str, Any]) -> str:
             )
     if node.get("description_html"):
         parts.append(f'<div class="node-desc">{node["description_html"]}</div>')
-    return f'<div class="node-card">{"\n".join(parts)}</div>'
+    parts_html = "\n".join(parts)
+    return f'<div class="node-card">{parts_html}</div>'
 
 
 def _inline_text(text: str) -> str:

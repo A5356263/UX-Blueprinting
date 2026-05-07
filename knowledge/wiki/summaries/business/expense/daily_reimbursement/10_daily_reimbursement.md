@@ -8,8 +8,8 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-05
-- updated_at: 2026-05-05
+- semantic_updated_at: 2026-05-07
+- updated_at: 2026-05-07
 - source_refs: [knowledge/raw/business/expense/daily_reimbursement/10_daily_reimbursement.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/expense/daily_reimbursement/00_domain_overview.md

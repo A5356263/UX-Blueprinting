@@ -2,26 +2,6 @@ from __future__ import annotations
 
 import argparse
 
-from packages.archive import run_archive_artifacts
-from packages.capability_registry import run_capabilities_list, run_capability_show
-from packages.context_assemble import run_context_assemble
-from packages.experience_preview import run_experience_preview
-from packages.generation import (
-    run_generate_business,
-    run_generate_experience,
-    run_generate_facts,
-)
-from packages.mainline import run_main, run_sample_check
-from packages.repair_loop import run_repair_accept, run_repair_close, run_repair_defer, run_repair_plan, run_repair_status
-from packages.task_bootstrap import run_task_bootstrap
-from packages.validate import (
-    run_business_gate,
-    run_coverage_check,
-    run_experience_gate,
-    run_facts_gate,
-    run_validate_outputs,
-)
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="python -m packages")
@@ -104,42 +84,80 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.command == "bootstrap":
+        from packages.task_bootstrap import run_task_bootstrap
+
         return run_task_bootstrap(args.project_id, task_name=args.task_name, domain=args.domain, force=args.force)
     if args.command == "assemble":
+        from packages.context_assemble import run_context_assemble
+
         return run_context_assemble(args.project_id, strict=args.strict)
     if args.command == "generate-facts":
+        from packages.generation import run_generate_facts
+
         return run_generate_facts(args.project_id)
     if args.command == "generate-business":
+        from packages.generation import run_generate_business
+
         return run_generate_business(args.project_id)
     if args.command == "generate-experience":
+        from packages.generation import run_generate_experience
+
         return run_generate_experience(args.project_id)
     if args.command == "validate":
+        from packages.validate import run_validate_outputs
+
         return run_validate_outputs(args.project_id)
     if args.command == "coverage":
+        from packages.validate import run_coverage_check
+
         return run_coverage_check(args.project_id)
     if args.command == "gate-facts":
+        from packages.validate import run_facts_gate
+
         return run_facts_gate(args.project_id)
     if args.command == "gate-business":
+        from packages.validate import run_business_gate
+
         return run_business_gate(args.project_id)
     if args.command == "gate-experience":
+        from packages.validate import run_experience_gate
+
         return run_experience_gate(args.project_id)
     if args.command == "archive":
+        from packages.archive import run_archive_artifacts
+
         return run_archive_artifacts(args.project_id)
     if args.command == "repair-plan":
+        from packages.repair_loop import run_repair_plan
+
         return run_repair_plan(args.project_id)
     if args.command == "repair-status":
+        from packages.repair_loop import run_repair_status
+
         return run_repair_status(args.project_id)
     if args.command == "repair-close":
+        from packages.repair_loop import run_repair_close
+
         return run_repair_close(args.project_id)
     if args.command == "repair-accept":
+        from packages.repair_loop import run_repair_accept
+
         return run_repair_accept(args.project_id, args.issue_id, reason=args.reason)
     if args.command == "repair-defer":
+        from packages.repair_loop import run_repair_defer
+
         return run_repair_defer(args.project_id, args.issue_id, reason=args.reason)
     if args.command == "capabilities-list":
+        from packages.capability_registry import run_capabilities_list
+
         return run_capabilities_list()
     if args.command == "capability-show":
+        from packages.capability_registry import run_capability_show
+
         return run_capability_show(args.capability_id)
     if args.command == "preview":
+        from packages.experience_preview import run_experience_preview
+
         return run_experience_preview(
             args.project_id,
             host=args.host,
@@ -147,8 +165,12 @@ def main() -> int:
             serve=not args.no_serve,
         )
     if args.command == "run-main":
+        from packages.mainline import run_main
+
         return run_main(args.project_id, skip_preview=args.skip_preview, strict=args.strict)
     if args.command == "sample-check":
+        from packages.mainline import run_sample_check
+
         return run_sample_check()
     return 1
 
