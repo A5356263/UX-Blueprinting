@@ -8,8 +8,8 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-07
-- updated_at: 2026-05-07
+- semantic_updated_at: 2026-05-08
+- updated_at: 2026-05-08
 - source_refs: [knowledge/raw/business/app_management/11_application_assembly.md]
 - related_summaries:
   - knowledge/wiki/summaries/business/app_management/00_domain_overview.md

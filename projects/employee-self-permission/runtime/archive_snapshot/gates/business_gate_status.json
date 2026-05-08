@@ -1,0 +1,312 @@
+{
+  "project_id": "employee-self-permission",
+  "stage": "business",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-08T12:52:13.055886+00:00",
+  "checked_files": [
+    "projects/employee-self-permission/workspace/facts.md",
+    "projects/employee-self-permission/workspace/business_blueprint.md",
+    "projects/employee-self-permission/runtime/provenance.json",
+    "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 4,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
+      "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
+      "business_blueprint.md 价值/成本/认知负担评估检测不到结构化内容，请确认已在自然语言中覆盖",
+      "business_blueprint.md 判断依据未覆盖足够的核心判断"
+    ],
+    "infos": [
+      "facts 阶段状态：warning"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据",
+      "target_artifacts": [
+        "projects/employee-self-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-permission/workspace/facts.md",
+        "projects/employee-self-permission/workspace/business_blueprint.md",
+        "projects/employee-self-permission/runtime/provenance.json",
+        "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-permission/workspace/facts.md",
+            "projects/employee-self-permission/workspace/business_blueprint.md",
+            "projects/employee-self-permission/runtime/provenance.json",
+            "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 0,
+            "facts_consumed_count": 0,
+            "judgment_traceable_count": 0,
+            "trace_mapping_item_count": 10,
+            "option_compare_count": 16,
+            "value_assessment_item_count": 6,
+            "risk_item_count": 9,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 6,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "facts",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）",
+      "target_artifacts": [
+        "projects/employee-self-permission/workspace/facts.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-permission/workspace/facts.md",
+        "projects/employee-self-permission/workspace/business_blueprint.md",
+        "projects/employee-self-permission/runtime/provenance.json",
+        "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-permission/workspace/facts.md",
+            "projects/employee-self-permission/workspace/business_blueprint.md",
+            "projects/employee-self-permission/runtime/provenance.json",
+            "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 0,
+            "facts_consumed_count": 0,
+            "judgment_traceable_count": 0,
+            "trace_mapping_item_count": 10,
+            "option_compare_count": 16,
+            "value_assessment_item_count": 6,
+            "risk_item_count": 9,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 6,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 价值/成本/认知负担评估检测不到结构化内容，请确认已在自然语言中覆盖",
+      "target_artifacts": [
+        "projects/employee-self-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-permission/workspace/facts.md",
+        "projects/employee-self-permission/workspace/business_blueprint.md",
+        "projects/employee-self-permission/runtime/provenance.json",
+        "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 价值/成本/认知负担评估检测不到结构化内容，请确认已在自然语言中覆盖"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-permission/workspace/facts.md",
+            "projects/employee-self-permission/workspace/business_blueprint.md",
+            "projects/employee-self-permission/runtime/provenance.json",
+            "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 0,
+            "facts_consumed_count": 0,
+            "judgment_traceable_count": 0,
+            "trace_mapping_item_count": 10,
+            "option_compare_count": 16,
+            "value_assessment_item_count": 6,
+            "risk_item_count": 9,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 6,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 判断依据未覆盖足够的核心判断",
+      "target_artifacts": [
+        "projects/employee-self-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-permission/workspace/facts.md",
+        "projects/employee-self-permission/workspace/business_blueprint.md",
+        "projects/employee-self-permission/runtime/provenance.json",
+        "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 判断依据未覆盖足够的核心判断"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-permission/workspace/facts.md",
+            "projects/employee-self-permission/workspace/business_blueprint.md",
+            "projects/employee-self-permission/runtime/provenance.json",
+            "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 0,
+            "facts_consumed_count": 0,
+            "judgment_traceable_count": 0,
+            "trace_mapping_item_count": 10,
+            "option_compare_count": 16,
+            "value_assessment_item_count": 6,
+            "risk_item_count": 9,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 6,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts 阶段状态：warning",
+      "target_artifacts": [
+        "projects/employee-self-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-permission/workspace/facts.md",
+        "projects/employee-self-permission/workspace/business_blueprint.md",
+        "projects/employee-self-permission/runtime/provenance.json",
+        "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts 阶段状态：warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-permission/workspace/facts.md",
+            "projects/employee-self-permission/workspace/business_blueprint.md",
+            "projects/employee-self-permission/runtime/provenance.json",
+            "projects/employee-self-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "judgment_count": 0,
+            "facts_consumed_count": 0,
+            "judgment_traceable_count": 0,
+            "trace_mapping_item_count": 10,
+            "option_compare_count": 16,
+            "value_assessment_item_count": 6,
+            "risk_item_count": 9,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "handover_item_count": 6,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "judgment_count": 0,
+    "facts_consumed_count": 0,
+    "judgment_traceable_count": 0,
+    "trace_mapping_item_count": 10,
+    "option_compare_count": 16,
+    "value_assessment_item_count": 6,
+    "risk_item_count": 9,
+    "unresolved_gap_count": 0,
+    "has_appendix": true,
+    "handover_item_count": 6,
+    "handover_keyword_count": 5,
+    "has_handover_empty_talk": false
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "project_id": "employee-self-permission",
+  "generation_mode": "generated",
+  "copied_from_project_id": "",
+  "source_hash": "manual",
+  "task_card_hash": "manual",
+  "command_chain": [
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage"
+  ],
+  "created_at": "2026-05-08T00:00:00Z",
+  "updated_at": "2026-05-08T00:00:00Z"
+}

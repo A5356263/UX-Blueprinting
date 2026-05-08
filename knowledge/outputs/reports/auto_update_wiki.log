@@ -854,3 +854,13 @@ pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pe
 [2026-05-07T12:30:34+00:00] update_exit_code=0
 [2026-05-07T12:30:34+00:00] update_stdout=status=ok
 pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-05-08T00:12:25+00:00] daemon_started pid=10728 interval=20
+[2026-05-08T00:12:25+00:00] trigger_summary_refresh changed_count=132
+[2026-05-08T00:12:31+00:00] update_exit_code=0
+[2026-05-08T00:12:31+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-05-08T11:53:59+00:00] daemon_started pid=13224 interval=20
+[2026-05-08T11:53:59+00:00] trigger_summary_refresh changed_count=132
+[2026-05-08T11:54:04+00:00] update_exit_code=0
+[2026-05-08T11:54:04+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
