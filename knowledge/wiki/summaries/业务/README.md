@@ -1,4 +1,4 @@
-# knowledge/business
+# knowledge/raw/业务
 
 - page_id: PG-SUMMARY-BUSINESS-业务-README
 - page_type: summary
@@ -10,13 +10,13 @@
 - semantic_status: ai_generated
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
-- source_refs: [knowledge/raw/业务/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/README.md
   - knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
   - knowledge/wiki/summaries/业务/人事服务/客户管理/README.md
   - knowledge/wiki/summaries/业务/人事服务/招聘管理/README.md
   - knowledge/wiki/summaries/业务/人事服务/组织管理/README.md
+- source_refs: [knowledge/raw/业务/README.md]
 
 ## 1. 知识定位
 

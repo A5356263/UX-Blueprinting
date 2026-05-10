@@ -305,6 +305,11 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    guideline_summary_refs = set(
+        list(knowledge_plan["experience"].get("guideline_entry_refs", []))
+        + list(knowledge_plan["experience"].get("guideline_refs", []))
+    )
+
     usage_report = {
         "task_id": task_id,
         "generated_from": to_repo_relative(repo_root, manifest_path),
@@ -339,9 +344,9 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "experience"],
                 "guideline_refs_used": list(knowledge_plan["experience"].get("guideline_refs", [])),
                 "guideline_raw_refs_used": [
-                    str(item).replace("\\", "/")
-                    for item in knowledge_plan["experience"].get("raw_refs_from_source_refs", [])
-                    if isinstance(item, str) and "/设计准则/" in str(item).replace("\\", "/").lower()
+                    str(item.get("raw", "")).replace("\\", "/")
+                    for item in source_ref_chains
+                    if item.get("stage") == "experience" and item.get("summary") in guideline_summary_refs
                 ],
                 "guideline_selection_reason": [],
             },

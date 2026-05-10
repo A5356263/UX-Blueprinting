@@ -25,14 +25,12 @@ def _is_summary_ref(path: str) -> bool:
     return normalized.startswith("knowledge/wiki/summaries/") and normalized.endswith(".md")
 
 
-def _is_guideline_summary(path: str) -> bool:
-    normalized = path.replace("\\", "/").lower()
-    return "/设计准则/" in normalized
+def _is_guideline_summary(metadata: dict[str, object]) -> bool:
+    return metadata.get("page_type") == "summary" and metadata.get("source_group") == "guideline"
 
 
-def _is_business_summary(path: str) -> bool:
-    normalized = path.replace("\\", "/").lower()
-    return "/业务/" in normalized
+def _is_business_summary(metadata: dict[str, object]) -> bool:
+    return metadata.get("page_type") == "summary" and metadata.get("source_group") == "business"
 
 
 def _looks_like_experience_summary(path: str) -> bool:
@@ -55,16 +53,20 @@ def build_knowledge_consumption_plan(resolved: dict[str, object]) -> tuple[dict[
     guideline_entry_refs = _dedupe_keep_order([str(item) for item in resolved.get("guideline_refs", []) if isinstance(item, str)])
 
     summary_metadata: dict[str, dict[str, object]] = {}
-    for summary_ref in _dedupe_keep_order(summary_refs + guideline_entry_refs):
-        summary_metadata[summary_ref] = _read_summary_metadata(repo_root, summary_ref)
-
     facts_required_default = FACTS_REQUIRED_WIKI_BY_DOMAIN.get(domain, [])
     facts_required_wiki_refs = _dedupe_keep_order(facts_required_default[: DEFAULT_KNOWLEDGE_BUDGET["facts"]["max_summary_refs"]])
+    domain_seed_refs = [ref for ref in facts_required_wiki_refs if _is_summary_ref(ref)]
 
-    business_summary_refs = _dedupe_keep_order([ref for ref in summary_refs if _is_business_summary(ref)])
+    for summary_ref in _dedupe_keep_order(summary_refs + domain_seed_refs + guideline_entry_refs):
+        summary_metadata[summary_ref] = _read_summary_metadata(repo_root, summary_ref)
+
+    business_seed_refs = _dedupe_keep_order(summary_refs + domain_seed_refs)
+    business_summary_refs = _dedupe_keep_order([ref for ref in business_seed_refs if _is_business_summary(summary_metadata.get(ref, {}))])
     business_summary_refs = business_summary_refs[: DEFAULT_KNOWLEDGE_BUDGET["business"]["max_summary_refs"]]
 
-    guideline_refs = _dedupe_keep_order([ref for ref in summary_refs if _is_guideline_summary(ref) and ref not in guideline_entry_refs])
+    guideline_refs = _dedupe_keep_order(
+        [ref for ref in summary_refs if _is_guideline_summary(summary_metadata.get(ref, {})) and ref not in guideline_entry_refs]
+    )
     experience_summary_refs = _dedupe_keep_order([ref for ref in summary_refs if _looks_like_experience_summary(ref)])
     if not experience_summary_refs:
         experience_summary_refs = business_summary_refs[:]

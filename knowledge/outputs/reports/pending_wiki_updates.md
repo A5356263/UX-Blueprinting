@@ -1,13 +1,12 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-10T08:28:00+00:00
+- generated_at_utc: 2026-05-10T09:29:19+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
 ## Mechanical Pipeline
 
 - scan_raw.py: ok
-- build_manifest.py: ok
 - build_summaries.py: ok
 - reindex_wiki.py: ok
 - refresh_questions.py: ok
@@ -35,7 +34,7 @@
 
 ```text
 raw_root=E:\AI设计\体验蓝图构建思路\knowledge\raw
-file_count=134
+file_count=132
 业务/README.md
 业务/人事服务/00_领域概述.md
 业务/人事服务/README.md
@@ -158,8 +157,6 @@ file_count=134
 业务/项目背景/04_产品优势与服务模式.md
 业务/项目背景/05_管理控制台能力概览.md
 业务/项目背景/README.md
-清单/source_manifest.generated.md
-清单/source_manifest.md
 设计准则/README.md
 设计准则/信息架构.md
 设计准则/可用性.md
@@ -170,14 +167,6 @@ file_count=134
 设计准则/视觉.md
 设计准则/认知.md
 设计准则/质量.md
-```
-
-### build_manifest.py
-
-```text
-written=E:\AI设计\体验蓝图构建思路\knowledge\raw\清单\source_manifest.generated.md
-written=E:\AI设计\体验蓝图构建思路\knowledge\raw\清单\source_manifest.md
-record_count=132
 ```
 
 ### build_summaries.py

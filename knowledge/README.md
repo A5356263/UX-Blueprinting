@@ -55,11 +55,9 @@
 ```text
 knowledge/
   raw/
-    business/
-    guidelines/
+    业务/
+    设计准则/
     inbox/
-    manifests/
-      source_manifest.md
 
   wiki/
     index.md
@@ -67,9 +65,8 @@ knowledge/
     questions.md
     log.md
     summaries/
-      business/
-      guidelines/
-      inbox/
+      业务/
+      设计准则/
 
   outputs/
     answers/
@@ -79,7 +76,6 @@ knowledge/
 
   scripts/
     scan_raw.py
-    build_manifest.py
     build_summaries.py
     reindex_wiki.py
     refresh_overview.py
@@ -143,7 +139,6 @@ knowledge/
 这里放：
 
 - 扫描 raw
-- 构建 manifest
 - 生成 summaries
 - 刷新 index / overview / questions
 - lint 与自动更新
@@ -245,12 +240,11 @@ summary 与 raw 保持：
 ### 新来源进入时
 
 1. 放入 `raw/业务/`、`raw/设计准则/` 或 `raw/inbox/`
-2. 更新 `source_manifest.md`
-3. 生成对应 summary
-4. 刷新 `index.md`
-5. 刷新 `overview.md`
-6. 刷新 `questions.md`
-7. 写入 `log.md`
+2. 生成对应 summary
+3. 刷新 `index.md`
+4. 刷新 `overview.md`
+5. 刷新 `questions.md`
+6. 写入 `log.md`
 
 ### 做健康检查时
 

@@ -115,7 +115,6 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 - `raw/业务/`
 - `raw/设计准则/`
 - `raw/inbox/`
-- `raw/清单/source_manifest.md`
 
 ### 3.2 wiki/
 
@@ -144,12 +143,11 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 默认链路：
 
 1. 扫描 raw
-2. 更新 manifest
-3. 为每个 raw 生成对应 summary
-4. 刷新 index
-5. 刷新 overview
-6. 刷新 questions
-7. 运行 lint
+2. 为每个 raw 生成对应 summary
+3. 刷新 index
+4. 刷新 overview
+5. 刷新 questions
+6. 运行 lint
 
 ### 4.1 你生成的默认页面
 
@@ -199,7 +197,6 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 优先调用脚本的情况：
 
 - 扫描 raw 文件
-- 构建 manifest
 - 生成 mirrored summaries
 - 刷新 index / overview / questions
 - 检查 raw-summary 一对一映射
@@ -221,12 +218,11 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 默认顺序：
 
 1. 扫描新来源
-2. 更新 `source_manifest.md`
-3. 生成对应 summary
-4. 刷新 `index.md`
-5. 刷新 `overview.md`
-6. 必要时刷新 `questions.md`
-7. 写入 `log.md`
+2. 生成对应 summary
+3. 刷新 `index.md`
+4. 刷新 `overview.md`
+5. 必要时刷新 `questions.md`
+6. 写入 `log.md`
 
 ### 6.2 当收到“做一次 Wiki 健康检查”
 

@@ -49,6 +49,17 @@ def _parse_inline_list(value: str) -> list[str]:
     return items
 
 
+def normalize_source_group(value: object) -> str:
+    text = str(value or "").strip().lower()
+    if text in {"business", "业务"}:
+        return "business"
+    if text in {"guideline", "guidelines", "设计准则"}:
+        return "guideline"
+    if text in {"inbox", "收件箱"}:
+        return "inbox"
+    return text
+
+
 def parse_summary_metadata(text: str) -> dict[str, object]:
     source_path = ""
     source_refs: list[str] = []
@@ -88,7 +99,7 @@ def parse_summary_metadata(text: str) -> dict[str, object]:
             elif key == "page_type":
                 page_type = value
             elif key == "source_group":
-                source_group = value
+                source_group = normalize_source_group(value)
             elif key == "confidence":
                 confidence = value
             continue

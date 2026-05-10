@@ -9,11 +9,11 @@
 - touched_files:
   - knowledge/raw/业务/*
   - knowledge/raw/设计准则/*
-  - knowledge/raw/清单/source_manifest.md
+  - 旧来源清单文件（已移除）
 - summary: 完成既有业务与指南真源向 raw 层归位，并初始化来源清单。
 - reason: 按 Wiki 子系统 v2 规范完成改造步骤 1-3。
 - risk_level: medium
-- rollback_hint: 可从 git 还原 `knowledge/raw/` 与 `source_manifest.md` 到改造前状态。
+- rollback_hint: 可从 git 还原 `knowledge/raw/` 与 `旧来源清单文件` 到改造前状态。
 
 ## LOG-2026-04-09-0002
 
@@ -40,7 +40,7 @@
 - operator: ai
 - touched_files:
   - knowledge/scripts/scan_raw.py
-  - knowledge/scripts/build_manifest.py
+  - 旧来源清单生成脚本（已移除）
   - knowledge/scripts/lint_wiki.py
   - knowledge/scripts/refresh_overview.py
   - knowledge/scripts/reindex_wiki.py
@@ -58,7 +58,7 @@
 - touched_files:
   - knowledge/wiki/concepts/*
   - knowledge/wiki/entities/permission-detail-view.md
-  - knowledge/wiki/topics/*
+  - knowledge/旧 topics 目录*
   - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
   - knowledge/wiki/index.md
 - summary: 为核心 Wiki 内容页补齐 page_id/page_type/source_refs 等元数据，并修正原始来源路径到 raw 层。
@@ -89,15 +89,15 @@
 - action_type: update
 - operator: ai
 - touched_files:
-  - knowledge/wiki/topics/permission-domain-index.md
+  - knowledge/旧 topics 目录permission-domain-index.md
   - knowledge/wiki/index.md
   - knowledge/wiki/concepts/*
   - knowledge/wiki/entities/permission-detail-view.md
-  - knowledge/wiki/topics/*
+  - knowledge/旧 topics 目录*
   - knowledge/wiki/relations/query-page-vs-configuration-page-boundary.md
   - knowledge/scripts/reindex_wiki.py
   - knowledge/wiki/index.md
-- summary: 对齐 v2 规范目录，移除 `wiki/indices/`，将权限域索引页迁移至 `wiki/topics/` 并批量修复链接。
+- summary: 对齐 v2 规范目录，移除 `wiki/indices/`，将权限域索引页迁移至 `旧 topics 目录` 并批量修复链接。
 - reason: 消除目录结构与规范定义差异，降低后续维护与脚本分叉风险。
 - risk_level: low
 - rollback_hint: 可恢复 `wiki/indices/` 并将索引页迁回原目录后重跑 reindex 脚本。
@@ -147,7 +147,7 @@
   - knowledge/wiki/entities/query-by-role-result-view.md
   - knowledge/wiki/entities/query-by-permission-result-view.md
   - knowledge/wiki/entities/query-by-feature-result-view.md
-  - knowledge/wiki/topics/data-permission-gaps-backlog.md
+  - 旧 topics 数据权限待补页（已移除）
   - knowledge/wiki/questions.md
 - summary: 搭建数据权限相关骨架页，覆盖数据授权页与三类查询结果承接页，并新增待补清单。
 - reason: 在 Raw 细节未补齐前先建立正式承接骨架，确保后续可增量填充且不破坏体系结构。
@@ -161,7 +161,7 @@
 - action_type: update
 - operator: ai
 - touched_files:
-  - knowledge/wiki/topics/data-permission-gaps-backlog.md
+  - 旧 topics 数据权限待补页（已移除）
 - summary: 明确数据权限边界，确认“概念与关系已具备，当前仅缺页面架构层真源信息”。
 - reason: 对齐当前维护范围，避免误判为概念层缺失，便于后续 Raw 定向补充。
 - risk_level: low
@@ -211,7 +211,7 @@
   - knowledge/scripts/uninstall_wiki_autoupdate_task.ps1
   - knowledge/scripts/auto_update_wiki.py
   - knowledge/README.md
-- summary: 为自动触发安装脚本增加权限不足降级策略（启动项回退），并避免 manifests 变更触发循环更新。
+- summary: 为自动触发安装脚本增加权限不足降级策略（启动项回退），并避免 旧清单变更触发循环更新。
 - reason: 提升无人值守在普通权限环境中的可用性与稳定性，防止守护进程自触发抖动。
 - risk_level: low
 - rollback_hint: 回滚安装脚本与监听脚本到前一版本，改回纯计划任务方案。

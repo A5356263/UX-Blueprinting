@@ -3,25 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 
-BUSINESS_SECTIONS: list[tuple[str, list[str]]] = [
-    ("背景层", ["项目背景"]),
-    ("平台公共域", ["工作台与全局入口", "账户与企业生命周期"]),
-    (
-        "平台治理域",
-        [
-            "权限管理",
-            "组织架构",
-            "成员管理",
-            "应用管理",
-            "审批管理",
-            "安全管理",
-            "企业设置",
-            "服务管理",
-        ],
-    ),
-]
-
-
 def append_summary_links(
     lines: list[str],
     wiki: Path,
@@ -71,30 +52,6 @@ def main() -> int:
     for group_dir in sorted(groups, key=lambda p: p.name):
         lines.append(f"## {group_dir.name}")
         lines.append("")
-        if group_dir.name == "business":
-            domain_dirs = {p.name: p for p in group_dir.iterdir() if p.is_dir()}
-            emitted: set[str] = set()
-            for section_title, domains in BUSINESS_SECTIONS:
-                existing_domains = [name for name in domains if name in domain_dirs]
-                if not existing_domains:
-                    continue
-                lines.append(f"### {section_title}")
-                lines.append("")
-                for domain in existing_domains:
-                    emitted.add(domain)
-                    lines.append(f"#### {domain}")
-                    lines.append("")
-                    append_summary_links(lines, wiki, domain_dirs[domain], sorted(domain_dirs[domain].rglob("*.md")), "#####")
-            remaining = sorted(name for name in domain_dirs if name not in emitted)
-            if remaining:
-                lines.append("### 其他")
-                lines.append("")
-                for domain in remaining:
-                    lines.append(f"#### {domain}")
-                    lines.append("")
-                    append_summary_links(lines, wiki, domain_dirs[domain], sorted(domain_dirs[domain].rglob("*.md")), "#####")
-            continue
-
         summary_files = sorted(group_dir.rglob("*.md"))
         if not summary_files:
             lines.append("- none")

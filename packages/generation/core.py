@@ -189,6 +189,17 @@ def _read_guideline_candidate_text(repo_root: Path, summary_ref: str) -> tuple[s
     return candidate_text, matched_fragments
 
 
+def _read_summary_metadata(repo_root: Path, summary_ref: str) -> dict[str, object]:
+    path = repo_root / Path(summary_ref.replace("/", "\\"))
+    if not path.exists() or not path.is_file():
+        return {}
+    return parse_summary_metadata(path.read_text(encoding="utf-8"))
+
+
+def _is_guideline_summary_metadata(metadata: dict[str, object]) -> bool:
+    return metadata.get("page_type") == "summary" and metadata.get("source_group") == "guideline"
+
+
 def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) -> list[str]:
     candidates: list[str] = []
     for entry_ref in entry_refs:
@@ -215,7 +226,7 @@ def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) ->
         )
         if entry_path.name.lower() != "readme.md":
             candidates.append(normalized)
-    return _dedupe_keep_order([ref for ref in candidates if "/设计准则/" in ref.lower()])
+    return _dedupe_keep_order([ref for ref in candidates if _is_guideline_summary_metadata(_read_summary_metadata(repo_root, ref))])
 
 
 def _select_guidelines_from_business(business_text: str, entry_refs: list[str]) -> tuple[list[str], list[str], list[dict[str, str]]]:
@@ -251,11 +262,7 @@ def _select_guidelines_from_business(business_text: str, entry_refs: list[str]) 
     for _, summary_ref, reason_fragment in ranked[:3]:
         summary_path = repo_root / Path(summary_ref.replace("/", "\\"))
         metadata = parse_summary_metadata(summary_path.read_text(encoding="utf-8"))
-        raw_refs = [
-            str(item).replace("\\", "/")
-            for item in metadata.get("source_refs", [])
-            if isinstance(item, str) and "/设计准则/" in str(item).replace("\\", "/").lower()
-        ]
+        raw_refs = [str(item).replace("\\", "/") for item in metadata.get("source_refs", []) if isinstance(item, str)]
         selected_raw_refs.extend(raw_refs[:1])
         selection_reasons.append(
             {
@@ -320,7 +327,13 @@ def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list
             }
         ]
 
-    guideline_raw_refs = [ref for ref in raw_refs_from_source_refs if "/设计准则/" in ref.lower()]
+    guideline_source_refs: list[str] = []
+    for summary_ref in guideline_entry_refs + guideline_refs:
+        metadata = _read_summary_metadata(get_repo_root(), summary_ref)
+        if not _is_guideline_summary_metadata(metadata):
+            continue
+        guideline_source_refs.extend(str(item).replace("\\", "/") for item in metadata.get("source_refs", []) if isinstance(item, str))
+    guideline_raw_refs = [ref for ref in raw_refs_from_source_refs if ref in set(guideline_source_refs)]
     return guideline_entry_refs, guideline_refs, guideline_raw_refs, reasons
 
 

@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_project_source_dir, get_repo_root
+from packages.knowledge_consumption.summary_parser import parse_summary_metadata
 
 from .schemas import KnowledgeNote
 
@@ -38,14 +39,14 @@ def _first_heading(text: str, fallback: str) -> str:
     return fallback
 
 
-def _classify_ref(path_text: str) -> str:
+def _classify_note(path_text: str, text: str) -> str:
+    metadata = parse_summary_metadata(text)
+    source_group = str(metadata.get("source_group") or "")
+    if metadata.get("page_type") == "summary" and source_group in {"business", "guideline", "inbox"}:
+        return source_group
     lowered = path_text.lower()
-    if "设计准则" in lowered or "principle" in lowered:
-        return "guideline"
     if "knowledge/wiki" in lowered:
         return "wiki"
-    if "/业务/" in lowered:
-        return "business"
     if "knowledge/raw" in lowered:
         return "raw"
     return "knowledge"
@@ -125,7 +126,7 @@ def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | 
     return KnowledgeNote(
         note_id=note_id,
         path=ref_path,
-        kind=_classify_ref(ref_path),
+        kind=_classify_note(ref_path, text),
         title=title,
         summary=summary,
         signals=signals[:6],

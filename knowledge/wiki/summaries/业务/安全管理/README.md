@@ -10,13 +10,13 @@
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
-- source_refs: [knowledge/raw/业务/安全管理/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/业务/安全管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/安全管理/10_安全水印.md
   - knowledge/wiki/summaries/业务/安全管理/11_操作记录.md
   - knowledge/wiki/summaries/业务/安全管理/12_安全设置.md
   - knowledge/wiki/summaries/业务/README.md
+- source_refs: [knowledge/raw/业务/安全管理/README.md]
 
 ## 1. 知识定位
 

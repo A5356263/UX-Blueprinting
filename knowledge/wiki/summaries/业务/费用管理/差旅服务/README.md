@@ -10,13 +10,13 @@
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
-- source_refs: [knowledge/raw/业务/费用管理/差旅服务/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
   - knowledge/wiki/summaries/业务/README.md
   - knowledge/wiki/summaries/业务/人事服务/README.md
   - knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
+- source_refs: [knowledge/raw/业务/费用管理/差旅服务/README.md]
 
 ## 1. 知识定位
 

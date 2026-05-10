@@ -182,8 +182,8 @@ AI 不得仅凭感觉决定 memory 归属领域。
 
 #### `classification_basis`
 记录归类依据，例如：
-- `task_card.domain=permission`
-- `wiki_ref=knowledge/wiki/summaries/业务/permission/00_domain_overview.md`
+- `task_card.domain=权限管理`
+- `wiki_ref=knowledge/wiki/summaries/业务/权限管理/00_领域概述.md`
 
 #### `confidence`
 仅允许：

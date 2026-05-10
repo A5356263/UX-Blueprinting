@@ -62,7 +62,7 @@ def parse_related_summaries(text: str) -> list[str]:
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     repo_root = root.parent
-    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file() and "清单" not in p.parts)
+    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file())
     summary_files = sorted(p for p in (root / "wiki" / "summaries").rglob("*.md") if p.is_file())
     issues: list[str] = []
 

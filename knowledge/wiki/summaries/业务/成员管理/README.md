@@ -10,13 +10,13 @@
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
-- source_refs: [knowledge/raw/业务/成员管理/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/业务/成员管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/成员管理/10_成员加入与邀请.md
   - knowledge/wiki/summaries/业务/成员管理/11_成员退出与离职交接.md
   - knowledge/wiki/summaries/业务/成员管理/12_成员分组.md
   - knowledge/wiki/summaries/业务/成员管理/13_外部人员.md
+- source_refs: [knowledge/raw/业务/成员管理/README.md]
 
 ## 1. 知识定位
 

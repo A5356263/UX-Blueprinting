@@ -10,13 +10,13 @@
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
-- source_refs: [knowledge/raw/业务/企业设置/README.md]
 - related_summaries:
   - knowledge/wiki/summaries/业务/企业设置/00_领域概述.md
   - knowledge/wiki/summaries/业务/企业设置/10_企业信息展示.md
   - knowledge/wiki/summaries/业务/企业设置/11_企业登录页自定义.md
   - knowledge/wiki/summaries/业务/企业设置/12_企业文化.md
   - knowledge/wiki/summaries/业务/README.md
+- source_refs: [knowledge/raw/业务/企业设置/README.md]
 
 ## 1. 知识定位
 

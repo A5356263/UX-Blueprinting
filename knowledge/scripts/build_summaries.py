@@ -22,7 +22,7 @@ def list_raw_files(raw_root: Path) -> list[Path]:
     return sorted(
         p
         for p in raw_root.rglob("*.md")
-        if p.is_file() and "清单" not in p.parts
+        if p.is_file()
     )
 
 
@@ -30,7 +30,7 @@ def source_group_for(path: Path) -> str:
     if "业务" in path.parts:
         return "business"
     if "设计准则" in path.parts:
-        return "设计准则"
+        return "guideline"
     return "inbox"
 
 
@@ -242,9 +242,9 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         f"- semantic_status: {semantic_status}",
         f"- semantic_updated_at: {today_str}",
         f"- updated_at: {today_str}",
-        f"- source_refs: [{rel_source}]",
         "- related_summaries:",
         *([f"  - {item}" for item in related_lines]),
+        f"- source_refs: [{rel_source}]",
         "",
         "## 1. 知识定位",
         "",

@@ -1,4 +1,4 @@
-# knowledge/raw/guidelines
+# knowledge/raw/设计准则
 
 本目录用于存放跨业务、跨产品复用的通用设计原则。
 

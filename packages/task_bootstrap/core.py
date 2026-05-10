@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 from packages.common import (
-    get_knowledge_root_dir,
     get_project_dir,
     get_project_exports_dir,
     get_project_gates_dir,
@@ -25,17 +24,9 @@ TEMPLATE_MAP = {
 }
 
 
-def _resolve_domain_knowledge_ref(domain: str) -> str:
-    candidate = get_knowledge_root_dir() / "wiki" / "topics" / f"{domain}-domain-index.md"
-    if candidate.exists():
-        return f"knowledge/wiki/topics/{domain}-domain-index.md"
-    return "knowledge/wiki/topics/README.md"
-
-
 def render_template(content: str, project_id: str, task_name: str, domain: str) -> str:
     return (
-        content.replace("knowledge/wiki/topics/{{DOMAIN}}-domain-index.md", _resolve_domain_knowledge_ref(domain))
-        .replace("{{TASK_ID}}", project_id)
+        content.replace("{{TASK_ID}}", project_id)
         .replace("{{TASK_NAME}}", task_name)
         .replace("{{DOMAIN}}", domain)
     )

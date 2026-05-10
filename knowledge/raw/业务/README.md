@@ -1,4 +1,4 @@
-# knowledge/business
+# knowledge/raw/业务
 
 本目录用于按业务域组织知识包。
 
