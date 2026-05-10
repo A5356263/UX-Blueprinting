@@ -1,7 +1,7 @@
 # Wiki Lint Report
 
-- raw_total: 132
-- summary_total: 132
+- raw_total: 135
+- summary_total: 135
 - issue_total: 0
 
 ## Issues

@@ -1,7 +1,7 @@
 # Pending Semantic Summaries
 
-- total: 132
-- pending_generate: 131
+- total: 135
+- pending_generate: 134
 - pending_review: 0
 - completed: 1
 
@@ -33,13 +33,19 @@
   - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
   - reason: semantic_status=pending
+- summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
+  - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/README.md
   - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
   - reason: semantic_status=pending
+- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
+  - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
   - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
+  - reason: semantic_status=pending
+- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
   - reason: semantic_status=pending
 - summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/README.md
   - reason: semantic_status=pending

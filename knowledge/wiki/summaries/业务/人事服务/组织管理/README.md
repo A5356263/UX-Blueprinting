@@ -13,10 +13,10 @@
 - updated_at: 2026-05-10
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
+  - knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
   - knowledge/wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
   - knowledge/wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
-  - knowledge/wiki/summaries/业务/README.md
-  - knowledge/wiki/summaries/业务/人事服务/README.md
+  - knowledge/wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
 - source_refs: [knowledge/raw/业务/人事服务/组织管理/README.md]
 
 ## 1. 知识定位
@@ -54,9 +54,9 @@
 弱指向 3-5 个相关 summary。
 
 - knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
 - knowledge/wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
 - knowledge/wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
-- knowledge/wiki/summaries/业务/README.md
-- knowledge/wiki/summaries/业务/人事服务/README.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
 
 > summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/README.md

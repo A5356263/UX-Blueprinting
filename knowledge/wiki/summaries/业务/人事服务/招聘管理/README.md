@@ -14,9 +14,9 @@
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
+  - knowledge/wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
   - knowledge/wiki/summaries/业务/README.md
   - knowledge/wiki/summaries/业务/人事服务/README.md
-  - knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
 - source_refs: [knowledge/raw/业务/人事服务/招聘管理/README.md]
 
 ## 1. 知识定位
@@ -55,8 +55,8 @@
 
 - knowledge/wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
 - knowledge/wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
+- knowledge/wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
 - knowledge/wiki/summaries/业务/README.md
 - knowledge/wiki/summaries/业务/人事服务/README.md
-- knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
 
 > summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/README.md

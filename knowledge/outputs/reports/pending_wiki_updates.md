@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-10T10:05:23+00:00
+- generated_at_utc: 2026-05-10T12:13:56+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -34,7 +34,7 @@
 
 ```text
 raw_root=E:\AI设计\体验蓝图构建思路\knowledge\raw
-file_count=132
+file_count=135
 业务/README.md
 业务/人事服务/00_领域概述.md
 业务/人事服务/README.md
@@ -49,10 +49,13 @@ file_count=132
 业务/人事服务/客户管理/README.md
 业务/人事服务/招聘管理/00_领域概述.md
 业务/人事服务/招聘管理/10_招聘管理.md
+业务/人事服务/招聘管理/50_常见问题.md
 业务/人事服务/招聘管理/README.md
 业务/人事服务/组织管理/00_领域概述.md
+业务/人事服务/组织管理/10_组织架构.md
 业务/人事服务/组织管理/13_编制管理.md
 业务/人事服务/组织管理/14_岗位与职级管理.md
+业务/人事服务/组织管理/50_常见问题.md
 业务/人事服务/组织管理/README.md
 业务/人事服务/考勤管理/00_领域概述.md
 业务/人事服务/考勤管理/10_考勤管理.md
@@ -173,7 +176,7 @@ file_count=132
 
 ```text
 mode=apply
-summary_count=132
+summary_count=135
 wiki/summaries/业务/README.md
 wiki/summaries/业务/人事服务/00_领域概述.md
 wiki/summaries/业务/人事服务/README.md
@@ -188,10 +191,13 @@ wiki/summaries/业务/人事服务/客户管理/10_客户管理.md
 wiki/summaries/业务/人事服务/客户管理/README.md
 wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
 wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
+wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
 wiki/summaries/业务/人事服务/招聘管理/README.md
 wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
+wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
 wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
 wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
+wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
 wiki/summaries/业务/人事服务/组织管理/README.md
 wiki/summaries/业务/人事服务/考勤管理/00_领域概述.md
 wiki/summaries/业务/人事服务/考勤管理/10_考勤管理.md
@@ -318,7 +324,7 @@ reindexed=knowledge/wiki/index.md
 
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
-question_count=58
+question_count=62
 ```
 
 ### refresh_overview.py
