@@ -33,9 +33,21 @@ def _is_business_summary(metadata: dict[str, object]) -> bool:
     return metadata.get("page_type") == "summary" and metadata.get("source_group") == "business"
 
 
-def _looks_like_experience_summary(path: str) -> bool:
+def _looks_like_experience_summary(path: str, metadata: dict[str, object]) -> bool:
+    stage_hint = str(metadata.get("stage_hint") or "").strip().lower()
+    if stage_hint == "experience":
+        return True
+
+    summary_role = str(metadata.get("summary_role") or "").strip().lower()
+    if "experience" in summary_role:
+        return True
+
+    # Legacy fallback for summaries that still lack explicit experience-stage metadata.
     normalized = Path(path.replace("\\", "/")).name.lower()
-    return any(token in normalized for token in ("experience", "copy", "carrier", "risk", "translation", "page"))
+    return any(
+        token in normalized
+        for token in ("experience", "copy", "carrier", "risk", "translation", "page", "体验", "文案", "页面", "风险", "转译")
+    )
 
 
 def _read_summary_metadata(repo_root: Path, summary_ref: str) -> dict[str, object]:
@@ -67,7 +79,9 @@ def build_knowledge_consumption_plan(resolved: dict[str, object]) -> tuple[dict[
     guideline_refs = _dedupe_keep_order(
         [ref for ref in summary_refs if _is_guideline_summary(summary_metadata.get(ref, {})) and ref not in guideline_entry_refs]
     )
-    experience_summary_refs = _dedupe_keep_order([ref for ref in summary_refs if _looks_like_experience_summary(ref)])
+    experience_summary_refs = _dedupe_keep_order(
+        [ref for ref in summary_refs if _looks_like_experience_summary(ref, summary_metadata.get(ref, {}))]
+    )
     if not experience_summary_refs:
         experience_summary_refs = business_summary_refs[:]
     experience_summary_refs = experience_summary_refs[: DEFAULT_KNOWLEDGE_BUDGET["experience"]["max_summary_refs"]]

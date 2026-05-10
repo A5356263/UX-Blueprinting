@@ -7,6 +7,7 @@
 - status: draft
 - confidence: low
 - summary_role: ai_route_card
+- domain: 组织架构
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10

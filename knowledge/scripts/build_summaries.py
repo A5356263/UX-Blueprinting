@@ -34,6 +34,36 @@ def source_group_for(path: Path) -> str:
     return "inbox"
 
 
+def domain_for(path: Path) -> str:
+    if "业务" not in path.parts:
+        return ""
+
+    business_index = path.parts.index("业务")
+    domain_parts = path.parts[business_index + 1 : -1]
+    if not domain_parts:
+        return "业务总览"
+    return domain_parts[-1]
+
+
+def stage_hint_for(raw_file: Path, title: str) -> str:
+    normalized = f"{raw_file.stem} {title}".lower()
+    experience_markers = (
+        "体验风险",
+        "体验翻译",
+        "文案与解释",
+        "体验蓝图",
+        "页面载体",
+        "experience_risk",
+        "experience_translation",
+        "copy_and_explanation",
+        "experience_blueprint",
+        "page_carrier",
+    )
+    if any(marker in normalized for marker in experience_markers):
+        return "experience"
+    return ""
+
+
 def summary_path_for(root: Path, raw_file: Path) -> Path:
     raw_root = root / "raw"
     rel = raw_file.relative_to(raw_root)
@@ -198,6 +228,8 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
     lookup_rules = build_raw_lookup_rules()
     related_lines = related if related else ["none"]
     today_str = date.today().isoformat()
+    domain = domain_for(raw_file)
+    stage_hint = stage_hint_for(raw_file, title)
 
     existing_summary = summary_path if summary_path.exists() else None
     existing_text = existing_summary.read_text(encoding="utf-8") if existing_summary else None
@@ -239,6 +271,8 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         f"- status: {status}",
         f"- confidence: {confidence}",
         "- summary_role: ai_route_card",
+        *( [f"- domain: {domain}"] if domain else [] ),
+        *( [f"- stage_hint: {stage_hint}"] if stage_hint else [] ),
         f"- semantic_status: {semantic_status}",
         f"- semantic_updated_at: {today_str}",
         f"- updated_at: {today_str}",

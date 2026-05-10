@@ -16,6 +16,10 @@ def _domain_from_summary_path(summary_root: Path, path: Path) -> str:
     return rel_parts[1] if len(rel_parts) > 1 else ""
 
 
+def _domain_from_metadata(metadata: dict[str, object]) -> str:
+    return str(metadata.get("domain") or "").strip()
+
+
 def _entry_rank(path: Path) -> tuple[int, str]:
     if path.name == "README.md":
         return (0, path.name)
@@ -37,7 +41,10 @@ def build_facts_required_wiki_by_domain() -> dict[str, list[str]]:
         metadata = parse_summary_metadata(summary.read_text(encoding="utf-8"))
         if metadata.get("page_type") != "summary" or metadata.get("source_group") != "business":
             continue
-        domain = _domain_from_summary_path(summaries_root, summary)
+        domain = _domain_from_metadata(metadata)
+        if not domain:
+            # Legacy fallback for summaries that have not yet been backfilled with explicit domain metadata.
+            domain = _domain_from_summary_path(summaries_root, summary)
         if not domain:
             continue
         candidates_by_domain.setdefault(domain, []).append(summary)

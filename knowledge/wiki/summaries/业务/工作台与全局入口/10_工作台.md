@@ -7,6 +7,7 @@
 - status: draft
 - confidence: low
 - summary_role: ai_route_card
+- domain: 工作台与全局入口
 - semantic_status: pending
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10

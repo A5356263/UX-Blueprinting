@@ -60,6 +60,13 @@ def normalize_source_group(value: object) -> str:
     return text
 
 
+def normalize_stage_hint(value: object) -> str:
+    text = str(value or "").strip().lower()
+    if text in {"facts", "business", "experience"}:
+        return text
+    return text
+
+
 def parse_summary_metadata(text: str) -> dict[str, object]:
     source_path = ""
     source_refs: list[str] = []
@@ -67,6 +74,9 @@ def parse_summary_metadata(text: str) -> dict[str, object]:
     page_type = ""
     source_group = ""
     confidence = ""
+    summary_role = ""
+    domain = ""
+    stage_hint = ""
     current_multiline_key = ""
 
     for raw_line in text.splitlines():
@@ -102,6 +112,12 @@ def parse_summary_metadata(text: str) -> dict[str, object]:
                 source_group = normalize_source_group(value)
             elif key == "confidence":
                 confidence = value
+            elif key == "summary_role":
+                summary_role = value
+            elif key == "domain":
+                domain = value
+            elif key == "stage_hint":
+                stage_hint = normalize_stage_hint(value)
             continue
 
         if current_multiline_key:
@@ -128,4 +144,7 @@ def parse_summary_metadata(text: str) -> dict[str, object]:
         "page_type": page_type,
         "source_group": source_group,
         "confidence": confidence,
+        "summary_role": summary_role,
+        "domain": domain,
+        "stage_hint": stage_hint,
     }

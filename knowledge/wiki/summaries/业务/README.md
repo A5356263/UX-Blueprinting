@@ -7,6 +7,7 @@
 - status: active
 - confidence: medium
 - summary_role: ai_route_card
+- domain: 业务总览
 - semantic_status: ai_generated
 - semantic_updated_at: 2026-05-10
 - updated_at: 2026-05-10
