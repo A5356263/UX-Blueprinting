@@ -50,7 +50,7 @@
 - source_path: knowledge/raw/业务/人事服务/员工管理/15_合同管理.md
 - summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/15_合同管理.md
 - question_type: GAP
-- text: 合同审批流程的具体节点和签章规则未在帮助文档中展开
+- text: e签宝具体收费标准未在帮助文档中说明
 - updated_at: 2026-05-10
 
 ### Q-0006
@@ -59,7 +59,7 @@
 - source_path: knowledge/raw/业务/人事服务/员工管理/15_合同管理.md
 - summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/15_合同管理.md
 - question_type: GAP
-- text: 法人公司核验和e签宝开通的具体对接流程未采集
+- text: 多主体签署的跨法人公司权限细节未采集
 - updated_at: 2026-05-10
 
 ### Q-0007

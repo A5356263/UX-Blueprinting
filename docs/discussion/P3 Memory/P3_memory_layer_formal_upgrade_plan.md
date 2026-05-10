@@ -554,8 +554,8 @@ P3 改造可视为完成，当以下条件同时满足：
 ### 18.2 结构完成
 - 顶层 `memory/` 子系统已建立
 - `memory/preferences/` 骨架已建立
-- `memory/domains/permission/`
-- `memory/domains/organization/`
+- `memory/domains/权限管理/`
+- `memory/domains/组织架构/`
 - `memory/domains/enterprise_security/`
 - `memory/domains/personal_account/`
   已建立

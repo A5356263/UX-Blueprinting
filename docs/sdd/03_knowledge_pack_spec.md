@@ -5,12 +5,13 @@
 
 ## 分层
 
-- `knowledge/business/`：业务真源
-- `knowledge/guidelines/`：原则真源
-- `knowledge/wiki/`：默认消费层
+- `knowledge/raw/**`：事实真源
+- `knowledge/wiki/index.md`：默认入口
+- `knowledge/wiki/summaries/**`：默认消费层
 
 ## 理解重点
 
 - 做任务时默认先读 Wiki
-- 真源负责保证知识正确性
-- 当 Wiki 有缺口或冲突时，再回到真源核实
+- raw 真源负责保证知识正确性
+- summary 通过 `source_refs` 指向可回查的 raw 文件
+- 当 Wiki 有缺口或冲突时，再沿 `source_refs` 回到 raw 核实

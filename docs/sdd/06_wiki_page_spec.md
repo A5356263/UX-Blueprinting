@@ -12,7 +12,8 @@
 
 ## 与真源的关系
 
-- `business/guidelines` 是真源
-- `wiki` 是编译层
+- `knowledge/raw/**` 是真源
+- `knowledge/wiki/summaries/**` 是默认消费层
+- summary 通过 `source_refs` 指向可回查的 raw 文件
 
 默认从 Wiki 进入，必要时回真源核实。

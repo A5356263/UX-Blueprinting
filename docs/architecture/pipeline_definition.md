@@ -12,7 +12,7 @@
 ## 输入输出
 
 - 输入：任务工单与原始材料
-- 上游知识：`knowledge/business/`、`knowledge/guidelines/`、`knowledge/wiki/`
+- 上游知识：`knowledge/wiki/index.md`、`knowledge/wiki/summaries/**`，必要时沿 `source_refs` 回查 `knowledge/raw/**`
 - 中间产物：`facts.md`
 - 结果产物：`business_blueprint.md`、`experience_blueprint.md`
 - 检查产物：`check_report.md`

@@ -34,8 +34,8 @@
 
 ## 知识是如何被消费的
 
-- 默认先读 `knowledge/wiki/`
-- 需要细节时再回到 `knowledge/business/` 与 `knowledge/guidelines/`
+- 默认先读 `knowledge/wiki/index.md` 与 `knowledge/wiki/summaries/**`
+- 需要细节时再沿 summary 的 `source_refs` 回到 `knowledge/raw/**`
 
 ## 结果是如何被查看的
 
