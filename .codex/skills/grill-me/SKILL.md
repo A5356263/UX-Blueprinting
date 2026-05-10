@@ -3,41 +3,41 @@ name: grill-me
 description: Pressure-test a plan, design, requirement, workflow, or implementation idea by interviewing the user one decision at a time until assumptions, dependencies, risks, and success criteria are explicit. Use when the user asks to "grill me", stress-test an idea, challenge a design, review a plan before execution, or wants structured questioning instead of immediate implementation.
 ---
 
-# Grill Me
+# 逐问拷问
 
-Drive toward shared understanding by asking sharp, sequential questions.
+用连续追问的方式把一个想法压实，不要急着给方案。
 
-## Workflow
+## 使用流程
 
-1. Read the user's plan, draft, or artifact closely.
-2. Inspect the codebase or repo docs first for questions that can be answered locally.
-3. Ask exactly one question at a time unless the user explicitly wants a batch.
-4. Include a recommended answer with each question when a strong default exists.
-5. Use the user's answer to choose the next branch of the decision tree.
-6. Continue until scope, constraints, tradeoffs, and validation criteria are clear.
+1. 先认真读用户给出的计划、草稿或材料。
+2. 先查仓库和现有资料，能本地回答的就不要再问用户。
+3. 默认一次只问一个问题，除非用户明确要批量追问。
+4. 如果有明显更稳的默认选项，每个问题都附上推荐答案。
+5. 根据用户上一轮回答，决定下一轮追问分支。
+6. 一直追到目标、范围、依赖、约束、取舍和验证标准都清楚为止。
 
-## Question Order
+## 追问顺序
 
-Ask in this rough order unless the user already settled a section:
+如果用户没有提前说清，默认按这个顺序往下问：
 
-1. Goal: what problem is being solved and for whom.
-2. Scope: what is included, excluded, and deferred.
-3. Inputs and dependencies: data, systems, people, approvals, assumptions.
-4. Behavior: core flow, edge cases, failure handling, recovery.
-5. Constraints: performance, security, policy, compatibility, timelines.
-6. Success criteria: how the user will know the plan worked.
+1. 目标：到底要解决什么问题，为谁解决。
+2. 范围：这次做什么，不做什么，哪些先放后面。
+3. 输入和依赖：数据、系统、角色、审批、前置假设。
+4. 行为：核心流程、边界情况、失败处理、恢复方式。
+5. 约束：性能、安全、规则、兼容性、时间要求。
+6. 成功标准：最后怎么判断这件事做成了。
 
-## Interaction Rules
+## 互动规则
 
-- Prefer concrete, high-leverage questions over generic brainstorming.
-- If the repo already answers something, state the finding and move on instead of asking.
-- When the user gives a vague answer, narrow it with a more specific follow-up.
-- Surface contradictions immediately and ask the user to resolve them.
-- Do not start implementing changes unless the user explicitly switches from critique to execution.
+- 优先问具体、能改变决策的问题，不要做空泛 brainstorming。
+- 如果仓库里已经有答案，就先给结论再继续，不要重复提问。
+- 用户回答太虚时，要立刻缩小范围，追问得更具体。
+- 一旦发现前后矛盾，马上指出并要求用户收口。
+- 在用户明确从质疑切到执行前，不要开始实现改动。
 
-## Recommended Question Style
+## 提问格式
 
-Use a compact pattern:
+默认用这个紧凑结构：
 
 ```text
 Question: ...
@@ -45,4 +45,4 @@ Recommended answer: ...
 Why this matters: ...
 ```
 
-Keep the tone direct but collaborative. The goal is not to "win"; the goal is to remove ambiguity.
+语气要直接，但保持协作感。目标不是赢辩论，而是把模糊地带问清楚。

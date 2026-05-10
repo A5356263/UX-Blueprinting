@@ -1,8 +1,8 @@
-# Execution Guide
+# 执行说明
 
-用户明确确认执行后，再用这个 guide。
+用户明确确认执行后，再用这份说明。
 
-## Before Running
+## 执行前
 
 先用大白话告诉用户你会做这几件事：
 
@@ -19,7 +19,13 @@
 
 知识候选创建、知识入库确认，不走 UXB 主链路。
 
-## Stable Entry
+默认确认话术模板见：
+
+```text
+.codex/skills/uxb/assets/execution_confirmation.template.md
+```
+
+## 稳定入口
 
 统一通过仓库执行中枢进入：
 
@@ -46,7 +52,7 @@ scripts/uxb.sh <command> <project-id>
 
 作为适合场景下的薄转发入口。
 
-## Discover Real Commands
+## 先查真实命令
 
 不要在 skill 里维护静态命令表，也不要盲信记忆里的命令。
 
@@ -60,7 +66,7 @@ python -m packages capability-show <capability-id>
 
 以仓库里的真实实现为准。
 
-## Task Creation
+## 任务创建
 
 常见起点是：
 
@@ -93,7 +99,7 @@ projects/<project-id>/source/background.md
 4. 如果检查失败，优先修正式文件，而不是只在聊天里解释。
 5. 是否可归档，以执行中枢结果为准。
 
-## Artifact Destination
+## 产物位置
 
 正式产物目录是：
 

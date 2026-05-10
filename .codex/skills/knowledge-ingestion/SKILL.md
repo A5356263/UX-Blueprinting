@@ -1,126 +1,49 @@
 ---
 name: knowledge-ingestion
-description: Safely merge new material into this repository's knowledge system without polluting the source of truth. Use when Codex needs to ingest help-center notes, product docs, requirement drafts, screenshots analysis, meeting notes, external references, or legacy .claude materials into `knowledge/`, `docs/`, `specs/`, `templates/`, or related project structures.
+description: Safely ingest non-standard materials into this repository's knowledge system without polluting the source of truth. Use when Codex needs to merge help-center articles, product docs, operation guides, FAQ, screenshot or video analysis, meeting notes, requirement drafts, or external references into `knowledge/` while preserving the repository's Chinese naming, raw-as-source, and summary-first routing protocol.
 ---
 
-# Knowledge Ingestion
+# 知识入库
 
-Ingest new material only after identifying where truth lives in this repo and what should remain as process residue instead of formal knowledge.
+只有在先弄清仓库里哪里是事实来源、哪里只是过程残留之后，才开始做知识入库。
 
-## Repository Truth Map
+## 使用流程
 
-Use these defaults unless stronger local evidence in the target area says otherwise:
+1. 写入前先读目标区域。
+2. 从附近的 `README.md`、`knowledge/README.md`、`knowledge/LLM.md`、`knowledge/wiki/index.md`、相关 `specs/` 和邻近示例里判断本地约定。
+3. 先给输入材料分类，再决定它是可沉淀知识、未决信息、过程残留还是噪音。
+4. 先决定落点，再优先合并，避免扩散。
+5. 先更新 raw，再用 `python knowledge/scripts/update_wiki.py --apply` 或 `--only <raw-file-path>` 刷新 wiki。
+6. 收尾前检查落点、命名、raw-summary 一致性和未决项。
 
-- `specs/`: formal execution contracts and normative rules.
-- `knowledge/`: reusable business, product, design, and domain knowledge.
-- `docs/`: explanatory notes, discussion, and runbooks; useful but usually less normative than `specs/`.
-- `templates/`: reusable artifact templates, not raw facts.
-- `projects/`: task-specific runtime and delivery artifacts.
-- `.claude/`: legacy Claude-oriented materials; useful source input, not the canonical Codex layer.
+## 按需读取这些参考文件
 
-Do not recreate a root `skills/` directory for repository logic. This repo already moved core behavior into `specs/`, `packages/`, `projects/`, `knowledge/`, and `templates/`.
+- 需要确认 `knowledge/` 结构、命名协议、summary 元数据契约和 `source_refs` 规则时，读 [references/knowledge-protocol.md](references/knowledge-protocol.md)。
+- 需要按输入类型处理帮助中心、操作指南、FAQ、截图、视频、会议纪要或需求草稿时，读 [references/input-adaptation.md](references/input-adaptation.md)。
+- 收尾前，以及任务容易放错位置或违反约束时，读 [references/validation.md](references/validation.md)。
 
-## Ingestion Workflow
+## 核心规则
 
-1. Read the target area before writing anything.
-2. Identify the local contract from files such as `README.md`, `CLAUDE.md`, relevant `specs/`, nearby examples, and folder structure.
-3. Classify the incoming material.
-4. Decide whether to merge, create, stage for review, or reject.
-5. Write the smallest durable change that preserves provenance and avoids duplicating truth.
-6. Update indexes, manifests, or logs only when the repo already uses them or the task clearly requires them.
-7. Verify the destination still matches the surrounding structure and naming style.
+- 把 `knowledge/raw/**` 当成事实来源。
+- 把 `knowledge/wiki/summaries/**` 当成路由卡，不当成正式知识。
+- 用最小但可复用的改动保留有效信息。
+- 用 `[GAP]`、`[CONFLICT]`、`[QUESTION]` 显式保留不确定性。
+- 过程残留要隔离，不要把它抬成正式知识。
 
-## Classification Rules
+## 禁止事项
 
-Treat incoming content as one of these categories:
+- 不要只改 summary，不改 raw。
+- 不要重建 `source_manifest`、`build_manifest`、旧 `wiki/topics`、registry 层或命名映射表。
+- 不要为了有个地方放内容，就把上传材料整个塞进 `README.md`。
+- 不要为了让编号看起来整齐就批量造文件。
+- 不要让弱来源静默覆盖强来源。
 
-### 1. Durable knowledge
+## 最终汇报
 
-Good candidates for ingestion:
+简要说明：
 
-- stable business or product facts
-- explicit rules, constraints, fields, states, dependencies
-- reusable design or workflow knowledge
-- durable summaries of authoritative source material
-
-### 2. Process residue
-
-Do not write these into canonical knowledge by default:
-
-- crawl logs
-- collection coverage reports
-- browser steps
-- temporary analysis notes
-- tool failures
-- execution transcripts
-
-Keep them in process-log style locations when needed, or mention them in the final report without promoting them to truth.
-
-### 3. Unresolved information
-
-Preserve uncertainty explicitly:
-
-- `[GAP]` for missing information
-- `[CONFLICT]` for source disagreement
-- `[QUESTION]` for issues requiring human confirmation
-
-Do not silently fill these with guesses.
-
-### 4. Noise
-
-Usually reject:
-
-- marketing filler
-- footer/legal/contact boilerplate
-- duplicated low-signal text
-- content unrelated to the repo's knowledge scope
-
-## Decision Rules
-
-Prefer merge over sprawl.
-
-Merge into an existing file when the new material extends or corrects an existing topic cleanly.
-
-Create a new file only when:
-
-- the topic is durable
-- no existing file is the right home
-- the content is large enough to stand on its own
-- the new file fits the repo's current organization
-
-Stage or defer when:
-
-- ownership is unclear
-- the source is incomplete
-- multiple destinations are plausible
-- the material is mostly process residue with a few useful facts mixed in
-
-Reject when the content adds no lasting value.
-
-## Project-Specific Guardrails
-
-- Do not make `.claude/` the canonical instruction layer for Codex.
-- Do not overwrite a stronger source in `specs/` with weaker notes from `docs/`, chat text, or collection output.
-- Do not turn navigation files, summaries, or indexes into a second source of truth.
-- Do not force every input into the same structure.
-- Do not invent missing numbering, folders, or taxonomies just for neatness.
-
-## Handling Help-Center Collection Output
-
-If the input came from a collector or scraped documentation set:
-
-- ingest article content, explicit rules, flows, fields, and dependencies
-- keep `_collection`, coverage, failure, and crawl artifacts out of canonical knowledge
-- keep partial collection gaps visible instead of pretending the source set is complete
-
-## Output Checklist
-
-Before finishing, confirm:
-
-- the destination matches the local contract
-- durable facts were separated from process residue
-- uncertainty is explicitly marked
-- no weaker source displaced a stronger one
-- indexes or summaries were updated only if needed
-
-Report what was merged, what was deferred, and any remaining `[GAP]`, `[CONFLICT]`, or `[QUESTION]` items.
+- 合并了什么
+- 跳过或暂缓了什么
+- 是否执行了 wiki 同步
+- 新增了哪些文件
+- 还剩哪些 `[GAP]`、`[CONFLICT]`、`[QUESTION]`

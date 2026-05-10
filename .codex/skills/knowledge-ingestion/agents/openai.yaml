@@ -1,4 +1,4 @@
 interface:
-  display_name: "Knowledge Ingestion"
-  short_description: "Merge new material into repo knowledge safely."
-  default_prompt: "Use $knowledge-ingestion to merge this material into the project knowledge base safely."
+  display_name: "知识入库"
+  short_description: "把外部材料安全并入仓库知识系统。"
+  default_prompt: "Use $knowledge-ingestion 先判断这份材料该不该入库、该放哪，再合并 durable facts、刷新 wiki，并报告未决项。"

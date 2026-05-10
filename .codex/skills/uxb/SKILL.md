@@ -30,7 +30,7 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 - 默认不暴露内部 pipeline、task card、context manifest、gates、repair loop 等术语，除非用户明确追问。
 - 默认短答，必要时再展开。
 
-## Work Modes
+## 工作状态
 
 每次用户请求到达后，先在内部判断当前更接近下面哪一种工作状态。这个判断不要显式抛给用户。
 
@@ -85,7 +85,7 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 - 用户确认候选可以作为稳定知识后，才进入正式知识库更新。
 - 正式入库遵循 knowledge 子系统逻辑：写入 `knowledge/raw/**` 或 `knowledge/raw/inbox/**`，再刷新 wiki。
 
-## Natural Conversation Standard
+## 自然对话标准
 
 咨询和诊断场景默认用这种结构：
 
@@ -119,7 +119,7 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 
 详细咨询规则见 [references/consulting_guide.md](references/consulting_guide.md)。
 
-## Knowledge Use
+## 知识使用
 
 仓库知识是判断依据，不是要整段倒给用户的内容。
 
@@ -130,7 +130,7 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 
 完整规则见 [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)。
 
-## Knowledge Candidate Area
+## 知识候选区
 
 知识候选区是知识维护前的缓冲层，不是正式知识库，也不是 UXB 主链路产物。
 
@@ -155,7 +155,7 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 默认模板见 [assets/knowledge_candidate.template.md](assets/knowledge_candidate.template.md)。
 详细规则见 [references/knowledge_candidate_guide.md](references/knowledge_candidate_guide.md)。
 
-## Task Shaping
+## 任务成型
 
 当请求已经足够清楚，可以变成正式 UXB 任务时：
 
@@ -166,13 +166,14 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 默认模板见 [assets/task_summary.template.md](assets/task_summary.template.md)。
 详细规则见 [references/task_submission_guide.md](references/task_submission_guide.md)。
 
-## Execution
+## 正式执行
 
 只有用户明确表达“确认 / 开始 / 创建任务 / 走主链路 / 输出正式产物”这一类意图后，才进入执行。
 
 执行时：
 
 - 先用自然语言说明你会创建 UXB 任务并写入正式输入。
+- 默认确认话术模板见 [assets/execution_confirmation.template.md](assets/execution_confirmation.template.md)。
 - 使用 `python -m packages`、`python3 -m packages`、仓库 [run_packages.sh](../../../run_packages.sh)、[run_packages.ps1](../../../run_packages.ps1) 或 [scripts/uxb.sh](scripts/uxb.sh)。
 - 优先先查真实命令，不要凭记忆假设：
 
@@ -187,11 +188,11 @@ python -m packages capability-show <capability-id>
 
 执行细则见 [references/execution_guide.md](references/execution_guide.md)。
 
-## Asset Map
+## 资产地图
 
 仓库主要区域怎么用，见 [references/asset_map.md](references/asset_map.md)。
 
-## Boundaries
+## 边界
 
 这个 skill 负责“使用 UXB”，不是“维护整个仓库”。
 
@@ -202,7 +203,7 @@ python -m packages capability-show <capability-id>
 - 不自动把聊天原文写入 knowledge。
 - 不让用户先理解内部状态名才能继续。
 
-## Final Standard
+## 最终体验标准
 
 用户最终应该感受到：
 

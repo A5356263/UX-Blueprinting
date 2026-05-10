@@ -1,0 +1,4 @@
+interface:
+  display_name: "帮助中心采集"
+  short_description: "把公开帮助中心采成 Markdown 知识。"
+  default_prompt: "Use $help-center-collector 遍历这个帮助中心，按原结构采集正文内容，整理输出目录，并记录所有未采全和失败项。"
