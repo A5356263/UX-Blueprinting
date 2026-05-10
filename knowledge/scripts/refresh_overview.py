@@ -20,7 +20,7 @@ def count_markers(files: list[Path], marker: str) -> int:
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file() and "manifests" not in p.parts)
+    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file() and "清单" not in p.parts)
     summary_files = sorted(p for p in (root / "wiki" / "summaries").rglob("*.md") if p.is_file())
     raw_set = {p.relative_to(root / "raw").as_posix() for p in raw_files}
     summary_set = {p.relative_to(root / "wiki" / "summaries").as_posix() for p in summary_files}

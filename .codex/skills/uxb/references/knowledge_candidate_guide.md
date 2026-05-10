@@ -153,13 +153,13 @@ YYYY-MM-DD_HHMM_待归类_候选主题.md
 如果业务域明确：
 
 ```text
-knowledge/raw/business/<domain>/
+knowledge/raw/业务/<domain>/
 ```
 
 如果更像体验指南：
 
 ```text
-knowledge/raw/guidelines/
+knowledge/raw/设计准则/
 ```
 
 如果暂时无法归类：

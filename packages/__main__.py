@@ -10,7 +10,7 @@ def main() -> int:
     bootstrap = subparsers.add_parser("bootstrap")
     bootstrap.add_argument("project_id")
     bootstrap.add_argument("--task-name", default="Demo Task")
-    bootstrap.add_argument("--domain", default="permission")
+    bootstrap.add_argument("--domain", required=True)
     bootstrap.add_argument("--force", action="store_true")
 
     assemble = subparsers.add_parser("assemble")

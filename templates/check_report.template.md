@@ -1,4 +1,8 @@
-# Check Report
+# Check Report｜人读说明版
+
+> 本文件是 `projects/<project-id>/workspace/check_status.json` 的人读说明版。
+> 它只用于帮助理解检查结果，不作为 gate / validate / repair 的机器判断依据。
+> 机器判断请以 `check_status.json` 为准。
 
 ## Summary
 

@@ -35,7 +35,7 @@ def main() -> int:
     wiki_root = root / "wiki"
     items: list[dict[str, str]] = []
 
-    for file in sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "manifests" not in p.parts):
+    for file in sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "清单" not in p.parts):
         extracted = extract_questions(file, root.parent)
         for entry in extracted:
             entry["summary_path"] = summary_path_for_raw(root, file)

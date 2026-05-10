@@ -40,11 +40,11 @@ def _first_heading(text: str, fallback: str) -> str:
 
 def _classify_ref(path_text: str) -> str:
     lowered = path_text.lower()
-    if "guideline" in lowered or "principle" in lowered:
+    if "设计准则" in lowered or "principle" in lowered:
         return "guideline"
     if "knowledge/wiki" in lowered:
         return "wiki"
-    if "/business/" in lowered:
+    if "/业务/" in lowered:
         return "business"
     if "knowledge/raw" in lowered:
         return "raw"
@@ -57,7 +57,7 @@ def _load_reference_paths_from_task_card(project_id: str) -> list[str]:
         return []
     sections = _split_sections(task_card_path.read_text(encoding="utf-8"))
     refs: list[str] = []
-    for section_name in ("Knowledge", "Wiki", "Knowledge Consumption Policy"):
+    for section_name in ("Knowledge", "Wiki", "Design Guidelines", "Knowledge Consumption Policy"):
         section = sections.get(section_name, "")
         refs.extend([item for item in _parse_bullets(section) if "/" in item and not item.startswith("mode:")])
     return refs
@@ -105,6 +105,7 @@ def _load_reference_paths_from_plan(project_id: str, stage: str) -> list[str]:
         refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
         refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])
     elif stage == "experience":
+        refs.extend([str(item) for item in stage_plan.get("guideline_entry_refs", []) if isinstance(item, str)])
         refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
         refs.extend([str(item) for item in stage_plan.get("guideline_refs", []) if isinstance(item, str)])
         refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])

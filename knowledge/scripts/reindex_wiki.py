@@ -4,19 +4,19 @@ from pathlib import Path
 
 
 BUSINESS_SECTIONS: list[tuple[str, list[str]]] = [
-    ("背景层", ["project_background"]),
-    ("平台公共域", ["workspace_and_global_entry", "account_and_enterprise_lifecycle"]),
+    ("背景层", ["项目背景"]),
+    ("平台公共域", ["工作台与全局入口", "账户与企业生命周期"]),
     (
         "平台治理域",
         [
-            "permission",
-            "organization",
-            "member",
-            "app_management",
-            "approval_management",
-            "security_management",
-            "enterprise_settings",
-            "service_management",
+            "权限管理",
+            "组织架构",
+            "成员管理",
+            "应用管理",
+            "审批管理",
+            "安全管理",
+            "企业设置",
+            "服务管理",
         ],
     ),
 ]

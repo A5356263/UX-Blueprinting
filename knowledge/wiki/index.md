@@ -12,221 +12,215 @@
 - [questions](questions.md)
 - [log](log.md)
 
-## business
+## 业务
 
-### 背景层
+- [README](summaries/业务/README.md)
 
-#### project_background
+### 人事服务
 
-- [00_domain_overview](summaries/business/project_background/00_domain_overview.md)
-- [01_product_positioning](summaries/business/project_background/01_product_positioning.md)
-- [02_platform_roles_and_terminals](summaries/business/project_background/02_platform_roles_and_terminals.md)
-- [03_product_capability_landscape](summaries/business/project_background/03_product_capability_landscape.md)
-- [04_product_advantages_and_service_model](summaries/business/project_background/04_product_advantages_and_service_model.md)
-- [05_management_console_capability_overview](summaries/business/project_background/05_management_console_capability_overview.md)
-- [README](summaries/business/project_background/README.md)
+- [00_领域概述](summaries/业务/人事服务/00_领域概述.md)
+- [README](summaries/业务/人事服务/README.md)
 
-### 平台公共域
+### 人事服务/员工管理
 
-#### workspace_and_global_entry
+- [00_领域概述](summaries/业务/人事服务/员工管理/00_领域概述.md)
+- [14_员工花名册](summaries/业务/人事服务/员工管理/14_员工花名册.md)
+- [15_合同管理](summaries/业务/人事服务/员工管理/15_合同管理.md)
+- [16_入职生命周期](summaries/业务/人事服务/员工管理/16_入职生命周期.md)
+- [50_常见问题](summaries/业务/人事服务/员工管理/50_常见问题.md)
+- [README](summaries/业务/人事服务/员工管理/README.md)
 
-- [00_domain_overview](summaries/business/workspace_and_global_entry/00_domain_overview.md)
-- [10_workspace](summaries/business/workspace_and_global_entry/10_workspace.md)
-- [11_global_navigation_and_service_entry](summaries/business/workspace_and_global_entry/11_global_navigation_and_service_entry.md)
-- [README](summaries/business/workspace_and_global_entry/README.md)
+### 人事服务/客户管理
 
-#### account_and_enterprise_lifecycle
+- [00_领域概述](summaries/业务/人事服务/客户管理/00_领域概述.md)
+- [10_客户管理](summaries/业务/人事服务/客户管理/10_客户管理.md)
+- [README](summaries/业务/人事服务/客户管理/README.md)
 
-- [00_domain_overview](summaries/business/account_and_enterprise_lifecycle/00_domain_overview.md)
-- [10_enablement_paths](summaries/business/account_and_enterprise_lifecycle/10_enablement_paths.md)
-- [11_enterprise_creation_and_certification](summaries/business/account_and_enterprise_lifecycle/11_enterprise_creation_and_certification.md)
-- [12_enterprise_status_and_change](summaries/business/account_and_enterprise_lifecycle/12_enterprise_status_and_change.md)
-- [13_super_administrator_change](summaries/business/account_and_enterprise_lifecycle/13_super_administrator_change.md)
-- [14_account_common_issues](summaries/business/account_and_enterprise_lifecycle/14_account_common_issues.md)
-- [15_personal_account_security](summaries/business/account_and_enterprise_lifecycle/15_personal_account_security.md)
-- [README](summaries/business/account_and_enterprise_lifecycle/README.md)
+### 人事服务/招聘管理
 
-### 平台治理域
+- [00_领域概述](summaries/业务/人事服务/招聘管理/00_领域概述.md)
+- [10_招聘管理](summaries/业务/人事服务/招聘管理/10_招聘管理.md)
+- [README](summaries/业务/人事服务/招聘管理/README.md)
 
-#### permission
+### 人事服务/组织管理
 
-- [00_domain_overview](summaries/business/permission/00_domain_overview.md)
-- [01_scope_and_boundary](summaries/business/permission/01_scope_and_boundary.md)
-- [02_glossary](summaries/business/permission/02_glossary.md)
-- [03_business_objects](summaries/business/permission/03_business_objects.md)
-- [04_object_relations](summaries/business/permission/04_object_relations.md)
-- [10_capability_map](summaries/business/permission/10_capability_map.md)
-- [11_task_scenarios](summaries/business/permission/11_task_scenarios.md)
-- [12_query_and_configuration_paths](summaries/business/permission/12_query_and_configuration_paths.md)
-- [13_route_map](summaries/business/permission/13_route_map.md)
-- [14_actor_boundary](summaries/business/permission/14_actor_boundary.md)
-- [15_page_carrier_semantics](summaries/business/permission/15_page_carrier_semantics.md)
-- [20_decision_chain_contract](summaries/business/permission/20_decision_chain_contract.md)
-- [21_source_model](summaries/business/permission/21_source_model.md)
-- [22_conflict_reason_codes](summaries/business/permission/22_conflict_reason_codes.md)
-- [23_rule_contracts](summaries/business/permission/23_rule_contracts.md)
-- [24_governance_state_model](summaries/business/permission/24_governance_state_model.md)
-- [25_audit_contract](summaries/business/permission/25_audit_contract.md)
-- [30_experience_risk_patterns](summaries/business/permission/30_experience_risk_patterns.md)
-- [31_experience_translation_requirements](summaries/business/permission/31_experience_translation_requirements.md)
-- [32_copy_and_explanation_strategy](summaries/business/permission/32_copy_and_explanation_strategy.md)
-- [40_blueprint_consumption_map](summaries/business/permission/40_blueprint_consumption_map.md)
-- [41_business_blueprint_handoff](summaries/business/permission/41_business_blueprint_handoff.md)
-- [42_experience_blueprint_handoff](summaries/business/permission/42_experience_blueprint_handoff.md)
-- [50_helpdoc_permission_delta](summaries/business/permission/50_helpdoc_permission_delta.md)
-- [README](summaries/business/permission/README.md)
+- [00_领域概述](summaries/业务/人事服务/组织管理/00_领域概述.md)
+- [13_编制管理](summaries/业务/人事服务/组织管理/13_编制管理.md)
+- [14_岗位与职级管理](summaries/业务/人事服务/组织管理/14_岗位与职级管理.md)
+- [README](summaries/业务/人事服务/组织管理/README.md)
 
-#### organization
+### 人事服务/考勤管理
 
-- [00_domain_overview](summaries/business/organization/00_domain_overview.md)
-- [10_organization_architecture](summaries/business/organization/10_organization_architecture.md)
-- [11_legal_entities](summaries/business/organization/11_legal_entities.md)
-- [12_cost_centers](summaries/business/organization/12_cost_centers.md)
-- [13_function_and_view_model](summaries/business/organization/13_function_and_view_model.md)
-- [14_member_binding_and_scope_generation](summaries/business/organization/14_member_binding_and_scope_generation.md)
-- [15_runtime_flow_and_legacy_mapping](summaries/business/organization/15_runtime_flow_and_legacy_mapping.md)
-- [README](summaries/business/organization/README.md)
+- [00_领域概述](summaries/业务/人事服务/考勤管理/00_领域概述.md)
+- [10_考勤管理](summaries/业务/人事服务/考勤管理/10_考勤管理.md)
+- [README](summaries/业务/人事服务/考勤管理/README.md)
 
-#### member
+### 企业设置
 
-- [00_domain_overview](summaries/business/member/00_domain_overview.md)
-- [10_member_join_and_invitation](summaries/business/member/10_member_join_and_invitation.md)
-- [11_member_exit_and_offboarding](summaries/business/member/11_member_exit_and_offboarding.md)
-- [12_member_groups](summaries/business/member/12_member_groups.md)
-- [13_external_personnel](summaries/business/member/13_external_personnel.md)
-- [README](summaries/business/member/README.md)
+- [00_领域概述](summaries/业务/企业设置/00_领域概述.md)
+- [10_企业信息展示](summaries/业务/企业设置/10_企业信息展示.md)
+- [11_企业登录页自定义](summaries/业务/企业设置/11_企业登录页自定义.md)
+- [12_企业文化](summaries/业务/企业设置/12_企业文化.md)
+- [README](summaries/业务/企业设置/README.md)
 
-#### app_management
+### 协同办公
 
-- [00_domain_overview](summaries/business/app_management/00_domain_overview.md)
-- [10_application_management](summaries/business/app_management/10_application_management.md)
-- [11_application_assembly](summaries/business/app_management/11_application_assembly.md)
-- [README](summaries/business/app_management/README.md)
+- [00_领域概述](summaries/业务/协同办公/00_领域概述.md)
+- [README](summaries/业务/协同办公/README.md)
 
-#### approval_management
+### 协同办公/协同工具
 
-- [00_domain_overview](summaries/business/approval_management/00_domain_overview.md)
-- [10_approval_management](summaries/business/approval_management/10_approval_management.md)
-- [README](summaries/business/approval_management/README.md)
+- [00_领域概述](summaries/业务/协同办公/协同工具/00_领域概述.md)
+- [10_协同工具](summaries/业务/协同办公/协同工具/10_协同工具.md)
+- [README](summaries/业务/协同办公/协同工具/README.md)
 
-#### security_management
+### 协同办公/智能报表
 
-- [00_domain_overview](summaries/business/security_management/00_domain_overview.md)
-- [10_security_watermark](summaries/business/security_management/10_security_watermark.md)
-- [11_operation_records](summaries/business/security_management/11_operation_records.md)
-- [12_security_settings](summaries/business/security_management/12_security_settings.md)
-- [README](summaries/business/security_management/README.md)
+- [00_领域概述](summaries/业务/协同办公/智能报表/00_领域概述.md)
+- [10_智能报表](summaries/业务/协同办公/智能报表/10_智能报表.md)
+- [README](summaries/业务/协同办公/智能报表/README.md)
 
-#### enterprise_settings
+### 安全管理
 
-- [00_domain_overview](summaries/business/enterprise_settings/00_domain_overview.md)
-- [10_enterprise_information_display](summaries/business/enterprise_settings/10_enterprise_information_display.md)
-- [11_enterprise_login_page_customization](summaries/business/enterprise_settings/11_enterprise_login_page_customization.md)
-- [12_enterprise_culture](summaries/business/enterprise_settings/12_enterprise_culture.md)
-- [README](summaries/business/enterprise_settings/README.md)
+- [00_领域概述](summaries/业务/安全管理/00_领域概述.md)
+- [10_安全水印](summaries/业务/安全管理/10_安全水印.md)
+- [11_操作记录](summaries/业务/安全管理/11_操作记录.md)
+- [12_安全设置](summaries/业务/安全管理/12_安全设置.md)
+- [README](summaries/业务/安全管理/README.md)
 
-#### service_management
+### 审批管理
 
-- [00_domain_overview](summaries/business/service_management/00_domain_overview.md)
-- [10_service_personnel_authorization](summaries/business/service_management/10_service_personnel_authorization.md)
-- [README](summaries/business/service_management/README.md)
+- [00_领域概述](summaries/业务/审批管理/00_领域概述.md)
+- [10_审批管理](summaries/业务/审批管理/10_审批管理.md)
+- [README](summaries/业务/审批管理/README.md)
 
-### 其他
+### 工作台与全局入口
 
-#### collaboration
+- [00_领域概述](summaries/业务/工作台与全局入口/00_领域概述.md)
+- [10_工作台](summaries/业务/工作台与全局入口/10_工作台.md)
+- [11_全局导航与服务入口](summaries/业务/工作台与全局入口/11_全局导航与服务入口.md)
+- [README](summaries/业务/工作台与全局入口/README.md)
 
-- [00_domain_overview](summaries/business/collaboration/00_domain_overview.md)
+### 应用管理
 
-##### collaboration_tools
+- [00_领域概述](summaries/业务/应用管理/00_领域概述.md)
+- [10_应用管理](summaries/业务/应用管理/10_应用管理.md)
+- [11_应用组装](summaries/业务/应用管理/11_应用组装.md)
+- [README](summaries/业务/应用管理/README.md)
 
-- [00_domain_overview](summaries/business/collaboration/collaboration_tools/00_domain_overview.md)
-- [10_collaboration_tools](summaries/business/collaboration/collaboration_tools/10_collaboration_tools.md)
-- [README](summaries/business/collaboration/collaboration_tools/README.md)
-- [README](summaries/business/collaboration/README.md)
+### 成员管理
 
-##### smart_reports
+- [00_领域概述](summaries/业务/成员管理/00_领域概述.md)
+- [10_成员加入与邀请](summaries/业务/成员管理/10_成员加入与邀请.md)
+- [11_成员退出与离职交接](summaries/业务/成员管理/11_成员退出与离职交接.md)
+- [12_成员分组](summaries/业务/成员管理/12_成员分组.md)
+- [13_外部人员](summaries/业务/成员管理/13_外部人员.md)
+- [README](summaries/业务/成员管理/README.md)
 
-- [00_domain_overview](summaries/business/collaboration/smart_reports/00_domain_overview.md)
-- [10_smart_reports](summaries/business/collaboration/smart_reports/10_smart_reports.md)
-- [README](summaries/business/collaboration/smart_reports/README.md)
+### 服务管理
 
-#### expense
+- [00_领域概述](summaries/业务/服务管理/00_领域概述.md)
+- [10_服务人员授权](summaries/业务/服务管理/10_服务人员授权.md)
+- [README](summaries/业务/服务管理/README.md)
 
-- [00_domain_overview](summaries/business/expense/00_domain_overview.md)
+### 权限管理
 
-##### corporate_payment
+- [00_领域概述](summaries/业务/权限管理/00_领域概述.md)
+- [01_范围与边界](summaries/业务/权限管理/01_范围与边界.md)
+- [02_术语表](summaries/业务/权限管理/02_术语表.md)
+- [03_业务对象](summaries/业务/权限管理/03_业务对象.md)
+- [04_对象关系](summaries/业务/权限管理/04_对象关系.md)
+- [10_能力地图](summaries/业务/权限管理/10_能力地图.md)
+- [11_任务场景](summaries/业务/权限管理/11_任务场景.md)
+- [12_查询与配置路径](summaries/业务/权限管理/12_查询与配置路径.md)
+- [13_路由地图](summaries/业务/权限管理/13_路由地图.md)
+- [14_角色边界](summaries/业务/权限管理/14_角色边界.md)
+- [15_页面载体语义](summaries/业务/权限管理/15_页面载体语义.md)
+- [20_决策链契约](summaries/业务/权限管理/20_决策链契约.md)
+- [21_来源模型](summaries/业务/权限管理/21_来源模型.md)
+- [22_冲突原因码](summaries/业务/权限管理/22_冲突原因码.md)
+- [23_规则契约](summaries/业务/权限管理/23_规则契约.md)
+- [24_治理状态模型](summaries/业务/权限管理/24_治理状态模型.md)
+- [25_审计契约](summaries/业务/权限管理/25_审计契约.md)
+- [30_体验风险模式](summaries/业务/权限管理/30_体验风险模式.md)
+- [31_体验翻译需求](summaries/业务/权限管理/31_体验翻译需求.md)
+- [32_文案与解释策略](summaries/业务/权限管理/32_文案与解释策略.md)
+- [40_蓝图消费地图](summaries/业务/权限管理/40_蓝图消费地图.md)
+- [41_业务蓝图移交](summaries/业务/权限管理/41_业务蓝图移交.md)
+- [42_体验蓝图移交](summaries/业务/权限管理/42_体验蓝图移交.md)
+- [50_帮助文档权限差异](summaries/业务/权限管理/50_帮助文档权限差异.md)
+- [README](summaries/业务/权限管理/README.md)
 
-- [00_domain_overview](summaries/business/expense/corporate_payment/00_domain_overview.md)
-- [10_corporate_payment](summaries/business/expense/corporate_payment/10_corporate_payment.md)
-- [README](summaries/business/expense/corporate_payment/README.md)
+### 组织架构
 
-##### daily_reimbursement
+- [00_领域概述](summaries/业务/组织架构/00_领域概述.md)
+- [10_组织架构设计](summaries/业务/组织架构/10_组织架构设计.md)
+- [11_法律实体](summaries/业务/组织架构/11_法律实体.md)
+- [12_成本中心](summaries/业务/组织架构/12_成本中心.md)
+- [13_职能与视图模型](summaries/业务/组织架构/13_职能与视图模型.md)
+- [14_成员绑定与范围生成](summaries/业务/组织架构/14_成员绑定与范围生成.md)
+- [15_运行时流程与遗留映射](summaries/业务/组织架构/15_运行时流程与遗留映射.md)
+- [README](summaries/业务/组织架构/README.md)
 
-- [00_domain_overview](summaries/business/expense/daily_reimbursement/00_domain_overview.md)
-- [10_daily_reimbursement](summaries/business/expense/daily_reimbursement/10_daily_reimbursement.md)
-- [README](summaries/business/expense/daily_reimbursement/README.md)
+### 账户与企业生命周期
 
-##### general_config
+- [00_领域概述](summaries/业务/账户与企业生命周期/00_领域概述.md)
+- [10_开通路径](summaries/业务/账户与企业生命周期/10_开通路径.md)
+- [11_企业创建与认证](summaries/业务/账户与企业生命周期/11_企业创建与认证.md)
+- [12_企业状态与变更](summaries/业务/账户与企业生命周期/12_企业状态与变更.md)
+- [13_超级管理员变更](summaries/业务/账户与企业生命周期/13_超级管理员变更.md)
+- [14_账号常见问题](summaries/业务/账户与企业生命周期/14_账号常见问题.md)
+- [15_个人账号安全](summaries/业务/账户与企业生命周期/15_个人账号安全.md)
+- [README](summaries/业务/账户与企业生命周期/README.md)
 
-- [00_domain_overview](summaries/business/expense/general_config/00_domain_overview.md)
-- [10_general_config](summaries/business/expense/general_config/10_general_config.md)
-- [README](summaries/business/expense/general_config/README.md)
-- [README](summaries/business/expense/README.md)
+### 费用管理
 
-##### travel_service
+- [00_领域概述](summaries/业务/费用管理/00_领域概述.md)
+- [README](summaries/业务/费用管理/README.md)
 
-- [00_domain_overview](summaries/business/expense/travel_service/00_domain_overview.md)
-- [10_travel_service](summaries/business/expense/travel_service/10_travel_service.md)
-- [README](summaries/business/expense/travel_service/README.md)
+### 费用管理/企业支付
 
-#### hr_service
+- [00_领域概述](summaries/业务/费用管理/企业支付/00_领域概述.md)
+- [10_企业支付](summaries/业务/费用管理/企业支付/10_企业支付.md)
+- [README](summaries/业务/费用管理/企业支付/README.md)
 
-- [00_domain_overview](summaries/business/hr_service/00_domain_overview.md)
+### 费用管理/差旅服务
 
-##### attendance
+- [00_领域概述](summaries/业务/费用管理/差旅服务/00_领域概述.md)
+- [10_差旅服务](summaries/业务/费用管理/差旅服务/10_差旅服务.md)
+- [README](summaries/业务/费用管理/差旅服务/README.md)
 
-- [00_domain_overview](summaries/business/hr_service/attendance/00_domain_overview.md)
-- [10_attendance_management](summaries/business/hr_service/attendance/10_attendance_management.md)
-- [README](summaries/business/hr_service/attendance/README.md)
+### 费用管理/日常报销
 
-##### customer_management
+- [00_领域概述](summaries/业务/费用管理/日常报销/00_领域概述.md)
+- [10_日常报销](summaries/业务/费用管理/日常报销/10_日常报销.md)
+- [README](summaries/业务/费用管理/日常报销/README.md)
 
-- [00_domain_overview](summaries/business/hr_service/customer_management/00_domain_overview.md)
-- [10_customer_management](summaries/business/hr_service/customer_management/10_customer_management.md)
-- [README](summaries/business/hr_service/customer_management/README.md)
+### 费用管理/通用配置
 
-##### employee_management
+- [00_领域概述](summaries/业务/费用管理/通用配置/00_领域概述.md)
+- [10_通用配置](summaries/业务/费用管理/通用配置/10_通用配置.md)
+- [README](summaries/业务/费用管理/通用配置/README.md)
 
-- [00_domain_overview](summaries/business/hr_service/employee_management/00_domain_overview.md)
-- [14_employee_roster](summaries/business/hr_service/employee_management/14_employee_roster.md)
-- [15_contract_management](summaries/business/hr_service/employee_management/15_contract_management.md)
-- [16_employment_lifecycle](summaries/business/hr_service/employee_management/16_employment_lifecycle.md)
-- [50_faq](summaries/business/hr_service/employee_management/50_faq.md)
-- [README](summaries/business/hr_service/employee_management/README.md)
+### 项目背景
 
-##### org_management
+- [00_领域概述](summaries/业务/项目背景/00_领域概述.md)
+- [01_产品定位](summaries/业务/项目背景/01_产品定位.md)
+- [02_平台角色与终端](summaries/业务/项目背景/02_平台角色与终端.md)
+- [03_产品能力版图](summaries/业务/项目背景/03_产品能力版图.md)
+- [04_产品优势与服务模式](summaries/业务/项目背景/04_产品优势与服务模式.md)
+- [05_管理控制台能力概览](summaries/业务/项目背景/05_管理控制台能力概览.md)
+- [README](summaries/业务/项目背景/README.md)
 
-- [00_domain_overview](summaries/business/hr_service/org_management/00_domain_overview.md)
-- [13_headcount_management](summaries/business/hr_service/org_management/13_headcount_management.md)
-- [14_position_and_rank_management](summaries/business/hr_service/org_management/14_position_and_rank_management.md)
-- [README](summaries/business/hr_service/org_management/README.md)
-- [README](summaries/business/hr_service/README.md)
+## 设计准则
 
-##### recruitment
-
-- [00_domain_overview](summaries/business/hr_service/recruitment/00_domain_overview.md)
-- [10_recruitment_management](summaries/business/hr_service/recruitment/10_recruitment_management.md)
-- [README](summaries/business/hr_service/recruitment/README.md)
-
-## guidelines
-
-- [accessibility](summaries/guidelines/accessibility.md)
-- [cognition](summaries/guidelines/cognition.md)
-- [flow_mode](summaries/guidelines/flow_mode.md)
-- [governance](summaries/guidelines/governance.md)
-- [information_architecture](summaries/guidelines/information_architecture.md)
-- [quality](summaries/guidelines/quality.md)
-- [readability](summaries/guidelines/readability.md)
-- [README](summaries/guidelines/README.md)
-- [usability](summaries/guidelines/usability.md)
-- [visual](summaries/guidelines/visual.md)
+- [README](summaries/设计准则/README.md)
+- [信息架构](summaries/设计准则/信息架构.md)
+- [可用性](summaries/设计准则/可用性.md)
+- [可读性](summaries/设计准则/可读性.md)
+- [无障碍](summaries/设计准则/无障碍.md)
+- [治理](summaries/设计准则/治理.md)
+- [流程模式](summaries/设计准则/流程模式.md)
+- [视觉](summaries/设计准则/视觉.md)
+- [认知](summaries/设计准则/认知.md)
+- [质量](summaries/设计准则/质量.md)

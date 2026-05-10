@@ -7,9 +7,9 @@
 - action_type: ingest
 - operator: ai
 - touched_files:
-  - knowledge/raw/business/*
-  - knowledge/raw/guidelines/*
-  - knowledge/raw/manifests/source_manifest.md
+  - knowledge/raw/业务/*
+  - knowledge/raw/设计准则/*
+  - knowledge/raw/清单/source_manifest.md
 - summary: 完成既有业务与指南真源向 raw 层归位，并初始化来源清单。
 - reason: 按 Wiki 子系统 v2 规范完成改造步骤 1-3。
 - risk_level: medium

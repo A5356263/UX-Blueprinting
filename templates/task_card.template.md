@@ -57,12 +57,12 @@
 ## Knowledge
 
 - knowledge/wiki/index.md
-- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+- knowledge/wiki/summaries/业务/{{DOMAIN}}/00_领域概述.md
 
 ## Wiki
 
 - knowledge/wiki/index.md
-- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+- knowledge/wiki/summaries/业务/{{DOMAIN}}/00_领域概述.md
 
 ## Design Guidelines
 
@@ -73,11 +73,11 @@
 ### Primary Knowledge Entry
 
 - knowledge/wiki/index.md
-- knowledge/wiki/summaries/business/{{DOMAIN}}/00_domain_overview.md
+- knowledge/wiki/summaries/业务/{{DOMAIN}}/00_领域概述.md
 
 ### Fallback Source
 
-- knowledge/raw/business/{{DOMAIN}}/
+- knowledge/raw/业务/{{DOMAIN}}/
 
 ### Fallback Conditions
 

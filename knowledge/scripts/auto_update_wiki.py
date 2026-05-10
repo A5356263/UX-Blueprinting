@@ -40,7 +40,7 @@ def process_exists(pid: int) -> bool:
 def collect_raw_snapshot(raw_root: Path) -> dict[str, int]:
     snapshot: dict[str, int] = {}
     for file in sorted(raw_root.rglob("*.md")):
-        if not file.is_file() or "manifests" in file.parts:
+        if not file.is_file() or "清单" in file.parts:
             continue
         snapshot[file.relative_to(raw_root).as_posix()] = file.stat().st_mtime_ns
     return snapshot

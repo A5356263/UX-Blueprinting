@@ -6,15 +6,15 @@ from typing import Any
 
 STYLE_CSS = r"""
 :root {
-  --bg: #f2f0e8;
-  --panel: #fffdf8;
-  --panel-strong: #ffffff;
-  --panel-subtle: #f6f3ec;
-  --line: #d8d1c2;
-  --line-strong: #c7bca7;
-  --text: #1f2933;
-  --text-muted: #6b7280;
-  --text-soft: #8b8f97;
+  --bg: #f5f4ed;
+  --panel: #faf9f5;
+  --panel-strong: #faf9f5;
+  --panel-subtle: #f2f0e8;
+  --line: #e8e6dc;
+  --line-strong: #d8d1c2;
+  --text: #2b2b28;
+  --text-muted: #6b6a64;
+  --text-soft: #75746e;
   --accent: #1f6b5b;
   --accent-soft: #e2f1eb;
   --accent-strong: #155245;
@@ -22,7 +22,7 @@ STYLE_CSS = r"""
   --warn-soft: #f6ead5;
   --danger: #8b3a3a;
   --danger-soft: #f8e4e1;
-  --shadow: 0 10px 28px rgba(63, 49, 30, 0.08);
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   --radius: 8px;
 }
 
@@ -31,9 +31,9 @@ STYLE_CSS = r"""
 body {
   margin: 0;
   font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(180deg, #f7f4ed 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.55;
 }
 
 .app { display: flex; min-height: 100vh; }
@@ -151,11 +151,11 @@ body {
 
 .section-heading {
   font-size: 18px;
-  font-weight: 700;
-  color: var(--accent-strong);
+  font-weight: 500;
+  color: var(--text);
   margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--accent-soft);
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
 }
 
 .section-heading.level-2 {
@@ -218,7 +218,7 @@ body {
 
 .flow-name {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
   margin: 0 0 16px;
   padding: 8px 14px;
@@ -234,13 +234,13 @@ body {
   border-radius: var(--radius);
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(63, 49, 30, 0.04);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 }
 
 .node-name {
   font-size: 15px;
-  font-weight: 700;
-  color: var(--accent-strong);
+  font-weight: 500;
+  color: var(--text);
   margin: 0 0 14px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
@@ -284,12 +284,12 @@ body {
   border-radius: var(--radius);
   padding: 16px 20px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(63, 49, 30, 0.04);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 }
 
 .page-card-name {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
   margin: 0 0 8px;
   display: flex;

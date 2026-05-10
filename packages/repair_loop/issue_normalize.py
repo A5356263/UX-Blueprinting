@@ -106,6 +106,8 @@ def _infer_stage(raw_issue: dict[str, Any]) -> str:
 
 def _infer_target_artifacts(project_id: str, stage: str, source: str, message: str, raw_issue: dict[str, Any]) -> list[str]:
     direct_targets = [str(item) for item in raw_issue.get("target_artifacts", []) if isinstance(item, str)]
+    if "gap_list.md" in message.lower() and f"projects/{project_id}/workspace/gap_list.md" not in direct_targets:
+        direct_targets.insert(0, f"projects/{project_id}/workspace/gap_list.md")
     if direct_targets:
         unique_targets: list[str] = []
         for item in direct_targets:
@@ -180,8 +182,18 @@ def _infer_category(raw_issue: dict[str, Any], project_id: str, stage: str) -> t
         return raw_category, inspection
     if raw_issue["source"] == "coverage":
         return "coverage_gap", inspection
-    if "trace" in lowered or "追踪" in message or "追溯" in message:
-        return "trace_missing", inspection
+    if "设计指南" in message or "guideline" in lowered:
+        return "experience_guideline_consumption_gap", inspection
+    if ("角色" in message and "路径" in message) or ("角色" in message and "覆盖" in message):
+        return "experience_role_path_gap", inspection
+    if "状态" in message or "反馈" in message:
+        return "experience_state_feedback_gap", inspection
+    if "异常" in message or "阻断" in message or "拦截" in message:
+        return "experience_exception_handling_gap", inspection
+    if "用户可见文案" in message or "文案" in message:
+        return "experience_copy_not_user_visible", inspection
+    if "承接检查" in message or "business_blueprint.md" in message:
+        return "experience_business_consumption_gap", inspection
     if "state" in lowered or "状态" in message or "exception" in lowered or "happy path" in lowered:
         return "state_model_gap", inspection
     if "copy" in lowered or "文案" in message or "反馈文案" in message:
@@ -272,7 +284,7 @@ def _build_description(stage: str, category: str, raw_issue: dict[str, Any], ins
     if inspection.get("has_placeholder"):
         return f"{Path(targets[0]).name} 存在占位内容残留，需要补齐正式内容后再重跑检查"
     if category == "coverage_gap" and raw_issue["source"] == "coverage":
-        return f"coverage 检查发现覆盖缺口：{raw_issue['message']}"
+        return f"自然语言承接检查发现缺口：{raw_issue['message']}"
     return f"{stage} 阶段发现 {category} 问题：{raw_issue['message']}"
 
 
@@ -303,7 +315,19 @@ def _suggested_actions(category: str, targets: list[str], inspection: dict[str, 
     elif category == "placeholder_residue":
         actions.append(f"替换 {target_name} 中的占位内容，确保不再残留模板变量")
     elif category == "coverage_gap":
-        actions.append(f"补齐 {target_name} 与上下游产物之间的覆盖与追踪关系")
+        actions.append(f"补齐 {target_name} 与 business / experience 自然语言承接之间的真实缺口，不要新增编号或 trace 表")
+    elif category == "experience_business_consumption_gap":
+        actions.append(f"只补 {target_name} 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写")
+    elif category == "experience_guideline_consumption_gap":
+        actions.append("补齐 design guideline 的实际消费记录或补足场景对应的设计原则承接，不要回退到硬编码映射")
+    elif category == "experience_copy_not_user_visible":
+        actions.append(f"把 {target_name} 中的抽象元指令改成用户真实能看到的页面文案、提示语或按钮文案")
+    elif category == "experience_state_feedback_gap":
+        actions.append(f"补齐 {target_name} 的状态含义、页面反馈和用户下一步，不要只写状态名")
+    elif category == "experience_exception_handling_gap":
+        actions.append(f"补齐 {target_name} 的触发条件、系统反馈和用户下一步，保持修复范围只落在对应异常节点")
+    elif category == "experience_role_path_gap":
+        actions.append(f"补齐 {target_name} 中缺失角色的主路径或关键次路径，不要把其他角色段落整稿重写")
     elif category == "state_model_gap":
         actions.append(f"补齐 {target_name} 的失败态、阻断态或处理中状态")
     elif category == "copy_contract_gap":

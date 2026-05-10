@@ -137,14 +137,9 @@ DEFAULT_TRACKED_OUTPUTS = [
     "projects/{project_id}/workspace/check_status.json",
 ]
 
-FACT_ID_PATTERN = re.compile(r"\bF-[A-Z]{0,4}\d+\b|\bF-\d+\b")
-JUDGMENT_ID_PATTERN = re.compile(r"\bJ-\d+\b|\bPOS-\d+\b")
-PAGE_ID_PATTERN = re.compile(r"\bP-\d+\b")
-FLOW_ID_PATTERN = re.compile(r"\bTF-\d+\b")
 GENERIC_ID_PATTERN = re.compile(r"\b[A-Z]{1,8}-\d+\b")
 OPTION_ID_PATTERN = re.compile(r"\bOPT?-\d+\b")
 RISK_ID_PATTERN = re.compile(r"\b(?:RSK|RK|AP)-\d+\b")
-TRACE_ID_PATTERN = re.compile(r"\bTR-\d+\b")
 SECTION_HEADING_PATTERN = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 SUBPAGE_HEADING_PATTERN = re.compile(r"^(?:###|####)\s+(P-\d+)\b", re.MULTILINE)
 LIST_ITEM_PATTERN = re.compile(r"^\s*(?:[-*]|\d+\.)\s+")
@@ -185,6 +180,58 @@ EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"source[_ ]?path", re.IGNORECASE), "核心区包含 source_path"),
     (re.compile(r"(?:从当前输入直接抽取|未做模板补全)"), "核心区暴露了生成过程提示语"),
     (re.compile(r"(?:生成基于当前真实需求文档承载页)"), "核心区存在明显机器化表达"),
+]
+EXPERIENCE_NODE_PATTERN = re.compile(r"^\*\*节点\s*\d+", re.MULTILINE)
+EXPERIENCE_PAGE_BLOCK_PATTERN = re.compile(r"^\*\*(?:页面|弹窗|抽屉)：", re.MULTILINE)
+EXPERIENCE_STATE_BLOCK_PATTERN = re.compile(r"^-+\s*状态：", re.MULTILINE)
+
+ROLE_ALIASES: dict[str, list[str]] = {
+    "超管": ["超管", "超级管理员"],
+    "员工": ["员工"],
+    "审批人": ["审批人", "组织负责人"],
+}
+
+HANDOFF_FLOW_CHECKS: list[tuple[str, list[str]]] = [
+    ("超管配置", ["超管", "配置", "启用"]),
+    ("员工发起申请", ["员工", "申请权限", "提交"]),
+    ("系统前置校验", ["校验", "拦截", "认证"]),
+    ("审批人审批", ["审批人", "同意", "否决"]),
+    ("自动授权或拒绝", ["自动", "授权"]),
+    ("结果通知员工", ["通知", "员工"]),
+]
+
+HANDOFF_EXCEPTION_CHECKS: list[tuple[str, list[str], list[str]]] = [
+    ("互斥模式冲突拦截", ["互斥", "冲突"], ["无法同时开启", "互斥"]),
+    ("关闭模式时在途流程阻断", ["关闭", "在途"], ["关闭失败", "未完成审批", "在途"]),
+    ("资金用户校验失败", ["资金用户", "代发付款"], ["资金用户", "代发付款", "无法申请"]),
+    ("子管理员模式拦截", ["子管理员"], ["子管理员", "不可通过自助申请获得"]),
+]
+
+HANDOFF_STATE_CHECKS: list[tuple[str, list[str], list[str]]] = [
+    ("模式状态", ["未启用", "已启用"], ["未启用", "已启用"]),
+    ("申请单状态", ["审批中", "已通过", "已拒绝", "已撤销"], ["审批中", "已通过", "已拒绝", "已撤销"]),
+    ("权限生效结果", ["生效", "通过"], ["现在可以使用", "自动生效", "权限正在生效中"]),
+]
+
+HANDOFF_RISK_CHECKS: list[tuple[str, list[str], list[str], str]] = [
+    (
+        "审批人信息密度不足导致盲目审批",
+        ["审批人负担过重", "审批页需要展示足够的前后对比信息"],
+        ["当前已有权限", "申请获取的权限", "申请后将新增"],
+        "承接检查：business_blueprint.md 强调审批人侧需要看到“当前已有权限 / 申请内容 / 新增影响”的判断辅助，但 experience_blueprint.md 还缺少足够完整的审批对比信息。",
+    ),
+    (
+        "敏感权限绕过",
+        ["敏感权限绕过", "敏感应用"],
+        ["敏感应用", "不可申请", "联系企业管理员"],
+        "承接检查：business_blueprint.md 已把敏感权限绕过列为关键风险，但 experience_blueprint.md 还没有把敏感应用不可自助申请的保护策略转译成用户可见规则或提示。",
+    ),
+    (
+        "互斥认知盲区",
+        ["认知盲区", "互斥提示需要说明原因"],
+        ["审批链路", "冲突", "互斥"],
+        "承接检查：business_blueprint.md 要求互斥提示解释“为什么不能同时开启”，但 experience_blueprint.md 还没有把原因说明转成用户可理解的提示。",
+    ),
 ]
 
 
@@ -242,11 +289,11 @@ def infer_issue_stage(default_stage: str, message: str) -> str:
 def infer_issue_source(default_stage: str, message: str) -> str:
     if default_stage == "final":
         coverage_warning_markers = (
-            "存在未被体验层消费的业务判断",
-            "存在未被后续消费的事实",
-            "未发现页面 ID",
+            "承接检查：",
+            "自然语言承接检查：",
+            "设计指南消费检查：",
         )
-        if message.lower().startswith("coverage:") or any(marker in message for marker in coverage_warning_markers):
+        if any(message.startswith(marker) for marker in coverage_warning_markers):
             return "coverage"
         return "validate"
     return f"{default_stage}_gate"
@@ -254,13 +301,25 @@ def infer_issue_source(default_stage: str, message: str) -> str:
 
 def infer_issue_category(stage: str, message: str) -> str:
     lowered = message.lower()
+    if " gate 状态" in message or "阶段状态：" in message or "阶段状态为" in message:
+        return "quality_gap"
     if "缺少栏目" in message or "缺少必需章节" in message or ("缺少" in message and "## " in message):
         return "structure_missing"
-    if "缺少追踪映射" in message or "不可追溯" in message or "追踪映射" in message:
-        return "trace_missing"
     if "placeholder" in lowered or "占位" in message:
         return "placeholder_residue"
-    if "未被" in message or lowered.startswith("coverage:") or "覆盖检查" in message:
+    if "设计指南" in message or "guideline" in lowered:
+        return "experience_guideline_consumption_gap"
+    if ("角色" in message and "路径" in message) or ("角色" in message and "覆盖" in message):
+        return "experience_role_path_gap"
+    if "状态" in message or "反馈" in message:
+        return "experience_state_feedback_gap"
+    if "异常" in message or "阻断" in message or "拦截" in message:
+        return "experience_exception_handling_gap"
+    if "用户可见文案" in message or "文案" in message:
+        return "experience_copy_not_user_visible"
+    if "承接检查" in message or "business_blueprint.md 中强调" in message:
+        return "experience_business_consumption_gap"
+    if lowered.startswith("handoff:") or lowered.startswith("coverage:") or "自然语言承接检查" in message:
         return "coverage_gap"
     if "未通过" in message or "状态为 failed" in message:
         return "stage_blocked"
@@ -287,6 +346,8 @@ def infer_target_artifacts(project_id: str, stage: str, message: str, checked_fi
         inferred.append(f"{workspace_prefix}/business_blueprint.md")
     if "experience_blueprint.md" in lowered or "experience gate" in lowered:
         inferred.append(f"{workspace_prefix}/experience_blueprint.md")
+    if "gap_list.md" in lowered:
+        inferred.append(f"{workspace_prefix}/gap_list.md")
     if "check_status.json" in lowered:
         inferred.append(f"{workspace_prefix}/check_status.json")
     if "check_report.md" in lowered:
@@ -520,11 +581,13 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
 
 
 def extract_fact_ids(text: str) -> list[str]:
-    return sorted(set(FACT_ID_PATTERN.findall(text)))
+    del text
+    return []
 
 
 def extract_judgment_ids(text: str) -> list[str]:
-    return sorted(set(JUDGMENT_ID_PATTERN.findall(text)))
+    del text
+    return []
 
 
 def has_experience_critical_signal(text: str) -> bool:
@@ -534,24 +597,18 @@ def has_experience_critical_signal(text: str) -> bool:
 
 
 def find_critical_judgment_ids(business_text: str, judgment_ids: list[str]) -> list[str]:
-    critical: list[str] = []
-    for judgment_id in judgment_ids:
-        for match in re.finditer(re.escape(judgment_id), business_text):
-            start = max(0, match.start() - 160)
-            end = min(len(business_text), match.end() + 160)
-            snippet = business_text[start:end]
-            if has_experience_critical_signal(snippet):
-                critical.append(judgment_id)
-                break
-    return sorted(set(critical))
+    del business_text, judgment_ids
+    return []
 
 
 def extract_page_ids(text: str) -> list[str]:
-    return sorted(set(PAGE_ID_PATTERN.findall(text)))
+    del text
+    return []
 
 
 def extract_flow_ids(text: str) -> list[str]:
-    return sorted(set(FLOW_ID_PATTERN.findall(text)))
+    del text
+    return []
 
 
 def extract_generic_ids(text: str) -> list[str]:
@@ -640,6 +697,31 @@ def count_keywords_present(text: str, keywords: list[str]) -> int:
 
 def contains_any(text: str, keywords: list[str]) -> bool:
     return any(keyword in text for keyword in keywords)
+
+
+def normalize_for_match(text: str) -> str:
+    lowered = text.lower()
+    return re.sub(r"\s+", "", lowered)
+
+
+def contains_phrase(text: str, phrase: str) -> bool:
+    return normalize_for_match(phrase) in normalize_for_match(text)
+
+
+def contains_any_phrase(text: str, phrases: list[str]) -> bool:
+    return any(contains_phrase(text, phrase) for phrase in phrases)
+
+
+def contains_all_phrases(text: str, phrases: list[str]) -> bool:
+    return all(contains_phrase(text, phrase) for phrase in phrases)
+
+
+def count_pattern_matches(pattern: re.Pattern[str], text: str) -> int:
+    return len(pattern.findall(text))
+
+
+def count_role_mentions(text: str, aliases: dict[str, list[str]]) -> dict[str, bool]:
+    return {role: contains_any_phrase(text, role_aliases) for role, role_aliases in aliases.items()}
 
 
 def extract_principle_refs(
@@ -765,7 +847,17 @@ def render_final_report(
     output_status_lines: list[str],
     coverage_lines: list[str],
 ) -> str:
-    lines = ["# Check Report", "", *report_summary_lines(status, blockers, warnings, infos), "## Output Status", ""]
+    lines = [
+        "# Check Report｜人读说明版",
+        "",
+        f"> 本文件是 `projects/{project_id}/workspace/check_status.json` 的人读说明版。",
+        "> 它只用于帮助理解检查结果，不作为 gate / validate / repair 的机器判断依据。",
+        "> 机器判断请以 `check_status.json` 为准。",
+        "",
+        *report_summary_lines(status, blockers, warnings, infos),
+        "## Output Status",
+        "",
+    ]
     lines.extend([f"- {item}" for item in output_status_lines] or ["- none"])
     lines.extend(["", "## Blockers", ""])
     lines.extend([f"- {item}" for item in blockers] or ["- none"])
@@ -773,7 +865,7 @@ def render_final_report(
     lines.extend([f"- {item}" for item in warnings] or ["- none"])
     lines.extend(["", "## Infos", ""])
     lines.extend([f"- {item}" for item in infos] or ["- none"])
-    lines.extend(["", "## Coverage Check", ""])
+    lines.extend(["", "## 自然语言承接检查", ""])
     lines.extend([f"- {item}" for item in coverage_lines] or ["- not_run"])
     lines.extend(["", "## Machine Status", "", f"- 机器可读状态文件：`projects/{project_id}/workspace/check_status.json`", ""])
     return "\n".join(lines)
@@ -995,9 +1087,6 @@ def check_status_report_consistency(status_data: dict[str, object], report_text:
 def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dict[str, object], list[tuple[str, str]]]:
     issues: list[tuple[str, str]] = []
     sections = parse_h2_sections(business_text)
-    fact_ids = extract_fact_ids(facts_text)
-    judgment_ids = extract_judgment_ids(business_text)
-    referenced_facts = [fact_id for fact_id in fact_ids if fact_id in business_text]
 
     stance_section = sections.get("1. 一句话结论", "")
     value_section = sections.get("3. 值不值得做", "")
@@ -1009,40 +1098,32 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     pending_section = sections.get("9. 待确认问题", "")
     appendix_section = sections.get("附录：事实、知识与判断追踪", "")
     option_section = "\n".join([capability_section, appendix_section])
-    trace_section = appendix_section
 
-    judgment_count = len(judgment_ids)
-    option_compare_count = max(count_unique_matches(OPTION_ID_PATTERN, option_section), count_real_table_rows(option_section), count_real_list_items(option_section))
+    option_compare_count = max(
+        count_unique_matches(OPTION_ID_PATTERN, option_section),
+        count_real_table_rows(option_section),
+        count_real_list_items(option_section),
+    )
     value_assessment_item_count = max(count_real_table_rows(value_section), count_real_list_items(value_section))
     risk_item_count = max(count_unique_matches(RISK_ID_PATTERN, risk_section), count_real_table_rows(risk_section), count_real_list_items(risk_section))
-    judgment_traceable_count = len(sorted(set(JUDGMENT_ID_PATTERN.findall(trace_section))))
-    trace_mapping_item_count = max(judgment_traceable_count, count_real_table_rows(trace_section), count_real_list_items(trace_section))
-    unresolved_gap_count = business_text.count("GAP-") + business_text.count("OQ-")
+    appendix_item_count = max(count_real_table_rows(appendix_section), count_real_list_items(appendix_section))
+    unresolved_gap_count = business_text.count("[GAP]") + business_text.count("开放问题")
     has_appendix = bool(appendix_section.strip())
     handover_keyword_count = count_keywords_present(handover_section, ["角色", "流程", "状态", "异常", "风险"])
     handover_item_count = max(count_real_table_rows(handover_section), count_real_list_items(handover_section))
     has_handover_empty_talk = contains_any(handover_section, ["后续根据实际情况设计", "按实际情况调整", "后续再细化", "待后续补齐"])
+    fact_section_keywords = ["任务概述", "功能范围", "关键业务规则", "状态流转", "异常与边界", "开放问题与缺口"]
+    referenced_fact_sections = [item for item in fact_section_keywords if item in facts_text and item in appendix_section]
 
-    if not judgment_ids:
-        add_issue(issues, "warning", "business_blueprint.md 未形成显式业务判断，建议明确各项判断的结论和依据")
-    elif judgment_count < 3:
-        add_issue(issues, "warning", "business_blueprint.md 业务判断数量偏少，review 深度可能不足")
-
-    if not fact_ids:
-        add_issue(issues, "warning", "facts.md 未使用显式编号体系（当前已是自然语言规范，此检查仅作兼容保留）")
-    elif not referenced_facts:
-        add_issue(issues, "warning", "business_blueprint.md 对 facts 的承接关系不够明显，建议在判断中自然引用 facts 中的关键结论")
-    else:
-        add_issue(issues, "info", f"business_blueprint.md 已承接 {len(referenced_facts)} 条事实")
-        if len(referenced_facts) < max(1, len(fact_ids) // 5):
-            add_issue(issues, "warning", "business_blueprint.md 对 facts 的显式承接偏弱")
+    if not stance_section.strip():
+        add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
 
     if option_compare_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 备选路径比较检测不到结构化内容，请确认已用自然语言表达")
     elif option_compare_count < 2:
         add_issue(issues, "warning", "business_blueprint.md 备选路径比较仍偏少，建议至少保留两个以上可比方案")
 
-    if value_assessment_item_count == 0 or count_keywords_present(value_section, ["价值", "成本", "认知"]) < 2:
+    if value_assessment_item_count == 0 or count_keywords_present(value_section, ["价值", "收益", "成本", "认知", "负担"]) < 2:
         add_issue(issues, "warning", "business_blueprint.md 价值/成本/认知负担评估检测不到结构化内容，请确认已在自然语言中覆盖")
 
     if risk_item_count == 0:
@@ -1061,13 +1142,10 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     if has_handover_empty_talk:
         add_issue(issues, "warning", "business_blueprint.md 方案承接要求存在空话，建议改为可执行要求")
 
-    if not trace_section.strip():
+    if not appendix_section.strip():
         add_issue(issues, "warning", "business_blueprint.md 缺少有效的判断依据说明")
-    elif judgment_traceable_count == 0:
-        add_issue(issues, "warning", "business_blueprint.md 判断依据未覆盖足够的核心判断")
-
-    if not stance_section.strip():
-        add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
+    elif not referenced_fact_sections:
+        add_issue(issues, "warning", "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱")
 
     if not pending_section.strip() and unresolved_gap_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 未显式保留开放问题或缺口")
@@ -1075,15 +1153,13 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
         add_issue(issues, "warning", "business_blueprint.md 缺少附录（事实、知识与判断追踪）")
 
     metrics = {
-        "judgment_count": judgment_count,
-        "facts_consumed_count": len(referenced_facts),
-        "judgment_traceable_count": judgment_traceable_count,
-        "trace_mapping_item_count": trace_mapping_item_count,
         "option_compare_count": option_compare_count,
         "value_assessment_item_count": value_assessment_item_count,
         "risk_item_count": risk_item_count,
         "unresolved_gap_count": unresolved_gap_count,
         "has_appendix": has_appendix,
+        "appendix_item_count": appendix_item_count,
+        "referenced_fact_section_count": len(referenced_fact_sections),
         "handover_item_count": handover_item_count,
         "handover_keyword_count": handover_keyword_count,
         "has_handover_empty_talk": has_handover_empty_talk,
@@ -1093,7 +1169,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
 
 def analyze_experience_blueprint(
     _facts_text: str,
-    _business_text: str,
+    business_text: str,
     experience_text: str,
 ) -> tuple[dict[str, object], list[tuple[str, str]]]:
     issues: list[tuple[str, str]] = []
@@ -1108,9 +1184,21 @@ def analyze_experience_blueprint(
     core_text = get_experience_core_text(sections)
 
     flow_section = "\n".join([main_flow_section, secondary_flow_section])
-    flow_count = max(count_real_table_rows(flow_section), count_real_list_items(flow_section))
-    page_inventory_item_count = max(count_real_table_rows(page_design_section), count_real_list_items(page_design_section))
-    state_feedback_pair_count = max(count_real_table_rows(state_copy_section), count_real_list_items(state_copy_section))
+    flow_count = max(
+        count_real_table_rows(flow_section),
+        count_real_list_items(flow_section),
+        count_pattern_matches(EXPERIENCE_NODE_PATTERN, flow_section),
+    )
+    page_inventory_item_count = max(
+        count_real_table_rows(page_design_section),
+        count_real_list_items(page_design_section),
+        count_pattern_matches(EXPERIENCE_PAGE_BLOCK_PATTERN, page_design_section),
+    )
+    state_feedback_pair_count = max(
+        count_real_table_rows(state_copy_section),
+        count_real_list_items(state_copy_section),
+        count_pattern_matches(EXPERIENCE_STATE_BLOCK_PATTERN, state_copy_section),
+    )
     appendix_item_count = max(count_real_table_rows(appendix_section), count_real_list_items(appendix_section))
 
     exception_text = "\n".join([main_flow_section, secondary_flow_section, exception_flow_section, state_copy_section])
@@ -1149,6 +1237,9 @@ def analyze_experience_blueprint(
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
+    if "审批人" in business_text and not contains_any_phrase(experience_text, ["审批详情页", "权限申请审批", "当前已有权限"]):
+        add_issue(issues, "warning", "experience_blueprint.md 提到了审批人流程，但审批详情页还没有体现足够的判断辅助信息")
+
     metrics = {
         "flow_count": flow_count,
         "page_inventory_item_count": page_inventory_item_count,
@@ -1158,6 +1249,138 @@ def analyze_experience_blueprint(
         "core_table_count": core_table_count,
     }
     return metrics, issues
+
+
+def analyze_natural_language_handoff(
+    business_text: str,
+    experience_text: str,
+    usage_report: dict[str, object] | None = None,
+) -> tuple[dict[str, object], list[tuple[str, str]], list[str]]:
+    issues: list[tuple[str, str]] = []
+    coverage_lines: list[str] = []
+    business_sections = parse_h2_sections(business_text)
+    experience_sections = parse_h2_sections(experience_text)
+
+    handover_section = business_sections.get("8. 方案承接要求", "")
+    risk_section = business_sections.get("7. 主要风险与保护策略", "")
+    business_signal_text = "\n".join([handover_section, risk_section, business_text])
+    experience_signal_text = "\n".join(
+        [
+            experience_sections.get("1. 交互流程总览", ""),
+            experience_sections.get("2. 主交互流程", ""),
+            experience_sections.get("3. 次交互流程", ""),
+            experience_sections.get("4. 异常与阻断流程", ""),
+            experience_sections.get("5. 页面 / 弹窗 / 抽屉设计", ""),
+            experience_sections.get("6. 状态与反馈文案", ""),
+        ]
+    )
+
+    required_roles = {
+        role: aliases
+        for role, aliases in ROLE_ALIASES.items()
+        if contains_any_phrase(handover_section or business_text, aliases)
+    }
+    role_hits = count_role_mentions(experience_signal_text, required_roles or ROLE_ALIASES)
+    required_role_count = len(required_roles or ROLE_ALIASES)
+    covered_role_count = sum(1 for covered in role_hits.values() if covered)
+    coverage_lines.append(f"角色路径覆盖：{covered_role_count}/{required_role_count}")
+    for role, covered in role_hits.items():
+        if role in (required_roles or ROLE_ALIASES) and not covered:
+            add_issue(
+                issues,
+                "warning",
+                f"承接检查：business_blueprint.md 要求覆盖“{role}”角色路径，但 experience_blueprint.md 还没有给出这类角色的清晰任务路径或页面承接。",
+            )
+
+    required_flow_checks = [item for item in HANDOFF_FLOW_CHECKS if contains_any_phrase(handover_section or business_text, item[1])]
+    covered_flow_count = 0
+    for flow_name, required_phrases in required_flow_checks:
+        if contains_any_phrase(experience_signal_text, required_phrases):
+            covered_flow_count += 1
+        else:
+            add_issue(
+                issues,
+                "warning",
+                f"承接检查：business_blueprint.md 明确要求主流程闭环包含“{flow_name}”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。",
+            )
+    coverage_lines.append(f"主流程闭环覆盖：{covered_flow_count}/{len(required_flow_checks)}")
+
+    required_exception_count = 0
+    covered_exception_count = 0
+    for exception_name, business_phrases, expected_phrases in HANDOFF_EXCEPTION_CHECKS:
+        if not contains_any_phrase(business_signal_text, business_phrases):
+            continue
+        required_exception_count += 1
+        if contains_any_phrase(experience_signal_text, expected_phrases):
+            covered_exception_count += 1
+            continue
+        add_issue(
+            issues,
+            "warning",
+            f"承接检查：business_blueprint.md 已把“{exception_name}”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
+        )
+    coverage_lines.append(f"异常与阻断覆盖：{covered_exception_count}/{required_exception_count}")
+
+    required_state_count = 0
+    covered_state_count = 0
+    for state_name, business_phrases, expected_phrases in HANDOFF_STATE_CHECKS:
+        if not contains_any_phrase(business_signal_text, business_phrases):
+            continue
+        required_state_count += 1
+        if contains_any_phrase(experience_sections.get("6. 状态与反馈文案", ""), expected_phrases):
+            covered_state_count += 1
+            continue
+        add_issue(
+            issues,
+            "warning",
+            f"承接检查：business_blueprint.md 要求解释“{state_name}”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
+        )
+    coverage_lines.append(f"状态与反馈覆盖：{covered_state_count}/{required_state_count}")
+
+    required_risk_count = 0
+    covered_risk_count = 0
+    for _risk_name, business_phrases, expected_phrases, warning_message in HANDOFF_RISK_CHECKS:
+        if not contains_any_phrase(business_signal_text, business_phrases):
+            continue
+        required_risk_count += 1
+        if contains_any_phrase(experience_signal_text, expected_phrases):
+            covered_risk_count += 1
+            continue
+        add_issue(issues, "warning", warning_message)
+    coverage_lines.append(f"风险保护承接：{covered_risk_count}/{required_risk_count}")
+
+    guideline_refs_used: list[str] = []
+    guideline_selection_reason: list[dict[str, object]] = []
+    if usage_report:
+        stage_usage = usage_report.get("stage_usage")
+        if isinstance(stage_usage, dict):
+            experience_usage = stage_usage.get("experience")
+            if isinstance(experience_usage, dict):
+                guideline_refs_used = _string_list(experience_usage.get("guideline_refs_used"))
+                raw_reason = experience_usage.get("guideline_selection_reason")
+                if isinstance(raw_reason, list):
+                    guideline_selection_reason = [item for item in raw_reason if isinstance(item, dict)]
+
+    if not guideline_refs_used:
+        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 未记录 experience 阶段实际消费的 design guideline。")
+    elif not guideline_selection_reason:
+        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 缺少 guideline_selection_reason，无法说明为何选择这些设计指南。")
+    coverage_lines.append(f"设计指南消费：{len(guideline_refs_used)} 条")
+
+    metrics = {
+        "required_role_count": required_role_count,
+        "covered_role_count": covered_role_count,
+        "required_flow_step_count": len(required_flow_checks),
+        "covered_flow_step_count": covered_flow_count,
+        "required_exception_count": required_exception_count,
+        "covered_exception_count": covered_exception_count,
+        "required_state_count": required_state_count,
+        "covered_state_count": covered_state_count,
+        "required_risk_count": required_risk_count,
+        "covered_risk_count": covered_risk_count,
+        "guideline_refs_used_count": len(guideline_refs_used),
+    }
+    return metrics, issues, coverage_lines
 
 
 def run_validate_outputs(project_id: str) -> int:
@@ -1230,16 +1453,22 @@ def run_validate_outputs(project_id: str) -> int:
 
     business_metrics: dict[str, object] = {}
     experience_metrics: dict[str, object] = {}
+    handoff_metrics: dict[str, object] = {}
+    coverage_lines = ["not_run"]
 
     if facts_text and business_text:
         business_metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
         extend_issues(issues, business_depth_issues)
-        if int(business_metrics.get("judgment_traceable_count", 0)) == 0:
-            add_issue(issues, "warning", "final validate：business_blueprint.md 的判断依据仍需补充，建议明确判断与事实的承接关系")
 
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
+        handoff_metrics, handoff_issues, coverage_lines = analyze_natural_language_handoff(
+            business_text,
+            experience_text,
+            usage_report,
+        )
+        extend_issues(issues, handoff_issues)
 
     has_directory_ref = bool(resolved.get("has_directory_ref"))
     requires_narrowing = bool(resolved.get("requires_narrowing"))
@@ -1275,7 +1504,6 @@ def run_validate_outputs(project_id: str) -> int:
             add_issue(issues, "info", f"{stage} gate 状态：{gate_status.get('status')}")
 
     blockers, warnings, infos, status = summarize_issues(issues)
-    coverage_lines = ["not_run"]
     report_text = render_final_report(project_id, status, blockers, warnings, infos, output_status_lines, coverage_lines)
     report_path.write_text(report_text, encoding="utf-8")
 
@@ -1285,6 +1513,7 @@ def run_validate_outputs(project_id: str) -> int:
         "missing_output_count": len(missing_outputs),
         "business_depth": business_metrics,
         "experience_depth": experience_metrics,
+        "experience_handoff": handoff_metrics,
     }
     payload = build_final_payload(
         project_id,
@@ -1318,50 +1547,26 @@ def run_coverage_check(project_id: str) -> int:
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
     experience_text = read_text(workspace_dir / "experience_blueprint.md")
-
-    fact_ids = extract_fact_ids(facts_text)
-    judgment_ids = extract_judgment_ids(business_text)
-    page_ids = extract_page_ids(experience_text)
-    experience_sections = parse_h2_sections(experience_text)
-    experience_trace_section = (
-        experience_sections.get("附录：依据与追踪", "")
-        or experience_sections.get("依据与追踪", "")
-        or experience_text
+    usage_report = read_json(get_project_runtime_dir(project_id) / "knowledge_usage_report.json")
+    handoff_metrics, handoff_issues, coverage_lines = analyze_natural_language_handoff(
+        business_text,
+        experience_text,
+        usage_report,
     )
-
-    facts_in_business = [item for item in fact_ids if item in business_text]
-    facts_in_experience = [item for item in fact_ids if item in experience_text]
-    orphan_facts = [item for item in fact_ids if item not in business_text and item not in experience_text]
-    judgments_in_experience = [item for item in judgment_ids if item in experience_text]
-    orphan_judgments = [item for item in judgment_ids if item not in experience_text]
-    critical_judgments = find_critical_judgment_ids(business_text, judgment_ids)
-    critical_judgments_in_trace = [item for item in critical_judgments if item in experience_trace_section]
-
-    coverage_lines: list[str] = [
-        f"facts_covered_by_business: {len(facts_in_business)}",
-        f"facts_covered_by_experience: {len(facts_in_experience)}",
-        f"business_judgments_consumed_by_experience: {len(judgments_in_experience)}",
-        f"orphan_fact_count: {len(orphan_facts)}",
-        f"orphan_judgment_count: {len(orphan_judgments)}",
-        f"orphan_page_count: {0 if page_ids else 1}",
-    ]
 
     blockers = list(status_data.get("issues", {}).get("blockers", []))
     warnings = list(status_data.get("issues", {}).get("warnings", []))
     infos = list(status_data.get("issues", {}).get("infos", []))
 
-    if not fact_ids:
-        infos.append("facts.md 使用自然语言表达（未使用旧版编号体系），覆盖检查将以章节级承接为准")
-    if orphan_facts:
-        warnings.append(f"存在未被后续消费的事实：{', '.join(orphan_facts[:6])}")
-    if orphan_judgments:
-        warnings.append(f"存在未被体验层消费的业务判断：{', '.join(orphan_judgments[:6])}")
-    if critical_judgments and not critical_judgments_in_trace:
-        warnings.append("experience 可能未充分承接 business 的方案承接要求，建议检查页面/流程/状态/文案是否覆盖 business 的关键判断")
-    if not page_ids:
-        warnings.append("experience_blueprint.md 未发现明确的页面/弹窗/抽屉设计，页面级消费不足")
+    for level, message in handoff_issues:
+        if level == "blocker":
+            blockers.append(message)
+        elif level == "warning":
+            warnings.append(message)
+        else:
+            infos.append(message)
 
-    infos.extend([f"coverage: {line}" for line in coverage_lines])
+    infos.extend([f"自然语言承接检查：{line}" for line in coverage_lines])
     blockers = sorted(set(blockers))
     warnings = sorted(set(warnings))
     infos = sorted(set(infos))
@@ -1388,16 +1593,7 @@ def run_coverage_check(project_id: str) -> int:
     status_data["issues"]["warnings"] = warnings
     status_data["issues"]["infos"] = infos
     status_data["metrics"] = status_data.get("metrics", {})
-    status_data["metrics"]["coverage"] = {
-        "facts_covered_by_business": len(facts_in_business),
-        "facts_covered_by_experience": len(facts_in_experience),
-        "business_judgments_consumed_by_experience": len(judgments_in_experience),
-        "orphan_fact_count": len(orphan_facts),
-        "orphan_judgment_count": len(orphan_judgments),
-        "critical_judgment_count": len(critical_judgments),
-        "critical_judgment_traced_count": len(critical_judgments_in_trace),
-        "orphan_page_count": 0 if page_ids else 1,
-    }
+    status_data["metrics"]["coverage"] = handoff_metrics
     checked_files = [str(item) for item in status_data.get("checked_files", []) if isinstance(item, str)]
     status_data["issue_details_version"] = "1.0"
     status_data["issue_details"] = build_issue_details(
@@ -1410,15 +1606,6 @@ def run_coverage_check(project_id: str) -> int:
         status_data["metrics"],
     )
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
-    write_runtime_extension_artifacts(
-        project_id,
-        fact_ids,
-        judgment_ids,
-        page_ids,
-        facts_in_business,
-        facts_in_experience,
-        judgments_in_experience,
-    )
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
     append_command_if_provenance_exists(project_id, "coverage")

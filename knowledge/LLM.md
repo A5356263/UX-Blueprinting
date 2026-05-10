@@ -112,10 +112,10 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 
 至少包含：
 
-- `raw/business/`
-- `raw/guidelines/`
+- `raw/业务/`
+- `raw/设计准则/`
 - `raw/inbox/`
-- `raw/manifests/source_manifest.md`
+- `raw/清单/source_manifest.md`
 
 ### 3.2 wiki/
 

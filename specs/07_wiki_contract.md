@@ -55,8 +55,8 @@ summary 与 raw 必须保持：
 映射规则：
 
 ```text
-knowledge/raw/business/permission/15_page_carrier_semantics.md
--> knowledge/wiki/summaries/business/permission/15_page_carrier_semantics.md
+knowledge/raw/业务/权限管理/15_页面载体语义.md
+-> knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md
 ```
 
 ## 弱关系规则

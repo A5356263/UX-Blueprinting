@@ -14,8 +14,8 @@
 
 ## 与其他目录的关系
 
-- `knowledge/raw/business/`：业务真源
-- `knowledge/raw/guidelines/`：设计指南真源
+- `knowledge/raw/业务/`：业务真源
+- `knowledge/raw/设计准则/`：设计指南真源
 - `knowledge/raw/inbox/`：待整理来源
 - `knowledge/wiki/summaries/`：raw 的 mirrored summary
 

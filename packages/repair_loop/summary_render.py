@@ -24,7 +24,16 @@ def render_repair_summary(issue_index: dict[str, Any], remediation_plan: dict[st
     deferred_issues = [issue for issue in issues if issue.get("status") == "deferred"]
 
     lines = [
-        "# Repair Summary",
+        "# Repair Summary｜人读说明版",
+        "",
+        "> 本文件是以下机器状态文件的人读说明版：",
+        ">",
+        f"> - `projects/{issue_index.get('project_id', '<project-id>')}/runtime/remediation/issue_index.json`",
+        f"> - `projects/{issue_index.get('project_id', '<project-id>')}/runtime/remediation/remediation_plan.json`",
+        f"> - `projects/{issue_index.get('project_id', '<project-id>')}/runtime/remediation/retry_scope.json`",
+        ">",
+        "> 它只用于帮助理解修复任务，不作为 repair loop 的机器判断依据。",
+        "> 机器判断请以上述 JSON 文件为准。",
         "",
         "## 当前状态",
         "",

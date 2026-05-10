@@ -130,12 +130,13 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     consumption_map = {
         "knowledge_refs": ["facts", "business", "experience"],
         "wiki_refs": ["facts", "business", "experience"],
+        "guideline_refs": ["experience"],
         "template_refs": ["facts", "business", "experience"],
         "check_refs": ["gate", "validate"],
     }
 
     reference_items_raw: list[dict[str, object]] = []
-    for field in ("knowledge_refs", "wiki_refs", "template_refs", "check_refs"):
+    for field in ("knowledge_refs", "wiki_refs", "guideline_refs", "template_refs", "check_refs"):
         for reference in resolved.get(field, []):
             reference_items_raw.append(
                 {
@@ -158,6 +159,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     append_stage_refs(list(knowledge_plan["facts"].get("required_wiki_refs", [])), "wiki_refs", "facts")
     append_stage_refs(list(knowledge_plan["business"].get("summary_refs", [])), "wiki_refs", "business")
     append_stage_refs(list(knowledge_plan["business"].get("related_summary_refs", [])), "wiki_refs", "business")
+    append_stage_refs(list(knowledge_plan["experience"].get("guideline_entry_refs", [])), "guideline_refs", "experience")
     append_stage_refs(list(knowledge_plan["experience"].get("summary_refs", [])), "wiki_refs", "experience")
     append_stage_refs(list(knowledge_plan["experience"].get("guideline_refs", [])), "wiki_refs", "experience")
     append_stage_refs(list(knowledge_plan["experience"].get("related_summary_refs", [])), "wiki_refs", "experience")
@@ -310,6 +312,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "reference_summary": {
             "knowledge_ref_count": len(resolved.get("knowledge_refs", [])),
             "wiki_ref_count": len(resolved.get("wiki_refs", [])),
+            "guideline_ref_count": len(resolved.get("guideline_refs", [])),
             "template_ref_count": len(resolved.get("template_refs", [])),
             "check_ref_count": len(resolved.get("check_refs", [])),
         },
@@ -329,6 +332,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "business"],
             },
             "experience": {
+                "guideline_entry_refs": list(knowledge_plan["experience"].get("guideline_entry_refs", [])),
                 "wiki_refs_used": list(knowledge_plan["experience"].get("summary_refs", []))
                 + list(knowledge_plan["experience"].get("guideline_refs", [])),
                 "raw_refs_used": list(knowledge_plan["experience"].get("raw_refs_from_source_refs", [])),
@@ -337,7 +341,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 "guideline_raw_refs_used": [
                     str(item).replace("\\", "/")
                     for item in knowledge_plan["experience"].get("raw_refs_from_source_refs", [])
-                    if isinstance(item, str) and "/guidelines/" in str(item).replace("\\", "/").lower()
+                    if isinstance(item, str) and "/设计准则/" in str(item).replace("\\", "/").lower()
                 ],
                 "guideline_selection_reason": [],
             },

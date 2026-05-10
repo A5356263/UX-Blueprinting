@@ -1,7 +1,9 @@
 {
-  "pid": 13224,
-  "last_scan_utc": "2026-05-08T13:28:31+00:00",
-  "last_status": "watching",
-  "last_change_count": 0,
-  "watching_root": "E:/AI设计/体验蓝图构建思路/knowledge/raw"
+  "pid": 12368,
+  "last_trigger_utc": "2026-05-10T08:28:01+00:00",
+  "last_status": "ok",
+  "last_changed_files": [
+    "清单/source_manifest.generated.md",
+    "清单/source_manifest.md"
+  ]
 }

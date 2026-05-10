@@ -224,7 +224,6 @@ Repair Loop 至少输出以下正式产物：
 
 - `structure_missing`
 - `boundary_violation`
-- `trace_missing`
 - `coverage_gap`
 - `depth_insufficient`
 - `state_model_gap`
@@ -232,6 +231,12 @@ Repair Loop 至少输出以下正式产物：
 - `consistency_conflict`
 - `runtime_staleness`
 - `placeholder_residue`
+- `experience_business_consumption_gap`
+- `experience_guideline_consumption_gap`
+- `experience_copy_not_user_visible`
+- `experience_state_feedback_gap`
+- `experience_exception_handling_gap`
+- `experience_role_path_gap`
 
 #### `evidence`
 
@@ -341,9 +346,9 @@ Repair Loop 不要求一条 issue 对应一个修复动作。
 `operator_guidance` 必须是明确可执行的修复指导，不得只写抽象口号。  
 例如允许：
 
-- “补齐体验追踪映射章节”
+- “补齐审批详情页中的当前已有权限 / 新增权限 / 风险提示”
 - “新增失败态 / 阻断态 / 处理中状态”
-- “不要整稿重写，只修正文案合同矩阵”
+- “不要整稿重写，只修正当前异常节点的用户提示与下一步”
 
 不允许：
 

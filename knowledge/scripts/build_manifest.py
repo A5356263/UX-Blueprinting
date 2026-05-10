@@ -5,21 +5,21 @@ from pathlib import Path
 
 
 def classify(path: Path) -> tuple[str, str]:
-    if "business" in path.parts:
+    if "业务" in path.parts:
         return "business", "SRC-BIZ"
-    if "guidelines" in path.parts:
-        return "guidelines", "SRC-GDL"
+    if "设计准则" in path.parts:
+        return "设计准则", "SRC-GDL"
     return "inbox", "SRC-INB"
 
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     raw_root = root / "raw"
-    out_generated = raw_root / "manifests" / "source_manifest.generated.md"
-    out_canonical = raw_root / "manifests" / "source_manifest.md"
+    out_generated = raw_root / "清单" / "source_manifest.generated.md"
+    out_canonical = raw_root / "清单" / "source_manifest.md"
     rows: list[str] = []
     idx_map: dict[str, int] = {"SRC-BIZ": 0, "SRC-GDL": 0, "SRC-INB": 0}
-    files = sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "manifests" not in p.parts)
+    files = sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "清单" not in p.parts)
     for file in files:
         group, prefix = classify(file)
         idx_map[prefix] += 1

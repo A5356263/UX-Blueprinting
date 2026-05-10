@@ -25,6 +25,7 @@ REQUIRED_SECTIONS = {
 REFERENCE_SECTIONS = {
     "## Knowledge": "knowledge_refs",
     "## Wiki": "wiki_refs",
+    "## Design Guidelines": "guideline_refs",
     "## Templates": "template_refs",
     "## Checks": "check_refs",
 }
@@ -126,6 +127,15 @@ def parse_output_requirements(lines: list[str]) -> dict[str, object]:
     }
 
 
+def parse_raw_section_lines(lines: list[str]) -> list[str]:
+    values: list[str] = []
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if stripped:
+            values.append(stripped)
+    return values
+
+
 def parse_policy_section(lines: list[str]) -> dict[str, object]:
     by_subsection: dict[str, list[str]] = {}
     current = ""
@@ -184,6 +194,12 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
     sections = parse_sections(task_card_text)
     errors: list[str] = []
     warnings: list[str] = []
+    recognized_sections = (
+        REQUIRED_SECTIONS
+        | set(REFERENCE_SECTIONS.keys())
+        | set(OUTPUT_REQUIREMENT_SECTIONS.keys())
+        | {"## Task Scenario", "## Read Order", "## Notes", "## Knowledge Consumption Policy", "## Platform Optimizations"}
+    )
 
     missing_sections = sorted(section for section in REQUIRED_SECTIONS if section not in sections)
     for section in missing_sections:
@@ -238,10 +254,17 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "required_outputs": required_outputs,
         "knowledge_refs": [],
         "wiki_refs": [],
+        "guideline_refs": [],
         "template_refs": [],
         "check_refs": [],
         "knowledge_refs_details": [],
         "wiki_refs_details": [],
+        "raw_sections": {
+            section.replace("## ", "", 1): parse_raw_section_lines(lines)
+            for section, lines in sections.items()
+            if parse_raw_section_lines(lines)
+        },
+        "unparsed_sections": sorted(section.replace("## ", "", 1) for section in sections if section not in recognized_sections),
         "primary_knowledge_entries": [],
         "fallback_source_refs": [],
         "fallback_conditions": [],

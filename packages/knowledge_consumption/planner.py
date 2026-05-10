@@ -27,12 +27,12 @@ def _is_summary_ref(path: str) -> bool:
 
 def _is_guideline_summary(path: str) -> bool:
     normalized = path.replace("\\", "/").lower()
-    return "/guidelines/" in normalized
+    return "/设计准则/" in normalized
 
 
 def _is_business_summary(path: str) -> bool:
     normalized = path.replace("\\", "/").lower()
-    return "/business/" in normalized
+    return "/业务/" in normalized
 
 
 def _looks_like_experience_summary(path: str) -> bool:
@@ -52,9 +52,10 @@ def build_knowledge_consumption_plan(resolved: dict[str, object]) -> tuple[dict[
     domain = str(resolved.get("domain") or "").strip()
     task_refs = _dedupe_keep_order([*map(str, resolved.get("knowledge_refs", [])), *map(str, resolved.get("wiki_refs", []))])
     summary_refs = [ref for ref in task_refs if _is_summary_ref(ref)]
+    guideline_entry_refs = _dedupe_keep_order([str(item) for item in resolved.get("guideline_refs", []) if isinstance(item, str)])
 
     summary_metadata: dict[str, dict[str, object]] = {}
-    for summary_ref in summary_refs:
+    for summary_ref in _dedupe_keep_order(summary_refs + guideline_entry_refs):
         summary_metadata[summary_ref] = _read_summary_metadata(repo_root, summary_ref)
 
     facts_required_default = FACTS_REQUIRED_WIKI_BY_DOMAIN.get(domain, [])
@@ -63,7 +64,7 @@ def build_knowledge_consumption_plan(resolved: dict[str, object]) -> tuple[dict[
     business_summary_refs = _dedupe_keep_order([ref for ref in summary_refs if _is_business_summary(ref)])
     business_summary_refs = business_summary_refs[: DEFAULT_KNOWLEDGE_BUDGET["business"]["max_summary_refs"]]
 
-    guideline_refs = _dedupe_keep_order([ref for ref in summary_refs if _is_guideline_summary(ref)])
+    guideline_refs = _dedupe_keep_order([ref for ref in summary_refs if _is_guideline_summary(ref) and ref not in guideline_entry_refs])
     experience_summary_refs = _dedupe_keep_order([ref for ref in summary_refs if _looks_like_experience_summary(ref)])
     if not experience_summary_refs:
         experience_summary_refs = business_summary_refs[:]
@@ -144,6 +145,7 @@ def build_knowledge_consumption_plan(resolved: dict[str, object]) -> tuple[dict[
             "policy": STAGE_POLICIES["business"],
         },
         "experience": {
+            "guideline_entry_refs": guideline_entry_refs,
             "summary_refs": experience_summary_refs,
             "guideline_refs": guideline_refs,
             "related_summary_refs": experience_related,

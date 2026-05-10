@@ -213,7 +213,7 @@ summary 与 raw 保持：
 
 - 一次性编排更新：`python knowledge/scripts/update_wiki.py --apply`
 - 预览本次将更新什么：`python knowledge/scripts/update_wiki.py --dry-run`
-- 只更新单个 raw 对应 summary：`python knowledge/scripts/update_wiki.py --apply --only knowledge/raw/business/permission/15_page_carrier_semantics.md`
+- 只更新单个 raw 对应 summary：`python knowledge/scripts/update_wiki.py --apply --only knowledge/raw/业务/权限管理/15_页面载体语义.md`
 - 持续监听 raw 并自动触发：`python knowledge/scripts/auto_update_wiki.py --run-on-start`
 
 自动更新不会再使用 registry、block sync 或 compiled wiki page 写回机制。
@@ -244,7 +244,7 @@ summary 与 raw 保持：
 
 ### 新来源进入时
 
-1. 放入 `raw/business/`、`raw/guidelines/` 或 `raw/inbox/`
+1. 放入 `raw/业务/`、`raw/设计准则/` 或 `raw/inbox/`
 2. 更新 `source_manifest.md`
 3. 生成对应 summary
 4. 刷新 `index.md`

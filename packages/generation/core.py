@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_project_workspace_dir, get_specs_root_dir, get_templates_root_dir
+from packages.common import get_project_runtime_dir, get_project_workspace_dir, get_repo_root, get_specs_root_dir, get_templates_root_dir
+from packages.knowledge_consumption import parse_summary_metadata
 from packages.provenance import upsert_generated_provenance
 
 from .reasoning import (
@@ -79,30 +81,257 @@ def _extract_markdown_section(text: str, heading: str) -> list[str]:
     return collected
 
 
+def _load_experience_guideline_plan(project_id: str) -> tuple[list[str], list[str], list[str]]:
+    runtime_dir = get_project_runtime_dir(project_id)
+    context_manifest_path = runtime_dir / "context_manifest.json"
+    if not context_manifest_path.exists():
+        return [], [], []
+
+    try:
+        payload = json.loads(context_manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return [], [], []
+
+    plan = payload.get("knowledge_consumption_plan")
+    if not isinstance(plan, dict):
+        return [], [], []
+    experience_plan = plan.get("experience")
+    if not isinstance(experience_plan, dict):
+        return [], [], []
+
+    def _collect(field: str) -> list[str]:
+        return [
+            str(item).replace("\\", "/")
+            for item in experience_plan.get(field, [])
+            if isinstance(item, str) and str(item).strip()
+        ]
+
+    return _collect("guideline_entry_refs"), _collect("guideline_refs"), _collect("raw_refs_from_source_refs")
+
+
+def _read_context_manifest(project_id: str) -> dict[str, object] | None:
+    manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
+    if not manifest_path.exists():
+        return None
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _write_context_manifest(project_id: str, payload: dict[str, object]) -> None:
+    manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
+    manifest_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _dedupe_keep_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for value in values:
+        normalized = value.replace("\\", "/").strip()
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped
+
+
+TOKEN_RE = re.compile(r"[A-Za-z]{3,}|[\u4e00-\u9fff]{2,8}")
+TOKEN_STOPWORDS = {
+    "需要",
+    "判断",
+    "场景",
+    "方案",
+    "设计",
+    "任务",
+    "评估",
+    "当前",
+    "用户",
+    "系统",
+    "相关",
+    "原则",
+    "summary",
+    "readme",
+    "guidelines",
+}
+
+
+def _extract_signal_tokens(text: str) -> list[str]:
+    seen: set[str] = set()
+    tokens: list[str] = []
+    for match in TOKEN_RE.finditer(text.lower()):
+        token = match.group(0).strip()
+        if len(token) < 2 or token in TOKEN_STOPWORDS or token in seen:
+            continue
+        seen.add(token)
+        tokens.append(token)
+    return tokens
+
+
+def _read_guideline_candidate_text(repo_root: Path, summary_ref: str) -> tuple[str, list[str]]:
+    path = repo_root / Path(summary_ref.replace("/", "\\"))
+    if not path.exists() or not path.is_file():
+        return "", []
+
+    text = path.read_text(encoding="utf-8")
+    title = ""
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# "):
+            title = stripped[2:].strip()
+            break
+
+    trigger_lines = _extract_markdown_section(text, "## 2. 任务触发线索")[:6]
+    coverage_lines = _extract_markdown_section(text, "## 3. 覆盖内容")[:4]
+    candidate_text = "\n".join([title, *trigger_lines, *coverage_lines])
+    matched_fragments = [line for line in trigger_lines + coverage_lines if line]
+    return candidate_text, matched_fragments
+
+
+def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) -> list[str]:
+    candidates: list[str] = []
+    for entry_ref in entry_refs:
+        normalized = entry_ref.replace("\\", "/").strip()
+        if not normalized.endswith(".md"):
+            continue
+        entry_path = repo_root / Path(normalized.replace("/", "\\"))
+        if not entry_path.exists() or not entry_path.is_file():
+            continue
+
+        if entry_path.name.lower() == "readme.md":
+            sibling_refs = [
+                str(item.resolve().relative_to(repo_root.resolve())).replace("\\", "/")
+                for item in sorted(entry_path.parent.glob("*.md"))
+                if item.is_file() and item.name.lower() != "readme.md"
+            ]
+            candidates.extend(sibling_refs)
+
+        metadata = parse_summary_metadata(entry_path.read_text(encoding="utf-8"))
+        candidates.extend(
+            str(item).replace("\\", "/")
+            for item in metadata.get("related_summaries", [])
+            if isinstance(item, str)
+        )
+        if entry_path.name.lower() != "readme.md":
+            candidates.append(normalized)
+    return _dedupe_keep_order([ref for ref in candidates if "/设计准则/" in ref.lower()])
+
+
+def _select_guidelines_from_business(business_text: str, entry_refs: list[str]) -> tuple[list[str], list[str], list[dict[str, str]]]:
+    repo_root = get_repo_root()
+    candidate_refs = _collect_guideline_candidate_refs(repo_root, entry_refs)
+    business_text_lower = business_text.lower()
+    ranked: list[tuple[int, str, str]] = []
+
+    for summary_ref in candidate_refs:
+        candidate_text, fragments = _read_guideline_candidate_text(repo_root, summary_ref)
+        if not candidate_text:
+            continue
+        tokens = _extract_signal_tokens(candidate_text)
+        matched_tokens = [token for token in tokens if token in business_text_lower]
+        if not matched_tokens:
+            continue
+        score = len(matched_tokens)
+        reason_fragment = ""
+        for fragment in fragments:
+            fragment_tokens = _extract_signal_tokens(fragment)
+            if any(token in business_text_lower for token in fragment_tokens):
+                reason_fragment = fragment
+                break
+        if not reason_fragment and fragments:
+            reason_fragment = fragments[0]
+        ranked.append((score, summary_ref, reason_fragment))
+
+    ranked.sort(key=lambda item: (-item[0], item[1]))
+    selected_refs = [summary_ref for _, summary_ref, _ in ranked[:3]]
+
+    selected_raw_refs: list[str] = []
+    selection_reasons: list[dict[str, str]] = []
+    for _, summary_ref, reason_fragment in ranked[:3]:
+        summary_path = repo_root / Path(summary_ref.replace("/", "\\"))
+        metadata = parse_summary_metadata(summary_path.read_text(encoding="utf-8"))
+        raw_refs = [
+            str(item).replace("\\", "/")
+            for item in metadata.get("source_refs", [])
+            if isinstance(item, str) and "/设计准则/" in str(item).replace("\\", "/").lower()
+        ]
+        selected_raw_refs.extend(raw_refs[:1])
+        selection_reasons.append(
+            {
+                "guideline": summary_ref,
+                "reason": f"business_blueprint 命中了该指南的触发线索：{reason_fragment}" if reason_fragment else "business_blueprint 与该指南的任务触发线索存在明显重合。",
+            }
+        )
+
+    return selected_refs, _dedupe_keep_order(selected_raw_refs), selection_reasons
+
+
+def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list[str], list[str], list[dict[str, str]]]:
+    manifest = _read_context_manifest(project_id)
+    if not manifest:
+        return [], [], [], []
+
+    plan = manifest.get("knowledge_consumption_plan")
+    if not isinstance(plan, dict):
+        return [], [], [], []
+    experience_plan = plan.get("experience")
+    if not isinstance(experience_plan, dict):
+        return [], [], [], []
+
+    guideline_entry_refs = [
+        str(item).replace("\\", "/")
+        for item in experience_plan.get("guideline_entry_refs", [])
+        if isinstance(item, str) and str(item).strip()
+    ]
+    guideline_refs = [
+        str(item).replace("\\", "/")
+        for item in experience_plan.get("guideline_refs", [])
+        if isinstance(item, str) and str(item).strip()
+    ]
+    raw_refs_from_source_refs = [
+        str(item).replace("\\", "/")
+        for item in experience_plan.get("raw_refs_from_source_refs", [])
+        if isinstance(item, str) and str(item).strip()
+    ]
+
+    reasons: list[dict[str, str]] = []
+    business_text = _read_workspace_file(project_id, "business_blueprint.md")
+    if not guideline_refs and guideline_entry_refs and business_text.strip():
+        selected_guideline_refs, selected_guideline_raw_refs, reasons = _select_guidelines_from_business(business_text, guideline_entry_refs)
+        guideline_refs = _dedupe_keep_order(selected_guideline_refs)
+        raw_refs_from_source_refs = _dedupe_keep_order(raw_refs_from_source_refs + selected_guideline_raw_refs)
+        experience_plan["guideline_refs"] = guideline_refs
+        experience_plan["raw_refs_from_source_refs"] = raw_refs_from_source_refs
+        _write_context_manifest(project_id, manifest)
+    elif guideline_refs:
+        reasons = [
+            {
+                "guideline": guideline,
+                "reason": "该指南已作为 experience 阶段的明确设计指南输入进入上下文。",
+            }
+            for guideline in guideline_refs
+        ]
+    elif guideline_entry_refs:
+        reasons = [
+            {
+                "guideline": "",
+                "reason": "已保留 Design Guidelines 入口，但当前 business_blueprint 未形成足够明确的场景信号，暂未自动选中具体指南。",
+            }
+        ]
+
+    guideline_raw_refs = [ref for ref in raw_refs_from_source_refs if "/设计准则/" in ref.lower()]
+    return guideline_entry_refs, guideline_refs, guideline_raw_refs, reasons
+
+
 def _build_experience_prompt_preview(project_id: str) -> str:
     task_card_text = _read_source_file(project_id, "task_card.md")
     facts_text = _read_workspace_file(project_id, "facts.md")
     business_text = _read_workspace_file(project_id, "business_blueprint.md")
     gap_text = _read_workspace_file(project_id, "gap_list.md")
-    runtime_dir = get_project_runtime_dir(project_id)
-    context_manifest_path = runtime_dir / "context_manifest.json"
     contract_path = get_specs_root_dir() / "10_experience_blueprint_contract.md"
     template_path = get_templates_root_dir() / "experience_blueprint.template.md"
-    guideline_refs: list[str] = []
-    if context_manifest_path.exists():
-        try:
-            payload = json.loads(context_manifest_path.read_text(encoding="utf-8"))
-            plan = payload.get("knowledge_consumption_plan")
-            if isinstance(plan, dict):
-                experience_plan = plan.get("experience")
-                if isinstance(experience_plan, dict):
-                    guideline_refs = [
-                        str(item).replace("\\", "/")
-                        for item in experience_plan.get("guideline_refs", [])
-                        if isinstance(item, str) and str(item).strip()
-                    ]
-        except json.JSONDecodeError:
-            guideline_refs = []
+    guideline_entry_refs, guideline_refs, _, _ = _materialize_experience_guidelines(project_id)
 
     task_lines = _extract_bullets(task_card_text, limit=8)
     facts_lines = _first_lines(facts_text, limit=12)
@@ -130,7 +359,12 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     if not gap_lines:
         gap_lines = ["当前暂无显式待确认问题，需在生成时主动暴露不确定项。"]
 
-    guideline_lines = "\n".join(f"- {line}" for line in guideline_refs) if guideline_refs else "- 当前任务未命中显式指南导航，将按业务承接要求保守生成。"
+    if guideline_refs:
+        guideline_lines = "已选中的具体指南：\n" + "\n".join(f"- {line}" for line in guideline_refs)
+    elif guideline_entry_refs:
+        guideline_lines = "当前仅声明了指南入口，需先结合 business 选择具体指南：\n" + "\n".join(f"- {line}" for line in guideline_entry_refs)
+    else:
+        guideline_lines = "- 当前任务未命中显式指南导航，将按业务承接要求保守生成。"
     return (
         "# Experience Prompt 预览（仅调试）\n\n"
         "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
@@ -175,38 +409,10 @@ def _update_experience_guideline_usage(project_id: str) -> None:
 
     try:
         usage_report = json.loads(usage_report_path.read_text(encoding="utf-8"))
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return
 
-    plan = manifest.get("knowledge_consumption_plan")
-    if not isinstance(plan, dict):
-        return
-    experience_plan = plan.get("experience")
-    if not isinstance(experience_plan, dict):
-        return
-
-    guideline_refs = [
-        str(item).replace("\\", "/")
-        for item in experience_plan.get("guideline_refs", [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-    guideline_raw_refs = [
-        str(item).replace("\\", "/")
-        for item in experience_plan.get("raw_refs_from_source_refs", [])
-        if isinstance(item, str) and "/guidelines/" in str(item).replace("\\", "/").lower()
-    ]
-
-    business_text = _read_workspace_file(project_id, "business_blueprint.md")
-    reasons: list[str] = []
-    if any(token in business_text for token in ("状态", "反馈", "异常", "阻断")):
-        reasons.append("业务方案涉及状态反馈与异常阻断，需要补充反馈类设计指南。")
-    if any(token in business_text for token in ("文案", "说明", "提示")):
-        reasons.append("业务方案包含解释责任与提示语义，需要补充文案表达类设计指南。")
-    if any(token in business_text for token in ("页面", "弹窗", "抽屉", "列表")):
-        reasons.append("业务方案包含页面承载要求，需要补充容器与信息结构类设计指南。")
-    if not reasons and guideline_refs:
-        reasons.append("按方案承接要求补充通用交互设计指南，避免体验表达脱离业务边界。")
+    guideline_entry_refs, guideline_refs, guideline_raw_refs, reasons = _materialize_experience_guidelines(project_id)
 
     stage_usage = usage_report.setdefault("stage_usage", {})
     if not isinstance(stage_usage, dict):
@@ -215,6 +421,7 @@ def _update_experience_guideline_usage(project_id: str) -> None:
     if not isinstance(experience_usage, dict):
         return
 
+    experience_usage["guideline_entry_refs"] = guideline_entry_refs
     experience_usage["guideline_refs_used"] = guideline_refs
     experience_usage["guideline_raw_refs_used"] = guideline_raw_refs
     experience_usage["guideline_selection_reason"] = reasons

@@ -22,15 +22,15 @@ def list_raw_files(raw_root: Path) -> list[Path]:
     return sorted(
         p
         for p in raw_root.rglob("*.md")
-        if p.is_file() and "manifests" not in p.parts
+        if p.is_file() and "清单" not in p.parts
     )
 
 
 def source_group_for(path: Path) -> str:
-    if "business" in path.parts:
+    if "业务" in path.parts:
         return "business"
-    if "guidelines" in path.parts:
-        return "guidelines"
+    if "设计准则" in path.parts:
+        return "设计准则"
     return "inbox"
 
 

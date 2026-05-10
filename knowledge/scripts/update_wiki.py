@@ -64,7 +64,7 @@ def run_step(root: Path, script_name: str, extra_args: list[str] | None = None) 
 
 def changed_raw_files(root: Path, last_run_utc: str | None) -> list[Path]:
     raw_root = root / "raw"
-    files = sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "manifests" not in p.parts)
+    files = sorted(p for p in raw_root.rglob("*.md") if p.is_file() and "清单" not in p.parts)
     if not last_run_utc:
         return files
     try:

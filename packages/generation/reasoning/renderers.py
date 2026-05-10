@@ -27,7 +27,11 @@ def render_gap_list() -> str:
 
 
 def render_check_report() -> str:
-    return """# Check Report
+    return """# Check Report｜人读说明版
+
+> 本文件是 `projects/<project-id>/workspace/check_status.json` 的人读说明版。
+> 它只用于帮助理解检查结果，不作为 gate / validate / repair 的机器判断依据。
+> 机器判断请以 `check_status.json` 为准。
 
 ## Summary
 
@@ -57,6 +61,10 @@ def render_check_report() -> str:
 ## Infos
 
 - generate-* 已完成正式初稿写入。
+
+## 自然语言承接检查
+
+- not_run
 
 ## Machine Status
 

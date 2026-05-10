@@ -77,21 +77,21 @@ def _build_generic_pattern(project_id: str, task_context: dict[str, Any], check_
 
 def _build_domain_pattern(project_id: str, task_context: dict[str, Any], check_status: dict[str, Any]) -> dict[str, Any] | None:
     domain = str(task_context.get("domain") or "").strip()
-    if domain != "permission":
+    if not domain:
         return None
     if str(check_status.get("status") or "") != "passed":
         return None
     return classify_candidate(
         {
-            "memory_id": "pattern_permission_judgment_trace",
+            "memory_id": f"pattern_{domain}_judgment_trace",
             "kind": "pattern",
             "scope": "domain",
-            "title": "permission 任务需要显式展开业务判断追踪映射",
-            "rule": "permission 任务的 business blueprint 需要把关键审批、拦截与授权判断显式追到 J-xx / POS-xx，而不是只给结论。",
+            "title": f"{domain} 任务需要显式展开业务判断追踪映射",
+            "rule": f"{domain} 任务的 business blueprint 需要把关键判断与决策依据显式追到具体节点，而不是只给结论。",
             "why_it_helps": "这能为 experience 转译提供稳定依据，并减少 orphan judgment 与 coverage gap。",
-            "anti_pattern": "只写权限策略立场，不写判断链路、依据与被下游消费的追踪映射。",
+            "anti_pattern": "只写策略立场，不写判断链路、依据与被下游消费的追踪映射。",
             "applies_to_stage": "business",
-            "domain_tags": ["permission"],
+            "domain_tags": [domain],
             "task_type_tags": [],
             "classification_basis": [],
             "confidence": "high",

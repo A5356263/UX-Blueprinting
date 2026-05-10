@@ -50,8 +50,8 @@ def write_text(path: Path, content: str, force: bool) -> None:
 
 def run_task_bootstrap(
     project_id: str,
+    domain: str,
     task_name: str = "Demo Task",
-    domain: str = "permission",
     force: bool = False,
 ) -> int:
     templates_dir = get_templates_root_dir()
