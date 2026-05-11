@@ -1,8 +1,11 @@
 {
   "positive_samples": [],
   "negative_samples": [],
-  "issue_count": 0,
-  "issues": [],
-  "status": "passed",
+  "issue_count": 2,
+  "issues": [
+    "missing benchmark_positive sample under packages/examples/positive/",
+    "missing benchmark_negative sample under packages/examples/negative/"
+  ],
+  "status": "failed",
   "examples_root": "E:/AI设计/体验蓝图构建思路/packages/examples"
 }

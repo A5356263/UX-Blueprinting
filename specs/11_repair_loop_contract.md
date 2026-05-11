@@ -175,6 +175,10 @@ Repair Loop 至少输出以下正式产物：
 - `retry_scope_hint`
 - `status`
 
+如需要让 machine 更精确地表达“最小回退起点”，允许额外记录：
+
+- `upstream_backtrack_stage`
+
 ### 字段说明
 
 #### `issue_id`
@@ -284,6 +288,16 @@ Repair Loop 至少输出以下正式产物：
 #### `retry_scope_hint`
 
 推荐重跑范围提示，不是最终正式命令清单。
+
+#### `upstream_backtrack_stage`
+
+可选字段。  
+仅当 `upstream_backtrack_required=true` 时使用，用于表达最小回退起点，允许值为：
+
+- `facts`
+- `business`
+- `experience`
+- `final`
 
 #### `status`
 
@@ -613,6 +627,7 @@ Repair Loop 可视为落地完成，当以下条件同时满足：
   - 局部补修
   - 范围化重跑
   - 问题关闭
+- benchmark 基线缺失时，`sample-check` 不得空跑通过
 - 对现有通过样例不造成兼容性破坏
 
 ## 与其他模块的同步要求

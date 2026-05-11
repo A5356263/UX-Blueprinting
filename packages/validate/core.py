@@ -8,6 +8,7 @@ from typing import Any
 
 from packages.common import (
     get_project_gates_dir,
+    get_project_remediation_dir,
     get_project_runtime_dir,
     get_project_source_dir,
     get_project_workspace_dir,
@@ -81,6 +82,20 @@ FORBIDDEN_TERMS = {
         "未做模板补全",
     ],
 }
+
+
+def _print_repair_guidance(project_id: str) -> None:
+    remediation_dir = get_project_remediation_dir(project_id)
+    summary_path = remediation_dir / "repair_summary.md"
+    retry_scope_path = remediation_dir / "retry_scope.json"
+
+    print(f"当前检查失败，请执行：python -m packages repair-plan {project_id}")
+    if summary_path.exists() or retry_scope_path.exists():
+        print("如已有 remediation 产物，请优先读取：")
+        if summary_path.exists():
+            print(f"- {summary_path}")
+        if retry_scope_path.exists():
+            print(f"- {retry_scope_path}")
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
@@ -1529,6 +1544,8 @@ def run_validate_outputs(project_id: str) -> int:
     print(f"Validation finished: {report_path}")
     print(f"Machine status written: {status_path}")
     append_command_if_provenance_exists(project_id, "validate")
+    if status == "failed":
+        _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
 
 
@@ -1609,6 +1626,8 @@ def run_coverage_check(project_id: str) -> int:
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
     append_command_if_provenance_exists(project_id, "coverage")
+    if status == "failed":
+        _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
 
 
@@ -1704,6 +1723,8 @@ def run_facts_gate(project_id: str) -> int:
     print(f"Facts gate finished: {report_path}")
     print(f"Facts gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-facts")
+    if status == "failed":
+        _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
 
 
@@ -1757,6 +1778,8 @@ def run_business_gate(project_id: str) -> int:
     print(f"Business gate finished: {report_path}")
     print(f"Business gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-business")
+    if status == "failed":
+        _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
 
 
@@ -1818,4 +1841,6 @@ def run_experience_gate(project_id: str) -> int:
     print(f"Experience gate finished: {report_path}")
     print(f"Experience gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-experience")
+    if status == "failed":
+        _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1

@@ -1,0 +1,19 @@
+{
+  "project_id": "employee-permission-apply",
+  "scope_version": "1.0",
+  "recommended_commands": [
+    "python -m packages gate-business employee-permission-apply",
+    "python -m packages gate-experience employee-permission-apply",
+    "python -m packages validate employee-permission-apply",
+    "python -m packages coverage employee-permission-apply"
+  ],
+  "backtrack_required": false,
+  "highest_required_stage": "business",
+  "rationale": [
+    "BIZ-3DC7E33A 需要从 business 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "EXP-7274D601 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "EXP-E59C49D9 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "CHK-1B10D647 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-1C9A809E 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。"
+  ]
+}

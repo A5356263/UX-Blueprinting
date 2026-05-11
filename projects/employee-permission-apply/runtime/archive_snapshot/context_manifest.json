@@ -1,0 +1,543 @@
+{
+  "task_id": "employee-permission-apply",
+  "resolved_from": "projects/employee-permission-apply/runtime/task_card_resolved.json",
+  "reference_count": 28,
+  "task_contract": {
+    "task_goal": [
+      "为\"员工自助申请权限\"能力产出完整的业务蓝图和体验蓝图",
+      "本次输出服务于产品方案评审和交互设计启动"
+    ],
+    "task_scenario": [
+      "基于低完整度需求文档，由 AI 自行推导补足合理的业务判断、页面承载方式、主流程与异常流程、权限安全边界、员工端自解释设计和管理端配置策略",
+      "这是新建任务，覆盖全链路（facts → business → experience）",
+      "需求文档刻意不提供页面结构、字段清单、交互流程、文案等细节，测试 AI 在低完整度输入下的自主推导能力"
+    ],
+    "execution_constraints": [
+      "不得臆造业务事实",
+      "信息不足处保留 `[GAP]`",
+      "正式产出必须写入 `workspace/`",
+      "不得用聊天回复替代正式文档产物",
+      "facts 阶段不得把引用知识提升为当前任务的已确认事实",
+      "business 阶段不得输出 UI 方案或实现方案",
+      "experience 阶段不得输出高保真视觉稿或研发实现细节",
+      "**阶段门禁**：每个阶段必须 gate 通过后才能进入下一阶段。不得在 facts gate 通过前生成 business_blueprint.md，不得在 business gate 通过前生成 experience_blueprint.md。不得一次性写完所有产物再回头补 gate。"
+    ],
+    "read_order": [
+      "先读本文件",
+      "再读 `Required Inputs`",
+      "生成 facts.md（详见 `specs/08_fact_extraction_contract.md`）→ 运行 `python -m packages gate-facts employee-permission-apply`，通过才能进入下一步",
+      "生成 business_blueprint.md（详见 `specs/09_business_blueprint_contract.md`）→ 运行 `python -m packages gate-business employee-permission-apply`，通过才能进入下一步",
+      "生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience employee-permission-apply`，通过才能进入下一步",
+      "运行 `python -m packages validate employee-permission-apply` 和 `python -m packages coverage employee-permission-apply`",
+      "运行 `python -m packages archive employee-permission-apply`（产物镜像到 exports/）"
+    ],
+    "notes": [
+      "当前为模板占位，可按任务补充",
+      "若任务明确只做到某一阶段，可在 `Task Scenario` 中标注并在 `Required Outputs` 中裁剪"
+    ]
+  },
+  "knowledge_consumption_plan": {
+    "mode": "wiki_routed_raw_precision",
+    "facts": {
+      "required_wiki_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
+      ],
+      "raw_refs_from_source_refs": [],
+      "policy": "wiki_for_boundary_only"
+    },
+    "business": {
+      "summary_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
+      ],
+      "related_summary_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
+      ],
+      "raw_refs_from_source_refs": [
+        "knowledge/raw/业务/权限管理/README.md",
+        "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "knowledge/raw/业务/权限管理/02_术语表.md",
+        "knowledge/raw/业务/权限管理/03_业务对象.md",
+        "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "knowledge/raw/业务/权限管理/11_任务场景.md"
+      ],
+      "policy": "summary_refs_route_to_raw"
+    },
+    "experience": {
+      "guideline_entry_refs": [
+        "knowledge/wiki/index.md"
+      ],
+      "summary_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
+      ],
+      "guideline_refs": [],
+      "related_summary_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
+      ],
+      "raw_refs_from_source_refs": [
+        "knowledge/raw/业务/权限管理/README.md",
+        "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "knowledge/raw/业务/权限管理/02_术语表.md",
+        "knowledge/raw/业务/权限管理/03_业务对象.md",
+        "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "knowledge/raw/业务/权限管理/11_任务场景.md"
+      ],
+      "policy": "business_first_translation_with_raw_support"
+    }
+  },
+  "references": [
+    {
+      "reference": "knowledge/wiki/index.md",
+      "group": "knowledge_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/index.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md"
+    },
+    {
+      "reference": "knowledge/wiki/index.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/index.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md"
+    },
+    {
+      "reference": "knowledge/wiki/index.md",
+      "group": "guideline_refs",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/index.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md"
+    },
+    {
+      "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "templates/facts.template.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md"
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md"
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md"
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md"
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "templates/check_report.template.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md"
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md"
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md"
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md"
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/README.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/README.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/README.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/README.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md"
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "group": "wiki_refs",
+      "consumed_by": [
+        "business",
+        "experience",
+        "facts"
+      ],
+      "routed_from_summary": "",
+      "route_reason": "",
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/README.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/README.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/README.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/README.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/00_领域概述.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/00_领域概述.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/01_范围与边界.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/02_术语表.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/02_术语表.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/02_术语表.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/02_术语表.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/03_业务对象.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/04_对象关系.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/10_能力地图.md"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "group": "raw_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "route_reason": "source_refs",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "destination": "projects/employee-permission-apply/runtime/context_bundle/knowledge/raw/业务/权限管理/11_任务场景.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/11_任务场景.md"
+    }
+  ],
+  "warnings": [],
+  "knowledge_entry_mode": "summary_first_with_raw_fallback",
+  "strict_mode": false,
+  "directory_refs_detected": [],
+  "directory_refs_resolved_to_index": [],
+  "directory_refs_fallback_copied": [],
+  "narrowed_references": [],
+  "stage_boundaries": {
+    "facts": [],
+    "business": [],
+    "experience": []
+  },
+  "facts_extraction_boundary": [],
+  "business_judgment_boundary": [],
+  "experience_translation_boundary": []
+}

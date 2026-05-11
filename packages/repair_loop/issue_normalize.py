@@ -48,6 +48,10 @@ def _severity_rank(value: str) -> int:
     return {"blocker": 0, "warning": 1, "info": 2}.get(value, 9)
 
 
+def _stage_backtrack_rank(value: str | None) -> int:
+    return {"facts": 3, "business": 2, "experience": 1, "final": 0, "runtime": 0, None: -1, "": -1}.get(value, -1)
+
+
 def _stage_artifact_path(project_id: str, stage: str) -> Path | None:
     workspace_dir = get_project_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -228,6 +232,27 @@ def _infer_upstream_backtrack_required(raw_issue: dict[str, Any], stage: str, ca
     return False
 
 
+def _infer_upstream_backtrack_stage(raw_issue: dict[str, Any], stage: str, upstream_backtrack_required: bool) -> str | None:
+    if not upstream_backtrack_required:
+        return None
+
+    message = raw_issue["message"].lower()
+    if "facts gate" in message or "facts stage" in message:
+        return "facts"
+    if "business gate" in message or "business stage" in message:
+        return "business"
+    if "experience gate" in message or "experience stage" in message:
+        return "experience"
+
+    if stage == "business":
+        return "facts"
+    if stage == "experience":
+        return "business"
+    if stage == "final":
+        return "experience"
+    return None
+
+
 def _infer_repair_mode(category: str, stage: str, severity: str, inspection: dict[str, Any], upstream_backtrack_required: bool) -> str:
     if upstream_backtrack_required:
         return "backtrack_upstream_stage"
@@ -341,12 +366,13 @@ def _suggested_actions(category: str, targets: list[str], inspection: dict[str, 
     return actions
 
 
-def _retry_scope_hint(stage: str, source: str, upstream_backtrack_required: bool) -> list[str]:
-    if upstream_backtrack_required or stage == "facts":
+def _retry_scope_hint(stage: str, source: str, upstream_backtrack_required: bool, upstream_backtrack_stage: str | None) -> list[str]:
+    required_stage = upstream_backtrack_stage or stage
+    if required_stage == "facts":
         return ["gate-facts", "gate-business", "gate-experience", "validate", "coverage"]
-    if stage == "business":
+    if required_stage == "business":
         return ["gate-business", "gate-experience", "validate", "coverage"]
-    if stage == "experience":
+    if required_stage == "experience":
         return ["gate-experience", "validate", "coverage"]
     if source == "runtime":
         return ["validate", "coverage"]
@@ -361,6 +387,7 @@ def normalize_issue_index(project_id: str, collected: dict[str, Any]) -> dict[st
         targets = _infer_target_artifacts(project_id, stage, raw_issue["source"], raw_issue["message"], raw_issue)
         category, inspection = _infer_category(raw_issue, project_id, stage)
         upstream_backtrack_required = _infer_upstream_backtrack_required(raw_issue, stage, category)
+        upstream_backtrack_stage = _infer_upstream_backtrack_stage(raw_issue, stage, upstream_backtrack_required)
         description = _build_description(stage, category, raw_issue, inspection, targets)
         issue_id = _build_issue_id(stage, raw_issue["source"], category, targets, description)
 
@@ -381,6 +408,10 @@ def normalize_issue_index(project_id: str, collected: dict[str, Any]) -> dict[st
             existing["upstream_backtrack_required"] = bool(
                 existing.get("upstream_backtrack_required") or upstream_backtrack_required
             )
+            if upstream_backtrack_stage:
+                previous_stage = str(existing.get("upstream_backtrack_stage") or "")
+                if _stage_backtrack_rank(upstream_backtrack_stage) > _stage_backtrack_rank(previous_stage):
+                    existing["upstream_backtrack_stage"] = upstream_backtrack_stage
             for evidence_item in _build_evidence(raw_issue, inspection):
                 if evidence_item not in existing["evidence"]:
                     existing["evidence"].append(evidence_item)
@@ -408,7 +439,13 @@ def normalize_issue_index(project_id: str, collected: dict[str, Any]) -> dict[st
             "repair_mode": _infer_repair_mode(category, stage, raw_issue["severity"], inspection, upstream_backtrack_required),
             "suggested_actions": _suggested_actions(category, targets, inspection),
             "upstream_backtrack_required": upstream_backtrack_required,
-            "retry_scope_hint": _retry_scope_hint(stage, raw_issue["source"], upstream_backtrack_required),
+            "upstream_backtrack_stage": upstream_backtrack_stage,
+            "retry_scope_hint": _retry_scope_hint(
+                stage,
+                raw_issue["source"],
+                upstream_backtrack_required,
+                upstream_backtrack_stage,
+            ),
             "related_sources": [raw_issue["source"]],
             "status": "open",
         }

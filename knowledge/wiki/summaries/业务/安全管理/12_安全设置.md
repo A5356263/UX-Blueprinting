@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 安全管理
 - semantic_status: pending
-- semantic_updated_at: 2026-05-10
-- updated_at: 2026-05-10
+- semantic_updated_at: 2026-05-11
+- updated_at: 2026-05-11
 - related_summaries:
   - knowledge/wiki/summaries/业务/安全管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/安全管理/10_安全水印.md
