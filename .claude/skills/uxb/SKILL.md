@@ -70,7 +70,8 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 - 任务摘要必须等待用户确认。
 - 用户明确确认后，才通过 `python -m packages` 或仓库允许的转发脚本进入主链路。
 - 正式产物写入 `projects/<project-id>/`。
-- 蓝图完成后不自动写 knowledge，只能提取知识候选，等用户确认。
+- 蓝图完成后必须做一次知识变更检查。
+- 蓝图完成后不自动写 knowledge，只能先输出候选清单，等用户确认后再写入知识候选区。
 
 ### 4. 知识维护态
 
@@ -134,6 +135,12 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 
 知识候选区是知识维护前的缓冲层，不是正式知识库，也不是 UXB 主链路产物。
 
+它更接近：
+
+```text
+待入库知识卡片
+```
+
 统一目录：
 
 ```text
@@ -147,10 +154,11 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 
 - 目录不存在时可以按需创建。
 - 每条候选知识单独一个 Markdown 文件。
-- 候选状态只用：`待确认`、`已确认待入库`、`已入库`、`暂缓`、`已拒绝`。
 - 候选不等于正式知识，不能直接当后续任务的稳定依据。
 - 只有用户明确要求记录、同意记录、或同意沉淀时才创建候选。
 - 入库前必须有用户确认。
+- 候选正文不写流程单式状态字段，不写用户确认记录和入库处理记录。
+- 候选中的不确定点统一使用 `[GAP]`、`[QUESTION]`、`[CONFLICT]`。
 
 默认模板见 [assets/knowledge_candidate.template.md](assets/knowledge_candidate.template.md)。
 详细规则见 [references/knowledge_candidate_guide.md](references/knowledge_candidate_guide.md)。
@@ -165,6 +173,23 @@ description: Use UXB as a business and experience consulting skill, a task-shapi
 
 默认模板见 [assets/task_summary.template.md](assets/task_summary.template.md)。
 详细规则见 [references/task_submission_guide.md](references/task_submission_guide.md)。
+
+## 蓝图后的知识变更检查
+
+正式蓝图任务完成后，必须做一次知识变更检查。
+
+这一步不是复制需求文档，也不是复制蓝图，而是判断这次任务是否对长期知识库产生影响。
+
+必须检查四类变化：
+
+- 新增知识：是否新增能力、菜单、页面、字段、状态、流程、权限、角色、校验规则
+- 修正知识：是否发现现有 knowledge 中的旧路径、旧规则、旧结构需要更新
+- 冲突知识：是否与现有 raw 结论不一致
+- 补缺知识：是否发现当前知识库缺少必要规则、边界、路径或解释
+
+如果发现候选知识，先给用户一个候选清单，再等确认后写入 `知识候选区/`。
+
+如果没有发现长期知识变化，要明确告诉用户这次蓝图没有需要沉淀的候选知识。
 
 ## Execution
 
@@ -200,6 +225,7 @@ python -m packages capability-show <capability-id>
 - 不重构 knowledge 子系统。
 - 不把知识候选区写成正式知识库。
 - 不自动把聊天原文写入 knowledge。
+- 不把候选区改成审批系统或人工流程单。
 - 不让用户先理解内部状态名才能继续。
 
 ## Final Standard
