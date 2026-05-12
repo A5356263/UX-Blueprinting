@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 日常报销
 - semantic_status: pending
-- semantic_updated_at: 2026-05-11
-- updated_at: 2026-05-11
+- semantic_updated_at: 2026-05-12
+- updated_at: 2026-05-12
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/日常报销/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/日常报销/10_日常报销.md

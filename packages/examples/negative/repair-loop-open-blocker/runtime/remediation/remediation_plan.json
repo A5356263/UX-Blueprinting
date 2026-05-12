@@ -1,0 +1,22 @@
+{
+  "project_id": "repair-loop-open-blocker",
+  "plan_version": "1.0",
+  "open_issue_count": 1,
+  "blocker_count": 1,
+  "warning_count": 0,
+  "repair_units": [
+    {
+      "unit_id": "RU-NEGATIVE-001",
+      "stage": "experience",
+      "target_artifact": "workspace/experience_blueprint.md",
+      "issue_ids": [
+        "EXP-NEGATIVE-001"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "验证 negative benchmark 能暴露 open blocker，不用于真实修复。",
+      "required_inputs": [],
+      "operator_guidance": "这是最小负向样例，不需要执行真实修复。",
+      "completion_signal": "sample-check 能识别该样例具有 blocking or remediation pressure。"
+    }
+  ]
+}

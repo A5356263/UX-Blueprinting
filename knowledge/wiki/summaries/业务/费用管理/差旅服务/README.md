@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 差旅服务
 - semantic_status: pending
-- semantic_updated_at: 2026-05-11
-- updated_at: 2026-05-11
+- semantic_updated_at: 2026-05-12
+- updated_at: 2026-05-12
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
