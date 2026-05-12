@@ -28,6 +28,7 @@ STAGE_REQUIRED_HEADINGS = {
         "## 开放问题与缺口",
     ],
     "business_blueprint.md": [
+        "## 0. 本次关键设计判断",
         "## 1. 一句话结论",
         "## 2. 需求是否成立",
         "## 3. 值不值得做",
@@ -40,6 +41,7 @@ STAGE_REQUIRED_HEADINGS = {
         "## 附录：事实、知识与判断追踪",
     ],
     "experience_blueprint.md": [
+        "## 0. 本次关键设计判断",
         "## 1. 交互流程总览",
         "## 2. 主交互流程",
         "## 3. 次交互流程",
@@ -206,47 +208,70 @@ ROLE_ALIASES: dict[str, list[str]] = {
     "审批人": ["审批人", "组织负责人"],
 }
 
-HANDOFF_FLOW_CHECKS: list[tuple[str, list[str]]] = [
-    ("超管配置", ["超管", "配置", "启用"]),
-    ("员工发起申请", ["员工", "申请权限", "提交"]),
-    ("系统前置校验", ["校验", "拦截", "认证"]),
-    ("审批人审批", ["审批人", "同意", "否决"]),
-    ("自动授权或拒绝", ["自动", "授权"]),
-    ("结果通知员工", ["通知", "员工"]),
-]
+HANDOFF_CATEGORY_LABELS = {
+    "roles": "必须覆盖的角色",
+    "flows": "必须闭环的主流程",
+    "exceptions": "必须处理的异常",
+    "states": "必须解释的状态",
+    "risks": "必须保护的风险",
+}
 
-HANDOFF_EXCEPTION_CHECKS: list[tuple[str, list[str], list[str]]] = [
-    ("互斥模式冲突拦截", ["互斥", "冲突"], ["无法同时开启", "互斥"]),
-    ("关闭模式时在途流程阻断", ["关闭", "在途"], ["关闭失败", "未完成审批", "在途"]),
-    ("资金用户校验失败", ["资金用户", "代发付款"], ["资金用户", "代发付款", "无法申请"]),
-    ("子管理员模式拦截", ["子管理员"], ["子管理员", "不可通过自助申请获得"]),
-]
+HANDOFF_GENERIC_PHRASES = {
+    "roles": ["角色", "配置方", "申请方", "审批方"],
+    "flows": ["主流程", "流程", "路径", "闭环"],
+    "exceptions": ["异常", "阻断", "拦截", "失败"],
+    "states": ["状态", "反馈", "结果"],
+    "risks": ["风险", "保护", "治理"],
+}
 
-HANDOFF_STATE_CHECKS: list[tuple[str, list[str], list[str]]] = [
-    ("模式状态", ["未启用", "已启用"], ["未启用", "已启用"]),
-    ("申请单状态", ["审批中", "已通过", "已拒绝", "已撤销"], ["审批中", "已通过", "已拒绝", "已撤销"]),
-    ("权限生效结果", ["生效", "通过"], ["现在可以使用", "自动生效", "权限正在生效中"]),
-]
+HANDOFF_PHRASE_STOPWORDS = {
+    "必须覆盖的角色",
+    "必须闭环的主流程",
+    "必须处理的异常",
+    "必须解释的状态",
+    "必须保护的风险",
+    "experience阶段必须承接以下内容",
+    "后续experience阶段必须承接的内容",
+    "后续experience阶段必须承接的内容：",
+    "可作为设计建议的内容",
+    "角色",
+    "流程",
+    "异常",
+    "状态",
+    "风险",
+    "配置方",
+    "申请方",
+    "审批方",
+}
 
-HANDOFF_RISK_CHECKS: list[tuple[str, list[str], list[str], str]] = [
-    (
-        "审批人信息密度不足导致盲目审批",
-        ["审批人负担过重", "审批页需要展示足够的前后对比信息"],
-        ["当前已有权限", "申请获取的权限", "申请后将新增"],
-        "承接检查：business_blueprint.md 强调审批人侧需要看到“当前已有权限 / 申请内容 / 新增影响”的判断辅助，但 experience_blueprint.md 还缺少足够完整的审批对比信息。",
-    ),
-    (
-        "敏感权限绕过",
-        ["敏感权限绕过", "敏感应用"],
-        ["敏感应用", "不可申请", "联系企业管理员"],
-        "承接检查：business_blueprint.md 已把敏感权限绕过列为关键风险，但 experience_blueprint.md 还没有把敏感应用不可自助申请的保护策略转译成用户可见规则或提示。",
-    ),
-    (
-        "互斥认知盲区",
-        ["认知盲区", "互斥提示需要说明原因"],
-        ["审批链路", "冲突", "互斥"],
-        "承接检查：business_blueprint.md 要求互斥提示解释“为什么不能同时开启”，但 experience_blueprint.md 还没有把原因说明转成用户可理解的提示。",
-    ),
+HANDOFF_SIGNAL_KEYWORDS = [
+    "互斥",
+    "冲突",
+    "关闭",
+    "审批",
+    "审批人",
+    "权限",
+    "员工",
+    "管理员",
+    "范围",
+    "申请",
+    "超时",
+    "失败",
+    "拒绝",
+    "通过",
+    "未完成",
+    "校验",
+    "配置",
+    "通知",
+    "结果",
+    "生效",
+    "来源",
+    "查询",
+    "导出",
+    "敏感",
+    "时效",
+    "离职",
+    "兜底",
 ]
 
 
@@ -737,6 +762,121 @@ def count_pattern_matches(pattern: re.Pattern[str], text: str) -> int:
 
 def count_role_mentions(text: str, aliases: dict[str, list[str]]) -> dict[str, bool]:
     return {role: contains_any_phrase(text, role_aliases) for role, role_aliases in aliases.items()}
+
+
+def strip_markdown_inline(text: str) -> str:
+    cleaned = text.replace("**", "").replace("`", "").strip()
+    return re.sub(r"^#+\s*", "", cleaned).strip()
+
+
+def normalize_handoff_line(text: str) -> str:
+    cleaned = strip_markdown_inline(text)
+    return re.sub(r"^\s*(?:[-*]|\d+\.)\s*", "", cleaned).strip()
+
+
+def normalize_handoff_phrase(text: str) -> str:
+    return re.sub(r"[^\w\u4e00-\u9fff]", "", strip_markdown_inline(text))
+
+
+def is_meaningful_handoff_phrase(text: str) -> bool:
+    normalized = normalize_handoff_phrase(text)
+    if len(normalized) < 2:
+        return False
+    return normalized not in {normalize_handoff_phrase(item) for item in HANDOFF_PHRASE_STOPWORDS}
+
+
+def extract_handoff_requirements(section_text: str) -> dict[str, list[str]]:
+    items = {key: [] for key in HANDOFF_CATEGORY_LABELS}
+    current_category: str | None = None
+
+    for raw_line in section_text.splitlines():
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        normalized = normalize_handoff_line(stripped)
+        matched_category = next(
+            (key for key, label in HANDOFF_CATEGORY_LABELS.items() if label in normalized),
+            None,
+        )
+        if matched_category:
+            current_category = matched_category
+            continue
+        if "可作为设计建议的内容" in normalized:
+            current_category = None
+            continue
+        if current_category is None:
+            continue
+
+        is_item_line = bool(re.match(r"^\s*(?:[-*]|\d+\.)\s+", raw_line)) or stripped.startswith("**") or stripped.startswith("###")
+        if not is_item_line:
+            continue
+
+        item_text = normalize_handoff_line(stripped)
+        if not item_text or item_text in HANDOFF_CATEGORY_LABELS.values():
+            continue
+        items[current_category].append(item_text)
+
+    return {key: dedupe_keep_order(value) for key, value in items.items()}
+
+
+def extract_handoff_match_phrases(item_text: str, category: str) -> list[str]:
+    candidates: list[str] = [item_text]
+    split_queue = [item_text]
+
+    if "：" in item_text:
+        head, tail = item_text.split("：", 1)
+        split_queue.extend([head, tail])
+    elif ":" in item_text:
+        head, tail = item_text.split(":", 1)
+        split_queue.extend([head, tail])
+
+    for segment in split_queue:
+        candidates.extend(re.split(r"[→/、，,；;（）()+]", segment))
+        if category in {"exceptions", "states", "risks"}:
+            candidates.extend(re.split(r"(?:并|或|与|和)", segment))
+
+    cleaned_candidates: list[str] = []
+    for candidate in candidates:
+        cleaned = normalize_handoff_line(candidate)
+        cleaned = re.sub(r"^(?:配置方|申请方|审批方)\s*[:：]?\s*", "", cleaned)
+        cleaned = cleaned.strip(" -:：")
+        if not is_meaningful_handoff_phrase(cleaned):
+            continue
+        cleaned_candidates.append(cleaned)
+        if category == "roles" and cleaned.endswith("管理员") and len(cleaned) > 3:
+            cleaned_candidates.append("管理员")
+        if category in {"exceptions", "states", "risks"}:
+            for suffix in ["风险", "状态", "流程", "模式", "能力", "结果", "机制", "策略"]:
+                if cleaned.endswith(suffix) and len(cleaned) > len(suffix) + 1:
+                    trimmed = cleaned[: -len(suffix)]
+                    if is_meaningful_handoff_phrase(trimmed):
+                        cleaned_candidates.append(trimmed)
+            for keyword in HANDOFF_SIGNAL_KEYWORDS:
+                if keyword in cleaned:
+                    cleaned_candidates.append(keyword)
+
+    return dedupe_keep_order(cleaned_candidates)
+
+
+def handoff_item_match_count(item_text: str, target_text: str, category: str) -> tuple[int, list[str]]:
+    phrases = extract_handoff_match_phrases(item_text, category)
+    hit_count = sum(1 for phrase in phrases if contains_phrase(target_text, phrase))
+    return hit_count, phrases
+
+
+def handoff_item_is_covered(item_text: str, target_text: str, category: str) -> tuple[bool, list[str]]:
+    hit_count, phrases = handoff_item_match_count(item_text, target_text, category)
+    required_hits = 1
+    if category in {"flows", "exceptions", "states", "risks"} and len(phrases) >= 3:
+        required_hits = 2
+    return hit_count >= required_hits, phrases
+
+
+def summarize_handoff_item(item_text: str, limit: int = 24) -> str:
+    normalized = normalize_handoff_line(item_text)
+    if len(normalized) <= limit:
+        return normalized
+    return f"{normalized[:limit]}..."
 
 
 def extract_principle_refs(
@@ -1252,9 +1392,6 @@ def analyze_experience_blueprint(
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
-    if "审批人" in business_text and not contains_any_phrase(experience_text, ["审批详情页", "权限申请审批", "当前已有权限"]):
-        add_issue(issues, "warning", "experience_blueprint.md 提到了审批人流程，但审批详情页还没有体现足够的判断辅助信息")
-
     metrics = {
         "flow_count": flow_count,
         "page_inventory_item_count": page_inventory_item_count,
@@ -1289,80 +1426,98 @@ def analyze_natural_language_handoff(
             experience_sections.get("6. 状态与反馈文案", ""),
         ]
     )
+    handoff_requirements = extract_handoff_requirements(handover_section)
 
-    required_roles = {
-        role: aliases
-        for role, aliases in ROLE_ALIASES.items()
-        if contains_any_phrase(handover_section or business_text, aliases)
-    }
-    role_hits = count_role_mentions(experience_signal_text, required_roles or ROLE_ALIASES)
-    required_role_count = len(required_roles or ROLE_ALIASES)
-    covered_role_count = sum(1 for covered in role_hits.values() if covered)
-    coverage_lines.append(f"角色路径覆盖：{covered_role_count}/{required_role_count}")
-    for role, covered in role_hits.items():
-        if role in (required_roles or ROLE_ALIASES) and not covered:
+    role_items = handoff_requirements.get("roles", [])
+    if not role_items:
+        required_roles = {
+            role: aliases
+            for role, aliases in ROLE_ALIASES.items()
+            if contains_any_phrase(handover_section or business_text, aliases)
+        }
+        role_hits = count_role_mentions(experience_signal_text, required_roles or ROLE_ALIASES)
+        required_role_count = len(required_roles or ROLE_ALIASES)
+        covered_role_count = sum(1 for covered in role_hits.values() if covered)
+        coverage_lines.append(f"角色路径覆盖：{covered_role_count}/{required_role_count}")
+        for role, covered in role_hits.items():
+            if role in (required_roles or ROLE_ALIASES) and not covered:
+                add_issue(
+                    issues,
+                    "warning",
+                    f"承接检查：business_blueprint.md 要求覆盖“{role}”角色路径，但 experience_blueprint.md 还没有给出这类角色的清晰任务路径或页面承接。",
+                )
+    else:
+        covered_role_count = 0
+        for item_text in role_items:
+            covered, _phrases = handoff_item_is_covered(item_text, experience_signal_text, "roles")
+            if covered:
+                covered_role_count += 1
+                continue
             add_issue(
                 issues,
                 "warning",
-                f"承接检查：business_blueprint.md 要求覆盖“{role}”角色路径，但 experience_blueprint.md 还没有给出这类角色的清晰任务路径或页面承接。",
+                f"承接检查：business_blueprint.md 已点名角色要求“{summarize_handoff_item(item_text)}”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。",
             )
+        coverage_lines.append(f"角色路径覆盖：{covered_role_count}/{len(role_items)}")
+        required_role_count = len(role_items)
 
-    required_flow_checks = [item for item in HANDOFF_FLOW_CHECKS if contains_any_phrase(handover_section or business_text, item[1])]
+    flow_items = handoff_requirements.get("flows", [])
     covered_flow_count = 0
-    for flow_name, required_phrases in required_flow_checks:
-        if contains_any_phrase(experience_signal_text, required_phrases):
+    for item_text in flow_items:
+        covered, _phrases = handoff_item_is_covered(item_text, experience_signal_text, "flows")
+        if covered:
             covered_flow_count += 1
-        else:
-            add_issue(
-                issues,
-                "warning",
-                f"承接检查：business_blueprint.md 明确要求主流程闭环包含“{flow_name}”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。",
-            )
-    coverage_lines.append(f"主流程闭环覆盖：{covered_flow_count}/{len(required_flow_checks)}")
-
-    required_exception_count = 0
-    covered_exception_count = 0
-    for exception_name, business_phrases, expected_phrases in HANDOFF_EXCEPTION_CHECKS:
-        if not contains_any_phrase(business_signal_text, business_phrases):
             continue
-        required_exception_count += 1
-        if contains_any_phrase(experience_signal_text, expected_phrases):
+        add_issue(
+            issues,
+            "warning",
+            f"承接检查：business_blueprint.md 明确要求主流程闭环包含“{summarize_handoff_item(item_text)}”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。",
+        )
+    coverage_lines.append(f"主流程闭环覆盖：{covered_flow_count}/{len(flow_items)}")
+
+    exception_items = handoff_requirements.get("exceptions", [])
+    covered_exception_count = 0
+    for item_text in exception_items:
+        covered, _phrases = handoff_item_is_covered(item_text, experience_signal_text, "exceptions")
+        if covered:
             covered_exception_count += 1
             continue
         add_issue(
             issues,
             "warning",
-            f"承接检查：business_blueprint.md 已把“{exception_name}”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
+            f"承接检查：business_blueprint.md 已把“{summarize_handoff_item(item_text)}”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
         )
-    coverage_lines.append(f"异常与阻断覆盖：{covered_exception_count}/{required_exception_count}")
+    coverage_lines.append(f"异常与阻断覆盖：{covered_exception_count}/{len(exception_items)}")
 
-    required_state_count = 0
+    state_items = handoff_requirements.get("states", [])
     covered_state_count = 0
-    for state_name, business_phrases, expected_phrases in HANDOFF_STATE_CHECKS:
-        if not contains_any_phrase(business_signal_text, business_phrases):
-            continue
-        required_state_count += 1
-        if contains_any_phrase(experience_sections.get("6. 状态与反馈文案", ""), expected_phrases):
+    for item_text in state_items:
+        covered, _phrases = handoff_item_is_covered(item_text, experience_sections.get("6. 状态与反馈文案", ""), "states")
+        if covered:
             covered_state_count += 1
             continue
         add_issue(
             issues,
             "warning",
-            f"承接检查：business_blueprint.md 要求解释“{state_name}”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
+            f"承接检查：business_blueprint.md 要求解释“{summarize_handoff_item(item_text)}”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
         )
-    coverage_lines.append(f"状态与反馈覆盖：{covered_state_count}/{required_state_count}")
+    coverage_lines.append(f"状态与反馈覆盖：{covered_state_count}/{len(state_items)}")
 
-    required_risk_count = 0
+    risk_items = handoff_requirements.get("risks", [])
+    if not risk_items and contains_any(business_signal_text, HANDOFF_GENERIC_PHRASES["risks"]):
+        risk_items = [line.strip() for line in risk_section.splitlines() if LIST_ITEM_PATTERN.match(line)]
     covered_risk_count = 0
-    for _risk_name, business_phrases, expected_phrases, warning_message in HANDOFF_RISK_CHECKS:
-        if not contains_any_phrase(business_signal_text, business_phrases):
-            continue
-        required_risk_count += 1
-        if contains_any_phrase(experience_signal_text, expected_phrases):
+    for item_text in risk_items:
+        covered, _phrases = handoff_item_is_covered(item_text, experience_signal_text, "risks")
+        if covered:
             covered_risk_count += 1
             continue
-        add_issue(issues, "warning", warning_message)
-    coverage_lines.append(f"风险保护承接：{covered_risk_count}/{required_risk_count}")
+        add_issue(
+            issues,
+            "warning",
+            f"承接检查：business_blueprint.md 已把“{summarize_handoff_item(item_text)}”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+        )
+    coverage_lines.append(f"风险保护承接：{covered_risk_count}/{len(risk_items)}")
 
     guideline_refs_used: list[str] = []
     guideline_selection_reason: list[dict[str, object]] = []
@@ -1385,13 +1540,13 @@ def analyze_natural_language_handoff(
     metrics = {
         "required_role_count": required_role_count,
         "covered_role_count": covered_role_count,
-        "required_flow_step_count": len(required_flow_checks),
+        "required_flow_step_count": len(flow_items),
         "covered_flow_step_count": covered_flow_count,
-        "required_exception_count": required_exception_count,
+        "required_exception_count": len(exception_items),
         "covered_exception_count": covered_exception_count,
-        "required_state_count": required_state_count,
+        "required_state_count": len(state_items),
         "covered_state_count": covered_state_count,
-        "required_risk_count": required_risk_count,
+        "required_risk_count": len(risk_items),
         "covered_risk_count": covered_risk_count,
         "guideline_refs_used_count": len(guideline_refs_used),
     }
