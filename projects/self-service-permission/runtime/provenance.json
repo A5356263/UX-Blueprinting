@@ -17,6 +17,7 @@
     "gate-experience",
     "validate",
     "coverage",
-    "archive"
+    "archive",
+    "preview"
   ]
 }

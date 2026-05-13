@@ -29,7 +29,8 @@
       "生成 business_blueprint.md（详见 `specs/09_business_blueprint_contract.md`）→ 运行 `python -m packages gate-business sub-admin-copy`，通过才能进入下一步",
       "生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience sub-admin-copy`，通过才能进入下一步",
       "运行 `python -m packages validate sub-admin-copy` 和 `python -m packages coverage sub-admin-copy`",
-      "运行 `python -m packages archive sub-admin-copy`（产物镜像到 exports/）"
+      "运行 `python -m packages archive sub-admin-copy`（产物镜像到 exports/）",
+      "运行 `python -m packages preview sub-admin-copy --no-serve`（生成静态预览 HTML 到 runtime/preview/）"
     ],
     "notes": [
       "当前为模板占位，可按任务补充",

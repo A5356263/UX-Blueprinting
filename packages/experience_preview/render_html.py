@@ -213,6 +213,46 @@ body {
   line-height: 1.5;
 }
 
+.section-body h3,
+.section-body h4,
+.section-body h5,
+.section-body h6 {
+  margin: 18px 0 10px;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.section-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 18px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+}
+
+.section-body th,
+.section-body td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.section-body th {
+  background: var(--panel-subtle);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.section-body ol {
+  margin: 8px 0 16px;
+  padding-left: 22px;
+}
+
+.section-body ol li {
+  padding: 4px 0;
+}
+
 /* ---- flow groups ---- */
 .flow-group { margin-bottom: 28px; }
 
@@ -411,102 +451,12 @@ def _render_business(model: dict[str, Any]) -> str:
 
 def _render_experience(model: dict[str, Any]) -> str:
     exp = model["experience"]
-    sections = exp["sections"]
-    flows = exp["flows"]
-    pages = exp["pages"]
-    states = exp["states"]
-
-    parts: list[str] = []
-    parts.append(f"""<div class="content-panel hidden" id="content-experience">
-      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp['title'])}</h1>""")
-
-    flow_section_indices = set()
-    page_section_index = None
-    state_section_index = None
-
-    for i, s in enumerate(sections):
-        heading = s["heading"]
-        if any(kw in heading for kw in ["主交互流程", "次交互流程"]):
-            flow_section_indices.add(i)
-        if any(kw in heading for kw in ["页面", "弹窗", "抽屉"]):
-            page_section_index = i
-        if any(kw in heading for kw in ["状态", "反馈文案"]):
-            state_section_index = i
-
-    for i, s in enumerate(sections):
-        if i in flow_section_indices:
-            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
-            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
-
-            relevant_flows = [f for f in flows if _flow_matches_section(f["name"], s["heading"])]
-            if not relevant_flows:
-                relevant_flows = [f for f in flows if not _flow_matches_any_section(f["name"], [sections[j]["heading"] for j in flow_section_indices if j != i])]
-
-            for flow in relevant_flows:
-                parts.append(f'<div class="flow-group">')
-                parts.append(f'<h3 class="flow-name">{html_mod.escape(flow["name"])}</h3>')
-                for node in flow.get("nodes", []):
-                    if node.get("_has_fields"):
-                        parts.append(_render_node_card(node))
-                    else:
-                        parts.append(f'<div class="section-body">{node.get("description_html", "")}</div>')
-                if flow.get("body_html"):
-                    parts.append(f'<div class="section-body">{flow["body_html"]}</div>')
-                parts.append("</div>")
-
-            if not relevant_flows:
-                parts.append(f'<div class="section-body">{s["body_html"]}</div>')
-            parts.append("</div>")
-
-        elif i == page_section_index and pages:
-            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
-            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
-            for p in pages:
-                icon = _page_icon(p["name"])
-                parts.append(
-                    f'<div class="page-card">'
-                    f'<div class="page-card-name"><span class="icon">{icon}</span>{html_mod.escape(p["name"])}</div>'
-                    f'<div class="page-card-desc">{p["desc_html"]}</div>'
-                    f"</div>"
-                )
-            parts.append("</div>")
-
-        elif i == state_section_index and states:
-            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
-            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
-            parts.append('<ul class="states-list">')
-            for st in states:
-                parts.append(f'<li class="state-item">{_inline_text(st)}</li>')
-            parts.append("</ul>")
-            parts.append("</div>")
-
-        else:
-            parts.append(f'<div class="section-block" id="{s["anchor"]}">')
-            parts.append(f'<h2 class="section-heading">{html_mod.escape(s["heading"])}</h2>')
-            parts.append(f'<div class="section-body">{s["body_html"]}</div>')
-            parts.append("</div>")
-
-    parts.append("</div>")
-    return "\n".join(parts)
-
-
-def _page_icon(name: str) -> str:
-    n = name.lower()
-    if "抽屉" in n:
-        return "　"
-    if "弹窗" in n:
-        return "▣"
-    return "□"
-
-
-def _flow_matches_section(flow_name: str, section_heading: str) -> bool:
-    fn = flow_name.replace("流程 ", "").replace("流程", "")
-    sh = section_heading.replace("主交互流程", "").replace("次交互流程", "").strip()
-    return fn[0:4] in sh if fn and sh else True
-
-
-def _flow_matches_any_section(flow_name: str, section_headings: list[str]) -> bool:
-    return any(_flow_matches_section(flow_name, sh) for sh in section_headings)
+    sections_html = _render_sections(exp["sections"])
+    return f"""
+    <div class="content-panel hidden" id="content-experience">
+      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp['title'])}</h1>
+      {sections_html}
+    </div>"""
 
 
 def _render_html(model: dict[str, Any]) -> str:

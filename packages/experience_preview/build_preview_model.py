@@ -58,59 +58,109 @@ def _inline_md(text: str) -> str:
     return text
 
 
+def _is_table_separator(line: str) -> bool:
+    stripped = line.strip()
+    if not (stripped.startswith("|") and stripped.endswith("|")):
+        return False
+    cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+    if not cells:
+        return False
+    return all(cells) and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells)
+
+
+def _split_table_row(line: str) -> list[str]:
+    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+
+def _render_table(lines: list[str]) -> str:
+    header_cells = _split_table_row(lines[0])
+    body_rows = [_split_table_row(line) for line in lines[2:]]
+    thead = "".join(f"<th>{_inline_md(cell)}</th>" for cell in header_cells)
+    tbody_rows: list[str] = []
+    for row in body_rows:
+        padded = row + [""] * max(0, len(header_cells) - len(row))
+        cells = "".join(f"<td>{_inline_md(cell)}</td>" for cell in padded[: len(header_cells)])
+        tbody_rows.append(f"<tr>{cells}</tr>")
+    return f"<table><thead><tr>{thead}</tr></thead><tbody>{''.join(tbody_rows)}</tbody></table>"
+
+
 def _md_body_to_html(body: str) -> str:
     if not body:
         return ""
-    blocks = re.split(r"\n{2,}", body)
     result: list[str] = []
-    in_code_block = False
-    code_lines: list[str] = []
+    lines = body.splitlines()
+    i = 0
 
-    for block in blocks:
-        lines = block.strip().split("\n")
-
-        if lines[0].startswith("```"):
-            if in_code_block:
-                code_text = html_mod.escape("\n".join(code_lines))
-                result.append(f"<pre><code>{code_text}</code></pre>")
-                code_lines = []
-                in_code_block = False
-            else:
-                in_code_block = True
+    while i < len(lines):
+        stripped = lines[i].strip()
+        if not stripped:
+            i += 1
             continue
 
-        if in_code_block:
-            code_lines.extend(lines)
+        if stripped.startswith("```"):
+            i += 1
+            code_lines: list[str] = []
+            while i < len(lines) and not lines[i].strip().startswith("```"):
+                code_lines.append(lines[i])
+                i += 1
+            if i < len(lines):
+                i += 1
+            code_text = html_mod.escape("\n".join(code_lines))
+            result.append(f"<pre><code>{code_text}</code></pre>")
             continue
 
-        if all(line.strip().startswith("- ") for line in lines if line.strip()):
-            items = "".join(f"<li>{_inline_md(line.strip()[2:])}</li>" for line in lines if line.strip())
-            result.append(f"<ul>{items}</ul>")
+        heading_match = re.match(r"^(#{3,6})\s+(.+?)\s*$", stripped)
+        if heading_match:
+            level = len(heading_match.group(1))
+            result.append(f"<h{level}>{_inline_md(heading_match.group(2))}</h{level}>")
+            i += 1
             continue
 
-        paras: list[str] = []
-        list_buffer: list[str] = []
+        if stripped.startswith("|") and i + 1 < len(lines) and _is_table_separator(lines[i + 1]):
+            table_lines = [lines[i], lines[i + 1]]
+            i += 2
+            while i < len(lines) and lines[i].strip().startswith("|"):
+                table_lines.append(lines[i])
+                i += 1
+            result.append(_render_table(table_lines))
+            continue
 
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith("- "):
-                if list_buffer:
-                    paras.append(f"<p>{'<br>'.join(list_buffer)}</p>")
-                    list_buffer = []
-                result.append("".join(paras))
-                paras = []
-                result.append(f"<ul><li>{_inline_md(stripped[2:])}</li></ul>")
-            elif stripped:
-                list_buffer.append(_inline_md(stripped))
-            else:
-                if list_buffer:
-                    paras.append(f"<p>{'<br>'.join(list_buffer)}</p>")
-                    list_buffer = []
+        if stripped.startswith("- "):
+            items: list[str] = []
+            while i < len(lines) and lines[i].strip().startswith("- "):
+                items.append(f"<li>{_inline_md(lines[i].strip()[2:])}</li>")
+                i += 1
+            result.append(f"<ul>{''.join(items)}</ul>")
+            continue
 
-        if list_buffer:
-            paras.append(f"<p>{'<br>'.join(list_buffer)}</p>")
-        if paras:
-            result.append("".join(paras))
+        if re.match(r"^\d+\.\s+", stripped):
+            items: list[str] = []
+            while i < len(lines) and re.match(r"^\d+\.\s+", lines[i].strip()):
+                item_text = re.sub(r"^\d+\.\s+", "", lines[i].strip(), count=1)
+                items.append(f"<li>{_inline_md(item_text)}</li>")
+                i += 1
+            result.append(f"<ol>{''.join(items)}</ol>")
+            continue
+
+        paragraph_lines = [stripped]
+        i += 1
+        while i < len(lines):
+            next_stripped = lines[i].strip()
+            if not next_stripped:
+                break
+            if next_stripped.startswith("```"):
+                break
+            if re.match(r"^(#{3,6})\s+.+$", next_stripped):
+                break
+            if next_stripped.startswith("- "):
+                break
+            if re.match(r"^\d+\.\s+", next_stripped):
+                break
+            if next_stripped.startswith("|") and i + 1 < len(lines) and _is_table_separator(lines[i + 1]):
+                break
+            paragraph_lines.append(next_stripped)
+            i += 1
+        result.append(f"<p>{'<br>'.join(_inline_md(part) for part in paragraph_lines)}</p>")
 
     return "\n".join(result)
 

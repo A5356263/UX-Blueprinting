@@ -42,6 +42,7 @@
 5. 生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience self-service-permission`，通过才能进入下一步
 6. 运行 `python -m packages validate self-service-permission` 和 `python -m packages coverage self-service-permission`
 7. 运行 `python -m packages archive self-service-permission`（产物镜像到 exports/）
+8. 运行 `python -m packages preview self-service-permission --no-serve`（生成静态预览 HTML 到 runtime/preview/）
 
 ## Constraints
 

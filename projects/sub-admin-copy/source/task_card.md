@@ -42,6 +42,7 @@
 5. 生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience sub-admin-copy`，通过才能进入下一步
 6. 运行 `python -m packages validate sub-admin-copy` 和 `python -m packages coverage sub-admin-copy`
 7. 运行 `python -m packages archive sub-admin-copy`（产物镜像到 exports/）
+8. 运行 `python -m packages preview sub-admin-copy --no-serve`（生成静态预览 HTML 到 runtime/preview/）
 
 ## Constraints
 
