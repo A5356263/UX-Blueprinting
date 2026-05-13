@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 组织管理
 - semantic_status: pending
-- semantic_updated_at: 2026-05-12
-- updated_at: 2026-05-12
+- semantic_updated_at: 2026-05-13
+- updated_at: 2026-05-13
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
