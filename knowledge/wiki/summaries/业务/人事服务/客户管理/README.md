@@ -5,12 +5,12 @@
 - source_path: knowledge/raw/业务/人事服务/客户管理/README.md
 - source_group: business
 - status: draft
-- confidence: low
+- confidence: medium
 - summary_role: ai_route_card
 - domain: 客户管理
-- semantic_status: pending
-- semantic_updated_at: 2026-05-13
-- updated_at: 2026-05-13
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-16
+- updated_at: 2026-05-16
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/客户管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/人事服务/客户管理/10_客户管理.md
@@ -21,19 +21,24 @@
 
 ## 1. 知识定位
 
-待 AI Code 读取 raw 后生成。
+客户管理子域的目录入口，提供文件结构和阅读顺序。解决"该子域包含哪些知识文件、按什么顺序阅读"的导航判断问题。
 
 ## 2. 任务触发线索
 
-待 AI Code 读取 raw 后生成。
+- 首次进入客户管理子域，需要了解文件结构和阅读路径时
+- 需要确定某个具体客户管理问题应查阅哪个文件时
 
 ## 3. 覆盖内容
 
-待 AI Code 读取 raw 后生成。
+- **文件清单**：00_领域概述.md、10_客户管理.md，共2个文件
+- **阅读顺序**：先读00了解边界和整体链路，再读10理解全功能业务流程
+- **维护原则**：只记录帮助中心"客户管理"模块中的产品知识；专为人力资源服务企业设计
 
 ## 4. 可直接使用的稳定结论
 
-待 AI Code 读取 raw 后生成。
+- 本子域仅2个核心文件，结构简洁：00提供领域定义，10提供完整功能说明
+- 所有原始内容源自帮助中心 help/modules/人事服务/客户管理/
+- 专为人力资源服务企业（劳务派遣/人力外包）场景设计，非通用CRM产品
 
 ## 5. 必须回查 raw 的情况
 

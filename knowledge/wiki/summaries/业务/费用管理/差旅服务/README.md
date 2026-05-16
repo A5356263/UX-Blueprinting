@@ -5,12 +5,12 @@
 - source_path: knowledge/raw/业务/费用管理/差旅服务/README.md
 - source_group: business
 - status: draft
-- confidence: low
+- confidence: medium
 - summary_role: ai_route_card
 - domain: 差旅服务
-- semantic_status: pending
-- semantic_updated_at: 2026-05-13
-- updated_at: 2026-05-13
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-16
+- updated_at: 2026-05-16
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
@@ -21,19 +21,20 @@
 
 ## 1. 知识定位
 
-待 AI Code 读取 raw 后生成。
+这是一份差旅服务子域的目录索引说明，用来回答"差旅服务子域沉淀什么知识、对应帮助中心哪个模块"。
 
 ## 2. 任务触发线索
 
-待 AI Code 读取 raw 后生成。
+当任务需要确认差旅服务子域的模块归属时读取。
 
 ## 3. 覆盖内容
 
-待 AI Code 读取 raw 后生成。
+- 子域定位：对应薪福通帮助中心"费用管理 > 差旅服务"模块
+- 沉淀内容：出差申请、商旅预订、差旅报销、自动支付全流程知识
 
 ## 4. 可直接使用的稳定结论
 
-待 AI Code 读取 raw 后生成。
+- 差旅服务子域的知识范围严格对应帮助中心"费用管理 > 差旅服务"模块。
 
 ## 5. 必须回查 raw 的情况
 

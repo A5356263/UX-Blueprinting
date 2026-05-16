@@ -269,3 +269,5 @@ summary 与 raw 保持：
 ## 10. 一句话结论
 
 **Knowledge 目录是一个以 raw 为事实真源、以 summary 为 AI 路由卡的轻量知识入口系统。**
+
+低频 AI 语义填充任务请先阅读 `knowledge/LLM.md`。

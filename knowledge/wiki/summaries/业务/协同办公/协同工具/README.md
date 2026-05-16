@@ -5,12 +5,12 @@
 - source_path: knowledge/raw/业务/协同办公/协同工具/README.md
 - source_group: business
 - status: draft
-- confidence: low
+- confidence: medium
 - summary_role: ai_route_card
 - domain: 协同工具
-- semantic_status: pending
-- semantic_updated_at: 2026-05-13
-- updated_at: 2026-05-13
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-16
+- updated_at: 2026-05-16
 - related_summaries:
   - knowledge/wiki/summaries/业务/协同办公/协同工具/00_领域概述.md
   - knowledge/wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
@@ -21,19 +21,30 @@
 
 ## 1. 知识定位
 
-待 AI Code 读取 raw 后生成。
+这是协同工具子域的目录索引卡，用于回答"协同工具子域包含哪些文件、推荐的阅读顺序是什么、7个工具各自的核心功能是什么"。
+
+它帮助后续任务在进入协同工具子域时快速定位目标文件，不误读为业务规则卡。
 
 ## 2. 任务触发线索
 
-待 AI Code 读取 raw 后生成。
+当任务属于以下情况时，应优先读取本文件：
+
+- 首次进入协同工具子域，需要了解文件结构与阅读路径
+- 需要快速确认某个工具是否在协同工具子域范围内
+- 需要通过工具索引表快速判断目标工具的核心功能
 
 ## 3. 覆盖内容
 
-待 AI Code 读取 raw 后生成。
+本文件覆盖协同工具子域的目录导航：
+
+- 推荐阅读顺序：先读 `00_领域概述.md` 了解子域边界，再读 `10_协同工具.md` 理解全部工具功能
+- 工具索引表：7个工具的名称与核心功能关键词
+- 子域定位：对应帮助中心"协同办公 > 协同工具"模块
 
 ## 4. 可直接使用的稳定结论
 
-待 AI Code 读取 raw 后生成。
+- 协同工具子域仅包含2个知识文件：`00_领域概述.md`（领域边界）和 `10_协同工具.md`（能力详情）。
+- 阅读顺序固定：先领域概述再能力详情，不跳过00直接读10可能丢失边界和跨域关系信息。
 
 ## 5. 必须回查 raw 的情况
 

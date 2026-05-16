@@ -5,12 +5,12 @@
 - source_path: knowledge/raw/业务/费用管理/通用配置/README.md
 - source_group: business
 - status: draft
-- confidence: low
+- confidence: medium
 - summary_role: ai_route_card
 - domain: 通用配置
-- semantic_status: pending
-- semantic_updated_at: 2026-05-13
-- updated_at: 2026-05-13
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-16
+- updated_at: 2026-05-16
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/通用配置/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
@@ -21,19 +21,26 @@
 
 ## 1. 知识定位
 
-待 AI Code 读取 raw 后生成。
+这是一份通用配置子域的目录索引说明，用来回答"通用配置子域的组织结构、已采集内容范围、待采集缺口"。
+
+它是目录导航卡，其核心价值在于提供详细的目录索引（系统配置 18 篇 + 支付管理 8 篇 + 会计核算 1 篇 + FAQ 56 条），并标记大规模待采集状态。
 
 ## 2. 任务触发线索
 
-待 AI Code 读取 raw 后生成。
+当任务需要确认通用配置子域的文章清单、分类结构或采集进度时读取。
 
 ## 3. 覆盖内容
 
-待 AI Code 读取 raw 后生成。
+- 子域定位：对应薪福通帮助中心"费用管理 > 通用配置"模块
+- 三大分类：系统配置（18 篇）、支付管理（8 篇）、会计核算（1 篇）
+- FAQ 主题分布：发票收取、预算占用、部门选择、审批超时、支付状态不一致等 56 条
+- 进度状态：仅目录结构已入库，操作指引和 FAQ 正文均待采集
 
 ## 4. 可直接使用的稳定结论
 
-待 AI Code 读取 raw 后生成。
+- 通用配置子域是费用管理的系统级配置中心，共 27 篇操作指引 + 56 条 FAQ。
+- 当前全部正文均未采集，仅目录索引可用。
+- 若需具体配置规则，必须回查帮助中心原文，不可依赖当前 knowledge/raw。
 
 ## 5. 必须回查 raw 的情况
 

@@ -1,280 +1,13 @@
 # Pending Semantic Summaries
 
 - total: 135
-- pending_generate: 134
+- pending_generate: 0
 - pending_review: 0
-- completed: 1
+- completed: 135
 
 ## 待 AI 生成
 
-- summary_path: knowledge/wiki/summaries/业务/人事服务/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/14_员工花名册.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/15_合同管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/16_入职生命周期.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/50_常见问题.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/客户管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/客户管理/10_客户管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/客户管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/招聘管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/组织管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/考勤管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/考勤管理/10_考勤管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/人事服务/考勤管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/企业设置/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/企业设置/10_企业信息展示.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/企业设置/11_企业登录页自定义.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/企业设置/12_企业文化.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/企业设置/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/协同工具/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/协同工具/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/智能报表/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/智能报表/10_智能报表.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/协同办公/智能报表/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/安全管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/安全管理/10_安全水印.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/安全管理/11_操作记录.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/安全管理/12_安全设置.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/安全管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/审批管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/审批管理/10_审批管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/审批管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/10_工作台.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/11_全局导航与服务入口.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/应用管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/应用管理/10_应用管理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/应用管理/11_应用组装.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/应用管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/10_成员加入与邀请.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/11_成员退出与离职交接.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/12_成员分组.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/13_外部人员.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/成员管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/服务管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/服务管理/10_服务人员授权.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/服务管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/02_术语表.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/03_业务对象.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/04_对象关系.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/10_能力地图.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/11_任务场景.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/13_路由地图.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/14_角色边界.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/21_来源模型.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/23_规则契约.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/25_审计契约.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/40_蓝图消费地图.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/41_业务蓝图移交.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/42_体验蓝图移交.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/50_帮助文档权限差异.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/权限管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/10_组织架构设计.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/11_法律实体.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/12_成本中心.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/13_职能与视图模型.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/14_成员绑定与范围生成.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/组织架构/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/10_开通路径.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/11_企业创建与认证.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/12_企业状态与变更.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/13_超级管理员变更.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/14_账号常见问题.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/15_个人账号安全.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/账户与企业生命周期/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/企业支付/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/企业支付/10_企业支付.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/企业支付/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/差旅服务/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/日常报销/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/日常报销/10_日常报销.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/日常报销/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/通用配置/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/费用管理/通用配置/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/00_领域概述.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/01_产品定位.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/02_平台角色与终端.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/03_产品能力版图.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/04_产品优势与服务模式.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/05_管理控制台能力概览.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/业务/项目背景/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/README.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/信息架构.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/可用性.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/可读性.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/无障碍.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/治理.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/流程模式.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/视觉.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/认知.md
-  - reason: semantic_status=pending
-- summary_path: knowledge/wiki/summaries/设计准则/质量.md
-  - reason: semantic_status=pending
+- none
 
 ## 待 AI 复核
 
@@ -283,3 +16,137 @@
 ## 已完成
 
 - knowledge/wiki/summaries/业务/README.md
+- knowledge/wiki/summaries/业务/人事服务/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/README.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/14_员工花名册.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/15_合同管理.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/16_入职生命周期.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/50_常见问题.md
+- knowledge/wiki/summaries/业务/人事服务/员工管理/README.md
+- knowledge/wiki/summaries/业务/人事服务/客户管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/客户管理/10_客户管理.md
+- knowledge/wiki/summaries/业务/人事服务/客户管理/README.md
+- knowledge/wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
+- knowledge/wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
+- knowledge/wiki/summaries/业务/人事服务/招聘管理/README.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
+- knowledge/wiki/summaries/业务/人事服务/组织管理/README.md
+- knowledge/wiki/summaries/业务/人事服务/考勤管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/人事服务/考勤管理/10_考勤管理.md
+- knowledge/wiki/summaries/业务/人事服务/考勤管理/README.md
+- knowledge/wiki/summaries/业务/企业设置/00_领域概述.md
+- knowledge/wiki/summaries/业务/企业设置/10_企业信息展示.md
+- knowledge/wiki/summaries/业务/企业设置/11_企业登录页自定义.md
+- knowledge/wiki/summaries/业务/企业设置/12_企业文化.md
+- knowledge/wiki/summaries/业务/企业设置/README.md
+- knowledge/wiki/summaries/业务/协同办公/00_领域概述.md
+- knowledge/wiki/summaries/业务/协同办公/README.md
+- knowledge/wiki/summaries/业务/协同办公/协同工具/00_领域概述.md
+- knowledge/wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
+- knowledge/wiki/summaries/业务/协同办公/协同工具/README.md
+- knowledge/wiki/summaries/业务/协同办公/智能报表/00_领域概述.md
+- knowledge/wiki/summaries/业务/协同办公/智能报表/10_智能报表.md
+- knowledge/wiki/summaries/业务/协同办公/智能报表/README.md
+- knowledge/wiki/summaries/业务/安全管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/安全管理/10_安全水印.md
+- knowledge/wiki/summaries/业务/安全管理/11_操作记录.md
+- knowledge/wiki/summaries/业务/安全管理/12_安全设置.md
+- knowledge/wiki/summaries/业务/安全管理/README.md
+- knowledge/wiki/summaries/业务/审批管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/审批管理/10_审批管理.md
+- knowledge/wiki/summaries/业务/审批管理/README.md
+- knowledge/wiki/summaries/业务/工作台与全局入口/00_领域概述.md
+- knowledge/wiki/summaries/业务/工作台与全局入口/10_工作台.md
+- knowledge/wiki/summaries/业务/工作台与全局入口/11_全局导航与服务入口.md
+- knowledge/wiki/summaries/业务/工作台与全局入口/README.md
+- knowledge/wiki/summaries/业务/应用管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/应用管理/10_应用管理.md
+- knowledge/wiki/summaries/业务/应用管理/11_应用组装.md
+- knowledge/wiki/summaries/业务/应用管理/README.md
+- knowledge/wiki/summaries/业务/成员管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/成员管理/10_成员加入与邀请.md
+- knowledge/wiki/summaries/业务/成员管理/11_成员退出与离职交接.md
+- knowledge/wiki/summaries/业务/成员管理/12_成员分组.md
+- knowledge/wiki/summaries/业务/成员管理/13_外部人员.md
+- knowledge/wiki/summaries/业务/成员管理/README.md
+- knowledge/wiki/summaries/业务/服务管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/服务管理/10_服务人员授权.md
+- knowledge/wiki/summaries/业务/服务管理/README.md
+- knowledge/wiki/summaries/业务/权限管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md
+- knowledge/wiki/summaries/业务/权限管理/02_术语表.md
+- knowledge/wiki/summaries/业务/权限管理/03_业务对象.md
+- knowledge/wiki/summaries/业务/权限管理/04_对象关系.md
+- knowledge/wiki/summaries/业务/权限管理/10_能力地图.md
+- knowledge/wiki/summaries/业务/权限管理/11_任务场景.md
+- knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md
+- knowledge/wiki/summaries/业务/权限管理/13_路由地图.md
+- knowledge/wiki/summaries/业务/权限管理/14_角色边界.md
+- knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md
+- knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md
+- knowledge/wiki/summaries/业务/权限管理/21_来源模型.md
+- knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md
+- knowledge/wiki/summaries/业务/权限管理/23_规则契约.md
+- knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md
+- knowledge/wiki/summaries/业务/权限管理/25_审计契约.md
+- knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md
+- knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md
+- knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md
+- knowledge/wiki/summaries/业务/权限管理/40_蓝图消费地图.md
+- knowledge/wiki/summaries/业务/权限管理/41_业务蓝图移交.md
+- knowledge/wiki/summaries/业务/权限管理/42_体验蓝图移交.md
+- knowledge/wiki/summaries/业务/权限管理/50_帮助文档权限差异.md
+- knowledge/wiki/summaries/业务/权限管理/README.md
+- knowledge/wiki/summaries/业务/组织架构/00_领域概述.md
+- knowledge/wiki/summaries/业务/组织架构/10_组织架构设计.md
+- knowledge/wiki/summaries/业务/组织架构/11_法律实体.md
+- knowledge/wiki/summaries/业务/组织架构/12_成本中心.md
+- knowledge/wiki/summaries/业务/组织架构/13_职能与视图模型.md
+- knowledge/wiki/summaries/业务/组织架构/14_成员绑定与范围生成.md
+- knowledge/wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
+- knowledge/wiki/summaries/业务/组织架构/README.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/00_领域概述.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/10_开通路径.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/11_企业创建与认证.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/12_企业状态与变更.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/13_超级管理员变更.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/14_账号常见问题.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/15_个人账号安全.md
+- knowledge/wiki/summaries/业务/账户与企业生命周期/README.md
+- knowledge/wiki/summaries/业务/费用管理/00_领域概述.md
+- knowledge/wiki/summaries/业务/费用管理/README.md
+- knowledge/wiki/summaries/业务/费用管理/企业支付/00_领域概述.md
+- knowledge/wiki/summaries/业务/费用管理/企业支付/10_企业支付.md
+- knowledge/wiki/summaries/业务/费用管理/企业支付/README.md
+- knowledge/wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
+- knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
+- knowledge/wiki/summaries/业务/费用管理/差旅服务/README.md
+- knowledge/wiki/summaries/业务/费用管理/日常报销/00_领域概述.md
+- knowledge/wiki/summaries/业务/费用管理/日常报销/10_日常报销.md
+- knowledge/wiki/summaries/业务/费用管理/日常报销/README.md
+- knowledge/wiki/summaries/业务/费用管理/通用配置/00_领域概述.md
+- knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
+- knowledge/wiki/summaries/业务/费用管理/通用配置/README.md
+- knowledge/wiki/summaries/业务/项目背景/00_领域概述.md
+- knowledge/wiki/summaries/业务/项目背景/01_产品定位.md
+- knowledge/wiki/summaries/业务/项目背景/02_平台角色与终端.md
+- knowledge/wiki/summaries/业务/项目背景/03_产品能力版图.md
+- knowledge/wiki/summaries/业务/项目背景/04_产品优势与服务模式.md
+- knowledge/wiki/summaries/业务/项目背景/05_管理控制台能力概览.md
+- knowledge/wiki/summaries/业务/项目背景/README.md
+- knowledge/wiki/summaries/设计准则/README.md
+- knowledge/wiki/summaries/设计准则/信息架构.md
+- knowledge/wiki/summaries/设计准则/可用性.md
+- knowledge/wiki/summaries/设计准则/可读性.md
+- knowledge/wiki/summaries/设计准则/无障碍.md
+- knowledge/wiki/summaries/设计准则/治理.md
+- knowledge/wiki/summaries/设计准则/流程模式.md
+- knowledge/wiki/summaries/设计准则/视觉.md
+- knowledge/wiki/summaries/设计准则/认知.md
+- knowledge/wiki/summaries/设计准则/质量.md

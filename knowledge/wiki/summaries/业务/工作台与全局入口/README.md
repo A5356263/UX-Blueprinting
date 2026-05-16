@@ -8,9 +8,9 @@
 - confidence: low
 - summary_role: ai_route_card
 - domain: 工作台与全局入口
-- semantic_status: pending
-- semantic_updated_at: 2026-05-13
-- updated_at: 2026-05-13
+- semantic_status: ai_generated
+- semantic_updated_at: 2026-05-16
+- updated_at: 2026-05-16
 - related_summaries:
   - knowledge/wiki/summaries/业务/工作台与全局入口/00_领域概述.md
   - knowledge/wiki/summaries/业务/工作台与全局入口/10_工作台.md
@@ -21,19 +21,21 @@
 
 ## 1. 知识定位
 
-待 AI Code 读取 raw 后生成。
+这是一份工作台与全局入口域知识库的目录索引说明。⚠ 对应的 raw 文件 `knowledge/raw/业务/工作台与全局入口/README.md` 不存在，本 summary 内容仅基于域概述推断的结构信息。
 
 ## 2. 任务触发线索
 
-待 AI Code 读取 raw 后生成。
+当任务需要确认工作台与全局入口域的子模块构成时，应优先读取 00_领域概述，本文件仅提供目录结构参考。
 
 ## 3. 覆盖内容
 
-待 AI Code 读取 raw 后生成。
+- 域构成（推断）：领域总览层 -> 工作台 + 全局导航与服务入口
+- [GAP] raw/README.md 源文件缺失，无法提供维护原则和阅读顺序
 
 ## 4. 可直接使用的稳定结论
 
-待 AI Code 读取 raw 后生成。
+- 工作台与全局入口域包含两个子模块：工作台、全局导航与服务入口。
+- 本 summary 可提供的稳定结论有限，建议优先阅读 00_领域概述、10_工作台和 11_全局导航与服务入口。
 
 ## 5. 必须回查 raw 的情况
 
