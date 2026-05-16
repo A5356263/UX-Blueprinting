@@ -8,22 +8,22 @@
 
 ## 当前概况
 
-- raw_total: 135
-- summary_total: 135
-- summary_coverage: 135/135
+- raw_total: 142
+- summary_total: 142
+- summary_coverage: 142/142
 - gap_count: 141
 - conflict_count: 2
-- question_marker_count: 0
+- question_marker_count: 2
 - raw_without_summary: 0
-- questions_total: 76
+- questions_total: 77
 
 ## 最近更新的 Raw
 
-- raw/业务/人事服务/员工管理/15_合同管理.md
-- raw/业务/人事服务/招聘管理/00_领域概述.md
-- raw/业务/人事服务/招聘管理/README.md
-- raw/业务/人事服务/招聘管理/50_常见问题.md
-- raw/业务/人事服务/组织管理/50_常见问题.md
+- raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md
+- raw/设计准则/反馈与报错/README.md
+- raw/设计准则/反馈与报错/05_财税场景案例.md
+- raw/设计准则/反馈与报错/04_人事与薪酬场景案例.md
+- raw/设计准则/反馈与报错/03_通用报错场景案例.md
 
 ## 无 Summary 的 Raw
 

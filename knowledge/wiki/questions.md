@@ -569,35 +569,35 @@
 ### Q-0063
 
 - question_id: Q-0063
+- source_path: knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md
+- summary_path: knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md
+- question_type: QUESTION
+- text: 后续行业场景是否继续细分为更窄的专题册，例如税务专项、发票专项、薪酬专项。
+- updated_at: 2026-05-16
+
+### Q-0064
+
+- question_id: Q-0064
 - source_path: knowledge/raw/业务/企业设置/README.md
 - summary_path: knowledge/wiki/summaries/业务/企业设置/README.md
 - question_type: GAP
 - text: raw/README.md 源文件缺失，无法提供维护原则和阅读顺序
 - updated_at: 2026-05-16
 
-### Q-0064
+### Q-0065
 
-- question_id: Q-0064
+- question_id: Q-0065
 - source_path: knowledge/raw/业务/协同办公/协同工具/10_协同工具.md
 - summary_path: knowledge/wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
 - question_type: GAP
 - text: 企业公告、公文、必应的详细操作指引未采集，涉及这些工具的细化设计时需回查原始帮助中心或产品实际界面。
 - updated_at: 2026-05-16
 
-### Q-0065
-
-- question_id: Q-0065
-- source_path: knowledge/raw/业务/工作台与全局入口/README.md
-- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/README.md
-- question_type: GAP
-- text: raw/README.md 源文件缺失，无法提供维护原则和阅读顺序
-- updated_at: 2026-05-16
-
 ### Q-0066
 
 - question_id: Q-0066
-- source_path: knowledge/raw/业务/服务管理/README.md
-- summary_path: knowledge/wiki/summaries/业务/服务管理/README.md
+- source_path: knowledge/raw/业务/工作台与全局入口/README.md
+- summary_path: knowledge/wiki/summaries/业务/工作台与全局入口/README.md
 - question_type: GAP
 - text: raw/README.md 源文件缺失，无法提供维护原则和阅读顺序
 - updated_at: 2026-05-16
@@ -605,37 +605,37 @@
 ### Q-0067
 
 - question_id: Q-0067
+- source_path: knowledge/raw/业务/服务管理/README.md
+- summary_path: knowledge/wiki/summaries/业务/服务管理/README.md
+- question_type: GAP
+- text: raw/README.md 源文件缺失，无法提供维护原则和阅读顺序
+- updated_at: 2026-05-16
+
+### Q-0068
+
+- question_id: Q-0068
 - source_path: knowledge/raw/业务/组织架构/12_成本中心.md
 - summary_path: knowledge/wiki/summaries/业务/组织架构/12_成本中心.md
 - question_type: GAP
 - text: 在没有新证据前，不推断成本中心的默认职能归属、默认视图归属或成员挂载方式
 - updated_at: 2026-05-16
 
-### Q-0068
+### Q-0069
 
-- question_id: Q-0068
+- question_id: Q-0069
 - source_path: knowledge/raw/业务/组织架构/13_职能与视图模型.md
 - summary_path: knowledge/wiki/summaries/业务/组织架构/13_职能与视图模型.md
 - question_type: GAP
 - text: 平台默认视图与业务自定义视图在数据结构上的完整字段差异未明确
 - updated_at: 2026-05-16
 
-### Q-0069
+### Q-0070
 
-- question_id: Q-0069
+- question_id: Q-0070
 - source_path: knowledge/raw/业务/组织架构/14_成员绑定与范围生成.md
 - summary_path: knowledge/wiki/summaries/业务/组织架构/14_成员绑定与范围生成.md
 - question_type: GAP
 - text: 成员挂载关系的字段结构、唯一性约束和变更规则未展开
-- updated_at: 2026-05-16
-
-### Q-0070
-
-- question_id: Q-0070
-- source_path: knowledge/raw/业务/组织架构/15_运行时流程与遗留映射.md
-- summary_path: knowledge/wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
-- question_type: GAP
-- text: 初始化过程中生成的全部默认对象和字段未完整展开
 - updated_at: 2026-05-16
 
 ### Q-0071
@@ -644,48 +644,57 @@
 - source_path: knowledge/raw/业务/组织架构/15_运行时流程与遗留映射.md
 - summary_path: knowledge/wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
 - question_type: GAP
-- text: 职能/视图状态流转的前置条件、失败条件和回滚规则未完整展开
+- text: 初始化过程中生成的全部默认对象和字段未完整展开
 - updated_at: 2026-05-16
 
 ### Q-0072
 
 - question_id: Q-0072
+- source_path: knowledge/raw/业务/组织架构/15_运行时流程与遗留映射.md
+- summary_path: knowledge/wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
+- question_type: GAP
+- text: 职能/视图状态流转的前置条件、失败条件和回滚规则未完整展开
+- updated_at: 2026-05-16
+
+### Q-0073
+
+- question_id: Q-0073
 - source_path: knowledge/raw/业务/费用管理/企业支付/10_企业支付.md
 - summary_path: knowledge/wiki/summaries/业务/费用管理/企业支付/10_企业支付.md
 - question_type: GAP
 - text: 常见问题 7 条未采集。
 - updated_at: 2026-05-16
 
-### Q-0073
+### Q-0074
 
-- question_id: Q-0073
+- question_id: Q-0074
 - source_path: knowledge/raw/业务/费用管理/差旅服务/10_差旅服务.md
 - summary_path: knowledge/wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
 - question_type: GAP
 - text: 常见问题 14 条 + 产品动态未采集。
 - updated_at: 2026-05-16
 
-### Q-0074
+### Q-0075
 
-- question_id: Q-0074
+- question_id: Q-0075
 - source_path: knowledge/raw/业务/费用管理/日常报销/10_日常报销.md
 - summary_path: knowledge/wiki/summaries/业务/费用管理/日常报销/10_日常报销.md
 - question_type: GAP
 - text: 常见问题 12 条未采集。
 - updated_at: 2026-05-16
 
-### Q-0075
+### Q-0076
 
-- question_id: Q-0075
+- question_id: Q-0076
 - source_path: knowledge/raw/业务/费用管理/通用配置/10_通用配置.md
 - summary_path: knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
 - question_type: GAP
 - text: 56 条常见问题未采集。
 - updated_at: 2026-05-16
 
-### Q-0076
+### Q-0077
 
-- question_id: Q-0076
+- question_id: Q-0077
 - source_path: knowledge/raw/业务/费用管理/通用配置/10_通用配置.md
 - summary_path: knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
 - question_type: GAP
