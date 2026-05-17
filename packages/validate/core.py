@@ -1520,6 +1520,7 @@ def analyze_natural_language_handoff(
     coverage_lines.append(f"风险保护承接：{covered_risk_count}/{len(risk_items)}")
 
     guideline_refs_used: list[str] = []
+    guideline_raw_refs_used: list[str] = []
     guideline_selection_reason: list[dict[str, object]] = []
     if usage_report:
         stage_usage = usage_report.get("stage_usage")
@@ -1527,14 +1528,23 @@ def analyze_natural_language_handoff(
             experience_usage = stage_usage.get("experience")
             if isinstance(experience_usage, dict):
                 guideline_refs_used = _string_list(experience_usage.get("guideline_refs_used"))
+                guideline_raw_refs_used = _string_list(experience_usage.get("guideline_raw_refs_used"))
                 raw_reason = experience_usage.get("guideline_selection_reason")
                 if isinstance(raw_reason, list):
                     guideline_selection_reason = [item for item in raw_reason if isinstance(item, dict)]
 
+    has_guideline_appendix = "设计指南消费说明" in experience_text
+    claims_guideline_consumed = has_guideline_appendix and any(marker in experience_text for marker in ("已消费", "消费的设计指南", "消费指南"))
     if not guideline_refs_used:
         add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 未记录 experience 阶段实际消费的 design guideline。")
+    elif not guideline_raw_refs_used:
+        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 已记录 guideline summary，但 guideline_raw_refs_used 为空，无法确认 summary 命中后读取了 raw。")
     elif not guideline_selection_reason:
         add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 缺少 guideline_selection_reason，无法说明为何选择这些设计指南。")
+    if not has_guideline_appendix:
+        add_issue(issues, "warning", "设计指南消费检查：experience_blueprint.md 缺少「设计指南消费说明」附录。")
+    if claims_guideline_consumed and not guideline_refs_used:
+        add_issue(issues, "blocker", "设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 knowledge_usage_report.json 没有对应记录。")
     coverage_lines.append(f"设计指南消费：{len(guideline_refs_used)} 条")
 
     metrics = {
@@ -1549,6 +1559,7 @@ def analyze_natural_language_handoff(
         "required_risk_count": len(risk_items),
         "covered_risk_count": covered_risk_count,
         "guideline_refs_used_count": len(guideline_refs_used),
+        "guideline_raw_refs_used_count": len(guideline_raw_refs_used),
     }
     return metrics, issues, coverage_lines
 

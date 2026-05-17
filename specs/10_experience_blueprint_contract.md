@@ -44,7 +44,17 @@
 
 指南选择应以当前业务语境和体验场景为依据，不应退化为硬编码映射表。
 
-优先读取相关 guideline summary；如果 summary 信息不足以指导设计，再读取对应 raw。最终输出只吸收原则，不暴露 guideline 路径、内部编号或 trace 标记。
+优先读取相关 guideline summary；summary 只做路由，一旦命中必须读取其 `source_refs` 指向的 raw。最终输出只吸收原则，不暴露 guideline 路径、内部编号或 trace 标记。
+
+### 设计指南消费判断
+
+在输出体验蓝图前，必须基于 facts.md 和 business_blueprint.md 判断：
+
+1. 本次业务蓝图中是否出现报错、阻断、校验、状态反馈、审批延迟、批量风险、高风险配置等体验问题。
+2. 这些问题是否命中 Design Guidelines 中的具体 summary。
+3. 如果命中 summary，必须读取其 source_refs 指向的 raw。
+4. 体验蓝图不得凭指南替代业务事实；业务事实不足时，只能输出待确认问题或条件型建议。
+5. 输出方案时，需要说明反馈时机、反馈形式、用户可见文案和用户下一步。
 
 ## 输出
 
@@ -292,6 +302,16 @@
 ### 7. 待确认问题
 
 列出当前仍不确定且会影响体验方案的事项。每项说明：问题是什么、影响什么、建议由谁确认。
+
+### 附录：设计指南消费说明
+
+仅当 `knowledge_usage_report.json` 的 `stage_usage.experience` 记录了实际消费时填写，保持 3-6 条要点：
+
+- 本次命中的体验问题
+- 消费的 guideline summary 与 raw 主题
+- 这些原则如何转译到方案
+
+不得贴 raw 原文，不得写成长篇理论说明；如果 usage report 没有记录，不得声称“已消费”。
 
 ## 合格标准
 

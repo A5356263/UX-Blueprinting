@@ -156,6 +156,120 @@ TOKEN_STOPWORDS = {
     "guidelines",
 }
 
+GUIDELINE_ROUTE_RULES: list[tuple[list[str], list[str], str]] = [
+    (
+        ["信息", "结构", "模块", "分组", "页面", "归属", "层级", "开始"],
+        [
+            "knowledge/wiki/summaries/设计准则/信息架构.md",
+            "knowledge/wiki/summaries/设计准则/视觉.md",
+            "knowledge/wiki/summaries/设计准则/认知.md",
+        ],
+        "facts/business 出现信息组织、页面结构或模块分组信号。",
+    ),
+    (
+        ["流程", "步骤", "闭环", "前后", "连续", "任务"],
+        [
+            "knowledge/wiki/summaries/设计准则/流程模式.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/认知.md",
+        ],
+        "facts/business 出现操作流程、步骤拆分或任务闭环信号。",
+    ),
+    (
+        ["报错", "失败", "阻断", "校验", "权限", "不可操作", "必填", "格式", "重复", "超限"],
+        [
+            "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/可读性.md",
+        ],
+        "facts/business 出现报错、阻断、校验或权限不足信号。",
+    ),
+    (
+        ["审批", "待生效", "异步", "后台", "任务", "状态", "变化", "进度"],
+        [
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/治理.md",
+            "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        ],
+        "facts/business 出现审批、延迟生效、后台任务或状态流转信号。",
+    ),
+    (
+        ["批量", "删除", "关闭", "不可逆", "多人", "范围", "权限变更", "风险"],
+        [
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/治理.md",
+            "knowledge/wiki/summaries/设计准则/认知.md",
+        ],
+        "facts/business 出现批量操作、高风险配置或权限变更信号。",
+    ),
+    (
+        ["列表", "表格", "结果", "明细", "空状态", "部分成功", "全部失败"],
+        [
+            "knowledge/wiki/summaries/设计准则/信息架构.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/视觉.md",
+            "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        ],
+        "facts/business 出现列表、表格、结果明细或空状态信号。",
+    ),
+    (
+        ["弹窗", "抽屉", "详情", "确认", "临时配置", "上下文"],
+        [
+            "knowledge/wiki/summaries/设计准则/信息架构.md",
+            "knowledge/wiki/summaries/设计准则/流程模式.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/认知.md",
+        ],
+        "facts/business 出现弹窗、抽屉、详情承载或二次确认信号。",
+    ),
+    (
+        ["术语", "文案", "命名", "原因", "下一步", "理解", "错误码"],
+        [
+            "knowledge/wiki/summaries/设计准则/可读性.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/治理.md",
+        ],
+        "facts/business 出现术语、文案或用户理解成本信号。",
+    ),
+    (
+        ["配置", "规则", "选择", "认知", "渐进", "披露", "复杂"],
+        [
+            "knowledge/wiki/summaries/设计准则/认知.md",
+            "knowledge/wiki/summaries/设计准则/信息架构.md",
+            "knowledge/wiki/summaries/设计准则/流程模式.md",
+            "knowledge/wiki/summaries/设计准则/视觉.md",
+        ],
+        "facts/business 出现复杂配置、高认知负担或渐进披露信号。",
+    ),
+    (
+        ["密度", "视觉", "层级", "扫读", "卡片", "表格", "详情"],
+        [
+            "knowledge/wiki/summaries/设计准则/视觉.md",
+            "knowledge/wiki/summaries/设计准则/信息架构.md",
+            "knowledge/wiki/summaries/设计准则/可读性.md",
+        ],
+        "facts/business 出现视觉层级、信息密度或可扫读信号。",
+    ),
+    (
+        ["无障碍", "键盘", "颜色", "感知", "可达", "可操作"],
+        [
+            "knowledge/wiki/summaries/设计准则/无障碍.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/可读性.md",
+        ],
+        "facts/business 出现无障碍、可感知或可操作信号。",
+    ),
+    (
+        ["质量", "有效", "效率", "满意", "返工", "价值", "完成"],
+        [
+            "knowledge/wiki/summaries/设计准则/质量.md",
+            "knowledge/wiki/summaries/设计准则/可用性.md",
+            "knowledge/wiki/summaries/设计准则/认知.md",
+        ],
+        "facts/business 出现体验质量、效率、完成度或风险评估信号。",
+    ),
+]
+
 
 def _extract_signal_tokens(text: str) -> list[str]:
     seen: set[str] = set()
@@ -182,10 +296,11 @@ def _read_guideline_candidate_text(repo_root: Path, summary_ref: str) -> tuple[s
             title = stripped[2:].strip()
             break
 
+    route_lines = _extract_markdown_section(text, "## 场景路由")[:12]
     trigger_lines = _extract_markdown_section(text, "## 2. 任务触发线索")[:6]
     coverage_lines = _extract_markdown_section(text, "## 3. 覆盖内容")[:4]
-    candidate_text = "\n".join([title, *trigger_lines, *coverage_lines])
-    matched_fragments = [line for line in trigger_lines + coverage_lines if line]
+    candidate_text = "\n".join([title, *route_lines, *trigger_lines, *coverage_lines])
+    matched_fragments = [line for line in route_lines + trigger_lines + coverage_lines if line]
     return candidate_text, matched_fragments
 
 
@@ -204,6 +319,14 @@ def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) ->
     candidates: list[str] = []
     for entry_ref in entry_refs:
         normalized = entry_ref.replace("\\", "/").strip()
+        if normalized == "knowledge/wiki/index.md":
+            guideline_root = repo_root / "knowledge" / "wiki" / "summaries" / "设计准则"
+            if guideline_root.exists():
+                candidates.extend(
+                    str(item.resolve().relative_to(repo_root.resolve())).replace("\\", "/")
+                    for item in sorted(guideline_root.glob("**/*.md"))
+                    if item.is_file()
+                )
         if not normalized.endswith(".md"):
             continue
         entry_path = repo_root / Path(normalized.replace("/", "\\"))
@@ -213,7 +336,7 @@ def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) ->
         if entry_path.name.lower() == "readme.md":
             sibling_refs = [
                 str(item.resolve().relative_to(repo_root.resolve())).replace("\\", "/")
-                for item in sorted(entry_path.parent.glob("*.md"))
+                for item in sorted(entry_path.parent.glob("**/*.md"))
                 if item.is_file() and item.name.lower() != "readme.md"
             ]
             candidates.extend(sibling_refs)
@@ -229,10 +352,37 @@ def _collect_guideline_candidate_refs(repo_root: Path, entry_refs: list[str]) ->
     return _dedupe_keep_order([ref for ref in candidates if _is_guideline_summary_metadata(_read_summary_metadata(repo_root, ref))])
 
 
-def _select_guidelines_from_business(business_text: str, entry_refs: list[str]) -> tuple[list[str], list[str], list[dict[str, str]]]:
+def _valid_guideline_raw_refs(metadata: dict[str, object], limit: int = 3) -> list[str]:
+    raw_refs: list[str] = []
+    for item in metadata.get("source_refs", []):
+        if not isinstance(item, str):
+            continue
+        normalized = item.replace("\\", "/").strip()
+        if not normalized.startswith("knowledge/raw/"):
+            continue
+        if normalized.endswith("/") or "." not in Path(normalized).name:
+            continue
+        raw_refs.append(normalized)
+        if len(raw_refs) >= limit:
+            break
+    return raw_refs
+
+
+def _collect_source_refs_for_guidelines(repo_root: Path, guideline_refs: list[str]) -> list[str]:
+    raw_refs: list[str] = []
+    for summary_ref in guideline_refs:
+        metadata = _read_summary_metadata(repo_root, summary_ref)
+        if not _is_guideline_summary_metadata(metadata):
+            continue
+        raw_refs.extend(_valid_guideline_raw_refs(metadata))
+    return _dedupe_keep_order(raw_refs)
+
+
+def _select_guidelines_from_business(context_text: str, entry_refs: list[str]) -> tuple[list[str], list[str], list[dict[str, str]]]:
     repo_root = get_repo_root()
     candidate_refs = _collect_guideline_candidate_refs(repo_root, entry_refs)
-    business_text_lower = business_text.lower()
+    candidate_ref_set = set(candidate_refs)
+    context_text_lower = context_text.lower()
     ranked: list[tuple[int, str, str]] = []
 
     for summary_ref in candidate_refs:
@@ -240,34 +390,50 @@ def _select_guidelines_from_business(business_text: str, entry_refs: list[str]) 
         if not candidate_text:
             continue
         tokens = _extract_signal_tokens(candidate_text)
-        matched_tokens = [token for token in tokens if token in business_text_lower]
+        matched_tokens = [token for token in tokens if token in context_text_lower]
         if not matched_tokens:
             continue
         score = len(matched_tokens)
         reason_fragment = ""
         for fragment in fragments:
             fragment_tokens = _extract_signal_tokens(fragment)
-            if any(token in business_text_lower for token in fragment_tokens):
+            if any(token in context_text_lower for token in fragment_tokens):
                 reason_fragment = fragment
                 break
         if not reason_fragment and fragments:
             reason_fragment = fragments[0]
         ranked.append((score, summary_ref, reason_fragment))
 
+    for signal_tokens, routed_refs, reason in GUIDELINE_ROUTE_RULES:
+        hits = [token for token in signal_tokens if token.lower() in context_text_lower]
+        if not hits:
+            continue
+        for routed_ref in routed_refs:
+            if routed_ref in candidate_ref_set:
+                ranked.append((len(hits) + 20, routed_ref, reason))
+
     ranked.sort(key=lambda item: (-item[0], item[1]))
-    selected_refs = [summary_ref for _, summary_ref, _ in ranked[:3]]
+    selected_ranked: list[tuple[int, str, str]] = []
+    seen_guidelines: set[str] = set()
+    for item in ranked:
+        if item[1] in seen_guidelines:
+            continue
+        seen_guidelines.add(item[1])
+        selected_ranked.append(item)
+        if len(selected_ranked) >= 3:
+            break
+    selected_refs = [summary_ref for _, summary_ref, _ in selected_ranked]
 
     selected_raw_refs: list[str] = []
     selection_reasons: list[dict[str, str]] = []
-    for _, summary_ref, reason_fragment in ranked[:3]:
+    for _, summary_ref, reason_fragment in selected_ranked:
         summary_path = repo_root / Path(summary_ref.replace("/", "\\"))
         metadata = parse_summary_metadata(summary_path.read_text(encoding="utf-8"))
-        raw_refs = [str(item).replace("\\", "/") for item in metadata.get("source_refs", []) if isinstance(item, str)]
-        selected_raw_refs.extend(raw_refs[:1])
+        selected_raw_refs.extend(_valid_guideline_raw_refs(metadata))
         selection_reasons.append(
             {
                 "guideline": summary_ref,
-                "reason": f"business_blueprint 命中了该指南的触发线索：{reason_fragment}" if reason_fragment else "business_blueprint 与该指南的任务触发线索存在明显重合。",
+                "reason": f"facts/business 命中了该指南的场景线索：{reason_fragment}" if reason_fragment else "facts/business 与该指南的任务触发线索存在明显重合。",
             }
         )
 
@@ -302,23 +468,63 @@ def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list
         if isinstance(item, str) and str(item).strip()
     ]
 
+    raw_existing_reasons = experience_plan.get("guideline_selection_reason")
     reasons: list[dict[str, str]] = []
+    if isinstance(raw_existing_reasons, list):
+        reasons = [
+            {"guideline": str(item.get("guideline", "")), "reason": str(item.get("reason", ""))}
+            for item in raw_existing_reasons
+            if isinstance(item, dict)
+        ]
+    facts_text = _read_workspace_file(project_id, "facts.md")
     business_text = _read_workspace_file(project_id, "business_blueprint.md")
-    if not guideline_refs and guideline_entry_refs and business_text.strip():
-        selected_guideline_refs, selected_guideline_raw_refs, reasons = _select_guidelines_from_business(business_text, guideline_entry_refs)
+    context_text = "\n".join([facts_text, business_text])
+    if not guideline_refs and guideline_entry_refs and context_text.strip():
+        selected_guideline_refs, selected_guideline_raw_refs, reasons = _select_guidelines_from_business(context_text, guideline_entry_refs)
         guideline_refs = _dedupe_keep_order(selected_guideline_refs)
         raw_refs_from_source_refs = _dedupe_keep_order(raw_refs_from_source_refs + selected_guideline_raw_refs)
         experience_plan["guideline_refs"] = guideline_refs
         experience_plan["raw_refs_from_source_refs"] = raw_refs_from_source_refs
+        experience_plan["guideline_selection_reason"] = reasons
         _write_context_manifest(project_id, manifest)
     elif guideline_refs:
-        reasons = [
-            {
-                "guideline": guideline,
-                "reason": "该指南已作为 experience 阶段的明确设计指南输入进入上下文。",
-            }
-            for guideline in guideline_refs
-        ]
+        plan_changed = False
+        reasons_are_generic = bool(reasons) and all("明确设计指南输入" in item.get("reason", "") for item in reasons)
+        reasons_need_refresh = reasons_are_generic or any("在以下设计任务中触发" in item.get("reason", "") for item in reasons)
+        if (not reasons or reasons_need_refresh) and guideline_entry_refs and context_text.strip():
+            selected_refs, selected_raw_refs, selected_reasons = _select_guidelines_from_business(context_text, guideline_entry_refs)
+            if reasons_need_refresh and selected_refs:
+                guideline_refs = _dedupe_keep_order(selected_refs)
+                raw_refs_from_source_refs = _dedupe_keep_order(raw_refs_from_source_refs + selected_raw_refs)
+                experience_plan["guideline_refs"] = guideline_refs
+                experience_plan["raw_refs_from_source_refs"] = raw_refs_from_source_refs
+                plan_changed = True
+            selected_reason_by_ref = {item["guideline"]: item["reason"] for item in selected_reasons}
+            reasons = [
+                {
+                    "guideline": guideline,
+                    "reason": selected_reason_by_ref.get(guideline, "facts/business 已保留该 guideline 作为 experience 阶段输入，但未重新命中更具体的场景片段。"),
+                }
+                for guideline in guideline_refs
+            ]
+            experience_plan["guideline_selection_reason"] = reasons
+            plan_changed = True
+        selected_guideline_raw_refs = _collect_source_refs_for_guidelines(get_repo_root(), guideline_refs)
+        updated_raw_refs = _dedupe_keep_order(raw_refs_from_source_refs + selected_guideline_raw_refs)
+        if updated_raw_refs != raw_refs_from_source_refs:
+            raw_refs_from_source_refs = updated_raw_refs
+            experience_plan["raw_refs_from_source_refs"] = raw_refs_from_source_refs
+            plan_changed = True
+        if not reasons:
+            reasons = [
+                {
+                    "guideline": guideline,
+                    "reason": "该指南已作为 experience 阶段的明确设计指南输入进入上下文，并已补齐 source_refs 指向的 raw。",
+                }
+                for guideline in guideline_refs
+            ]
+        if plan_changed:
+            _write_context_manifest(project_id, manifest)
     elif guideline_entry_refs:
         reasons = [
             {
@@ -327,12 +533,7 @@ def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list
             }
         ]
 
-    guideline_source_refs: list[str] = []
-    for summary_ref in guideline_entry_refs + guideline_refs:
-        metadata = _read_summary_metadata(get_repo_root(), summary_ref)
-        if not _is_guideline_summary_metadata(metadata):
-            continue
-        guideline_source_refs.extend(str(item).replace("\\", "/") for item in metadata.get("source_refs", []) if isinstance(item, str))
+    guideline_source_refs = _collect_source_refs_for_guidelines(get_repo_root(), guideline_entry_refs + guideline_refs)
     guideline_raw_refs = [ref for ref in raw_refs_from_source_refs if ref in set(guideline_source_refs)]
     return guideline_entry_refs, guideline_refs, guideline_raw_refs, reasons
 
@@ -393,14 +594,21 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         )
         + "\n\n## 4. 设计指南导航（按需消费）\n\n"
         + guideline_lines
-        + "\n\n## 5. 设计原则摘要\n\n"
+        + "\n\n## 5. 设计指南消费判断\n\n"
+        "在输出体验蓝图前，请基于 facts.md 和 business_blueprint.md 判断：\n"
+        "1. 本次业务蓝图中是否出现报错、阻断、校验、状态反馈、审批延迟、批量风险、高风险配置等体验问题。\n"
+        "2. 这些问题是否命中 Design Guidelines 中的具体 summary。\n"
+        "3. 如果命中 summary，必须读取其 source_refs 指向的 raw，并只吸收原则，不暴露大段原文。\n"
+        "4. 体验蓝图不得凭指南替代业务事实；业务事实不足时，只能输出待确认问题或条件型建议。\n"
+        "5. 输出方案时，需要说明反馈时机、反馈形式、用户可见文案和用户下一步。\n"
+        + "\n\n## 6. 设计原则摘要\n\n"
         "- 先写主流程，再补次流程与异常阻断流程。\n"
         "- 页面/弹窗/抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
         "- 禁止重做事实抽取、业务判断或需求全文重读。\n\n"
-        "## 6. 待确认问题\n\n"
+        "## 7. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
-        + "\n\n## 7. 输出模板要求\n\n"
+        + "\n\n## 8. 输出模板要求\n\n"
         "- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
         "  - `## 1. 交互流程总览`\n"
