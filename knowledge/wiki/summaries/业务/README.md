@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 业务总览
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-16
-- updated_at: 2026-05-16
+- semantic_updated_at: 2026-05-17
+- updated_at: 2026-05-17
 - related_summaries:
   - knowledge/wiki/summaries/业务/人事服务/README.md
   - knowledge/wiki/summaries/业务/人事服务/员工管理/README.md

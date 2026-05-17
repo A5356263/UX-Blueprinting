@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 账户与企业生命周期
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-16
-- updated_at: 2026-05-16
+- semantic_updated_at: 2026-05-17
+- updated_at: 2026-05-17
 - related_summaries:
   - knowledge/wiki/summaries/业务/账户与企业生命周期/00_领域概述.md
   - knowledge/wiki/summaries/业务/账户与企业生命周期/10_开通路径.md

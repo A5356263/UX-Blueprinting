@@ -1,0 +1,25 @@
+{
+  "project_id": "employee-self-permission",
+  "generation_mode": "generated",
+  "producer": "UXB mainline",
+  "source_hash": "4cd3ccc492901b15df9f98e526c89f66858e829c18b7e5786685fd7199e876d8",
+  "task_card_hash": "71fef717b134c6eedd98630c491d1562afbbde2fc1cf939b56aaead033bd8b8c",
+  "generated_at": "2026-05-17T03:28:00+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "bootstrap",
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive",
+    "preview"
+  ]
+}

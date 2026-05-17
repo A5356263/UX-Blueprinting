@@ -2520,3 +2520,8 @@ pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pe
 [2026-05-16T15:31:26+00:00] update_exit_code=0
 [2026-05-16T15:31:26+00:00] update_stdout=status=ok
 pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
+[2026-05-17T02:51:00+00:00] daemon_started pid=10968 interval=20
+[2026-05-17T02:51:00+00:00] trigger_summary_refresh changed_count=142
+[2026-05-17T02:51:05+00:00] update_exit_code=0
+[2026-05-17T02:51:05+00:00] update_stdout=status=ok
+pending_report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\pending_wiki_updates.md
