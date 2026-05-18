@@ -1,0 +1,90 @@
+{
+  "version": "route-decision@1.0",
+  "rules_version": "route-decision-rules@1.0",
+  "project_id": "standard-export-org-dimension",
+  "route": "standard",
+  "confidence": "high",
+  "demand_type": "权限与治理风险",
+  "reason": "初判为权限与治理风险，主要压力在业务规则、权限治理、状态异常，需要保留业务边界判断后再转体验方案。",
+  "evidence": [
+    "source/requirement.md: 在导出弹窗中增加组织维度选择，支持按当前组织、含下级组织、全部可见组织导出。"
+  ],
+  "dimension_judgment": {
+    "business_capability_change": "none",
+    "business_rule_change": "medium",
+    "permission_governance_risk": "high",
+    "task_flow_change": "none",
+    "information_structure_pressure": "none",
+    "state_exception_pressure": "medium",
+    "copy_comprehension_pressure": "low",
+    "layout_interaction_pressure": "low",
+    "review_risk": "medium"
+  },
+  "dimension_evidence": {
+    "business_capability_change": "需求未表现出新增或重构能力，主要是既有能力内调整",
+    "business_rule_change": "存在业务规则、校验或条件变化：影响员工列表导出范围、导出弹窗和结果反馈",
+    "permission_governance_risk": "涉及权限、审批、数据范围、导出或治理风险：涉及数据范围和用户可见组织范围，不能导出超出当前权限的数据",
+    "task_flow_change": "未发现主任务路径变化",
+    "information_structure_pressure": "未发现明显信息结构或概念澄清压力",
+    "state_exception_pressure": "状态、异常、阻断或校验会影响方案：需要处理无权限组织、导出任务失败和大数据量导出延迟",
+    "copy_comprehension_pressure": "未发现文案理解是主要压力",
+    "layout_interaction_pressure": "未发现布局交互是主要压力",
+    "review_risk": "存在评审误解、边界争议或待确认风险：用户进入员工列表，点击导出，选择组织维度，确认后生成导出任务"
+  },
+  "design_pressure": [
+    "业务规则",
+    "权限治理",
+    "状态异常",
+    "评审风险"
+  ],
+  "business_depth": "lite",
+  "experience_focus": [
+    "重点展开规则边界、校验条件、限制原因和体验承接要求",
+    "重点展开可操作条件、不可操作原因、风险提示和异常后的下一步",
+    "重点展开状态含义、异常触发、反馈形式、失败原因和补救路径",
+    "重点展开容易误解的边界、争议点和必须确认项"
+  ],
+  "non_focus_guidance": [
+    "非重点章节只写结论和必要边界，不补泛化价值分析、泛化风险或无依据收益估算。"
+  ],
+  "escalation_signals": [
+    "后续发现新增核心业务能力、重构既有模块或改变业务对象关系时，需升级 full。",
+    "后续发现多角色协作闭环、权限模型、审批模式或状态机变化时，需升级 full。",
+    "后续 facts/business 出现关键 GAP，无法支撑体验方案时，需升级 full 或暂停确认。"
+  ],
+  "matched_route_signals": [
+    {
+      "demand_type": "权限与治理风险",
+      "matched_terms": [
+        "数据范围"
+      ],
+      "evidence": "涉及权限、审批、数据范围或治理",
+      "route_pressure": 4
+    },
+    {
+      "demand_type": "既有能力扩展",
+      "matched_terms": [
+        "增加",
+        "导出"
+      ],
+      "evidence": "在既有能力上增加规则或能力",
+      "route_pressure": 2
+    }
+  ],
+  "matched_dimension_terms": {
+    "business_rule_change": [
+      "范围"
+    ],
+    "permission_governance_risk": [
+      "数据范围",
+      "超出当前权限"
+    ],
+    "state_exception_pressure": [
+      "失败"
+    ],
+    "review_risk": [
+      "确认"
+    ]
+  },
+  "should_not_control_mainline": true
+}

@@ -1,0 +1,15 @@
+{
+  "project_id": "full-org-module-refactor",
+  "status": "failed",
+  "generated_at": "2026-05-18T03:42:24+00:00",
+  "stopped_at": "assemble",
+  "message": "Task card not found: E:\\AI设计\\体验蓝图构建思路\\test\\route_decision_cases\\full-org-module-refactor\\source\\task_card.md",
+  "steps": [
+    {
+      "command": "assemble",
+      "exit_code": 1,
+      "message": "Task card not found: E:\\AI设计\\体验蓝图构建思路\\test\\route_decision_cases\\full-org-module-refactor\\source\\task_card.md"
+    }
+  ],
+  "actual_outputs": []
+}

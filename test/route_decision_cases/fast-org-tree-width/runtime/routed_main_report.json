@@ -1,0 +1,54 @@
+{
+  "project_id": "fast-org-tree-width",
+  "status": "passed",
+  "generated_at": "2026-05-18T12:46:11+00:00",
+  "requested_route": "auto",
+  "decided_route": "fast",
+  "actual_route": "fast",
+  "stopped_at": "",
+  "steps": [
+    {
+      "command": "assemble",
+      "exit_code": 0
+    },
+    {
+      "command": "route-decision",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-facts",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-business-note",
+      "exit_code": 0
+    },
+    {
+      "command": "gate-business-note",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-experience",
+      "exit_code": 0
+    },
+    {
+      "command": "gate-experience-lite",
+      "exit_code": 0
+    },
+    {
+      "command": "validate-lite",
+      "exit_code": 0
+    }
+  ],
+  "actual_outputs": [
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/workspace/facts.md",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/workspace/business_note.md",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/workspace/business_blueprint_lite.md",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/workspace/experience_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/workspace/check_status.json",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/runtime/routed_main_plan.json",
+    "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/fast-org-tree-width/runtime/routed_main_report.json"
+  ],
+  "recommend_enable_routed_execution": false,
+  "recommendation_reason": "阶段三仅完成试运行能力；是否正式启用需要基于测试样本结果判断。"
+}

@@ -1,0 +1,26 @@
+{
+  "capability_id": "generate_business_lite",
+  "display_name": "Generate Business Lite",
+  "type": "command",
+  "stage": "mainline",
+  "entrypoint": "python -m packages generate-business-lite <project-id>",
+  "description": "为 standard 路线生成轻量业务蓝图的提示入口。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/facts.md",
+    "projects/<project-id>/runtime/route_decision.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/business_blueprint_lite.md",
+    "projects/<project-id>/runtime/provenance.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/generation/core.py",
+    "specs/17_business_blueprint_lite_contract.md",
+    "templates/business_blueprint_lite.template.md"
+  ],
+  "status": "active"
+}

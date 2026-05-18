@@ -1,0 +1,24 @@
+{
+  "capability_id": "validate_lite",
+  "display_name": "Validate Lite",
+  "type": "command",
+  "stage": "validate",
+  "entrypoint": "python -m packages validate-lite <project-id>",
+  "description": "按轻量路线边界检查必需产物和 gate 状态。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/experience_blueprint.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/workspace/check_status.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": false,
+  "source_of_truth_refs": [
+    "packages/validate/core.py",
+    "specs/18_routed_main_contract.md"
+  ],
+  "status": "active"
+}

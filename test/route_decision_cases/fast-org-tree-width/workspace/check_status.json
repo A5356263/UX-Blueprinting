@@ -1,0 +1,136 @@
+{
+  "task_id": "fast-org-tree-width",
+  "status": "warning",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 1,
+  "completed_outputs": [
+    "projects/fast-org-tree-width/workspace/facts.md",
+    "projects/fast-org-tree-width/workspace/business_note.md",
+    "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+    "projects/fast-org-tree-width/workspace/experience_blueprint.md"
+  ],
+  "missing_outputs": [],
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-18T12:46:11.008537+00:00",
+  "checked_files": [
+    "projects/fast-org-tree-width/runtime/route_decision.json",
+    "projects/fast-org-tree-width/workspace/facts.md",
+    "projects/fast-org-tree-width/workspace/business_note.md",
+    "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+    "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+    "projects/fast-org-tree-width/runtime/gates/business_note_gate_status.json",
+    "projects/fast-org-tree-width/runtime/gates/experience_lite_gate_status.json"
+  ],
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience_lite gate 状态为 warning"
+    ],
+    "infos": [
+      "business_note gate 状态：passed"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_lite gate 状态为 warning",
+      "target_artifacts": [
+        "projects/fast-org-tree-width/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/fast-org-tree-width/runtime/route_decision.json",
+        "projects/fast-org-tree-width/workspace/facts.md",
+        "projects/fast-org-tree-width/workspace/business_note.md",
+        "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+        "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+        "projects/fast-org-tree-width/runtime/gates/business_note_gate_status.json",
+        "projects/fast-org-tree-width/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_lite gate 状态为 warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/fast-org-tree-width/runtime/route_decision.json",
+            "projects/fast-org-tree-width/workspace/facts.md",
+            "projects/fast-org-tree-width/workspace/business_note.md",
+            "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+            "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+            "projects/fast-org-tree-width/runtime/gates/business_note_gate_status.json",
+            "projects/fast-org-tree-width/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "route": "fast",
+            "validation_mode": "lite"
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business_note gate 状态：passed",
+      "target_artifacts": [
+        "projects/fast-org-tree-width/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/fast-org-tree-width/runtime/route_decision.json",
+        "projects/fast-org-tree-width/workspace/facts.md",
+        "projects/fast-org-tree-width/workspace/business_note.md",
+        "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+        "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+        "projects/fast-org-tree-width/runtime/gates/business_note_gate_status.json",
+        "projects/fast-org-tree-width/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_note gate 状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/fast-org-tree-width/runtime/route_decision.json",
+            "projects/fast-org-tree-width/workspace/facts.md",
+            "projects/fast-org-tree-width/workspace/business_note.md",
+            "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+            "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+            "projects/fast-org-tree-width/runtime/gates/business_note_gate_status.json",
+            "projects/fast-org-tree-width/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "route": "fast",
+            "validation_mode": "lite"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "route": "fast",
+    "validation_mode": "lite"
+  }
+}

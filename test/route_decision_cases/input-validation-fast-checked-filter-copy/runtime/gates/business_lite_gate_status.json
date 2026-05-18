@@ -1,0 +1,71 @@
+{
+  "project_id": "input-validation-fast-checked-filter-copy",
+  "stage": "business_lite",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-18T12:45:53.919538+00:00",
+  "checked_files": [
+    "projects/input-validation-fast-checked-filter-copy/workspace/facts.md",
+    "projects/input-validation-fast-checked-filter-copy/workspace/business_blueprint_lite.md",
+    "projects/input-validation-fast-checked-filter-copy/runtime/route_decision.json",
+    "projects/input-validation-fast-checked-filter-copy/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "route 判断：standard"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_lite_gate",
+      "stage": "business_lite",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "route 判断：standard",
+      "target_artifacts": [
+        "projects/input-validation-fast-checked-filter-copy/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/input-validation-fast-checked-filter-copy/workspace/facts.md",
+        "projects/input-validation-fast-checked-filter-copy/workspace/business_blueprint_lite.md",
+        "projects/input-validation-fast-checked-filter-copy/runtime/route_decision.json",
+        "projects/input-validation-fast-checked-filter-copy/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "route 判断：standard"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/input-validation-fast-checked-filter-copy/workspace/facts.md",
+            "projects/input-validation-fast-checked-filter-copy/workspace/business_blueprint_lite.md",
+            "projects/input-validation-fast-checked-filter-copy/runtime/route_decision.json",
+            "projects/input-validation-fast-checked-filter-copy/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "artifact": "business_blueprint_lite.md"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "artifact": "business_blueprint_lite.md"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "project_id": "input-validation-full-subadmin-copy-approval",
+  "stage": "facts",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "business",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-18T12:45:56.408858+00:00",
+  "checked_files": [
+    "projects/input-validation-full-subadmin-copy-approval/source/task_card.md",
+    "projects/input-validation-full-subadmin-copy-approval/source/requirement.md",
+    "projects/input-validation-full-subadmin-copy-approval/source/background.md",
+    "projects/input-validation-full-subadmin-copy-approval/runtime/task_card_resolved.json",
+    "projects/input-validation-full-subadmin-copy-approval/runtime/context_manifest.json",
+    "projects/input-validation-full-subadmin-copy-approval/runtime/provenance.json",
+    "projects/input-validation-full-subadmin-copy-approval/workspace/facts.md"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [],
+  "metrics": {
+    "dimension_coverage": {
+      "overview": 1,
+      "features": 1,
+      "rules": 1,
+      "states": 1,
+      "exceptions": 1,
+      "dependencies": 1,
+      "gaps": 1
+    },
+    "gap_count": 0,
+    "knowledge_derived_fact_count": 0
+  }
+}

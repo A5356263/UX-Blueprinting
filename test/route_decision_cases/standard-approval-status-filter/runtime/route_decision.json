@@ -1,0 +1,79 @@
+{
+  "version": "route-decision@1.0",
+  "rules_version": "route-decision-rules@1.0",
+  "project_id": "standard-approval-status-filter",
+  "route": "standard",
+  "confidence": "medium",
+  "demand_type": "文案与信息表达优化",
+  "reason": "初判为文案与信息表达优化，主要压力在信息结构、状态异常，需要保留业务边界判断后再转体验方案。",
+  "evidence": [
+    "source/requirement.md: 新增审批状态筛选，支持按待处理、处理中、已完成、已失效筛选。"
+  ],
+  "dimension_judgment": {
+    "business_capability_change": "none",
+    "business_rule_change": "none",
+    "permission_governance_risk": "none",
+    "task_flow_change": "none",
+    "information_structure_pressure": "medium",
+    "state_exception_pressure": "medium",
+    "copy_comprehension_pressure": "low",
+    "layout_interaction_pressure": "low",
+    "review_risk": "low"
+  },
+  "dimension_evidence": {
+    "business_capability_change": "需求未表现出新增或重构能力，主要是既有能力内调整",
+    "business_rule_change": "未发现明确业务规则变化信号",
+    "permission_governance_risk": "未发现权限、审批、数据范围或治理变化",
+    "task_flow_change": "未发现主任务路径变化",
+    "information_structure_pressure": "存在概念、入口、层级或模块边界压力：需要定义每个状态的业务含义，以及筛选后无结果时的说明",
+    "state_exception_pressure": "状态、异常、阻断或校验会影响方案：新增审批状态筛选，支持按待处理、处理中、已完成、已失效筛选",
+    "copy_comprehension_pressure": "用户理解主要依赖文案、说明或提示：影响审批列表筛选条件、状态说明和空状态文案",
+    "layout_interaction_pressure": "未发现布局交互是主要压力",
+    "review_risk": "当前信息未暴露明显评审风险"
+  },
+  "design_pressure": [
+    "信息结构",
+    "状态异常"
+  ],
+  "business_depth": "lite",
+  "experience_focus": [
+    "重点展开模块定义、信息分组、入口归属和页面层级",
+    "重点展开状态含义、异常触发、反馈形式、失败原因和补救路径"
+  ],
+  "non_focus_guidance": [
+    "非重点章节只写结论和必要边界，不补泛化价值分析、泛化风险或无依据收益估算。"
+  ],
+  "escalation_signals": [
+    "后续发现新增核心业务能力、重构既有模块或改变业务对象关系时，需升级 full。",
+    "后续发现多角色协作闭环、权限模型、审批模式或状态机变化时，需升级 full。",
+    "后续 facts/business 出现关键 GAP，无法支撑体验方案时，需升级 full 或暂停确认。"
+  ],
+  "matched_route_signals": [
+    {
+      "demand_type": "文案与信息表达优化",
+      "matched_terms": [
+        "文案",
+        "说明",
+        "空状态"
+      ],
+      "evidence": "主要关注文案或信息表达",
+      "route_pressure": 1
+    }
+  ],
+  "matched_dimension_terms": {
+    "information_structure_pressure": [
+      "定义"
+    ],
+    "state_exception_pressure": [
+      "审批状态",
+      "状态筛选",
+      "失效"
+    ],
+    "copy_comprehension_pressure": [
+      "文案",
+      "说明",
+      "空状态"
+    ]
+  },
+  "should_not_control_mainline": true
+}

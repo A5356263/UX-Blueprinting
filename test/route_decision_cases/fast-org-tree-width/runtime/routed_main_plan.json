@@ -1,0 +1,114 @@
+{
+  "project_id": "fast-org-tree-width",
+  "generated_at": "2026-05-18T12:46:10+00:00",
+  "route_source": "route_decision.json",
+  "requested_route": "auto",
+  "decided_route": "fast",
+  "actual_route": "fast",
+  "downgrade_rejected": false,
+  "planned_steps": [
+    "assemble",
+    "route-decision",
+    "generate-facts",
+    "generate-business-note",
+    "gate-business-note",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite"
+  ],
+  "route_decision": {
+    "version": "route-decision@1.0",
+    "rules_version": "route-decision-rules@1.0",
+    "project_id": "fast-org-tree-width",
+    "route": "fast",
+    "confidence": "medium",
+    "demand_type": "局部体验优化",
+    "reason": "初判为局部体验优化，主要压力在信息结构、评审风险，未发现会改变核心业务规则的信号。",
+    "evidence": [
+      "source/task_card.md: 优化组织树宽度展示，让长部门名称更容易查看。",
+      "source/requirement.md: 组织架构页面左侧组织树在层级较深时，部门名称经常被截断，用户需要反复悬停查看完整名称。",
+      "source/background.md: 测试 fast 路线下局部布局交互优化。",
+      "runtime/task_card_resolved.json: {\"task_id\": \"fast-org-tree-width\", \"protocol_name\": \"UXB Test Task\", \"protocol_version\": \"1.0\", \"task_name\": \"组织树宽度拖动\", "
+    ],
+    "dimension_judgment": {
+      "business_capability_change": "none",
+      "business_rule_change": "none",
+      "permission_governance_risk": "none",
+      "task_flow_change": "none",
+      "information_structure_pressure": "medium",
+      "state_exception_pressure": "none",
+      "copy_comprehension_pressure": "low",
+      "layout_interaction_pressure": "low",
+      "review_risk": "medium"
+    },
+    "dimension_evidence": {
+      "business_capability_change": "需求未表现出新增或重构能力，主要是既有能力内调整",
+      "business_rule_change": "未发现明确业务规则变化信号",
+      "permission_governance_risk": "未发现权限、审批、数据范围或治理变化",
+      "task_flow_change": "未发现主任务路径变化",
+      "information_structure_pressure": "存在概念、入口、层级或模块边界压力：需要定义最小宽度、最大宽度、长部门名称展示和窗口缩小时的响应方式",
+      "state_exception_pressure": "未发现明显状态、异常或校验压力",
+      "copy_comprehension_pressure": "未发现文案理解是主要压力",
+      "layout_interaction_pressure": "局部布局、展示或交互细节是明显压力：测试 fast 路线下局部布局交互优化",
+      "review_risk": "存在评审误解、边界争议或待确认风险：experience 承接宽度调整、边界宽度和刷新恢复"
+    },
+    "design_pressure": [
+      "信息结构",
+      "评审风险"
+    ],
+    "business_depth": "note",
+    "experience_focus": [
+      "重点展开模块定义、信息分组、入口归属和页面层级",
+      "重点展开容易误解的边界、争议点和必须确认项"
+    ],
+    "non_focus_guidance": [
+      "业务章节只保留必要依据，明确不影响权限、审批、数据范围、状态机和业务对象关系。"
+    ],
+    "escalation_signals": [
+      "后续发现权限、审批、数据范围、导出或状态机变化时，需升级 standard。",
+      "后续发现新增业务规则、校验条件或阻断异常决定方案成败时，需升级 standard。",
+      "后续发现需求原文存在明显更优解或体验风险时，需重新判断路线。"
+    ],
+    "matched_route_signals": [
+      {
+        "demand_type": "局部体验优化",
+        "matched_terms": [
+          "局部"
+        ],
+        "evidence": "主要关注局部体验表达",
+        "route_pressure": 1
+      },
+      {
+        "demand_type": "布局交互优化",
+        "matched_terms": [
+          "布局",
+          "拖动",
+          "宽度",
+          "响应",
+          "区域"
+        ],
+        "evidence": "主要关注布局或局部交互",
+        "route_pressure": 1
+      }
+    ],
+    "matched_dimension_terms": {
+      "information_structure_pressure": [
+        "定义",
+        "层级"
+      ],
+      "layout_interaction_pressure": [
+        "布局",
+        "拖动",
+        "宽度",
+        "展示",
+        "默认",
+        "响应",
+        "区域"
+      ],
+      "review_risk": [
+        "边界"
+      ]
+    },
+    "should_not_control_mainline": true
+  }
+}

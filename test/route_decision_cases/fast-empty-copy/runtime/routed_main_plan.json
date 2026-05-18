@@ -1,0 +1,117 @@
+{
+  "project_id": "fast-empty-copy",
+  "generated_at": "2026-05-18T12:46:11+00:00",
+  "route_source": "route_decision.json",
+  "requested_route": "auto",
+  "decided_route": "standard",
+  "actual_route": "standard",
+  "downgrade_rejected": false,
+  "planned_steps": [
+    "assemble",
+    "route-decision",
+    "generate-facts",
+    "gate-facts",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ],
+  "route_decision": {
+    "version": "route-decision@1.0",
+    "rules_version": "route-decision-rules@1.0",
+    "project_id": "fast-empty-copy",
+    "route": "standard",
+    "confidence": "medium",
+    "demand_type": "业务流程调整",
+    "reason": "初判为业务流程调整，主要压力在流程承接，需要保留业务边界判断后再转体验方案。",
+    "evidence": [
+      "source/task_card.md: Task Name: 空状态文案微调",
+      "source/requirement.md: 权限查询页面在没有筛选结果时只显示“暂无数据”，用户不知道是没有权限记录，还是筛选条件过窄。",
+      "source/background.md: 当前需求只涉及空状态提示，不涉及核心业务规则变化。",
+      "runtime/task_card_resolved.json: {\"task_id\": \"fast-empty-copy\", \"protocol_name\": \"UXB Test Task\", \"protocol_version\": \"1.0\", \"task_name\": \"空状态文案微调\", \"dom"
+    ],
+    "dimension_judgment": {
+      "business_capability_change": "none",
+      "business_rule_change": "none",
+      "permission_governance_risk": "none",
+      "task_flow_change": "medium",
+      "information_structure_pressure": "none",
+      "state_exception_pressure": "none",
+      "copy_comprehension_pressure": "low",
+      "layout_interaction_pressure": "low",
+      "review_risk": "low"
+    },
+    "dimension_evidence": {
+      "business_capability_change": "需求未表现出新增或重构能力，主要是既有能力内调整",
+      "business_rule_change": "未发现明确业务规则变化信号",
+      "permission_governance_risk": "未发现权限、审批、数据范围或治理变化",
+      "task_flow_change": "用户任务路径、结果回写或角色协同可能变化：交互流程总览",
+      "information_structure_pressure": "未发现明显信息结构或概念澄清压力",
+      "state_exception_pressure": "未发现明显状态、异常或校验压力",
+      "copy_comprehension_pressure": "用户理解主要依赖文案、说明或提示：Task Name: 空状态文案微调",
+      "layout_interaction_pressure": "局部布局、展示或交互细节是明显压力：优化空状态提示文案，让用户知道当前没有可展示内容",
+      "review_risk": "当前信息未暴露明显评审风险"
+    },
+    "design_pressure": [
+      "流程承接"
+    ],
+    "business_depth": "lite",
+    "experience_focus": [
+      "重点展开主路径变化、步骤衔接、角色协同和结果回写"
+    ],
+    "non_focus_guidance": [
+      "非重点章节只写结论和必要边界，不补泛化价值分析、泛化风险或无依据收益估算。"
+    ],
+    "escalation_signals": [
+      "后续发现新增核心业务能力、重构既有模块或改变业务对象关系时，需升级 full。",
+      "后续发现多角色协作闭环、权限模型、审批模式或状态机变化时，需升级 full。",
+      "后续 facts/business 出现关键 GAP，无法支撑体验方案时，需升级 full 或暂停确认。"
+    ],
+    "matched_route_signals": [
+      {
+        "demand_type": "业务流程调整",
+        "matched_terms": [
+          "流程"
+        ],
+        "evidence": "涉及流程、结果回写或角色协同",
+        "route_pressure": 3
+      },
+      {
+        "demand_type": "局部体验优化",
+        "matched_terms": [
+          "微调",
+          "状态提示"
+        ],
+        "evidence": "主要关注局部体验表达",
+        "route_pressure": 1
+      },
+      {
+        "demand_type": "文案与信息表达优化",
+        "matched_terms": [
+          "文案",
+          "说明",
+          "空状态"
+        ],
+        "evidence": "主要关注文案或信息表达",
+        "route_pressure": 1
+      }
+    ],
+    "matched_dimension_terms": {
+      "task_flow_change": [
+        "流程"
+      ],
+      "copy_comprehension_pressure": [
+        "文案",
+        "提示",
+        "说明",
+        "空状态"
+      ],
+      "layout_interaction_pressure": [
+        "展示"
+      ]
+    },
+    "should_not_control_mainline": true
+  }
+}

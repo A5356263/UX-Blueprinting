@@ -1,0 +1,24 @@
+{
+  "capability_id": "coverage_lite",
+  "display_name": "Coverage Lite",
+  "type": "command",
+  "stage": "validate",
+  "entrypoint": "python -m packages coverage-lite <project-id>",
+  "description": "检查轻量业务产物中的关键承接信号是否进入 experience。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/check_status.json"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/workspace/check_report.md",
+    "projects/<project-id>/workspace/check_status.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": false,
+  "source_of_truth_refs": [
+    "packages/validate/core.py",
+    "specs/18_routed_main_contract.md"
+  ],
+  "status": "active"
+}

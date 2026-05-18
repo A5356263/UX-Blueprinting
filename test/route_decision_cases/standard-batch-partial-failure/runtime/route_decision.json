@@ -1,0 +1,74 @@
+{
+  "version": "route-decision@1.0",
+  "rules_version": "route-decision-rules@1.0",
+  "project_id": "standard-batch-partial-failure",
+  "route": "standard",
+  "confidence": "medium",
+  "demand_type": "既有能力扩展",
+  "reason": "初判为既有能力扩展，主要压力在状态异常，需要保留业务边界判断后再转体验方案。",
+  "evidence": [
+    "source/requirement.md: 成员批量禁用时，如果部分成员因状态或权限原因失败，当前只提示“操作失败”，用户不知道哪些成功、哪些失败。"
+  ],
+  "dimension_judgment": {
+    "business_capability_change": "none",
+    "business_rule_change": "none",
+    "permission_governance_risk": "none",
+    "task_flow_change": "none",
+    "information_structure_pressure": "none",
+    "state_exception_pressure": "medium",
+    "copy_comprehension_pressure": "low",
+    "layout_interaction_pressure": "low",
+    "review_risk": "low"
+  },
+  "dimension_evidence": {
+    "business_capability_change": "需求未表现出新增或重构能力，主要是既有能力内调整",
+    "business_rule_change": "未发现明确业务规则变化信号",
+    "permission_governance_risk": "未发现权限、审批、数据范围或治理变化",
+    "task_flow_change": "未发现主任务路径变化",
+    "information_structure_pressure": "未发现明显信息结构或概念澄清压力",
+    "state_exception_pressure": "状态、异常、阻断或校验会影响方案：成员批量禁用时，如果部分成员因状态或权限原因失败，当前只提示“操作失败”，用户不知道哪些成功、哪些失败",
+    "copy_comprehension_pressure": "用户理解主要依赖文案、说明或提示：成员批量禁用时，如果部分成员因状态或权限原因失败，当前只提示“操作失败”，用户不知道哪些成功、哪些失败",
+    "layout_interaction_pressure": "局部布局、展示或交互细节是明显压力：批量操作完成后展示成功数量、失败数量和失败明细，并给出可继续处理的下一步",
+    "review_risk": "当前信息未暴露明显评审风险"
+  },
+  "design_pressure": [
+    "状态异常"
+  ],
+  "business_depth": "lite",
+  "experience_focus": [
+    "重点展开状态含义、异常触发、反馈形式、失败原因和补救路径"
+  ],
+  "non_focus_guidance": [
+    "非重点章节只写结论和必要边界，不补泛化价值分析、泛化风险或无依据收益估算。"
+  ],
+  "escalation_signals": [
+    "后续发现新增核心业务能力、重构既有模块或改变业务对象关系时，需升级 full。",
+    "后续发现多角色协作闭环、权限模型、审批模式或状态机变化时，需升级 full。",
+    "后续 facts/business 出现关键 GAP，无法支撑体验方案时，需升级 full 或暂停确认。"
+  ],
+  "matched_route_signals": [
+    {
+      "demand_type": "既有能力扩展",
+      "matched_terms": [
+        "导出",
+        "批量",
+        "明细"
+      ],
+      "evidence": "在既有能力上增加规则或能力",
+      "route_pressure": 2
+    }
+  ],
+  "matched_dimension_terms": {
+    "state_exception_pressure": [
+      "失败",
+      "部分成功"
+    ],
+    "copy_comprehension_pressure": [
+      "提示"
+    ],
+    "layout_interaction_pressure": [
+      "展示"
+    ]
+  },
+  "should_not_control_mainline": true
+}

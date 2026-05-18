@@ -1,0 +1,24 @@
+{
+  "project_id": "fast-empty-copy",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "b30d6941ffc34437ba86844660365fb22162060918f0dc425abc0d3348dd1275",
+  "task_card_hash": "7e2db9cdf499c722b0fa3ab0e23cf9d91e9cee3fff012a42bc7b06ee69965a18",
+  "generated_at": "2026-05-18T12:46:11+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite",
+    "run-routed-main",
+    "route-decision",
+    "assemble"
+  ]
+}

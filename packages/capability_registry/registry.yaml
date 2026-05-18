@@ -6,14 +6,23 @@
     "task_bootstrap",
     "context_assemble",
     "generate_facts",
+    "route_decision",
     "generate_business",
+    "generate_business_note",
+    "generate_business_lite",
     "generate_experience",
     "facts_gate",
     "business_gate",
+    "business_note_gate",
+    "business_lite_gate",
     "experience_gate",
+    "experience_lite_gate",
     "validate_outputs",
+    "validate_lite",
     "coverage_check",
+    "coverage_lite",
     "run_main",
+    "run_routed_main",
     "sample_check",
     "repair_plan",
     "repair_status",
@@ -49,6 +58,7 @@
     "首轮以现有正式命令为主，并为 capability registry 查询命令提供只读消费入口。",
     "P3 新增 memory 命令用于提取候选、接受长期 memory，并生成用户可读摘要。",
     "P4 新增 preview 命令用于在主链路完成后生成体验蓝图预览层，并交付本地预览地址。",
-    "P5 新增 generate-*、run-main、sample-check 与 provenance 约束，用于补齐主链路、来源追溯和样例治理。"
+    "P5 新增 generate-*、run-main、sample-check 与 provenance 约束，用于补齐主链路、来源追溯和样例治理。",
+    "P6 新增 run-routed-main 与轻量业务产物命令，用于阶段三 route-aware 执行评估。"
   ]
 }

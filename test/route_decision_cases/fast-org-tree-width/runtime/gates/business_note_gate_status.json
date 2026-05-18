@@ -1,0 +1,71 @@
+{
+  "project_id": "fast-org-tree-width",
+  "stage": "business_note",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-18T12:46:10.958705+00:00",
+  "checked_files": [
+    "projects/fast-org-tree-width/workspace/facts.md",
+    "projects/fast-org-tree-width/workspace/business_note.md",
+    "projects/fast-org-tree-width/runtime/route_decision.json",
+    "projects/fast-org-tree-width/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "route 判断：fast"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_note_gate",
+      "stage": "business_note",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "route 判断：fast",
+      "target_artifacts": [
+        "projects/fast-org-tree-width/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/fast-org-tree-width/workspace/facts.md",
+        "projects/fast-org-tree-width/workspace/business_note.md",
+        "projects/fast-org-tree-width/runtime/route_decision.json",
+        "projects/fast-org-tree-width/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "route 判断：fast"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/fast-org-tree-width/workspace/facts.md",
+            "projects/fast-org-tree-width/workspace/business_note.md",
+            "projects/fast-org-tree-width/runtime/route_decision.json",
+            "projects/fast-org-tree-width/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "artifact": "business_note.md"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "artifact": "business_note.md"
+  }
+}

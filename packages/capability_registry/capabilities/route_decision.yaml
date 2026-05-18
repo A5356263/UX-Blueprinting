@@ -1,0 +1,27 @@
+{
+  "capability_id": "route_decision",
+  "display_name": "Route Decision",
+  "type": "command",
+  "stage": "mainline_observation",
+  "entrypoint": "python -m packages route-decision <project-id>",
+  "description": "基于当前 source 与已装配 runtime 上下文生成旁路路线判断，不控制 run-main，不改变后续执行步骤。",
+  "required_inputs": [
+    "projects/<project-id>/source/task_card.md",
+    "projects/<project-id>/source/requirement.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/route_decision.json",
+    "projects/<project-id>/runtime/route_decision.md"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/route_decision/core.py",
+    "packages/route_decision/rules.json",
+    "specs/15_route_decision_contract.md",
+    "docs/discussion/UXB SKILL优化/01_阶段一_route_decision旁路观察优化文档_最终校对版.md"
+  ],
+  "status": "active"
+}

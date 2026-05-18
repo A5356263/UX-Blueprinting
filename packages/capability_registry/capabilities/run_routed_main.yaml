@@ -1,0 +1,27 @@
+{
+  "capability_id": "run_routed_main",
+  "display_name": "Run Routed Main",
+  "type": "command",
+  "stage": "mainline",
+  "entrypoint": "python -m packages run-routed-main <project-id> [--route auto|fast|standard|full]",
+  "description": "独立试运行 route-aware 主链路编排，不改变 run-main 默认行为。",
+  "required_inputs": [
+    "projects/<project-id>/source/requirement.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/route_decision.json",
+    "projects/<project-id>/runtime/routed_main_plan.json",
+    "projects/<project-id>/runtime/routed_main_report.json",
+    "projects/<project-id>/workspace/*.md"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": true,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/routed_main/core.py",
+    "specs/18_routed_main_contract.md",
+    "docs/discussion/UXB SKILL优化/04_阶段三实施方案_执行前确认版.md"
+  ],
+  "status": "active"
+}

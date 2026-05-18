@@ -1,0 +1,15 @@
+{
+  "project_id": "boundary-extension-state-machine",
+  "status": "failed",
+  "generated_at": "2026-05-18T03:42:23+00:00",
+  "stopped_at": "assemble",
+  "message": "Task card not found: E:\\AI设计\\体验蓝图构建思路\\test\\route_decision_cases\\boundary-extension-state-machine\\source\\task_card.md",
+  "steps": [
+    {
+      "command": "assemble",
+      "exit_code": 1,
+      "message": "Task card not found: E:\\AI设计\\体验蓝图构建思路\\test\\route_decision_cases\\boundary-extension-state-machine\\source\\task_card.md"
+    }
+  ],
+  "actual_outputs": []
+}

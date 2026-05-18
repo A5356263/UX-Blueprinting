@@ -120,6 +120,45 @@ def _read_context_manifest(project_id: str) -> dict[str, object] | None:
     return payload if isinstance(payload, dict) else None
 
 
+def _read_route_decision(project_id: str) -> dict[str, object] | None:
+    route_path = get_project_runtime_dir(project_id) / "route_decision.json"
+    if not route_path.exists():
+        return None
+    try:
+        payload = json.loads(route_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _route_decision_prompt_lines(project_id: str, target_stage: str) -> list[str]:
+    decision = _read_route_decision(project_id)
+    if not decision:
+        return []
+    demand_type = str(decision.get("demand_type") or "不确定")
+    route = str(decision.get("route") or "standard")
+    confidence = str(decision.get("confidence") or "unknown")
+    reason = str(decision.get("reason") or "").strip()
+    pressure = "、".join(str(item) for item in decision.get("design_pressure", []) if str(item).strip())
+    focus = "；".join(str(item) for item in decision.get("experience_focus", [])[:3] if str(item).strip())
+    non_focus = "；".join(str(item) for item in decision.get("non_focus_guidance", [])[:2] if str(item).strip())
+    lines = [
+        f"- 需求类型：{demand_type}；建议路线：{route}；置信度：{confidence}。",
+        f"- 重点维度：{pressure or '请结合 facts/business 补充判断'}。",
+    ]
+    if target_stage == "business":
+        lines.append(f"- route 输出建议：{non_focus or 'route_decision 未提供非重点章节建议。'}")
+    else:
+        lines.append(f"- route 输出建议：{focus or 'route_decision 未提供体验重点建议。'}")
+    escalation = "；".join(str(item) for item in decision.get("escalation_signals", [])[:2] if str(item).strip())
+    if escalation:
+        lines.append(f"- 升级信号：{escalation}")
+    if reason:
+        lines.append(f"- route 判断理由：{reason}")
+    lines.append("- 写作规则以对应 specs 中的路线说明要求为准。")
+    return lines
+
+
 def _write_context_manifest(project_id: str, payload: dict[str, object]) -> None:
     manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
     manifest_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -562,6 +601,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         if section_lines:
             business_sections.append((title.replace("## ", "", 1), section_lines[:12]))
     gap_lines = _extract_bullets(gap_text, limit=8)
+    route_lines = _route_decision_prompt_lines(project_id, target_stage="experience")
 
     if not task_lines:
         task_lines = ["请结合当前任务上下文补全任务目标。"]
@@ -585,30 +625,32 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/business_blueprint.md`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
         "## 1. 任务目标\n\n"
         + "\n".join(f"- {line}" for line in task_lines)
-        + "\n\n## 2. facts 摘要\n\n"
+        + "\n\n## 2. route 判断\n\n"
+        + ("\n".join(route_lines) if route_lines else "- 当前未生成 route_decision.json，按 facts 与 business 保守判断输出重点。")
+        + "\n\n## 3. facts 摘要\n\n"
         + "\n".join(f"- {line}" for line in facts_lines)
-        + "\n\n## 3. business 核心判断与承接要求\n\n"
+        + "\n\n## 4. business 核心判断与承接要求\n\n"
         + "\n\n".join(
             f"### {section_title}\n" + "\n".join(f"- {line}" for line in section_lines)
             for section_title, section_lines in business_sections
         )
-        + "\n\n## 4. 设计指南导航（按需消费）\n\n"
+        + "\n\n## 5. 设计指南导航（按需消费）\n\n"
         + guideline_lines
-        + "\n\n## 5. 设计指南消费判断\n\n"
+        + "\n\n## 6. 设计指南消费判断\n\n"
         "在输出体验蓝图前，请基于 facts.md 和 business_blueprint.md 判断：\n"
         "1. 本次业务蓝图中是否出现报错、阻断、校验、状态反馈、审批延迟、批量风险、高风险配置等体验问题。\n"
         "2. 这些问题是否命中 Design Guidelines 中的具体 summary。\n"
         "3. 如果命中 summary，必须读取其 source_refs 指向的 raw，并只吸收原则，不暴露大段原文。\n"
         "4. 体验蓝图不得凭指南替代业务事实；业务事实不足时，只能输出待确认问题或条件型建议。\n"
         "5. 输出方案时，需要说明反馈时机、反馈形式、用户可见文案和用户下一步。\n"
-        + "\n\n## 6. 设计原则摘要\n\n"
+        + "\n\n## 7. 设计原则摘要\n\n"
         "- 先写主流程，再补次流程与异常阻断流程。\n"
         "- 页面/弹窗/抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
         "- 禁止重做事实抽取、业务判断或需求全文重读。\n\n"
-        "## 7. 待确认问题\n\n"
+        "## 8. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
-        + "\n\n## 8. 输出模板要求\n\n"
+        + "\n\n## 9. 输出模板要求\n\n"
         "- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
         "  - `## 1. 交互流程总览`\n"
@@ -676,9 +718,62 @@ def run_generate_business(project_id: str) -> int:
         return 0
 
     print("business_blueprint.md 不存在，请 AI 根据以下文件生成：")
+    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
+    if route_lines:
+        print(f"  - projects/{project_id}/runtime/route_decision.json")
     print("  - specs/09_business_blueprint_contract.md")
     print("  - templates/business_blueprint.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
+    if route_lines:
+        print("route 判断摘要：")
+        for line in route_lines:
+            print(f"  {line}")
+    return 1
+
+
+def run_generate_business_note(project_id: str) -> int:
+    workspace_dir = get_project_workspace_dir(project_id)
+    note_path = workspace_dir / "business_note.md"
+
+    if note_path.exists():
+        upsert_generated_provenance(project_id, "packages.generation", "generate-business-note")
+        print(f"business_note.md 已存在: {note_path}")
+        return 0
+
+    print("business_note.md 不存在，请 AI 根据以下文件生成：")
+    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
+    if route_lines:
+        print(f"  - projects/{project_id}/runtime/route_decision.json")
+    print("  - specs/16_business_note_contract.md")
+    print("  - templates/business_note.template.md")
+    print(f"  - projects/{project_id}/workspace/facts.md")
+    if route_lines:
+        print("route 判断摘要：")
+        for line in route_lines:
+            print(f"  {line}")
+    return 1
+
+
+def run_generate_business_lite(project_id: str) -> int:
+    workspace_dir = get_project_workspace_dir(project_id)
+    business_lite_path = workspace_dir / "business_blueprint_lite.md"
+
+    if business_lite_path.exists():
+        upsert_generated_provenance(project_id, "packages.generation", "generate-business-lite")
+        print(f"business_blueprint_lite.md 已存在: {business_lite_path}")
+        return 0
+
+    print("business_blueprint_lite.md 不存在，请 AI 根据以下文件生成：")
+    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
+    if route_lines:
+        print(f"  - projects/{project_id}/runtime/route_decision.json")
+    print("  - specs/17_business_blueprint_lite_contract.md")
+    print("  - templates/business_blueprint_lite.template.md")
+    print(f"  - projects/{project_id}/workspace/facts.md")
+    if route_lines:
+        print("route 判断摘要：")
+        for line in route_lines:
+            print(f"  {line}")
     return 1
 
 
@@ -690,11 +785,25 @@ def run_generate_experience(project_id: str) -> int:
 
     if not experience_path.exists():
         print("experience_blueprint.md 不存在，请 AI 根据以下文件生成：")
+        route_lines = _route_decision_prompt_lines(project_id, target_stage="experience")
+        if route_lines:
+            print(f"  - projects/{project_id}/runtime/route_decision.json")
         print("  - specs/10_experience_blueprint_contract.md")
         print("  - templates/experience_blueprint.template.md")
         print(f"  - projects/{project_id}/workspace/facts.md")
-        print(f"  - projects/{project_id}/workspace/business_blueprint.md")
+        business_lite_path = workspace_dir / "business_blueprint_lite.md"
+        business_note_path = workspace_dir / "business_note.md"
+        if business_lite_path.exists():
+            print(f"  - projects/{project_id}/workspace/business_blueprint_lite.md")
+        elif business_note_path.exists():
+            print(f"  - projects/{project_id}/workspace/business_note.md")
+        else:
+            print(f"  - projects/{project_id}/workspace/business_blueprint.md")
         print(f"  参考示例: test/Experience_Blueprint 理想效果.md")
+        if route_lines:
+            print("route 判断摘要：")
+            for line in route_lines:
+                print(f"  {line}")
         return 1
 
     debug_dir = runtime_dir / "debug"

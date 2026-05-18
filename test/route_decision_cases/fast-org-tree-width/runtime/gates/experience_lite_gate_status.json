@@ -1,0 +1,85 @@
+{
+  "project_id": "fast-org-tree-width",
+  "stage": "experience_lite",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-18T12:46:10.987391+00:00",
+  "checked_files": [
+    "projects/fast-org-tree-width/workspace/facts.md",
+    "projects/fast-org-tree-width/workspace/business_note.md",
+    "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+    "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+    "projects/fast-org-tree-width/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience_blueprint.md 附录：依据与追踪内容偏少"
+    ],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_lite_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "target_artifacts": [
+        "projects/fast-org-tree-width/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/fast-org-tree-width/workspace/facts.md",
+        "projects/fast-org-tree-width/workspace/business_note.md",
+        "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+        "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+        "projects/fast-org-tree-width/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/fast-org-tree-width/workspace/facts.md",
+            "projects/fast-org-tree-width/workspace/business_note.md",
+            "projects/fast-org-tree-width/workspace/business_blueprint_lite.md",
+            "projects/fast-org-tree-width/workspace/experience_blueprint.md",
+            "projects/fast-org-tree-width/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 6,
+            "page_inventory_item_count": 5,
+            "state_feedback_pair_count": 4,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "flow_count": 6,
+    "page_inventory_item_count": 5,
+    "state_feedback_pair_count": 4,
+    "appendix_item_count": 0,
+    "exception_coverage": true,
+    "core_table_count": 0
+  }
+}

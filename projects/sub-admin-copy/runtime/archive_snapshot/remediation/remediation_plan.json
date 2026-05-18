@@ -1,0 +1,176 @@
+{
+  "project_id": "sub-admin-copy",
+  "plan_version": "1.0",
+  "generated_at": "2026-05-17T08:21:04.728831+00:00",
+  "open_issue_count": 9,
+  "blocker_count": 0,
+  "warning_count": 9,
+  "repair_units": [
+    {
+      "unit_id": "repair-unit-001",
+      "stage": "business",
+      "target_artifact": "projects/sub-admin-copy/workspace/business_blueprint.md",
+      "issue_ids": [
+        "BIZ-E567BD54"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 business_blueprint.md 中的 experience_business_consumption_gap 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "workspace/business_blueprint.md",
+        "runtime/trace_index.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "只补 business_blueprint.md 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写"
+      ],
+      "completion_signal": [
+        "business gate 无相关 blocker",
+        "experience 与 final check 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-002",
+      "stage": "experience",
+      "target_artifact": "projects/sub-admin-copy/workspace/business_blueprint.md",
+      "issue_ids": [
+        "EXP-95711CFC",
+        "EXP-D69BF8F0",
+        "EXP-F624169D"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 business_blueprint.md 中的 experience_business_consumption_gap, experience_state_feedback_gap 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "workspace/business_blueprint.md",
+        "workspace/experience_blueprint.md",
+        "runtime/trace_index.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "只补 business_blueprint.md 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写",
+        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
+      ],
+      "completion_signal": [
+        "experience gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-003",
+      "stage": "experience",
+      "target_artifact": "projects/sub-admin-copy/workspace/experience_blueprint.md",
+      "issue_ids": [
+        "EXP-E5A4CBA2"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 experience_blueprint.md 中的 depth_insufficient 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "workspace/business_blueprint.md",
+        "workspace/experience_blueprint.md",
+        "runtime/trace_index.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 experience_blueprint.md 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "experience gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-004",
+      "stage": "final",
+      "target_artifact": "projects/sub-admin-copy/workspace/check_status.json",
+      "issue_ids": [
+        "CHK-ADCB4102"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 check_status.json 中的 experience_guideline_consumption_gap 问题",
+      "required_inputs": [
+        "workspace/check_report.md",
+        "workspace/check_status.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "补齐 design guideline 的实际消费记录或补足场景对应的设计原则承接，不要回退到硬编码映射"
+      ],
+      "completion_signal": [
+        "warning 被接受或消除",
+        "archive 约束明确"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-005",
+      "stage": "final",
+      "target_artifact": "projects/sub-admin-copy/workspace/gap_list.md",
+      "issue_ids": [
+        "CHK-F368C50F"
+      ],
+      "repair_mode": "patch_current_section",
+      "repair_goal": "修复 gap_list.md 中的 placeholder_residue 问题",
+      "required_inputs": [
+        "workspace/check_report.md",
+        "workspace/check_status.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "替换 gap_list.md 中的占位内容，确保不再残留模板变量"
+      ],
+      "completion_signal": [
+        "warning 被接受或消除",
+        "archive 约束明确"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-006",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/runtime/gate_metrics.json",
+      "issue_ids": [
+        "RUN-5CF0E79F"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/task_card_resolved.json",
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-007",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/runtime/trace_index.json",
+      "issue_ids": [
+        "RUN-9B36895F"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 trace_index.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/task_card_resolved.json",
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "project_id": "input-validation-fast-checked-filter-view",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "c9f0faa3c99cabb1a695a0d1cce727927dbc51f38c83f576f36ae79cf7471d78",
+  "task_card_hash": "3d020ad96b1cd590a1766fec937b56ae28dc5ccd79d54ff32747482791deb452",
+  "generated_at": "2026-05-18T12:45:54+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "assemble",
+    "route-decision",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ]
+}

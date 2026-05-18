@@ -1,0 +1,148 @@
+{
+  "version": "route-decision@1.0",
+  "rules_version": "route-decision-rules@1.0",
+  "project_id": "input-validation-full-permission-query-multidimension",
+  "route": "full",
+  "confidence": "high",
+  "demand_type": "权限与治理风险",
+  "reason": "初判为权限与治理风险，主要压力在业务能力、业务规则、权限治理，涉及核心能力、治理或模型边界，需走完整链路。",
+  "evidence": [
+    "source/task_card.md: Task Name: 权限维度多维查询",
+    "source/requirement.md: input 需求集合：权限查询",
+    "source/background.md: 本样本来自 input 目录中的 权限查询 需求族，用于阶段三 run-routed-main 严格验收。",
+    "runtime/task_card_resolved.json: {\"task_id\": \"input-validation-full-permission-query-multidimension\", \"protocol_name\": \"UXB Test Task\", \"protocol_version"
+  ],
+  "dimension_judgment": {
+    "business_capability_change": "major",
+    "business_rule_change": "medium",
+    "permission_governance_risk": "high",
+    "task_flow_change": "medium",
+    "information_structure_pressure": "medium",
+    "state_exception_pressure": "medium",
+    "copy_comprehension_pressure": "low",
+    "layout_interaction_pressure": "low",
+    "review_risk": "medium"
+  },
+  "dimension_evidence": {
+    "business_capability_change": "业务能力发生变化或扩展：本需求是功能新增和权限治理能力建设，涉及权限模型、数据范围、敏感查询、导出审计、对象关系重构、状态异常和跨维度结果解释",
+    "business_rule_change": "存在业务规则、校验或条件变化：管理员需要从不同业务对象反查权限来源、可见范围、审批链路和导出依据",
+    "permission_governance_risk": "涉及权限、审批、数据范围、导出或治理风险：本需求是功能新增和权限治理能力建设，涉及权限模型、数据范围、敏感查询、导出审计、对象关系重构、状态异常和跨维度结果解释",
+    "task_flow_change": "用户任务路径、结果回写或角色协同可能变化：交互流程总览",
+    "information_structure_pressure": "存在概念、入口、层级或模块边界压力：本需求是功能新增和权限治理能力建设，涉及权限模型、数据范围、敏感查询、导出审计、对象关系重构、状态异常和跨维度结果解释",
+    "state_exception_pressure": "状态、异常、阻断或校验会影响方案：本需求是功能新增和权限治理能力建设，涉及权限模型、数据范围、敏感查询、导出审计、对象关系重构、状态异常和跨维度结果解释",
+    "copy_comprehension_pressure": "用户理解主要依赖文案、说明或提示：本需求是功能新增和权限治理能力建设，涉及权限模型、数据范围、敏感查询、导出审计、对象关系重构、状态异常和跨维度结果解释",
+    "layout_interaction_pressure": "未发现布局交互是主要压力",
+    "review_risk": "存在评审误解、边界争议或待确认风险：产物必须承接当前需求正文中的关键边界，不外扩判断维度"
+  },
+  "design_pressure": [
+    "业务能力",
+    "业务规则",
+    "权限治理",
+    "流程承接",
+    "信息结构"
+  ],
+  "business_depth": "full",
+  "experience_focus": [
+    "重点展开能力变化、方案形态和与既有能力的关系",
+    "重点展开规则边界、校验条件、限制原因和体验承接要求",
+    "重点展开可操作条件、不可操作原因、风险提示和异常后的下一步",
+    "重点展开主路径变化、步骤衔接、角色协同和结果回写"
+  ],
+  "non_focus_guidance": [
+    "保持完整业务和体验蓝图，但仍按主要设计压力分配篇幅，避免平均铺开。"
+  ],
+  "escalation_signals": [
+    "当前已建议 full，不建议自动降级。",
+    "如果后续事实证明范围更小，也应由人工确认后再调整，不自动改为 fast 或 standard。"
+  ],
+  "matched_route_signals": [
+    {
+      "demand_type": "权限与治理风险",
+      "matched_terms": [
+        "权限模型",
+        "审计",
+        "治理",
+        "敏感",
+        "数据范围",
+        "可见范围"
+      ],
+      "evidence": "涉及权限、审批、数据范围或治理",
+      "route_pressure": 4
+    },
+    {
+      "demand_type": "功能重构",
+      "matched_terms": [
+        "重构",
+        "关系重构"
+      ],
+      "evidence": "出现功能或模型重构信号",
+      "route_pressure": 4
+    },
+    {
+      "demand_type": "业务流程调整",
+      "matched_terms": [
+        "流程"
+      ],
+      "evidence": "涉及流程、结果回写或角色协同",
+      "route_pressure": 3
+    },
+    {
+      "demand_type": "信息结构与概念澄清",
+      "matched_terms": [
+        "对象关系"
+      ],
+      "evidence": "需要澄清概念、入口或信息结构",
+      "route_pressure": 2
+    },
+    {
+      "demand_type": "既有能力扩展",
+      "matched_terms": [
+        "导出"
+      ],
+      "evidence": "在既有能力上增加规则或能力",
+      "route_pressure": 2
+    },
+    {
+      "demand_type": "文案与信息表达优化",
+      "matched_terms": [
+        "解释"
+      ],
+      "evidence": "主要关注文案或信息表达",
+      "route_pressure": 1
+    }
+  ],
+  "matched_dimension_terms": {
+    "business_capability_change": [
+      "重构"
+    ],
+    "business_rule_change": [
+      "范围",
+      "必须"
+    ],
+    "permission_governance_risk": [
+      "权限模型",
+      "审计",
+      "治理",
+      "数据范围",
+      "敏感",
+      "可见范围"
+    ],
+    "task_flow_change": [
+      "流程"
+    ],
+    "information_structure_pressure": [
+      "关系"
+    ],
+    "state_exception_pressure": [
+      "异常"
+    ],
+    "copy_comprehension_pressure": [
+      "解释"
+    ],
+    "review_risk": [
+      "边界",
+      "可能"
+    ]
+  },
+  "should_not_control_mainline": true
+}

@@ -1,0 +1,175 @@
+{
+  "task_id": "input-validation-standard-permission-query-user-role",
+  "protocol_name": "UXB Test Task",
+  "protocol_version": "1.0",
+  "task_name": "权限查询用户角色维度",
+  "domain": "permission",
+  "task_goal": [
+    "支持按用户和角色维度查询权限归属。"
+  ],
+  "task_scenario": [
+    "管理员需要定位某个用户拥有权限的来源角色和可见范围。"
+  ],
+  "execution_constraints": [
+    "只依据 source 中的真实需求片段和背景，不引入无来源的新业务范围。",
+    "按 route_decision 的实际路线输出对应正式产物，不能用聊天回复替代正式文档。"
+  ],
+  "read_order": [],
+  "notes": [],
+  "required_inputs": [
+    "projects/input-validation-standard-permission-query-user-role/source/requirement.md",
+    "projects/input-validation-standard-permission-query-user-role/source/background.md"
+  ],
+  "required_outputs": [
+    "projects/input-validation-standard-permission-query-user-role/workspace/facts.md",
+    "projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint_lite.md",
+    "projects/input-validation-standard-permission-query-user-role/workspace/experience_blueprint.md",
+    "projects/input-validation-standard-permission-query-user-role/workspace/check_report.md",
+    "projects/input-validation-standard-permission-query-user-role/workspace/check_status.json"
+  ],
+  "knowledge_refs": [],
+  "wiki_refs": [],
+  "guideline_refs": [],
+  "template_refs": [
+    "templates/facts.template.md",
+    "templates/business_note.template.md",
+    "templates/business_blueprint_lite.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md"
+  ],
+  "check_refs": [
+    "specs/16_business_note_contract.md",
+    "specs/17_business_blueprint_lite_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md",
+    "specs/18_routed_main_contract.md"
+  ],
+  "knowledge_refs_details": [],
+  "wiki_refs_details": [],
+  "raw_sections": {
+    "Protocol": [
+      "- Protocol Name: UXB Test Task",
+      "- Protocol Version: 1.0",
+      "- Task ID: input-validation-standard-permission-query-user-role",
+      "- Task Name: 权限查询用户角色维度",
+      "- Domain: permission"
+    ],
+    "Task Goal": [
+      "- 支持按用户和角色维度查询权限归属。"
+    ],
+    "Task Scenario": [
+      "- 管理员需要定位某个用户拥有权限的来源角色和可见范围。"
+    ],
+    "Required Inputs": [
+      "- projects/input-validation-standard-permission-query-user-role/source/requirement.md",
+      "- projects/input-validation-standard-permission-query-user-role/source/background.md"
+    ],
+    "Required Outputs": [
+      "- projects/input-validation-standard-permission-query-user-role/workspace/facts.md",
+      "- projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint_lite.md",
+      "- projects/input-validation-standard-permission-query-user-role/workspace/experience_blueprint.md",
+      "- projects/input-validation-standard-permission-query-user-role/workspace/check_report.md",
+      "- projects/input-validation-standard-permission-query-user-role/workspace/check_status.json"
+    ],
+    "Constraints": [
+      "- 只依据 source 中的真实需求片段和背景，不引入无来源的新业务范围。",
+      "- 按 route_decision 的实际路线输出对应正式产物，不能用聊天回复替代正式文档。"
+    ],
+    "Templates": [
+      "- templates/facts.template.md",
+      "- templates/business_note.template.md",
+      "- templates/business_blueprint_lite.template.md",
+      "- templates/business_blueprint.template.md",
+      "- templates/experience_blueprint.template.md"
+    ],
+    "Checks": [
+      "- specs/16_business_note_contract.md",
+      "- specs/17_business_blueprint_lite_contract.md",
+      "- specs/09_business_blueprint_contract.md",
+      "- specs/10_experience_blueprint_contract.md",
+      "- specs/18_routed_main_contract.md"
+    ],
+    "Result Locations": [
+      "- facts: projects/input-validation-standard-permission-query-user-role/workspace/facts.md",
+      "- business_note: projects/input-validation-standard-permission-query-user-role/workspace/business_note.md",
+      "- business_lite: projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint_lite.md",
+      "- business: projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint.md",
+      "- experience: projects/input-validation-standard-permission-query-user-role/workspace/experience_blueprint.md"
+    ],
+    "Completion Criteria": [
+      "- routed-main 能按 auto 路线完成到最终检查产物。",
+      "- 产物必须承接当前需求正文中的关键边界，不外扩判断维度。"
+    ],
+    "Facts Output Requirements": [
+      "### Required Sections",
+      "- 任务概述",
+      "### Boundary",
+      "- 不输出体验方案。"
+    ],
+    "Business Output Requirements": [
+      "### Required Sections",
+      "- 路线对应业务产物",
+      "### Boundary",
+      "- 不越过 route_decision 的业务深度。"
+    ],
+    "Experience Output Requirements": [
+      "### Required Sections",
+      "- 交互流程总览",
+      "### Boundary",
+      "- 不输出前端实现方案。"
+    ]
+  },
+  "unparsed_sections": [],
+  "primary_knowledge_entries": [],
+  "fallback_source_refs": [],
+  "fallback_conditions": [],
+  "disallowed_broad_references": [],
+  "reference_granularity": {
+    "wiki_refs": "file_or_index_preferred",
+    "knowledge_refs": "file_or_index_preferred"
+  },
+  "has_directory_ref": false,
+  "requires_narrowing": false,
+  "result_locations": {
+    "facts": "projects/input-validation-standard-permission-query-user-role/workspace/facts.md",
+    "business_note": "projects/input-validation-standard-permission-query-user-role/workspace/business_note.md",
+    "business_lite": "projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint_lite.md",
+    "business": "projects/input-validation-standard-permission-query-user-role/workspace/business_blueprint.md",
+    "experience": "projects/input-validation-standard-permission-query-user-role/workspace/experience_blueprint.md"
+  },
+  "completion_criteria": [
+    "routed-main 能按 auto 路线完成到最终检查产物。",
+    "产物必须承接当前需求正文中的关键边界，不外扩判断维度。"
+  ],
+  "facts_output_requirements": {
+    "required_sections": [
+      "任务概述"
+    ],
+    "recommended_id_prefixes": [],
+    "boundary": [
+      "不输出体验方案。"
+    ]
+  },
+  "business_output_requirements": {
+    "required_sections": [
+      "路线对应业务产物"
+    ],
+    "recommended_id_prefixes": [],
+    "boundary": [
+      "不越过 route_decision 的业务深度。"
+    ]
+  },
+  "experience_output_requirements": {
+    "required_sections": [
+      "交互流程总览"
+    ],
+    "recommended_id_prefixes": [],
+    "boundary": [
+      "不输出前端实现方案。"
+    ]
+  },
+  "warnings": [
+    "Read Order section is missing"
+  ],
+  "errors": []
+}

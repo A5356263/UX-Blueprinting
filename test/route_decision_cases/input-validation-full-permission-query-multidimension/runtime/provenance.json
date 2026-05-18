@@ -1,0 +1,25 @@
+{
+  "project_id": "input-validation-full-permission-query-multidimension",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "b815a6c102fb7d429cd1c9ca53a1733a8c2beac8d7ee81a340e25f1aac8ea323",
+  "task_card_hash": "46636ab0e4766d8bb2cbb3901c0eca3a1a7870b2a011bc3dcf87a1e29e94e6a5",
+  "generated_at": "2026-05-18T12:45:55+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "assemble",
+    "route-decision",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive"
+  ]
+}

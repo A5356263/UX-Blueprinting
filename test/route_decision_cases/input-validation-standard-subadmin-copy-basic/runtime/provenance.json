@@ -1,0 +1,24 @@
+{
+  "project_id": "input-validation-standard-subadmin-copy-basic",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "cdf928fdc07bb1ddbfb11b17a554c6bf29cbf7f2ea32ef52044bcd800e7f231e",
+  "task_card_hash": "3553c52654c7e1f6805e649daa71974c4b2b9635aba01e692b7c470aa3feb350",
+  "generated_at": "2026-05-18T12:45:58+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "assemble",
+    "route-decision",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ]
+}

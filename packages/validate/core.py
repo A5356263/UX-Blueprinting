@@ -51,6 +51,23 @@ STAGE_REQUIRED_HEADINGS = {
         "## 7. 待确认问题",
     ],
     "gap_list.md": ["## Blockers", "## Warnings", "## 待补信息"],
+    "business_note.md": [
+        "## 0. 路线说明",
+        "## 1. 业务依据",
+        "## 2. 核心业务规则影响",
+        "## 3. 体验可承接内容",
+        "## 4. 升级信号",
+        "## 5. 待确认问题",
+    ],
+    "business_blueprint_lite.md": [
+        "## 0. 路线说明",
+        "## 1. 一句话结论",
+        "## 2. 关键业务规则",
+        "## 3. 边界与风险",
+        "## 4. 体验承接要求",
+        "## 5. 升级信号",
+        "## 6. 待确认问题",
+    ],
 }
 
 FORBIDDEN_TERMS = {
@@ -82,6 +99,22 @@ FORBIDDEN_TERMS = {
         "EV-",
         "从当前输入直接抽取",
         "未做模板补全",
+    ],
+    "business_note.md": [
+        "页面区块布局",
+        "高保真视觉",
+        "组件开发实现",
+        "前端技术栈",
+        "SQL",
+        "数据库表",
+    ],
+    "business_blueprint_lite.md": [
+        "页面区块布局",
+        "高保真视觉",
+        "组件开发实现",
+        "前端技术栈",
+        "SQL",
+        "数据库表",
     ],
 }
 
@@ -948,6 +981,19 @@ def required_output_paths(project_id: str, resolved_data: dict[str, object]) -> 
     return [item.format(project_id=project_id) for item in DEFAULT_TRACKED_OUTPUTS]
 
 
+def resolve_required_output_path(project_id: str, normalized_path: str) -> Path:
+    workspace_prefix = f"projects/{project_id}/workspace/"
+    runtime_prefix = f"projects/{project_id}/runtime/"
+    source_prefix = f"projects/{project_id}/source/"
+    if normalized_path.startswith(workspace_prefix):
+        return get_project_workspace_dir(project_id) / normalized_path[len(workspace_prefix) :]
+    if normalized_path.startswith(runtime_prefix):
+        return get_project_runtime_dir(project_id) / normalized_path[len(runtime_prefix) :]
+    if normalized_path.startswith(source_prefix):
+        return get_project_source_dir(project_id) / normalized_path[len(source_prefix) :]
+    return get_repo_root() / normalized_path
+
+
 def report_summary_lines(status: str, blockers: list[str], warnings: list[str], infos: list[str]) -> list[str]:
     return [
         "## Summary",
@@ -1601,7 +1647,7 @@ def run_validate_outputs(project_id: str) -> int:
     for output_path_str in required_outputs:
         normalized = output_path_str.replace("\\", "/")
         checked_files.append(normalized)
-        output_path = get_repo_root() / normalized
+        output_path = resolve_required_output_path(project_id, normalized)
         if output_path.exists():
             completed_outputs.append(normalized)
             output_status_lines.append(f"{normalized}: present")
@@ -1949,6 +1995,137 @@ def run_business_gate(project_id: str) -> int:
     return 0 if status != "failed" else 1
 
 
+def _section_text(content: str, heading: str) -> str:
+    lines = content.splitlines()
+    collecting = False
+    collected: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped == heading:
+            collecting = True
+            continue
+        if collecting and stripped.startswith("## "):
+            break
+        if collecting:
+            collected.append(line)
+    return "\n".join(collected).strip()
+
+
+def _read_route(project_id: str) -> dict[str, object]:
+    return read_json(get_project_runtime_dir(project_id) / "route_decision.json")
+
+
+def _add_route_info(project_id: str, issues: list[tuple[str, str]], expected_routes: set[str]) -> None:
+    route = _read_route(project_id)
+    if not route:
+        add_issue(issues, "warning", "缺少 route_decision.json，轻量 gate 将只做产物结构检查")
+        return
+    route_name = str(route.get("route") or "")
+    if route_name not in expected_routes:
+        add_issue(issues, "warning", f"当前 route 为 {route_name or 'unknown'}，与轻量 gate 预期 {', '.join(sorted(expected_routes))} 不一致")
+    else:
+        add_issue(issues, "info", f"route 判断：{route_name}")
+
+
+def run_business_note_gate(project_id: str) -> int:
+    workspace_dir = get_workspace_dir(project_id)
+    issues: list[tuple[str, str]] = []
+    add_provenance_issues(issues, project_id, required_commands=["generate-facts", "generate-business-note"])
+    checked_files = [
+        f"projects/{project_id}/workspace/facts.md",
+        f"projects/{project_id}/workspace/business_note.md",
+        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/runtime/provenance.json",
+    ]
+    _add_route_info(project_id, issues, {"fast"})
+
+    facts_text = read_text(workspace_dir / "facts.md")
+    note_text = read_text(workspace_dir / "business_note.md")
+    if not facts_text:
+        add_issue(issues, "blocker", "缺少 facts.md")
+    if not note_text:
+        add_issue(issues, "blocker", "缺少 business_note.md")
+
+    if note_text:
+        check_required_headings("business_note.md", note_text, issues)
+        check_forbidden_terms("business_note.md", note_text, issues)
+        check_placeholders("business_note.md", note_text, issues)
+        check_runtime_leakage_guard("business_note.md", note_text, issues)
+        impact_text = _section_text(note_text, "## 2. 核心业务规则影响")
+        for dimension in ["权限", "数据范围", "审批", "状态机", "业务对象关系"]:
+            if dimension not in impact_text:
+                add_issue(issues, "blocker", f"business_note.md 未说明核心业务规则影响维度：{dimension}")
+        if "体验可承接" not in note_text and not _section_text(note_text, "## 3. 体验可承接内容"):
+            add_issue(issues, "blocker", "business_note.md 缺少 experience 可承接内容")
+
+    blockers, warnings, infos, _ = summarize_issues(issues)
+    metrics = {"artifact": "business_note.md"}
+    report_path, status_path, status = write_gate_artifacts(
+        project_id,
+        "business_note",
+        "experience",
+        blockers,
+        warnings,
+        infos,
+        checked_files,
+        metrics,
+    )
+    print(f"Business note gate finished: {report_path}")
+    print(f"Business note gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-business-note")
+    if status == "failed":
+        _print_repair_guidance(project_id)
+    return 0 if status != "failed" else 1
+
+
+def run_business_lite_gate(project_id: str) -> int:
+    workspace_dir = get_workspace_dir(project_id)
+    issues: list[tuple[str, str]] = []
+    add_provenance_issues(issues, project_id, required_commands=["generate-facts", "generate-business-lite"])
+    checked_files = [
+        f"projects/{project_id}/workspace/facts.md",
+        f"projects/{project_id}/workspace/business_blueprint_lite.md",
+        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/runtime/provenance.json",
+    ]
+    _add_route_info(project_id, issues, {"standard"})
+
+    facts_text = read_text(workspace_dir / "facts.md")
+    business_lite_text = read_text(workspace_dir / "business_blueprint_lite.md")
+    if not facts_text:
+        add_issue(issues, "blocker", "缺少 facts.md")
+    if not business_lite_text:
+        add_issue(issues, "blocker", "缺少 business_blueprint_lite.md")
+
+    if business_lite_text:
+        check_required_headings("business_blueprint_lite.md", business_lite_text, issues)
+        check_forbidden_terms("business_blueprint_lite.md", business_lite_text, issues)
+        check_placeholders("business_blueprint_lite.md", business_lite_text, issues)
+        check_runtime_leakage_guard("business_blueprint_lite.md", business_lite_text, issues)
+        for heading in ["## 2. 关键业务规则", "## 3. 边界与风险", "## 4. 体验承接要求"]:
+            if len(_section_text(business_lite_text, heading)) < 20:
+                add_issue(issues, "blocker", f"business_blueprint_lite.md 内容不足：{heading}")
+
+    blockers, warnings, infos, _ = summarize_issues(issues)
+    metrics = {"artifact": "business_blueprint_lite.md"}
+    report_path, status_path, status = write_gate_artifacts(
+        project_id,
+        "business_lite",
+        "experience",
+        blockers,
+        warnings,
+        infos,
+        checked_files,
+        metrics,
+    )
+    print(f"Business lite gate finished: {report_path}")
+    print(f"Business lite gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-business-lite")
+    if status == "failed":
+        _print_repair_guidance(project_id)
+    return 0 if status != "failed" else 1
+
+
 def run_experience_gate(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     issues: list[tuple[str, str]] = []
@@ -2007,6 +2184,233 @@ def run_experience_gate(project_id: str) -> int:
     print(f"Experience gate finished: {report_path}")
     print(f"Experience gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-experience")
+    if status == "failed":
+        _print_repair_guidance(project_id)
+    return 0 if status != "failed" else 1
+
+
+def run_experience_lite_gate(project_id: str) -> int:
+    workspace_dir = get_workspace_dir(project_id)
+    issues: list[tuple[str, str]] = []
+    checked_files = [
+        f"projects/{project_id}/workspace/facts.md",
+        f"projects/{project_id}/workspace/business_note.md",
+        f"projects/{project_id}/workspace/business_blueprint_lite.md",
+        f"projects/{project_id}/workspace/experience_blueprint.md",
+        f"projects/{project_id}/runtime/provenance.json",
+    ]
+    add_provenance_issues(issues, project_id, required_commands=["generate-facts", "generate-experience"])
+
+    facts_text = read_text(workspace_dir / "facts.md")
+    business_note_text = read_text(workspace_dir / "business_note.md")
+    business_lite_text = read_text(workspace_dir / "business_blueprint_lite.md")
+    business_context = business_lite_text or business_note_text
+    experience_text = read_text(workspace_dir / "experience_blueprint.md")
+
+    if not facts_text:
+        add_issue(issues, "blocker", "缺少 facts.md")
+    if not business_context:
+        add_issue(issues, "blocker", "缺少 business_note.md 或 business_blueprint_lite.md")
+    if not experience_text:
+        add_issue(issues, "blocker", "缺少 experience_blueprint.md")
+
+    if business_note_text and not business_lite_text:
+        business_note_gate = read_gate_status(project_id, "business_note")
+        if not business_note_gate:
+            add_issue(issues, "blocker", "缺少 business_note gate 状态，请先运行 gate-business-note")
+        elif business_note_gate.get("status") == "failed":
+            add_issue(issues, "blocker", "business_note 阶段未通过，不能进入体验蓝图阶段")
+    if business_lite_text:
+        business_lite_gate = read_gate_status(project_id, "business_lite")
+        if not business_lite_gate:
+            add_issue(issues, "blocker", "缺少 business_lite gate 状态，请先运行 gate-business-lite")
+        elif business_lite_gate.get("status") == "failed":
+            add_issue(issues, "blocker", "business_lite 阶段未通过，不能进入体验蓝图阶段")
+
+    if experience_text:
+        check_required_headings("experience_blueprint.md", experience_text, issues)
+        check_forbidden_terms("experience_blueprint.md", experience_text, issues)
+        check_placeholders("experience_blueprint.md", experience_text, issues)
+        check_runtime_leakage_guard("experience_blueprint.md", experience_text, issues)
+        if business_context:
+            metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_context, experience_text)
+            extend_issues(issues, experience_depth_issues)
+        else:
+            metrics = {}
+    else:
+        metrics = {}
+
+    blockers, warnings, infos, _ = summarize_issues(issues)
+    report_path, status_path, status = write_gate_artifacts(
+        project_id,
+        "experience_lite",
+        "final-validate",
+        blockers,
+        warnings,
+        infos,
+        checked_files,
+        metrics,
+    )
+    print(f"Experience lite gate finished: {report_path}")
+    print(f"Experience lite gate status: {status_path}")
+    append_command_if_provenance_exists(project_id, "gate-experience-lite")
+    if status == "failed":
+        _print_repair_guidance(project_id)
+    return 0 if status != "failed" else 1
+
+
+def run_validate_lite(project_id: str) -> int:
+    workspace_dir = get_workspace_dir(project_id)
+    runtime_dir = get_project_runtime_dir(project_id)
+    report_path = workspace_dir / "check_report.md"
+    status_path = workspace_dir / "check_status.json"
+    issues: list[tuple[str, str]] = []
+    checked_files = [
+        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/workspace/facts.md",
+        f"projects/{project_id}/workspace/business_note.md",
+        f"projects/{project_id}/workspace/business_blueprint_lite.md",
+        f"projects/{project_id}/workspace/experience_blueprint.md",
+    ]
+
+    route = _read_route(project_id)
+    route_name = str(route.get("route") or "")
+    if not route:
+        add_issue(issues, "blocker", "缺少 route_decision.json")
+
+    facts_text = read_text(workspace_dir / "facts.md")
+    business_note_text = read_text(workspace_dir / "business_note.md")
+    business_lite_text = read_text(workspace_dir / "business_blueprint_lite.md")
+    experience_text = read_text(workspace_dir / "experience_blueprint.md")
+
+    if not facts_text:
+        add_issue(issues, "blocker", "缺少 facts.md")
+    if route_name == "fast" and not business_note_text:
+        add_issue(issues, "blocker", "fast 路线缺少 business_note.md")
+    if route_name == "standard" and not business_lite_text:
+        add_issue(issues, "blocker", "standard 路线缺少 business_blueprint_lite.md")
+    if not experience_text:
+        add_issue(issues, "blocker", "缺少 experience_blueprint.md")
+
+    for file_name, content in [
+        ("business_note.md", business_note_text),
+        ("business_blueprint_lite.md", business_lite_text),
+        ("experience_blueprint.md", experience_text),
+    ]:
+        if not content:
+            continue
+        check_required_headings(file_name, content, issues)
+        check_forbidden_terms(file_name, content, issues)
+        check_placeholders(file_name, content, issues)
+        check_runtime_leakage_guard(file_name, content, issues)
+
+    if route_name == "fast":
+        gate_stage = "business_note"
+    elif route_name == "standard":
+        gate_stage = "business_lite"
+    else:
+        gate_stage = "business_note" if business_note_text else "business_lite" if business_lite_text else ""
+    for stage in [gate_stage, "experience_lite"]:
+        if not stage:
+            continue
+        gate_status = read_gate_status(project_id, stage)
+        checked_files.append(f"projects/{project_id}/runtime/gates/{stage}_gate_status.json")
+        if not gate_status:
+            add_issue(issues, "blocker", f"缺少 {stage} gate 状态文件")
+        elif gate_status.get("status") == "failed":
+            add_issue(issues, "blocker", f"{stage} gate 状态为 failed")
+        elif gate_status.get("status") == "warning":
+            add_issue(issues, "warning", f"{stage} gate 状态为 warning")
+        else:
+            add_issue(issues, "info", f"{stage} gate 状态：{gate_status.get('status')}")
+
+    blockers, warnings, infos, status = summarize_issues(issues)
+    output_status_lines = [
+        f"projects/{project_id}/workspace/facts.md: {'present' if facts_text else 'missing'}",
+        f"projects/{project_id}/workspace/business_note.md: {'present' if business_note_text else 'missing'}",
+        f"projects/{project_id}/workspace/business_blueprint_lite.md: {'present' if business_lite_text else 'missing'}",
+        f"projects/{project_id}/workspace/experience_blueprint.md: {'present' if experience_text else 'missing'}",
+    ]
+    report_path.write_text(render_final_report(project_id, status, blockers, warnings, infos, output_status_lines, ["validate-lite"]), encoding="utf-8")
+    completed_outputs = [line.split(": ", 1)[0] for line in output_status_lines if line.endswith("present")]
+    missing_outputs = [line.split(": ", 1)[0] for line in output_status_lines if line.endswith("missing")]
+    payload = build_final_payload(
+        project_id,
+        blockers,
+        warnings,
+        infos,
+        completed_outputs,
+        missing_outputs,
+        checked_files,
+        {"route": route_name, "validation_mode": "lite"},
+    )
+    status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Validate lite finished: {report_path}")
+    print(f"Machine status written: {status_path}")
+    append_command_if_provenance_exists(project_id, "validate-lite")
+    if status == "failed":
+        _print_repair_guidance(project_id)
+    return 0 if status != "failed" else 1
+
+
+def run_coverage_lite(project_id: str) -> int:
+    workspace_dir = get_workspace_dir(project_id)
+    report_path = workspace_dir / "check_report.md"
+    status_path = workspace_dir / "check_status.json"
+
+    status_data = read_json(status_path)
+    if not status_data:
+        raise SystemExit(f"Missing machine status: {status_path}")
+
+    business_text = read_text(workspace_dir / "business_blueprint_lite.md") or read_text(workspace_dir / "business_note.md")
+    experience_text = read_text(workspace_dir / "experience_blueprint.md")
+    blockers = list(status_data.get("issues", {}).get("blockers", []))
+    warnings = list(status_data.get("issues", {}).get("warnings", []))
+    infos = list(status_data.get("issues", {}).get("infos", []))
+    coverage_lines: list[str] = []
+
+    if not business_text:
+        blockers.append("coverage-lite: 缺少轻量业务产物")
+    if not experience_text:
+        blockers.append("coverage-lite: 缺少 experience_blueprint.md")
+    if business_text and experience_text:
+        required_signals = ["规则", "边界", "风险", "状态", "异常", "文案"]
+        covered = [item for item in required_signals if item in business_text and item in experience_text]
+        missing = [item for item in required_signals if item in business_text and item not in experience_text]
+        coverage_lines.append(f"covered_signals={len(covered)} missing_signals={len(missing)}")
+        for item in missing:
+            warnings.append(f"coverage-lite: experience 未明显承接轻量业务产物中的维度：{item}")
+
+    blockers = sorted(set(str(item) for item in blockers))
+    warnings = sorted(set(str(item) for item in warnings))
+    infos = sorted(set(str(item) for item in infos + [f"轻量承接检查：{line}" for line in coverage_lines]))
+    status = "passed"
+    if blockers:
+        status = "failed"
+    elif warnings:
+        status = "warning"
+
+    output_status_lines = [line[2:] if line.startswith("- ") else line for line in re.findall(r"^- .+: (?:present|missing)$", read_text(report_path), flags=re.MULTILINE)]
+    report_path.write_text(render_final_report(project_id, status, blockers, warnings, infos, output_status_lines, coverage_lines), encoding="utf-8")
+    status_data["status"] = status
+    status_data["has_blocker"] = bool(blockers)
+    status_data["blocker_count"] = len(blockers)
+    status_data["warning_count"] = len(warnings)
+    status_data["info_count"] = len(infos)
+    status_data.setdefault("issues", {})
+    status_data["issues"]["blockers"] = blockers
+    status_data["issues"]["warnings"] = warnings
+    status_data["issues"]["infos"] = infos
+    status_data["generated_by"] = "packages.validate"
+    status_data["updated_at"] = now_iso()
+    status_data["metrics"] = status_data.get("metrics", {})
+    status_data["metrics"]["coverage_lite"] = {"lines": coverage_lines}
+    checked_files = [str(item) for item in status_data.get("checked_files", []) if isinstance(item, str)]
+    status_data["issue_details"] = build_issue_details(project_id, "final", blockers, warnings, infos, checked_files, status_data["metrics"])
+    status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Coverage lite finished: {report_path}")
+    print(f"Machine status updated: {status_path}")
+    append_command_if_provenance_exists(project_id, "coverage-lite")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1

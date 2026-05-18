@@ -1,0 +1,24 @@
+{
+  "capability_id": "business_lite_gate",
+  "display_name": "Business Lite Gate",
+  "type": "command",
+  "stage": "gate",
+  "entrypoint": "python -m packages gate-business-lite <project-id>",
+  "description": "检查 standard 路线 business_blueprint_lite.md 是否满足轻量业务蓝图边界。",
+  "required_inputs": [
+    "projects/<project-id>/workspace/business_blueprint_lite.md"
+  ],
+  "declared_outputs": [
+    "projects/<project-id>/runtime/gates/business_lite_gate_report.md",
+    "projects/<project-id>/runtime/gates/business_lite_gate_status.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/validate/core.py",
+    "specs/17_business_blueprint_lite_contract.md"
+  ],
+  "status": "active"
+}

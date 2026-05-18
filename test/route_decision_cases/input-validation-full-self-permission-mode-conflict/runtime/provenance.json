@@ -1,0 +1,25 @@
+{
+  "project_id": "input-validation-full-self-permission-mode-conflict",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "fcc27624b35c58fda285a56dde54a99b60a820dcf6184585f1e9adee18dd79d5",
+  "task_card_hash": "b83b87e23c9edb7533b2e5075394bba71b48861bfb715eeafa5c883de7342a30",
+  "generated_at": "2026-05-18T12:45:55+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "assemble",
+    "route-decision",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive"
+  ]
+}

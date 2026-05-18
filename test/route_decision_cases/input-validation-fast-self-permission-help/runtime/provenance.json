@@ -1,0 +1,24 @@
+{
+  "project_id": "input-validation-fast-self-permission-help",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "ffd05f7b60805b9eb242d7d0c80ed89a840d202fff8115b060bf9c4430e16a6e",
+  "task_card_hash": "bcd99f07a5f65917bf315e66bcd083d0f12df68fe2411015cc745ce08eae4659",
+  "generated_at": "2026-05-18T12:45:54+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "assemble",
+    "route-decision",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ]
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "case": "input-validation-fast-checked-filter-copy",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-fast-checked-filter-view",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-fast-self-permission-help",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-full-permission-query-multidimension",
+    "route": "full",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 11
+  },
+  {
+    "case": "input-validation-full-self-permission-high",
+    "route": "full",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 11
+  },
+  {
+    "case": "input-validation-full-self-permission-mode-conflict",
+    "route": "full",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 11
+  },
+  {
+    "case": "input-validation-full-subadmin-copy-approval",
+    "route": "full",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 11
+  },
+  {
+    "case": "input-validation-standard-checked-filter-editing",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-standard-permission-query-user-role",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-standard-self-permission-low",
+    "route": "full",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 11
+  },
+  {
+    "case": "input-validation-standard-subadmin-copy-basic",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "input-validation-standard-subadmin-copy-validation",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  },
+  {
+    "case": "fast-org-tree-width",
+    "route": "fast",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 8
+  },
+  {
+    "case": "fast-empty-copy",
+    "route": "standard",
+    "status": "passed",
+    "stopped_at": "",
+    "check_status": "warning",
+    "step_count": 10
+  }
+]
