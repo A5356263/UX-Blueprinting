@@ -10,7 +10,10 @@ from packages.common import get_project_runtime_dir, get_project_source_dir
 from packages.provenance import append_command_if_provenance_exists
 
 
-ROUTE_VERSION = "route-decision@1.0"
+ROUTE_VERSION = "route-decision@2.0"
+UXB_ROUTE_VERSION = "uxb-route-decision@1.0"
+ROUTE_RANK = {"fast": 1, "standard": 2, "full": 3}
+BUSINESS_DEPTH_BY_ROUTE = {"fast": "note", "standard": "lite", "full": "full"}
 
 
 def _route_rules_path() -> Path:
@@ -47,22 +50,15 @@ def _read_json(path: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
-def _source_texts(project_id: str) -> dict[str, str]:
-    source_dir = get_project_source_dir(project_id)
-    runtime_dir = get_project_runtime_dir(project_id)
-    task_card_resolved = _read_json(runtime_dir / "task_card_resolved.json")
-    context_manifest = _read_json(runtime_dir / "context_manifest.json")
-    return {
-        "source/task_card.md": _read_text(source_dir / "task_card.md"),
-        "source/requirement.md": _read_text(source_dir / "requirement.md"),
-        "source/background.md": _read_text(source_dir / "background.md"),
-        "runtime/task_card_resolved.json": json.dumps(task_card_resolved, ensure_ascii=False),
-        "runtime/context_manifest.json": json.dumps(context_manifest, ensure_ascii=False),
-    }
-
-
-def _combined_text(texts: dict[str, str]) -> str:
-    return "\n".join(value for value in texts.values() if value.strip())
+def _clean_lines(values: object) -> list[str]:
+    if not isinstance(values, list):
+        return []
+    cleaned: list[str] = []
+    for item in values:
+        text = str(item).strip()
+        if text:
+            cleaned.append(text)
+    return cleaned
 
 
 def _analysis_sentences(text: str) -> list[str]:
@@ -77,7 +73,7 @@ def _analysis_sentences(text: str) -> list[str]:
             continue
         if skip_section:
             continue
-        for raw_part in re.split(r"[。！？!?；;]", stripped):
+        for raw_part in re.split(r"[。！？；]", stripped):
             part = raw_part.strip(" -\t")
             if part:
                 sentences.append(part)
@@ -92,9 +88,10 @@ def _contains_any(text: str, terms: list[str], rules: dict[str, Any]) -> list[st
     sentences = _analysis_sentences(text)
     matched: list[str] = []
     for raw_term in terms:
-        term = str(raw_term)
-        term_lower = term.lower()
-        hit_sentences = [sentence for sentence in sentences if term_lower in sentence.lower()]
+        term = str(raw_term).strip()
+        if not term:
+            continue
+        hit_sentences = [sentence for sentence in sentences if term.lower() in sentence.lower()]
         if not hit_sentences:
             continue
         if all(_is_negated_sentence(sentence, rules) for sentence in hit_sentences):
@@ -104,10 +101,26 @@ def _contains_any(text: str, terms: list[str], rules: dict[str, Any]) -> list[st
 
 
 def _sentence_for_term(text: str, term: str) -> str:
-    for part in _analysis_sentences(text):
-        if term.lower() in part.lower() and part:
-            return part[:120]
+    for sentence in _analysis_sentences(text):
+        if term.lower() in sentence.lower():
+            return sentence[:120]
     return term
+
+
+def _source_texts(project_id: str) -> dict[str, str]:
+    source_dir = get_project_source_dir(project_id)
+    runtime_dir = get_project_runtime_dir(project_id)
+    return {
+        "source/task_card.md": _read_text(source_dir / "task_card.md"),
+        "source/requirement.md": _read_text(source_dir / "requirement.md"),
+        "source/background.md": _read_text(source_dir / "background.md"),
+        "runtime/task_card_resolved.json": json.dumps(_read_json(runtime_dir / "task_card_resolved.json"), ensure_ascii=False),
+        "runtime/context_manifest.json": json.dumps(_read_json(runtime_dir / "context_manifest.json"), ensure_ascii=False),
+    }
+
+
+def _combined_text(texts: dict[str, str]) -> str:
+    return "\n".join(value for value in texts.values() if value.strip())
 
 
 def _task_goal_evidence(texts: dict[str, str], rules: dict[str, Any]) -> list[str]:
@@ -123,12 +136,13 @@ def _task_goal_evidence(texts: dict[str, str], rules: dict[str, Any]) -> list[st
             if any(term in stripped for term in evidence_terms):
                 evidence.append(f"{source}: {stripped[:120]}")
                 break
-        if len(evidence) >= 4:
+        if len(evidence) >= 6:
             break
-    return evidence
+    fallback = str(rules.get("fallback_evidence") or "未读取到足够明确的需求正文，请先由 UXB 做需求类型判断。")
+    return evidence or [fallback]
 
 
-def _demand_type_and_signals(text: str, rules: dict[str, Any]) -> tuple[str, list[dict[str, object]]]:
+def _matched_signals(text: str, rules: dict[str, Any]) -> list[dict[str, object]]:
     hits: list[dict[str, object]] = []
     for rule in rules.get("signal_rules", []):
         if not isinstance(rule, dict):
@@ -141,20 +155,10 @@ def _demand_type_and_signals(text: str, rules: dict[str, Any]) -> tuple[str, lis
                 "demand_type": str(rule.get("demand_type") or "不确定"),
                 "matched_terms": matched,
                 "evidence": str(rule.get("evidence_label") or ""),
-                "route_pressure": int(rule.get("route_pressure") or 0),
+                "signal_level": str(rule.get("signal_level") or "medium"),
             }
         )
-    if not hits:
-        return str(rules.get("default_demand_type") or "不确定"), []
-    demand_order = [str(item) for item in rules.get("demand_types", [])]
-
-    def sort_key(item: dict[str, object]) -> tuple[int, int]:
-        demand_type = str(item["demand_type"])
-        order = demand_order.index(demand_type) if demand_type in demand_order else len(demand_order)
-        return -int(item["route_pressure"]), order
-
-    hits.sort(key=sort_key)
-    return str(hits[0]["demand_type"]), hits
+    return hits
 
 
 def _dimension_judgment(text: str, rules: dict[str, Any]) -> tuple[dict[str, str], dict[str, str], dict[str, list[str]]]:
@@ -168,7 +172,7 @@ def _dimension_judgment(text: str, rules: dict[str, Any]) -> tuple[dict[str, str
         matched_terms_by_field[field] = matched
         if not matched:
             values[field] = str(rule.get("miss_level") or "none")
-            evidence[field] = str(rule.get("miss_reason") or "未发现相关压力")
+            evidence[field] = str(rule.get("miss_reason") or "未发现相关信号")
             continue
         value = str(rule.get("default_hit_level") or "medium")
         for trigger in rule.get("value_triggers", []):
@@ -178,64 +182,13 @@ def _dimension_judgment(text: str, rules: dict[str, Any]) -> tuple[dict[str, str
             if any(term in matched for term in trigger_terms):
                 value = str(trigger.get("level") or value)
                 break
-        sample = _sentence_for_term(text, matched[0])
         values[field] = value
-        evidence[field] = f"{rule.get('hit_reason') or '发现相关压力'}：{sample}"
+        evidence[field] = f"{str(rule.get('hit_reason') or '发现相关风险提示')}：{_sentence_for_term(text, matched[0])}"
     return values, evidence, matched_terms_by_field
 
 
-def _has_dimension_value(dimensions: dict[str, str], fields: list[str], levels: list[str]) -> bool:
-    return any(dimensions.get(field) in set(levels) for field in fields)
-
-
-def _route_from_rules(demand_type: str, dimensions: dict[str, str], signals: list[dict[str, object]], rules: dict[str, Any]) -> str:
-    policy = rules.get("route_policy", {})
-    if demand_type in set(policy.get("full_demand_types", [])):
-        return "full"
-    for item in policy.get("full_dimension_values", []):
-        if not isinstance(item, dict):
-            continue
-        if dimensions.get(str(item.get("field"))) in set(str(level) for level in item.get("levels", [])):
-            return "full"
-    state_rule = policy.get("full_when_state_exception_high_with_demand_types", {})
-    state_field = str(state_rule.get("field") or "")
-    state_levels = set(str(level) for level in state_rule.get("levels", []))
-    demand_types = set(str(item) for item in state_rule.get("demand_types", []))
-    if state_field and dimensions.get(state_field) in state_levels and any(str(signal.get("demand_type")) in demand_types for signal in signals):
-        return "full"
-    if demand_type in set(policy.get("standard_demand_types", [])):
-        return "standard"
-    standard_dimensions = policy.get("standard_dimension_values", {})
-    if _has_dimension_value(
-        dimensions,
-        [str(item) for item in standard_dimensions.get("fields", [])],
-        [str(item) for item in standard_dimensions.get("levels", [])],
-    ):
-        return "standard"
-    pressure_threshold = int(policy.get("standard_when_route_pressure_at_least") or 0)
-    if pressure_threshold and any(int(signal.get("route_pressure") or 0) >= pressure_threshold for signal in signals):
-        return "standard"
-    return str(policy.get("default_route") or "fast")
-
-
-def _confidence(route: str, demand_type: str, signals: list[dict[str, object]], dimensions: dict[str, str], rules: dict[str, Any]) -> str:
-    confidence_rules = rules.get("confidence_policy", {})
-    non_none_count = sum(1 for value in dimensions.values() if value not in {"none", "low"})
-    if demand_type == rules.get("default_demand_type") or not signals:
-        return str(confidence_rules.get("no_signal") or "low")
-    fast_risk = confidence_rules.get("fast_with_risk", {})
-    if route == "fast" and _has_dimension_value(
-        dimensions,
-        [str(item) for item in fast_risk.get("fields", [])],
-        [str(item) for item in fast_risk.get("levels", [])],
-    ):
-        return str(fast_risk.get("confidence") or "medium")
-    if non_none_count >= int(confidence_rules.get("high_non_none_dimension_count") or 4):
-        return "high"
-    return str(confidence_rules.get("default") or "medium")
-
-
 def _design_pressure(dimensions: dict[str, str], rules: dict[str, Any]) -> list[str]:
+    labels_by_field = {str(key): str(value) for key, value in rules.get("pressure_labels", {}).items()}
     ranked_fields = [
         field
         for field in [str(item) for item in rules.get("dimension_fields", [])]
@@ -247,15 +200,10 @@ def _design_pressure(dimensions: dict[str, str], rules: dict[str, Any]) -> list[
             for field in rules.get("fallback_pressure_fields", [])
             if dimensions.get(str(field)) == "low"
         ]
-    labels_by_field = {str(key): str(value) for key, value in rules.get("pressure_labels", {}).items()}
     labels = [labels_by_field[field] for field in ranked_fields if field in labels_by_field]
     default_pressure = str(rules.get("default_design_pressure") or "")
-    return labels[: int(rules.get("max_design_pressure_count") or 5)] or ([default_pressure] if default_pressure else [])
-
-
-def _route_text(value_by_route: dict[str, list[str]], route: str) -> list[str]:
-    values = value_by_route.get(route, [])
-    return [str(item) for item in values]
+    max_count = int(rules.get("max_design_pressure_count") or 5)
+    return labels[:max_count] or ([default_pressure] if default_pressure else [])
 
 
 def _experience_focus(design_pressure: list[str], rules: dict[str, Any]) -> list[str]:
@@ -263,43 +211,145 @@ def _experience_focus(design_pressure: list[str], rules: dict[str, Any]) -> list
     return [focus_map[label] for label in design_pressure if label in focus_map][:4]
 
 
-def _reason(route: str, demand_type: str, design_pressure: list[str], rules: dict[str, Any]) -> str:
-    template = str(rules.get("reason_templates", {}).get(route) or "{demand_type}：{pressure}")
-    return template.format(demand_type=demand_type, pressure="、".join(design_pressure[:3]))
+def _guardrail_warnings(dimensions: dict[str, str], rules: dict[str, Any]) -> list[str]:
+    warnings: list[str] = []
+    review_fields = rules.get("guardrail_review_fields", {})
+    for field, config in review_fields.items():
+        if not isinstance(config, dict):
+            continue
+        levels = {str(item) for item in config.get("levels", [])}
+        if dimensions.get(str(field)) in levels:
+            message = str(config.get("message") or "").strip()
+            if message:
+                warnings.append(message)
+    return warnings
+
+
+def _uxb_route_decision_path(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "uxb_route_decision.json"
+
+
+def _normalized_business_depth(route: str, payload: dict[str, Any]) -> str:
+    value = str(payload.get("business_depth") or "").strip()
+    return value or BUSINESS_DEPTH_BY_ROUTE.get(route, "full")
+
+
+def _validate_uxb_route_decision(payload: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    errors: list[str] = []
+    route = str(payload.get("route") or "").strip()
+    demand_type = str(payload.get("demand_type") or "").strip()
+    reason = str(payload.get("reason") or "").strip()
+    source = str(payload.get("source") or "").strip() or "uxb_ai_judgment"
+    version = str(payload.get("version") or "").strip() or UXB_ROUTE_VERSION
+    confirmed_by_user = bool(payload.get("confirmed_by_user"))
+    evidence = _clean_lines(payload.get("evidence"))
+    design_pressure = _clean_lines(payload.get("design_pressure"))
+    experience_focus = _clean_lines(payload.get("experience_focus"))
+    risk_notes = _clean_lines(payload.get("risk_notes"))
+
+    if version != UXB_ROUTE_VERSION:
+        errors.append(f"uxb_route_decision.version 必须为 `{UXB_ROUTE_VERSION}`")
+    if route not in ROUTE_RANK:
+        errors.append("uxb_route_decision.route 必须是 fast / standard / full")
+    if not demand_type:
+        errors.append("uxb_route_decision.demand_type 不能为空")
+    if not reason:
+        errors.append("uxb_route_decision.reason 不能为空")
+    if not confirmed_by_user:
+        errors.append("uxb_route_decision 还没有用户确认，不能直接驱动主链路")
+    if not evidence:
+        errors.append("uxb_route_decision.evidence 不能为空")
+
+    normalized = {
+        "version": version,
+        "source": source,
+        "confirmed_by_user": confirmed_by_user,
+        "demand_type": demand_type,
+        "route": route,
+        "reason": reason,
+        "evidence": evidence,
+        "design_pressure": design_pressure,
+        "business_depth": _normalized_business_depth(route, payload),
+        "experience_focus": experience_focus,
+        "risk_notes": risk_notes,
+    }
+    return normalized, errors
+
+
+def _build_missing_decision(project_id: str, rules: dict[str, Any], texts: dict[str, str]) -> dict[str, Any]:
+    text = _combined_text(texts)
+    matched_signals = _matched_signals(text, rules)
+    dimensions, dimension_evidence, matched_dimension_terms = _dimension_judgment(text, rules)
+    design_pressure = _design_pressure(dimensions, rules)
+    return {
+        "version": ROUTE_VERSION,
+        "project_id": project_id,
+        "status": "needs_uxb_judgment",
+        "source": "missing_uxb_route_decision",
+        "confirmed_by_user": False,
+        "can_execute_mainline": False,
+        "should_not_control_mainline": True,
+        "route": "",
+        "demand_type": "不确定",
+        "reason": "缺少 UXB 已确认的需求类型判断，当前只能给出风险提示，不能自动决定执行路线。",
+        "evidence": _task_goal_evidence(texts, rules),
+        "design_pressure": design_pressure,
+        "business_depth": "",
+        "experience_focus": _experience_focus(design_pressure, rules),
+        "risk_notes": _guardrail_warnings(dimensions, rules),
+        "validation_errors": ["缺少 runtime/uxb_route_decision.json"],
+        "guardrail_hints": {
+            "matched_signals": matched_signals[:6],
+            "dimension_judgment": dimensions,
+            "dimension_evidence": dimension_evidence,
+            "matched_dimension_terms": {field: terms for field, terms in matched_dimension_terms.items() if terms},
+        },
+    }
 
 
 def build_route_decision(project_id: str) -> dict[str, Any]:
     rules = _load_rules()
     texts = _source_texts(project_id)
     text = _combined_text(texts)
-    demand_type, signals = _demand_type_and_signals(text, rules)
-    dimensions, dimension_evidence, matched_terms = _dimension_judgment(text, rules)
-    route = _route_from_rules(demand_type, dimensions, signals, rules)
-    pressure = _design_pressure(dimensions, rules)
-    evidence = _task_goal_evidence(texts, rules)
-    if not evidence:
-        evidence = [str(rules.get("fallback_evidence") or "未读取到足够明确的需求正文，建议补充 source 输入。")]
-    decision = {
+    matched_signals = _matched_signals(text, rules)
+    dimensions, dimension_evidence, matched_dimension_terms = _dimension_judgment(text, rules)
+    design_pressure = _design_pressure(dimensions, rules)
+    guardrail_warnings = _guardrail_warnings(dimensions, rules)
+
+    raw_uxb_decision = _read_json(_uxb_route_decision_path(project_id))
+    if not raw_uxb_decision:
+        return _build_missing_decision(project_id, rules, texts)
+
+    normalized, validation_errors = _validate_uxb_route_decision(raw_uxb_decision)
+    status = "confirmed" if not validation_errors else "needs_user_confirmation"
+    route = normalized["route"] if status == "confirmed" else ""
+    business_depth = normalized["business_depth"] if status == "confirmed" else ""
+
+    return {
         "version": ROUTE_VERSION,
-        "rules_version": str(rules.get("version") or ""),
         "project_id": project_id,
+        "status": status,
+        "source": normalized["source"],
+        "confirmed_by_user": normalized["confirmed_by_user"],
+        "can_execute_mainline": status == "confirmed",
+        "should_not_control_mainline": status != "confirmed",
         "route": route,
-        "confidence": _confidence(route, demand_type, signals, dimensions, rules),
-        "demand_type": demand_type,
-        "reason": _reason(route, demand_type, pressure, rules),
-        "evidence": evidence[:6],
-        "dimension_judgment": dimensions,
-        "dimension_evidence": dimension_evidence,
-        "design_pressure": pressure,
-        "business_depth": str(rules.get("business_depth_by_route", {}).get(route) or "full"),
-        "experience_focus": _experience_focus(pressure, rules),
-        "non_focus_guidance": _route_text(rules.get("non_focus_guidance_by_route", {}), route),
-        "escalation_signals": _route_text(rules.get("escalation_signals_by_route", {}), route),
-        "matched_route_signals": signals[:6],
-        "matched_dimension_terms": {field: terms for field, terms in matched_terms.items() if terms},
-        "should_not_control_mainline": True,
+        "demand_type": normalized["demand_type"],
+        "reason": normalized["reason"] if status == "confirmed" else "UXB 已形成初步判断，但还不能直接启动主链路，请先补齐并确认判断结果。",
+        "evidence": normalized["evidence"] or _task_goal_evidence(texts, rules),
+        "design_pressure": normalized["design_pressure"] or design_pressure,
+        "business_depth": business_depth,
+        "experience_focus": normalized["experience_focus"] or _experience_focus(normalized["design_pressure"] or design_pressure, rules),
+        "risk_notes": normalized["risk_notes"] or guardrail_warnings,
+        "validation_errors": validation_errors,
+        "guardrail_hints": {
+            "matched_signals": matched_signals[:6],
+            "dimension_judgment": dimensions,
+            "dimension_evidence": dimension_evidence,
+            "matched_dimension_terms": {field: terms for field, terms in matched_dimension_terms.items() if terms},
+            "guardrail_warnings": guardrail_warnings,
+        },
     }
-    return decision
 
 
 def _render_markdown(decision: dict[str, Any]) -> str:
@@ -308,16 +358,17 @@ def _render_markdown(decision: dict[str, Any]) -> str:
         "",
         f"- Project: `{decision['project_id']}`",
         f"- Version: `{decision['version']}`",
-        f"- Rules version: `{decision.get('rules_version', '')}`",
-        f"- Route: `{decision['route']}`",
-        f"- Confidence: `{decision['confidence']}`",
-        f"- Demand type: {decision['demand_type']}",
-        f"- Business depth: `{decision['business_depth']}`",
-        f"- Should control mainline: `{str(decision['should_not_control_mainline']).lower()}`",
+        f"- Status: `{decision['status']}`",
+        f"- Source: `{decision['source']}`",
+        f"- Confirmed by user: `{str(bool(decision['confirmed_by_user'])).lower()}`",
+        f"- Can execute mainline: `{str(bool(decision['can_execute_mainline'])).lower()}`",
+        f"- Route: `{decision.get('route') or 'pending'}`",
+        f"- Demand type: {decision.get('demand_type') or '不确定'}",
+        f"- Business depth: `{decision.get('business_depth') or 'pending'}`",
         "",
         "## Reason",
         "",
-        str(decision["reason"]),
+        str(decision.get("reason") or ""),
         "",
         "## Evidence",
         "",
@@ -325,11 +376,19 @@ def _render_markdown(decision: dict[str, Any]) -> str:
     lines.extend(f"- {item}" for item in decision.get("evidence", []))
     lines.extend(["", "## Design Pressure", ""])
     lines.extend(f"- {item}" for item in decision.get("design_pressure", []))
-    lines.extend(["", "## Escalation Signals", ""])
-    lines.extend(f"- {item}" for item in decision.get("escalation_signals", []))
-    lines.extend(["", "## Dimension Judgment", ""])
-    for field, value in decision.get("dimension_judgment", {}).items():
-        evidence = decision.get("dimension_evidence", {}).get(field, "")
+
+    validation_errors = _clean_lines(decision.get("validation_errors"))
+    lines.extend(["", "## Validation Errors", ""])
+    lines.extend(f"- {item}" for item in validation_errors or ["none"])
+
+    risk_notes = _clean_lines(decision.get("risk_notes"))
+    lines.extend(["", "## Risk Notes", ""])
+    lines.extend(f"- {item}" for item in risk_notes or ["none"])
+
+    hints = decision.get("guardrail_hints", {})
+    lines.extend(["", "## Guardrail Hints", ""])
+    for field, value in dict(hints.get("dimension_judgment", {})).items():
+        evidence = dict(hints.get("dimension_evidence", {})).get(field, "")
         lines.append(f"- `{field}`: `{value}` - {evidence}")
     return "\n".join(lines) + "\n"
 
@@ -339,6 +398,7 @@ def run_route_decision(project_id: str) -> int:
     if not source_dir.exists():
         print(f"ERROR: Project source directory not found: {source_dir}")
         return 1
+
     decision = build_route_decision(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
     runtime_dir.mkdir(parents=True, exist_ok=True)
@@ -346,9 +406,17 @@ def run_route_decision(project_id: str) -> int:
     md_path = runtime_dir / "route_decision.md"
     json_path.write_text(json.dumps(decision, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     md_path.write_text(_render_markdown(decision), encoding="utf-8")
-    append_command_if_provenance_exists(project_id, "route-decision")
+
+    if decision.get("status") == "confirmed":
+        append_command_if_provenance_exists(project_id, "route-decision")
+        print(f"route_decision.json 已生成: {json_path}")
+        print(f"route_decision.md 已生成: {md_path}")
+        print(f"route={decision['route']} demand_type={decision['demand_type']}")
+        return 0
+
     print(f"route_decision.json 已生成: {json_path}")
     print(f"route_decision.md 已生成: {md_path}")
-    print(f"route={decision['route']} confidence={decision['confidence']} demand_type={decision['demand_type']}")
-    print("should_not_control_mainline=true")
-    return 0
+    print("当前还不能自动决定执行路线，请先由 UXB 生成并确认 runtime/uxb_route_decision.json。")
+    for item in _clean_lines(decision.get("validation_errors")):
+        print(f"- {item}")
+    return 1

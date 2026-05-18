@@ -1,0 +1,13 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "project_id": "input-validation-standard-self-permission-low",
+  "confirmed_by_user": true,
+  "route": "standard",
+  "demand_type": "自助权限申请",
+  "reason": "把低完整度自助权限申请需求整理成可评估的业务边界。",
+  "evidence": [
+    "员工希望发起申请。",
+    "可申请权限范围、审批人和生效时机缺失。"
+  ],
+  "notes": "generated for routed-main acceptance fixtures"
+}

@@ -1,0 +1,13 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "project_id": "input-validation-full-permission-query-multidimension",
+  "confirmed_by_user": true,
+  "route": "full",
+  "demand_type": "权限查询",
+  "reason": "设计用户、角色、权限、OA 表单和报表的多维权限查询能力。",
+  "evidence": [
+    "查询维度包括用户、角色、权限、OA 表单、报表。",
+    "结果需要解释来源和可见范围。"
+  ],
+  "notes": "generated for routed-main acceptance fixtures"
+}

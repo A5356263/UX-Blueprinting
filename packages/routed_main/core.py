@@ -58,6 +58,10 @@ def _route_decision(project_id: str) -> dict[str, object]:
     return _read_json(get_project_runtime_dir(project_id) / "route_decision.json")
 
 
+def _uxb_route_decision(project_id: str) -> dict[str, object]:
+    return _read_json(get_project_runtime_dir(project_id) / "uxb_route_decision.json")
+
+
 def _actual_outputs(project_id: str) -> list[str]:
     workspace_dir = get_project_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -74,7 +78,7 @@ def _actual_outputs(project_id: str) -> list[str]:
     return [str(path).replace("\\", "/") for path in candidates if path.exists()]
 
 
-def _steps_for_route(route: str, strict: bool) -> list[tuple[str, Callable[[str], int]]]:
+def _steps_for_route(route: str) -> list[tuple[str, Callable[[str], int]]]:
     if route == "full":
         return [
             ("generate-facts", run_generate_facts),
@@ -113,6 +117,25 @@ def _print_repair_hint(project_id: str, command_name: str) -> None:
         print(f"当前步骤 `{command_name}` 失败，请查看 runtime/gates 或 workspace/check_status.json：{project_id}")
 
 
+def _write_failed_report(
+    report_path: Path,
+    project_id: str,
+    stopped_at: str,
+    steps: list[dict[str, object]],
+    message: str = "",
+) -> None:
+    payload = {
+        "project_id": project_id,
+        "status": "failed",
+        "generated_at": _now_iso(),
+        "stopped_at": stopped_at,
+        "message": message,
+        "steps": steps,
+        "actual_outputs": _actual_outputs(project_id),
+    }
+    _write_json(report_path, payload)
+
+
 def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = False, strict: bool = False) -> int:
     if route not in {"auto", "fast", "standard", "full"}:
         print(f"ERROR: unsupported route: {route}")
@@ -132,64 +155,54 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         if message:
             print(message)
         bootstrap_results.append({"command": "assemble", "exit_code": assemble_code, "message": message})
-        _write_json(
-            report_path,
-            {
-                "project_id": project_id,
-                "status": "failed",
-                "generated_at": _now_iso(),
-                "stopped_at": "assemble",
-                "message": message,
-                "steps": bootstrap_results,
-                "actual_outputs": _actual_outputs(project_id),
-            },
-        )
+        _write_failed_report(report_path, project_id, "assemble", bootstrap_results, message=message)
         print(f"routed_main_report.json: {report_path}")
         return assemble_code
+
     bootstrap_results.append({"command": "assemble", "exit_code": assemble_code})
     append_command_if_provenance_exists(project_id, "assemble")
     if assemble_code != 0:
-        _write_json(
-            report_path,
-            {
-                "project_id": project_id,
-                "status": "failed",
-                "generated_at": _now_iso(),
-                "stopped_at": "assemble",
-                "steps": bootstrap_results,
-                "actual_outputs": _actual_outputs(project_id),
-            },
-        )
+        _write_failed_report(report_path, project_id, "assemble", bootstrap_results)
         return assemble_code
 
-    route_code = run_route_decision(project_id)
-    bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
-    append_command_if_provenance_exists(project_id, "route-decision")
-    if route_code != 0:
-        _write_json(
-            report_path,
-            {
-                "project_id": project_id,
-                "status": "failed",
-                "generated_at": _now_iso(),
-                "stopped_at": "route-decision",
-                "steps": bootstrap_results,
-                "actual_outputs": _actual_outputs(project_id),
-            },
-        )
-        return route_code
+    decision: dict[str, object] = {}
+    confirmed_route = ""
+    actual_route = route
+    route_source = "manual_argument"
 
-    decision = _route_decision(project_id)
-    decided_route = str(decision.get("route") or "standard")
-    actual_route = decided_route if route == "auto" else route
-    downgrade_rejected = ROUTE_RANK.get(actual_route, 0) < ROUTE_RANK.get(decided_route, 0)
-    steps = _steps_for_route(actual_route, strict)
+    if route == "auto":
+        route_code = run_route_decision(project_id)
+        bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
+        if route_code == 0:
+            append_command_if_provenance_exists(project_id, "route-decision")
+        if route_code != 0:
+            message = "当前缺少 UXB 已确认的 route 判断，不能在 auto 模式下自动启动 routed-main。"
+            _write_failed_report(report_path, project_id, "route-decision", bootstrap_results, message=message)
+            return route_code
+
+        decision = _route_decision(project_id)
+        if str(decision.get("status") or "") != "confirmed":
+            message = "route_decision 未进入 confirmed 状态，不能在 auto 模式下继续执行。"
+            _write_failed_report(report_path, project_id, "route-decision", bootstrap_results, message=message)
+            return 1
+
+        confirmed_route = str(decision.get("route") or "")
+        actual_route = confirmed_route
+        route_source = "uxb_route_decision.json"
+    else:
+        decision = _route_decision(project_id)
+        uxb_decision = _uxb_route_decision(project_id)
+        if bool(uxb_decision.get("confirmed_by_user")):
+            confirmed_route = str(uxb_decision.get("route") or "")
+
+    downgrade_rejected = bool(confirmed_route) and ROUTE_RANK.get(actual_route, 0) < ROUTE_RANK.get(confirmed_route, 0)
+    steps = _steps_for_route(actual_route)
     plan = {
         "project_id": project_id,
         "generated_at": _now_iso(),
-        "route_source": "route_decision.json" if route == "auto" else "manual_argument",
+        "route_source": route_source,
         "requested_route": route,
-        "decided_route": decided_route,
+        "decided_route": confirmed_route,
         "actual_route": actual_route,
         "downgrade_rejected": downgrade_rejected,
         "planned_steps": [item["command"] for item in bootstrap_results] + [name for name, _ in steps],
@@ -198,17 +211,8 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
     _write_json(plan_path, plan)
 
     if downgrade_rejected:
-        message = f"拒绝降级：route_decision 建议 {decided_route}，但手动指定 {actual_route}"
-        report = {
-            "project_id": project_id,
-            "status": "failed",
-            "generated_at": _now_iso(),
-            "stopped_at": "route-selection",
-            "message": message,
-            "steps": bootstrap_results,
-            "actual_outputs": _actual_outputs(project_id),
-        }
-        _write_json(report_path, report)
+        message = f"拒绝降级：UXB 已确认 route 为 {confirmed_route}，但手动指定为 {actual_route}"
+        _write_failed_report(report_path, project_id, "route-selection", bootstrap_results, message=message)
         print(message)
         print(f"routed_main_plan.json: {plan_path}")
         print(f"routed_main_report.json: {report_path}")
@@ -249,13 +253,13 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         "status": status,
         "generated_at": _now_iso(),
         "requested_route": route,
-        "decided_route": decided_route,
+        "decided_route": confirmed_route,
         "actual_route": actual_route,
         "stopped_at": stopped_at,
         "steps": results,
         "actual_outputs": _actual_outputs(project_id),
         "recommend_enable_routed_execution": False,
-        "recommendation_reason": "阶段三仅完成试运行能力；是否正式启用需要基于测试样本结果判断。",
+        "recommendation_reason": "当前 route 来源已经切换为 UXB 已确认判断；是否默认启用，仍应基于样例和真实任务继续验证。",
     }
     _write_json(report_path, report)
     append_command_if_provenance_exists(project_id, "run-routed-main")

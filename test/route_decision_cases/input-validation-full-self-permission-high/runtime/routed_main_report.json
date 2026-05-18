@@ -1,7 +1,7 @@
 {
   "project_id": "input-validation-full-self-permission-high",
   "status": "passed",
-  "generated_at": "2026-05-18T12:45:55+00:00",
+  "generated_at": "2026-05-18T14:16:19+00:00",
   "requested_route": "auto",
   "decided_route": "full",
   "actual_route": "full",
@@ -61,5 +61,5 @@
     "E:/AI设计/体验蓝图构建思路/test/route_decision_cases/input-validation-full-self-permission-high/runtime/routed_main_report.json"
   ],
   "recommend_enable_routed_execution": false,
-  "recommendation_reason": "阶段三仅完成试运行能力；是否正式启用需要基于测试样本结果判断。"
+  "recommendation_reason": "当前 route 来源已经切换为 UXB 已确认判断；是否默认启用，仍应基于样例和真实任务继续验证。"
 }

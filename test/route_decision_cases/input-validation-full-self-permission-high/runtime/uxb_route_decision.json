@@ -1,0 +1,14 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "project_id": "input-validation-full-self-permission-high",
+  "confirmed_by_user": true,
+  "route": "full",
+  "demand_type": "自助权限申请",
+  "reason": "设计员工自助申请权限的完整业务和体验闭环。",
+  "evidence": [
+    "员工是申请方。",
+    "审批人处理申请。",
+    "管理员配置可申请范围。"
+  ],
+  "notes": "generated for routed-main acceptance fixtures"
+}

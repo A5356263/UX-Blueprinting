@@ -3,8 +3,8 @@
   "generation_mode": "generated",
   "producer": "packages.generation",
   "source_hash": "eff4675290eb10c54b43fb141e99021a868c57559f0ae64618562de8ea647377",
-  "task_card_hash": "f97cd5594948848b1058d9310cb5b1b197c09c3756e70157461f792ce69ca999",
-  "generated_at": "2026-05-18T12:45:55+00:00",
+  "task_card_hash": "9acf26b4cb85f71c661ba9d877974431838b62c004d5deaa571c53bc5385699f",
+  "generated_at": "2026-05-18T14:16:18+00:00",
   "parent_project_id": "",
   "copied_from_project_id": "",
   "manual_patch_reason": "",
@@ -19,6 +19,7 @@
     "generate-experience",
     "gate-experience",
     "validate",
-    "coverage"
+    "coverage",
+    "archive"
   ]
 }

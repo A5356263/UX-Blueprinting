@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-05-18T12:45:55.551080+00:00",
+  "updated_at": "2026-05-18T14:16:19.000331+00:00",
   "checked_files": [
     "projects/input-validation-full-self-permission-high/workspace/facts.md",
     "projects/input-validation-full-self-permission-high/workspace/business_blueprint.md",

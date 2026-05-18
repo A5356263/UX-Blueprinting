@@ -149,8 +149,8 @@ def write(path: Path, text: str) -> None:
     path.write_text(text.strip() + "\n", encoding="utf-8")
 
 
-def route_for(case: dict[str, object]) -> str:
-    route_path = ROOT / str(case["id"]) / "runtime" / "route_decision.json"
+def confirmed_route_for(case: dict[str, object]) -> str:
+    route_path = ROOT / str(case["id"]) / "runtime" / "uxb_route_decision.json"
     if route_path.exists():
         try:
             route = json.loads(route_path.read_text(encoding="utf-8")).get("route")
@@ -159,6 +159,22 @@ def route_for(case: dict[str, object]) -> str:
         except json.JSONDecodeError:
             pass
     return str(case["expected"])
+
+
+def uxb_route_decision(case: dict[str, object], route: str) -> str:
+    facts = case.get("facts", [])
+    evidence = [str(item) for item in facts[:3]] or [str(case["goal"])]
+    payload = {
+        "version": "uxb-route-decision@1.0",
+        "project_id": str(case["id"]),
+        "confirmed_by_user": True,
+        "route": route,
+        "demand_type": str(case["source"]),
+        "reason": str(case["goal"]),
+        "evidence": evidence,
+        "notes": "generated for routed-main acceptance fixtures",
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
 def route_outputs(cid: str, route: str | None) -> list[str]:
@@ -218,7 +234,7 @@ def task_card(case: dict[str, object], route: str | None = None) -> str:
 ## Constraints
 
 - 只依据 source 中的真实需求片段和背景，不引入无来源的新业务范围。
-- 按 route_decision 的实际路线输出对应正式产物，不能用聊天回复替代正式文档。
+- 按 UXB 已确认的实际路线输出对应正式产物，不能用聊天回复替代正式文档。
 
 ## Knowledge
 
@@ -273,7 +289,7 @@ def task_card(case: dict[str, object], route: str | None = None) -> str:
 
 ### Boundary
 
-- 不越过 route_decision 的业务深度。
+- 不越过 UXB 已确认路线对应的业务深度。
 
 ## Experience Output Requirements
 
@@ -323,7 +339,7 @@ def background(case: dict[str, object]) -> str:
 验收关注点：
 
 - source/task_card.md 是否能完成 assemble。
-- route_decision 是否能写出实际路线。
+- route_decision 是否能消费 UXB 已确认路线并写出实际路线。
 - routed-main 是否能根据实际路线消费对应业务产物。
 - workspace/check_status.json 是否能写出最终机器状态。
 """
@@ -593,17 +609,20 @@ def experience(case: dict[str, object], route: str) -> str:
 def write_sources() -> None:
     for case in CASES:
         base = ROOT / str(case["id"])
+        route = confirmed_route_for(case)
         write(base / "source" / "task_card.md", task_card(case))
         write(base / "source" / "requirement.md", source_requirement(case))
         write(base / "source" / "background.md", background(case))
+        write(base / "runtime" / "uxb_route_decision.json", uxb_route_decision(case, route))
 
 
 def write_artifacts() -> None:
     for case in CASES:
         base = ROOT / str(case["id"])
-        route = route_for(case)
+        route = confirmed_route_for(case)
         workspace = base / "workspace"
         write(base / "source" / "task_card.md", task_card(case, route))
+        write(base / "runtime" / "uxb_route_decision.json", uxb_route_decision(case, route))
         write(workspace / "facts.md", facts(case))
         write(workspace / "experience_blueprint.md", experience(case, route))
         if route == "fast":

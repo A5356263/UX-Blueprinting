@@ -1,0 +1,22 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "source": "uxb_ai_judgment",
+  "confirmed_by_user": true,
+  "demand_type": "布局交互优化",
+  "route": "fast",
+  "reason": "这次主要影响组织树的页面表现和交互边界，不改变权限、审批、数据范围或业务规则，适合按局部体验优化处理。",
+  "evidence": [
+    "需求只要求支持拖动组织树宽度并记住当前浏览器偏好。",
+    "约束里明确不新增组织、成员、角色或权限能力。"
+  ],
+  "design_pressure": [
+    "布局交互"
+  ],
+  "business_depth": "note",
+  "experience_focus": [
+    "重点展开默认状态、交互边界、极限状态、响应方式和偏好记忆。"
+  ],
+  "risk_notes": [
+    "如果后续发现影响数据范围、权限边界或结果状态，需要重新判断。"
+  ]
+}

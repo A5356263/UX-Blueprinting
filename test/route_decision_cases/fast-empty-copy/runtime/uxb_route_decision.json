@@ -1,0 +1,25 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "source": "uxb_ai_judgment",
+  "confirmed_by_user": true,
+  "demand_type": "既有能力扩展",
+  "route": "standard",
+  "reason": "这次不是单纯文案优化，它会影响空结果解释、异常区分和用户下一步，因此先做轻量业务判断更稳妥。",
+  "evidence": [
+    "需求要求区分筛选无结果与其他异常。",
+    "需要明确清空筛选后的承接动作和结果反馈。"
+  ],
+  "design_pressure": [
+    "业务规则",
+    "状态异常",
+    "文案理解"
+  ],
+  "business_depth": "lite",
+  "experience_focus": [
+    "重点展开规则边界、状态反馈和用户下一步。",
+    "重点展开用户可见文案、解释位置和下一步提示。"
+  ],
+  "risk_notes": [
+    "如果后续发现空结果解释改变了数据范围或权限边界，需要升级判断。"
+  ]
+}

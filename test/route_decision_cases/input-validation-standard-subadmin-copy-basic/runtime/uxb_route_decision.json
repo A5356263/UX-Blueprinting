@@ -1,0 +1,14 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "project_id": "input-validation-standard-subadmin-copy-basic",
+  "confirmed_by_user": true,
+  "route": "standard",
+  "demand_type": "子管理员权限复制",
+  "reason": "支持把一个子管理员的可授权组织和功能权限复制给多个目标用户。",
+  "evidence": [
+    "复制来源是已有子管理员。",
+    "目标用户可以多选。",
+    "复制结果需要区分成功、失败和跳过。"
+  ],
+  "notes": "generated for routed-main acceptance fixtures"
+}

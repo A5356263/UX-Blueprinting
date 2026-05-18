@@ -24,7 +24,7 @@
 ## Required Outputs
 
 - projects/input-validation-fast-checked-filter-copy/workspace/facts.md
-- projects/input-validation-fast-checked-filter-copy/workspace/business_blueprint_lite.md
+- projects/input-validation-fast-checked-filter-copy/workspace/business_note.md
 - projects/input-validation-fast-checked-filter-copy/workspace/experience_blueprint.md
 - projects/input-validation-fast-checked-filter-copy/workspace/check_report.md
 - projects/input-validation-fast-checked-filter-copy/workspace/check_status.json
@@ -32,7 +32,7 @@
 ## Constraints
 
 - 只依据 source 中的真实需求片段和背景，不引入无来源的新业务范围。
-- 按 route_decision 的实际路线输出对应正式产物，不能用聊天回复替代正式文档。
+- 按 UXB 已确认的实际路线输出对应正式产物，不能用聊天回复替代正式文档。
 
 ## Knowledge
 
@@ -87,7 +87,7 @@
 
 ### Boundary
 
-- 不越过 route_decision 的业务深度。
+- 不越过 UXB 已确认路线对应的业务深度。
 
 ## Experience Output Requirements
 

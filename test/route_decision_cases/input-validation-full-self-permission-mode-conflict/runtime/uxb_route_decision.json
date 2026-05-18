@@ -1,0 +1,13 @@
+{
+  "version": "uxb-route-decision@1.0",
+  "project_id": "input-validation-full-self-permission-mode-conflict",
+  "confirmed_by_user": true,
+  "route": "full",
+  "demand_type": "自助权限申请",
+  "reason": "处理自助权限申请与既有双管理员审批、权限变更审批的模式冲突。",
+  "evidence": [
+    "可能存在双管理员审批和员工自助申请并存。",
+    "关闭模式时可能仍有在途申请。"
+  ],
+  "notes": "generated for routed-main acceptance fixtures"
+}

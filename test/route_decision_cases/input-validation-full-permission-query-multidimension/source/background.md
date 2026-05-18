@@ -5,6 +5,6 @@
 验收关注点：
 
 - source/task_card.md 是否能完成 assemble。
-- route_decision 是否能写出实际路线。
+- route_decision 是否能消费 UXB 已确认路线并写出实际路线。
 - routed-main 是否能根据实际路线消费对应业务产物。
 - workspace/check_status.json 是否能写出最终机器状态。
