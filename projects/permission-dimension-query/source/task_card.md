@@ -1,0 +1,143 @@
+# Task Card
+
+## Protocol
+
+- Protocol Name: Cross-AI Task Card
+- Protocol Version: v0.2
+- Task ID: permission-dimension-query
+- Task Name: 权限维度统一查询
+- Domain: 业务/权限管理
+
+## Task Goal
+
+- 为管理员提供统一的跨域权限查询入口，支持从用户、角色、权限、OA 表单、报表五个维度查看权限归属关系，提升权限核对和审计效率。
+- 本次输出主要服务于业务蓝图评审和体验蓝图设计。
+
+## Task Scenario
+
+- 本次为新建任务，新增跨域统一权限查询能力。
+- 权限域当前已有按用户查询的独立入口，但按角色查仅部分可行、按权限反查存在明确缺口、OA 表单和报表维度的统一查询尚未建立。
+- 本次任务覆盖全链路（facts → business → experience），走完整业务蓝图。
+
+## Required Inputs
+
+- projects/permission-dimension-query/source/requirement.md
+- projects/permission-dimension-query/source/background.md
+
+## Required Outputs
+
+- projects/permission-dimension-query/workspace/facts.md
+- projects/permission-dimension-query/workspace/business_blueprint.md
+- projects/permission-dimension-query/workspace/experience_blueprint.md
+- projects/permission-dimension-query/workspace/gap_list.md
+- projects/permission-dimension-query/workspace/check_report.md
+- projects/permission-dimension-query/workspace/check_status.json
+
+## Read Order
+
+1. 先读本文件
+2. 再读 `Required Inputs`
+3. 生成 facts.md（详见 `specs/08_fact_extraction_contract.md`）→ 运行 `python -m packages gate-facts permission-dimension-query`，通过才能进入下一步
+4. 生成 business_blueprint.md（详见 `specs/09_business_blueprint_contract.md`）→ 运行 `python -m packages gate-business permission-dimension-query`，通过才能进入下一步
+5. 生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience permission-dimension-query`，通过才能进入下一步
+6. 运行 `python -m packages validate permission-dimension-query` 和 `python -m packages coverage permission-dimension-query`
+7. 运行 `python -m packages archive permission-dimension-query`（产物镜像到 exports/）
+8. 运行 `python -m packages preview permission-dimension-query --no-serve`（生成静态预览 HTML 到 runtime/preview/）
+
+## Constraints
+
+- 不得臆造业务事实
+- 信息不足处保留 `[GAP]`
+- 正式产出必须写入 `workspace/`
+- 不得用聊天回复替代正式文档产物
+- facts 阶段不得把引用知识提升为当前任务的已确认事实
+- business 阶段不得输出 UI 方案或实现方案
+- experience 阶段不得输出高保真视觉稿或研发实现细节
+- **阶段门禁**：每个阶段必须 gate 通过后才能进入下一阶段。不得在 facts gate 通过前生成 business_blueprint.md，不得在 business gate 通过前生成 experience_blueprint.md。不得一次性写完所有产物再回头补 gate。
+
+## Knowledge
+
+- knowledge/wiki/index.md
+
+## Wiki
+
+- knowledge/wiki/index.md
+
+## Design Guidelines
+
+- knowledge/wiki/index.md
+
+## Knowledge Consumption Policy
+
+### Primary Knowledge Entry
+
+- knowledge/wiki/index.md
+
+### Fallback Conditions
+
+- 命中 `[GAP]`
+- 命中 `[CONFLICT]`
+- 摘要页未覆盖当前任务需要的对象、规则或路径
+
+### Disallowed Broad References
+
+- 不允许默认整目录装配到 context bundle
+
+## Templates
+
+- templates/facts.template.md
+- templates/business_blueprint.template.md
+- templates/experience_blueprint.template.md
+- templates/gap_list.template.md
+- templates/check_report.template.md
+
+## Checks
+
+- specs/06_check_contract.md
+- specs/08_fact_extraction_contract.md
+- specs/09_business_blueprint_contract.md
+- specs/10_experience_blueprint_contract.md
+
+## Result Locations
+
+- 执行中结果: projects/permission-dimension-query/workspace/
+- 归档结果: projects/permission-dimension-query/exports/final/
+
+## Completion Criteria
+
+- 必需输出文件全部存在
+- `check_report.md` 已生成
+- 无 blocker
+
+## Facts Output Requirements
+
+产出规范见 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`。
+
+核心要求：
+- 用自然语言理解和重述需求，不切碎原文，不填表，不用 ID 编号
+- 禁止把引用知识提升为当前任务的已确认事实
+- 信息不足处保留 `[GAP]`
+
+## Business Output Requirements
+
+产出规范见 `specs/09_business_blueprint_contract.md` 和 `templates/business_blueprint.template.md`。
+
+核心要求：
+- 用业务分析师的自然语言做判断，不复制 facts 碎片
+- 禁止输出 UI 方案或实现方案
+- 方案承接要求必须具体、可执行
+
+## Experience Output Requirements
+
+产出规范见 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`。
+
+核心要求：
+- 每个交互节点写清用户动作、系统反馈、前置解释、具体文案、下一步
+- 文案必须是可直接展示的文本，禁止元指令
+- 禁止输出高保真视觉稿或研发实现细节
+
+## Notes
+
+- 本次任务涉及跨域权限概念统一，facts 阶段需特别关注不同域的权限颗粒度差异
+- 查询页负责解释不负责配置的边界在 business 阶段必须明确
+- 访问控制边界（谁能查、查什么范围）是本次蓝图的重点展开维度

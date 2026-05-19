@@ -1,0 +1,22 @@
+{
+  "project_id": "permission-dimension-query",
+  "generated_at": "2026-05-19T06:43:57+00:00",
+  "route_source": "manual_argument",
+  "requested_route": "full",
+  "decided_route": "",
+  "actual_route": "full",
+  "downgrade_rejected": false,
+  "planned_steps": [
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive"
+  ],
+  "route_decision": {}
+}

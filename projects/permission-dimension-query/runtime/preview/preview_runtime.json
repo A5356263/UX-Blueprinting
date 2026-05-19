@@ -1,0 +1,16 @@
+{
+  "project_id": "permission-dimension-query",
+  "generated_at": "2026-05-19T07:17:15+00:00",
+  "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\permission-dimension-query\\runtime\\preview",
+  "output_path": "E:\\AI设计\\体验蓝图构建思路\\projects\\permission-dimension-query\\runtime\\preview\\index.html",
+  "server_host": "127.0.0.1",
+  "server_port": 0,
+  "preview_url": "",
+  "ready_state": "built",
+  "business_section_count": 11,
+  "experience_section_count": 9,
+  "flow_count": 7,
+  "page_count": 2,
+  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\permission-dimension-query\\exports\\final\\business_blueprint.md",
+  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\permission-dimension-query\\exports\\final\\experience_blueprint.md"
+}

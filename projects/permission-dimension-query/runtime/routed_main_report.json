@@ -1,0 +1,32 @@
+{
+  "project_id": "permission-dimension-query",
+  "status": "failed",
+  "generated_at": "2026-05-19T06:43:57+00:00",
+  "requested_route": "full",
+  "decided_route": "",
+  "actual_route": "full",
+  "stopped_at": "gate-facts",
+  "steps": [
+    {
+      "command": "assemble",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-facts",
+      "exit_code": 0
+    },
+    {
+      "command": "gate-facts",
+      "exit_code": 1
+    }
+  ],
+  "actual_outputs": [
+    "E:/AI设计/体验蓝图构建思路/projects/permission-dimension-query/workspace/facts.md",
+    "E:/AI设计/体验蓝图构建思路/projects/permission-dimension-query/workspace/business_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/projects/permission-dimension-query/workspace/experience_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/projects/permission-dimension-query/workspace/check_status.json",
+    "E:/AI设计/体验蓝图构建思路/projects/permission-dimension-query/runtime/routed_main_plan.json"
+  ],
+  "recommend_enable_routed_execution": false,
+  "recommendation_reason": "当前 route 来源已经切换为 UXB 已确认判断；是否默认启用，仍应基于样例和真实任务继续验证。"
+}
