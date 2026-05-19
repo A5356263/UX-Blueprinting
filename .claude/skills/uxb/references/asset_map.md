@@ -1,14 +1,14 @@
-# UXB Asset Map
+# UXB 资产地图
 
-用这个 guide 看仓库主要资产放在哪里，以及各自该怎么用。
+用这份说明看仓库主要资产放在哪里，以及各自该怎么用。
 
-## Principle
+## 原则
 
 这个文件说明的是资产类型和使用边界，不承诺维护一份完整目录清单。
 
 以当前仓库结构为准。
 
-## Execution Hub
+## 执行中枢
 
 ```text
 packages/
@@ -18,7 +18,7 @@ packages/
 
 skill 应调用它，而不是复制它。
 
-## Knowledge Base
+## 正式知识库
 
 ```text
 knowledge/
@@ -36,7 +36,7 @@ knowledge/wiki/index.md
 
 这里是正式知识系统，不是随手记录区。用户纠错或确认沉淀时，先进入知识候选区，不要直接改这里。
 
-## Knowledge Candidate Area
+## 知识候选区
 
 ```text
 知识候选区/
@@ -60,7 +60,7 @@ knowledge/wiki/index.md
 - 不被 `specs/`、`templates/` 消费
 - 不等于 `projects/<project-id>/` 正式产物
 
-## Formal Rules
+## 正式规则
 
 ```text
 specs/
@@ -68,7 +68,7 @@ specs/
 
 这里是正式规则契约的事实来源。涉及正式产物或阶段边界时，以 `specs/` 为准。
 
-## Templates
+## 模板区
 
 ```text
 templates/
@@ -76,7 +76,7 @@ templates/
 
 生成 facts、business、experience 等正式产物时，优先使用这里的模板。
 
-## Project Artifact Area
+## 项目产物区
 
 ```text
 projects/<project-id>/
@@ -84,7 +84,7 @@ projects/<project-id>/
 
 这里是正式任务输入和输出的归属位置。
 
-Typical structure:
+典型结构：
 
 ```text
 source/

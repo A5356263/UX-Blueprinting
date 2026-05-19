@@ -1,0 +1,71 @@
+{
+  "project_id": "quick-permission-search",
+  "stage": "business_note",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-19T05:59:18.805140+00:00",
+  "checked_files": [
+    "projects/quick-permission-search/workspace/facts.md",
+    "projects/quick-permission-search/workspace/business_note.md",
+    "projects/quick-permission-search/runtime/route_decision.json",
+    "projects/quick-permission-search/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "route 判断：fast"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_note_gate",
+      "stage": "business_note",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "route 判断：fast",
+      "target_artifacts": [
+        "projects/quick-permission-search/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/quick-permission-search/workspace/facts.md",
+        "projects/quick-permission-search/workspace/business_note.md",
+        "projects/quick-permission-search/runtime/route_decision.json",
+        "projects/quick-permission-search/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "route 判断：fast"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/quick-permission-search/workspace/facts.md",
+            "projects/quick-permission-search/workspace/business_note.md",
+            "projects/quick-permission-search/runtime/route_decision.json",
+            "projects/quick-permission-search/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "artifact": "business_note.md"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "artifact": "business_note.md"
+  }
+}

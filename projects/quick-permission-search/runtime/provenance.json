@@ -1,0 +1,21 @@
+{
+  "project_id": "quick-permission-search",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "494d7a143a2c836614e46782b5eb97f4e83f957fab925d31300273b2f1d0a174",
+  "task_card_hash": "8af051170fe1561b477ec81808d4236532cb3caacec248bba8e1261e6f1cb37f",
+  "generated_at": "2026-05-19T03:43:52+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "generate-business-note",
+    "run-routed-main",
+    "assemble",
+    "gate-business-note",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite"
+  ]
+}

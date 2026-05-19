@@ -1,0 +1,214 @@
+{
+  "task_id": "quick-permission-search",
+  "generated_from": "projects/quick-permission-search/runtime/context_manifest.json",
+  "mainline_knowledge_policy": "summary_first_with_raw_fallback",
+  "reference_summary": {
+    "knowledge_ref_count": 1,
+    "wiki_ref_count": 1,
+    "guideline_ref_count": 1,
+    "template_ref_count": 5,
+    "check_ref_count": 4
+  },
+  "primary_entries_used": [
+    "knowledge/wiki/index.md"
+  ],
+  "fallback_sources_used": [],
+  "narrowing_actions": [],
+  "broad_reference_warnings": [],
+  "stage_usage": {
+    "facts": {
+      "wiki_refs_used": [],
+      "raw_refs_used": [],
+      "raw_policy": "not_default"
+    },
+    "business": {
+      "wiki_refs_used": [],
+      "raw_refs_used": [],
+      "source_ref_chains": []
+    },
+    "experience": {
+      "guideline_entry_refs": [
+        "knowledge/wiki/index.md"
+      ],
+      "wiki_refs_used": [],
+      "raw_refs_used": [],
+      "source_ref_chains": [],
+      "guideline_refs_used": [
+        "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "knowledge/wiki/summaries/设计准则/可用性.md",
+        "knowledge/wiki/summaries/设计准则/可读性.md"
+      ],
+      "guideline_raw_refs_used": [
+        "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "knowledge/raw/设计准则/可用性.md",
+        "knowledge/raw/设计准则/可读性.md"
+      ],
+      "guideline_selection_reason": [
+        {
+          "guideline": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现报错、阻断、校验或权限不足信号。"
+        },
+        {
+          "guideline": "knowledge/wiki/summaries/设计准则/可用性.md",
+          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现报错、阻断、校验或权限不足信号。"
+        },
+        {
+          "guideline": "knowledge/wiki/summaries/设计准则/可读性.md",
+          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现报错、阻断、校验或权限不足信号。"
+        }
+      ]
+    }
+  },
+  "references": [
+    {
+      "reference": "knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md",
+      "group": "knowledge_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md",
+      "group": "wiki_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "knowledge/wiki/index.md",
+      "requested_reference": "knowledge/wiki/index.md",
+      "group": "guideline_refs",
+      "type": "file",
+      "consumed_by": [
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "type": "file",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "type": "file",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "routed_from_summary": "",
+      "route_reason": ""
+    }
+  ]
+}

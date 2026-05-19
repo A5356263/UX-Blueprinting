@@ -1,0 +1,9 @@
+{
+  "project_id": "quick-permission-search",
+  "task_name": "功能权限全局关键词命中高亮",
+  "domain": "业务/权限管理",
+  "status": "draft",
+  "project_role": "real_project",
+  "read_only": false,
+  "excluded_from_default_scan": false
+}
