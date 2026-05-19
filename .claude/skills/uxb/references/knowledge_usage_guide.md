@@ -1,4 +1,4 @@
-# Knowledge Usage Guide
+# 知识使用说明
 
 当知识问答、诊断咨询、任务成型需要用到仓库知识时，用这个 guide。
 

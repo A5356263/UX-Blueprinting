@@ -22,7 +22,7 @@
 默认确认话术模板见：
 
 ```text
-.claude/skills/uxb/assets/execution_confirmation.template.md
+../assets/execution_confirmation.template.md
 ```
 
 ## 稳定入口
