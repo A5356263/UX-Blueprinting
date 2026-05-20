@@ -154,7 +154,6 @@ FACTS_RUNTIME_SOURCE_BLOCKED_SECTIONS = {
     "依赖与前置条件",
 }
 RUNTIME_SOURCE_REF_MARKERS = [
-    "task_card_resolved.json",
     "context_manifest.json",
     "task_card.md",
 ]
@@ -432,9 +431,6 @@ def infer_target_artifacts(project_id: str, stage: str, message: str, checked_fi
         inferred.append(f"{runtime_prefix}/gate_metrics.json")
     if "context_manifest.json" in lowered:
         inferred.append(f"{runtime_prefix}/context_manifest.json")
-    if "task_card_resolved.json" in lowered:
-        inferred.append(f"{runtime_prefix}/task_card_resolved.json")
-
     if not inferred:
         if stage == "facts":
             inferred.append(f"{workspace_prefix}/facts.md")
@@ -544,28 +540,7 @@ def _string_list(value: object) -> list[str]:
 
 def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> None:
     runtime_dir = get_project_runtime_dir(project_id)
-    resolved_path = runtime_dir / "task_card_resolved.json"
     manifest_path = runtime_dir / "context_manifest.json"
-
-    resolved: dict[str, object] = {}
-    manifest: dict[str, object] = {}
-
-    if not resolved_path.exists():
-        add_issue(issues, "blocker", "缺少 runtime/task_card_resolved.json")
-    else:
-        resolved = read_json(resolved_path)
-        if not resolved:
-            add_issue(issues, "blocker", "runtime/task_card_resolved.json 不可读取或不是有效 JSON")
-        else:
-            resolved_errors = _string_list(resolved.get("errors"))
-            if resolved_errors:
-                add_issue(issues, "blocker", f"task_card_resolved.json 存在解析错误：{' | '.join(resolved_errors[:3])}")
-            if not _string_list(resolved.get("task_goal")):
-                add_issue(issues, "blocker", "task_card_resolved.json 缺少 task_goal")
-            if not _string_list(resolved.get("execution_constraints")):
-                add_issue(issues, "blocker", "task_card_resolved.json 缺少 execution_constraints")
-            if not _string_list(resolved.get("read_order")):
-                add_issue(issues, "warning", "task_card_resolved.json 缺少 read_order")
 
     if not manifest_path.exists():
         add_issue(issues, "blocker", "缺少 runtime/context_manifest.json")
@@ -575,6 +550,10 @@ def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> No
     if not manifest:
         add_issue(issues, "blocker", "runtime/context_manifest.json 不可读取或不是有效 JSON")
         return
+
+    task_card_source = str(manifest.get("task_card_source") or "").strip()
+    if not task_card_source:
+        add_issue(issues, "blocker", "context_manifest.json 缺少 task_card_source")
 
     task_contract = manifest.get("task_contract")
     if not isinstance(task_contract, dict):
@@ -588,23 +567,10 @@ def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> No
     if not _string_list(task_contract.get("read_order")):
         add_issue(issues, "warning", "context_manifest.json.task_contract 缺少 read_order")
 
-    if resolved:
-        mismatched_fields: list[str] = []
-        for field in ("task_goal", "task_scenario", "execution_constraints", "read_order", "notes"):
-            if _string_list(resolved.get(field)) != _string_list(task_contract.get(field)):
-                mismatched_fields.append(field)
-        if mismatched_fields:
-            add_issue(
-                issues,
-                "warning",
-                f"context_manifest.json.task_contract 与 task_card_resolved.json 不一致：{', '.join(mismatched_fields)}",
-            )
-
 
 def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, str]]) -> None:
     runtime_dir = get_project_runtime_dir(project_id)
     manifest = read_json(runtime_dir / "context_manifest.json")
-    usage_report = read_json(runtime_dir / "knowledge_usage_report.json")
 
     selection_source = str(manifest.get("selection_source") or "").strip()
     if not selection_source:
@@ -627,14 +593,12 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
         if not ref_path.exists():
             add_issue(issues, "blocker", f"context_manifest.json 引用了不存在的 ref：{reference}")
 
-    report_selection_source = str(usage_report.get("selection_source") or "").strip()
-    if report_selection_source != selection_source:
-        add_issue(issues, "warning", "knowledge_usage_report.json.selection_source 与 context_manifest.json.selection_source 不一致")
-
-    if not isinstance(usage_report.get("selected_refs"), dict):
-        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 selected_refs")
-    if not isinstance(usage_report.get("assembled_refs"), list):
-        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 assembled_refs")
+    if not isinstance(manifest.get("selected_refs"), dict):
+        add_issue(issues, "warning", "context_manifest.json 缺少 selected_refs")
+    if not isinstance(manifest.get("assembled_refs"), list):
+        add_issue(issues, "warning", "context_manifest.json 缺少 assembled_refs")
+    if not isinstance(manifest.get("missing_refs"), list):
+        add_issue(issues, "warning", "context_manifest.json 缺少 missing_refs")
 
 
 def extract_fact_ids(text: str) -> list[str]:
@@ -1436,7 +1400,7 @@ def analyze_experience_blueprint(
 def analyze_natural_language_handoff(
     business_text: str,
     experience_text: str,
-    usage_report: dict[str, object] | None = None,
+    context_manifest: dict[str, object] | None = None,
 ) -> tuple[dict[str, object], list[tuple[str, str]], list[str]]:
     issues: list[tuple[str, str]] = []
     coverage_lines: list[str] = []
@@ -1550,15 +1514,15 @@ def analyze_natural_language_handoff(
     coverage_lines.append(f"风险保护承接：{covered_risk_count}/{len(risk_items)}")
 
     guideline_refs_used: list[str] = []
-    if usage_report:
-        selected_refs = usage_report.get("selected_refs")
+    if context_manifest:
+        selected_refs = context_manifest.get("selected_refs")
         if isinstance(selected_refs, dict):
             guideline_refs_used = _string_list(selected_refs.get("guideline_refs"))
 
     has_guideline_appendix = "设计指南消费说明" in experience_text
     claims_guideline_consumed = has_guideline_appendix and any(marker in experience_text for marker in ("已消费", "消费的设计指南", "消费指南"))
     if claims_guideline_consumed and not guideline_refs_used:
-        add_issue(issues, "blocker", "设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 knowledge_usage_report.json 没有对应记录。")
+        add_issue(issues, "blocker", "设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 context_manifest.json 没有对应记录。")
     coverage_lines.append(f"设计指南装配：{len(guideline_refs_used)} 条")
 
     metrics = {
@@ -1585,15 +1549,11 @@ def run_validate_outputs(project_id: str) -> int:
     issues: list[tuple[str, str]] = []
     checked_files: list[str] = []
 
-    resolved = read_json(runtime_dir / "task_card_resolved.json")
     context_manifest = read_json(runtime_dir / "context_manifest.json")
-    usage_report = read_json(runtime_dir / "knowledge_usage_report.json")
-    required_outputs = required_output_paths(project_id, resolved)
+    required_outputs = required_output_paths(project_id, {})
     checked_files.extend(
         [
-            f"projects/{project_id}/runtime/task_card_resolved.json",
             f"projects/{project_id}/runtime/context_manifest.json",
-            f"projects/{project_id}/runtime/knowledge_usage_report.json",
         ]
     )
     add_provenance_issues(
@@ -1660,7 +1620,7 @@ def run_validate_outputs(project_id: str) -> int:
         handoff_metrics, handoff_issues, coverage_lines = analyze_natural_language_handoff(
             business_text,
             experience_text,
-            usage_report,
+            context_manifest,
         )
         extend_issues(issues, handoff_issues)
 
@@ -1743,11 +1703,11 @@ def run_coverage_check(project_id: str) -> int:
     facts_text = read_text(workspace_dir / "facts.md")
     business_text = read_text(workspace_dir / "business_blueprint.md")
     experience_text = read_text(workspace_dir / "experience_blueprint.md")
-    usage_report = read_json(get_project_runtime_dir(project_id) / "knowledge_usage_report.json")
+    context_manifest = read_json(get_project_runtime_dir(project_id) / "context_manifest.json")
     handoff_metrics, handoff_issues, coverage_lines = analyze_natural_language_handoff(
         business_text,
         experience_text,
-        usage_report,
+        context_manifest,
     )
 
     blockers = list(status_data.get("issues", {}).get("blockers", []))
@@ -1815,7 +1775,6 @@ def run_facts_gate(project_id: str) -> int:
     runtime_dir = get_project_runtime_dir(project_id)
     workspace_dir = get_workspace_dir(project_id)
     facts_path = workspace_dir / "facts.md"
-    task_resolved_path = runtime_dir / "task_card_resolved.json"
     context_manifest_path = runtime_dir / "context_manifest.json"
 
     issues: list[tuple[str, str]] = []
@@ -1824,7 +1783,6 @@ def run_facts_gate(project_id: str) -> int:
         f"projects/{project_id}/source/task_card.md",
         f"projects/{project_id}/source/requirement.md",
         f"projects/{project_id}/source/background.md",
-        f"projects/{project_id}/runtime/task_card_resolved.json",
         f"projects/{project_id}/runtime/context_manifest.json",
         f"projects/{project_id}/runtime/provenance.json",
         f"projects/{project_id}/workspace/facts.md",
@@ -1834,7 +1792,6 @@ def run_facts_gate(project_id: str) -> int:
             source_dir / "task_card.md",
             source_dir / "requirement.md",
             source_dir / "background.md",
-            task_resolved_path,
             context_manifest_path,
             facts_path,
         ],
@@ -1868,7 +1825,6 @@ def run_facts_gate(project_id: str) -> int:
             add_issue(issues, "warning", "facts.md 未显式暴露缺口")
 
     context_manifest = read_json(context_manifest_path)
-    resolved = read_json(task_resolved_path)
     warnings = context_manifest.get("warnings", [])
     if isinstance(warnings, list):
         for item in warnings:
@@ -1876,8 +1832,6 @@ def run_facts_gate(project_id: str) -> int:
             if "directory-only" in warning_text or "directory" in warning_text:
                 add_issue(issues, "warning", f"context_manifest 警告：{warning_text}")
 
-    if resolved.get("has_directory_ref"):
-        add_issue(issues, "warning", "task_card_resolved.json reports broad knowledge references that may require narrowing")
     fallback_copied = context_manifest.get("directory_refs_fallback_copied", [])
     if isinstance(fallback_copied, list) and fallback_copied:
         joined_refs = ", ".join(str(item) for item in fallback_copied)

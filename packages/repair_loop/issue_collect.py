@@ -246,7 +246,7 @@ def collect_issue_sources(project_id: str) -> dict[str, Any]:
             )
 
     for path in [
-        runtime_dir / "task_card_resolved.json",
+        runtime_dir / "uxb_route_decision.json",
         runtime_dir / "context_manifest.json",
         runtime_dir / "trace_index.json",
         runtime_dir / "gate_metrics.json",

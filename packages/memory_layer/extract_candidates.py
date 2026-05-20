@@ -10,12 +10,23 @@ from packages.memory_layer.memory_index import now_iso, read_json, repo_rel, wri
 
 def _load_task_context(project_id: str) -> dict[str, Any]:
     runtime_dir = get_project_runtime_dir(project_id)
-    source_payload = read_json(runtime_dir / "task_card_resolved.json")
+    source_payload = read_json(runtime_dir / "context_manifest.json")
+    task_contract = source_payload.get("task_contract")
+    if not isinstance(task_contract, dict):
+        task_contract = {}
+    selected_refs = source_payload.get("selected_refs")
+    if not isinstance(selected_refs, dict):
+        selected_refs = {}
     return {
         "project_id": project_id,
-        "domain": str(source_payload.get("domain") or ""),
-        "wiki_refs": [str(value) for value in source_payload.get("wiki_refs", []) if isinstance(value, str)],
-        "knowledge_refs": [str(value) for value in source_payload.get("knowledge_refs", []) if isinstance(value, str)],
+        "domain": str(task_contract.get("domain") or ""),
+        "guideline_refs": [str(value) for value in selected_refs.get("guideline_refs", []) if isinstance(value, str)],
+        "knowledge_refs": [
+            str(value)
+            for key in ("business_refs", "complexity_refs")
+            for value in selected_refs.get(key, [])
+            if isinstance(value, str)
+        ],
     }
 
 
@@ -213,7 +224,7 @@ def run_memory_extract(project_id: str) -> int:
         "rejected_memory_ids": [],
         "deferred_memory_ids": [],
         "source_artifacts": [
-            repo_rel(get_project_runtime_dir(project_id) / "task_card_resolved.json"),
+            repo_rel(get_project_runtime_dir(project_id) / "context_manifest.json"),
             repo_rel(get_project_workspace_dir(project_id) / "check_status.json"),
             repo_rel(get_project_runtime_dir(project_id) / "remediation" / "issue_index.json"),
         ],

@@ -157,18 +157,14 @@ def _positive_sample_issues(project_id: str, example_dir: Path) -> list[str]:
     required_files = [
         example_dir / "meta.json",
         example_dir / "source" / "task_card.md",
-        example_dir / "runtime" / "task_card_resolved.json",
+        example_dir / "runtime" / "uxb_route_decision.json",
         example_dir / "runtime" / "context_manifest.json",
-        example_dir / "runtime" / "knowledge_usage_report.json",
     ]
     for file_path in required_files:
         if not file_path.exists():
             issues.append(f"{project_id}: missing benchmark artifact {file_path.name}")
 
-    resolved = _read_json(example_dir / "runtime" / "task_card_resolved.json")
     manifest = _read_json(example_dir / "runtime" / "context_manifest.json")
-    if resolved.get("errors"):
-        issues.append(f"{project_id}: task_card_resolved.json still contains errors")
     if manifest.get("warnings"):
         issues.append(f"{project_id}: context_manifest.json still contains warnings")
 

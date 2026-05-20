@@ -6,16 +6,9 @@
 
 ## Entry Boundary
 
-- `run-routed-main` 不改变 `run-main` 的默认存在方式
 - `run-routed-main` 的执行判断只来自 `runtime/uxb_route_decision.json`
-- 代码可以保留内部执行模式映射，但这些内部枚举不应成为用户可读判断源
-
-## Route Selection
-
 - 只允许 `--route auto`
 - 不再接受手动 `fast / standard / full` 覆盖
-- 执行模式由 `execution.required_outputs` 推导
-- 如果 UXB 判断不完整或不允许执行，必须停止并返回 `needs_rejudgment`
 
 ## Required Preconditions
 
@@ -28,25 +21,19 @@
 - `can_execute_mainline == true`
 - `execution.required_outputs` 存在
 
-## Execution Products
+若判断不足，必须停止并返回 `needs_rejudgment`。
 
-轻量模式至少产生：
+## Runtime Products
 
-- `workspace/facts.md`
-- `workspace/business_note.md`
-- `workspace/experience_blueprint.md`
+至少产出：
+
 - `runtime/routed_main_plan.json`
 - `runtime/routed_main_report.json`
+- 对应模式要求的 `workspace/*.md`
 
-中等模式至少产生：
+不再要求产出：
 
-- `workspace/facts.md`
-- `workspace/business_blueprint_lite.md`
-- `workspace/experience_blueprint.md`
-- `runtime/routed_main_plan.json`
-- `runtime/routed_main_report.json`
-
-完整模式复用现有完整主链路产物。
+- `runtime/route_decision.json`
 
 ## Report Requirements
 
@@ -66,11 +53,6 @@
 - `actual_outputs`
 - `execution_mode`
 
-如判断不足，应记录：
-
-- `status = needs_rejudgment`
-- `blocking_issue`
-
 ## Prohibited Behaviors
 
 - 不得在执行中自动升级判断
@@ -78,4 +60,3 @@
 - 不得补写新的知识选择
 - 不得替 UXB 改写 required outputs
 - 不得把内部执行模式词汇写入用户可读正文
-- 不得修改正式 knowledge 系统作为测试输入

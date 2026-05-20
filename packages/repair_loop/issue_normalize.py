@@ -140,8 +140,8 @@ def _infer_target_artifacts(project_id: str, stage: str, source: str, message: s
         targets.append(runtime_dir / "gate_metrics.json")
     if "context_manifest.json" in lowered:
         targets.append(runtime_dir / "context_manifest.json")
-    if "task_card_resolved.json" in lowered:
-        targets.append(runtime_dir / "task_card_resolved.json")
+    if "uxb_route_decision.json" in lowered:
+        targets.append(runtime_dir / "uxb_route_decision.json")
 
     if source == "coverage":
         if "judgment" in lowered:

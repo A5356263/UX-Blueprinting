@@ -1,0 +1,55 @@
+{
+  "schema_version": "uxb_route_decision@3.0",
+  "project_id": "employee-self-service-permission",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "judgment": {
+    "demand_type": "既有权限治理能力扩展",
+    "business_depth": "light_business_judgment",
+    "experience_output": "experience_blueprint",
+    "reason": "当前输入虽不完整，但已经明确了角色、目标、核心场景、关键约束和主要风险，足以先产出 facts、轻量业务判断和体验蓝图，并把未定项显式暴露出来。"
+  },
+  "complexity_judgment": {
+    "business_change": [
+      "员工侧新增权限查看与申请入口，但授权控制权仍留在管理员和审批链路",
+      "申请通过后需要自动授权，意味着申请状态与权限生效状态要形成闭环",
+      "关闭能力时要处理在途申请，不能只处理新增入口开关"
+    ],
+    "experience_pressure": [
+      "员工需要先理解自己已有权限，再理解哪些权限可以申请、为什么不能直接获得",
+      "审批人与管理员需要看清申请原因、适用范围、风险和处理结果",
+      "异常状态需要明确反馈，包括无可申请权限、审批异常、授权失败和模式关闭"
+    ],
+    "uncertainties": [
+      "申请范围是按角色、按功能权限还是混合配置",
+      "审批流是否复用现有审批中心以及审批异常兜底方式",
+      "是否支持附件、数据范围选择、申请撤销和服务人员适用"
+    ]
+  },
+  "knowledge_selection": {
+    "business_refs": [
+      "knowledge/wiki/index.md"
+    ],
+    "guideline_refs": [],
+    "complexity_refs": [],
+    "selection_reasons": [
+      {
+        "ref": "knowledge/wiki/index.md",
+        "reason": "本次先验证最新知识装配边界，显式选择一个最小可用知识入口，用于确认只装配 UXB 指定 ref、不自动补充其他知识。"
+      }
+    ]
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_note.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "按轻量业务判断路径执行。",
+      "对未明确的信息保留 [GAP] 和待确认问题。",
+      "不要把 runtime 内部字段原样写进正式正文。"
+    ]
+  }
+}

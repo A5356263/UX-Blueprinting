@@ -96,9 +96,9 @@ def run_archive_artifacts(task_id: str) -> int:
 
     if copy_if_exists(source_dir / "task_card.md", context_dir / "task_card.md"):
         copied += 1
-    if copy_if_exists(runtime_dir / "context_manifest.json", context_dir / "context_manifest.json"):
+    if copy_if_exists(runtime_dir / "uxb_route_decision.json", context_dir / "uxb_route_decision.json"):
         copied += 1
-    if copy_if_exists(runtime_dir / "task_card_resolved.json", context_dir / "task_card_resolved.json"):
+    if copy_if_exists(runtime_dir / "context_manifest.json", context_dir / "context_manifest.json"):
         copied += 1
     if copy_if_exists(runtime_dir / "provenance.json", context_dir / "provenance.json"):
         copied += 1

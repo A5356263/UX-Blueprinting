@@ -5,10 +5,8 @@ from pathlib import Path
 from typing import Any
 
 from packages.common import get_project_runtime_dir
-from packages.provenance import append_command_if_provenance_exists
 
 
-MIRROR_VERSION = "route-decision@3.0"
 SUPPORTED_UXB_SCHEMA_VERSIONS = {"uxb_route_decision@3.0"}
 BUSINESS_OUTPUTS = {
     "business_note.md": "fast",
@@ -39,6 +37,26 @@ def _clean_string_list(value: object) -> list[str]:
     return cleaned
 
 
+def _clean_reason_items(value: object) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+    cleaned: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        ref = str(item.get("ref") or "").replace("\\", "/").strip()
+        reason = str(item.get("reason") or "").strip()
+        if not ref:
+            continue
+        key = (ref, reason)
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append({"ref": ref, "reason": reason})
+    return cleaned
+
+
 def _uxb_route_decision_path(project_id: str) -> Path:
     return get_project_runtime_dir(project_id) / "uxb_route_decision.json"
 
@@ -50,7 +68,7 @@ def _infer_execution_mode(required_outputs: list[str]) -> tuple[str, list[str]]:
 
     if len(selected_business_outputs) != 1:
         errors.append(
-            "execution.required_outputs 必须且只能明确指定一个业务产物："
+            "execution.required_outputs must include exactly one business output: "
             "business_note.md / business_blueprint_lite.md / business_blueprint.md"
         )
         return "", errors
@@ -58,7 +76,7 @@ def _infer_execution_mode(required_outputs: list[str]) -> tuple[str, list[str]]:
     missing_core_outputs = sorted(REQUIRED_CORE_OUTPUTS - normalized_outputs)
     if missing_core_outputs:
         errors.append(
-            "execution.required_outputs 缺少主链路基础产物："
+            "execution.required_outputs is missing required core outputs: "
             + ", ".join(missing_core_outputs)
         )
 
@@ -71,7 +89,7 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
     validation_errors: list[str] = []
 
     if not payload:
-        validation_errors.append("缺少 runtime/uxb_route_decision.json")
+        validation_errors.append("Missing runtime/uxb_route_decision.json")
         return {
             "project_id": project_id,
             "status": "needs_rejudgment",
@@ -94,20 +112,20 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
 
     if schema_version not in SUPPORTED_UXB_SCHEMA_VERSIONS:
         validation_errors.append(
-            "uxb_route_decision.schema_version 不受支持，当前只支持 "
+            "uxb_route_decision.schema_version is unsupported. Supported values: "
             + ", ".join(sorted(SUPPORTED_UXB_SCHEMA_VERSIONS))
         )
     if created_by != "uxb_ai":
-        validation_errors.append("uxb_route_decision.created_by 必须为 uxb_ai")
+        validation_errors.append("uxb_route_decision.created_by must be uxb_ai")
     if not confirmed_by_user:
-        validation_errors.append("uxb_route_decision.confirmed_by_user 必须为 true")
+        validation_errors.append("uxb_route_decision.confirmed_by_user must be true")
     if not can_execute_mainline:
-        validation_errors.append("uxb_route_decision.can_execute_mainline 必须为 true")
+        validation_errors.append("uxb_route_decision.can_execute_mainline must be true")
 
     judgment = payload.get("judgment")
     if not isinstance(judgment, dict):
         judgment = {}
-        validation_errors.append("uxb_route_decision.judgment 必须存在且为对象")
+        validation_errors.append("uxb_route_decision.judgment must be an object")
 
     complexity_judgment = payload.get("complexity_judgment")
     if not isinstance(complexity_judgment, dict):
@@ -116,22 +134,22 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
     execution = payload.get("execution")
     if not isinstance(execution, dict):
         execution = {}
-        validation_errors.append("uxb_route_decision.execution 必须存在且为对象")
+        validation_errors.append("uxb_route_decision.execution must be an object")
 
     required_outputs = _clean_string_list(execution.get("required_outputs"))
     if not required_outputs:
-        validation_errors.append("uxb_route_decision.execution.required_outputs 不能为空")
+        validation_errors.append("uxb_route_decision.execution.required_outputs cannot be empty")
 
     knowledge_selection = payload.get("knowledge_selection")
     if not isinstance(knowledge_selection, dict):
         knowledge_selection = {}
-        validation_errors.append("uxb_route_decision.knowledge_selection 必须存在且为对象")
+        validation_errors.append("uxb_route_decision.knowledge_selection must be an object")
 
     normalized_knowledge_selection = {
         "business_refs": _clean_string_list(knowledge_selection.get("business_refs")),
         "guideline_refs": _clean_string_list(knowledge_selection.get("guideline_refs")),
         "complexity_refs": _clean_string_list(knowledge_selection.get("complexity_refs")),
-        "selection_reasons": _clean_string_list(knowledge_selection.get("selection_reasons")),
+        "selection_reasons": _clean_reason_items(knowledge_selection.get("selection_reasons")),
     }
 
     execution_mode, mode_errors = _infer_execution_mode(required_outputs)
@@ -156,36 +174,15 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
     }
 
 
-def build_route_decision(project_id: str) -> dict[str, Any]:
-    decision = load_uxb_execution_decision(project_id)
-    return {
-        "version": MIRROR_VERSION,
-        "project_id": project_id,
-        "status": decision["status"],
-        "source": decision["source_path"],
-        "can_execute_mainline": decision.get("status") == "confirmed",
-        "required_outputs": decision.get("required_outputs", []),
-        "execution_mode": decision.get("execution_mode", ""),
-        "validation_errors": decision.get("validation_errors", []),
-        "note": "Temporary execution mirror. No semantic judgment.",
-    }
-
-
 def run_route_decision(project_id: str) -> int:
-    runtime_dir = get_project_runtime_dir(project_id)
-    runtime_dir.mkdir(parents=True, exist_ok=True)
+    decision = load_uxb_execution_decision(project_id)
+    source_path = str(decision.get("source_path") or f"projects/{project_id}/runtime/uxb_route_decision.json")
 
-    mirror = build_route_decision(project_id)
-    json_path = runtime_dir / "route_decision.json"
-    json_path.write_text(json.dumps(mirror, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-    if mirror.get("status") == "confirmed":
-        append_command_if_provenance_exists(project_id, "route-decision")
-        print(f"route_decision.json 已同步: {json_path}")
+    if decision.get("status") == "confirmed":
+        print(f"UXB execution decision confirmed: {source_path}")
         return 0
 
-    print(f"route_decision.json 已同步: {json_path}")
-    print("当前执行判断需要 UXB AI 重新确认，请先更新 runtime/uxb_route_decision.json。")
-    for item in _clean_string_list(mirror.get("validation_errors")):
+    print("Current execution decision requires UXB AI re-judgment. Please update runtime/uxb_route_decision.json first.")
+    for item in _clean_string_list(decision.get("validation_errors")):
         print(f"- {item}")
     return 1

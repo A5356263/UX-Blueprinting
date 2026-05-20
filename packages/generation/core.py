@@ -346,8 +346,6 @@ def run_generate_business_lite(project_id: str) -> int:
 
 
 def run_generate_experience(project_id: str) -> int:
-    runtime_dir = get_project_runtime_dir(project_id)
-    runtime_dir.mkdir(parents=True, exist_ok=True)
     workspace_dir = get_project_workspace_dir(project_id)
     experience_path = workspace_dir / "experience_blueprint.md"
 
@@ -374,13 +372,8 @@ def run_generate_experience(project_id: str) -> int:
                 print(f"  {line}")
         return 1
 
-    debug_dir = runtime_dir / "debug"
-    debug_dir.mkdir(parents=True, exist_ok=True)
-    debug_prompt_path = debug_dir / "experience_prompt_preview.md"
-    debug_prompt_path.write_text(_build_experience_prompt_preview(project_id), encoding="utf-8")
 
     _update_experience_guideline_usage(project_id)
     upsert_generated_provenance(project_id, "packages.generation", "generate-experience")
     print(f"experience_blueprint.md 已存在: {experience_path}")
-    print(f"调试预览文件（不参与主链路）: {debug_prompt_path}")
     return 0

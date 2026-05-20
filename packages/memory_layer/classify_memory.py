@@ -19,7 +19,7 @@ def infer_task_type_tags(project_id: str) -> list[str]:
 
 def classify_candidate(candidate: dict[str, Any], task_context: dict[str, Any]) -> dict[str, Any]:
     domain = str(task_context.get("domain") or "").strip()
-    wiki_refs = [str(value) for value in task_context.get("wiki_refs", []) if isinstance(value, str)]
+    guideline_refs = [str(value) for value in task_context.get("guideline_refs", []) if isinstance(value, str)]
     project_id = str(task_context.get("project_id") or "")
 
     classification_basis = [str(value) for value in candidate.get("classification_basis", []) if str(value).strip()]
@@ -33,11 +33,11 @@ def classify_candidate(candidate: dict[str, Any], task_context: dict[str, Any]) 
         if domain and not domain_tags:
             domain_tags = [domain]
         if domain:
-            basis = f"task_card.domain={domain}"
+            basis = f"context_manifest.task_contract.domain={domain}"
             if basis not in classification_basis:
                 classification_basis.append(basis)
-        for wiki_ref in wiki_refs:
-            basis = f"wiki_ref={wiki_ref}"
+        for guideline_ref in guideline_refs:
+            basis = f"guideline_ref={guideline_ref}"
             if basis not in classification_basis:
                 classification_basis.append(basis)
     else:

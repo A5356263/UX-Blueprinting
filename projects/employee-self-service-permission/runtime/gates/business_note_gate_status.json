@@ -1,0 +1,71 @@
+{
+  "project_id": "employee-self-service-permission",
+  "stage": "business_note",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-20T17:32:53.332828+00:00",
+  "checked_files": [
+    "projects/employee-self-service-permission/workspace/facts.md",
+    "projects/employee-self-service-permission/workspace/business_note.md",
+    "projects/employee-self-service-permission/runtime/uxb_route_decision.json",
+    "projects/employee-self-service-permission/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "执行模式：fast"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_note_gate",
+      "stage": "business_note",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "执行模式：fast",
+      "target_artifacts": [
+        "projects/employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-service-permission/workspace/facts.md",
+        "projects/employee-self-service-permission/workspace/business_note.md",
+        "projects/employee-self-service-permission/runtime/uxb_route_decision.json",
+        "projects/employee-self-service-permission/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "执行模式：fast"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-service-permission/workspace/facts.md",
+            "projects/employee-self-service-permission/workspace/business_note.md",
+            "projects/employee-self-service-permission/runtime/uxb_route_decision.json",
+            "projects/employee-self-service-permission/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "artifact": "business_note.md"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "artifact": "business_note.md"
+  }
+}

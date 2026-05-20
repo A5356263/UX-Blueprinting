@@ -9,7 +9,6 @@ def _required_inputs_for_stage(stage: str) -> list[str]:
     if stage == "facts":
         return [
             "workspace/facts.md",
-            "runtime/task_card_resolved.json",
             "runtime/context_manifest.json",
         ]
     if stage == "business":
@@ -27,7 +26,6 @@ def _required_inputs_for_stage(stage: str) -> list[str]:
         ]
     if stage == "runtime":
         return [
-            "runtime/task_card_resolved.json",
             "runtime/context_manifest.json",
             "runtime/gate_metrics.json",
         ]

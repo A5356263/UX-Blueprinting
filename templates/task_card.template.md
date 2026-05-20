@@ -3,14 +3,14 @@
 ## Protocol
 
 - Protocol Name: Cross-AI Task Card
-- Protocol Version: v0.2
+- Protocol Version: v0.3
 - Task ID: {{TASK_ID}}
 - Task Name: {{TASK_NAME}}
 - Domain: {{DOMAIN}}
 
 ## Task Goal
 
-- 用一句话说明本任务要解决什么问题
+- 用一句话说明本次任务要解决什么问题
 - 说明本次输出主要服务于哪类评审、设计或重构工作
 
 ## Task Scenario
@@ -37,9 +37,9 @@
 
 1. 先读本文档
 2. 再读 `Required Inputs`
-3. 生成 facts.md，参考 `specs/08_fact_extraction_contract.md`
-4. 生成 business 产物，参考对应 business 合同
-5. 生成 experience_blueprint.md，参考 `specs/10_experience_blueprint_contract.md`
+3. 生成 facts.md
+4. 生成 business 产物
+5. 生成 experience_blueprint.md
 6. 运行 validate / coverage / archive / preview
 
 ## Constraints
@@ -52,29 +52,7 @@
 - business 阶段不得输出 UI 方案或实现方案
 - experience 阶段不得输出高保真视觉稿或研发实现细节
 - `runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源
-- `task_card.md` 不能代替 UXB 做复杂度判断、知识选择或执行深度判断
-
-## Knowledge
-
-- <可选：声明业务知识入口，不代表自动装配>
-
-## Wiki
-
-- <可选：声明 wiki 入口，不代表自动装配>
-
-## Design Guidelines
-
-- <可选：声明设计参考入口，不代表自动装配>
-
-## Knowledge Consumption Policy
-
-### Primary Knowledge Entry
-
-- <可选：仅用于目录引用的工程收窄>
-
-### Disallowed Broad References
-
-- 不允许默认整目录装配到 context bundle
+- `task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断
 
 ## Templates
 

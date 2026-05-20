@@ -1,0 +1,28 @@
+{
+  "schema_version": "uxb_route_decision@3.0",
+  "project_id": "<project-id>",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": false,
+  "can_execute_mainline": false,
+  "judgment": {
+    "demand_type": "",
+    "business_depth": "",
+    "experience_output": "",
+    "reason": ""
+  },
+  "complexity_judgment": {
+    "business_change": [],
+    "experience_pressure": [],
+    "uncertainties": []
+  },
+  "knowledge_selection": {
+    "business_refs": [],
+    "guideline_refs": [],
+    "complexity_refs": [],
+    "selection_reasons": []
+  },
+  "execution": {
+    "required_outputs": [],
+    "notes": []
+  }
+}

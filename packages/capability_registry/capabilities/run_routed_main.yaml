@@ -4,13 +4,12 @@
   "type": "command",
   "stage": "mainline",
   "entrypoint": "python -m packages run-routed-main <project-id> [--route auto]",
-  "description": "按 UXB 已确认判断驱动主链路执行，不再接受代码侧手动路由判断。",
+  "description": "按 UXB 已确认判断驱动主链路执行。",
   "required_inputs": [
     "projects/<project-id>/source/requirement.md",
     "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
   "declared_outputs": [
-    "projects/<project-id>/runtime/route_decision.json",
     "projects/<project-id>/runtime/routed_main_plan.json",
     "projects/<project-id>/runtime/routed_main_report.json",
     "projects/<project-id>/workspace/*.md"
@@ -20,8 +19,8 @@
   "mutates_formal_artifacts": true,
   "mutates_runtime_state": true,
   "source_of_truth_refs": [
-    "packages/routed_main/core.py",
-    "docs/discussion/UXB SKILL优化/第四阶段/02_收敛为UXB单一判断源_执行文档.md"
+    "specs/18_routed_main_contract.md",
+    "packages/routed_main/core.py"
   ],
   "status": "active"
 }

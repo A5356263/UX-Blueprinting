@@ -4,17 +4,15 @@
   "type": "command",
   "stage": "runtime",
   "entrypoint": "python -m packages assemble <project-id>",
-  "description": "解析 task_card 协议，复制显式引用资源，并生成上下文装配所需的 runtime 清单与边界声明。",
+  "description": "解析 task_card 执行说明，装配模板、检查项和 UXB 显式选择的 refs，并生成正式上下文记录。",
   "required_inputs": [
     "projects/<project-id>/source/task_card.md",
     "projects/<project-id>/source/requirement.md",
     "projects/<project-id>/source/background.md",
-    "task_card.md 中显式引用的 knowledge/wiki/templates/checks 路径"
+    "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
   "declared_outputs": [
-    "projects/<project-id>/runtime/task_card_resolved.json",
     "projects/<project-id>/runtime/context_manifest.json",
-    "projects/<project-id>/runtime/knowledge_usage_report.json",
     "projects/<project-id>/runtime/context_bundle/"
   ],
   "dependencies": [
@@ -26,11 +24,10 @@
   "mutates_runtime_state": true,
   "source_of_truth_refs": [
     "specs/01_execution_hub_spec.md",
-    "packages/__main__.py",
+    "specs/03_task_card_contract.md",
+    "specs/04_knowledge_reference_contract.md",
     "packages/context_assemble/core.py",
-    "packages/task_card_resolve/core.py",
-    "docs/runbook/external_ai_quickstart.md",
-    "docs/runbook/task_execution_flow.md"
+    "packages/task_card_resolve/core.py"
   ],
   "status": "active"
 }

@@ -4,20 +4,18 @@
   "type": "command",
   "stage": "mainline_observation",
   "entrypoint": "python -m packages route-decision <project-id>",
-  "description": "将 UXB 已确认判断同步为临时执行镜像，不新增语义判断。",
+  "description": "校验 UXB 已确认判断，并输出确认或重判提示。",
   "required_inputs": [
     "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
-  "declared_outputs": [
-    "projects/<project-id>/runtime/route_decision.json"
-  ],
+  "declared_outputs": [],
   "retryable": true,
   "review_required": false,
   "mutates_formal_artifacts": false,
-  "mutates_runtime_state": true,
+  "mutates_runtime_state": false,
   "source_of_truth_refs": [
-    "packages/route_decision/core.py",
-    "docs/discussion/UXB SKILL优化/第四阶段/02_收敛为UXB单一判断源_执行文档.md"
+    "specs/15_route_decision_contract.md",
+    "packages/route_decision/core.py"
   ],
   "status": "active"
 }
