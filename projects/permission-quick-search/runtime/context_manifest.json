@@ -1,7 +1,8 @@
 {
   "task_id": "permission-quick-search",
   "resolved_from": "projects/permission-quick-search/runtime/task_card_resolved.json",
-  "reference_count": 28,
+  "selection_source": "projects/permission-quick-search/runtime/uxb_route_decision.json",
+  "reference_count": 9,
   "task_contract": {
     "task_goal": [
       "在功能权限设置页面增加页面内关键词查找定位能力，帮助权限管理员在 1100+ 权限项中快速定位目标内容",
@@ -37,152 +38,7 @@
       "需求文档中不明确事项已在 requirement.md 中列出，设计时需给出建议方案。"
     ]
   },
-  "knowledge_consumption_plan": {
-    "mode": "wiki_routed_raw_precision",
-    "facts": {
-      "required_wiki_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/README.md",
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
-      ],
-      "raw_refs_from_source_refs": [],
-      "policy": "wiki_for_boundary_only"
-    },
-    "business": {
-      "summary_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/README.md",
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
-      ],
-      "related_summary_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
-      ],
-      "raw_refs_from_source_refs": [
-        "knowledge/raw/业务/权限管理/README.md",
-        "knowledge/raw/业务/权限管理/00_领域概述.md",
-        "knowledge/raw/业务/权限管理/01_范围与边界.md",
-        "knowledge/raw/业务/权限管理/02_术语表.md",
-        "knowledge/raw/业务/权限管理/03_业务对象.md",
-        "knowledge/raw/业务/权限管理/04_对象关系.md",
-        "knowledge/raw/业务/权限管理/10_能力地图.md",
-        "knowledge/raw/业务/权限管理/11_任务场景.md"
-      ],
-      "policy": "summary_refs_route_to_raw"
-    },
-    "experience": {
-      "guideline_entry_refs": [
-        "knowledge/wiki/index.md"
-      ],
-      "summary_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/README.md",
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
-      ],
-      "guideline_refs": [
-        "knowledge/wiki/summaries/设计准则/信息架构.md",
-        "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "knowledge/wiki/summaries/设计准则/可用性.md"
-      ],
-      "related_summary_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-        "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
-      ],
-      "raw_refs_from_source_refs": [
-        "knowledge/raw/业务/权限管理/README.md",
-        "knowledge/raw/业务/权限管理/00_领域概述.md",
-        "knowledge/raw/业务/权限管理/01_范围与边界.md",
-        "knowledge/raw/业务/权限管理/02_术语表.md",
-        "knowledge/raw/业务/权限管理/03_业务对象.md",
-        "knowledge/raw/业务/权限管理/04_对象关系.md",
-        "knowledge/raw/业务/权限管理/10_能力地图.md",
-        "knowledge/raw/业务/权限管理/11_任务场景.md",
-        "knowledge/raw/设计准则/信息架构.md",
-        "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "knowledge/raw/设计准则/可用性.md"
-      ],
-      "policy": "business_first_translation_with_raw_support",
-      "guideline_selection_reason": [
-        {
-          "guideline": "knowledge/wiki/summaries/设计准则/信息架构.md",
-          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现信息组织、页面结构或模块分组信号。"
-        },
-        {
-          "guideline": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现报错、阻断、校验或权限不足信号。"
-        },
-        {
-          "guideline": "knowledge/wiki/summaries/设计准则/可用性.md",
-          "reason": "facts/business 命中了该指南的场景线索：facts/business 出现报错、阻断、校验或权限不足信号。"
-        }
-      ]
-    }
-  },
   "references": [
-    {
-      "reference": "knowledge/wiki/index.md",
-      "group": "knowledge_refs",
-      "consumed_by": [
-        "facts",
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/index.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/index.md",
-      "requested_reference": "knowledge/wiki/index.md"
-    },
-    {
-      "reference": "knowledge/wiki/index.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "facts",
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/index.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/index.md",
-      "requested_reference": "knowledge/wiki/index.md"
-    },
-    {
-      "reference": "knowledge/wiki/index.md",
-      "group": "guideline_refs",
-      "consumed_by": [
-        "experience"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/index.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/index.md",
-      "requested_reference": "knowledge/wiki/index.md"
-    },
     {
       "reference": "templates/facts.template.md",
       "group": "template_refs",
@@ -191,12 +47,14 @@
         "business",
         "experience"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "templates/facts.template.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/templates/facts.template.md",
-      "requested_reference": "templates/facts.template.md"
+      "requested_reference": "templates/facts.template.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "templates/business_blueprint.template.md",
@@ -206,12 +64,14 @@
         "business",
         "experience"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "templates/business_blueprint.template.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/templates/business_blueprint.template.md",
-      "requested_reference": "templates/business_blueprint.template.md"
+      "requested_reference": "templates/business_blueprint.template.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "templates/experience_blueprint.template.md",
@@ -221,12 +81,14 @@
         "business",
         "experience"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "templates/experience_blueprint.template.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/templates/experience_blueprint.template.md",
-      "requested_reference": "templates/experience_blueprint.template.md"
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "templates/gap_list.template.md",
@@ -236,12 +98,14 @@
         "business",
         "experience"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "templates/gap_list.template.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/templates/gap_list.template.md",
-      "requested_reference": "templates/gap_list.template.md"
+      "requested_reference": "templates/gap_list.template.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "templates/check_report.template.md",
@@ -251,12 +115,14 @@
         "business",
         "experience"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "templates/check_report.template.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/templates/check_report.template.md",
-      "requested_reference": "templates/check_report.template.md"
+      "requested_reference": "templates/check_report.template.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "specs/06_check_contract.md",
@@ -265,12 +131,14 @@
         "gate",
         "validate"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "specs/06_check_contract.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/specs/06_check_contract.md",
-      "requested_reference": "specs/06_check_contract.md"
+      "requested_reference": "specs/06_check_contract.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "specs/08_fact_extraction_contract.md",
@@ -279,12 +147,14 @@
         "gate",
         "validate"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "specs/08_fact_extraction_contract.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/specs/08_fact_extraction_contract.md",
-      "requested_reference": "specs/08_fact_extraction_contract.md"
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "specs/09_business_blueprint_contract.md",
@@ -293,12 +163,14 @@
         "gate",
         "validate"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "specs/09_business_blueprint_contract.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/specs/09_business_blueprint_contract.md",
-      "requested_reference": "specs/09_business_blueprint_contract.md"
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "exists": true,
+      "copied": true
     },
     {
       "reference": "specs/10_experience_blueprint_contract.md",
@@ -307,248 +179,17 @@
         "gate",
         "validate"
       ],
-      "routed_from_summary": "",
-      "route_reason": "",
+      "selected_by": "",
+      "selection_reason": "",
       "type": "file",
       "source": "specs/10_experience_blueprint_contract.md",
       "destination": "projects/permission-quick-search/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
-      "requested_reference": "specs/10_experience_blueprint_contract.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/README.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/README.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md"
-    },
-    {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "group": "wiki_refs",
-      "consumed_by": [
-        "business",
-        "experience",
-        "facts"
-      ],
-      "routed_from_summary": "",
-      "route_reason": "",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/README.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/README.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/README.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/README.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/00_领域概述.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/00_领域概述.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/01_范围与边界.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/01_范围与边界.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/01_范围与边界.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/01_范围与边界.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/02_术语表.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/02_术语表.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/02_术语表.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/02_术语表.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/02_术语表.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/03_业务对象.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/03_业务对象.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/03_业务对象.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/04_对象关系.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/04_对象关系.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/04_对象关系.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/10_能力地图.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/10_能力地图.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/10_能力地图.md"
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/11_任务场景.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "routed_from_summary": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "route_reason": "source_refs",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/11_任务场景.md",
-      "destination": "projects/permission-quick-search/runtime/context_bundle/knowledge/raw/业务/权限管理/11_任务场景.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/11_任务场景.md"
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "exists": true,
+      "copied": true
     }
   ],
   "warnings": [],
-  "knowledge_entry_mode": "summary_first_with_raw_fallback",
   "strict_mode": false,
   "directory_refs_detected": [],
   "directory_refs_resolved_to_index": [],

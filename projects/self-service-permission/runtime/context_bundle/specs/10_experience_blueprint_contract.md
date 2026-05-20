@@ -68,9 +68,10 @@
 
 写法要求：
 
-- 如果存在 `projects/<project-id>/runtime/route_decision.json`，开头必须先写 3-4 行路线说明，覆盖需求类型、建议路线、重点维度和体验输出策略。
+- 如果存在 `projects/<project-id>/runtime/route_decision.json`，可以把它作为内部轻重参考，但用户可读正文不要直接暴露 `fast / standard / full`、`route_decision` 或“route 判为 full”这类写法。
 - experience 阶段必须同时承接 `route_decision.json`、`facts.md` 与 `business_blueprint.md`；如果 business 已推翻 route 初判，以 business 的更充分依据为准。
-- 路线说明必须指导正文轻重分配，但不得写成最终业务结论，也不得让 route 判断替代 business 判断。
+- 路线判断只用于指导正文轻重分配，不得写成最终业务结论，也不得让 route 判断替代 business 判断。
+- 摘要优先写成“判断 / 主要影响 / 建议方案 / 不建议方案 / 需要确认”的可扫读结构。
 - 每项 1-2 句话即可
 - 只前置呈现关键判断，不替代后文完整体验方案
 - "必须确认"只写真正影响体验落地的问题
@@ -220,11 +221,11 @@
 
 用极简摘要说明：
 
-- route 判断形成的需求类型、建议路线、重点维度和体验输出策略
+- 本次体验判断和处理方式
+- 主要影响
 - 建议方案
 - 不建议方案
-- 核心理由
-- 必须确认
+- 需要确认
 
 ### 1. 交互流程总览
 

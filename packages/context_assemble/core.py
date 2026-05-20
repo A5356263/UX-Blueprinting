@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 import os
-import stat
 import shutil
+import stat
 from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_repo_root
@@ -106,6 +106,78 @@ def resolve_reference_for_copy(
     return normalized_ref, "directory"
 
 
+def _selection_reason_by_ref(selection_plan: dict[str, object]) -> dict[str, str]:
+    selection_reasons = selection_plan.get("selection_reasons")
+    if not isinstance(selection_reasons, list):
+        return {}
+
+    normalized: dict[str, str] = {}
+    for item in selection_reasons:
+        if not isinstance(item, dict):
+            continue
+        ref = str(item.get("ref") or "").replace("\\", "/").strip()
+        if not ref or ref in normalized:
+            continue
+        normalized[ref] = str(item.get("reason") or "").strip()
+    return normalized
+
+
+def _selected_reference_items(selection_plan: dict[str, object]) -> list[dict[str, object]]:
+    selected_refs = selection_plan.get("selected_refs")
+    if not isinstance(selected_refs, dict):
+        return []
+
+    consumed_by_map = {
+        "business_refs": ["business", "experience"],
+        "guideline_refs": ["experience"],
+        "complexity_refs": ["facts", "business", "experience"],
+    }
+    reason_by_ref = _selection_reason_by_ref(selection_plan)
+    items: list[dict[str, object]] = []
+
+    for group, consumed_by in consumed_by_map.items():
+        refs = selected_refs.get(group, [])
+        if not isinstance(refs, list):
+            continue
+        for ref in refs:
+            normalized_ref = str(ref).replace("\\", "/").strip()
+            if not normalized_ref:
+                continue
+            items.append(
+                {
+                    "reference": normalized_ref,
+                    "group": group,
+                    "consumed_by": list(consumed_by),
+                    "selected_by": "uxb_ai",
+                    "selection_reason": reason_by_ref.get(normalized_ref, ""),
+                }
+            )
+    return items
+
+
+def _dedupe_reference_items(items: list[dict[str, object]]) -> list[dict[str, object]]:
+    deduped: dict[tuple[str, str], dict[str, object]] = {}
+    for item in items:
+        key = (str(item.get("group", "")), str(item.get("reference", "")))
+        existing = deduped.get(key)
+        if existing is None:
+            deduped[key] = {
+                "reference": str(item.get("reference", "")),
+                "group": str(item.get("group", "")),
+                "consumed_by": list(item.get("consumed_by", [])),
+                "selected_by": str(item.get("selected_by", "")),
+                "selection_reason": str(item.get("selection_reason", "")),
+            }
+            continue
+
+        existing["consumed_by"] = sorted(set(existing.get("consumed_by", []) + list(item.get("consumed_by", []))))
+        if not existing.get("selected_by") and item.get("selected_by"):
+            existing["selected_by"] = str(item.get("selected_by", ""))
+        if not existing.get("selection_reason") and item.get("selection_reason"):
+            existing["selection_reason"] = str(item.get("selection_reason", ""))
+    return list(deduped.values())
+
+
 def run_context_assemble(task_id: str, strict: bool = False) -> int:
     repo_root = get_repo_root()
     runtime_dir = get_project_runtime_dir(task_id)
@@ -115,7 +187,6 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     context_bundle_dir.mkdir(parents=True, exist_ok=True)
 
     resolved, resolved_path = resolve_task_card_file(task_id, write_output=True)
-
     if resolved["errors"]:
         for error in resolved["errors"]:
             print(f"ERROR: {error}")
@@ -124,98 +195,26 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
 
     warnings = list(resolved.get("warnings", []))
     primary_entries = [str(item) for item in resolved.get("primary_knowledge_entries", [])]
-    fallback_refs = [str(item) for item in resolved.get("fallback_source_refs", [])]
-    knowledge_plan, source_ref_chains = build_knowledge_consumption_plan(resolved)
-
-    consumption_map = {
-        "knowledge_refs": ["facts", "business", "experience"],
-        "wiki_refs": ["facts", "business", "experience"],
-        "guideline_refs": ["experience"],
-        "template_refs": ["facts", "business", "experience"],
-        "check_refs": ["gate", "validate"],
-    }
+    selection_plan = build_knowledge_consumption_plan(task_id)
 
     reference_items_raw: list[dict[str, object]] = []
-    for field in ("knowledge_refs", "wiki_refs", "guideline_refs", "template_refs", "check_refs"):
+    for field, consumed_by in {
+        "template_refs": ["facts", "business", "experience"],
+        "check_refs": ["gate", "validate"],
+    }.items():
         for reference in resolved.get(field, []):
             reference_items_raw.append(
                 {
                     "reference": str(reference),
                     "group": field,
-                    "consumed_by": consumption_map[field],
+                    "consumed_by": list(consumed_by),
+                    "selected_by": "",
+                    "selection_reason": "",
                 }
             )
 
-    def append_stage_refs(refs: list[str], group: str, stage: str) -> None:
-        for ref in refs:
-            reference_items_raw.append(
-                {
-                    "reference": ref,
-                    "group": group,
-                    "consumed_by": [stage],
-                }
-            )
-
-    append_stage_refs(list(knowledge_plan["facts"].get("required_wiki_refs", [])), "wiki_refs", "facts")
-    append_stage_refs(list(knowledge_plan["business"].get("summary_refs", [])), "wiki_refs", "business")
-    append_stage_refs(list(knowledge_plan["business"].get("related_summary_refs", [])), "wiki_refs", "business")
-    append_stage_refs(list(knowledge_plan["experience"].get("guideline_entry_refs", [])), "guideline_refs", "experience")
-    append_stage_refs(list(knowledge_plan["experience"].get("summary_refs", [])), "wiki_refs", "experience")
-    append_stage_refs(list(knowledge_plan["experience"].get("guideline_refs", [])), "wiki_refs", "experience")
-    append_stage_refs(list(knowledge_plan["experience"].get("related_summary_refs", [])), "wiki_refs", "experience")
-
-    raw_route_by_ref: dict[str, dict[str, object]] = {}
-    for chain in source_ref_chains:
-        raw_ref = str(chain.get("raw", "")).strip()
-        stage = str(chain.get("stage", "")).strip()
-        summary = str(chain.get("summary", "")).strip()
-        if not raw_ref or not stage:
-            continue
-        route_meta = raw_route_by_ref.setdefault(
-            raw_ref,
-            {
-                "stages": [],
-                "summary": summary,
-                "reason": "source_refs",
-            },
-        )
-        if stage not in route_meta["stages"]:
-            route_meta["stages"].append(stage)
-        if summary and not route_meta.get("summary"):
-            route_meta["summary"] = summary
-
-    for raw_ref, route_meta in raw_route_by_ref.items():
-        reference_items_raw.append(
-            {
-                "reference": raw_ref,
-                "group": "raw_refs",
-                "consumed_by": route_meta["stages"],
-                "routed_from_summary": route_meta.get("summary", ""),
-                "route_reason": route_meta.get("reason", "source_refs"),
-            }
-        )
-
-    deduped_reference_items: dict[tuple[str, str], dict[str, object]] = {}
-    for item in reference_items_raw:
-        key = (str(item["group"]), str(item["reference"]))
-        existing = deduped_reference_items.get(key)
-        if existing is None:
-            deduped_reference_items[key] = {
-                "reference": str(item["reference"]),
-                "group": str(item["group"]),
-                "consumed_by": list(item.get("consumed_by", [])),
-                "routed_from_summary": str(item.get("routed_from_summary", "")),
-                "route_reason": str(item.get("route_reason", "")),
-            }
-            continue
-        merged_consumed_by = sorted(set(existing.get("consumed_by", []) + list(item.get("consumed_by", []))))
-        existing["consumed_by"] = merged_consumed_by
-        if not existing.get("routed_from_summary") and item.get("routed_from_summary"):
-            existing["routed_from_summary"] = item.get("routed_from_summary")
-        if not existing.get("route_reason") and item.get("route_reason"):
-            existing["route_reason"] = item.get("route_reason")
-
-    reference_items = list(deduped_reference_items.values())
+    reference_items_raw.extend(_selected_reference_items(selection_plan))
+    reference_items = _dedupe_reference_items(reference_items_raw)
 
     copied: list[dict[str, object]] = []
     directory_refs_detected: list[str] = []
@@ -223,7 +222,6 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     directory_refs_fallback_copied: list[str] = []
     narrowed_references: list[dict[str, str]] = []
     primary_entries_used: list[str] = []
-    fallback_sources_used: list[str] = []
     broad_reference_warnings: list[str] = []
 
     try:
@@ -238,11 +236,11 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 narrowed_references,
             )
             source_path = repo_root / Path(resolved_reference.replace("/", "\\"))
-            if str(item.get("group")) == "raw_refs" and source_path.is_dir():
-                raise ValueError(f"Raw reference must be file, not directory: {resolved_reference}")
             copied_item = dict(item)
             copied_item.update(copy_path(repo_root, context_bundle_dir, source_path, resolved_reference, resolved_type))
             copied_item["requested_reference"] = reference
+            copied_item["exists"] = True
+            copied_item["copied"] = True
             copied.append(copied_item)
 
             original_source = repo_root / Path(reference.replace("/", "\\"))
@@ -261,10 +259,6 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
 
             if resolved_reference in primary_entries and resolved_reference not in primary_entries_used:
                 primary_entries_used.append(resolved_reference)
-            if reference in fallback_refs and reference not in fallback_sources_used:
-                fallback_sources_used.append(reference)
-            if resolved_reference in fallback_refs and resolved_reference not in fallback_sources_used:
-                fallback_sources_used.append(resolved_reference)
     except (FileNotFoundError, ValueError) as exc:
         print(f"ERROR: {exc}")
         return 1
@@ -279,15 +273,15 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "read_order": resolved.get("read_order", []),
         "notes": resolved.get("notes", []),
     }
+
     manifest = {
         "task_id": task_id,
         "resolved_from": to_repo_relative(repo_root, resolved_path),
+        "selection_source": str(selection_plan.get("selection_source", "")),
         "reference_count": len(copied),
         "task_contract": task_contract,
-        "knowledge_consumption_plan": knowledge_plan,
         "references": copied,
         "warnings": warnings,
-        "knowledge_entry_mode": "summary_first_with_raw_fallback",
         "strict_mode": strict,
         "directory_refs_detected": sorted(set(directory_refs_detected)),
         "directory_refs_resolved_to_index": directory_refs_resolved_to_index,
@@ -305,51 +299,25 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    guideline_summary_refs = set(
-        list(knowledge_plan["experience"].get("guideline_entry_refs", []))
-        + list(knowledge_plan["experience"].get("guideline_refs", []))
-    )
-
+    selected_refs = selection_plan.get("selected_refs", {})
     usage_report = {
         "task_id": task_id,
-        "generated_from": to_repo_relative(repo_root, manifest_path),
-        "mainline_knowledge_policy": "summary_first_with_raw_fallback",
+        "selection_source": str(selection_plan.get("selection_source", "")),
+        "selected_refs": {
+            "business_refs": list(selected_refs.get("business_refs", [])) if isinstance(selected_refs, dict) else [],
+            "guideline_refs": list(selected_refs.get("guideline_refs", [])) if isinstance(selected_refs, dict) else [],
+            "complexity_refs": list(selected_refs.get("complexity_refs", [])) if isinstance(selected_refs, dict) else [],
+        },
+        "assembled_refs": [str(item.get("reference", "")) for item in copied if str(item.get("reference", "")).strip()],
+        "missing_refs": [],
+        "notes": [
+            "本报告只记录 UXB AI 指定资料的装配情况，不代表代码做了知识选择。",
+        ],
         "reference_summary": {
-            "knowledge_ref_count": len(resolved.get("knowledge_refs", [])),
-            "wiki_ref_count": len(resolved.get("wiki_refs", [])),
-            "guideline_ref_count": len(resolved.get("guideline_refs", [])),
             "template_ref_count": len(resolved.get("template_refs", [])),
             "check_ref_count": len(resolved.get("check_refs", [])),
-        },
-        "primary_entries_used": sorted(set(primary_entries_used)),
-        "fallback_sources_used": sorted(set(fallback_sources_used)),
-        "narrowing_actions": narrowed_references,
-        "broad_reference_warnings": broad_reference_warnings,
-        "stage_usage": {
-            "facts": {
-                "wiki_refs_used": list(knowledge_plan["facts"].get("required_wiki_refs", [])),
-                "raw_refs_used": [],
-                "raw_policy": "not_default",
-            },
-            "business": {
-                "wiki_refs_used": list(knowledge_plan["business"].get("summary_refs", [])),
-                "raw_refs_used": list(knowledge_plan["business"].get("raw_refs_from_source_refs", [])),
-                "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "business"],
-            },
-            "experience": {
-                "guideline_entry_refs": list(knowledge_plan["experience"].get("guideline_entry_refs", [])),
-                "wiki_refs_used": list(knowledge_plan["experience"].get("summary_refs", []))
-                + list(knowledge_plan["experience"].get("guideline_refs", [])),
-                "raw_refs_used": list(knowledge_plan["experience"].get("raw_refs_from_source_refs", [])),
-                "source_ref_chains": [item for item in source_ref_chains if item.get("stage") == "experience"],
-                "guideline_refs_used": list(knowledge_plan["experience"].get("guideline_refs", [])),
-                "guideline_raw_refs_used": [
-                    str(item.get("raw", "")).replace("\\", "/")
-                    for item in source_ref_chains
-                    if item.get("stage") == "experience" and item.get("summary") in guideline_summary_refs
-                ],
-                "guideline_selection_reason": [],
-            },
+            "selected_ref_count": len([item for item in copied if str(item.get("selected_by", "")) == "uxb_ai"]),
+            "assembled_ref_count": len(copied),
         },
         "references": [
             {
@@ -358,11 +326,17 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
                 "group": item.get("group"),
                 "type": item.get("type"),
                 "consumed_by": item.get("consumed_by"),
-                "routed_from_summary": item.get("routed_from_summary"),
-                "route_reason": item.get("route_reason"),
+                "selected_by": item.get("selected_by"),
+                "selection_reason": item.get("selection_reason"),
             }
             for item in copied
         ],
+        "assembly_details": {
+            "generated_from": to_repo_relative(repo_root, manifest_path),
+            "primary_entries_used": sorted(set(primary_entries_used)),
+            "narrowing_actions": narrowed_references,
+            "broad_reference_warnings": broad_reference_warnings,
+        },
     }
     usage_report_path = runtime_dir / "knowledge_usage_report.json"
     usage_report_path.write_text(json.dumps(usage_report, ensure_ascii=False, indent=2), encoding="utf-8")

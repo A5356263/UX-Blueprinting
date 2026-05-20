@@ -1,0 +1,16 @@
+{
+  "project_id": "sub-admin-permission-copy",
+  "generated_at": "2026-05-20T13:19:55+00:00",
+  "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\sub-admin-permission-copy\\runtime\\preview",
+  "output_path": "E:\\AI设计\\体验蓝图构建思路\\projects\\sub-admin-permission-copy\\runtime\\preview\\index.html",
+  "server_host": "127.0.0.1",
+  "server_port": 0,
+  "preview_url": "",
+  "ready_state": "built",
+  "business_section_count": 11,
+  "experience_section_count": 9,
+  "flow_count": 7,
+  "page_count": 3,
+  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\sub-admin-permission-copy\\exports\\final\\business_blueprint.md",
+  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\sub-admin-permission-copy\\exports\\final\\experience_blueprint.md"
+}

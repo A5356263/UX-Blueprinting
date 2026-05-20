@@ -1,0 +1,41 @@
+{
+  "project_id": "sub-admin-permission-copy",
+  "stage": "facts",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "business",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-20T13:19:21.162437+00:00",
+  "checked_files": [
+    "projects/sub-admin-permission-copy/source/task_card.md",
+    "projects/sub-admin-permission-copy/source/requirement.md",
+    "projects/sub-admin-permission-copy/source/background.md",
+    "projects/sub-admin-permission-copy/runtime/task_card_resolved.json",
+    "projects/sub-admin-permission-copy/runtime/context_manifest.json",
+    "projects/sub-admin-permission-copy/runtime/provenance.json",
+    "projects/sub-admin-permission-copy/workspace/facts.md"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [],
+  "metrics": {
+    "dimension_coverage": {
+      "overview": 1,
+      "features": 1,
+      "rules": 1,
+      "states": 1,
+      "exceptions": 1,
+      "dependencies": 1,
+      "gaps": 1
+    },
+    "gap_count": 17,
+    "knowledge_derived_fact_count": 0
+  }
+}

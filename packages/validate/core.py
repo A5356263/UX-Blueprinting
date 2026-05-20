@@ -605,52 +605,35 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
     manifest = read_json(runtime_dir / "context_manifest.json")
     usage_report = read_json(runtime_dir / "knowledge_usage_report.json")
 
-    plan = manifest.get("knowledge_consumption_plan")
-    if not isinstance(plan, dict):
-        add_issue(issues, "blocker", "context_manifest.json 缺少 knowledge_consumption_plan")
+    selection_source = str(manifest.get("selection_source") or "").strip()
+    if not selection_source:
+        add_issue(issues, "blocker", "context_manifest.json 缺少 selection_source")
         return
 
-    facts = plan.get("facts")
-    business = plan.get("business")
-    experience = plan.get("experience")
-    if not isinstance(facts, dict) or not isinstance(business, dict) or not isinstance(experience, dict):
-        add_issue(issues, "blocker", "knowledge_consumption_plan 结构不完整")
+    references = manifest.get("references")
+    if not isinstance(references, list):
+        add_issue(issues, "blocker", "context_manifest.json 缺少 references")
         return
-
-    facts_required = _string_list(facts.get("required_wiki_refs"))
-    facts_raw = _string_list(facts.get("raw_refs_from_source_refs"))
-    business_raw = _string_list(business.get("raw_refs_from_source_refs"))
-    experience_raw = _string_list(experience.get("raw_refs_from_source_refs"))
-
-    if not facts_required:
-        add_issue(issues, "warning", "knowledge_consumption_plan.facts 缺少 required_wiki_refs")
-    if facts_raw:
-        add_issue(issues, "warning", "knowledge_consumption_plan.facts 不应默认读取 raw_refs_from_source_refs")
-    if "raw_refs_from_source_refs" not in business:
-        add_issue(issues, "warning", "knowledge_consumption_plan.business 缺少 raw_refs_from_source_refs")
-    if "raw_refs_from_source_refs" not in experience:
-        add_issue(issues, "warning", "knowledge_consumption_plan.experience 缺少 raw_refs_from_source_refs")
 
     repo_root = get_repo_root()
-    for raw_ref in business_raw + experience_raw:
-        normalized = raw_ref.replace("\\", "/")
-        raw_path = repo_root / Path(normalized.replace("/", "\\"))
-        if normalized.endswith("/") or "." not in Path(normalized).name:
-            add_issue(issues, "blocker", f"raw ref 必须是文件，不能是目录：{normalized}")
+    for item in references:
+        if not isinstance(item, dict):
             continue
-        if raw_path.exists() and raw_path.is_dir():
-            add_issue(issues, "blocker", f"raw ref 指向目录，禁止装配：{normalized}")
+        reference = str(item.get("reference") or "").replace("\\", "/").strip()
+        if not reference:
+            continue
+        ref_path = repo_root / Path(reference.replace("/", "\\"))
+        if not ref_path.exists():
+            add_issue(issues, "blocker", f"context_manifest.json 引用了不存在的 ref：{reference}")
 
-    stage_usage = usage_report.get("stage_usage")
-    if not isinstance(stage_usage, dict):
-        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 stage_usage")
-        return
-    business_usage = stage_usage.get("business")
-    experience_usage = stage_usage.get("experience")
-    if not isinstance(business_usage, dict) or "source_ref_chains" not in business_usage:
-        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 business.source_ref_chains")
-    if not isinstance(experience_usage, dict) or "source_ref_chains" not in experience_usage:
-        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 experience.source_ref_chains")
+    report_selection_source = str(usage_report.get("selection_source") or "").strip()
+    if report_selection_source != selection_source:
+        add_issue(issues, "warning", "knowledge_usage_report.json.selection_source 与 context_manifest.json.selection_source 不一致")
+
+    if not isinstance(usage_report.get("selected_refs"), dict):
+        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 selected_refs")
+    if not isinstance(usage_report.get("assembled_refs"), list):
+        add_issue(issues, "warning", "knowledge_usage_report.json 缺少 assembled_refs")
 
 
 def extract_fact_ids(text: str) -> list[str]:
@@ -1566,32 +1549,16 @@ def analyze_natural_language_handoff(
     coverage_lines.append(f"风险保护承接：{covered_risk_count}/{len(risk_items)}")
 
     guideline_refs_used: list[str] = []
-    guideline_raw_refs_used: list[str] = []
-    guideline_selection_reason: list[dict[str, object]] = []
     if usage_report:
-        stage_usage = usage_report.get("stage_usage")
-        if isinstance(stage_usage, dict):
-            experience_usage = stage_usage.get("experience")
-            if isinstance(experience_usage, dict):
-                guideline_refs_used = _string_list(experience_usage.get("guideline_refs_used"))
-                guideline_raw_refs_used = _string_list(experience_usage.get("guideline_raw_refs_used"))
-                raw_reason = experience_usage.get("guideline_selection_reason")
-                if isinstance(raw_reason, list):
-                    guideline_selection_reason = [item for item in raw_reason if isinstance(item, dict)]
+        selected_refs = usage_report.get("selected_refs")
+        if isinstance(selected_refs, dict):
+            guideline_refs_used = _string_list(selected_refs.get("guideline_refs"))
 
     has_guideline_appendix = "设计指南消费说明" in experience_text
     claims_guideline_consumed = has_guideline_appendix and any(marker in experience_text for marker in ("已消费", "消费的设计指南", "消费指南"))
-    if not guideline_refs_used:
-        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 未记录 experience 阶段实际消费的 design guideline。")
-    elif not guideline_raw_refs_used:
-        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 已记录 guideline summary，但 guideline_raw_refs_used 为空，无法确认 summary 命中后读取了 raw。")
-    elif not guideline_selection_reason:
-        add_issue(issues, "warning", "设计指南消费检查：knowledge_usage_report.json 缺少 guideline_selection_reason，无法说明为何选择这些设计指南。")
-    if not has_guideline_appendix:
-        add_issue(issues, "warning", "设计指南消费检查：experience_blueprint.md 缺少「设计指南消费说明」附录。")
     if claims_guideline_consumed and not guideline_refs_used:
         add_issue(issues, "blocker", "设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 knowledge_usage_report.json 没有对应记录。")
-    coverage_lines.append(f"设计指南消费：{len(guideline_refs_used)} 条")
+    coverage_lines.append(f"设计指南装配：{len(guideline_refs_used)} 条")
 
     metrics = {
         "required_role_count": required_role_count,
@@ -1605,7 +1572,6 @@ def analyze_natural_language_handoff(
         "required_risk_count": len(risk_items),
         "covered_risk_count": covered_risk_count,
         "guideline_refs_used_count": len(guideline_refs_used),
-        "guideline_raw_refs_used_count": len(guideline_raw_refs_used),
     }
     return metrics, issues, coverage_lines
 

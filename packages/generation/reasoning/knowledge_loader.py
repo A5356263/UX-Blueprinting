@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_project_source_dir, get_repo_root
+from packages.common import get_project_runtime_dir, get_repo_root
 from packages.knowledge_consumption.summary_parser import parse_summary_metadata
 
 from .schemas import KnowledgeNote
@@ -12,14 +13,12 @@ from .schemas import KnowledgeNote
 SECTION_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 
 
-def _split_sections(text: str) -> dict[str, str]:
-    matches = list(SECTION_RE.finditer(text))
-    sections: dict[str, str] = {}
-    for index, match in enumerate(matches):
-        start = match.end()
-        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        sections[match.group(1).strip()] = text[start:end].strip()
-    return sections
+def _first_heading(text: str, fallback: str) -> str:
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# "):
+            return stripped[2:].strip()
+    return fallback
 
 
 def _parse_bullets(text: str) -> list[str]:
@@ -29,14 +28,6 @@ def _parse_bullets(text: str) -> list[str]:
         if line.startswith("- "):
             results.append(line[2:].strip())
     return results
-
-
-def _first_heading(text: str, fallback: str) -> str:
-    for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("# "):
-            return stripped[2:].strip()
-    return fallback
 
 
 def _classify_note(path_text: str, text: str) -> str:
@@ -52,27 +43,18 @@ def _classify_note(path_text: str, text: str) -> str:
     return "knowledge"
 
 
-def _load_reference_paths_from_task_card(project_id: str) -> list[str]:
-    task_card_path = get_project_source_dir(project_id) / "task_card.md"
-    if not task_card_path.exists():
-        return []
-    sections = _split_sections(task_card_path.read_text(encoding="utf-8"))
-    refs: list[str] = []
-    for section_name in ("Knowledge", "Wiki", "Design Guidelines", "Knowledge Consumption Policy"):
-        section = sections.get(section_name, "")
-        refs.extend([item for item in _parse_bullets(section) if "/" in item and not item.startswith("mode:")])
-    return refs
-
-
 def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str]:
     manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
     if not manifest_path.exists():
         return []
-    import json
 
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    references = payload.get("references")
+    if not isinstance(references, list):
+        return []
+
     refs: list[str] = []
-    for item in payload.get("references", []):
+    for item in references:
         if not isinstance(item, dict):
             continue
         consumed_by = [str(value) for value in item.get("consumed_by", []) if isinstance(value, str)]
@@ -81,35 +63,6 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
         reference = str(item.get("reference") or "").strip()
         if reference:
             refs.append(reference)
-    return refs
-
-
-def _load_reference_paths_from_plan(project_id: str, stage: str) -> list[str]:
-    manifest_path = get_project_runtime_dir(project_id) / "context_manifest.json"
-    if not manifest_path.exists():
-        return []
-    import json
-
-    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-    plan = payload.get("knowledge_consumption_plan")
-    if not isinstance(plan, dict):
-        return []
-
-    stage_plan = plan.get(stage)
-    if not isinstance(stage_plan, dict):
-        return []
-
-    refs: list[str] = []
-    if stage == "facts":
-        refs.extend([str(item) for item in stage_plan.get("required_wiki_refs", []) if isinstance(item, str)])
-    elif stage == "business":
-        refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
-        refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])
-    elif stage == "experience":
-        refs.extend([str(item) for item in stage_plan.get("guideline_entry_refs", []) if isinstance(item, str)])
-        refs.extend([str(item) for item in stage_plan.get("summary_refs", []) if isinstance(item, str)])
-        refs.extend([str(item) for item in stage_plan.get("guideline_refs", []) if isinstance(item, str)])
-        refs.extend([str(item) for item in stage_plan.get("raw_refs_from_source_refs", []) if isinstance(item, str)])
     return refs
 
 
@@ -122,7 +75,7 @@ def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | 
     bullets = _parse_bullets(text)
     signal_lines = [line.strip() for line in text.splitlines() if line.strip() and not line.strip().startswith("#")]
     signals = bullets[:6] or signal_lines[:6]
-    summary = "；".join(signals[:3]) if signals else f"引用了 {title}"
+    summary = "；".join(signals[:3]) if signals else f"引用于 {title}"
     return KnowledgeNote(
         note_id=note_id,
         path=ref_path,
@@ -135,11 +88,8 @@ def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | 
 
 def load_knowledge_notes(project_id: str, stage: str) -> list[KnowledgeNote]:
     repo_root = get_repo_root()
-    raw_refs = (
-        _load_reference_paths_from_plan(project_id, stage)
-        or _load_reference_paths_from_manifest(project_id, stage)
-        or _load_reference_paths_from_task_card(project_id)
-    )
+    raw_refs = _load_reference_paths_from_manifest(project_id, stage)
+
     deduped: list[str] = []
     seen: set[str] = set()
     for ref in raw_refs:
@@ -154,9 +104,7 @@ def load_knowledge_notes(project_id: str, stage: str) -> list[KnowledgeNote]:
         note = _read_note(repo_root, f"KN-{index:02d}", ref)
         if note is None:
             continue
-        if stage == "facts" and note.kind == "guideline":
-            continue
-        if stage == "business" and note.kind == "guideline":
+        if stage in {"facts", "business"} and note.kind == "guideline":
             continue
         notes.append(note)
     return notes

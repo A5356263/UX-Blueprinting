@@ -19,6 +19,7 @@
     "validate-lite",
     "coverage-lite",
     "archive",
-    "preview"
+    "preview",
+    "assemble"
   ]
 }
