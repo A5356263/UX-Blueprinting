@@ -4,10 +4,10 @@
   "type": "command",
   "stage": "mainline",
   "entrypoint": "python -m packages generate-business-lite <project-id>",
-  "description": "为 standard 路线生成轻量业务蓝图的提示入口。",
+  "description": "为轻量业务蓝图产物提供生成提示入口，执行依据只来自 UXB 已确认判断。",
   "required_inputs": [
     "projects/<project-id>/workspace/facts.md",
-    "projects/<project-id>/runtime/route_decision.json"
+    "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
   "declared_outputs": [
     "projects/<project-id>/workspace/business_blueprint_lite.md",

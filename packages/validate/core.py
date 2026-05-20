@@ -15,6 +15,7 @@ from packages.common import (
     get_repo_root,
 )
 from packages.provenance import append_command_if_provenance_exists, validate_provenance
+from packages.route_decision import load_uxb_execution_decision
 
 
 STAGE_REQUIRED_HEADINGS = {
@@ -1977,20 +1978,21 @@ def _section_text(content: str, heading: str) -> str:
     return "\n".join(collected).strip()
 
 
-def _read_route(project_id: str) -> dict[str, object]:
-    return read_json(get_project_runtime_dir(project_id) / "route_decision.json")
+def _read_execution_decision(project_id: str) -> dict[str, object]:
+    return load_uxb_execution_decision(project_id)
 
 
-def _add_route_info(project_id: str, issues: list[tuple[str, str]], expected_routes: set[str]) -> None:
-    route = _read_route(project_id)
-    if not route:
-        add_issue(issues, "warning", "缺少 route_decision.json，轻量 gate 将只做产物结构检查")
+def _add_execution_mode_info(project_id: str, issues: list[tuple[str, str]], expected_modes: set[str]) -> None:
+    decision = _read_execution_decision(project_id)
+    mode = str(decision.get("execution_mode") or "")
+    if str(decision.get("status") or "") != "confirmed":
+        details = "; ".join(str(item) for item in decision.get("validation_errors", []) if str(item).strip())
+        add_issue(issues, "warning", f"当前 UXB 执行判断未确认：{details or '请先检查 runtime/uxb_route_decision.json'}")
         return
-    route_name = str(route.get("route") or "")
-    if route_name not in expected_routes:
-        add_issue(issues, "warning", f"当前 route 为 {route_name or 'unknown'}，与轻量 gate 预期 {', '.join(sorted(expected_routes))} 不一致")
+    if mode not in expected_modes:
+        add_issue(issues, "warning", f"当前执行模式为 {mode or 'unknown'}，与本次 gate 预期 {', '.join(sorted(expected_modes))} 不一致")
     else:
-        add_issue(issues, "info", f"route 判断：{route_name}")
+        add_issue(issues, "info", f"执行模式：{mode}")
 
 
 def run_business_note_gate(project_id: str) -> int:
@@ -2000,10 +2002,10 @@ def run_business_note_gate(project_id: str) -> int:
     checked_files = [
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_note.md",
-        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/runtime/uxb_route_decision.json",
         f"projects/{project_id}/runtime/provenance.json",
     ]
-    _add_route_info(project_id, issues, {"fast"})
+    _add_execution_mode_info(project_id, issues, {"fast"})
 
     facts_text = read_text(workspace_dir / "facts.md")
     note_text = read_text(workspace_dir / "business_note.md")
@@ -2051,10 +2053,10 @@ def run_business_lite_gate(project_id: str) -> int:
     checked_files = [
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_blueprint_lite.md",
-        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/runtime/uxb_route_decision.json",
         f"projects/{project_id}/runtime/provenance.json",
     ]
-    _add_route_info(project_id, issues, {"standard"})
+    _add_execution_mode_info(project_id, issues, {"standard"})
 
     facts_text = read_text(workspace_dir / "facts.md")
     business_lite_text = read_text(workspace_dir / "business_blueprint_lite.md")
@@ -2232,17 +2234,18 @@ def run_validate_lite(project_id: str) -> int:
     status_path = workspace_dir / "check_status.json"
     issues: list[tuple[str, str]] = []
     checked_files = [
-        f"projects/{project_id}/runtime/route_decision.json",
+        f"projects/{project_id}/runtime/uxb_route_decision.json",
         f"projects/{project_id}/workspace/facts.md",
         f"projects/{project_id}/workspace/business_note.md",
         f"projects/{project_id}/workspace/business_blueprint_lite.md",
         f"projects/{project_id}/workspace/experience_blueprint.md",
     ]
 
-    route = _read_route(project_id)
-    route_name = str(route.get("route") or "")
-    if not route:
-        add_issue(issues, "blocker", "缺少 route_decision.json")
+    decision = _read_execution_decision(project_id)
+    execution_mode = str(decision.get("execution_mode") or "")
+    if str(decision.get("status") or "") != "confirmed":
+        details = "; ".join(str(item) for item in decision.get("validation_errors", []) if str(item).strip())
+        add_issue(issues, "blocker", f"UXB 执行判断未确认：{details or '请先检查 runtime/uxb_route_decision.json'}")
 
     facts_text = read_text(workspace_dir / "facts.md")
     business_note_text = read_text(workspace_dir / "business_note.md")
@@ -2251,10 +2254,10 @@ def run_validate_lite(project_id: str) -> int:
 
     if not facts_text:
         add_issue(issues, "blocker", "缺少 facts.md")
-    if route_name == "fast" and not business_note_text:
-        add_issue(issues, "blocker", "fast 路线缺少 business_note.md")
-    if route_name == "standard" and not business_lite_text:
-        add_issue(issues, "blocker", "standard 路线缺少 business_blueprint_lite.md")
+    if execution_mode == "fast" and not business_note_text:
+        add_issue(issues, "blocker", "当前执行要求 business_note.md，但文件缺失")
+    if execution_mode == "standard" and not business_lite_text:
+        add_issue(issues, "blocker", "当前执行要求 business_blueprint_lite.md，但文件缺失")
     if not experience_text:
         add_issue(issues, "blocker", "缺少 experience_blueprint.md")
 
@@ -2270,9 +2273,9 @@ def run_validate_lite(project_id: str) -> int:
         check_placeholders(file_name, content, issues)
         check_runtime_leakage_guard(file_name, content, issues)
 
-    if route_name == "fast":
+    if execution_mode == "fast":
         gate_stage = "business_note"
-    elif route_name == "standard":
+    elif execution_mode == "standard":
         gate_stage = "business_lite"
     else:
         gate_stage = "business_note" if business_note_text else "business_lite" if business_lite_text else ""
@@ -2308,7 +2311,7 @@ def run_validate_lite(project_id: str) -> int:
         completed_outputs,
         missing_outputs,
         checked_files,
-        {"route": route_name, "validation_mode": "lite"},
+        {"execution_mode": execution_mode, "validation_mode": "lite"},
     )
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Validate lite finished: {report_path}")

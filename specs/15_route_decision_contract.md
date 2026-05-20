@@ -1,77 +1,83 @@
 # Route Decision Contract
 
-定义 `route_decision` 判断能力的规则边界、配置约束与输出契约。
+## Goal
 
-## 职责边界
+定义 `packages/route_decision` 在第四阶段后的职责边界。
 
-- `packages/route_decision/core.py` 只负责读取输入、加载规则、执行匹配、输出 `route_decision.json` 与 `route_decision.md`。
-- 路线判断的需求类型、维度、关键词、路线升级策略、输出建议和置信度策略不得散落在 Python 代码中。
-- 当前机器可读规则源为 `packages/route_decision/rules.json`。
-- 如果后续需要调整 `fast / standard / full` 判断口径，优先修改规则文件，而不是改执行代码。
+## Positioning
 
-## 输入边界
+`route_decision` 不再负责独立语义判断。
 
-初始路线判断可读取：
+它现在只负责：
 
-- `projects/<project-id>/source/task_card.md`
-- `projects/<project-id>/source/requirement.md`
-- `projects/<project-id>/source/background.md`
-- `projects/<project-id>/runtime/task_card_resolved.json`
-- `projects/<project-id>/runtime/context_manifest.json`
+- 读取 `projects/<project-id>/runtime/uxb_route_decision.json`
+- 做基础结构校验
+- 生成一个临时执行镜像 `runtime/route_decision.json`
 
-初始 route 判断不得依赖尚未生成的完整 `facts.md`、`business_blueprint.md` 或 `experience_blueprint.md`。
+它不再负责：
 
-## 输出
+- 基于 source 文件重新推导 route
+- 生成新的 reason / evidence / guardrail
+- 输出 `route_decision.md`
+- 维护独立规则文件驱动的语义分类
+
+## Input Boundary
+
+唯一正式输入：
+
+- `projects/<project-id>/runtime/uxb_route_decision.json`
+
+不得再把以下文件作为 route 语义判断源：
+
+- `source/task_card.md`
+- `source/requirement.md`
+- `source/background.md`
+- `runtime/context_manifest.json`
+
+## Required Validation
+
+至少校验：
+
+- `schema_version`
+- `created_by == "uxb_ai"`
+- `confirmed_by_user == true`
+- `can_execute_mainline == true`
+- `execution.required_outputs` 存在
+
+如校验失败，应输出 `needs_rejudgment` 语义，而不是补写新判断。
+
+## Output
 
 必须输出：
 
 - `projects/<project-id>/runtime/route_decision.json`
-- `projects/<project-id>/runtime/route_decision.md`
 
-`route_decision.json` 至少包含：
+该文件只允许是临时执行镜像，至少包含：
 
 - `version`
-- `rules_version`
 - `project_id`
-- `route`
-- `confidence`
-- `demand_type`
-- `reason`
-- `evidence`
-- `dimension_judgment`
-- `dimension_evidence`
-- `design_pressure`
-- `business_depth`
-- `experience_focus`
-- `non_focus_guidance`
-- `escalation_signals`
-- `should_not_control_mainline`
+- `status`
+- `source`
+- `can_execute_mainline`
+- `required_outputs`
+- `execution_mode`
+- `validation_errors`
+- `note`
 
-默认 `route_decision` 只提供路线建议，不控制主链路编排；因此 `should_not_control_mainline` 必须为 `true`。
+其中 `note` 应明确说明：
 
-## 规则文件要求
+- 这是临时执行镜像
+- 不承载新的语义判断
 
-`packages/route_decision/rules.json` 必须至少声明：
+## Prohibited Behaviors
 
-- `demand_types`
-- `signal_rules`
-- `dimension_fields`
-- `dimension_rules`
-- `route_policy`
-- `confidence_policy`
-- `pressure_labels`
-- `business_depth_by_route`
-- `experience_focus_by_pressure`
-- `non_focus_guidance_by_route`
-- `escalation_signals_by_route`
-- `reason_templates`
+- 不得生成新的 `route_decision.md`
+- 不得读取旧 `rules.json` 做语义判断
+- 不得输出新的 `reason`
+- 不得输出新的 `evidence`
+- 不得输出 `matched_signals`、`matched_terms`、`guardrail_hints`
+- 不得成为用户可读正文输入
 
-规则文件可以包含关键词，但关键词只能作为路线判断线索，不能写成“命中一个词就必然等于某条路线”的硬编码分类器。
+## Long-Term Direction
 
-## 禁止事项
-
-- 不得让 route 判断替代 facts、business 或 experience 的正式判断。
-- 不得让 route 判断直接改写 `run-main` 步骤。
-- 不得自动降级路线。
-- 不得把某个业务域的专有知识写成唯一判断逻辑。
-- 不得为了小需求默认绕过业务依据。
+长期目标是进一步淡化 `route_decision.json` 的存在，只保留 `uxb_route_decision.json` 作为单一判断源。

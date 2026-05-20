@@ -17,7 +17,7 @@ from packages.generation import (
     run_generate_facts,
 )
 from packages.provenance import append_command_if_provenance_exists
-from packages.route_decision import run_route_decision
+from packages.route_decision import load_uxb_execution_decision, run_route_decision
 from packages.validate import (
     run_business_gate,
     run_business_lite_gate,
@@ -32,34 +32,13 @@ from packages.validate import (
 )
 
 
-ROUTE_RANK = {"fast": 1, "standard": 2, "full": 3}
-
-
 def _now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-
-
-def _read_json(path: Path) -> dict[str, object]:
-    if not path.exists():
-        return {}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {}
-    return payload if isinstance(payload, dict) else {}
 
 
 def _write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def _route_decision(project_id: str) -> dict[str, object]:
-    return _read_json(get_project_runtime_dir(project_id) / "route_decision.json")
-
-
-def _uxb_route_decision(project_id: str) -> dict[str, object]:
-    return _read_json(get_project_runtime_dir(project_id) / "uxb_route_decision.json")
 
 
 def _actual_outputs(project_id: str) -> list[str]:
@@ -78,8 +57,8 @@ def _actual_outputs(project_id: str) -> list[str]:
     return [str(path).replace("\\", "/") for path in candidates if path.exists()]
 
 
-def _steps_for_route(route: str) -> list[tuple[str, Callable[[str], int]]]:
-    if route == "full":
+def _steps_for_execution_mode(execution_mode: str) -> list[tuple[str, Callable[[str], int]]]:
+    if execution_mode == "full":
         return [
             ("generate-facts", run_generate_facts),
             ("gate-facts", run_facts_gate),
@@ -91,7 +70,7 @@ def _steps_for_route(route: str) -> list[tuple[str, Callable[[str], int]]]:
             ("coverage", run_coverage_check),
             ("archive", run_archive_artifacts),
         ]
-    if route == "standard":
+    if execution_mode == "standard":
         return [
             ("generate-facts", run_generate_facts),
             ("gate-facts", run_facts_gate),
@@ -114,22 +93,29 @@ def _steps_for_route(route: str) -> list[tuple[str, Callable[[str], int]]]:
 
 def _print_repair_hint(project_id: str, command_name: str) -> None:
     if command_name.startswith("gate") or command_name in {"validate", "validate-lite", "coverage", "coverage-lite"}:
-        print(f"当前步骤 `{command_name}` 失败，请查看 runtime/gates 或 workspace/check_status.json：{project_id}")
+        print(
+            f"当前步骤 `{command_name}` 失败，请查看 runtime/gates 或 workspace/check_status.json：{project_id}"
+        )
 
 
-def _write_failed_report(
+def _write_execution_report(
     report_path: Path,
     project_id: str,
+    status: str,
     stopped_at: str,
     steps: list[dict[str, object]],
     message: str = "",
+    blocking_issue: str = "",
+    execution_mode: str = "",
 ) -> None:
     payload = {
         "project_id": project_id,
-        "status": "failed",
+        "status": status,
         "generated_at": _now_iso(),
         "stopped_at": stopped_at,
         "message": message,
+        "blocking_issue": blocking_issue,
+        "execution_mode": execution_mode,
         "steps": steps,
         "actual_outputs": _actual_outputs(project_id),
     }
@@ -140,6 +126,9 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
     if route not in {"auto", "fast", "standard", "full"}:
         print(f"ERROR: unsupported route: {route}")
         return 1
+    if route != "auto":
+        print("ERROR: run-routed-main 不再支持手动指定 route，请先由 UXB 写好 runtime/uxb_route_decision.json。")
+        return 1
 
     runtime_dir = get_project_runtime_dir(project_id)
     plan_path = runtime_dir / "routed_main_plan.json"
@@ -147,6 +136,34 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
     runtime_dir.mkdir(parents=True, exist_ok=True)
 
     bootstrap_results: list[dict[str, object]] = []
+    execution_decision = load_uxb_execution_decision(project_id)
+    if str(execution_decision.get("status") or "") != "confirmed":
+        route_code = run_route_decision(project_id)
+        bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
+        blocking_issue = "; ".join(
+            str(item) for item in execution_decision.get("validation_errors", []) if str(item).strip()
+        )
+        message = "执行中发现当前 UXB 判断不足以驱动主链路，请先重新判断。"
+        _write_execution_report(
+            report_path,
+            project_id,
+            "needs_rejudgment",
+            "precheck",
+            bootstrap_results,
+            message=message,
+            blocking_issue=blocking_issue,
+        )
+        print(message)
+        if blocking_issue:
+            print(blocking_issue)
+        print(f"routed_main_report.json: {report_path}")
+        return 1
+
+    route_code = run_route_decision(project_id)
+    bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
+    if route_code == 0:
+        append_command_if_provenance_exists(project_id, "route-decision")
+
     try:
         assemble_code = run_context_assemble(project_id, strict=strict)
     except (FileNotFoundError, SystemExit) as exc:
@@ -155,68 +172,28 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         if message:
             print(message)
         bootstrap_results.append({"command": "assemble", "exit_code": assemble_code, "message": message})
-        _write_failed_report(report_path, project_id, "assemble", bootstrap_results, message=message)
+        _write_execution_report(report_path, project_id, "failed", "assemble", bootstrap_results, message=message)
         print(f"routed_main_report.json: {report_path}")
         return assemble_code
 
     bootstrap_results.append({"command": "assemble", "exit_code": assemble_code})
     append_command_if_provenance_exists(project_id, "assemble")
     if assemble_code != 0:
-        _write_failed_report(report_path, project_id, "assemble", bootstrap_results)
+        _write_execution_report(report_path, project_id, "failed", "assemble", bootstrap_results)
         return assemble_code
 
-    decision: dict[str, object] = {}
-    confirmed_route = ""
-    actual_route = route
-    route_source = "manual_argument"
-
-    if route == "auto":
-        route_code = run_route_decision(project_id)
-        bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
-        if route_code == 0:
-            append_command_if_provenance_exists(project_id, "route-decision")
-        if route_code != 0:
-            message = "当前缺少 UXB 已确认的 route 判断，不能在 auto 模式下自动启动 routed-main。"
-            _write_failed_report(report_path, project_id, "route-decision", bootstrap_results, message=message)
-            return route_code
-
-        decision = _route_decision(project_id)
-        if str(decision.get("status") or "") != "confirmed":
-            message = "route_decision 未进入 confirmed 状态，不能在 auto 模式下继续执行。"
-            _write_failed_report(report_path, project_id, "route-decision", bootstrap_results, message=message)
-            return 1
-
-        confirmed_route = str(decision.get("route") or "")
-        actual_route = confirmed_route
-        route_source = "uxb_route_decision.json"
-    else:
-        decision = _route_decision(project_id)
-        uxb_decision = _uxb_route_decision(project_id)
-        if bool(uxb_decision.get("confirmed_by_user")):
-            confirmed_route = str(uxb_decision.get("route") or "")
-
-    downgrade_rejected = bool(confirmed_route) and ROUTE_RANK.get(actual_route, 0) < ROUTE_RANK.get(confirmed_route, 0)
-    steps = _steps_for_route(actual_route)
+    execution_mode = str(execution_decision.get("execution_mode") or "")
+    steps = _steps_for_execution_mode(execution_mode)
     plan = {
         "project_id": project_id,
         "generated_at": _now_iso(),
-        "route_source": route_source,
+        "decision_source": "uxb_route_decision.json",
         "requested_route": route,
-        "decided_route": confirmed_route,
-        "actual_route": actual_route,
-        "downgrade_rejected": downgrade_rejected,
+        "execution_mode": execution_mode,
         "planned_steps": [item["command"] for item in bootstrap_results] + [name for name, _ in steps],
-        "route_decision": decision,
+        "uxb_route_decision": execution_decision,
     }
     _write_json(plan_path, plan)
-
-    if downgrade_rejected:
-        message = f"拒绝降级：UXB 已确认 route 为 {confirmed_route}，但手动指定为 {actual_route}"
-        _write_failed_report(report_path, project_id, "route-selection", bootstrap_results, message=message)
-        print(message)
-        print(f"routed_main_plan.json: {plan_path}")
-        print(f"routed_main_report.json: {report_path}")
-        return 1
 
     results: list[dict[str, object]] = list(bootstrap_results)
     status = "passed"
@@ -237,7 +214,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
             _print_repair_hint(project_id, command_name)
             break
 
-    if status == "passed" and actual_route == "full" and not skip_preview:
+    if status == "passed" and execution_mode == "full" and not skip_preview:
         try:
             preview_code = run_experience_preview(project_id, host="127.0.0.1", port=0, serve=False)
         except SystemExit as exc:
@@ -253,18 +230,17 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         "status": status,
         "generated_at": _now_iso(),
         "requested_route": route,
-        "decided_route": confirmed_route,
-        "actual_route": actual_route,
+        "execution_mode": execution_mode,
         "stopped_at": stopped_at,
         "steps": results,
         "actual_outputs": _actual_outputs(project_id),
         "recommend_enable_routed_execution": False,
-        "recommendation_reason": "当前 route 来源已经切换为 UXB 已确认判断；是否默认启用，仍应基于样例和真实任务继续验证。",
+        "recommendation_reason": "当前执行判断已收敛到 UXB 已确认结果；是否默认启用，仍应基于样例和真实任务继续验证。",
     }
     _write_json(report_path, report)
     append_command_if_provenance_exists(project_id, "run-routed-main")
     print(f"routed_main_plan.json: {plan_path}")
     print(f"routed_main_report.json: {report_path}")
     if status == "passed":
-        print(f"run-routed-main finished: route={actual_route}")
+        print(f"run-routed-main finished: execution_mode={execution_mode}")
     return 0 if status == "passed" else 1

@@ -35,14 +35,12 @@
 
 ## Read Order
 
-1. 先读本文件
+1. 先读本文档
 2. 再读 `Required Inputs`
-3. 生成 facts.md（详见 `specs/08_fact_extraction_contract.md`）→ 运行 `python -m packages gate-facts {{TASK_ID}}`，通过才能进入下一步
-4. 生成 business_blueprint.md（详见 `specs/09_business_blueprint_contract.md`）→ 运行 `python -m packages gate-business {{TASK_ID}}`，通过才能进入下一步
-5. 生成 experience_blueprint.md（详见 `specs/10_experience_blueprint_contract.md`）→ 运行 `python -m packages gate-experience {{TASK_ID}}`，通过才能进入下一步
-6. 运行 `python -m packages validate {{TASK_ID}}` 和 `python -m packages coverage {{TASK_ID}}`
-7. 运行 `python -m packages archive {{TASK_ID}}`（产物镜像到 exports/）
-8. 运行 `python -m packages preview {{TASK_ID}} --no-serve`（生成静态预览 HTML 到 runtime/preview/）
+3. 生成 facts.md，参考 `specs/08_fact_extraction_contract.md`
+4. 生成 business 产物，参考对应 business 合同
+5. 生成 experience_blueprint.md，参考 `specs/10_experience_blueprint_contract.md`
+6. 运行 validate / coverage / archive / preview
 
 ## Constraints
 
@@ -50,34 +48,29 @@
 - 信息不足处保留 `[GAP]`
 - 正式产出必须写入 `workspace/`
 - 不得用聊天回复替代正式文档产物
-- facts 阶段不得把引用知识提升为当前任务的已确认事实
+- facts 阶段不得把引用知识提升为当前任务已确认事实
 - business 阶段不得输出 UI 方案或实现方案
 - experience 阶段不得输出高保真视觉稿或研发实现细节
-- **阶段门禁**：每个阶段必须 gate 通过后才能进入下一阶段。不得在 facts gate 通过前生成 business_blueprint.md，不得在 business gate 通过前生成 experience_blueprint.md。不得一次性写完所有产物再回头补 gate。
+- `runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源
+- `task_card.md` 不能代替 UXB 做复杂度判断、知识选择或执行深度判断
 
 ## Knowledge
 
-- knowledge/wiki/index.md
+- <可选：声明业务知识入口，不代表自动装配>
 
 ## Wiki
 
-- knowledge/wiki/index.md
+- <可选：声明 wiki 入口，不代表自动装配>
 
 ## Design Guidelines
 
-- knowledge/wiki/index.md
+- <可选：声明设计参考入口，不代表自动装配>
 
 ## Knowledge Consumption Policy
 
 ### Primary Knowledge Entry
 
-- knowledge/wiki/index.md
-
-### Fallback Conditions
-
-- 命中 `[GAP]`
-- 命中 `[CONFLICT]`
-- 摘要页未覆盖当前任务需要的对象、规则或路径
+- <可选：仅用于目录引用的工程收窄>
 
 ### Disallowed Broad References
 
@@ -111,32 +104,17 @@
 
 ## Facts Output Requirements
 
-产出规范见 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`。
-
-核心要求：
-- 用自然语言理解和重述需求，不切碎原文，不填表，不用 ID 编号
-- 禁止把引用知识提升为当前任务的已确认事实
-- 信息不足处保留 `[GAP]`
+参考 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`
 
 ## Business Output Requirements
 
-产出规范见 `specs/09_business_blueprint_contract.md` 和 `templates/business_blueprint.template.md`。
-
-核心要求：
-- 用业务分析师的自然语言做判断，不复制 facts 碎片
-- 禁止输出 UI 方案或实现方案
-- 方案承接要求必须具体、可执行
+参考对应业务合同和模板，不在 task card 中重复写内部判断逻辑
 
 ## Experience Output Requirements
 
-产出规范见 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`。
-
-核心要求：
-- 每个交互节点写清用户动作、系统反馈、前置解释、具体文案、下一步
-- 文案必须是可直接展示的文本，禁止元指令
-- 禁止输出高保真视觉稿或研发实现细节
+参考 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`
 
 ## Notes
 
-- 当前为模板占位，可按任务补充
-- 若任务明确只做到某一阶段，可在 `Task Scenario` 中标注并在 `Required Outputs` 中裁剪
+- UXB 应在执行前写好 `projects/{{TASK_ID}}/runtime/uxb_route_decision.json`
+- 如任务只做到某一阶段，可在 `Task Scenario` 和 `Required Outputs` 中明确裁剪

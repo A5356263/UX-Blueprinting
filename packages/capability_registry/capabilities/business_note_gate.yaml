@@ -4,7 +4,7 @@
   "type": "command",
   "stage": "gate",
   "entrypoint": "python -m packages gate-business-note <project-id>",
-  "description": "检查 fast 路线 business_note.md 是否满足轻量业务依据边界。",
+  "description": "检查 business_note.md 是否满足轻量业务依据边界，并与 UXB 已确认执行模式保持一致。",
   "required_inputs": [
     "projects/<project-id>/workspace/business_note.md"
   ],

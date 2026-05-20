@@ -4,7 +4,7 @@
   "type": "command",
   "stage": "gate",
   "entrypoint": "python -m packages gate-business-lite <project-id>",
-  "description": "检查 standard 路线 business_blueprint_lite.md 是否满足轻量业务蓝图边界。",
+  "description": "检查 business_blueprint_lite.md 是否满足轻量业务蓝图边界，并与 UXB 已确认执行模式保持一致。",
   "required_inputs": [
     "projects/<project-id>/workspace/business_blueprint_lite.md"
   ],

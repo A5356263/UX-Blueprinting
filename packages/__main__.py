@@ -105,7 +105,7 @@ def main() -> int:
 
     run_routed_main_parser = subparsers.add_parser("run-routed-main")
     run_routed_main_parser.add_argument("project_id")
-    run_routed_main_parser.add_argument("--route", choices=["auto", "fast", "standard", "full"], default="auto")
+    run_routed_main_parser.add_argument("--route", choices=["auto"], default="auto")
     run_routed_main_parser.add_argument("--skip-preview", action="store_true")
     run_routed_main_parser.add_argument("--strict", action="store_true")
 

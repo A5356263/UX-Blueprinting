@@ -2,73 +2,85 @@
 
 ## Goal
 
-Define how tasks reference `knowledge/wiki/`, `knowledge/raw/`, and other explicit knowledge assets, and how execution narrows broad references during context assembly.
+定义任务如何引用 `knowledge/` 中的材料，以及执行期如何只按 UXB 已确认判断装配上下文。
+
+## Source Of Judgment
+
+- `projects/<project-id>/runtime/uxb_route_decision.json` 是知识选择的唯一判断源。
+- 代码不得根据 `Domain`、关键词、summary、`source_refs`、默认 budget 或 fallback 规则自动补知识。
+- `task_card.md`、`knowledge/wiki/index.md`、`knowledge/raw/*` 仍可作为显式引用材料存在，但它们本身不再触发自动知识选择。
 
 ## Knowledge Layer Responsibilities
 
-- `knowledge/wiki/`: default consumption layer, especially index pages and summary pages.
-- `knowledge/raw/`: source-of-truth layer for detailed fallback lookup.
-- Task card and execution hub: decide what is consumed for the current task and how broad references are narrowed.
-- Generation stages: consume assembled context only.
-- Validate and coverage: expose broad-reference risk and fallback usage, but do not silently rewrite references.
+- `knowledge/wiki/`：知识导航与摘要层，可被显式引用。
+- `knowledge/raw/`：原始知识层，可被显式引用。
+- `task_card.md`：声明任务边界、模板、检查项和可选知识入口。
+- `uxb_route_decision.json`：声明本次任务实际需要装配的 `business_refs`、`guideline_refs`、`complexity_refs`。
+- generation / validate：只消费已经装配进 `runtime/context_bundle/` 的材料。
 
-## Default Consumption Order
+## Allowed Assembly Inputs
 
-1. `task_card.md`
-2. Explicit wiki entry pages referenced by the task
-3. Explicit summary pages referenced by the task
-4. Explicit fallback raw sources under allowed conditions
-5. Templates and checks
+上下文装配只允许从以下来源读取引用：
+
+1. `task_card_resolved.json` 中的 `template_refs`
+2. `task_card_resolved.json` 中的 `check_refs`
+3. `uxb_route_decision.json.knowledge_selection.business_refs`
+4. `uxb_route_decision.json.knowledge_selection.guideline_refs`
+5. `uxb_route_decision.json.knowledge_selection.complexity_refs`
 
 ## Reference Rules
 
-- Tasks must prefer file or stable index-page references.
-- Directory references are considered broad references and must be narrowed before normal assembly whenever possible.
-- Wildcard references are descriptive only and must not be copied into `context_bundle/` as raw patterns.
-- A broad reference is acceptable only if the task card also defines a consumption policy that makes narrowing and fallback behavior explicit.
+- 所有引用必须是仓库相对路径。
+- 优先使用文件路径或稳定索引页路径。
+- 目录引用仍允许作为显式输入存在，但只能做工程级收窄，不能触发额外语义判断。
+- 通配符引用不能直接复制进 `context_bundle/`。
+- 如果 `uxb_route_decision.json` 未显式选择某个知识文件，代码不得自行补装。
 
-## Narrowing Rules
+## Directory Narrowing Rules
 
-When a reference points to a directory, the execution hub must attempt narrowing in the following order:
+当显式引用指向目录时，执行层只做工程级收窄，按以下顺序尝试：
 
-1. Explicit `Primary Knowledge Entry` under the same directory
+1. 同目录下显式声明的 `Primary Knowledge Entry`
 2. `README.md`
 3. `index.md`
 4. `*-index.md`
 5. `*-domain-index.md`
 
-If a stable entry is found, execution should copy that entry instead of copying the whole directory.
+如果找到稳定入口，只复制该入口文件。
 
-If no stable entry is found:
+如果没有稳定入口：
 
-- ordinary mode: emit a warning and allow fallback directory copy
-- strict mode: fail the assembly step
+- 非 strict 模式：记录 warning，并允许目录 fallback copy
+- strict 模式：直接失败
 
-## Fallback Rules
+这里的 fallback 仅指“目录复制的工程降级”，不代表知识语义上的自动补全。
 
-Fallback to raw-source references is allowed only when the task card states a valid fallback condition, for example:
+## Prohibited Behaviors
 
-- summary page contains `[GAP]`
-- summary page contains `[CONFLICT]`
-- summary page does not cover the needed object, rule, path, or decision point
+- 不得根据 summary 自动展开其 `source_refs`
+- 不得把 summary 视为 raw 的自动入口
+- 不得根据 guideline 关键词自动命中设计指南
+- 不得根据 domain 自动注入业务知识
+- 不得因为 refs 为空而自动推荐或补装知识
+- 不得因为 refs 数量较多而自动截断或替换
 
 ## Context Assembly Requirements
 
-Context assembly must:
+`context_assemble` 必须：
 
-- read `task_card_resolved.json`
-- record every explicit reference in `context_manifest.json`
-- record narrowing decisions, fallback copies, and broad-reference warnings
-- copy only resolved files, allowed fallback directories, templates, and checks into `projects/<project-id>/runtime/context_bundle/`
-- generate `knowledge_usage_report.json` that distinguishes primary entries from fallback sources
+- 读取 `task_card_resolved.json`
+- 读取 `runtime/uxb_route_decision.json`
+- 校验被选 refs 是否存在
+- 仅复制显式模板、检查项和 UXB 已选择 refs 到 `runtime/context_bundle/`
+- 记录实际装配结果，而不是重新生成选择理由
 
 ## Required Manifest Fields
 
-`context_manifest.json` must include at least:
+`context_manifest.json` 至少包含：
 
+- `selection_source`
 - `references`
 - `warnings`
-- `knowledge_entry_mode`
 - `strict_mode`
 - `directory_refs_detected`
 - `directory_refs_resolved_to_index`
@@ -78,29 +90,40 @@ Context assembly must:
 - `business_judgment_boundary`
 - `experience_translation_boundary`
 
+其中：
+
+- `selection_source` 必须指向 `projects/<project-id>/runtime/uxb_route_decision.json`
+- `references[*].selected_by` 用于区分哪些材料由 `uxb_ai` 明确指定
+- manifest 只记录装配结果，不再承载代码生成的知识消费计划
+
 ## Required Usage Report Fields
 
-`knowledge_usage_report.json` must include at least:
+`knowledge_usage_report.json` 至少包含：
 
-- `primary_entries_used`
-- `fallback_sources_used`
-- `narrowing_actions`
-- `broad_reference_warnings`
+- `selection_source`
+- `selected_refs`
+- `assembled_refs`
+- `missing_refs`
+- `references`
+- `assembly_details`
+
+可选补充：
+
+- `notes`
+- `reference_summary`
+
+报告语义应是“UXB 指定了什么、代码装了什么、缺了什么”，而不是“代码决定用了什么”。
 
 ## Failure Conditions
 
-- A referenced path does not exist.
-- A wildcard reference is treated as a direct copy target.
-- A reference cannot be copied into `context_bundle/`.
-- `context_manifest.json` is not generated.
-- strict mode encounters an unresolved broad reference.
+- `uxb_route_decision.json` 中声明的 ref 不存在
+- 通配符引用被当成直接复制目标
+- 引用无法复制进 `context_bundle/`
+- `context_manifest.json` 未生成
+- strict 模式下遇到无法收窄的目录引用
 
-## Wiki 路由 Raw 消费
+## Notes
 
-- wiki summary 负责导航与定位，不直接替代原文证据层。
-- facts 阶段读取必要 wiki 用于术语和边界校准，默认不读取 raw。
-- business 阶段应沿命中 summary 的 `source_refs` 精确读取 raw 文件。
-- experience 阶段应沿命中 summary 与 guideline 的 `source_refs` 精确读取 raw 文件。
-- raw 引用必须是文件路径，禁止目录级装配。
-- `context_manifest.json` 应包含 `knowledge_consumption_plan`。
-- `knowledge_usage_report.json` 应记录 `source_ref_chains`。
+- `summary` 与 `raw` 现在是平级可选材料，不再存在自动补链。
+- `guideline`、`business`、`complexity` 三类 refs 只按 `knowledge_selection` 装配。
+- task card 中保留 `Knowledge` / `Wiki` / `Design Guidelines` 章节的目的，是提供任务描述和显式入口，不是让代码替 UXB 做判断。

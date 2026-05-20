@@ -2,15 +2,23 @@
 
 ## Goal
 
-Define the required structure, path rules, and parse result for `projects/<project-id>/source/task_card.md`.
+定义 `projects/<project-id>/source/task_card.md` 的正式结构、路径规则与解析结果。
 
 ## Positioning
 
-`task_card.md` is the formal execution entry contract. It describes task scope, explicit references, and delivery targets. It is not the place to replace business judgment or wiki source content.
+`task_card.md` 是任务执行入口合同，用于描述任务范围、显式引用、交付目标与阶段边界。
+
+它不是：
+
+- UXB 判断文件
+- 知识自动选择规则文件
+- 复杂度自动分类文件
+
+`runtime/uxb_route_decision.json` 才是执行判断与知识选择的唯一正式来源。
 
 ## Required Sections
 
-The following level-2 sections must exist and must be machine-parseable:
+必须存在并可机读：
 
 - `## Protocol`
 - `## Task Goal`
@@ -22,7 +30,7 @@ The following level-2 sections must exist and must be machine-parseable:
 - `## Result Locations`
 - `## Completion Criteria`
 
-The following sections are recommended but optional:
+推荐但可选：
 
 - `## Task Scenario`
 - `## Read Order`
@@ -38,63 +46,62 @@ The following sections are recommended but optional:
 
 ## Protocol Fields
 
-`## Protocol` must include:
+`## Protocol` 必须包含：
 
 - `Protocol Name`
 - `Protocol Version`
 - `Task ID`
 
-It may additionally include:
+可选包含：
 
 - `Task Name`
 - `Domain`
 
-## Path Rules
-
-- All paths must use repository-relative paths.
-- Absolute paths are not allowed.
-- URLs are not allowed in place of repository files.
-- Every `Required Outputs` entry must stay under `projects/<project-id>/workspace/`.
-- `Result Locations` must explicitly include both workspace viewing locations and final export locations.
+`Domain` 现在只作为描述性字段保留，不再驱动代码自动选知识。
 
 ## Knowledge Reference Rules
 
-- `Knowledge`, `Wiki`, `Templates`, and `Checks` must be extractable item by item.
-- Prefer file or stable index-page references over directory references.
-- If a task must keep a broad source reference, it must also provide a narrowing policy in `## Knowledge Consumption Policy`.
-- `Platform Optimizations` is supplementary only and cannot replace formal inputs, outputs, or knowledge references.
+- `Knowledge` / `Wiki` / `Design Guidelines` 可以作为显式入口存在
+- 这些入口不会自动触发知识装配
+- 真正装配哪些 refs，以 `uxb_route_decision.json.knowledge_selection` 为准
+- `Templates` 与 `Checks` 仍由 task card 直接声明并装配
 
 ## Knowledge Consumption Policy
 
-When `## Knowledge Consumption Policy` exists, it should be structured with bullet-based subsections:
+如果保留 `## Knowledge Consumption Policy`，其作用仅限于：
 
-- `Primary Knowledge Entry`
-- `Fallback Source`
-- `Fallback Conditions`
-- `Disallowed Broad References`
+- 解释显式目录引用的工程收窄方式
+- 说明哪些 broad reference 不应被直接整目录复制
+
+它不再承担：
+
+- fallback raw 自动补全策略
+- summary 命中后自动展开策略
+- 业务知识自动选择策略
 
 ## Parse Output
 
-Execution must generate:
+执行必须生成：
 
 - `projects/<project-id>/runtime/task_card_resolved.json`
 
-Minimum fields:
+最小字段：
 
 - `task_id`
 - `protocol_name`
 - `protocol_version`
-- `task_name` (optional)
-- `domain` (optional)
+- `task_name`
+- `domain`
 - `task_goal`
-- `task_scenario` (optional)
+- `task_scenario`
 - `execution_constraints`
-- `read_order` (optional)
-- `notes` (optional)
+- `read_order`
+- `notes`
 - `required_inputs`
 - `required_outputs`
 - `knowledge_refs`
 - `wiki_refs`
+- `guideline_refs`
 - `template_refs`
 - `check_refs`
 - `primary_knowledge_entries`
@@ -106,43 +113,19 @@ Minimum fields:
 - `requires_narrowing`
 - `result_locations`
 - `completion_criteria`
-- `facts_output_requirements` (optional — parsed from `## Facts Output Requirements` if present)
-- `business_output_requirements` (optional — parsed from `## Business Output Requirements` if present)
-- `experience_output_requirements` (optional — parsed from `## Experience Output Requirements` if present)
+- `facts_output_requirements`
+- `business_output_requirements`
+- `experience_output_requirements`
 - `warnings`
 - `errors`
 
-## Runtime Semantic Fields
-
-- `task_goal`: Parsed from `## Task Goal`; required; describes the purpose and expected result of the task.
-- `task_scenario`: Parsed from `## Task Scenario`; optional; describes the current usage or business scenario.
-- `execution_constraints`: Parsed from `## Constraints`; required; defines hard execution boundaries.
-- `read_order`: Parsed from `## Read Order`; recommended; defines the preferred runtime consumption order.
-- `notes`: Parsed from `## Notes`; optional; records supplementary human-facing instructions.
-
-## Output Requirements
-
-`## Facts Output Requirements`, `## Business Output Requirements`, and `## Experience Output Requirements` are optional sections. When present, they should reference their respective contract files (`specs/08_*`, `specs/09_*`, `specs/10_*`) and provide brief guidance. They should not enumerate exhaustive required subsections or prescribe ID numbering systems.
-
-## Warning Conditions
-
-The task card may still pass with warnings when:
-
-- `## Wiki` is missing but `## Knowledge` exists.
-- `## Read Order` is missing.
-- `## Read Order` exists but cannot be parsed into readable items.
-- A knowledge or wiki reference is directory-only or wildcard-based.
-- `## Knowledge Consumption Policy` is missing while broad references are present.
-- `## Platform Optimizations` exists but is empty.
-
 ## Failure Conditions
 
-- `task_card.md` is missing.
-- Any required section is missing.
-- `Protocol Name`, `Protocol Version`, or `Task ID` is missing.
-- `Required Outputs` is empty.
-- Any output path is outside `projects/<project-id>/workspace/`.
-- Any reference section exists but cannot be parsed into path entries.
-- `Task Goal` exists but cannot be parsed into readable items.
-- `Constraints` exists but cannot be parsed into readable items.
-- `task_card_resolved.json` is not generated.
+- `task_card.md` 缺失
+- 缺少必需 section
+- `Protocol Name` / `Protocol Version` / `Task ID` 缺失
+- `Required Outputs` 为空
+- 任一 output 路径不在 `projects/<project-id>/workspace/` 下
+- 引用 section 存在但无法解析为路径
+- `Task Goal` 或 `Constraints` 无法解析为可读条目
+- `task_card_resolved.json` 未生成

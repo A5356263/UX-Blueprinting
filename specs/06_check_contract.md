@@ -2,23 +2,16 @@
 
 ## 目标
 
-定义执行中枢如何对输出结果进行正式检查、状态判定与 issue 数据暴露。
-
-本合同既服务于当前 `validate / coverage / stage gate`，也服务于 `Repair Loop` 对问题的标准化消费。
+定义 validate / coverage / stage gate 在当前仓库中的正式检查口径、状态判定方式与问题暴露方式。
 
 ## 检查范围
 
-- 结构完整性
-- 阶段边界越权
-- 开放问题缺失
-- 自然语言承接质量：检查 business 中的关键角色、流程、异常、状态、风险和承接要求，是否被 experience 转译为可评审的流程、页面、状态、异常和文案
-- 机器可读状态产出
-- issue 标准化所需的数据暴露
-
-## 非目标
-
-- 不得要求正式产物通过 `F-xx / J-xx / P-xx / TR-xx` 编号体系才能被判定为合格
-- 不得为了让 coverage 数字好看而要求业务或体验文档补写 trace matrix
+- 产物结构完整性
+- 阶段边界是否越权
+- 关键信息是否缺失
+- business 与 experience 之间的自然语言承接质量
+- 机器可读状态输出
+- issue 标准化暴露
 
 ## 正式输出
 
@@ -38,23 +31,22 @@
 
 ## 状态判定规则
 
-- 存在 `blocker` 时，`check_status.json.status` 必须为 `failed`
-- 不存在 `blocker` 但存在 `warning` 时，`status` 必须为 `warning`
-- 不存在 `blocker` 与 `warning` 时，`status` 必须为 `passed`
+- 存在 `blocker` 时，状态必须为 `failed`
+- 不存在 `blocker` 但存在 `warning` 时，状态必须为 `warning`
+- 同时不存在 `blocker` 和 `warning` 时，状态必须为 `passed`
 
-同一规则同样适用于各阶段 gate 的 `*_gate_status.json`。
+同一规则适用于 `check_status.json` 与各类 `*_gate_status.json`。
 
 ## 双产物分工
 
-- `check_status.json` 与 `*_gate_status.json`：机器正式判断依据
-- `check_report.md` 与 `*_gate_report.md`：人类解释说明依据
+- JSON：正式机器状态源
+- Markdown：面向人的解释层
 
-Markdown 是解释层，JSON 是机器真源。  
-Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 成为正式状态来源。
+Repair Loop 可以引用 Markdown 补充说明，但不得让 Markdown 替代 JSON 成为正式状态来源。
 
-## 面向 Repair Loop 的 issue 暴露要求
+## 面向 Repair Loop 的 Issue 暴露要求
 
-检查产物至少应支持提取以下字段：
+至少应可提取：
 
 - `severity`
 - `category`
@@ -62,23 +54,12 @@ Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 
 - `target_artifact`
 - `violated_contract_ref`
 
-在短期内，如果检查器尚未直接输出完整结构化 issue，允许由 `repair-plan` 从：
-
-- JSON 状态文件
-- Markdown 报告
-
-中做标准化提取。
-
-但中期目标应是：
-
-- gate / validate / coverage 自身具备更稳定的 issue 暴露能力
-
-当前仓库中，`*_gate_status.json` 与 `check_status.json` 已正式补充：
+当前仓库中的 `*_gate_status.json` 与 `check_status.json` 至少应补充：
 
 - `issue_details_version`
 - `issue_details`
 
-其中 `issue_details[*]` 至少应包含：
+其中 `issue_details[*]` 至少包含：
 
 - `source`
 - `stage`
@@ -105,41 +86,46 @@ Repair Loop 可以从 Markdown 补充证据，但不得让 Markdown 替代 JSON 
 - `generated_by`
 - `updated_at`
 
-如可行，建议逐步补充：
+可选增强：
 
 - `issue_sources`
 - `violated_contract_refs`
 - `target_artifacts`
 - `metrics`
 
-如已具备结构化 issue 输出，则应优先以 `issue_details` 作为 Repair Loop 的机器消费入口，`issues.blockers / warnings / infos` 保留为向后兼容的人类可读摘要层。
-
-## issue 进入 Repair Loop 的规则
-
-- `blocker`：必须进入 Repair Loop，且不得绕过进入 archive
-- `warning`：默认进入 Repair Loop，后续可被 `accepted` 或继续修复
-- `info`：可进入 Repair Loop 摘要层；是否进入正式修复单元，由 remediation 规划决定
-
 ## 一致性要求
 
-- Markdown 报告中的总状态必须与 JSON 状态一致
-- blocker / warning / info 的数量与 JSON 中的计数必须一致
-- 被标记为 `failed` 的阶段不得伪装成仅有人类说明的“待观察项”
-- JSON 中未出现的问题，不得仅靠 Markdown 文案被当作正式 blocker 归档约束依据
+- Markdown 报告中的总状态必须与 JSON 一致
+- blocker / warning / info 数量必须与 JSON 计数一致
+- 被标记为 `failed` 的阶段不得在文案上伪装成“仅观察”
+- JSON 中未出现的问题，不得仅靠 Markdown 被当作正式 blocker
 
 ## 失败条件
 
 - `check_report.md` 缺失
 - `check_status.json` 缺失
-- Markdown 报告与 JSON 状态不一致
+- Markdown 与 JSON 状态不一致
 - 存在 blocker 但未显式写出失败状态
-- 存在严重问题但无法从机器状态或报告中提取最小 issue 证据
+- 严重问题无法从状态文件或报告中提取最小证据
 
-## 知识消费专项检查
+## 知识装配专项检查
 
-- `context_manifest.json` 必须包含 `knowledge_consumption_plan`。
-- `knowledge_consumption_plan.facts.required_wiki_refs` 应存在。
-- `knowledge_consumption_plan.facts.raw_refs_from_source_refs` 默认应为空。
-- `knowledge_consumption_plan.business.raw_refs_from_source_refs` 与 `knowledge_consumption_plan.experience.raw_refs_from_source_refs` 应存在。
-- 所有 raw refs 必须是文件，不得是目录引用。
-- `knowledge_usage_report.json` 必须包含 `stage_usage.business.source_ref_chains` 与 `stage_usage.experience.source_ref_chains`。
+围绕 01 / 02 阶段收口后，检查口径改为：
+
+- `context_manifest.json.selection_source` 必须指向 `runtime/uxb_route_decision.json`
+- `knowledge_usage_report.json.selected_refs` 必须存在
+- `knowledge_usage_report.json.assembled_refs` 必须存在
+- `knowledge_usage_report.json.missing_refs` 必须存在
+- 如 `selected_refs` 中声明了 ref，则对应 ref 必须能在 manifest 或 missing 列表中被解释
+- 不再要求 `knowledge_consumption_plan`
+- 不再要求 `source_ref_chains`
+- 不再要求 `guideline summary -> raw` 自动消费记录
+
+## 执行判断专项检查
+
+- 主链路执行前必须存在 `runtime/uxb_route_decision.json`
+- `confirmed_by_user` 必须为 `true`
+- `can_execute_mainline` 必须为 `true`
+- `execution.required_outputs` 必须存在
+- 如果执行期发现判断不完整，应返回 `needs_rejudgment`
+- 检查器不得自行升级、替换或补写 UXB 判断

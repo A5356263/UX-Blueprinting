@@ -1,16 +1,9 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from packages.common import get_project_runtime_dir, get_project_workspace_dir, get_specs_root_dir, get_templates_root_dir
 from packages.provenance import upsert_generated_provenance
-
-from .reasoning import (
-    render_check_report,
-    render_check_status,
-    render_gap_list,
-)
 
 
 def _write_workspace_file(project_id: str, file_name: str, content: str) -> None:
@@ -71,9 +64,7 @@ def _extract_markdown_section(text: str, heading: str) -> list[str]:
             break
         if not collecting:
             continue
-        if not stripped:
-            continue
-        if stripped.startswith("#"):
+        if not stripped or stripped.startswith("#"):
             continue
         collected.append(stripped[2:].strip() if stripped.startswith("- ") else stripped)
     return collected
@@ -90,42 +81,60 @@ def _read_context_manifest(project_id: str) -> dict[str, object] | None:
     return payload if isinstance(payload, dict) else None
 
 
-def _read_route_decision(project_id: str) -> dict[str, object] | None:
-    route_path = get_project_runtime_dir(project_id) / "route_decision.json"
-    if not route_path.exists():
+def _read_uxb_route_decision(project_id: str) -> dict[str, object] | None:
+    decision_path = get_project_runtime_dir(project_id) / "uxb_route_decision.json"
+    if not decision_path.exists():
         return None
     try:
-        payload = json.loads(route_path.read_text(encoding="utf-8"))
+        payload = json.loads(decision_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return None
     return payload if isinstance(payload, dict) else None
 
 
-def _route_decision_prompt_lines(project_id: str, target_stage: str) -> list[str]:
-    decision = _read_route_decision(project_id)
+def _clean_list(value: object, limit: int | None = None) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    items = [str(item).strip() for item in value if str(item).strip()]
+    return items[:limit] if limit is not None else items
+
+
+def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
+    decision = _read_uxb_route_decision(project_id)
     if not decision:
         return []
-    demand_type = str(decision.get("demand_type") or "不确定")
-    route = str(decision.get("route") or "standard")
-    confidence = str(decision.get("confidence") or "unknown")
-    reason = str(decision.get("reason") or "").strip()
-    pressure = "、".join(str(item) for item in decision.get("design_pressure", []) if str(item).strip())
-    focus = "；".join(str(item) for item in decision.get("experience_focus", [])[:3] if str(item).strip())
-    non_focus = "；".join(str(item) for item in decision.get("non_focus_guidance", [])[:2] if str(item).strip())
-    lines = [
-        f"- 需求类型：{demand_type}；建议路线：{route}；置信度：{confidence}。",
-        f"- 重点维度：{pressure or '请结合 facts/business 补充判断'}。",
-    ]
-    if target_stage == "business":
-        lines.append(f"- route 输出建议：{non_focus or 'route_decision 未提供非重点章节建议。'}")
-    else:
-        lines.append(f"- route 输出建议：{focus or 'route_decision 未提供体验重点建议。'}")
-    escalation = "；".join(str(item) for item in decision.get("escalation_signals", [])[:2] if str(item).strip())
-    if escalation:
-        lines.append(f"- 升级信号：{escalation}")
+
+    judgment = decision.get("judgment")
+    if not isinstance(judgment, dict):
+        judgment = {}
+    complexity_judgment = decision.get("complexity_judgment")
+    if not isinstance(complexity_judgment, dict):
+        complexity_judgment = {}
+
+    demand_type = str(judgment.get("demand_type") or "").strip()
+    business_depth = str(judgment.get("business_depth") or "").strip()
+    experience_output = str(judgment.get("experience_output") or "").strip()
+    reason = str(judgment.get("reason") or "").strip()
+    business_change = "；".join(_clean_list(complexity_judgment.get("business_change"), limit=3))
+    experience_pressure = "；".join(_clean_list(complexity_judgment.get("experience_pressure"), limit=3))
+    uncertainties = "；".join(_clean_list(complexity_judgment.get("uncertainties"), limit=3))
+
+    lines: list[str] = []
+    if demand_type:
+        lines.append(f"- UXB 判断的需求类型：{demand_type}")
+    if target_stage == "business" and business_depth:
+        lines.append(f"- 这次需要达到的业务判断深度：{business_depth}")
+    if target_stage == "experience" and experience_output:
+        lines.append(f"- 这次需要产出的体验结果：{experience_output}")
+    if business_change:
+        lines.append(f"- 需要重点承接的业务变化：{business_change}")
+    if experience_pressure and target_stage == "experience":
+        lines.append(f"- 需要重点承接的体验压力：{experience_pressure}")
+    if uncertainties:
+        lines.append(f"- 仍待明确的不确定项：{uncertainties}")
     if reason:
-        lines.append(f"- route 判断理由：{reason}")
-    lines.append("- 写作规则以对应 specs 中的路线说明要求为准。")
+        lines.append(f"- UXB 给出的判断原因：{reason}")
+    lines.append("- 正文只吸收业务含义，不直接复述 runtime 中的内部执行字段。")
     return lines
 
 
@@ -180,7 +189,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         if section_lines:
             business_sections.append((title.replace("## ", "", 1), section_lines[:12]))
     gap_lines = _extract_bullets(gap_text, limit=8)
-    route_lines = _route_decision_prompt_lines(project_id, target_stage="experience")
+    judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="experience")
 
     if not task_lines:
         task_lines = ["请结合当前任务上下文补全任务目标。"]
@@ -188,24 +197,30 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         facts_lines = ["facts.md 暂缺或内容不足，请先补齐 facts。"]
     if not business_sections:
         fallback = _first_lines(business_text, limit=12)
-        business_sections = [("business 核心判断", fallback)] if fallback else [("business 核心判断", ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"])]
+        if fallback:
+            business_sections = [("business 核心判断", fallback)]
+        else:
+            business_sections = [("business 核心判断", ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"])]
     if not gap_lines:
-        gap_lines = ["当前暂无显式待确认问题，需在生成时主动暴露不确定项。"]
+        gap_lines = ["当前暂无显式待确认问题，需要在生成时主动暴露不确定项。"]
 
     if guideline_refs:
-        guideline_lines = "已选中的具体指南：\n" + "\n".join(f"- {line}" for line in guideline_refs)
+        guideline_lines = "已装配的设计参考：\n" + "\n".join(f"- {line}" for line in guideline_refs)
     elif guideline_entry_refs:
-        guideline_lines = "当前仅声明了指南入口，需先结合 business 选择具体指南：\n" + "\n".join(f"- {line}" for line in guideline_entry_refs)
+        guideline_lines = "当前仅声明了设计参考入口，需要先结合同批已装配内容判断具体引用：\n" + "\n".join(
+            f"- {line}" for line in guideline_entry_refs
+        )
     else:
-        guideline_lines = "- 当前任务未命中显式指南导航，将按业务承接要求保守生成。"
+        guideline_lines = "- 当前任务未装配显式设计参考，将按业务承接要求保守生成。"
+
     return (
         "# Experience Prompt 预览（仅调试）\n\n"
         "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
         f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/business_blueprint.md`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
         "## 1. 任务目标\n\n"
         + "\n".join(f"- {line}" for line in task_lines)
-        + "\n\n## 2. route 判断\n\n"
-        + ("\n".join(route_lines) if route_lines else "- 当前未生成 route_decision.json，按 facts 与 business 保守判断输出重点。")
+        + "\n\n## 2. UXB 判断摘要\n\n"
+        + ("\n".join(judgment_lines) if judgment_lines else "- 当前未提供 uxb_route_decision.json，请先补齐 UXB 判断后再执行主链路。")
         + "\n\n## 3. facts 摘要\n\n"
         + "\n".join(f"- {line}" for line in facts_lines)
         + "\n\n## 4. business 核心判断与承接要求\n\n"
@@ -213,32 +228,30 @@ def _build_experience_prompt_preview(project_id: str) -> str:
             f"### {section_title}\n" + "\n".join(f"- {line}" for line in section_lines)
             for section_title, section_lines in business_sections
         )
-        + "\n\n## 5. 设计指南导航（按需消费）\n\n"
+        + "\n\n## 5. 设计参考\n\n"
         + guideline_lines
-        + "\n\n## 6. 设计指南消费判断\n\n"
-        "在输出体验蓝图前，请基于 facts.md 和 business_blueprint.md 判断：\n"
-        "1. 本次业务蓝图中是否出现报错、阻断、校验、状态反馈、审批延迟、批量风险、高风险配置等体验问题。\n"
-        "2. 这些问题是否命中 Design Guidelines 中的具体 summary。\n"
-        "3. 如果命中 summary，必须读取其 source_refs 指向的 raw，并只吸收原则，不暴露大段原文。\n"
-        "4. 体验蓝图不得凭指南替代业务事实；业务事实不足时，只能输出待确认问题或条件型建议。\n"
-        "5. 输出方案时，需要说明反馈时机、反馈形式、用户可见文案和用户下一步。\n"
+        + "\n\n## 6. 知识使用规则\n\n"
+        "- 只使用 UXB AI 明确指定并已经装配到 context 的知识与设计参考。\n"
+        "- 不根据关键词自动补充其他知识，也不自动扩展额外原文材料。\n"
+        "- 如果 facts 或 business 事实不足，只能暴露缺口与待确认项，不能自行补判断。\n"
+        "- 输出方案时，需要说清反馈时机、反馈形式、用户可见文案和用户下一步。\n"
         + "\n\n## 7. 设计原则摘要\n\n"
         "- 先写主流程，再补次流程与异常阻断流程。\n"
-        "- 页面/弹窗/抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
+        "- 页面 / 弹窗 / 抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
-        "- 禁止重做事实抽取、业务判断或需求全文重读。\n\n"
+        "- 禁止重做事实抽取、业务判断或需求全文重述。\n\n"
         "## 8. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
         + "\n\n## 9. 输出模板要求\n\n"
-        "- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
+        f"- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
-        "  - `## 1. 交互流程总览`\n"
-        "  - `## 2. 主交互流程`\n"
-        "  - `## 3. 次交互流程`\n"
-        "  - `## 4. 异常与阻断流程`\n"
-        "  - `## 5. 页面 / 弹窗 / 抽屉设计`\n"
-        "  - `## 6. 状态与反馈文案`\n"
-        "  - `## 7. 待确认问题`\n"
+        "- `## 1. 交互流程总览`\n"
+        "- `## 2. 主交互流程`\n"
+        "- `## 3. 次交互流程`\n"
+        "- `## 4. 异常与阻断流程`\n"
+        "- `## 5. 页面 / 弹窗 / 抽屉设计`\n"
+        "- `## 6. 状态与反馈文案`\n"
+        "- `## 7. 待确认问题`\n"
     )
 
 
@@ -273,15 +286,15 @@ def run_generate_business(project_id: str) -> int:
         return 0
 
     print("business_blueprint.md 不存在，请 AI 根据以下文件生成：")
-    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
-    if route_lines:
-        print(f"  - projects/{project_id}/runtime/route_decision.json")
+    judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    if judgment_lines:
+        print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/09_business_blueprint_contract.md")
     print("  - templates/business_blueprint.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
-    if route_lines:
-        print("route 判断摘要：")
-        for line in route_lines:
+    if judgment_lines:
+        print("UXB 判断摘要：")
+        for line in judgment_lines:
             print(f"  {line}")
     return 1
 
@@ -296,15 +309,15 @@ def run_generate_business_note(project_id: str) -> int:
         return 0
 
     print("business_note.md 不存在，请 AI 根据以下文件生成：")
-    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
-    if route_lines:
-        print(f"  - projects/{project_id}/runtime/route_decision.json")
+    judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    if judgment_lines:
+        print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/16_business_note_contract.md")
     print("  - templates/business_note.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
-    if route_lines:
-        print("route 判断摘要：")
-        for line in route_lines:
+    if judgment_lines:
+        print("UXB 判断摘要：")
+        for line in judgment_lines:
             print(f"  {line}")
     return 1
 
@@ -319,15 +332,15 @@ def run_generate_business_lite(project_id: str) -> int:
         return 0
 
     print("business_blueprint_lite.md 不存在，请 AI 根据以下文件生成：")
-    route_lines = _route_decision_prompt_lines(project_id, target_stage="business")
-    if route_lines:
-        print(f"  - projects/{project_id}/runtime/route_decision.json")
+    judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    if judgment_lines:
+        print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/17_business_blueprint_lite_contract.md")
     print("  - templates/business_blueprint_lite.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
-    if route_lines:
-        print("route 判断摘要：")
-        for line in route_lines:
+    if judgment_lines:
+        print("UXB 判断摘要：")
+        for line in judgment_lines:
             print(f"  {line}")
     return 1
 
@@ -340,9 +353,9 @@ def run_generate_experience(project_id: str) -> int:
 
     if not experience_path.exists():
         print("experience_blueprint.md 不存在，请 AI 根据以下文件生成：")
-        route_lines = _route_decision_prompt_lines(project_id, target_stage="experience")
-        if route_lines:
-            print(f"  - projects/{project_id}/runtime/route_decision.json")
+        judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="experience")
+        if judgment_lines:
+            print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
         print("  - specs/10_experience_blueprint_contract.md")
         print("  - templates/experience_blueprint.template.md")
         print(f"  - projects/{project_id}/workspace/facts.md")
@@ -354,10 +367,10 @@ def run_generate_experience(project_id: str) -> int:
             print(f"  - projects/{project_id}/workspace/business_note.md")
         else:
             print(f"  - projects/{project_id}/workspace/business_blueprint.md")
-        print(f"  参考示例: test/Experience_Blueprint 理想效果.md")
-        if route_lines:
-            print("route 判断摘要：")
-            for line in route_lines:
+        print("  - test/Experience_Blueprint 理想效果.md")
+        if judgment_lines:
+            print("UXB 判断摘要：")
+            for line in judgment_lines:
                 print(f"  {line}")
         return 1
 

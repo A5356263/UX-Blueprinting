@@ -4,14 +4,12 @@
   "type": "command",
   "stage": "mainline_observation",
   "entrypoint": "python -m packages route-decision <project-id>",
-  "description": "基于当前 source 与已装配 runtime 上下文生成旁路路线判断，不控制 run-main，不改变后续执行步骤。",
+  "description": "将 UXB 已确认判断同步为临时执行镜像，不新增语义判断。",
   "required_inputs": [
-    "projects/<project-id>/source/task_card.md",
-    "projects/<project-id>/source/requirement.md"
+    "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
   "declared_outputs": [
-    "projects/<project-id>/runtime/route_decision.json",
-    "projects/<project-id>/runtime/route_decision.md"
+    "projects/<project-id>/runtime/route_decision.json"
   ],
   "retryable": true,
   "review_required": false,
@@ -19,9 +17,7 @@
   "mutates_runtime_state": true,
   "source_of_truth_refs": [
     "packages/route_decision/core.py",
-    "packages/route_decision/rules.json",
-    "specs/15_route_decision_contract.md",
-    "docs/discussion/UXB SKILL优化/01_阶段一_route_decision旁路观察优化文档_最终校对版.md"
+    "docs/discussion/UXB SKILL优化/第四阶段/02_收敛为UXB单一判断源_执行文档.md"
   ],
   "status": "active"
 }

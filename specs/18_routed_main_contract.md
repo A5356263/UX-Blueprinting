@@ -1,67 +1,81 @@
 # Routed Main Contract
 
-`run-routed-main` 是独立的 route-aware 执行入口，用于试运行 `fast / standard / full` 路线编排。
+## Goal
 
-## 1. 入口边界
+`run-routed-main` 是按 UXB 已确认判断驱动的主链路执行入口。
 
-- `run-routed-main` 不改变 `run-main` 默认行为。
-- `run-routed-main` 不删除、不降级 full 主链路。
-- `run-routed-main` 只读取 route 产物与外置规则，不在代码中承载路线语义判断。
+## Entry Boundary
 
-## 2. 路线选择
+- `run-routed-main` 不改变 `run-main` 的默认存在方式
+- `run-routed-main` 的执行判断只来自 `runtime/uxb_route_decision.json`
+- 代码可以保留内部执行模式映射，但这些内部枚举不应成为用户可读判断源
 
-- `--route auto` 使用 `runtime/route_decision.json` 的 route。
-- `--route fast|standard|full` 仅用于人工指定或测试。
-- 人工指定路线低于 route 判断路线时，必须拒绝或提示风险，不得自动降级。
-- 执行中允许升级，不建议自动降级。
+## Route Selection
 
-## 3. 产物要求
+- 只允许 `--route auto`
+- 不再接受手动 `fast / standard / full` 覆盖
+- 执行模式由 `execution.required_outputs` 推导
+- 如果 UXB 判断不完整或不允许执行，必须停止并返回 `needs_rejudgment`
 
-fast 必须至少产生：
+## Required Preconditions
 
-```text
-workspace/facts.md
-workspace/business_note.md
-workspace/experience_blueprint.md
-runtime/routed_main_plan.json
-runtime/routed_main_report.json
-```
+执行前必须检查：
 
-standard 必须至少产生：
+- `runtime/uxb_route_decision.json` 存在
+- `schema_version` 受支持
+- `created_by == "uxb_ai"`
+- `confirmed_by_user == true`
+- `can_execute_mainline == true`
+- `execution.required_outputs` 存在
 
-```text
-workspace/facts.md
-workspace/business_blueprint_lite.md
-workspace/experience_blueprint.md
-runtime/routed_main_plan.json
-runtime/routed_main_report.json
-```
+## Execution Products
 
-full 复用当前完整主链路产物。
+轻量模式至少产生：
 
-## 4. 报告要求
+- `workspace/facts.md`
+- `workspace/business_note.md`
+- `workspace/experience_blueprint.md`
+- `runtime/routed_main_plan.json`
+- `runtime/routed_main_report.json`
 
-`routed_main_plan.json` 必须记录：
+中等模式至少产生：
 
-- route 来源。
-- route 判断结果。
-- 实际执行路线。
-- 计划步骤。
-- 是否存在降级拒绝。
+- `workspace/facts.md`
+- `workspace/business_blueprint_lite.md`
+- `workspace/experience_blueprint.md`
+- `runtime/routed_main_plan.json`
+- `runtime/routed_main_report.json`
 
-`routed_main_report.json` 必须记录：
+完整模式复用现有完整主链路产物。
 
-- 实际执行步骤。
-- 每步退出码。
-- 实际生成产物。
-- gate / validate / coverage 结果。
-- 是否建议正式启用执行分流。
+## Report Requirements
 
-## 5. 禁止事项
+`routed_main_plan.json` 至少记录：
 
-- 不得修改 `run-main` 默认步骤。
-- 不得让 fast 完全跳过业务依据。
-- 不得让 standard 省略规则边界。
-- 不得让 full 走轻量路线。
-- 不得把路线判断规则写死进 Python。
-- 不得修改 knowledge 子系统或正式 projects 作为测试输入。
+- `decision_source`
+- `requested_route`
+- `execution_mode`
+- `planned_steps`
+- `uxb_route_decision`
+
+`routed_main_report.json` 至少记录：
+
+- `status`
+- `stopped_at`
+- `steps`
+- `actual_outputs`
+- `execution_mode`
+
+如判断不足，应记录：
+
+- `status = needs_rejudgment`
+- `blocking_issue`
+
+## Prohibited Behaviors
+
+- 不得在执行中自动升级判断
+- 不得在执行中自动降级判断
+- 不得补写新的知识选择
+- 不得替 UXB 改写 required outputs
+- 不得把内部执行模式词汇写入用户可读正文
+- 不得修改正式 knowledge 系统作为测试输入

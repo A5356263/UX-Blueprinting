@@ -1,36 +1,16 @@
 {
   "project_id": "permission-quick-search",
-  "status": "failed",
-  "generated_at": "2026-05-20T06:13:41+00:00",
-  "requested_route": "auto",
-  "decided_route": "fast",
-  "actual_route": "fast",
-  "stopped_at": "generate-business-note",
+  "status": "needs_rejudgment",
+  "generated_at": "2026-05-20T15:03:19+00:00",
+  "stopped_at": "precheck",
+  "message": "执行中发现当前 UXB 判断不足以驱动主链路，请先重新判断。",
+  "blocking_issue": "缺少 runtime/uxb_route_decision.json",
+  "execution_mode": "",
   "steps": [
     {
-      "command": "assemble",
-      "exit_code": 0
-    },
-    {
       "command": "route-decision",
-      "exit_code": 0
-    },
-    {
-      "command": "generate-facts",
-      "exit_code": 0
-    },
-    {
-      "command": "generate-business-note",
       "exit_code": 1
     }
   ],
-  "actual_outputs": [
-    "E:/AI设计/体验蓝图构建思路/projects/permission-quick-search/workspace/facts.md",
-    "E:/AI设计/体验蓝图构建思路/projects/permission-quick-search/workspace/business_blueprint.md",
-    "E:/AI设计/体验蓝图构建思路/projects/permission-quick-search/workspace/experience_blueprint.md",
-    "E:/AI设计/体验蓝图构建思路/projects/permission-quick-search/workspace/check_status.json",
-    "E:/AI设计/体验蓝图构建思路/projects/permission-quick-search/runtime/routed_main_plan.json"
-  ],
-  "recommend_enable_routed_execution": false,
-  "recommendation_reason": "当前 route 来源已经切换为 UXB 已确认判断；是否默认启用，仍应基于样例和真实任务继续验证。"
+  "actual_outputs": []
 }
