@@ -1,0 +1,41 @@
+# Check Report｜人读说明版
+
+> 本文件是 `projects/permission-quick-search/workspace/check_status.json` 的人读说明版。
+> 它只用于帮助理解检查结果，不作为 gate / validate / repair 的机器判断依据。
+> 机器判断请以 `check_status.json` 为准。
+
+## Summary
+
+- status: warning
+- has_blocker: false
+- blocker_count: 0
+- warning_count: 1
+- info_count: 2
+
+## Output Status
+
+- projects/permission-quick-search/workspace/facts.md: present
+- projects/permission-quick-search/workspace/business_note.md: present
+- projects/permission-quick-search/workspace/business_blueprint_lite.md: missing
+- projects/permission-quick-search/workspace/experience_blueprint.md: present
+
+## Blockers
+
+- none
+
+## Warnings
+
+- experience_lite gate 状态为 warning
+
+## Infos
+
+- business_note gate 状态：passed
+- 轻量承接检查：covered_signals=2 missing_signals=0
+
+## 自然语言承接检查
+
+- covered_signals=2 missing_signals=0
+
+## Machine Status
+
+- 机器可读状态文件：`projects/permission-quick-search/workspace/check_status.json`

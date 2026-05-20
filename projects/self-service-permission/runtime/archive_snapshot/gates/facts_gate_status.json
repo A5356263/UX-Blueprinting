@@ -1,0 +1,41 @@
+{
+  "project_id": "self-service-permission",
+  "stage": "facts",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "business",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-20T07:00:57.335524+00:00",
+  "checked_files": [
+    "projects/self-service-permission/source/task_card.md",
+    "projects/self-service-permission/source/requirement.md",
+    "projects/self-service-permission/source/background.md",
+    "projects/self-service-permission/runtime/task_card_resolved.json",
+    "projects/self-service-permission/runtime/context_manifest.json",
+    "projects/self-service-permission/runtime/provenance.json",
+    "projects/self-service-permission/workspace/facts.md"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [],
+  "metrics": {
+    "dimension_coverage": {
+      "overview": 1,
+      "features": 1,
+      "rules": 1,
+      "states": 1,
+      "exceptions": 1,
+      "dependencies": 1,
+      "gaps": 1
+    },
+    "gap_count": 8,
+    "knowledge_derived_fact_count": 0
+  }
+}

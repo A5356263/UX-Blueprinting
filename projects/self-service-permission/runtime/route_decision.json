@@ -1,0 +1,191 @@
+{
+  "version": "route-decision@2.0",
+  "project_id": "self-service-permission",
+  "status": "confirmed",
+  "source": "uxb_ai_judgment",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "should_not_control_mainline": false,
+  "route": "full",
+  "demand_type": "功能新增",
+  "reason": "引入新的权限治理模式（员工自助申请），改变业务对象关系（新增申请单对象）、状态机（申请→审批→生效）、生效机制（审批通过自动授权）和数据口径（可申请范围定义）。跨权限管理、协同办公、平台门户三个域，涉及4类角色和3个端。15项待确认事项需在完整业务判断中逐一处理。",
+  "evidence": [
+    "source/requirement.md: 新增员工自助申请权限能力，包含查看权限、申请权限、审批对接、申请记录四大模块",
+    "source/background.md: 引入权限申请单对象，改变 subject→source 关系",
+    "source/background.md: 新增申请单状态流转和自助申请模式开关状态",
+    "source/background.md: 新增审批通过后自动授权这条生效路径",
+    "source/requirement.md: 15项不明确事项涉及模式互斥、范围粒度、审批对接、异常处理等",
+    "source/requirement.md: 与现有权限治理模式可能存在互斥关系"
+  ],
+  "design_pressure": [
+    "业务能力",
+    "业务规则",
+    "权限治理",
+    "流程承接",
+    "信息结构",
+    "状态异常"
+  ],
+  "business_depth": "full",
+  "experience_focus": [
+    "重点展开新增治理模式与已有模式的关系、互斥规则和切换影响",
+    "重点展开可申请范围的配置策略、校验条件和限制原因说明",
+    "重点展开申请单完整状态流转和每个状态下的角色可见性、可操作动作",
+    "重点展开审批异常、审批人缺失、模式关闭等边界场景的兜底设计",
+    "重点展开员工端的自解释设计：权限来源说明、申请范围可见性、拒绝原因展示"
+  ],
+  "risk_notes": [
+    "自助申请模式与双管理员、子管理员、权限变更审批等已有治理模式存在互斥风险",
+    "可申请范围粒度不明确，角色级、功能权限级、数据权限级三种口径影响完全不同",
+    "审批人被默认为空或审批链配置错误时，可能导致申请永久卡在审批中",
+    "服务人员是否纳入该能力范围未确认，影响主体范围口径",
+    "管理员关闭能力后已授权限是否保留、审批中申请如何处理，两条分支需同时设计"
+  ],
+  "validation_errors": [],
+  "guardrail_hints": {
+    "matched_signals": [
+      {
+        "demand_type": "局部体验优化",
+        "matched_terms": [
+          "可见性"
+        ],
+        "evidence": "主要信号偏向局部体验表达",
+        "signal_level": "low"
+      },
+      {
+        "demand_type": "文案与信息表达优化",
+        "matched_terms": [
+          "文案",
+          "说明",
+          "解释"
+        ],
+        "evidence": "主要信号偏向文案或信息表达",
+        "signal_level": "low"
+      },
+      {
+        "demand_type": "信息结构与概念澄清",
+        "matched_terms": [
+          "入口",
+          "对象关系"
+        ],
+        "evidence": "主要信号偏向概念或信息结构",
+        "signal_level": "medium"
+      },
+      {
+        "demand_type": "业务流程调整",
+        "matched_terms": [
+          "流程",
+          "提交",
+          "生效",
+          "回写",
+          "协同"
+        ],
+        "evidence": "主要信号偏向任务路径或业务流程调整",
+        "signal_level": "high"
+      },
+      {
+        "demand_type": "权限与治理风险",
+        "matched_terms": [
+          "权限范围",
+          "授权",
+          "审批模式",
+          "治理",
+          "敏感"
+        ],
+        "evidence": "主要信号偏向权限、数据范围、审批或治理风险",
+        "signal_level": "high"
+      },
+      {
+        "demand_type": "功能新增",
+        "matched_terms": [
+          "自助申请"
+        ],
+        "evidence": "主要信号偏向新增核心能力",
+        "signal_level": "high"
+      }
+    ],
+    "dimension_judgment": {
+      "business_capability_change": "major",
+      "business_rule_change": "medium",
+      "permission_governance_risk": "high",
+      "task_flow_change": "medium",
+      "information_structure_pressure": "medium",
+      "state_exception_pressure": "high",
+      "copy_comprehension_pressure": "low",
+      "layout_interaction_pressure": "low",
+      "review_risk": "medium"
+    },
+    "dimension_evidence": {
+      "business_capability_change": "业务能力发生变化或扩展：说明本次输出主要服务于哪类评审、设计或重构工作",
+      "business_rule_change": "存在业务规则、校验或限制变化：摘要页未覆盖当前任务需要的对象、规则或路径",
+      "permission_governance_risk": "涉及权限、审批、数据范围、导出或治理风险：员工可以申请哪些权限范围",
+      "task_flow_change": "用户任务路径、结果回写或角色协同可能变化：希望通过支持员工自助查看和申请权限，把部分权限申请工作从管理员侧分散到员工侧，同时保留管理员对申请范围和审批流程的控制",
+      "information_structure_pressure": "存在概念、入口、层级或模块边界压力：组织负责人、管理员，还是自定义审批流程",
+      "state_exception_pressure": "状态、异常、阻断或校验会影响方案：3. **状态机**：引入申请单状态流转（发起→审批中→通过/拒绝→生效/不变），以及自助申请模式的开关状态",
+      "copy_comprehension_pressure": "用户理解主要依赖文案、说明或提示：每个交互节点写清用户动作、系统反馈、前置解释、具体文案、下一步",
+      "layout_interaction_pressure": "局部布局、展示或交互细节是明显压力：文案必须是可直接展示的文本，禁止元指令",
+      "review_risk": "存在边界争议、误解风险或待确认项：普通管理员：能力边界以产品配置为准"
+    },
+    "matched_dimension_terms": {
+      "business_capability_change": [
+        "重构"
+      ],
+      "business_rule_change": [
+        "规则",
+        "校验",
+        "限制",
+        "范围",
+        "必须",
+        "允许",
+        "禁止"
+      ],
+      "permission_governance_risk": [
+        "权限范围",
+        "授权",
+        "审批模式",
+        "治理",
+        "敏感",
+        "缺少权限"
+      ],
+      "task_flow_change": [
+        "流程",
+        "提交",
+        "生效",
+        "回写",
+        "协同"
+      ],
+      "information_structure_pressure": [
+        "定义",
+        "入口",
+        "关系"
+      ],
+      "state_exception_pressure": [
+        "状态机",
+        "审批状态",
+        "异常",
+        "校验",
+        "生效"
+      ],
+      "copy_comprehension_pressure": [
+        "文案",
+        "说明",
+        "解释"
+      ],
+      "layout_interaction_pressure": [
+        "展示",
+        "默认"
+      ],
+      "review_risk": [
+        "边界",
+        "确认",
+        "风险",
+        "可能"
+      ]
+    },
+    "guardrail_warnings": [
+      "当前需求可能涉及权限、数据范围、审批或治理边界，不应被直接当作纯局部体验优化。",
+      "当前需求可能改变业务规则、限制或校验，建议先确认规则边界。",
+      "当前需求可能改变状态、异常或阻断逻辑，建议先确认状态含义和失败处理。",
+      "当前需求存在明显待确认边界，UXB 需要先和用户确认关键问题。"
+    ]
+  }
+}
