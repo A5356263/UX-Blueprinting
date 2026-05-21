@@ -2,24 +2,24 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
-- info_count: 0
+- warning_count: 2
+- info_count: 1
 
 - project_id: employee-self-service-permission
-- stage: experience_lite
+- stage: experience
 - next_stage: final-validate
 - can_proceed: true
 
 ## Checked Files
 
 - projects/employee-self-service-permission/workspace/facts.md
-- projects/employee-self-service-permission/workspace/business_note.md
-- projects/employee-self-service-permission/workspace/business_blueprint_lite.md
+- projects/employee-self-service-permission/workspace/business_blueprint.md
 - projects/employee-self-service-permission/workspace/experience_blueprint.md
 - projects/employee-self-service-permission/runtime/provenance.json
+- projects/employee-self-service-permission/runtime/gates/business_gate_status.json
 
 ## Blockers
 
@@ -27,8 +27,9 @@
 
 ## Warnings
 
-- none
+- experience_blueprint.md 待确认问题为空，建议显式标注不确定项
+- experience_blueprint.md 附录：依据与追踪内容偏少
 
 ## Infos
 
-- none
+- business 阶段状态：warning
