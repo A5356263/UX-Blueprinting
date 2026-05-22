@@ -6,7 +6,7 @@
 - Protocol Version: v0.3
 - Task ID: employee-self-service-permission
 - Task Name: 员工自助申请权限
-- Domain: 协同办公/管理后台/平台门户
+- Domain: 权限管理
 
 ## Task Goal
 

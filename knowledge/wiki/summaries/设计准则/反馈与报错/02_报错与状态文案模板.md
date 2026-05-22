@@ -8,8 +8,8 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-17
-- updated_at: 2026-05-17
+- semantic_updated_at: 2026-05-21
+- updated_at: 2026-05-21
 - related_summaries:
   - knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md
   - knowledge/wiki/summaries/设计准则/反馈与报错/01_反馈形式选择原则.md

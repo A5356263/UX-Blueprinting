@@ -1,0 +1,15 @@
+{
+  "project_id": "permission-dimension-query",
+  "scope_version": "1.0",
+  "recommended_commands": [
+    "python -m packages validate permission-dimension-query",
+    "python -m packages coverage permission-dimension-query"
+  ],
+  "backtrack_required": false,
+  "highest_required_stage": "final",
+  "rationale": [
+    "RUN-07F6D6AB 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-598468B2 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-F655398D 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。"
+  ]
+}

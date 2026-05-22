@@ -6,7 +6,8 @@
   "entrypoint": "python -m packages preview <project-id> [--host 127.0.0.1] [--port 0]",
   "description": "在主链路正式体验蓝图完成后，生成只读预览模型、渲染本地浏览器页面，并输出可访问的本地预览地址。",
   "required_inputs": [
-    "projects/<project-id>/exports/final/experience_blueprint.md or projects/<project-id>/workspace/experience_blueprint.md"
+    "projects/<project-id>/exports/final/experience_blueprint.md or projects/<project-id>/workspace/experience_blueprint.md",
+    "projects/<project-id>/exports/final/business_blueprint.md or projects/<project-id>/workspace/business_blueprint.md or projects/<project-id>/workspace/business_blueprint_lite.md or projects/<project-id>/workspace/business_note.md"
   ],
   "declared_outputs": [
     "projects/<project-id>/runtime/preview/index.html",
@@ -16,8 +17,8 @@
     "projects/<project-id>/runtime/preview/preview_build_log.md"
   ],
   "dependencies": [
-    "gate_experience",
-    "archive_artifacts"
+    "gate_experience or gate_experience_lite",
+    "archive_artifacts (preferred when available)"
   ],
   "retryable": true,
   "review_required": false,

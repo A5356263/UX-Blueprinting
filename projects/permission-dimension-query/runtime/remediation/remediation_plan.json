@@ -1,0 +1,76 @@
+{
+  "project_id": "permission-dimension-query",
+  "plan_version": "1.0",
+  "generated_at": "2026-05-21T11:57:45.065657+00:00",
+  "open_issue_count": 3,
+  "blocker_count": 1,
+  "warning_count": 2,
+  "repair_units": [
+    {
+      "unit_id": "repair-unit-001",
+      "stage": "runtime",
+      "target_artifact": "projects/permission-dimension-query/runtime/context_manifest.json",
+      "issue_ids": [
+        "RUN-598468B2"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 context_manifest.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 context_manifest.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-002",
+      "stage": "runtime",
+      "target_artifact": "projects/permission-dimension-query/runtime/gate_metrics.json",
+      "issue_ids": [
+        "RUN-07F6D6AB"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-003",
+      "stage": "runtime",
+      "target_artifact": "projects/permission-dimension-query/runtime/trace_index.json",
+      "issue_ids": [
+        "RUN-F655398D"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 trace_index.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    }
+  ]
+}

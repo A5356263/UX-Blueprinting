@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "final-validate",
   "generated_by": "packages.validate",
-  "updated_at": "2026-05-21T00:34:19.233047+00:00",
+  "updated_at": "2026-05-21T15:46:33.780971+00:00",
   "checked_files": [
     "projects/employee-self-service-permission/workspace/facts.md",
     "projects/employee-self-service-permission/workspace/business_blueprint.md",
@@ -14,69 +14,19 @@
     "projects/employee-self-service-permission/runtime/gates/business_gate_status.json"
   ],
   "blocker_count": 0,
-  "warning_count": 2,
+  "warning_count": 1,
   "info_count": 1,
   "issues": {
     "blockers": [],
     "warnings": [
-      "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
       "experience_blueprint.md 附录：依据与追踪内容偏少"
     ],
     "infos": [
-      "business 阶段状态：warning"
+      "business 阶段状态：passed"
     ]
   },
   "issue_details_version": "1.0",
   "issue_details": [
-    {
-      "source": "experience_gate",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "quality_gap",
-      "message": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
-      "target_artifacts": [
-        "projects/employee-self-service-permission/workspace/experience_blueprint.md"
-      ],
-      "violated_contract_refs": [
-        "specs/06_check_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/11_repair_loop_contract.md"
-      ],
-      "checked_files": [
-        "projects/employee-self-service-permission/workspace/facts.md",
-        "projects/employee-self-service-permission/workspace/business_blueprint.md",
-        "projects/employee-self-service-permission/workspace/experience_blueprint.md",
-        "projects/employee-self-service-permission/runtime/provenance.json",
-        "projects/employee-self-service-permission/runtime/gates/business_gate_status.json"
-      ],
-      "evidence": [
-        {
-          "type": "message",
-          "value": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/employee-self-service-permission/workspace/facts.md",
-            "projects/employee-self-service-permission/workspace/business_blueprint.md",
-            "projects/employee-self-service-permission/workspace/experience_blueprint.md",
-            "projects/employee-self-service-permission/runtime/provenance.json",
-            "projects/employee-self-service-permission/runtime/gates/business_gate_status.json"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "flow_count": 77,
-            "page_inventory_item_count": 63,
-            "state_feedback_pair_count": 2,
-            "appendix_item_count": 0,
-            "exception_coverage": true,
-            "core_table_count": 0
-          }
-        }
-      ]
-    },
     {
       "source": "experience_gate",
       "stage": "experience",
@@ -116,9 +66,9 @@
         {
           "type": "metrics",
           "value": {
-            "flow_count": 77,
-            "page_inventory_item_count": 63,
-            "state_feedback_pair_count": 2,
+            "flow_count": 108,
+            "page_inventory_item_count": 87,
+            "state_feedback_pair_count": 18,
             "appendix_item_count": 0,
             "exception_coverage": true,
             "core_table_count": 0
@@ -131,7 +81,7 @@
       "stage": "experience",
       "severity": "info",
       "category": "quality_gap",
-      "message": "business 阶段状态：warning",
+      "message": "business 阶段状态：passed",
       "target_artifacts": [
         "projects/employee-self-service-permission/workspace/experience_blueprint.md"
       ],
@@ -150,7 +100,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "business 阶段状态：warning"
+          "value": "business 阶段状态：passed"
         },
         {
           "type": "checked_files",
@@ -165,9 +115,9 @@
         {
           "type": "metrics",
           "value": {
-            "flow_count": 77,
-            "page_inventory_item_count": 63,
-            "state_feedback_pair_count": 2,
+            "flow_count": 108,
+            "page_inventory_item_count": 87,
+            "state_feedback_pair_count": 18,
             "appendix_item_count": 0,
             "exception_coverage": true,
             "core_table_count": 0
@@ -177,9 +127,9 @@
     }
   ],
   "metrics": {
-    "flow_count": 77,
-    "page_inventory_item_count": 63,
-    "state_feedback_pair_count": 2,
+    "flow_count": 108,
+    "page_inventory_item_count": 87,
+    "state_feedback_pair_count": 18,
     "appendix_item_count": 0,
     "exception_coverage": true,
     "core_table_count": 0

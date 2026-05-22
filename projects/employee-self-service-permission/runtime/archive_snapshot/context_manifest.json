@@ -4,24 +4,22 @@
   "selection_source": "projects/employee-self-service-permission/runtime/uxb_route_decision.json",
   "selected_refs": {
     "business_refs": [
-      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
-      "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md"
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "knowledge/raw/业务/审批管理/10_审批管理.md"
     ],
     "guideline_refs": [
-      "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "knowledge/wiki/summaries/设计准则/流程模式.md",
-      "knowledge/wiki/summaries/设计准则/信息架构.md"
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
     ],
     "complexity_refs": [
       ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-      ".claude/skills/uxb/references/complexity/01_domain_router.md",
       ".claude/skills/uxb/references/complexity/domains/collaboration.md",
-      ".claude/skills/uxb/references/complexity/domains/admin_console.md",
-      ".claude/skills/uxb/references/complexity/domains/platform_portal.md"
+      ".claude/skills/uxb/references/complexity/domains/admin_console.md"
     ]
   },
   "assembled_refs": [
@@ -34,23 +32,21 @@
     "specs/08_fact_extraction_contract.md",
     "specs/09_business_blueprint_contract.md",
     "specs/10_experience_blueprint_contract.md",
-    "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-    "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-    "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-    "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-    "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
-    "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
-    "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-    "knowledge/wiki/summaries/设计准则/流程模式.md",
-    "knowledge/wiki/summaries/设计准则/信息架构.md",
+    "knowledge/raw/业务/权限管理/03_业务对象.md",
+    "knowledge/raw/业务/权限管理/04_对象关系.md",
+    "knowledge/raw/业务/权限管理/21_来源模型.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/权限管理/10_能力地图.md",
+    "knowledge/raw/业务/审批管理/10_审批管理.md",
+    "knowledge/raw/设计准则/流程模式.md",
+    "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
     ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-    ".claude/skills/uxb/references/complexity/01_domain_router.md",
     ".claude/skills/uxb/references/complexity/domains/collaboration.md",
-    ".claude/skills/uxb/references/complexity/domains/admin_console.md",
-    ".claude/skills/uxb/references/complexity/domains/platform_portal.md"
+    ".claude/skills/uxb/references/complexity/domains/admin_console.md"
   ],
   "missing_refs": [],
-  "reference_count": 23,
+  "reference_count": 21,
   "task_contract": {
     "task_goal": [
       "用一句话说明本次任务要解决什么问题",
@@ -96,7 +92,7 @@
       "projects/employee-self-service-permission/workspace/check_report.md",
       "projects/employee-self-service-permission/workspace/check_status.json"
     ],
-    "domain": "协同办公/管理后台/平台门户"
+    "domain": "权限管理"
   },
   "references": [
     {
@@ -249,143 +245,144 @@
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 facts 阶段梳理申请单作为新业务对象的属性定义，确认主体/资源/动作/范围/来源/状态七类对象如何承接新能力。影响 facts 和 business 输出。",
+      "selection_reason": "自助申请引入新的权限来源和审批状态，需要对齐现有 subject/resource/action/scope/source/modifier/state 七类对象模型，确保新能力不破坏现有对象定义，支撑 business 输出中的对象建模部分",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "source": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 business 阶段定义申请单与权限、角色、审批单、用户之间的关系。影响 business 输出中的对象关系建模。",
+      "selection_reason": "需要确认自助申请作为新来源类型在现有前置/覆盖/叠加/边界关系中的位置，确保新来源与 ACL_DIRECT、RBAC_ROLE 的关系定义正确，支撑 business 输出中的关系判断",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "source": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 business 阶段对齐现有治理状态机（draft/pending/approved/rejected/effective/revoked），确保自助申请状态机兼容现有模型。影响 business 输出中的状态机设计。",
+      "selection_reason": "自助申请是新的权限来源类型，需要理解现有 source_enum 和 effect_modifier 的定义，确定新来源如何纳入 source_of_truth 体系，支撑 business 输出中的来源扩展设计",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/21_来源模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 business 阶段将'自助申请'纳入权限来源枚举，区分授予来源与治理修饰因子，保持来源溯源口径一致。影响 business 输出中的来源模型扩展。",
+      "selection_reason": "自助申请引入了新的审批状态链路，需要基于现有治理状态模型（draft→pending→approved→rejected→effective→revoked）设计申请单的状态机和 actor_responsibility，支撑 business 输出中的状态机设计",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 business 阶段设计敏感排除机制，明确哪些角色/权限不可申请及按身份限制规则。影响 business 输出中的规则边界和 experience 输出中的阻断提示设计。",
+      "selection_reason": "涉及超管、子管理员、普通管理员、员工四类角色的可见边界和操作边界，需要确认自助申请能力对各角色视角的影响，特别是子管理员的组织/应用管辖范围是否约束可申请范围，支撑 business 输出中的角色定义",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "source": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/14_角色边界.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+      "reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 business 阶段确认审批对接方式（审批人来源、节点类型、超时策略），复用现有审批引擎能力。影响 business 输出中的审批链路设计和 experience 输出中的审批流程承接。",
+      "selection_reason": "需要了解现有权限域六大能力（按人授权/角色授权/全局治理/协作可见性/查询排障/应用治理）的页面承载关系，确定自助申请新模式应在哪些页面落地、是否复用现有查询和治理页面，支撑 business 输出中的页面承接设计",
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+      "source": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "group": "business_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "自助申请的审批流程需要复用现有审批中台能力（审批人来源、节点类型、超时策略、动态流程等），需要理解审批中台的配置模型和约束，确保权限申请的审批流设计与审批中台能力对齐，支撑 business 输出中的审批流设计",
+      "type": "file",
+      "source": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/业务/审批管理/10_审批管理.md",
+      "requested_reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/设计准则/流程模式.md",
       "group": "guideline_refs",
       "consumed_by": [
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 experience 阶段设计多异常分支的反馈策略：权限不足、审批人缺失、模式互斥阻断、敏感排除阻断等场景的反馈形式和文案。影响 experience 输出中的异常反馈设计。",
+      "selection_reason": "申请→审批→生效→查看记录是一个典型的多步骤流程，需要参考流程模式的体验承接原则，确保员工端申请、审批端处理、管理端配置三个端的流程体验一致，支撑 experience 输出中的流程体验设计",
       "type": "file",
-      "source": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "requested_reference": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "source": "knowledge/raw/设计准则/流程模式.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/流程模式.md",
+      "requested_reference": "knowledge/raw/设计准则/流程模式.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "reference": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
       "group": "guideline_refs",
       "consumed_by": [
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑 experience 阶段判断管理端配置页（可申请范围+审批方式设置）和员工端申请表单的流程组织方式。影响 experience 输出中的流程步骤设计。",
+      "selection_reason": "本次需求异常分支多（审批人缺失升级、模式互斥、关闭时审批中申请处理、敏感权限申请拒绝等），需要参考反馈与报错的设计指南来定义各异常场景的用户提示和兜底策略，支撑 experience 输出中的异常体验设计",
       "type": "file",
-      "source": "knowledge/wiki/summaries/设计准则/流程模式.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/设计准则/流程模式.md",
-      "requested_reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
-      "group": "guideline_refs",
-      "consumed_by": [
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "支撑 experience 阶段设计跨角色信息组织：员工端权限查看+申请入口、管理端配置入口、审批端待办入口的导航和分组。影响 experience 输出中的信息架构设计。",
-      "type": "file",
-      "source": "knowledge/wiki/summaries/设计准则/信息架构.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/设计准则/信息架构.md",
-      "requested_reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "source": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "destination": "projects/employee-self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "requested_reference": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
       "exists": true,
       "copied": true
     },
@@ -398,28 +395,11 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "通用复杂度判断标准，用于验证本次复杂度判断的一致性。支撑 judgment 阶段的判断依据。",
+      "selection_reason": "作为复杂度判断的通用标准，确认六问和五问的覆盖完整，支撑 overall judgment",
       "type": "file",
       "source": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
       "destination": "projects/employee-self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
       "requested_reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": ".claude/skills/uxb/references/complexity/01_domain_router.md",
-      "group": "complexity_refs",
-      "consumed_by": [
-        "facts",
-        "business",
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "领域识别规则，用于确认跨协同办公+管理后台+平台门户三个领域的判断依据。支撑 judgment 阶段的领域识别。",
-      "type": "file",
-      "source": ".claude/skills/uxb/references/complexity/01_domain_router.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/01_domain_router.md",
-      "requested_reference": ".claude/skills/uxb/references/complexity/01_domain_router.md",
       "exists": true,
       "copied": true
     },
@@ -432,7 +412,7 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "协同办公领域卡片，确认审批流程对接不触发高复杂度额外风险（复用现有审批引擎，不改流程引擎）。支撑 business 和 experience 输出的领域边界判断。",
+      "selection_reason": "审批流程设计涉及协同办公域的审批状态机和流程路由，需要参考协同办公域的复杂度触发点判断审批侧的改动深度，支撑 overall judgment",
       "type": "file",
       "source": ".claude/skills/uxb/references/complexity/domains/collaboration.md",
       "destination": "projects/employee-self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/domains/collaboration.md",
@@ -449,28 +429,11 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "管理后台领域卡片，确认权限配置、开关、操作记录涉及管理后台的高复杂度触发点（改配置生效机制、改角色与数据权限边界）。支撑 business 输出中管理端设计。",
+      "selection_reason": "管理后台配置涉及权限管理模式开关和配置生效机制，需要参考管理后台域的复杂度触发点判断配置侧的改动深度，支撑 overall judgment",
       "type": "file",
       "source": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
       "destination": "projects/employee-self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/domains/admin_console.md",
       "requested_reference": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": ".claude/skills/uxb/references/complexity/domains/platform_portal.md",
-      "group": "complexity_refs",
-      "consumed_by": [
-        "facts",
-        "business",
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "平台门户领域卡片，确认员工端入口属于中等复杂度（在现有门户挂入新入口，不改身份和权限分发规则）。支撑 experience 输出中员工端入口设计。",
-      "type": "file",
-      "source": ".claude/skills/uxb/references/complexity/domains/platform_portal.md",
-      "destination": "projects/employee-self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/domains/platform_portal.md",
-      "requested_reference": ".claude/skills/uxb/references/complexity/domains/platform_portal.md",
       "exists": true,
       "copied": true
     }
@@ -480,8 +443,8 @@
   "reference_summary": {
     "template_ref_count": 5,
     "check_ref_count": 4,
-    "selected_ref_count": 14,
-    "assembled_ref_count": 23
+    "selected_ref_count": 12,
+    "assembled_ref_count": 21
   },
   "stage_boundaries": {
     "facts": [],

@@ -1,10 +1,10 @@
 {
   "project_id": "employee-self-service-permission",
-  "status": "failed",
-  "generated_at": "2026-05-21T00:28:42+00:00",
+  "status": "passed",
+  "generated_at": "2026-05-21T15:46:34+00:00",
   "requested_route": "auto",
   "execution_mode": "full",
-  "stopped_at": "gate-experience",
+  "stopped_at": "",
   "steps": [
     {
       "command": "route-decision",
@@ -36,7 +36,23 @@
     },
     {
       "command": "gate-experience",
-      "exit_code": 1
+      "exit_code": 0
+    },
+    {
+      "command": "validate",
+      "exit_code": 0
+    },
+    {
+      "command": "coverage",
+      "exit_code": 0
+    },
+    {
+      "command": "archive",
+      "exit_code": 0
+    },
+    {
+      "command": "preview",
+      "exit_code": 0
     }
   ],
   "actual_outputs": [

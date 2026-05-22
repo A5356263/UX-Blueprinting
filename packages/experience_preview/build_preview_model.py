@@ -21,6 +21,24 @@ def _read_source(project_id: str, filename: str) -> tuple[Path, str]:
     raise SystemExit(f"Missing {filename} for preview in project {project_id}")
 
 
+def _read_business_source(project_id: str) -> tuple[Path, str]:
+    candidates = [
+        "business_blueprint.md",
+        "business_blueprint_lite.md",
+        "business_note.md",
+    ]
+    missing: list[str] = []
+    for filename in candidates:
+        try:
+            return _read_source(project_id, filename)
+        except SystemExit:
+            missing.append(filename)
+    raise SystemExit(
+        "Missing business blueprint source for preview in project "
+        f"{project_id}: expected one of {', '.join(missing)}"
+    )
+
+
 def _make_anchor(heading: str) -> str:
     return re.sub(r"[^\w一-鿿]+", "-", heading).strip("-").lower()
 
@@ -215,7 +233,7 @@ def _extract_title(text: str, fallback: str) -> str:
 
 
 def build_preview_model(project_id: str) -> dict[str, Any]:
-    business_path, business_text = _read_source(project_id, "business_blueprint.md")
+    business_path, business_text = _read_business_source(project_id)
     experience_path, experience_text = _read_source(project_id, "experience_blueprint.md")
 
     business_sections = _split_sections(business_text)

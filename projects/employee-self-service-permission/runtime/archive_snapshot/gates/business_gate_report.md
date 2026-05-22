@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: warning
+- status: passed
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 1
+- warning_count: 0
 - info_count: 1
 
 - project_id: employee-self-service-permission
@@ -26,7 +26,7 @@
 
 ## Warnings
 
-- business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱
+- none
 
 ## Infos
 

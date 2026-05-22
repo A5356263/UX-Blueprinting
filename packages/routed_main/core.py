@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from packages.archive import run_archive_artifacts
-from packages.common import get_project_runtime_dir, get_project_workspace_dir
+from packages.common import get_project_exports_dir, get_project_runtime_dir, get_project_workspace_dir
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
 from packages.generation import (
@@ -55,6 +55,16 @@ def _actual_outputs(project_id: str) -> list[str]:
         runtime_dir / "routed_main_report.json",
     ]
     return [str(path).replace("\\", "/") for path in candidates if path.exists()]
+
+
+def _has_preview_source(project_id: str) -> bool:
+    exports_dir = get_project_exports_dir(project_id) / "final"
+    workspace_dir = get_project_workspace_dir(project_id)
+    candidates = [
+        exports_dir / "experience_blueprint.md",
+        workspace_dir / "experience_blueprint.md",
+    ]
+    return any(path.exists() and path.is_file() and path.stat().st_size > 0 for path in candidates)
 
 
 def _steps_for_execution_mode(execution_mode: str) -> list[tuple[str, Callable[[str], int]]]:
@@ -214,16 +224,19 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
             _print_repair_hint(project_id, command_name)
             break
 
-    if status == "passed" and execution_mode == "full" and not skip_preview:
-        try:
-            preview_code = run_experience_preview(project_id, host="127.0.0.1", port=0, serve=False)
-        except SystemExit as exc:
-            preview_code = int(exc.code) if isinstance(exc.code, int) else 1
-            if str(exc):
-                print(str(exc))
-        results.append({"command": "preview", "exit_code": preview_code})
-        if preview_code == 0:
-            append_command_if_provenance_exists(project_id, "preview")
+    if status == "passed" and not skip_preview:
+        if _has_preview_source(project_id):
+            try:
+                preview_code = run_experience_preview(project_id, host="127.0.0.1", port=0, serve=False)
+            except SystemExit as exc:
+                preview_code = int(exc.code) if isinstance(exc.code, int) else 1
+                if str(exc):
+                    print(str(exc))
+            results.append({"command": "preview", "exit_code": preview_code})
+            if preview_code == 0:
+                append_command_if_provenance_exists(project_id, "preview")
+        else:
+            print("Preview skipped: missing usable experience_blueprint.md after mainline success.")
 
     report = {
         "project_id": project_id,

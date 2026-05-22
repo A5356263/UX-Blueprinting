@@ -1,7 +1,7 @@
 {
   "project_id": "employee-self-service-permission",
   "task_name": "员工自助申请权限",
-  "domain": "协同办公/管理后台/平台门户",
+  "domain": "权限管理",
   "status": "draft",
   "project_role": "real_project",
   "read_only": false,

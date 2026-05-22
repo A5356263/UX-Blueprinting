@@ -1,0 +1,287 @@
+{
+  "project_id": "permission-dimension-query",
+  "stage": "experience",
+  "status": "failed",
+  "can_proceed": false,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-21T12:06:43.898407+00:00",
+  "checked_files": [
+    "projects/permission-dimension-query/workspace/facts.md",
+    "projects/permission-dimension-query/workspace/business_blueprint.md",
+    "projects/permission-dimension-query/workspace/experience_blueprint.md",
+    "projects/permission-dimension-query/runtime/provenance.json",
+    "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+  ],
+  "blocker_count": 3,
+  "warning_count": 2,
+  "info_count": 0,
+  "issues": {
+    "blockers": [
+      "provenance: provenance.command_chain 缺少：generate-business",
+      "缺少 business 阶段 gate 结果，请先运行 gate-business",
+      "experience_blueprint.md 缺少栏目：## 5. 页面 / 弹窗 / 抽屉设计"
+    ],
+    "warnings": [
+      "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面",
+      "experience_blueprint.md 附录：依据与追踪内容偏少"
+    ],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "blocker",
+      "category": "quality_gap",
+      "message": "provenance: provenance.command_chain 缺少：generate-business",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "provenance: provenance.command_chain 缺少：generate-business"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 75,
+            "page_inventory_item_count": 0,
+            "state_feedback_pair_count": 14,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "blocker",
+      "category": "quality_gap",
+      "message": "缺少 business 阶段 gate 结果，请先运行 gate-business",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "缺少 business 阶段 gate 结果，请先运行 gate-business"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 75,
+            "page_inventory_item_count": 0,
+            "state_feedback_pair_count": 14,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "message": "experience_blueprint.md 缺少栏目：## 5. 页面 / 弹窗 / 抽屉设计",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 缺少栏目：## 5. 页面 / 弹窗 / 抽屉设计"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 75,
+            "page_inventory_item_count": 0,
+            "state_feedback_pair_count": 14,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 75,
+            "page_inventory_item_count": 0,
+            "state_feedback_pair_count": 14,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 75,
+            "page_inventory_item_count": 0,
+            "state_feedback_pair_count": 14,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 0
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "flow_count": 75,
+    "page_inventory_item_count": 0,
+    "state_feedback_pair_count": 14,
+    "appendix_item_count": 0,
+    "exception_coverage": true,
+    "core_table_count": 0
+  }
+}

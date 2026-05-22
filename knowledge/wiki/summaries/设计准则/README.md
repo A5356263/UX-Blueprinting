@@ -8,8 +8,8 @@
 - confidence: medium
 - summary_role: ai_route_card
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-17
-- updated_at: 2026-05-17
+- semantic_updated_at: 2026-05-21
+- updated_at: 2026-05-21
 - related_summaries:
   - knowledge/wiki/summaries/设计准则/信息架构.md
   - knowledge/wiki/summaries/设计准则/可用性.md

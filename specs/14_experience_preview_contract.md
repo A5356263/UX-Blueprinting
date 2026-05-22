@@ -21,8 +21,18 @@
 2. `projects/<project-id>/workspace/experience_blueprint.md`
 3. `projects/<project-id>/exports/final/business_blueprint.md`
 4. `projects/<project-id>/workspace/business_blueprint.md`
+5. `projects/<project-id>/workspace/business_blueprint_lite.md`
+6. `projects/<project-id>/workspace/business_note.md`
 
-优先读取 `exports/final/*.md`；仅当归档版不存在时，才允许降级读取 `workspace/*.md`。
+预览层必须以 `experience_blueprint.md` 作为必需输入。
+
+Business 侧输入按以下优先级读取：
+1. `exports/final/business_blueprint.md`
+2. `workspace/business_blueprint.md`
+3. `workspace/business_blueprint_lite.md`
+4. `workspace/business_note.md`
+
+优先读取 `exports/final/*.md`；仅当归档版不存在或当前路线未产出完整 business blueprint 时，才允许降级读取 `workspace/*.md`。
 
 ## 输出合同
 
@@ -239,6 +249,7 @@ packages/experience_preview/
 ## 运行原则
 
 - 先主链路完成，再执行预览层
+- 只要主链成功且存在可用的 `experience_blueprint.md`，即可自动后置触发预览层；不再限定为 full 路线
 - 预览层默认覆盖更新 `runtime/preview/`
 - 原始开放问题与缺口优先于自动降级提示
 - 无法稳定归属的信息优先进入 `global_context`，仍无法归属再进入 `unresolved_items[]`

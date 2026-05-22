@@ -1,0 +1,25 @@
+{
+  "project_id": "permission-dimension-query",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "74d6e0f0c2b4e98524e2331ffe38b64abc5f5cc57d181ba6e55f1d934732ae6c",
+  "task_card_hash": "401d761b6e9ff9d3c9fc89c23667b5e3efb2e6b359fda2b3f67b3e9ed462ce08",
+  "generated_at": "2026-05-21T13:27:45+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-business-lite",
+    "generate-business-lite",
+    "generate-experience",
+    "coverage",
+    "gate-experience",
+    "route-decision",
+    "assemble",
+    "gate-experience-lite",
+    "preview",
+    "gate-facts",
+    "run-routed-main"
+  ]
+}

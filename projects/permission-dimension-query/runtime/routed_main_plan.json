@@ -1,0 +1,116 @@
+{
+  "project_id": "permission-dimension-query",
+  "generated_at": "2026-05-21T13:28:21+00:00",
+  "decision_source": "uxb_route_decision.json",
+  "requested_route": "auto",
+  "execution_mode": "standard",
+  "planned_steps": [
+    "route-decision",
+    "assemble"
+  ],
+  "uxb_route_decision": {
+    "project_id": "permission-dimension-query",
+    "status": "confirmed",
+    "source_path": "projects/permission-dimension-query/runtime/uxb_route_decision.json",
+    "schema_version": "uxb_route_decision@3.0",
+    "created_by": "uxb_ai",
+    "confirmed_by_user": true,
+    "can_execute_mainline": true,
+    "judgment": {
+      "demand_type": "既有能力扩展",
+      "business_depth": "medium",
+      "experience_output": "experience_blueprint",
+      "reason": "本次是新增权限查询维度，复用现有权限数据模型，不改对象关系、规则、状态机或生效机制。底层业务改动低，但体验设计压力中等——涉及3类角色、3个查询维度、查询结果需解释来源和叠加关系。先补轻量业务判断（business_blueprint_lite），再输出具体体验策略（experience_blueprint）。"
+    },
+    "complexity_judgment": {
+      "business_change": [
+        "不改对象关系：主体、资源、动作、范围、来源、状态等权限对象不变",
+        "不改业务规则：授权规则、覆盖规则、叠加规则、可见性门槛不变",
+        "不改状态机：授权状态、治理状态、生效状态不变",
+        "不改生效机制：权限生效仍走现有配置生效链路",
+        "不改数据口径：权限数据的统计和范围口径不变",
+        "不涉及外部回写：仅读取权限数据，不向外部系统写入"
+      ],
+      "experience_pressure": [
+        "3类角色需差异化考量：权限管理员注重效率、超级管理员注重全局视角、审计人员注重完整性和可追溯",
+        "信息密度较高：查询结果需展示权限类型、来源、生效状态、数据范围等字段",
+        "多维度入口需统一但保持灵活：按人、按角色、按权限三个入口要有统一查询体验",
+        "查询结果需支撑解释链路：要能回答为什么有/没有权限、来自哪里",
+        "极限场景需处理：查不到结果、权限数量过长、权限来源过多"
+      ],
+      "uncertainties": [
+        "查询结果中权限来源是否需追溯到具体配置操作人（非阻断）",
+        "按权限反查时，是否需要区分直接授予和间接获取（非阻断）",
+        "三个查询维度是否需要统一的过滤条件面板（非阻断）"
+      ]
+    },
+    "knowledge_selection": {
+      "business_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md"
+      ],
+      "guideline_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+        "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md"
+      ],
+      "complexity_refs": [
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        ".claude/skills/uxb/references/complexity/01_domain_router.md",
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+      ],
+      "selection_reasons": [
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+          "reason": "支撑 business 阶段判断查询结果需要携带哪些权限对象字段——主体、资源、动作、范围、来源、状态"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+          "reason": "支撑 business 阶段说明权限来源叠加关系，确保查询结果解释链路准确"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+          "reason": "确认现有权限能力边界和页面承载关系，避免新查询入口与既有能力重复"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+          "reason": "确认现有查询路径的可行性状态与已知缺口，作为本次补齐的依据"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+          "reason": "支撑 experience 阶段识别权限查询中的多入口、多来源、覆盖规则等体验风险，并设计对应解释结构"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+          "reason": "支撑 experience 阶段将权限业务正确翻译为页面结构、交互和解释字段"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+          "reason": "复杂度判断基础，确认本次属于中等复杂度"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+          "reason": "领域路由，确认本次归属管理后台领域"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+          "reason": "管理后台领域卡片，确认权限查询不触及高复杂度触发点"
+        }
+      ]
+    },
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint_lite.md",
+      "experience_blueprint.md",
+      "gap_list.md",
+      "check_report.md"
+    ],
+    "execution_notes": [
+      "本次属于中等复杂度，先出 business_blueprint_lite（轻量业务判断），再出 experience_blueprint（体验策略）",
+      "体验策略需具体到交互流程、页面信息结构、状态反馈和文案"
+    ],
+    "execution_mode": "standard",
+    "validation_errors": []
+  }
+}

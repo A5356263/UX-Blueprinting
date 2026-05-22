@@ -1624,11 +1624,13 @@ def run_validate_outputs(project_id: str) -> int:
         )
         extend_issues(issues, handoff_issues)
 
+    resolved = context_manifest.get("resolved", {})
     has_directory_ref = bool(resolved.get("has_directory_ref"))
     requires_narrowing = bool(resolved.get("requires_narrowing"))
     narrowed_references = context_manifest.get("narrowed_references", [])
     fallback_copied = context_manifest.get("directory_refs_fallback_copied", [])
     strict_mode = bool(context_manifest.get("strict_mode"))
+    usage_report = context_manifest.get("usage_report", {})
     fallback_sources_used = usage_report.get("fallback_sources_used", [])
     fallback_conditions = resolved.get("fallback_conditions", [])
     resolved_to_index = context_manifest.get("directory_refs_resolved_to_index", [])

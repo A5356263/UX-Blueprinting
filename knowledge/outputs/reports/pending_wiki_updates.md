@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-17T12:59:35+00:00
+- generated_at_utc: 2026-05-21T14:28:45+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -16,11 +16,15 @@
 
 ## Changed Raw Sources
 
-- none
+- raw/业务/人事服务/组织管理/10_组织架构.md
+- raw/业务/协同办公/协同工具/10_协同工具.md
+- raw/业务/审批管理/10_审批管理.md
 
 ## Updated Summaries
 
-- none
+- wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
+- wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
+- wiki/summaries/业务/审批管理/10_审批管理.md
 
 ## Notes
 
@@ -338,7 +342,7 @@ reindexed=knowledge/wiki/index.md
 
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
-question_count=77
+question_count=78
 ```
 
 ### refresh_overview.py

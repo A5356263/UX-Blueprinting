@@ -4,7 +4,7 @@
   "type": "command",
   "stage": "mainline",
   "entrypoint": "python -m packages run-main <project-id> [--skip-preview]",
-  "description": "按统一顺序运行 assemble、generate-*、gate-*、validate、coverage、archive，并在默认情况下自动后置执行 preview。",
+  "description": "按统一顺序运行 assemble、generate-*、gate-*、validate、coverage、archive，并在默认情况下自动后置执行 preview；preview 仍是扩展层，不参与主链判定。",
   "required_inputs": [
     "projects/<project-id>/source/task_card.md",
     "projects/<project-id>/source/requirement.md"

@@ -5,7 +5,7 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 2
+- warning_count: 1
 - info_count: 1
 
 - project_id: employee-self-service-permission
@@ -27,9 +27,8 @@
 
 ## Warnings
 
-- experience_blueprint.md 待确认问题为空，建议显式标注不确定项
 - experience_blueprint.md 附录：依据与追踪内容偏少
 
 ## Infos
 
-- business 阶段状态：warning
+- business 阶段状态：passed
