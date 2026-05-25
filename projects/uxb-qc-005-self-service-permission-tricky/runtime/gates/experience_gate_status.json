@@ -1,0 +1,237 @@
+{
+  "project_id": "uxb-qc-005-self-service-permission-tricky",
+  "stage": "experience",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-25T14:55:18.991364+00:00",
+  "checked_files": [
+    "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+    "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+    "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+    "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+    "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 3,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
+      "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
+    ],
+    "infos": [
+      "business 阶段状态：warning"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
+      "target_artifacts": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 12,
+            "page_inventory_item_count": 6,
+            "state_feedback_pair_count": 8,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 8
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "target_artifacts": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 12,
+            "page_inventory_item_count": 6,
+            "state_feedback_pair_count": 8,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 8
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
+      "target_artifacts": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 12,
+            "page_inventory_item_count": 6,
+            "state_feedback_pair_count": 8,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 8
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business 阶段状态：warning",
+      "target_artifacts": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+        "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business 阶段状态：warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/facts.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/business_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/workspace/experience_blueprint.md",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/provenance.json",
+            "projects/uxb-qc-005-self-service-permission-tricky/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "flow_count": 12,
+            "page_inventory_item_count": 6,
+            "state_feedback_pair_count": 8,
+            "appendix_item_count": 0,
+            "exception_coverage": true,
+            "core_table_count": 8
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "flow_count": 12,
+    "page_inventory_item_count": 6,
+    "state_feedback_pair_count": 8,
+    "appendix_item_count": 0,
+    "exception_coverage": true,
+    "core_table_count": 8
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "project_id": "uxb-qc-006-permission-find-tricky",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "f38da2085ceecf876c6e1e4f2b74d0aa41123ab9c498be340c4e0c97c0b35fae",
+  "task_card_hash": "6ff9fe64a9796f3b79e57d069bfe159d555943105d775bbdb93382757a23c6fc",
+  "generated_at": "2026-05-25T15:00:08+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business-note",
+    "generate-experience",
+    "gate-business-note",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ]
+}

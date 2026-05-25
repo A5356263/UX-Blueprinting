@@ -1,0 +1,21 @@
+{
+  "project_id": "uxb-qc-005-self-service-permission-tricky",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "df7a86c18dea7249e706630d4364a93153c349944e1632a89f591866635e410d",
+  "task_card_hash": "f6cc5bc039a1bdc6691faa0c0f77572d52e95e8b871964ff03545950a4dbcbaf",
+  "generated_at": "2026-05-25T14:55:18+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage"
+  ]
+}
