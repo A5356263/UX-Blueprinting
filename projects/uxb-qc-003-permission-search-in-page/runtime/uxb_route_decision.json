@@ -1,0 +1,93 @@
+{
+  "schema_version": "uxb_route_decision@3.0",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "judgment": {
+    "demand_type": "local_ux_enhancement",
+    "business_depth": "fast",
+    "experience_output": "light_blueprint",
+    "reason": "本需求是在功能权限设置页面（1100+节点，约35屏）增加页面内查找定位能力。本质是页面内交互增强（类似Ctrl+F），不改变权限规则、不改变数据范围、不改变勾选状态。不应过度消费权限治理知识——只需确认功能权限设置页在权限体系中的位置。重点在可用性设计：查找入口、焦点跳转、折叠节点展开、编辑状态保护、大量命中性能。"
+  },
+  "complexity_judgment": {
+    "business_change": "shallow",
+    "business_change_reason": "底层权限规则无变化，仅页面内增加查找定位交互。不涉及权限来源、审批、状态、治理模式等。",
+    "experience_pressure": "low",
+    "experience_pressure_reason": "交互模式接近Ctrl+F，用户已有心智模型。需要特别处理的场景：折叠节点内命中（自动展开）、大量命中性能（1100+节点）、编辑状态保护（查找不触发保存）。",
+    "uncertainties": [
+      {
+        "item": "查看模式和编辑模式是否都支持查找",
+        "type": "non_blocking",
+        "reason": "可在方案中建议都支持"
+      },
+      {
+        "item": "是否适用于所有授权对象还是仅限功能权限页面",
+        "type": "non_blocking",
+        "reason": "初期可只支持功能权限设置页"
+      },
+      {
+        "item": "查找输入框是常驻展示还是快捷键/按钮呼出",
+        "type": "non_blocking",
+        "reason": "可在方案中建议常驻展示"
+      }
+    ]
+  },
+  "knowledge_selection": {
+    "business_refs": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md"
+    ],
+    "guideline_refs": [
+      "knowledge/raw/设计准则/信息架构.md",
+      "knowledge/raw/设计准则/可用性.md",
+      "knowledge/raw/设计准则/认知.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/raw/设计准则/反馈与报错/02_报错与状态文案模板.md"
+    ],
+    "complexity_refs": [],
+    "selection_reasons": [
+      {
+        "ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "reason": "仅确认功能权限设置页面在权限体系中的位置——不展开权限规则、审批、治理模式"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "reason": "仅确认功能权限设置页面的能力地图位置——不展开权限配置流程"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/信息架构.md",
+        "reason": "指导查找入口和命中结果的信息组织——查找输入框位置、高亮标记方式、命中计数展示"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/可用性.md",
+        "reason": "指导页面内查找（Ctrl+F体验）的可用性设计——这是本需求的核心：查找定位而非筛选"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/认知.md",
+        "reason": "控制查找功能的认知负担——区分\"查找\"与\"筛选\"，用户需要明确知道查找不改变数据范围"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "reason": "指导无命中提示、命中计数、清空恢复等状态反馈文案"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/反馈与报错/02_报错与状态文案模板.md",
+        "reason": "指导无命中提示、命中计数、清空恢复等状态反馈文案"
+      }
+    ]
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_note.md",
+      "experience_blueprint.md",
+      "gap_list.md",
+      "check_report.md"
+    ],
+    "notes": [
+      "查找≠筛选——这是本用例最核心的测试点。查找不改变数据范围，不改变勾选状态",
+      "本次是局部体验优化，business_note足够——不需要展开完整业务蓝图",
+      "重点处理：折叠节点内命中自动展开、编辑状态保护、大量命中性能和用户提示"
+    ]
+  }
+}

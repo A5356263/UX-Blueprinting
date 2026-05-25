@@ -1,0 +1,1586 @@
+{
+  "task_id": "uxb-qc-001-employee-self-service-permission",
+  "status": "warning",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 7,
+  "info_count": 8,
+  "completed_outputs": [
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+  ],
+  "missing_outputs": [],
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-25T12:36:43.169261+00:00",
+  "checked_files": [
+    "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+    "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+    "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+    "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+    "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+  ],
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience gate 状态为 warning",
+      "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
+      "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
+      "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面",
+      "gap_list.md 仍包含占位内容",
+      "承接检查：business_blueprint.md 已把“保护策略：开启前检测冲突；冲突时阻断并提示原因”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+    ],
+    "infos": [
+      "business gate 状态：passed",
+      "facts gate 状态：passed",
+      "自然语言承接检查：主流程闭环覆盖：0/0",
+      "自然语言承接检查：异常与阻断覆盖：0/0",
+      "自然语言承接检查：状态与反馈覆盖：0/0",
+      "自然语言承接检查：角色路径覆盖：2/2",
+      "自然语言承接检查：设计指南装配：5 条",
+      "自然语言承接检查：风险保护承接：5/6"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience gate 状态为 warning",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience gate 状态为 warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 待确认问题为空，建议显式标注不确定项"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 附录：依据与追踪内容偏少",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 附录：依据与追踪内容偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "warning",
+      "category": "placeholder_residue",
+      "message": "gap_list.md 仍包含占位内容",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "gap_list.md 仍包含占位内容"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_exception_handling_gap",
+      "message": "承接检查：business_blueprint.md 已把“保护策略：开启前检测冲突；冲突时阻断并提示原因”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“保护策略：开启前检测冲突；冲突时阻断并提示原因”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business gate 状态：passed",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business gate 状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "facts",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts gate 状态：passed",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/08_fact_extraction_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts gate 状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_business_consumption_gap",
+      "message": "自然语言承接检查：主流程闭环覆盖：0/0",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：主流程闭环覆盖：0/0"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_exception_handling_gap",
+      "message": "自然语言承接检查：异常与阻断覆盖：0/0",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：异常与阻断覆盖：0/0"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_state_feedback_gap",
+      "message": "自然语言承接检查：状态与反馈覆盖：0/0",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：状态与反馈覆盖：0/0"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_role_path_gap",
+      "message": "自然语言承接检查：角色路径覆盖：2/2",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：角色路径覆盖：2/2"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_guideline_consumption_gap",
+      "message": "自然语言承接检查：设计指南装配：5 条",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：设计指南装配：5 条"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_business_consumption_gap",
+      "message": "自然语言承接检查：风险保护承接：5/6",
+      "target_artifacts": [
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/facts.md",
+        "projects/uxb-qc-001-employee-self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：风险保护承接：5/6"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/context_manifest.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_report.md",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/check_status.json",
+            "projects/uxb-qc-001-employee-self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 18,
+              "value_assessment_item_count": 3,
+              "risk_item_count": 6,
+              "unresolved_gap_count": 6,
+              "has_appendix": true,
+              "appendix_item_count": 13,
+              "referenced_fact_section_count": 5,
+              "handover_item_count": 8,
+              "handover_keyword_count": 4,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "flow_count": 18,
+              "page_inventory_item_count": 0,
+              "state_feedback_pair_count": 23,
+              "appendix_item_count": 0,
+              "exception_coverage": true,
+              "core_table_count": 23
+            },
+            "experience_handoff": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            },
+            "coverage": {
+              "required_role_count": 2,
+              "covered_role_count": 2,
+              "required_flow_step_count": 0,
+              "covered_flow_step_count": 0,
+              "required_exception_count": 0,
+              "covered_exception_count": 0,
+              "required_state_count": 0,
+              "covered_state_count": 0,
+              "required_risk_count": 6,
+              "covered_risk_count": 5,
+              "guideline_refs_used_count": 5
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "required_output_count": 6,
+    "completed_output_count": 6,
+    "missing_output_count": 0,
+    "business_depth": {
+      "option_compare_count": 18,
+      "value_assessment_item_count": 3,
+      "risk_item_count": 6,
+      "unresolved_gap_count": 6,
+      "has_appendix": true,
+      "appendix_item_count": 13,
+      "referenced_fact_section_count": 5,
+      "handover_item_count": 8,
+      "handover_keyword_count": 4,
+      "has_handover_empty_talk": false
+    },
+    "experience_depth": {
+      "flow_count": 18,
+      "page_inventory_item_count": 0,
+      "state_feedback_pair_count": 23,
+      "appendix_item_count": 0,
+      "exception_coverage": true,
+      "core_table_count": 23
+    },
+    "experience_handoff": {
+      "required_role_count": 2,
+      "covered_role_count": 2,
+      "required_flow_step_count": 0,
+      "covered_flow_step_count": 0,
+      "required_exception_count": 0,
+      "covered_exception_count": 0,
+      "required_state_count": 0,
+      "covered_state_count": 0,
+      "required_risk_count": 6,
+      "covered_risk_count": 5,
+      "guideline_refs_used_count": 5
+    },
+    "coverage": {
+      "required_role_count": 2,
+      "covered_role_count": 2,
+      "required_flow_step_count": 0,
+      "covered_flow_step_count": 0,
+      "required_exception_count": 0,
+      "covered_exception_count": 0,
+      "required_state_count": 0,
+      "covered_state_count": 0,
+      "required_risk_count": 6,
+      "covered_risk_count": 5,
+      "guideline_refs_used_count": 5
+    }
+  }
+}

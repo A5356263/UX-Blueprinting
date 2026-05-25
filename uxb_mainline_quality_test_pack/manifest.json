@@ -1,0 +1,12 @@
+{
+  "name": "UXB 主链路推理质量自动测试说明包",
+  "version": "v1.0",
+  "purpose": "正式主链路运行 + 旁路质量评估，验证知识选择、真实推理、承接质量与耗时",
+  "structure": [
+    "README.md",
+    "run_ai_code.md",
+    "cases/*.md",
+    "templates/*.md",
+    "inputs/*.md"
+  ]
+}

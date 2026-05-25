@@ -1,0 +1,21 @@
+{
+  "project_id": "uxb-qc-004-sub-admin-copy",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "c1bf97b56dc9e7b46b354fc438a0ed112cf1292b503a2bf5ff8ed8fe83aeeedf",
+  "task_card_hash": "1059a60481729257e26195c5e51b970b010919ae603bd10ec073e88d41e0b755",
+  "generated_at": "2026-05-25T13:04:18+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "generate-experience",
+    "gate-business",
+    "gate-experience",
+    "validate",
+    "coverage"
+  ]
+}

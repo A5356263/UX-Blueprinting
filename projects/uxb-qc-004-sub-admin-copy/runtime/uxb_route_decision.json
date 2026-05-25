@@ -1,0 +1,134 @@
+{
+  "schema_version": "uxb_route_decision@3.0",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "judgment": {
+    "demand_type": "rule_based_enhancement",
+    "business_depth": "full",
+    "experience_output": "full_blueprint",
+    "reason": "本需求是在子管理员模式中新增复制能力，需求信息相对完整——入口、弹窗结构、复制内容、复制对象、校验顺序（4步）、复制规则（叠加不覆盖+普通用户变子管理员+200人限制）、操作记录文案、双管理员互审触发均有明确描述。核心工作是严格承接这些明确规则，逐条转译到business和experience，同时对双管理员互审审批规则不完整的GAP保持诚实标记，不脑补。"
+  },
+  "complexity_judgment": {
+    "business_change": "moderate",
+    "business_change_reason": "复制不改变底层权限模型，但影响子管理员配置流程（操作列新增入口）、批量授权效率（1→N）、操作记录格式（两种记录类型）、双管理员互审审批（时机待确认）",
+    "experience_pressure": "moderate",
+    "experience_pressure_reason": "涉及：复制弹窗的完整结构、选择员工弹窗（复用添加子管理员弹窗样式）、4步校验顺序和阻断文案、200人限制提示、叠加不覆盖的视觉表达、双管理员互审审批提示",
+    "uncertainties": [
+      {
+        "item": "双管理员互审模式下审批规则不完整（审批时机/生效方式/拒绝回滚/分别审批）",
+        "type": "blocking",
+        "reason": "影响审批流程设计和体验——不能脑补"
+      },
+      {
+        "item": "加入状态口径统一（已启用/已加入）",
+        "type": "non_blocking",
+        "reason": "仅影响选择员工弹窗的过滤文案"
+      },
+      {
+        "item": "部分用户校验失败时的处理策略（全部阻断/跳过失败继续）",
+        "type": "blocking",
+        "reason": "影响批量复制失败的用户体验"
+      },
+      {
+        "item": "重复组织/功能是否自动去重",
+        "type": "non_blocking",
+        "reason": "影响叠加逻辑的细节"
+      },
+      {
+        "item": "操作记录中多对象是否折叠展示",
+        "type": "non_blocking",
+        "reason": "影响操作记录展示"
+      }
+    ]
+  },
+  "knowledge_selection": {
+    "business_refs": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "knowledge/raw/业务/权限管理/02_术语表.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/31_体验翻译需求.md"
+    ],
+    "guideline_refs": [
+      "knowledge/raw/设计准则/可用性.md",
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "complexity_refs": [],
+    "selection_reasons": [
+      {
+        "ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "reason": "理解子管理员模式在权限体系中的定位——确认复制能力在子管理员管理中的位置"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "reason": "确认复制能力的边界：仅在子管理员模式内，不扩展到其他权限配置——对应需求约束第1条"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/02_术语表.md",
+        "reason": "统一\"子管理员\"\"可授权组织\"\"可授权功能\"\"叠加\"等术语——确保校验文案和操作记录文案术语一致"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/03_业务对象.md",
+        "reason": "比对复制能力与现有子管理员业务规则的兼容性——确保叠加不覆盖逻辑与现有规则不冲突"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "reason": "理解子管理员-可授权组织-可授权功能-用户的实体关系——支撑复制来源和复制对象的对象模型"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "reason": "确认复制能力在能力地图中的位置——子管理员管理域的批量操作增强"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/14_角色边界.md",
+        "reason": "确认权限管理员和子管理员的角色边界——复制操作需要权限管理员/超管权限"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "reason": "确认复制后权限的生效状态和双管理员互审的审批状态流转——影响business规则6和互审GAP处理"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+        "reason": "判断复制能力与双管理员互审模式的互动关系——复制完成时需要生成审批，这是本需求最关键的GAP来源"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/31_体验翻译需求.md",
+        "reason": "参考翻牌叠加等已有模式设计复制逻辑——翻牌叠加是已有的叠加不覆盖先例，直接用于推理叠加规则"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/可用性.md",
+        "reason": "指导复制弹窗的可用性设计——选择器交互、默认全选、至少选一项的校验提示"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/流程模式.md",
+        "reason": "指导复制弹窗的分步结构（复制信息→复制对象）——BFM-02分步引导适用于校验顺序强制的场景"
+      },
+      {
+        "ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "reason": "指导校验顺序的错误提示文案——按顺序阻断、展示具体失败用户名单"
+      }
+    ]
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md",
+      "gap_list.md",
+      "check_report.md"
+    ],
+    "notes": [
+      "严格承接需求中的明确规则：叠加不覆盖、普通用户变子管理员、200人限制、校验顺序(4步)",
+      "双管理员互审审批规则GAP不可脑补——必须在business和experience中标记为待确认",
+      "加入状态口径冲突（已启用/已加入）需在facts中暴露",
+      "复制信息至少选一项、复制对象至少选一名——两个必选校验"
+    ]
+  }
+}
