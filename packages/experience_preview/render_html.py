@@ -234,29 +234,29 @@ body {
   overflow-x: auto;
 }
 
-.summary-row {
-  display: flex;
-   align-items: center;
-  gap: 8px;
-   flex-wrap: wrap;
-   margin-bottom: 8px;
-}
-
-.summary-row:last-child { margin-bottom: 0; }
-
-.summary-role {
-  min-width: 88px;
-  padding: 4px 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent-strong);
-}
-
 .summary-path {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.summary-row:last-child { margin-bottom: 0; }
+
+.summary-role {
+  min-width: 160px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
 }
 
 .flow-arrow,
@@ -347,17 +347,20 @@ def _render_interaction_summary(summary: dict[str, Any]) -> str:
     rows = summary.get("rows") or []
     if not rows:
         return ""
-    parts = ['<div class="summary-visual">']
+    parts = ['<div class="summary-visual main-node-map">']
     for row in rows:
         parts.append('<div class="summary-row">')
-        parts.append(f'<div class="summary-role">{html_mod.escape(row.get("role", ""))}</div>')
+        parts.append(f'<div class="summary-role">{html_mod.escape(str(row.get("role", "")))}</div>')
         parts.append('<div class="summary-path">')
-        for index, step in enumerate(row.get("steps") or []):
-            parts.append(f'<span class="summary-step">{html_mod.escape(step)}</span>')
-            if index < len((row.get("steps") or [])) - 1:
+        nodes = row.get("nodes") or []
+        for index, node in enumerate(nodes):
+            parts.append(
+                f'<span class="summary-step"><strong>{html_mod.escape(str(node.get("id", "")))}</strong> '
+                f'{html_mod.escape(str(node.get("name", "")))}</span>'
+            )
+            if index < len(nodes) - 1:
                 parts.append('<span class="summary-arrow">→</span>')
-        parts.append('</div>')
-        parts.append('</div>')
+        parts.append('</div></div>')
     parts.append("</div>")
     return "".join(parts)
 

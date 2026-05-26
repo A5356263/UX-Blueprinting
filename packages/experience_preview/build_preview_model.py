@@ -177,40 +177,53 @@ def _remove_journey_path_lines(body: str) -> str:
 
 def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    in_role_block = False
+    in_node_block = False
     for line in body.splitlines():
         stripped = line.strip()
-        if stripped in {"**涉及角色：**", "**涉及角色:**"}:
-            in_role_block = True
+        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+            in_node_block = True
             continue
-        if in_role_block and (stripped.startswith("**") or re.match(r"^\d+\.\s+", stripped)):
+        if in_node_block and stripped.startswith("**"):
             break
-        if in_role_block and stripped.startswith("- "):
+        if in_node_block and stripped.startswith("- "):
             content = stripped[2:].strip()
-            if "：" not in content:
+            if "：" not in content and ":" not in content:
                 continue
-            role, path = content.split("：", 1)
-            steps = [step.strip() for step in re.split(r"\s*(?:->|→)\s*", path) if step.strip()]
-            if role.strip() and steps:
-                rows.append({"role": role.strip(), "steps": steps})
+            role, path = re.split(r"[:：]", content, maxsplit=1)
+            role = role.strip()
+            if not role:
+                continue
+            node_items: list[dict[str, Any]] = []
+            for part in re.split(r"\s*(?:->|→)\s*", path):
+                segment = part.strip()
+                if not segment:
+                    continue
+                match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
+                if not match:
+                    continue
+                node_id = match.group(1).strip()
+                name = match.group(2).strip()
+                node_items.append({"id": node_id, "name": name})
+            if role and node_items:
+                rows.append({"role": role, "nodes": node_items})
     return rows
 
 
-def _remove_interaction_summary_role_block(body: str) -> str:
+def _remove_interaction_summary_node_block(body: str) -> str:
     lines = body.splitlines()
     kept: list[str] = []
-    in_role_block = False
+    in_node_block = False
     for line in lines:
         stripped = line.strip()
-        if stripped in {"**涉及角色：**", "**涉及角色:**"}:
-            in_role_block = True
+        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+            in_node_block = True
             continue
-        if in_role_block and stripped.startswith("- "):
+        if in_node_block and stripped.startswith("- "):
             continue
-        if in_role_block and not stripped:
+        if in_node_block and not stripped:
             continue
-        if in_role_block:
-            in_role_block = False
+        if in_node_block:
+            in_node_block = False
         kept.append(line)
     return "\n".join(kept).strip()
 
@@ -372,7 +385,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                 "heading": heading,
                 "rows": _parse_interaction_summary(body),
             }
-            body = _remove_interaction_summary_role_block(body)
+            body = _remove_interaction_summary_node_block(body)
 
         if heading in {"3. 主交互流程", "4. 次交互流程"}:
             subs = _split_subsections(body, 3)

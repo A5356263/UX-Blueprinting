@@ -768,6 +768,39 @@ def count_business_code_like_hits(text: str) -> int:
     return len(hits)
 
 
+def extract_summary_node_ids(text: str) -> list[str]:
+    ids: list[str] = []
+    in_node_block = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+            in_node_block = True
+            continue
+        if in_node_block and stripped.startswith("**"):
+            break
+        if in_node_block and stripped.startswith("- "):
+            content = stripped[2:].strip()
+            if "：" not in content and ":" not in content:
+                continue
+            _role, path = re.split(r"[:：]", content, maxsplit=1)
+            for part in re.split(r"\s*(?:->|→)\s*", path):
+                segment = part.strip()
+                match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
+                if match:
+                    ids.append(match.group(1).strip())
+    return ids
+
+
+def extract_main_flow_heading_ids(text: str) -> list[str]:
+    ids: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        match = re.match(r"^###\s+节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)[:：]\s*(.+)$", stripped)
+        if match:
+            ids.append(match.group(1).strip())
+    return ids
+
+
 def find_repeated_page_names_in_core(section_text: str) -> list[str]:
     candidates: list[str] = []
     for line in section_text.splitlines():
@@ -1482,6 +1515,7 @@ def analyze_experience_blueprint(
     sections = parse_h2_sections(experience_text)
     summary_section = sections.get("0. 本次关键设计判断", "")
     journey_section = get_section_by_title(sections, "1. 旅程图")
+    interaction_summary_section = get_section_by_title(sections, "2. 交互流程总览")
     main_flow_section = get_section_by_title(sections, "3. 主交互流程")
     secondary_flow_section = get_section_by_title(sections, "4. 次交互流程")
     exception_flow_section = get_section_by_title(sections, "5. 异常与阻断流程")
@@ -1511,6 +1545,8 @@ def analyze_experience_blueprint(
         count_pattern_matches(EXPERIENCE_STATE_BLOCK_PATTERN, state_copy_section),
     )
     appendix_item_count = max(count_real_table_rows(appendix_section), count_real_list_items(appendix_section))
+    summary_node_ids = extract_summary_node_ids(interaction_summary_section)
+    main_flow_heading_ids = extract_main_flow_heading_ids(main_flow_section)
 
     exception_text = "\n".join([main_flow_section, secondary_flow_section, exception_flow_section, state_copy_section])
     has_exception_coverage = contains_any(
@@ -1559,6 +1595,14 @@ def analyze_experience_blueprint(
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
+    if summary_node_ids:
+        if not main_flow_heading_ids:
+            add_issue(issues, "warning", "experience_blueprint.md 交互流程总览存在主交互节点，但主交互流程缺少可对应的节点详情标题")
+        else:
+            missing_ids = [node_id for node_id in summary_node_ids if node_id not in main_flow_heading_ids]
+            if missing_ids:
+                add_issue(issues, "warning", f"experience_blueprint.md 的交互流程总览节点与主交互流程详情未完全对应，请检查这些节点编号：{', '.join(missing_ids)}")
+
     journey_table_headers, journey_table_rows = extract_first_markdown_table(journey_section)
     if journey_table_headers and journey_table_rows:
         add_issue(issues, "warning", "experience_blueprint.md 旅程图应使用角色路径列表，不再使用角色 × 阶段表格")
@@ -1586,6 +1630,8 @@ def analyze_experience_blueprint(
         "appendix_item_count": appendix_item_count,
         "exception_coverage": has_exception_coverage,
         "core_table_count": core_table_count,
+        "summary_node_count": len(summary_node_ids),
+        "main_flow_heading_count": len(main_flow_heading_ids),
     }
     return metrics, issues
 
