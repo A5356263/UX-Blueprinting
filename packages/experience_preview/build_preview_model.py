@@ -112,18 +112,6 @@ def _extract_markdown_table(lines: list[str]) -> tuple[list[str], list[list[str]
     return [], []
 
 
-def _remove_first_markdown_table(text: str) -> str:
-    lines = text.splitlines()
-    for i in range(len(lines) - 1):
-        if lines[i].strip().startswith("|") and _is_table_separator(lines[i + 1]):
-            j = i + 2
-            while j < len(lines) and lines[j].strip().startswith("|"):
-                j += 1
-            remaining = lines[:i] + lines[j:]
-            return "\n".join(remaining).strip()
-    return text.strip()
-
-
 def _plain_cell_text(text: str) -> str:
     text = text.replace("<br>", "\n").replace("<br/>", "\n").replace("<br />", "\n")
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
@@ -144,6 +132,47 @@ def _extract_journey_gaps(body: str) -> list[str]:
         if in_gap_section and stripped.startswith("- "):
             items.append(stripped[2:].strip())
     return items
+
+
+def _parse_journey_paths(body: str) -> list[dict[str, Any]]:
+    paths: list[dict[str, Any]] = []
+    in_gap_section = False
+    for line in body.splitlines():
+        stripped = line.strip()
+        if re.match(r"^###\s+旅程缺口\s*$", stripped):
+            in_gap_section = True
+            continue
+        if in_gap_section:
+            continue
+        if not stripped.startswith("- "):
+            continue
+        content = stripped[2:].strip()
+        if "：" not in content:
+            continue
+        role, path = content.split("：", 1)
+        nodes = [node.strip() for node in re.split(r"\s*(?:->|→)\s*", path) if node.strip()]
+        if role.strip() and nodes:
+            paths.append({"role": role.strip(), "nodes": nodes})
+    return paths
+
+
+def _remove_journey_path_lines(body: str) -> str:
+    lines = body.splitlines()
+    kept: list[str] = []
+    in_gap_section = False
+    for line in lines:
+        stripped = line.strip()
+        if re.match(r"^###\s+旅程缺口\s*$", stripped):
+            in_gap_section = True
+            kept.append(line)
+            continue
+        if in_gap_section:
+            kept.append(line)
+            continue
+        if stripped.startswith("- ") and "：" in stripped[2:]:
+            continue
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
@@ -330,7 +359,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
     pages: list[dict[str, Any]] = []
     states: list[str] = []
     state_rows: list[dict[str, str]] = []
-    journey: dict[str, Any] = {"heading": "", "stages": [], "rows": [], "gaps": []}
+    journey: dict[str, Any] = {"heading": "", "paths": [], "gaps": []}
     interaction_summary: dict[str, Any] = {"heading": "", "rows": []}
     detail_flows: dict[str, list[dict[str, Any]]] = {}
 
@@ -377,23 +406,12 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                 detail_flows[heading] = section_flows
 
         if heading == "1. 旅程图":
-            header_cells, body_rows = _extract_markdown_table(body.splitlines())
-            if len(header_cells) >= 2:
-                rows: list[dict[str, Any]] = []
-                for row in body_rows:
-                    if not row:
-                        continue
-                    role = _plain_cell_text(row[0])
-                    cells = [_plain_cell_text(cell) for cell in row[1 : len(header_cells)]]
-                    if role:
-                        rows.append({"role": role, "cells": cells})
-                journey = {
-                    "heading": heading,
-                    "stages": [_plain_cell_text(cell) for cell in header_cells[1:]],
-                    "rows": rows,
-                    "gaps": _extract_journey_gaps(body),
-                }
-            body = _remove_first_markdown_table(body)
+            journey = {
+                "heading": heading,
+                "paths": _parse_journey_paths(body),
+                "gaps": _extract_journey_gaps(body),
+            }
+            body = _remove_journey_path_lines(body)
 
         if heading == "6. 页面 / 弹窗 / 抽屉设计":
             subs = _split_subsections(body, 3)

@@ -281,57 +281,52 @@ body {
   line-height: 1.35;
 }
 
-.journey-grid {
-  display: grid;
-  gap: 8px;
+.journey-path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   min-width: max-content;
+  margin-bottom: 10px;
 }
 
-.journey-grid.header {
-  grid-template-columns: 140px repeat(var(--journey-cols), minmax(180px, 220px));
-  margin-bottom: 8px;
+.journey-path-row:last-child { margin-bottom: 0; }
+
+.journey-path-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
 }
 
-.journey-grid.row {
-  grid-template-columns: 140px repeat(var(--journey-cols), minmax(180px, 220px));
+.journey-path-nodes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.journey-col-head,
-.journey-role,
-.journey-cell {
+.journey-path-node {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--panel-strong);
-  padding: 10px;
-}
-
-.journey-col-head {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  font-weight: 600;
-}
-
-.journey-role {
-  font-weight: 600;
-  color: var(--accent-strong);
-}
-
-.journey-cell {
+  color: var(--text);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.35;
 }
 
-.journey-cell.is-missing {
-  background: var(--warn-soft);
-  border-color: var(--line-strong);
+.journey-path-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
 }
-
-.journey-cell-line {
-  margin-bottom: 4px;
-  white-space: pre-line;
-}
-
-.journey-cell-line:last-child { margin-bottom: 0; }
 
 .preview-footer {
   margin-top: 48px;
@@ -368,27 +363,20 @@ def _render_interaction_summary(summary: dict[str, Any]) -> str:
 
 
 def _render_journey_visual(journey: dict[str, Any]) -> str:
-    stages = journey.get("stages") or []
-    rows = journey.get("rows") or []
-    if not stages or not rows:
+    paths = journey.get("paths") or []
+    if not paths:
         return ""
-    parts = [f'<div class="journey-visual" style="--journey-cols:{len(stages)};">']
-    parts.append('<div class="journey-grid header">')
-    parts.append('<div class="journey-col-head">角色</div>')
-    for stage in stages:
-        parts.append(f'<div class="journey-col-head">{html_mod.escape(stage)}</div>')
-    parts.append('</div>')
-    for row in rows:
-        parts.append('<div class="journey-grid row">')
-        parts.append(f'<div class="journey-role">{html_mod.escape(row.get("role", ""))}</div>')
-        for cell in row.get("cells", []):
-            lines = [item.strip() for item in cell.split("\n") if item.strip()]
-            is_missing = "缺失" in cell
-            cls = "journey-cell is-missing" if is_missing else "journey-cell"
-            parts.append(f'<div class="{cls}">')
-            for line in lines or [""]:
-                parts.append(f'<div class="journey-cell-line">{html_mod.escape(line)}</div>')
-            parts.append("</div>")
+    parts = ['<div class="journey-visual">']
+    for path in paths:
+        parts.append('<div class="journey-path-row">')
+        parts.append(f'<div class="journey-path-role">{html_mod.escape(path.get("role", ""))}</div>')
+        parts.append('<div class="journey-path-nodes">')
+        nodes = path.get("nodes") or []
+        for index, node in enumerate(nodes):
+            parts.append(f'<span class="journey-path-node">{html_mod.escape(node)}</span>')
+            if index < len(nodes) - 1:
+                parts.append('<span class="journey-path-arrow">→</span>')
+        parts.append('</div>')
         parts.append('</div>')
     parts.append("</div>")
     return "".join(parts)

@@ -202,7 +202,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         else:
             business_sections = [("business 核心判断", ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"])]
     if not gap_lines:
-        gap_lines = ["当前暂无显式待确认问题，需要在生成时主动暴露不确定项。"]
+        gap_lines = ["当前暂无显式待确认问题，但仍需主动筛出是否存在影响核心判断的关键待确认。"]
 
     if guideline_refs:
         guideline_lines = "已装配的设计参考：\n" + "\n".join(f"- {line}" for line in guideline_refs)
@@ -237,8 +237,8 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         "- 输出方案时，需要说清反馈时机、反馈形式、用户可见文案和用户下一步。\n"
         + "\n\n## 7. 设计原则摘要\n\n"
         "- 先写旅程图，再写交互流程总览、主流程、次流程与异常阻断流程。\n"
-        "- 旅程图必须基于角色、阶段和简短节点正式生成，不得从 HTML 或交互流程反推。\n"
-        "- 旅程图单元格只写短节点，依据不足时进入“旅程缺口”，不要把依据和规则塞回表格。\n"
+        "- 旅程图必须基于角色路径正式生成，不得从 HTML 或交互流程反推。\n"
+        "- 旅程图使用“角色：节点 → 节点 → 节点”的路径表达；依据不足时进入“旅程缺口”，不要把依据和规则塞回路径节点。\n"
         "- 页面 / 弹窗 / 抽屉必须写清页面目标、进入条件、操作、状态反馈和异常处理。\n"
         "- 状态与反馈文案优先收敛为统一状态口径表，不重复完整流程说明。\n"
         "- 附录除设计指南消费外，还要说明业务知识如何转成体验策略与落点。\n"

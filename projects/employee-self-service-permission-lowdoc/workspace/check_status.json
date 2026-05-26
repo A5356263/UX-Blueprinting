@@ -15,7 +15,7 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-05-26T09:45:55.937354+00:00",
+  "updated_at": "2026-05-26T15:33:19.749250+00:00",
   "checked_files": [
     "projects/employee-self-service-permission-lowdoc/runtime/context_manifest.json",
     "projects/employee-self-service-permission-lowdoc/runtime/gates/business_gate_status.json",

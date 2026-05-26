@@ -119,25 +119,25 @@ section
 ```text
 journey
 - heading
-- stages[]
-- rows[]
+- paths[]
 - gaps[]
 ```
 
 其中：
 
 ```text
-journey_row
+journey_path
 - role
-- cells[]
+- nodes[]
 ```
 
 约束：
 
-- `journey` 来源于 `## 1. 旅程图` 的正式 Markdown 表格。
-- 单元格只承载旅程短节点。
+- `journey` 来源于 `## 1. 旅程图` 的正式 Markdown 路径列表。
+- 每条路径使用 `角色：节点 → 节点 → 节点` 表达。
+- 节点只承载旅程短节点。
 - `gaps[]` 来源于 `### 旅程缺口` 的普通列表。
-- 原始旅程表格在 section 正文 HTML 中应被移除，避免重复展示。
+- 原始旅程路径列表在 section 正文 HTML 中应被移除，避免重复展示。
 
 #### interaction_summary
 
@@ -226,7 +226,7 @@ state_rows[]
 
 预览层不得：
 
-- 重复展示原始旅程 Markdown 表格
+- 重复展示原始旅程 Markdown 路径列表
 - 对 `## 3. 主交互流程` 与 `## 4. 次交互流程` 插入 flow visual
 - 按参考图复刻复杂泳道图、连线系统或场景化样式
 

@@ -236,6 +236,12 @@ EXPERIENCE_MACHINE_LINE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
 EXPERIENCE_NODE_PATTERN = re.compile(r"^\*\*节点\s*\d+", re.MULTILINE)
 EXPERIENCE_PAGE_BLOCK_PATTERN = re.compile(r"^\*\*(?:页面|弹窗|抽屉)：", re.MULTILINE)
 EXPERIENCE_STATE_BLOCK_PATTERN = re.compile(r"^-+\s*状态：", re.MULTILINE)
+BUSINESS_CODE_LIKE_PATTERNS: list[re.Pattern[str]] = [
+    re.compile(r"\b[A-Z][A-Z0-9]+(?:_[A-Z0-9]+)+\b"),
+    re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b"),
+    re.compile(r"`[^`\n]+`"),
+    re.compile(r"\b[a-z][a-z0-9_]*\b\s*(?:→|->)\s*\b[a-z][a-z0-9_]*\b"),
+]
 
 ROLE_ALIASES: dict[str, list[str]] = {
     "超管": ["超管", "超级管理员"],
@@ -678,6 +684,28 @@ def extract_first_markdown_table(text: str) -> tuple[list[str], list[list[str]]]
     return (header_cells, body_rows) if found_header else ([], [])
 
 
+def extract_journey_paths(text: str) -> list[dict[str, object]]:
+    paths: list[dict[str, object]] = []
+    in_gap_section = False
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if re.match(r"^###\s+旅程缺口\s*$", stripped):
+            in_gap_section = True
+            continue
+        if in_gap_section:
+            continue
+        if not stripped.startswith("- "):
+            continue
+        content = stripped[2:].strip()
+        if "：" not in content:
+            continue
+        role, path = content.split("：", 1)
+        nodes = [node.strip() for node in re.split(r"\s*(?:->|→)\s*", path) if node.strip()]
+        if role.strip() and nodes:
+            paths.append({"role": role.strip(), "nodes": nodes})
+    return paths
+
+
 def journey_cell_contains_gap_marker(text: str) -> bool:
     normalized = normalize_handoff_line(strip_markdown_inline(text))
     if not normalized:
@@ -707,6 +735,37 @@ def journey_cell_contains_gap_marker(text: str) -> bool:
         "依据不足",
     )
     return normalized.startswith(explicit_prefixes)
+
+
+def journey_node_contains_forbidden_marker(text: str) -> bool:
+    normalized = normalize_handoff_line(strip_markdown_inline(text))
+    if not normalized:
+        return False
+    upper = normalized.upper()
+    if "依据：" in normalized or "依据:" in normalized:
+        return True
+    if "SOURCE_REFS" in upper or "SOURCE REFS" in upper:
+        return True
+    return contains_any(upper, ["[GAP]", " GAP", "GAP:", "GAP：", "CONFLICT", "QUESTION"])
+
+
+def has_pending_question_blocks(text: str) -> bool:
+    if not text.strip():
+        return False
+    has_title = bool(re.search(r"(?m)^\s*\d+\.\s+\*\*.+\*\*\s*$", text))
+    has_impact = "影响：" in text or "影响:" in text
+    has_owner = "建议确认方：" in text or "建议确认方:" in text
+    return has_title and has_impact and has_owner
+
+
+def count_business_code_like_hits(text: str) -> int:
+    hits: set[str] = set()
+    for pattern in BUSINESS_CODE_LIKE_PATTERNS:
+        for match in pattern.findall(text):
+            normalized = str(match).strip()
+            if normalized:
+                hits.add(normalized)
+    return len(hits)
 
 
 def find_repeated_page_names_in_core(section_text: str) -> list[str]:
@@ -1311,6 +1370,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     issues: list[tuple[str, str]] = []
     sections = parse_h2_sections(business_text)
 
+    summary_section = sections.get("0. 本次关键设计判断", "")
     stance_section = sections.get("1. 一句话结论", "")
     value_section = sections.get("3. 值不值得做", "")
     capability_section = sections.get("4. 应该做成什么能力形态", "")
@@ -1341,6 +1401,9 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     if not stance_section.strip():
         add_issue(issues, "blocker", "business_blueprint.md 缺少最终业务立场内容")
 
+    if summary_section.strip() and "关键待确认" not in summary_section:
+        add_issue(issues, "warning", "business_blueprint.md `## 0. 本次关键设计判断` 建议使用“关键待确认”而不是“需要确认”")
+
     if option_compare_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 备选路径比较检测不到结构化内容，请确认已用自然语言表达")
     elif option_compare_count < 2:
@@ -1370,8 +1433,28 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     elif not referenced_fact_sections:
         add_issue(issues, "warning", "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱")
 
+    business_core_sections = [
+        summary_section,
+        stance_section,
+        sections.get("2. 需求是否成立", ""),
+        value_section,
+        capability_section,
+        plan_section,
+        boundary_section,
+        risk_section,
+        handover_section,
+    ]
+    if count_business_code_like_hits("\n".join(business_core_sections)) >= 2:
+        add_issue(
+            issues,
+            "warning",
+            "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。",
+        )
+
     if not pending_section.strip() and unresolved_gap_count == 0:
         add_issue(issues, "warning", "business_blueprint.md 未显式保留开放问题或缺口")
+    elif pending_section.strip() and not has_pending_question_blocks(pending_section):
+        add_issue(issues, "warning", "business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构")
     if not has_appendix:
         add_issue(issues, "warning", "business_blueprint.md 缺少附录（事实、知识与判断追踪）")
 
@@ -1397,6 +1480,7 @@ def analyze_experience_blueprint(
 ) -> tuple[dict[str, object], list[tuple[str, str]]]:
     issues: list[tuple[str, str]] = []
     sections = parse_h2_sections(experience_text)
+    summary_section = sections.get("0. 本次关键设计判断", "")
     journey_section = get_section_by_title(sections, "1. 旅程图")
     main_flow_section = get_section_by_title(sections, "3. 主交互流程")
     secondary_flow_section = get_section_by_title(sections, "4. 次交互流程")
@@ -1409,7 +1493,8 @@ def analyze_experience_blueprint(
     core_non_tabular_text = "\n".join([main_flow_section, secondary_flow_section, exception_flow_section, page_design_section])
 
     flow_section = "\n".join([main_flow_section, secondary_flow_section])
-    journey_item_count = max(count_real_table_rows(journey_section), count_real_list_items(journey_section))
+    journey_paths = extract_journey_paths(journey_section)
+    journey_item_count = len(journey_paths)
     flow_count = max(
         count_real_table_rows(flow_section),
         count_real_list_items(flow_section),
@@ -1436,8 +1521,14 @@ def analyze_experience_blueprint(
     if flow_count == 0:
         add_issue(issues, "warning", "experience_blueprint.md 交互流程检测不到结构化内容，请确认已用自然语言写清各节点")
 
+    if summary_section.strip() and "关键待确认" not in summary_section:
+        add_issue(issues, "warning", "experience_blueprint.md `## 0. 本次关键设计判断` 建议使用“关键待确认”而不是“需要确认”")
+
     if journey_item_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 缺少正式旅程图，或旅程图还没有形成可解析结构")
+        if count_real_list_items(journey_section) > 0:
+            add_issue(issues, "warning", "experience_blueprint.md 旅程图列表存在，但未形成可解析的角色路径结构")
+        else:
+            add_issue(issues, "warning", "experience_blueprint.md 缺少正式旅程图，或旅程图还没有形成可解析结构")
 
     if page_inventory_item_count == 0:
         add_issue(issues, "warning", "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面")
@@ -1445,8 +1536,10 @@ def analyze_experience_blueprint(
     if state_feedback_pair_count == 0:
         add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与异常处理信息")
 
-    if count_real_list_items(pending_section) == 0:
+    if not pending_section.strip():
         add_issue(issues, "warning", "experience_blueprint.md 待确认问题为空，建议显式标注不确定项")
+    elif pending_section.strip() and not has_pending_question_blocks(pending_section):
+        add_issue(issues, "warning", "experience_blueprint.md `## 8. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构")
 
     if appendix_item_count == 0:
         add_issue(issues, "warning", "experience_blueprint.md 附录内容偏少，建议补充设计指南与业务知识消费说明")
@@ -1466,20 +1559,24 @@ def analyze_experience_blueprint(
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
-    table_headers, table_rows = extract_first_markdown_table(journey_section)
-    if table_headers and table_rows:
-        for row in table_rows:
-            for cell in row[1:]:
-                stripped = strip_markdown_inline(cell).replace("<br>", "").replace("<br/>", "").replace("<br />", "")
-                if "依据" in stripped or "规则" in stripped:
-                    add_issue(issues, "warning", "experience_blueprint.md 旅程图单元格应只保留短节点，不应混入依据或规则说明")
-                    break
-                if journey_cell_contains_gap_marker(stripped):
-                    add_issue(issues, "warning", "experience_blueprint.md 旅程缺口应单独放在旅程图下方，不应混入旅程表格单元格")
-                    break
-            else:
+    journey_table_headers, journey_table_rows = extract_first_markdown_table(journey_section)
+    if journey_table_headers and journey_table_rows:
+        add_issue(issues, "warning", "experience_blueprint.md 旅程图应使用角色路径列表，不再使用角色 × 阶段表格")
+
+    for path in journey_paths:
+        for node in path.get("nodes", []):
+            stripped = normalize_handoff_line(str(node))
+            if not stripped:
                 continue
-            break
+            if journey_node_contains_forbidden_marker(stripped):
+                add_issue(issues, "warning", "experience_blueprint.md 旅程路径节点不应混入显式依据来源、内部标记或缺口标记")
+                break
+            if journey_cell_contains_gap_marker(stripped):
+                add_issue(issues, "warning", "experience_blueprint.md 旅程缺口应单独放在旅程图下方，不应混入旅程路径节点")
+                break
+        else:
+            continue
+        break
 
     metrics = {
         "journey_item_count": journey_item_count,
