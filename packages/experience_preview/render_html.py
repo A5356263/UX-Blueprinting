@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html as html_mod
+import re
 from pathlib import Path
 from typing import Any
 
@@ -40,7 +41,6 @@ body {
 
 .app { display: flex; min-height: 100vh; }
 
-/* ---- sidebar ---- */
 .sidebar {
   width: 280px;
   min-width: 280px;
@@ -127,20 +127,11 @@ body {
 .nav-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
 .nav-item.level-2 { padding-left: 24px; font-size: 12px; }
 .nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
-.nav-divider {
-  font-size: 11px;
-  color: var(--text-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 10px 10px 4px;
-  font-weight: 600;
-}
 
-/* ---- main content ---- */
 .content {
   flex: 1;
   padding: 32px 40px 80px;
-  max-width: 960px;
+  max-width: 1080px;
 }
 
 .content-panel { display: block; }
@@ -162,7 +153,6 @@ body {
 
 .section-heading.level-2 {
   font-size: 16px;
-  color: var(--text);
   border-bottom: 1px solid var(--line);
 }
 
@@ -174,28 +164,20 @@ body {
 }
 
 .section-body { font-size: 15px; }
-
 .section-body p { margin: 0 0 10px; }
-.section-body ul {
-  margin: 8px 0 16px;
-  padding-left: 20px;
-  list-style: none;
-}
-
+.section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
 .section-body ul li {
   position: relative;
   padding: 4px 0 4px 16px;
   margin: 2px 0;
 }
-
 .section-body ul li::before {
-  content: "—";
+  content: "•";
   position: absolute;
   left: 0;
   color: var(--accent);
   font-size: 12px;
 }
-
 .section-body strong { color: var(--accent-strong); font-weight: 600; }
 .section-body code {
   background: var(--panel-subtle);
@@ -204,7 +186,6 @@ body {
   font-size: 0.9em;
   border: 1px solid var(--line);
 }
-
 .section-body pre {
   background: var(--panel-subtle);
   border: 1px solid var(--line);
@@ -214,7 +195,6 @@ body {
   font-size: 13px;
   line-height: 1.5;
 }
-
 .section-body h3,
 .section-body h4,
 .section-body h5,
@@ -223,7 +203,6 @@ body {
   color: var(--accent-strong);
   font-weight: 600;
 }
-
 .section-body table {
   width: 100%;
   border-collapse: collapse;
@@ -231,7 +210,6 @@ body {
   background: var(--panel-strong);
   border: 1px solid var(--line);
 }
-
 .section-body th,
 .section-body td {
   padding: 10px 12px;
@@ -239,37 +217,128 @@ body {
   text-align: left;
   vertical-align: top;
 }
-
 .section-body th {
   background: var(--panel-subtle);
   color: var(--accent-strong);
   font-weight: 600;
 }
+.section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+.section-body ol li { padding: 4px 0; }
 
-.section-body ol {
-  margin: 8px 0 16px;
-  padding-left: 22px;
-}
-
-.section-body ol li {
-  padding: 4px 0;
-}
-
-/* ---- flow groups ---- */
-.flow-group { margin-bottom: 28px; }
-
-.flow-name {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text);
-  margin: 0 0 16px;
-  padding: 8px 14px;
-  background: var(--accent-soft);
+.flow-visual,
+.journey-visual {
+  margin: 0 0 18px;
+  padding: 12px;
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  border-left: 4px solid var(--accent);
+  overflow-x: auto;
 }
 
-/* ---- node cards ---- */
+.flow-group { margin-bottom: 18px; }
+.flow-group:last-child { margin-bottom: 0; }
+
+.flow-name,
+.journey-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  margin: 0 0 10px;
+}
+
+.flow-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: max-content;
+  margin-bottom: 8px;
+}
+
+.flow-row:last-child { margin-bottom: 0; }
+
+.flow-node-card {
+  min-width: 132px;
+  max-width: 180px;
+  padding: 8px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.flow-node-name {
+  font-weight: 600;
+  color: var(--accent-strong);
+  margin-bottom: 4px;
+}
+
+.flow-node-meta {
+  color: var(--text-muted);
+}
+
+.flow-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.journey-grid {
+  display: grid;
+  gap: 8px;
+  min-width: max-content;
+}
+
+.journey-grid.header {
+  grid-template-columns: 140px repeat(var(--journey-cols), minmax(180px, 220px));
+  margin-bottom: 8px;
+}
+
+.journey-grid.row {
+  grid-template-columns: 140px repeat(var(--journey-cols), minmax(180px, 220px));
+}
+
+.journey-col-head,
+.journey-role,
+.journey-cell {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-strong);
+  padding: 10px;
+}
+
+.journey-col-head {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.journey-role {
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.journey-cell {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.journey-cell.is-missing {
+  background: var(--warn-soft);
+  border-color: var(--line-strong);
+}
+
+.journey-cell-line {
+  margin-bottom: 4px;
+  white-space: pre-line;
+}
+
+.journey-cell-line:last-child { margin-bottom: 0; }
+
 .node-card {
   background: var(--panel-strong);
   border: 1px solid var(--line);
@@ -319,51 +388,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ---- page cards ---- */
-.page-card {
-  background: var(--panel-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-}
-
-.page-card-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  margin: 0 0 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-card-name .icon { font-size: 18px; }
-
-.page-card-desc { font-size: 14px; }
-.page-card-desc p { margin: 0 0 6px; }
-
-/* ---- states list ---- */
-.states-list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-}
-
-.state-item {
-  background: var(--panel-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  font-size: 14px;
-  box-shadow: 0 1px 4px rgba(63, 49, 30, 0.03);
-}
-
-.state-item strong { color: var(--accent-strong); }
-
-/* ---- footer ---- */
 .preview-footer {
   margin-top: 48px;
   padding-top: 16px;
@@ -372,7 +396,6 @@ body {
   color: var(--text-soft);
 }
 
-/* ---- responsive ---- */
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .content { padding: 20px 16px 60px; }
@@ -396,25 +419,6 @@ def _field_label(key: str) -> str:
     return labels.get(key, key)
 
 
-def _render_node_card(node: dict[str, Any]) -> str:
-    parts = [f'<h4 class="node-name">{html_mod.escape(node.get("name", ""))}</h4>']
-    field_order = ["user_action", "system_feedback", "explanation", "copy_text", "success_copy", "error_copy", "failure_copy", "options_note", "buttons", "next_step"]
-    for key in field_order:
-        value = node.get(key, "")
-        if value:
-            label = _field_label(key)
-            parts.append(
-                f'<div class="node-field">'
-                f'<span class="node-field-label">{label}</span>'
-                f'<span class="node-field-value">{_inline_text(value)}</span>'
-                f"</div>"
-            )
-    if node.get("description_html"):
-        parts.append(f'<div class="node-desc">{node["description_html"]}</div>')
-    parts_html = "\n".join(parts)
-    return f'<div class="node-card">{parts_html}</div>'
-
-
 def _inline_text(text: str) -> str:
     text = html_mod.escape(text)
     text = text.replace("**", "")
@@ -422,43 +426,145 @@ def _inline_text(text: str) -> str:
     return text
 
 
-def _render_sections(sections: list[dict[str, Any]]) -> str:
+def _compact_text(text: str, limit: int = 48) -> str:
+    clean = re.sub(r"\s+", " ", text).strip()
+    if len(clean) <= limit:
+        return clean
+    return clean[: limit - 1] + "…"
+
+
+def _render_node_card(node: dict[str, Any]) -> str:
+    parts = [f'<h4 class="node-name">{html_mod.escape(node.get("name", ""))}</h4>']
+    field_order = [
+        "user_action",
+        "system_feedback",
+        "explanation",
+        "copy_text",
+        "success_copy",
+        "error_copy",
+        "failure_copy",
+        "options_note",
+        "buttons",
+        "next_step",
+    ]
+    for key in field_order:
+        value = node.get(key, "")
+        if value:
+            parts.append(
+                f'<div class="node-field"><span class="node-field-label">{_field_label(key)}</span>'
+                f'<span class="node-field-value">{_inline_text(value)}</span></div>'
+            )
+    if node.get("description_html"):
+        parts.append(f'<div class="node-desc">{node["description_html"]}</div>')
+    return f'<div class="node-card">{"".join(parts)}</div>'
+
+
+def _render_flow_visual(groups: list[dict[str, Any]]) -> str:
+    if not groups:
+        return ""
+    parts = ['<div class="flow-visual">']
+    for group in groups:
+        parts.append('<div class="flow-group">')
+        if group.get("name"):
+            parts.append(f'<div class="flow-name">{html_mod.escape(group["name"])}</div>')
+        nodes = group.get("nodes") or []
+        if nodes:
+            parts.append('<div class="flow-row">')
+            for index, node in enumerate(nodes):
+                meta = node.get("user_action") or node.get("next_step") or ""
+                parts.append(
+                    '<div class="flow-node-card">'
+                    f'<div class="flow-node-name">{html_mod.escape(node.get("name", ""))}</div>'
+                    f'<div class="flow-node-meta">{html_mod.escape(_compact_text(meta))}</div>'
+                    '</div>'
+                )
+                if index < len(nodes) - 1:
+                    parts.append('<div class="flow-arrow">→</div>')
+            parts.append('</div>')
+        elif group.get("body_html"):
+            parts.append(group["body_html"])
+        parts.append('</div>')
+    parts.append("</div>")
+    return "".join(parts)
+
+
+def _render_journey_visual(journey: dict[str, Any]) -> str:
+    stages = journey.get("stages") or []
+    rows = journey.get("rows") or []
+    if not stages or not rows:
+        return ""
+    parts = [f'<div class="journey-visual" style="--journey-cols:{len(stages)};">']
+    parts.append('<div class="journey-title">旅程视图</div>')
+    parts.append('<div class="journey-grid header">')
+    parts.append('<div class="journey-col-head">角色</div>')
+    for stage in stages:
+        parts.append(f'<div class="journey-col-head">{html_mod.escape(stage)}</div>')
+    parts.append('</div>')
+    for row in rows:
+        parts.append('<div class="journey-grid row">')
+        parts.append(f'<div class="journey-role">{html_mod.escape(row.get("role", ""))}</div>')
+        for cell in row.get("cells", []):
+            lines = [item.strip() for item in cell.split("\n") if item.strip()]
+            is_missing = "缺失" in cell
+            cls = "journey-cell is-missing" if is_missing else "journey-cell"
+            parts.append(f'<div class="{cls}">')
+            for line in lines or [""]:
+                parts.append(f'<div class="journey-cell-line">{html_mod.escape(line)}</div>')
+            parts.append("</div>")
+        parts.append('</div>')
+    parts.append("</div>")
+    return "".join(parts)
+
+
+def _render_sections(sections: list[dict[str, Any]], section_visuals: dict[str, str] | None = None) -> str:
     parts: list[str] = []
-    for s in sections:
-        level_class = f"level-{s['level']}" if s["level"] > 1 else ""
-        parts.append(f'<div class="section-block" id="{s["anchor"]}">')
-        parts.append(f'<h2 class="section-heading {level_class}">{html_mod.escape(s["heading"])}</h2>')
-        parts.append(f'<div class="section-body">{s["body_html"]}</div>')
+    visuals = section_visuals or {}
+    for section in sections:
+        level_class = f"level-{section['level']}" if section["level"] > 1 else ""
+        body_html = visuals.get(section["heading"], "") + section["body_html"]
+        parts.append(f'<div class="section-block" id="{section["anchor"]}">')
+        parts.append(f'<h2 class="section-heading {level_class}">{html_mod.escape(section["heading"])}</h2>')
+        parts.append(f'<div class="section-body">{body_html}</div>')
         parts.append("</div>")
     return "\n".join(parts)
 
 
 def _render_nav_items(sections: list[dict[str, Any]]) -> str:
     parts: list[str] = []
-    for s in sections:
-        cls = f"level-{s['level']}" if s["level"] > 1 else ""
-        parts.append(f'<a class="nav-item {cls}" data-target="{s["anchor"]}">{html_mod.escape(s["heading"])}</a>')
+    for section in sections:
+        cls = f"level-{section['level']}" if section["level"] > 1 else ""
+        parts.append(f'<a class="nav-item {cls}" data-target="{section["anchor"]}">{html_mod.escape(section["heading"])}</a>')
     return "\n".join(parts)
+
+
+def _experience_section_visuals(exp: dict[str, Any]) -> dict[str, str]:
+    visuals: dict[str, str] = {}
+    journey = exp.get("journey") or {}
+    if journey.get("heading"):
+        visuals[journey["heading"]] = _render_journey_visual(journey)
+    for heading, groups in (exp.get("flow_sections") or {}).items():
+        visuals[heading] = _render_flow_visual(groups)
+    return visuals
 
 
 def _render_business(model: dict[str, Any]) -> str:
     biz = model["business"]
     sections_html = _render_sections(biz["sections"])
-    return f"""
-    <div class="content-panel" id="content-business">
-      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(biz['title'])}</h1>
-      {sections_html}
-    </div>"""
+    return (
+        '<div class="content-panel" id="content-business">'
+        f'<h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(biz["title"])}</h1>'
+        f"{sections_html}</div>"
+    )
 
 
 def _render_experience(model: dict[str, Any]) -> str:
     exp = model["experience"]
-    sections_html = _render_sections(exp["sections"])
-    return f"""
-    <div class="content-panel hidden" id="content-experience">
-      <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp['title'])}</h1>
-      {sections_html}
-    </div>"""
+    sections_html = _render_sections(exp["sections"], _experience_section_visuals(exp))
+    return (
+        '<div class="content-panel hidden" id="content-experience">'
+        f'<h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp["title"])}</h1>'
+        f"{sections_html}</div>"
+    )
 
 
 def _render_html(model: dict[str, Any]) -> str:
@@ -481,7 +587,6 @@ def _render_html(model: dict[str, Any]) -> str:
 </head>
 <body>
 <div class="app">
-
 <nav class="sidebar">
   <div class="sidebar-header">
     <h2>体验策略</h2>
@@ -498,7 +603,6 @@ def _render_html(model: dict[str, Any]) -> str:
     <div class="nav-section">{experience_nav}</div>
   </div>
 </nav>
-
 <main class="content">
   {business_content}
   {experience_content}
@@ -506,7 +610,6 @@ def _render_html(model: dict[str, Any]) -> str:
     来源：{html_mod.escape(meta.get('source_experience', ''))} &nbsp;|&nbsp; 版本 {html_mod.escape(meta.get('version', ''))}
   </footer>
 </main>
-
 </div>
 <script>
 (function() {{

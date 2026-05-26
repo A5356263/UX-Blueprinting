@@ -1,0 +1,24 @@
+{
+  "project_id": "employee-self-service-permission-lowdoc",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "c65a7b55574947ae93020810c44ab80df5b4cdd32526f256f4ea35786200ede5",
+  "task_card_hash": "604e1196c3748cbb74b4080ff0f46d3eae4af14e3ada6cae5fe796de2f1ebaa3",
+  "generated_at": "2026-05-26T07:32:32+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "route-decision",
+    "assemble",
+    "gate-business",
+    "gate-experience",
+    "validate",
+    "preview",
+    "generate-experience",
+    "generate-business"
+  ]
+}

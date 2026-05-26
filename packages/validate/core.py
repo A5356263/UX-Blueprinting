@@ -44,6 +44,7 @@ STAGE_REQUIRED_HEADINGS = {
     "experience_blueprint.md": [
         "## 0. 本次关键设计判断",
         "## 1. 交互流程总览",
+        "## 1.5 旅程图",
         "## 2. 主交互流程",
         "## 3. 次交互流程",
         "## 4. 异常与阻断流程",
@@ -135,7 +136,7 @@ def _print_repair_guidance(project_id: str) -> None:
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程"},
+    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录：设计指南消费说明"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
@@ -175,7 +176,7 @@ RUNTIME_LEAKAGE_TERMS = [
 RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
     "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
-    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录 E：原始状态 / 文案 / 风险矩阵"},
+    "experience_blueprint.md": {"1. 交互流程总览", "2. 主交互流程", "附录：设计指南消费说明"},
 }
 
 DEFAULT_TRACKED_OUTPUTS = [
@@ -677,6 +678,13 @@ def get_section(content: str, heading: str) -> str:
     return parse_h2_sections(content).get(title, "")
 
 
+def find_first_section_by_keyword(sections: dict[str, str], keyword: str) -> str:
+    for title, section_text in sections.items():
+        if keyword in title:
+            return section_text
+    return ""
+
+
 def count_real_table_rows(text: str) -> int:
     pipe_lines = [line.strip() for line in text.splitlines() if line.strip().startswith("|")]
     if not pipe_lines:
@@ -813,8 +821,8 @@ def extract_handoff_match_phrases(item_text: str, category: str) -> list[str]:
 
     for segment in split_queue:
         candidates.extend(re.split(r"[→/、，,；;（）()+]", segment))
-        if category in {"exceptions", "states", "risks"}:
-            candidates.extend(re.split(r"(?:并|或|与|和)", segment))
+        if category in {"flows", "exceptions", "states", "risks"}:
+            candidates.extend(re.split(r"(?:并|或|与|和|及)", segment))
 
     cleaned_candidates: list[str] = []
     for candidate in candidates:
@@ -835,6 +843,15 @@ def extract_handoff_match_phrases(item_text: str, category: str) -> list[str]:
             for keyword in HANDOFF_SIGNAL_KEYWORDS:
                 if keyword in cleaned:
                     cleaned_candidates.append(keyword)
+        if category == "states":
+            if "管理模式" in cleaned:
+                cleaned_candidates.extend(["管理模式", "管理模式-已开启", "管理模式-未开启", "已开启", "未开启"])
+            if "可见性" in cleaned:
+                cleaned_candidates.extend(["适用对象", "可见"])
+            if "可操作性" in cleaned:
+                cleaned_candidates.extend(["用户可操作", "可操作"])
+            if "下一步" in cleaned:
+                cleaned_candidates.extend(["统一反馈口径", "下一步", "处理动作"])
 
     return dedupe_keep_order(cleaned_candidates)
 
@@ -1323,16 +1340,19 @@ def analyze_experience_blueprint(
 ) -> tuple[dict[str, object], list[tuple[str, str]]]:
     issues: list[tuple[str, str]] = []
     sections = parse_h2_sections(experience_text)
+    journey_section = find_first_section_by_keyword(sections, "旅程图")
     main_flow_section = sections.get("2. 主交互流程", "")
     secondary_flow_section = sections.get("3. 次交互流程", "")
     exception_flow_section = sections.get("4. 异常与阻断流程", "")
     page_design_section = sections.get("5. 页面 / 弹窗 / 抽屉设计", "")
     state_copy_section = sections.get("6. 状态与反馈文案", "")
     pending_section = sections.get("7. 待确认问题", "")
-    appendix_section = sections.get("附录：依据与追踪", "")
+    appendix_section = sections.get("附录：依据与追踪", "") or sections.get("附录：设计指南消费说明", "")
     core_text = get_experience_core_text(sections)
+    core_non_tabular_text = "\n".join([main_flow_section, secondary_flow_section, exception_flow_section, page_design_section])
 
     flow_section = "\n".join([main_flow_section, secondary_flow_section])
+    journey_item_count = max(count_real_table_rows(journey_section), count_real_list_items(journey_section))
     flow_count = max(
         count_real_table_rows(flow_section),
         count_real_list_items(flow_section),
@@ -1359,6 +1379,9 @@ def analyze_experience_blueprint(
     if flow_count == 0:
         add_issue(issues, "warning", "experience_blueprint.md 交互流程检测不到结构化内容，请确认已用自然语言写清各节点")
 
+    if journey_item_count == 0:
+        add_issue(issues, "warning", "experience_blueprint.md 缺少正式旅程图，或旅程图还没有形成可解析结构")
+
     if page_inventory_item_count == 0:
         add_issue(issues, "warning", "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面")
 
@@ -1369,7 +1392,7 @@ def analyze_experience_blueprint(
         add_issue(issues, "warning", "experience_blueprint.md 待确认问题为空，建议显式标注不确定项")
 
     if appendix_item_count == 0:
-        add_issue(issues, "warning", "experience_blueprint.md 附录：依据与追踪内容偏少")
+        add_issue(issues, "warning", "experience_blueprint.md 附录内容偏少，建议补充设计指南与业务知识消费说明")
 
     if not has_exception_coverage:
         add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
@@ -1378,15 +1401,16 @@ def analyze_experience_blueprint(
         if pattern.search(core_text):
             add_issue(issues, "warning", f"experience_blueprint.md {message}")
 
-    core_table_count = count_real_table_rows(core_text)
+    core_table_count = count_real_table_rows(core_non_tabular_text)
     if core_table_count > 0:
-        add_issue(issues, "warning", "experience_blueprint.md 核心区包含表格，建议改为节点化 Markdown 层级表达")
+        add_issue(issues, "warning", "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达")
 
     repeated_page_names = find_repeated_page_names_in_core(sections.get("5. 页面 / 弹窗 / 抽屉设计", ""))
     if repeated_page_names:
         add_issue(issues, "warning", "experience_blueprint.md 核心区页面名重复较多，建议继续语义去重")
 
     metrics = {
+        "journey_item_count": journey_item_count,
         "flow_count": flow_count,
         "page_inventory_item_count": page_inventory_item_count,
         "state_feedback_pair_count": state_feedback_pair_count,
@@ -1413,6 +1437,7 @@ def analyze_natural_language_handoff(
     experience_signal_text = "\n".join(
         [
             experience_sections.get("1. 交互流程总览", ""),
+            find_first_section_by_keyword(experience_sections, "旅程图"),
             experience_sections.get("2. 主交互流程", ""),
             experience_sections.get("3. 次交互流程", ""),
             experience_sections.get("4. 异常与阻断流程", ""),
@@ -1519,7 +1544,7 @@ def analyze_natural_language_handoff(
         if isinstance(selected_refs, dict):
             guideline_refs_used = _string_list(selected_refs.get("guideline_refs"))
 
-    has_guideline_appendix = "设计指南消费说明" in experience_text
+    has_guideline_appendix = "设计指南消费说明" in experience_text or "附录：依据与追踪" in experience_text
     claims_guideline_consumed = has_guideline_appendix and any(marker in experience_text for marker in ("已消费", "消费的设计指南", "消费指南"))
     if claims_guideline_consumed and not guideline_refs_used:
         add_issue(issues, "blocker", "设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 context_manifest.json 没有对应记录。")

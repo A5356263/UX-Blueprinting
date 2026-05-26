@@ -1,0 +1,28 @@
+{
+  "project_id": "employee-self-service-permission-lowdoc",
+  "status": "failed",
+  "generated_at": "2026-05-26T07:25:29+00:00",
+  "requested_route": "auto",
+  "execution_mode": "full",
+  "stopped_at": "generate-facts",
+  "steps": [
+    {
+      "command": "route-decision",
+      "exit_code": 0
+    },
+    {
+      "command": "assemble",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-facts",
+      "exit_code": 1
+    }
+  ],
+  "actual_outputs": [
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/runtime/routed_main_plan.json",
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/runtime/routed_main_report.json"
+  ],
+  "recommend_enable_routed_execution": false,
+  "recommendation_reason": "当前执行判断已收敛到 UXB 已确认结果；是否默认启用，仍应基于样例和真实任务继续验证。"
+}
