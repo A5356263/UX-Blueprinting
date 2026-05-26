@@ -1,9 +1,0 @@
-{
-  "project_id": "uxb-qc-003-permission-search-in-page",
-  "task_name": "页面内查找定位",
-  "domain": "权限管理",
-  "status": "draft",
-  "project_role": "real_project",
-  "read_only": false,
-  "excluded_from_default_scan": false
-}

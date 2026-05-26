@@ -1,0 +1,26 @@
+{
+  "project_id": "employee-self-service-permission",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "b1a1f48e88d5042ed511dee33a825866534ed377a469d57955418d94d7cbcbe6",
+  "task_card_hash": "f889471e6dd54d8ede54b7b432e7da668cb27070b0bf5d1d63258efeeeadcf39",
+  "generated_at": "2026-05-21T15:46:33+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "run-routed-main",
+    "route-decision",
+    "assemble",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive",
+    "preview"
+  ]
+}

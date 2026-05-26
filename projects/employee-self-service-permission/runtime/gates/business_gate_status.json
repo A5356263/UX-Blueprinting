@@ -1,0 +1,91 @@
+{
+  "project_id": "employee-self-service-permission",
+  "stage": "business",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-21T15:46:33.754340+00:00",
+  "checked_files": [
+    "projects/employee-self-service-permission/workspace/facts.md",
+    "projects/employee-self-service-permission/workspace/business_blueprint.md",
+    "projects/employee-self-service-permission/runtime/provenance.json",
+    "projects/employee-self-service-permission/runtime/gates/facts_gate_status.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "facts 阶段状态：passed"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts 阶段状态：passed",
+      "target_artifacts": [
+        "projects/employee-self-service-permission/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/employee-self-service-permission/workspace/facts.md",
+        "projects/employee-self-service-permission/workspace/business_blueprint.md",
+        "projects/employee-self-service-permission/runtime/provenance.json",
+        "projects/employee-self-service-permission/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts 阶段状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/employee-self-service-permission/workspace/facts.md",
+            "projects/employee-self-service-permission/workspace/business_blueprint.md",
+            "projects/employee-self-service-permission/runtime/provenance.json",
+            "projects/employee-self-service-permission/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "option_compare_count": 9,
+            "value_assessment_item_count": 9,
+            "risk_item_count": 26,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "appendix_item_count": 6,
+            "referenced_fact_section_count": 4,
+            "handover_item_count": 29,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "option_compare_count": 9,
+    "value_assessment_item_count": 9,
+    "risk_item_count": 26,
+    "unresolved_gap_count": 0,
+    "has_appendix": true,
+    "appendix_item_count": 6,
+    "referenced_fact_section_count": 4,
+    "handover_item_count": 29,
+    "handover_keyword_count": 5,
+    "has_handover_empty_talk": false
+  }
+}

@@ -36,6 +36,8 @@ body {
   line-height: 1.55;
 }
 
+.hidden { display: none !important; }
+
 .app { display: flex; min-height: 100vh; }
 
 /* ---- sidebar ---- */
@@ -44,7 +46,7 @@ body {
   min-width: 280px;
   background: var(--panel);
   border-right: 1px solid var(--line);
-  padding: 24px 0;
+  padding: 14px 0;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -54,29 +56,29 @@ body {
 }
 
 .sidebar-header {
-  padding: 0 20px 16px;
+  padding: 0 16px 10px;
   border-bottom: 1px solid var(--line);
 }
 
 .sidebar-header h2 {
-  margin: 0 0 4px;
-  font-size: 18px;
+  margin: 0 0 3px;
+  font-size: 16px;
   color: var(--accent-strong);
 }
 
 .project-badge {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   background: var(--panel-subtle);
   padding: 2px 8px;
   border-radius: 4px;
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .sidebar-tabs {
   display: flex;
-  padding: 12px 12px 0;
+  padding: 10px 12px 0;
   gap: 4px;
 }
 
@@ -105,14 +107,14 @@ body {
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 0;
+  padding: 6px 0 8px;
 }
 
-.nav-section { padding: 0 20px; }
+.nav-section { padding: 0 16px; }
 
 .nav-item {
   display: block;
-  padding: 5px 12px;
+  padding: 4px 10px;
   font-size: 13px;
   color: var(--text-muted);
   text-decoration: none;
@@ -130,7 +132,7 @@ body {
   color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 12px 12px 4px;
+  padding: 10px 10px 4px;
   font-weight: 600;
 }
 
@@ -472,15 +474,17 @@ def _render_html(model: dict[str, Any]) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>蓝图预览 — {html_mod.escape(project_id)}</title>
-<link rel="stylesheet" href="./assets/style.css">
+<title>体验策略 — {html_mod.escape(project_id)}</title>
+<style>
+{STYLE_CSS}
+</style>
 </head>
 <body>
 <div class="app">
 
 <nav class="sidebar">
   <div class="sidebar-header">
-    <h2>蓝图预览</h2>
+    <h2>体验策略</h2>
     <span class="project-badge">{html_mod.escape(project_id)}</span>
   </div>
   <div class="sidebar-tabs">
@@ -543,6 +547,12 @@ def _render_html(model: dict[str, Any]) -> str:
 
 def write_preview_site(preview_dir: Path, model: dict[str, Any]) -> None:
     assets_dir = preview_dir / "assets"
-    assets_dir.mkdir(parents=True, exist_ok=True)
-    (assets_dir / "style.css").write_text(STYLE_CSS, encoding="utf-8")
+    legacy_style = assets_dir / "style.css"
+    if legacy_style.exists():
+        legacy_style.unlink()
+    if assets_dir.exists():
+        try:
+            assets_dir.rmdir()
+        except OSError:
+            pass
     (preview_dir / "index.html").write_text(_render_html(model), encoding="utf-8")

@@ -11,7 +11,6 @@
   ],
   "declared_outputs": [
     "projects/<project-id>/runtime/preview/index.html",
-    "projects/<project-id>/runtime/preview/assets/style.css",
     "projects/<project-id>/runtime/preview/preview_model.json",
     "projects/<project-id>/runtime/preview/preview_runtime.json",
     "projects/<project-id>/runtime/preview/preview_build_log.md"

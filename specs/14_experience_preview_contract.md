@@ -46,11 +46,12 @@ projects/<project-id>/runtime/preview/
 
 ```text
 projects/<project-id>/runtime/preview/index.html
-projects/<project-id>/runtime/preview/assets/style.css
 projects/<project-id>/runtime/preview/preview_model.json
 projects/<project-id>/runtime/preview/preview_runtime.json
 projects/<project-id>/runtime/preview/preview_build_log.md
 ```
+
+预览页面的样式应内联到 `index.html`，以保证单独分发 HTML 时不依赖 `assets/style.css` 或其他静态样式文件。
 
 ## V2 中间模型合同
 
