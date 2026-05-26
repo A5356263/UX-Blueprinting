@@ -28,7 +28,10 @@ def write_preview_runtime(
 
     business_section_count = len(model.get("business", {}).get("sections", []))
     experience_section_count = len(model.get("experience", {}).get("sections", []))
-    flow_count = len(model.get("experience", {}).get("flows", []))
+    flow_count = sum(
+        len(items)
+        for items in (model.get("experience", {}).get("detail_flows", {}) or {}).values()
+    )
     page_count = len(model.get("experience", {}).get("pages", []))
 
     runtime_payload = {

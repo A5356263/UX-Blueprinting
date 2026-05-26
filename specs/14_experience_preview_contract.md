@@ -2,47 +2,43 @@
 
 ## 目标
 
-定义蓝图预览层 V2 的正式落地方式，使其在不改变主链路定位的前提下，统一承载 Business 与 Experience 的只读预览，并支持承接对照与风险提示视图。
+定义 Experience Preview 的正式落地方式，使其在不改变主链正式产物定位的前提下，提供统一、只读、可本地预览的业务蓝图 / 体验蓝图展示层。
 
 ## 定位
 
-- 预览层是正式体验蓝图的只读派生扩展层
-- 预览层不属于主链路正式产物
-- 预览层不参与正式 Gate / Validate
-- 预览层不回写正式体验蓝图
-- 预览层不新增业务语义
-- 预览层在主链路完成后执行
+- 预览层是正式蓝图的只读派生层。
+- 预览层不参与正式 gate / validate / coverage 判定。
+- 预览层不回写 `business_blueprint.md` 或 `experience_blueprint.md`。
+- 预览层不新增业务语义，只做结构化抽取与展示增强。
 
 ## 输入合同
 
-预览层标准输入为以下文件集合：
+体验蓝图读取优先级：
 
 1. `projects/<project-id>/exports/final/experience_blueprint.md`
 2. `projects/<project-id>/workspace/experience_blueprint.md`
-3. `projects/<project-id>/exports/final/business_blueprint.md`
-4. `projects/<project-id>/workspace/business_blueprint.md`
-5. `projects/<project-id>/workspace/business_blueprint_lite.md`
-6. `projects/<project-id>/workspace/business_note.md`
 
-预览层必须以 `experience_blueprint.md` 作为必需输入。
+业务蓝图读取优先级：
 
-Business 侧输入按以下优先级读取：
-1. `exports/final/business_blueprint.md`
-2. `workspace/business_blueprint.md`
-3. `workspace/business_blueprint_lite.md`
-4. `workspace/business_note.md`
+1. `projects/<project-id>/exports/final/business_blueprint.md`
+2. `projects/<project-id>/workspace/business_blueprint.md`
+3. `projects/<project-id>/workspace/business_blueprint_lite.md`
+4. `projects/<project-id>/workspace/business_note.md`
 
-优先读取 `exports/final/*.md`；仅当归档版不存在或当前路线未产出完整 business blueprint 时，才允许降级读取 `workspace/*.md`。
+约束：
+
+- 预览层必须以 `experience_blueprint.md` 作为必需输入。
+- 仅当归档版不存在时，才降级读取 `workspace/*.md`。
 
 ## 输出合同
 
-运行时产物必须继续落在：
+运行产物目录：
 
 ```text
 projects/<project-id>/runtime/preview/
 ```
 
-最小输出集合保持不变：
+最小输出集合：
 
 ```text
 projects/<project-id>/runtime/preview/index.html
@@ -51,113 +47,160 @@ projects/<project-id>/runtime/preview/preview_runtime.json
 projects/<project-id>/runtime/preview/preview_build_log.md
 ```
 
-预览页面的样式应内联到 `index.html`，以保证单独分发 HTML 时不依赖 `assets/style.css` 或其他静态样式文件。
+约束：
 
-## V2 中间模型合同
+- `index.html` 必须内联样式，不依赖 `assets/style.css` 或其他样式文件。
+- 预览层默认覆盖更新 `runtime/preview/`。
 
-V2 预览模型必须升级为：
+## Preview Model 合同
+
+当前正式中间模型为：
 
 ```text
-preview_document_v2
+preview_document_v3
 - project_id
 - meta
-- business_preview
-- handover_matrix[]
-- global_flow
-- page_views[]
-- global_context
-- unresolved_items[]
-- source_refs[]
+- business
+- experience
 ```
 
-### global_flow
-
-`global_flow` 至少包含：
+### meta
 
 ```text
-global_flow
-- lanes[]
-- chains[]
-- nodes[]
-- edges[]
-- dependencies[]
-- blockers[]
+meta
+- title
+- version
+- source_business
+- source_experience
 ```
 
-约束：
-
-- `lanes[]` 必须按角色分泳道
-- `chains[]` 必须按 `flow_id` 或等价任务流分链路
-- `nodes[]` 至少保留 `node_id / name / type / role / chain_id / goal`
-- `edges[]` 至少保留 `from / to / path_type / label / role / chain_id`
-- `dependencies[]` 用于表达链路之间依赖
-- `blockers[]` 用于表达流程级阻断
-
-### page_views
-
-`page_views[]` 中每个页面必须至少包含：
+### business
 
 ```text
-page_view
-- page_id
-- view_name
-- view_type
-- roles[]
-- summary
-- entry
-- exit
-- upstream_links[]
-- downstream_links[]
-- sketch_blocks[]
-- key_understanding[]
+business
+- title
+- sections[]
+```
+
+其中每个 `sections[]` 至少包含：
+
+```text
+section
+- heading
+- body_html
+```
+
+### experience
+
+```text
+experience
+- title
+- sections[]
+- journey
+- interaction_summary
+- detail_flows
+- pages[]
 - states[]
-- copy_items[]
-- risks[]
-- blockers[]
-- principles[]
-- design_patterns[]
-- trace_items[]
-- open_items[]
-- gap_items[]
-- source_refs[]
+- state_rows[]
 ```
 
-约束：
+#### experience.sections[]
 
-- `page_id` 是页面聚合主键
-- 页面信息优先按 `page_id` 精确归属
-- 仅在无法稳定命中 `page_id` 时，才允许降级到页面名 / 别名 / flow context
-- 不得把无法稳定归属的信息强塞进任意页面
-
-### global_context
-
-V2 禁止再以单一 `global_notes[]` 作为全局兜底池，必须拆分为：
+与 `business.sections[]` 一致，至少包含：
 
 ```text
-global_context
-- principles[]
-- dependencies[]
-- risks[]
-- open_questions[]
+section
+- heading
+- body_html
+```
+
+#### journey
+
+```text
+journey
+- heading
+- stages[]
+- rows[]
 - gaps[]
-- notes[]
+```
+
+其中：
+
+```text
+journey_row
+- role
+- cells[]
 ```
 
 约束：
 
-- `principles[]` 只放全局原则
-- `dependencies[]` 只放跨页面或跨链路依赖
-- `risks[]` 只放无法稳定归属到单页面的全局风险
-- `open_questions[]` 只放全局开放问题
-- `gaps[]` 只放全局缺口
-- `notes[]` 仅作为最后兜底项
+- `journey` 来源于 `## 1. 旅程图` 的正式 Markdown 表格。
+- 单元格只承载旅程短节点。
+- `gaps[]` 来源于 `### 旅程缺口` 的普通列表。
+- 原始旅程表格在 section 正文 HTML 中应被移除，避免重复展示。
 
-## 聚合规则
+#### interaction_summary
 
-- 必须先做全文语义聚合，再做展示渲染
-- 禁止按 Markdown 章节顺序直接渲染页面卡
-- 必须扫描整个体验蓝图，不得只扫少数几个章节
-- 聚合时至少覆盖信息架构、任务流、页面清单、关键页面蓝图、区块布局、信息优先级、状态矩阵、文案合同、风险、开放问题、体验追踪等来源
+```text
+interaction_summary
+- heading
+- rows[]
+```
+
+其中：
+
+```text
+summary_row
+- role
+- steps[]
+```
+
+约束：
+
+- `interaction_summary` 来源于 `## 2. 交互流程总览` 中的“涉及角色”路径块。
+- 仅抽取 `角色：步骤 -> 步骤 -> 步骤` 这种轻量路径表达。
+- 被抽取出的角色路径不应在 section 正文 HTML 中重复保留。
+
+#### detail_flows
+
+```text
+detail_flows
+- <section_heading>: flow_group[]
+```
+
+其中：
+
+```text
+flow_group
+- name
+- nodes[] | body_html
+```
+
+约束：
+
+- `detail_flows` 仅来源于 `## 3. 主交互流程` 与 `## 4. 次交互流程`。
+- 它保留结构化信息，供后续分析或扩展使用。
+- 当前 HTML 预览不对 `detail_flows` 做流程图式可视化。
+
+#### pages / states / state_rows
+
+```text
+pages[]
+- name
+- desc_html
+
+states[]
+- <state_text>
+
+state_rows[]
+- <table_row_map>
+```
+
+约束：
+
+- `pages[]` 来源于 `## 6. 页面 / 弹窗 / 抽屉设计` 的三级子块。
+- `state_rows[]` 来源于 `## 7. 状态与反馈文案` 的表格。
+- `states[]` 来源于状态章节中的普通列表项。
 
 ## 渲染规则
 
@@ -168,35 +211,32 @@ global_context
 3. 承接对照
 4. Warnings / Gaps
 
-Experience 页面卡必须稳定输出以下固定顺序：
+约束：
 
-1. 页面摘要
-2. 线框草图
-3. 关键理解
-4. 状态
-5. 文案
-6. 风险与阻断
-7. 原则、设计模式与追踪
-8. 开放问题 / 缺口
-9. 来源说明（可折叠）
+- 左侧锚点必须跟随当前 Tab 切换，不得同时展示业务与体验两套锚点。
+- 左侧标题区保持紧凑，不放过高的装饰性占位。
 
-Business / 承接 / Warnings 约束：
+### Experience Tab
 
-- Business Tab 优先展示：一句话结论、推荐业务方案、规则边界、风险保护、方案承接要求、待确认问题
-- 承接对照 Tab 以“业务承接要求 -> 体验承接状态”方式展示，状态至少包含：已承接 / 部分承接 / 未承接 / 待确认
-- Warnings Tab 聚合 unresolved、全局风险、开放问题、全局缺口与承接不足项
+预览层必须支持：
 
-额外约束：
+- `## 1. 旅程图` 的 CSS 视觉版
+- `### 旅程缺口` 的普通文本区
+- `## 2. 交互流程总览` 的轻量路径可视化
 
-- 当 `page_id == view_name` 时，不得重复输出页面 ID
-- 页面摘要不得重复标题语义
-- 自动降级提示不得淹没蓝图原始内容
-- 默认页面不直接展示整段 `preview_model.json`
-- 全局区块必须拆分为：全局流程总览、全局原则、全局依赖 / 前提、全局风险、全局开放问题、全局缺口、待人工确认
+预览层不得：
+
+- 重复展示原始旅程 Markdown 表格
+- 对 `## 3. 主交互流程` 与 `## 4. 次交互流程` 插入 flow visual
+- 按参考图复刻复杂泳道图、连线系统或场景化样式
+
+### Business / 承接 / Warnings
+
+- Business Tab 优先展示一句话结论、推荐业务方案、规则边界、风险保护、方案承接要求、待确认问题。
+- 承接对照 Tab 以“业务承接要求 -> 体验承接状态”方式展示。
+- Warnings Tab 聚合 unresolved、风险、开放问题、缺口与承接不足项。
 
 ## 执行入口
-
-当前仓库中的正式执行入口保持不变：
 
 ```bash
 python -m packages preview <project-id> [--host 127.0.0.1] [--port 0]
@@ -204,39 +244,26 @@ python -m packages preview <project-id> [--host 127.0.0.1] [--port 0]
 
 补充说明：
 
-- `--port 0` 允许系统自动分配本地可用端口
-- 使用 `--no-serve` 时，只生成静态文件，不启动本地服务
-- 默认应同时完成构建与本地服务启动
+- `--port 0` 允许系统自动分配可用端口。
+- `--no-serve` 只生成静态文件，不启动本地服务。
 
 ## 地址输出合同
 
-当预览服务已可访问时，聊天窗口或命令输出必须明确给出完整 URL：
+当本地服务可访问时，必须输出完整 URL：
 
 ```text
-本地预览地址：
-http://127.0.0.1:<port>/
+本地预览地址：http://127.0.0.1:<port>/
 ```
-
-不得仅输出路径、目录、端口号或“服务已启动”。
 
 ## 失败隔离
 
 若预览层失败，必须满足：
 
-- 主链路正式产物不受影响
-- 失败仅归因于预览层
-- 不得把预览层失败表述成主链路整体失败
-- 不得输出不可访问的伪地址
+- 主链正式产物不受影响
+- 失败只归因于预览层
+- 不得把预览层失败表述为主链整体失败
 
 ## 代码落位
-
-仓库级能力文件应落在：
-
-```text
-packages/experience_preview/
-```
-
-当前正式落位：
 
 ```text
 packages/experience_preview/
@@ -249,9 +276,6 @@ packages/experience_preview/
 
 ## 运行原则
 
-- 先主链路完成，再执行预览层
-- 只要主链成功且存在可用的 `experience_blueprint.md`，即可自动后置触发预览层；不再限定为 full 路线
-- 预览层默认覆盖更新 `runtime/preview/`
-- 原始开放问题与缺口优先于自动降级提示
-- 无法稳定归属的信息优先进入 `global_context`，仍无法归属再进入 `unresolved_items[]`
-- 不得伪造页面内容、流程关系或文案内容
+- 先完成主链，再执行预览层。
+- 只要主链成功且存在可读的 `experience_blueprint.md`，即可后置触发预览。
+- 不得伪造页面内容、流程关系或文案内容。

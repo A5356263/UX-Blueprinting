@@ -112,11 +112,78 @@ def _extract_markdown_table(lines: list[str]) -> tuple[list[str], list[list[str]
     return [], []
 
 
+def _remove_first_markdown_table(text: str) -> str:
+    lines = text.splitlines()
+    for i in range(len(lines) - 1):
+        if lines[i].strip().startswith("|") and _is_table_separator(lines[i + 1]):
+            j = i + 2
+            while j < len(lines) and lines[j].strip().startswith("|"):
+                j += 1
+            remaining = lines[:i] + lines[j:]
+            return "\n".join(remaining).strip()
+    return text.strip()
+
+
 def _plain_cell_text(text: str) -> str:
     text = text.replace("<br>", "\n").replace("<br/>", "\n").replace("<br />", "\n")
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
     text = re.sub(r"`([^`]+)`", r"\1", text)
     return text.strip()
+
+
+def _extract_journey_gaps(body: str) -> list[str]:
+    items: list[str] = []
+    in_gap_section = False
+    for line in body.splitlines():
+        stripped = line.strip()
+        if re.match(r"^###\s+旅程缺口\s*$", stripped):
+            in_gap_section = True
+            continue
+        if in_gap_section and re.match(r"^###\s+", stripped):
+            break
+        if in_gap_section and stripped.startswith("- "):
+            items.append(stripped[2:].strip())
+    return items
+
+
+def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    in_role_block = False
+    for line in body.splitlines():
+        stripped = line.strip()
+        if stripped in {"**涉及角色：**", "**涉及角色:**"}:
+            in_role_block = True
+            continue
+        if in_role_block and (stripped.startswith("**") or re.match(r"^\d+\.\s+", stripped)):
+            break
+        if in_role_block and stripped.startswith("- "):
+            content = stripped[2:].strip()
+            if "：" not in content:
+                continue
+            role, path = content.split("：", 1)
+            steps = [step.strip() for step in re.split(r"\s*(?:->|→)\s*", path) if step.strip()]
+            if role.strip() and steps:
+                rows.append({"role": role.strip(), "steps": steps})
+    return rows
+
+
+def _remove_interaction_summary_role_block(body: str) -> str:
+    lines = body.splitlines()
+    kept: list[str] = []
+    in_role_block = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped in {"**涉及角色：**", "**涉及角色:**"}:
+            in_role_block = True
+            continue
+        if in_role_block and stripped.startswith("- "):
+            continue
+        if in_role_block and not stripped:
+            continue
+        if in_role_block:
+            in_role_block = False
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def _md_body_to_html(body: str) -> str:
@@ -260,18 +327,25 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
         section["body_html"] = _md_body_to_html(section.pop("body"))
 
     experience_sections = _split_sections(experience_text)
-    flows: list[dict[str, Any]] = []
-    flow_sections: dict[str, list[dict[str, Any]]] = {}
     pages: list[dict[str, Any]] = []
     states: list[str] = []
     state_rows: list[dict[str, str]] = []
-    journey: dict[str, Any] = {"heading": "", "stages": [], "rows": []}
+    journey: dict[str, Any] = {"heading": "", "stages": [], "rows": [], "gaps": []}
+    interaction_summary: dict[str, Any] = {"heading": "", "rows": []}
+    detail_flows: dict[str, list[dict[str, Any]]] = {}
 
     for section in experience_sections:
         heading = section["heading"]
         body = section["body"]
 
-        if "主交互流程" in heading or "次交互流程" in heading:
+        if heading == "2. 交互流程总览":
+            interaction_summary = {
+                "heading": heading,
+                "rows": _parse_interaction_summary(body),
+            }
+            body = _remove_interaction_summary_role_block(body)
+
+        if heading in {"3. 主交互流程", "4. 次交互流程"}:
             subs = _split_subsections(body, 3)
             section_flows: list[dict[str, Any]] = []
             for sub in subs:
@@ -296,16 +370,13 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                         nodes.append(node)
                 if nodes:
                     item = {"name": sub["heading"], "nodes": nodes}
-                    flows.append(item)
                     section_flows.append(item)
                 elif sub["body"].strip():
-                    item = {"name": sub["heading"], "body_html": _md_body_to_html(sub["body"]), "nodes": []}
-                    flows.append(item)
-                    section_flows.append(item)
+                    section_flows.append({"name": sub["heading"], "body_html": _md_body_to_html(sub["body"]), "nodes": []})
             if section_flows:
-                flow_sections[heading] = section_flows
+                detail_flows[heading] = section_flows
 
-        if "旅程图" in heading:
+        if heading == "1. 旅程图":
             header_cells, body_rows = _extract_markdown_table(body.splitlines())
             if len(header_cells) >= 2:
                 rows: list[dict[str, Any]] = []
@@ -320,14 +391,16 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                     "heading": heading,
                     "stages": [_plain_cell_text(cell) for cell in header_cells[1:]],
                     "rows": rows,
+                    "gaps": _extract_journey_gaps(body),
                 }
+            body = _remove_first_markdown_table(body)
 
-        if "页面" in heading or "弹窗" in heading or "抽屉" in heading:
+        if heading == "6. 页面 / 弹窗 / 抽屉设计":
             subs = _split_subsections(body, 3)
             for sub in subs:
                 pages.append({"name": sub["heading"], "desc_html": _md_body_to_html(sub["body"])})
 
-        if "状态" in heading or "反馈文案" in heading:
+        if heading == "7. 状态与反馈文案":
             header_cells, body_rows = _extract_markdown_table(body.splitlines())
             if header_cells:
                 normalized_headers = [_plain_cell_text(cell) for cell in header_cells]
@@ -344,7 +417,8 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                 if stripped.startswith("- "):
                     states.append(stripped[2:])
 
-        section["body_html"] = _md_body_to_html(section.pop("body"))
+        section["body_html"] = _md_body_to_html(body)
+        section.pop("body")
 
     return {
         "project_id": project_id,
@@ -361,9 +435,9 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
         "experience": {
             "title": _extract_title(experience_text, "Experience Blueprint"),
             "sections": experience_sections,
-            "flows": flows,
-            "flow_sections": flow_sections,
             "journey": journey,
+            "interaction_summary": interaction_summary,
+            "detail_flows": detail_flows,
             "pages": pages,
             "states": states,
             "state_rows": state_rows,

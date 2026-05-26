@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import html as html_mod
-import re
 from pathlib import Path
 from typing import Any
 
@@ -225,7 +224,7 @@ body {
 .section-body ol { margin: 8px 0 16px; padding-left: 22px; }
 .section-body ol li { padding: 4px 0; }
 
-.flow-visual,
+.summary-visual,
 .journey-visual {
   margin: 0 0 18px;
   padding: 12px;
@@ -235,56 +234,51 @@ body {
   overflow-x: auto;
 }
 
-.flow-group { margin-bottom: 18px; }
-.flow-group:last-child { margin-bottom: 0; }
-
-.flow-name,
-.journey-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent-strong);
-  margin: 0 0 10px;
-}
-
-.flow-row {
+.summary-row {
   display: flex;
-  align-items: stretch;
+   align-items: center;
   gap: 8px;
-  min-width: max-content;
-  margin-bottom: 8px;
+   flex-wrap: wrap;
+   margin-bottom: 8px;
 }
 
-.flow-row:last-child { margin-bottom: 0; }
+.summary-row:last-child { margin-bottom: 0; }
 
-.flow-node-card {
-  min-width: 132px;
-  max-width: 180px;
-  padding: 8px 10px;
-  background: var(--panel-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: var(--text);
-  font-size: 12px;
-  line-height: 1.4;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.flow-node-name {
+.summary-role {
+  min-width: 88px;
+  padding: 4px 0;
+  font-size: 13px;
   font-weight: 600;
   color: var(--accent-strong);
-  margin-bottom: 4px;
 }
 
-.flow-node-meta {
-  color: var(--text-muted);
+.summary-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.flow-arrow {
+.flow-arrow,
+.summary-arrow {
   color: var(--text-soft);
   font-size: 13px;
   display: flex;
   align-items: center;
   flex: 0 0 auto;
+}
+
+.summary-step {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .journey-grid {
@@ -339,55 +333,6 @@ body {
 
 .journey-cell-line:last-child { margin-bottom: 0; }
 
-.node-card {
-  background: var(--panel-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-}
-
-.node-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  margin: 0 0 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--line);
-}
-
-.node-field {
-  margin-bottom: 10px;
-  display: flex;
-  gap: 8px;
-}
-
-.node-field-label {
-  min-width: 72px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  padding-top: 2px;
-}
-
-.node-field-value {
-  flex: 1;
-  font-size: 14px;
-}
-
-.node-field-value p { margin: 0; }
-
-.node-desc {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--line);
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
 .preview-footer {
   margin-top: 48px;
   padding-top: 16px;
@@ -403,86 +348,20 @@ body {
 """
 
 
-def _field_label(key: str) -> str:
-    labels = {
-        "user_action": "用户动作",
-        "system_feedback": "系统反馈",
-        "explanation": "前置解释",
-        "copy_text": "页面文案",
-        "success_copy": "成功文案",
-        "error_copy": "异常提示",
-        "failure_copy": "失败反馈",
-        "buttons": "按钮",
-        "next_step": "下一步",
-        "options_note": "选项说明",
-    }
-    return labels.get(key, key)
-
-
-def _inline_text(text: str) -> str:
-    text = html_mod.escape(text)
-    text = text.replace("**", "")
-    text = text.replace("\n", "<br>")
-    return text
-
-
-def _compact_text(text: str, limit: int = 48) -> str:
-    clean = re.sub(r"\s+", " ", text).strip()
-    if len(clean) <= limit:
-        return clean
-    return clean[: limit - 1] + "…"
-
-
-def _render_node_card(node: dict[str, Any]) -> str:
-    parts = [f'<h4 class="node-name">{html_mod.escape(node.get("name", ""))}</h4>']
-    field_order = [
-        "user_action",
-        "system_feedback",
-        "explanation",
-        "copy_text",
-        "success_copy",
-        "error_copy",
-        "failure_copy",
-        "options_note",
-        "buttons",
-        "next_step",
-    ]
-    for key in field_order:
-        value = node.get(key, "")
-        if value:
-            parts.append(
-                f'<div class="node-field"><span class="node-field-label">{_field_label(key)}</span>'
-                f'<span class="node-field-value">{_inline_text(value)}</span></div>'
-            )
-    if node.get("description_html"):
-        parts.append(f'<div class="node-desc">{node["description_html"]}</div>')
-    return f'<div class="node-card">{"".join(parts)}</div>'
-
-
-def _render_flow_visual(groups: list[dict[str, Any]]) -> str:
-    if not groups:
+def _render_interaction_summary(summary: dict[str, Any]) -> str:
+    rows = summary.get("rows") or []
+    if not rows:
         return ""
-    parts = ['<div class="flow-visual">']
-    for group in groups:
-        parts.append('<div class="flow-group">')
-        if group.get("name"):
-            parts.append(f'<div class="flow-name">{html_mod.escape(group["name"])}</div>')
-        nodes = group.get("nodes") or []
-        if nodes:
-            parts.append('<div class="flow-row">')
-            for index, node in enumerate(nodes):
-                meta = node.get("user_action") or node.get("next_step") or ""
-                parts.append(
-                    '<div class="flow-node-card">'
-                    f'<div class="flow-node-name">{html_mod.escape(node.get("name", ""))}</div>'
-                    f'<div class="flow-node-meta">{html_mod.escape(_compact_text(meta))}</div>'
-                    '</div>'
-                )
-                if index < len(nodes) - 1:
-                    parts.append('<div class="flow-arrow">→</div>')
-            parts.append('</div>')
-        elif group.get("body_html"):
-            parts.append(group["body_html"])
+    parts = ['<div class="summary-visual">']
+    for row in rows:
+        parts.append('<div class="summary-row">')
+        parts.append(f'<div class="summary-role">{html_mod.escape(row.get("role", ""))}</div>')
+        parts.append('<div class="summary-path">')
+        for index, step in enumerate(row.get("steps") or []):
+            parts.append(f'<span class="summary-step">{html_mod.escape(step)}</span>')
+            if index < len((row.get("steps") or [])) - 1:
+                parts.append('<span class="summary-arrow">→</span>')
+        parts.append('</div>')
         parts.append('</div>')
     parts.append("</div>")
     return "".join(parts)
@@ -494,7 +373,6 @@ def _render_journey_visual(journey: dict[str, Any]) -> str:
     if not stages or not rows:
         return ""
     parts = [f'<div class="journey-visual" style="--journey-cols:{len(stages)};">']
-    parts.append('<div class="journey-title">旅程视图</div>')
     parts.append('<div class="journey-grid header">')
     parts.append('<div class="journey-col-head">角色</div>')
     for stage in stages:
@@ -542,8 +420,9 @@ def _experience_section_visuals(exp: dict[str, Any]) -> dict[str, str]:
     journey = exp.get("journey") or {}
     if journey.get("heading"):
         visuals[journey["heading"]] = _render_journey_visual(journey)
-    for heading, groups in (exp.get("flow_sections") or {}).items():
-        visuals[heading] = _render_flow_visual(groups)
+    summary = exp.get("interaction_summary") or {}
+    if summary.get("heading"):
+        visuals[summary["heading"]] = _render_interaction_summary(summary)
     return visuals
 
 
