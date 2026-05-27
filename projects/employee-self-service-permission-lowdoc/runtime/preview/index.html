@@ -240,24 +240,27 @@ body {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .summary-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-bottom: 10px;
 }
 
 .summary-row:last-child { margin-bottom: 0; }
 
 .summary-role {
-  min-width: 160px;
+  min-width: 128px;
   padding: 4px 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-strong);
+  flex: 0 0 auto;
 }
 
 .flow-arrow,
@@ -280,6 +283,11 @@ body {
   color: var(--text);
   font-size: 12px;
   line-height: 1.35;
+}
+
+.summary-step strong {
+  color: var(--accent-strong);
+  margin-right: 4px;
 }
 
 .journey-path-row {
@@ -340,6 +348,8 @@ body {
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .content { padding: 20px 16px 60px; }
+  .summary-row,
+  .journey-path-row { flex-wrap: wrap; }
 }
 
 </style>
@@ -506,12 +516,8 @@ body {
 </div>
 <div class="section-block" id="2-交互流程总览">
 <h2 class="section-heading ">2. 交互流程总览</h2>
-<div class="section-body"><div class="summary-visual main-node-map"><div class="summary-row"><div class="summary-role">员工</div><div class="summary-path"><span class="summary-step">进入我的权限</span><span class="summary-arrow">→</span><span class="summary-step">查看权限列表（标注来源）</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.1</strong> 发起权限申请</span><span class="summary-arrow">→</span><span class="summary-step">选择申请项</span><span class="summary-arrow">→</span><span class="summary-step">填写原因</span><span class="summary-arrow">→</span><span class="summary-step">提交确认</span><span class="summary-arrow">→</span><span class="summary-step">查看申请记录</span><span class="summary-arrow">→</span><span class="summary-step">追踪状态</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.2</strong> 撤销申请</span></div></div><div class="summary-row"><div class="summary-role">审批人</div><div class="summary-path"><span class="summary-step">收到待办通知</span><span class="summary-arrow">→</span><span class="summary-step">进入审批列表</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.3</strong> 查看申请详情并审批</span><span class="summary-arrow">→</span><span class="summary-step">同意 / 拒绝</span><span class="summary-arrow">→</span><span class="summary-step">确认操作</span></div></div><div class="summary-row"><div class="summary-role">超管</div><div class="summary-path"><span class="summary-step">进入管理后台</span><span class="summary-arrow">→</span><span class="summary-step">权限管理</span><span class="summary-arrow">→</span><span class="summary-step">自助申请配置</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.4</strong> 开启并配置能力</span><span class="summary-arrow">→</span><span class="summary-step">设置可申请范围</span><span class="summary-arrow">→</span><span class="summary-step">设置审批策略</span><span class="summary-arrow">→</span><span class="summary-step">查看统计看板</span></div></div></div><pre><code>**异常流程重点：**
-
-- 异常 5.1：审批人不存在或无效时自动向上查找并兜底
-- 异常 5.2：管理员关闭能力时审批中的申请批量终止
-- 异常 5.3：员工尝试申请已有权限或不在范围内的权限
-- 异常 5.4：审批流程未配置完成时管理员尝试开启能力</code></pre></div>
+<div class="section-body"><div class="summary-visual main-node-map"><div class="summary-row"><div class="summary-role">超管</div><div class="summary-path"><span class="summary-step">进入自助申请配置</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.4</strong> 开启并配置能力</span><span class="summary-arrow">→</span><span class="summary-step">设置可申请范围</span><span class="summary-arrow">→</span><span class="summary-step">设置审批策略</span><span class="summary-arrow">→</span><span class="summary-step">查看统计看板或调整配置</span></div></div><div class="summary-row"><div class="summary-role">员工</div><div class="summary-path"><span class="summary-step">进入我的权限</span><span class="summary-arrow">→</span><span class="summary-step">查看已有权限与来源</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.1</strong> 发起权限申请</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.2</strong> 填写原因并提交申请</span><span class="summary-arrow">→</span><span class="summary-step">查看申请记录与处理状态</span><span class="summary-arrow">→</span><span class="summary-step">确认权限已生效</span></div></div><div class="summary-row"><div class="summary-role">审批人</div><div class="summary-path"><span class="summary-step">接收审批待办</span><span class="summary-arrow">→</span><span class="summary-step">进入申请详情</span><span class="summary-arrow">→</span><span class="summary-step"><strong>3.3</strong> 查看申请详情并审批</span><span class="summary-arrow">→</span><span class="summary-step">同步处理结果</span></div></div></div><p><strong>异常流程重点：</strong></p>
+<ul><li>异常 5.1：审批人不存在或无效时自动向上查找并兜底</li><li>异常 5.2：管理员关闭能力时审批中的申请批量终止</li><li>异常 5.3：员工尝试申请已有权限或不在范围内的权限</li><li>异常 5.4：审批流程未配置完成时管理员尝试开启能力</li></ul></div>
 </div>
 <div class="section-block" id="3-主交互流程">
 <h2 class="section-heading ">3. 主交互流程</h2>

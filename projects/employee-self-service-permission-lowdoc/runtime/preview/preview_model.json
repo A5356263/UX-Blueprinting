@@ -96,7 +96,7 @@
         "heading": "2. 交互流程总览",
         "level": 1,
         "anchor": "2-交互流程总览",
-        "body_html": "<pre><code>**异常流程重点：**\n\n- 异常 5.1：审批人不存在或无效时自动向上查找并兜底\n- 异常 5.2：管理员关闭能力时审批中的申请批量终止\n- 异常 5.3：员工尝试申请已有权限或不在范围内的权限\n- 异常 5.4：审批流程未配置完成时管理员尝试开启能力</code></pre>"
+        "body_html": "<p><strong>异常流程重点：</strong></p>\n<ul><li>异常 5.1：审批人不存在或无效时自动向上查找并兜底</li><li>异常 5.2：管理员关闭能力时审批中的申请批量终止</li><li>异常 5.3：员工尝试申请已有权限或不在范围内的权限</li><li>异常 5.4：审批流程未配置完成时管理员尝试开启能力</li></ul>"
       },
       {
         "heading": "3. 主交互流程",
@@ -199,101 +199,11 @@
       "heading": "2. 交互流程总览",
       "rows": [
         {
-          "role": "员工",
-          "nodes": [
-            {
-              "id": null,
-              "name": "进入我的权限",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "查看权限列表（标注来源）",
-              "has_detail": false
-            },
-            {
-              "id": "3.1",
-              "name": "发起权限申请",
-              "has_detail": true
-            },
-            {
-              "id": null,
-              "name": "选择申请项",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "填写原因",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "提交确认",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "查看申请记录",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "追踪状态",
-              "has_detail": false
-            },
-            {
-              "id": "3.2",
-              "name": "撤销申请",
-              "has_detail": true
-            }
-          ]
-        },
-        {
-          "role": "审批人",
-          "nodes": [
-            {
-              "id": null,
-              "name": "收到待办通知",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "进入审批列表",
-              "has_detail": false
-            },
-            {
-              "id": "3.3",
-              "name": "查看申请详情并审批",
-              "has_detail": true
-            },
-            {
-              "id": null,
-              "name": "同意 / 拒绝",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "确认操作",
-              "has_detail": false
-            }
-          ]
-        },
-        {
           "role": "超管",
           "nodes": [
             {
               "id": null,
-              "name": "进入管理后台",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "权限管理",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "自助申请配置",
+              "name": "进入自助申请配置",
               "has_detail": false
             },
             {
@@ -313,7 +223,67 @@
             },
             {
               "id": null,
-              "name": "查看统计看板",
+              "name": "查看统计看板或调整配置",
+              "has_detail": false
+            }
+          ]
+        },
+        {
+          "role": "员工",
+          "nodes": [
+            {
+              "id": null,
+              "name": "进入我的权限",
+              "has_detail": false
+            },
+            {
+              "id": null,
+              "name": "查看已有权限与来源",
+              "has_detail": false
+            },
+            {
+              "id": "3.1",
+              "name": "发起权限申请",
+              "has_detail": true
+            },
+            {
+              "id": "3.2",
+              "name": "填写原因并提交申请",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "查看申请记录与处理状态",
+              "has_detail": false
+            },
+            {
+              "id": null,
+              "name": "确认权限已生效",
+              "has_detail": false
+            }
+          ]
+        },
+        {
+          "role": "审批人",
+          "nodes": [
+            {
+              "id": null,
+              "name": "接收审批待办",
+              "has_detail": false
+            },
+            {
+              "id": null,
+              "name": "进入申请详情",
+              "has_detail": false
+            },
+            {
+              "id": "3.3",
+              "name": "查看申请详情并审批",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "同步处理结果",
               "has_detail": false
             }
           ]

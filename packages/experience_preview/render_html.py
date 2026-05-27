@@ -239,24 +239,27 @@ body {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .summary-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-bottom: 10px;
 }
 
 .summary-row:last-child { margin-bottom: 0; }
 
 .summary-role {
-  min-width: 160px;
+  min-width: 128px;
   padding: 4px 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-strong);
+  flex: 0 0 auto;
 }
 
 .flow-arrow,
@@ -279,6 +282,11 @@ body {
   color: var(--text);
   font-size: 12px;
   line-height: 1.35;
+}
+
+.summary-step strong {
+  color: var(--accent-strong);
+  margin-right: 4px;
 }
 
 .journey-path-row {
@@ -339,6 +347,8 @@ body {
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .content { padding: 20px 16px 60px; }
+  .summary-row,
+  .journey-path-row { flex-wrap: wrap; }
 }
 """
 
