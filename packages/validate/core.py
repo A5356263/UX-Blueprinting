@@ -773,7 +773,7 @@ def extract_summary_node_ids(text: str) -> list[str]:
     in_node_block = False
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+        if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
             in_node_block = True
             continue
         if in_node_block and stripped.startswith("**"):
@@ -1597,11 +1597,11 @@ def analyze_experience_blueprint(
 
     if summary_node_ids:
         if not main_flow_heading_ids:
-            add_issue(issues, "warning", "experience_blueprint.md 交互流程总览存在主交互节点，但主交互流程缺少可对应的节点详情标题")
+            add_issue(issues, "warning", "experience_blueprint.md 主交互流程缺少可对应的节点详情标题")
         else:
-            missing_ids = [node_id for node_id in summary_node_ids if node_id not in main_flow_heading_ids]
+            missing_ids = [node_id for node_id in main_flow_heading_ids if node_id not in summary_node_ids]
             if missing_ids:
-                add_issue(issues, "warning", f"experience_blueprint.md 的交互流程总览节点与主交互流程详情未完全对应，请检查这些节点编号：{', '.join(missing_ids)}")
+                add_issue(issues, "warning", f"experience_blueprint.md 的主交互流程存在详细节点，但未在交互流程总览中找到对应承接，请检查这些节点编号：{', '.join(missing_ids)}")
 
     journey_table_headers, journey_table_rows = extract_first_markdown_table(journey_section)
     if journey_table_headers and journey_table_rows:

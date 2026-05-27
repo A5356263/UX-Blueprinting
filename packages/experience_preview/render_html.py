@@ -354,10 +354,13 @@ def _render_interaction_summary(summary: dict[str, Any]) -> str:
         parts.append('<div class="summary-path">')
         nodes = row.get("nodes") or []
         for index, node in enumerate(nodes):
-            parts.append(
-                f'<span class="summary-step"><strong>{html_mod.escape(str(node.get("id", "")))}</strong> '
-                f'{html_mod.escape(str(node.get("name", "")))}</span>'
-            )
+            if node.get("has_detail") and node.get("id"):
+                parts.append(
+                    f'<span class="summary-step"><strong>{html_mod.escape(str(node.get("id", "")))}</strong> '
+                    f'{html_mod.escape(str(node.get("name", "")))}</span>'
+                )
+            else:
+                parts.append(f'<span class="summary-step">{html_mod.escape(str(node.get("name", "")))}</span>')
             if index < len(nodes) - 1:
                 parts.append('<span class="summary-arrow">→</span>')
         parts.append('</div></div>')

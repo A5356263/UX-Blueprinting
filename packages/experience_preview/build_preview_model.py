@@ -180,7 +180,7 @@ def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
     in_node_block = False
     for line in body.splitlines():
         stripped = line.strip()
-        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+        if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
             in_node_block = True
             continue
         if in_node_block and stripped.startswith("**"):
@@ -199,11 +199,12 @@ def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
                 if not segment:
                     continue
                 match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
-                if not match:
-                    continue
-                node_id = match.group(1).strip()
-                name = match.group(2).strip()
-                node_items.append({"id": node_id, "name": name})
+                if match:
+                    node_id = match.group(1).strip()
+                    name = match.group(2).strip()
+                    node_items.append({"id": node_id, "name": name, "has_detail": True})
+                else:
+                    node_items.append({"id": None, "name": segment, "has_detail": False})
             if role and node_items:
                 rows.append({"role": role, "nodes": node_items})
     return rows
@@ -215,7 +216,7 @@ def _remove_interaction_summary_node_block(body: str) -> str:
     in_node_block = False
     for line in lines:
         stripped = line.strip()
-        if stripped in {"**主交互节点总览：**", "**主交互节点总览:**"}:
+        if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
             in_node_block = True
             continue
         if in_node_block and stripped.startswith("- "):

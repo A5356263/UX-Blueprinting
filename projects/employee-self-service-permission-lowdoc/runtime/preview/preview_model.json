@@ -185,15 +185,28 @@
           "nodes": [
             {
               "id": "2.1",
-              "name": "管理员首次开启自助申请模式"
+              "name": "管理员首次开启自助申请模式",
+              "has_detail": true
             },
             {
               "id": "2.1a",
-              "name": "管理员设置可申请范围"
+              "name": "管理员设置可申请范围",
+              "has_detail": true
             },
             {
               "id": "2.1b",
-              "name": "管理员设置审批规则"
+              "name": "管理员设置审批规则",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "确认开启",
+              "has_detail": false
+            },
+            {
+              "id": null,
+              "name": "监控申请统计或调整能力",
+              "has_detail": false
             }
           ]
         },
@@ -201,16 +214,34 @@
           "role": "员工",
           "nodes": [
             {
+              "id": null,
+              "name": "查看已有权限",
+              "has_detail": false
+            },
+            {
               "id": "2.2",
-              "name": "员工查看权限并发现缺口"
+              "name": "员工查看权限并发现缺口",
+              "has_detail": true
             },
             {
               "id": "2.3",
-              "name": "员工发起权限申请"
+              "name": "员工发起权限申请",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "跟踪申请状态",
+              "has_detail": false
             },
             {
               "id": "2.4",
-              "name": "员工查看申请状态与结果"
+              "name": "员工查看申请记录和状态",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "确认权限已生效",
+              "has_detail": false
             }
           ]
         },
@@ -218,8 +249,24 @@
           "role": "审批人",
           "nodes": [
             {
+              "id": null,
+              "name": "接收申请待办",
+              "has_detail": false
+            },
+            {
+              "id": null,
+              "name": "查看申请详情",
+              "has_detail": false
+            },
+            {
               "id": "2.5",
-              "name": "审批人处理权限申请"
+              "name": "审批人处理权限申请",
+              "has_detail": true
+            },
+            {
+              "id": null,
+              "name": "同步处理结果",
+              "has_detail": false
             }
           ]
         }
