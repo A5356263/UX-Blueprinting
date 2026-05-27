@@ -1,12 +1,12 @@
 # 蓝图预览构建日志
 
 - project_id: `employee-self-service-permission-lowdoc`
-- generated_at: `2026-05-27T00:27:05+00:00`
-- source_business_blueprint: `E:\AI设计\体验蓝图构建思路\projects\employee-self-service-permission-lowdoc\workspace\business_blueprint.md`
-- source_experience_blueprint: `E:\AI设计\体验蓝图构建思路\projects\employee-self-service-permission-lowdoc\workspace\experience_blueprint.md`
+- generated_at: `2026-05-27T01:14:19+00:00`
+- source_business_blueprint: `E:\AI设计\体验蓝图构建思路\projects\employee-self-service-permission-lowdoc\exports\final\business_blueprint.md`
+- source_experience_blueprint: `E:\AI设计\体验蓝图构建思路\projects\employee-self-service-permission-lowdoc\exports\final\experience_blueprint.md`
 - ready_state: `built`
 - preview_url: `N/A`
 - business_section_count: `11`
 - experience_section_count: `10`
-- flow_count: `12`
-- page_count: `9`
+- flow_count: `10`
+- page_count: `0`

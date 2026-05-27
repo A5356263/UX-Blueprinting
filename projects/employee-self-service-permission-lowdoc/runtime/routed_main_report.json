@@ -1,10 +1,10 @@
 {
   "project_id": "employee-self-service-permission-lowdoc",
-  "status": "failed",
-  "generated_at": "2026-05-26T07:25:29+00:00",
+  "status": "passed",
+  "generated_at": "2026-05-27T01:14:19+00:00",
   "requested_route": "auto",
   "execution_mode": "full",
-  "stopped_at": "generate-facts",
+  "stopped_at": "",
   "steps": [
     {
       "command": "route-decision",
@@ -16,10 +16,50 @@
     },
     {
       "command": "generate-facts",
-      "exit_code": 1
+      "exit_code": 0
+    },
+    {
+      "command": "gate-facts",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-business",
+      "exit_code": 0
+    },
+    {
+      "command": "gate-business",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-experience",
+      "exit_code": 0
+    },
+    {
+      "command": "gate-experience",
+      "exit_code": 0
+    },
+    {
+      "command": "validate",
+      "exit_code": 0
+    },
+    {
+      "command": "coverage",
+      "exit_code": 0
+    },
+    {
+      "command": "archive",
+      "exit_code": 0
+    },
+    {
+      "command": "preview",
+      "exit_code": 0
     }
   ],
   "actual_outputs": [
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/workspace/facts.md",
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/workspace/business_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/workspace/experience_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/workspace/check_status.json",
     "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/runtime/routed_main_plan.json",
     "E:/AI设计/体验蓝图构建思路/projects/employee-self-service-permission-lowdoc/runtime/routed_main_report.json"
   ],

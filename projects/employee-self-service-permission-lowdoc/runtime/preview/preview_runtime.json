@@ -1,6 +1,6 @@
 {
   "project_id": "employee-self-service-permission-lowdoc",
-  "generated_at": "2026-05-27T00:27:05+00:00",
+  "generated_at": "2026-05-27T01:14:19+00:00",
   "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\runtime\\preview",
   "output_path": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\runtime\\preview\\index.html",
   "server_host": "127.0.0.1",
@@ -9,8 +9,8 @@
   "ready_state": "built",
   "business_section_count": 11,
   "experience_section_count": 10,
-  "flow_count": 12,
-  "page_count": 9,
-  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\workspace\\business_blueprint.md",
-  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\workspace\\experience_blueprint.md"
+  "flow_count": 10,
+  "page_count": 0,
+  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\exports\\final\\business_blueprint.md",
+  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\employee-self-service-permission-lowdoc\\exports\\final\\experience_blueprint.md"
 }

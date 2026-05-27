@@ -1,6 +1,6 @@
 {
   "project_id": "employee-self-service-permission-lowdoc",
-  "task_name": "员工自助申请权限（真实验收）",
+  "task_name": "员工自助申请权限",
   "domain": "权限管理",
   "status": "draft",
   "project_role": "real_project",
