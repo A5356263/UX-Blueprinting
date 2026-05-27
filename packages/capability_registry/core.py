@@ -8,7 +8,10 @@ from packages.common import get_repo_root
 
 
 def get_registry_dir() -> Path:
-    return get_repo_root() / "packages" / "capability_registry"
+    external_dir = get_repo_root() / "packages" / "capability_registry"
+    if external_dir.exists():
+        return external_dir
+    return Path(__file__).resolve().parent
 
 
 def get_registry_file() -> Path:

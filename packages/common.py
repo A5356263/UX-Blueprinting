@@ -36,7 +36,14 @@ def get_memory_root_dir() -> Path:
 
 
 def get_examples_root_dir() -> Path:
-    return _env_path("UXB_EXAMPLES_DIR", get_repo_root() / "packages" / "examples")
+    env_value = os.environ.get("UXB_EXAMPLES_DIR")
+    if env_value:
+        return Path(env_value).resolve()
+    external_examples = get_repo_root() / "packages" / "examples"
+    if external_examples.exists():
+        return external_examples
+    bundled_examples = Path(__file__).resolve().parent / "examples"
+    return bundled_examples
 
 
 def get_project_dir(project_id: str) -> Path:
