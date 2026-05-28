@@ -4,22 +4,23 @@
   "selection_source": "projects/self-service-permission/runtime/uxb_route_decision.json",
   "selected_refs": {
     "business_refs": [
-      "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/04_对象关系.md",
       "knowledge/raw/业务/权限管理/21_来源模型.md",
       "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "knowledge/raw/业务/权限管理/14_角色边界.md",
       "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md",
       "knowledge/raw/业务/审批管理/10_审批管理.md"
     ],
     "guideline_refs": [
-      "knowledge/raw/设计准则/治理.md",
       "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/信息架构.md",
       "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
     ],
     "complexity_refs": [
       ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-      ".claude/skills/uxb/references/complexity/01_domain_router.md"
+      ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      ".claude/skills/uxb/references/complexity/domains/admin_console.md"
     ]
   },
   "assembled_refs": [
@@ -32,21 +33,22 @@
     "specs/08_fact_extraction_contract.md",
     "specs/09_business_blueprint_contract.md",
     "specs/10_experience_blueprint_contract.md",
-    "knowledge/raw/业务/权限管理/00_领域概述.md",
-    "knowledge/raw/业务/权限管理/10_能力地图.md",
+    "knowledge/raw/业务/权限管理/03_业务对象.md",
+    "knowledge/raw/业务/权限管理/04_对象关系.md",
     "knowledge/raw/业务/权限管理/21_来源模型.md",
     "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-    "knowledge/raw/业务/权限管理/14_角色边界.md",
     "knowledge/raw/业务/权限管理/20_决策链契约.md",
+    "knowledge/raw/业务/权限管理/10_能力地图.md",
     "knowledge/raw/业务/审批管理/10_审批管理.md",
-    "knowledge/raw/设计准则/治理.md",
     "knowledge/raw/设计准则/流程模式.md",
+    "knowledge/raw/设计准则/信息架构.md",
     "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
     ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-    ".claude/skills/uxb/references/complexity/01_domain_router.md"
+    ".claude/skills/uxb/references/complexity/01_domain_router.md",
+    ".claude/skills/uxb/references/complexity/domains/admin_console.md"
   ],
   "missing_refs": [],
-  "reference_count": 21,
+  "reference_count": 22,
   "task_contract": {
     "task_goal": [
       "用一句话说明本次任务要解决什么问题",
@@ -245,34 +247,34 @@
       "copied": true
     },
     {
-      "reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认权限域的整体边界和上游依赖关系，为新增能力定位提供领域上下文",
+      "selection_reason": "支撑facts阶段的业务对象建模：需要基于现有七类对象（subject/resource/action/scope/source/modifier/state）定义'权限申请单'的新对象属性，确保新对象与现有对象模型一致。影响business_blueprint.md中的对象定义和experience_blueprint.md中的字段设计。",
       "type": "file",
-      "source": "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/00_领域概述.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "source": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
       "group": "business_refs",
       "consumed_by": [
         "business",
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认现有6大能力域的结构，判断新能力应作为第7能力域还是嵌入现有能力",
+      "selection_reason": "支撑business阶段的关联设计：需要确认新增的申请单对象如何嵌入现有的前置/覆盖/叠加/边界关系框架，特别是申请来源与现有ACL_DIRECT、RBAC_ROLE来源的叠加关系。影响business_blueprint.md中的对象关系图。",
       "type": "file",
-      "source": "knowledge/raw/业务/权限管理/10_能力地图.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/10_能力地图.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "source": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
       "exists": true,
       "copied": true
     },
@@ -284,7 +286,7 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "核心参考——需要在此文件中扩展 SELF_SERVICE 来源类型，定义其来源标识、effect_modifier 和 modifier_source_of_truth",
+      "selection_reason": "支撑business阶段的核心判断——新增SELF_SERVICE_APPLICATION来源类型：需要基于现有source_enum（ACL_DIRECT/RBAC_ROLE/APP_VISIBILITY/COLLAB_VISIBILITY）和effect_modifier结构，定义新来源的source_of_truth和优先级。影响business_blueprint.md中的来源模型扩展。",
       "type": "file",
       "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/21_来源模型.md",
@@ -300,27 +302,11 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认现有治理模式互斥关系和状态模型，保证自助申请与治理模式兼容而非互斥",
+      "selection_reason": "支撑business阶段的状态机设计：需要基于现有六类状态（draft/pending/approved/rejected/effective/revoked）和actor_responsibility结构，设计申请单的状态流转和每个状态下的可见/可操作/交接关系。影响business_blueprint.md中的状态模型和experience_blueprint.md中的状态反馈设计。",
       "type": "file",
       "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
-      "group": "business_refs",
-      "consumed_by": [
-        "business",
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "确认各角色在权限体系中的可见和可操作边界，为员工端入口和申请范围提供角色约束依据",
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/14_角色边界.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/14_角色边界.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
       "exists": true,
       "copied": true
     },
@@ -332,11 +318,27 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认权限判定链路结构，为新增 SELF_SERVICE 来源后的决策链路变化提供依据",
+      "selection_reason": "支撑business阶段的决策链扩展：需要确认自助申请路径如何嵌入现有四层判定链路（L0可见性→L1功能权限→L2数据权限→L3治理与生效），确保final_effective_rule公式在新路径下的完整性。影响business_blueprint.md中的决策链说明。",
       "type": "file",
       "source": "knowledge/raw/业务/权限管理/20_决策链契约.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/20_决策链契约.md",
       "requested_reference": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "group": "business_refs",
+      "consumed_by": [
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "支撑experience阶段的页面归属判断：需要基于现有能力到页面的映射关系，确定自助申请配置页和管理页面的合理归属位置，避免能力散落或入口分裂。影响experience_blueprint.md中的页面清单和导航设计。",
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/10_能力地图.md",
       "exists": true,
       "copied": true
     },
@@ -348,26 +350,11 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认审批中台的节点类型、审批人来源和流程设计能力，为自助申请的审批链路设计提供能力边界",
+      "selection_reason": "支撑business阶段的审批集成设计：自助申请的审批链路依赖审批管理域，需要确认审批流程设计、发布与授权的标准方式，确保权限变更审批闭环完整。影响business_blueprint.md中的审批规则和experience_blueprint.md中的审批体验。",
       "type": "file",
       "source": "knowledge/raw/业务/审批管理/10_审批管理.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/业务/审批管理/10_审批管理.md",
       "requested_reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": "knowledge/raw/设计准则/治理.md",
-      "group": "guideline_refs",
-      "consumed_by": [
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "为管理员配置端的治理类交互提供设计约束",
-      "type": "file",
-      "source": "knowledge/raw/设计准则/治理.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/治理.md",
-      "requested_reference": "knowledge/raw/设计准则/治理.md",
       "exists": true,
       "copied": true
     },
@@ -378,11 +365,26 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "为申请→审批→生效的流程设计提供模式参考",
+      "selection_reason": "支撑experience阶段的流程承接设计：申请→审批→生效是一个典型的多步流程模式，需要参考流程模式准则设计状态可见性、步骤引导和节点反馈。影响experience_blueprint.md中的流程承接方案。",
       "type": "file",
       "source": "knowledge/raw/设计准则/流程模式.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/流程模式.md",
       "requested_reference": "knowledge/raw/设计准则/流程模式.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/设计准则/信息架构.md",
+      "group": "guideline_refs",
+      "consumed_by": [
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "支撑experience阶段的信息架构设计：管理端配置页、员工端申请入口、审批端处理页三者的信息层级和组织方式需要统一。影响experience_blueprint.md中的页面信息架构。",
+      "type": "file",
+      "source": "knowledge/raw/设计准则/信息架构.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/信息架构.md",
+      "requested_reference": "knowledge/raw/设计准则/信息架构.md",
       "exists": true,
       "copied": true
     },
@@ -393,7 +395,7 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "为异常分支（审批人缺失、审批超时、范围冲突等）的错误提示设计提供原则",
+      "selection_reason": "支撑experience阶段的异常反馈设计：审批人不存在、审批链路异常、能力中途关闭、申请被拒等异常场景需要统一的反馈形式和文案策略。影响experience_blueprint.md中的异常处理和反馈设计。",
       "type": "file",
       "source": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
@@ -410,7 +412,7 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "支撑复杂度判断的标准依据，六问五中确认高复杂度",
+      "selection_reason": "复杂度判断的通用标准，支撑本次判断的方法论基础。",
       "type": "file",
       "source": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
@@ -427,11 +429,28 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认跨域范围：管理后台（权限配置）+ 协同办公（审批流程）+ 平台门户（员工入口）",
+      "selection_reason": "领域识别规则，确认权限管理归属管理后台领域，并触发admin_console领域卡片。",
       "type": "file",
       "source": ".claude/skills/uxb/references/complexity/01_domain_router.md",
       "destination": "projects/self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/01_domain_router.md",
       "requested_reference": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+      "group": "complexity_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "管理后台领域卡片，确认'改角色与数据权限边界'属于该领域的高复杂度触发点，验证本次复杂度判断的合理性。",
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/.claude/skills/uxb/references/complexity/domains/admin_console.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
       "exists": true,
       "copied": true
     }
@@ -441,8 +460,8 @@
   "reference_summary": {
     "template_ref_count": 5,
     "check_ref_count": 4,
-    "selected_ref_count": 12,
-    "assembled_ref_count": 21
+    "selected_ref_count": 13,
+    "assembled_ref_count": 22
   },
   "stage_boundaries": {
     "facts": [],

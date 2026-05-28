@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "experience",
   "generated_by": "packages.validate",
-  "updated_at": "2026-05-28T08:21:33.518849+00:00",
+  "updated_at": "2026-05-28T14:28:15.662640+00:00",
   "checked_files": [
     "projects/self-service-permission/workspace/facts.md",
     "projects/self-service-permission/workspace/business_blueprint.md",
@@ -61,14 +61,14 @@
         {
           "type": "metrics",
           "value": {
-            "option_compare_count": 10,
-            "value_assessment_item_count": 3,
-            "risk_item_count": 10,
+            "option_compare_count": 9,
+            "value_assessment_item_count": 8,
+            "risk_item_count": 5,
             "unresolved_gap_count": 0,
             "has_appendix": true,
-            "appendix_item_count": 6,
-            "referenced_fact_section_count": 2,
-            "handover_item_count": 6,
+            "appendix_item_count": 5,
+            "referenced_fact_section_count": 1,
+            "handover_item_count": 20,
             "handover_keyword_count": 5,
             "has_handover_empty_talk": false
           }
@@ -77,14 +77,14 @@
     }
   ],
   "metrics": {
-    "option_compare_count": 10,
-    "value_assessment_item_count": 3,
-    "risk_item_count": 10,
+    "option_compare_count": 9,
+    "value_assessment_item_count": 8,
+    "risk_item_count": 5,
     "unresolved_gap_count": 0,
     "has_appendix": true,
-    "appendix_item_count": 6,
-    "referenced_fact_section_count": 2,
-    "handover_item_count": 6,
+    "appendix_item_count": 5,
+    "referenced_fact_section_count": 1,
+    "handover_item_count": 20,
     "handover_keyword_count": 5,
     "has_handover_empty_talk": false
   }

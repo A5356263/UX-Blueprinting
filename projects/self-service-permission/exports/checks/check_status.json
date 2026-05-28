@@ -1,9 +1,9 @@
 {
   "task_id": "self-service-permission",
-  "status": "passed",
+  "status": "warning",
   "has_blocker": false,
   "blocker_count": 0,
-  "warning_count": 0,
+  "warning_count": 7,
   "info_count": 9,
   "completed_outputs": [
     "projects/self-service-permission/workspace/business_blueprint.md",
@@ -15,7 +15,7 @@
   ],
   "missing_outputs": [],
   "generated_by": "packages.validate",
-  "updated_at": "2026-05-28T08:21:33.598750+00:00",
+  "updated_at": "2026-05-28T14:28:15.794661+00:00",
   "checked_files": [
     "projects/self-service-permission/runtime/context_manifest.json",
     "projects/self-service-permission/runtime/gates/business_gate_status.json",
@@ -30,21 +30,659 @@
   ],
   "issues": {
     "blockers": [],
-    "warnings": [],
+    "warnings": [
+      "承接检查：business_blueprint.md 已把“可作为设计建议：”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 已把“员工端入口位置和引导方式”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 已把“审批决策的二次确认（避免误操作）”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 已把“审批端的批量处理能力”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 已把“申请列表的排序和筛选建议”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 已点名角色要求“管理员的配置体验（能力开关、范围圈定、审批设置、...”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。",
+      "承接检查：business_blueprint.md 明确要求主流程闭环包含“管理员关闭能力 → 员工端变化 → 已生效权限不...”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。"
+    ],
     "infos": [
       "business gate 状态：passed",
       "experience gate 状态：passed",
       "facts gate 状态：passed",
-      "自然语言承接检查：主流程闭环覆盖：0/0",
-      "自然语言承接检查：异常与阻断覆盖：0/0",
-      "自然语言承接检查：状态与反馈覆盖：0/0",
-      "自然语言承接检查：角色路径覆盖：2/2",
+      "自然语言承接检查：主流程闭环覆盖：1/2",
+      "自然语言承接检查：异常与阻断覆盖：5/5",
+      "自然语言承接检查：状态与反馈覆盖：3/3",
+      "自然语言承接检查：角色路径覆盖：2/3",
       "自然语言承接检查：设计指南装配：3 条",
-      "自然语言承接检查：风险保护承接：1/1"
+      "自然语言承接检查：风险保护承接：3/8"
     ]
   },
   "issue_details_version": "1.0",
   "issue_details": [
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“可作为设计建议：”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“可作为设计建议：”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“员工端入口位置和引导方式”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“员工端入口位置和引导方式”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“审批决策的二次确认（避免误操作）”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“审批决策的二次确认（避免误操作）”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“审批端的批量处理能力”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“审批端的批量处理能力”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“申请列表的排序和筛选建议”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“申请列表的排序和筛选建议”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_role_path_gap",
+      "message": "承接检查：business_blueprint.md 已点名角色要求“管理员的配置体验（能力开关、范围圈定、审批设置、...”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已点名角色要求“管理员的配置体验（能力开关、范围圈定、审批设置、...”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_state_feedback_gap",
+      "message": "承接检查：business_blueprint.md 明确要求主流程闭环包含“管理员关闭能力 → 员工端变化 → 已生效权限不...”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。",
+      "target_artifacts": [
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-service-permission/runtime/context_manifest.json",
+        "projects/self-service-permission/runtime/gates/business_gate_status.json",
+        "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+        "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+        "projects/self-service-permission/workspace/business_blueprint.md",
+        "projects/self-service-permission/workspace/check_report.md",
+        "projects/self-service-permission/workspace/check_status.json",
+        "projects/self-service-permission/workspace/experience_blueprint.md",
+        "projects/self-service-permission/workspace/facts.md",
+        "projects/self-service-permission/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 明确要求主流程闭环包含“管理员关闭能力 → 员工端变化 → 已生效权限不...”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-service-permission/runtime/context_manifest.json",
+            "projects/self-service-permission/runtime/gates/business_gate_status.json",
+            "projects/self-service-permission/runtime/gates/experience_gate_status.json",
+            "projects/self-service-permission/runtime/gates/facts_gate_status.json",
+            "projects/self-service-permission/workspace/business_blueprint.md",
+            "projects/self-service-permission/workspace/check_report.md",
+            "projects/self-service-permission/workspace/check_status.json",
+            "projects/self-service-permission/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
+              "exception_coverage": true,
+              "core_table_count": 0,
+              "summary_node_count": 0,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 2,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
+              "guideline_refs_used_count": 3
+            }
+          }
+        }
+      ]
+    },
     {
       "source": "validate",
       "stage": "business",
@@ -95,52 +733,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -197,52 +822,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -299,52 +911,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -356,7 +955,7 @@
       "stage": "final",
       "severity": "info",
       "category": "experience_business_consumption_gap",
-      "message": "自然语言承接检查：主流程闭环覆盖：0/0",
+      "message": "自然语言承接检查：主流程闭环覆盖：1/2",
       "target_artifacts": [
         "projects/self-service-permission/workspace/check_status.json"
       ],
@@ -378,7 +977,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "自然语言承接检查：主流程闭环覆盖：0/0"
+          "value": "自然语言承接检查：主流程闭环覆盖：1/2"
         },
         {
           "type": "checked_files",
@@ -400,52 +999,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -457,7 +1043,7 @@
       "stage": "final",
       "severity": "info",
       "category": "experience_exception_handling_gap",
-      "message": "自然语言承接检查：异常与阻断覆盖：0/0",
+      "message": "自然语言承接检查：异常与阻断覆盖：5/5",
       "target_artifacts": [
         "projects/self-service-permission/workspace/check_status.json"
       ],
@@ -479,7 +1065,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "自然语言承接检查：异常与阻断覆盖：0/0"
+          "value": "自然语言承接检查：异常与阻断覆盖：5/5"
         },
         {
           "type": "checked_files",
@@ -501,52 +1087,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -558,7 +1131,7 @@
       "stage": "final",
       "severity": "info",
       "category": "experience_state_feedback_gap",
-      "message": "自然语言承接检查：状态与反馈覆盖：0/0",
+      "message": "自然语言承接检查：状态与反馈覆盖：3/3",
       "target_artifacts": [
         "projects/self-service-permission/workspace/check_status.json"
       ],
@@ -580,7 +1153,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "自然语言承接检查：状态与反馈覆盖：0/0"
+          "value": "自然语言承接检查：状态与反馈覆盖：3/3"
         },
         {
           "type": "checked_files",
@@ -602,52 +1175,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -659,7 +1219,7 @@
       "stage": "final",
       "severity": "info",
       "category": "experience_role_path_gap",
-      "message": "自然语言承接检查：角色路径覆盖：2/2",
+      "message": "自然语言承接检查：角色路径覆盖：2/3",
       "target_artifacts": [
         "projects/self-service-permission/workspace/check_status.json"
       ],
@@ -681,7 +1241,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "自然语言承接检查：角色路径覆盖：2/2"
+          "value": "自然语言承接检查：角色路径覆盖：2/3"
         },
         {
           "type": "checked_files",
@@ -703,52 +1263,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -804,52 +1351,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -861,7 +1395,7 @@
       "stage": "final",
       "severity": "info",
       "category": "experience_business_consumption_gap",
-      "message": "自然语言承接检查：风险保护承接：1/1",
+      "message": "自然语言承接检查：风险保护承接：3/8",
       "target_artifacts": [
         "projects/self-service-permission/workspace/check_status.json"
       ],
@@ -883,7 +1417,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "自然语言承接检查：风险保护承接：1/1"
+          "value": "自然语言承接检查：风险保护承接：3/8"
         },
         {
           "type": "checked_files",
@@ -905,52 +1439,39 @@
             "completed_output_count": 6,
             "missing_output_count": 0,
             "business_depth": {
-              "option_compare_count": 10,
-              "value_assessment_item_count": 3,
-              "risk_item_count": 10,
+              "option_compare_count": 9,
+              "value_assessment_item_count": 8,
+              "risk_item_count": 5,
               "unresolved_gap_count": 0,
               "has_appendix": true,
-              "appendix_item_count": 6,
-              "referenced_fact_section_count": 2,
-              "handover_item_count": 6,
+              "appendix_item_count": 5,
+              "referenced_fact_section_count": 1,
+              "handover_item_count": 20,
               "handover_keyword_count": 5,
               "has_handover_empty_talk": false
             },
             "experience_depth": {
               "journey_item_count": 3,
-              "flow_count": 22,
-              "page_inventory_item_count": 71,
-              "state_feedback_pair_count": 12,
-              "appendix_item_count": 9,
+              "flow_count": 44,
+              "page_inventory_item_count": 59,
+              "state_feedback_pair_count": 6,
+              "appendix_item_count": 10,
               "exception_coverage": true,
               "core_table_count": 0,
               "summary_node_count": 0,
-              "main_flow_heading_count": 0
-            },
-            "experience_handoff": {
-              "required_role_count": 2,
-              "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
-              "guideline_refs_used_count": 3
+              "main_flow_heading_count": 4
             },
             "coverage": {
-              "required_role_count": 2,
+              "required_role_count": 3,
               "covered_role_count": 2,
-              "required_flow_step_count": 0,
-              "covered_flow_step_count": 0,
-              "required_exception_count": 0,
-              "covered_exception_count": 0,
-              "required_state_count": 0,
-              "covered_state_count": 0,
-              "required_risk_count": 1,
-              "covered_risk_count": 1,
+              "required_flow_step_count": 2,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 5,
+              "covered_exception_count": 5,
+              "required_state_count": 3,
+              "covered_state_count": 3,
+              "required_risk_count": 8,
+              "covered_risk_count": 3,
               "guideline_refs_used_count": 3
             }
           }
@@ -963,52 +1484,39 @@
     "completed_output_count": 6,
     "missing_output_count": 0,
     "business_depth": {
-      "option_compare_count": 10,
-      "value_assessment_item_count": 3,
-      "risk_item_count": 10,
+      "option_compare_count": 9,
+      "value_assessment_item_count": 8,
+      "risk_item_count": 5,
       "unresolved_gap_count": 0,
       "has_appendix": true,
-      "appendix_item_count": 6,
-      "referenced_fact_section_count": 2,
-      "handover_item_count": 6,
+      "appendix_item_count": 5,
+      "referenced_fact_section_count": 1,
+      "handover_item_count": 20,
       "handover_keyword_count": 5,
       "has_handover_empty_talk": false
     },
     "experience_depth": {
       "journey_item_count": 3,
-      "flow_count": 22,
-      "page_inventory_item_count": 71,
-      "state_feedback_pair_count": 12,
-      "appendix_item_count": 9,
+      "flow_count": 44,
+      "page_inventory_item_count": 59,
+      "state_feedback_pair_count": 6,
+      "appendix_item_count": 10,
       "exception_coverage": true,
       "core_table_count": 0,
       "summary_node_count": 0,
-      "main_flow_heading_count": 0
-    },
-    "experience_handoff": {
-      "required_role_count": 2,
-      "covered_role_count": 2,
-      "required_flow_step_count": 0,
-      "covered_flow_step_count": 0,
-      "required_exception_count": 0,
-      "covered_exception_count": 0,
-      "required_state_count": 0,
-      "covered_state_count": 0,
-      "required_risk_count": 1,
-      "covered_risk_count": 1,
-      "guideline_refs_used_count": 3
+      "main_flow_heading_count": 4
     },
     "coverage": {
-      "required_role_count": 2,
+      "required_role_count": 3,
       "covered_role_count": 2,
-      "required_flow_step_count": 0,
-      "covered_flow_step_count": 0,
-      "required_exception_count": 0,
-      "covered_exception_count": 0,
-      "required_state_count": 0,
-      "covered_state_count": 0,
-      "required_risk_count": 1,
-      "covered_risk_count": 1,
+      "required_flow_step_count": 2,
+      "covered_flow_step_count": 1,
+      "required_exception_count": 5,
+      "covered_exception_count": 5,
+      "required_state_count": 3,
+      "covered_state_count": 3,
+      "required_risk_count": 8,
+      "covered_risk_count": 3,
       "guideline_refs_used_count": 3
     }
   }
