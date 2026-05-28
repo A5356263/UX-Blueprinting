@@ -1,6 +1,6 @@
 ---
 name: knowledge-ingestion
-description: Safely ingest non-standard materials into this repository's knowledge system without polluting the source of truth. Use when Codex needs to merge help-center articles, product docs, operation guides, FAQ, screenshot or video analysis, meeting notes, requirement drafts, or external references into `knowledge/` while preserving the repository's Chinese naming, raw-as-source, and summary-first routing protocol.
+description: Safely ingest non-standard materials into this repository's knowledge system without polluting the source of truth. Use when you need to merge help-center articles, product docs, operation guides, FAQ, screenshot or video analysis, meeting notes, requirement drafts, or external references into `knowledge/` while preserving the repository's Chinese naming, raw-as-source, and summary-first routing protocol.
 ---
 
 # 知识入库
@@ -123,6 +123,7 @@ description: Safely ingest non-standard materials into this repository's knowled
 - 新增了哪些文件
 - 哪些文件属于“必须更新 / 命中但不更新 / 暂不处理”
 - 还剩哪些 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
+
 ## 健康检查触发
 
 当本 skill 用于知识入库、raw 删除同步、知识清理或大模块入库时，先做一次轻量健康检查：

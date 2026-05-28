@@ -3,41 +3,41 @@ name: grill-me
 description: Pressure-test a plan, design, requirement, workflow, or implementation idea by interviewing the user one decision at a time until assumptions, dependencies, risks, and success criteria are explicit. Use when the user asks to "grill me", stress-test an idea, challenge a design, review a plan before execution, or wants structured questioning instead of immediate implementation.
 ---
 
-# 逐问拷问
+# Grill Me
 
-用连续追问的方式把一个想法压实，不要急着给方案。
+Interview the user relentlessly about every aspect of the plan until shared understanding is reached. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide a recommended answer.
 
-## 使用流程
+## Process
 
-1. 先认真读用户给出的计划、草稿或材料。
-2. 先查仓库和现有资料，能本地回答的就不要再问用户。
-3. 默认一次只问一个问题，除非用户明确要批量追问。
-4. 如果有明显更稳的默认选项，每个问题都附上推荐答案。
-5. 根据用户上一轮回答，决定下一轮追问分支。
-6. 一直追到目标、范围、依赖、约束、取舍和验证标准都清楚为止。
+1. Read the user's plan, draft, or material carefully first.
+2. Check the repository and available resources — answer locally when possible instead of asking the user.
+3. Default to one question at a time unless the user explicitly requests batch questioning.
+4. If there is an obviously safer default option, include a recommended answer with each question.
+5. Decide the next branch of questioning based on the user's previous answer.
+6. Keep going until goals, scope, dependencies, constraints, trade-offs, and success criteria are all explicit.
 
-## 追问顺序
+## Questioning Order
 
-如果用户没有提前说清，默认按这个顺序往下问：
+If the user hasn't specified otherwise, follow this default order:
 
-1. 目标：到底要解决什么问题，为谁解决。
-2. 范围：这次做什么，不做什么，哪些先放后面。
-3. 输入和依赖：数据、系统、角色、审批、前置假设。
-4. 行为：核心流程、边界情况、失败处理、恢复方式。
-5. 约束：性能、安全、规则、兼容性、时间要求。
-6. 成功标准：最后怎么判断这件事做成了。
+1. Goal — what problem, for whom.
+2. Scope — what's in, what's out, what's deferred.
+3. Inputs & dependencies — data, systems, roles, approvals, assumptions.
+4. Behavior — core flows, edge cases, failure handling, recovery.
+5. Constraints — performance, security, rules, compatibility, timeline.
+6. Success criteria — how to know it's done right.
 
-## 互动规则
+## Interaction Rules
 
-- 优先问具体、能改变决策的问题，不要做空泛 brainstorming。
-- 如果仓库里已经有答案，就先给结论再继续，不要重复提问。
-- 用户回答太虚时，要立刻缩小范围，追问得更具体。
-- 一旦发现前后矛盾，马上指出并要求用户收口。
-- 在用户明确从质疑切到执行前，不要开始实现改动。
+- Prioritize questions that can change decisions — avoid open-ended brainstorming.
+- If the answer is already in the codebase, state the conclusion and move on — don't re-ask.
+- When the user's answer is too vague, narrow the scope immediately and ask more specifically.
+- If contradictions surface, point them out right away and ask the user to resolve.
+- Do not start implementing until the user explicitly switches from questioning to execution.
 
-## 提问格式
+## Question Format
 
-默认用这个紧凑结构：
+Use this compact structure by default:
 
 ```text
 Question: ...
@@ -45,4 +45,4 @@ Recommended answer: ...
 Why this matters: ...
 ```
 
-语气要直接，但保持协作感。目标不是赢辩论，而是把模糊地带问清楚。
+Be direct but collaborative. The goal is not to win a debate — it's to make ambiguity explicit.
