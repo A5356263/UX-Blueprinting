@@ -205,6 +205,8 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 - [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)
 
+正式做知识选择时，要明确区分领域 README、`00_领域概述` 和 `knowledge/templates/**` 的角色，不把入口文档或模板当成正式业务事实消费。
+
 ## 资产地图
 
 仓库主要区域怎么用，统一见：

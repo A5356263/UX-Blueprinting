@@ -49,6 +49,24 @@ knowledge/wiki/index.md
 
 不要假设旧目录结构还有效，以当前仓库实际结构为准。
 
+## Knowledge 文件边界补充
+
+读取知识时，先区分这些文件角色：
+
+- `knowledge/wiki/index.md`：全局知识入口，用于初步定位领域和 summary
+- `knowledge/wiki/summaries/**`：AI 路由卡，用于判断某份 raw 是否值得进入后续消费
+- `knowledge/raw/业务/<领域>/README.md`：领域内二级路由，用于命中领域后继续缩小范围
+- `knowledge/raw/业务/<领域>/00_领域概述.md`：领域事实总览，用于理解领域定义、边界、对象关系和上下游依赖
+- `knowledge/templates/**`：知识入库模板，只服务知识维护和新领域建档，不参与 UXB 主链路知识消费
+
+使用原则：
+
+1. 不把领域 README 当成正式业务事实来源。
+2. 不把 `00_领域概述.md` 当成目录维护说明。
+3. 不在正式任务知识选择中选择 `knowledge/templates/**`。
+4. 只有在做知识入库、知识维护或新建领域时，才读取 templates。
+5. 如果已通过 summary 明确命中具体 raw，应优先选择具体文件，不停留在入口型 README。
+
 ## 范围控制
 
 不要为了省事默认读取整个 `knowledge/`。
@@ -98,6 +116,7 @@ knowledge/wiki/index.md
 6. 不为了保险全量选择业务知识
 7. 不为了证明“参考过指南”而选设计指南
 8. raw 只在 summary 不足、需要证据或需要关键细节时选择
+9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `business_refs` 或 `guideline_refs`
 
 ### 什么时候优先选文件级 ref
 

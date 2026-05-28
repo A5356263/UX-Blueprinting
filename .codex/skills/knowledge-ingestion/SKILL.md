@@ -123,29 +123,29 @@ description: Safely ingest non-standard materials into this repository's knowled
 - 新增了哪些文件
 - 哪些文件属于“必须更新 / 命中但不更新 / 暂不处理”
 - 还剩哪些 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
-## Health Check Trigger
+## 健康检查触发
 
-When this skill is used for knowledge ingestion, raw deletion sync, knowledge cleanup, or large-module ingestion, do a lightweight health check first:
+当本 skill 用于知识入库、raw 删除同步、知识清理或大模块入库时，先做一次轻量健康检查：
 
-1. Run `python knowledge/scripts/prune_orphan_summaries.py --dry-run`
-2. If orphan summaries exist, list:
-   - summary path
-   - missing `source_path`
-   - suggested action
-3. Do not delete immediately; wait for user confirmation
-4. After confirmation, run `python knowledge/scripts/update_wiki.py --apply --prune-orphans`
-5. Then re-check `knowledge/outputs/reports/pending_semantic_summaries.md`
-6. If summary sections 1-4 are semantically missing, only prompt; do not auto-fill by default
+1. 运行 `python knowledge/scripts/prune_orphan_summaries.py --dry-run`
+2. 如果存在 orphan summary，列出：
+   - summary 路径
+   - 缺失的 `source_path`
+   - 建议动作
+3. 不要立即删除，先等待用户确认
+4. 用户确认后，运行 `python knowledge/scripts/update_wiki.py --apply --prune-orphans`
+5. 然后重新检查 `knowledge/outputs/reports/pending_semantic_summaries.md`
+6. 如果 summary 的 1-4 段语义仍缺失，只做提示，不默认自动补全
 
-## Large Module Ingestion Trigger
+## 大模块入库触发
 
-When the new material cannot be merged stably into an existing domain, or a new business domain is needed:
+当新材料无法稳定并入现有领域，或确实需要新建业务领域时：
 
-1. Read `knowledge/raw/业务/README.md`
-2. Read the target domain README or a nearby example
-3. Read `knowledge/templates/业务知识入库/`
-4. Distinguish:
-   - `README.md`: template-directory guide
-   - `README.template.md`: new-domain README template
-5. Output a short ingestion plan before writing raw
-6. Only write raw after user confirmation, then refresh wiki
+1. 读取 `knowledge/raw/业务/README.md`
+2. 读取目标领域 README 或相邻领域示例
+3. 读取 `knowledge/templates/业务知识入库/`
+4. 先区分：
+   - `README.md`：模板目录说明
+   - `README.template.md`：新业务领域 README 模板
+5. 在写 raw 之前，先输出简短入库计划
+6. 只有在用户确认后，才落地 raw 并刷新 wiki
