@@ -38,6 +38,7 @@
 - `knowledge/raw/`
 - `knowledge/outputs/`
 - `knowledge/scripts/`
+- `knowledge/templates/`
 
 ---
 
@@ -46,6 +47,9 @@
 ### 2.1 Raw 原文不可改
 
 你可以读取 raw，但不得直接改写 raw 正文。
+
+这里的“不得直接改写 raw 正文”适用于 Wiki 编译、summary 维护和系统页刷新场景。
+如果是知识入库、知识清理或用户确认后的 raw 更新，应遵循 `.codex/skills/knowledge-ingestion` 的流程：先判断、先规划、先确认，再更新 raw 并刷新 wiki。
 
 ### 2.2 正式入口必须可追溯
 
@@ -136,6 +140,19 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 
 工具层，用于扫描、生成 summary、刷新系统页与 lint。
 
+### 3.5 templates/
+
+知识入库模板层。
+
+它只服务：
+
+- 知识入库
+- 新领域建档
+- 编号结构参考
+- README 模板生成
+
+它不属于正式 raw，不生成 summary，不进入 index，也不参与主链路默认知识消费。
+
 ---
 
 ## 4. 你如何编译原始来源
@@ -201,6 +218,9 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 - 刷新 index / overview / questions
 - 检查 raw-summary 一对一映射
 - 检查 related summaries 坏链
+- 检查 `source_path` 已失效的 orphan summary
+- 用户确认后清理 orphan summary
+- 统计 summary 1-4 语义节缺失状态
 
 不得交给脚本直接裁决的事情：
 

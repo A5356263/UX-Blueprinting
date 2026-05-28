@@ -23,6 +23,7 @@
 - `knowledge/raw/`
 - `knowledge/outputs/`
 - `knowledge/scripts/`
+- `knowledge/templates/`
 
 ---
 
@@ -59,6 +60,9 @@ knowledge/
     设计准则/
     inbox/
 
+  templates/
+    业务知识入库/
+
   wiki/
     index.md
     overview.md
@@ -77,9 +81,11 @@ knowledge/
   scripts/
     scan_raw.py
     build_summaries.py
+    prune_orphan_summaries.py
     reindex_wiki.py
     refresh_overview.py
     refresh_questions.py
+    refresh_semantic_summary_report.py
     lint_wiki.py
     update_wiki.py
     auto_update_wiki.py
@@ -132,6 +138,20 @@ knowledge/
 
 **outputs 不是正式 Wiki 入口。**
 
+### templates/
+
+知识入库模板层。
+
+这里放：
+
+- 业务知识入库模板
+- 新业务领域 README 模板
+- 编号结构参考模板
+
+注意：
+
+**templates 只服务知识入库、知识维护和新领域建档，不进入主链路默认知识消费，不生成 summary，不进入 wiki/index。**
+
 ### scripts/
 
 工具层。
@@ -140,8 +160,15 @@ knowledge/
 
 - 扫描 raw
 - 生成 summaries
+- 检查 / 清理 orphan summary
 - 刷新 index / overview / questions
+- 统计 summary 1-4 语义节待生成 / 待复核状态
 - lint 与自动更新
+
+补充说明：
+
+- `prune_orphan_summaries.py`：检查 / 清理 `source_path` 已失效的 orphan summary
+- `refresh_semantic_summary_report.py`：统计 summary 1-4 语义节待生成 / 待复核状态
 
 注意：
 
@@ -154,6 +181,9 @@ knowledge/
 ### Raw 原文不可改
 
 AI 可以读 raw，但不能把总结覆盖回 raw 正文。
+
+这里的“不可改”适用于 Wiki 编译、summary 维护和系统页刷新场景。
+如果是知识入库、知识清理或用户确认后的 raw 更新，应遵循 `.codex/skills/knowledge-ingestion` 的流程：先判断、先规划、先确认，再更新 raw 并刷新 wiki。
 
 ### Summary 是 AI 路由卡，不是机械摘要
 
