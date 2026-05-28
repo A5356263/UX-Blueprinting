@@ -144,5 +144,8 @@ When the new material cannot be merged stably into an existing domain, or a new 
 1. Read `knowledge/raw/业务/README.md`
 2. Read the target domain README or a nearby example
 3. Read `knowledge/templates/业务知识入库/`
-4. Output a short ingestion plan before writing raw
-5. Only write raw after user confirmation, then refresh wiki
+4. Distinguish:
+   - `README.md`: template-directory guide
+   - `README.template.md`: new-domain README template
+5. Output a short ingestion plan before writing raw
+6. Only write raw after user confirmation, then refresh wiki

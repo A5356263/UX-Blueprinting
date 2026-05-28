@@ -1,4 +1,6 @@
 $ErrorActionPreference = "Stop"
+$env:PYTHONUTF8 = "1"
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 
 if (Get-Command python -ErrorAction SilentlyContinue) {
     python -m packages @args

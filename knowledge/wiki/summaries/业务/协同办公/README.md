@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 协同办公
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-27
-- updated_at: 2026-05-27
+- semantic_updated_at: 2026-05-28
+- updated_at: 2026-05-28
 - related_summaries:
   - knowledge/wiki/summaries/业务/协同办公/00_领域概述.md
   - knowledge/wiki/summaries/业务/README.md

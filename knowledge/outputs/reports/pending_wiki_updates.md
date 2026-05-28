@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-27T15:58:36+00:00
+- generated_at_utc: 2026-05-28T03:35:17+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -180,8 +180,9 @@ file_count=139
 ### build_summaries.py
 
 ```text
-mode=dry-run
+mode=apply
 summary_count=139
+written_count=139
 wiki/summaries/业务/README.md
 wiki/summaries/业务/人事服务/00_领域概述.md
 wiki/summaries/业务/人事服务/README.md
@@ -342,14 +343,14 @@ changed=false
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
 question_count=128
-changed=false
+changed=true
 ```
 
 ### refresh_overview.py
 
 ```text
 refreshed=knowledge/wiki/overview.md
-changed=false
+changed=true
 ```
 
 ### refresh_semantic_summary_report.py

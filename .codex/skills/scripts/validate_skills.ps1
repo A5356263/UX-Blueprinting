@@ -6,6 +6,7 @@ if ($args.Count -eq 0) {
 }
 
 $env:PYTHONUTF8 = "1"
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 
 $validator = "C:\Users\HP\.codex\skills\.system\skill-creator\scripts\quick_validate.py"
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export PYTHONUTF8=1
 
 if command -v python >/dev/null 2>&1; then
   python -m packages "$@"
