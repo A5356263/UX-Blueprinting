@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+from _write_if_changed import parse_metadata_value, replace_metadata_value, write_text_if_changed
+
 
 @dataclass
 class StepResult:
@@ -32,8 +34,7 @@ def read_state(state_file: Path) -> dict[str, str]:
 
 
 def write_state(state_file: Path, state: dict[str, str]) -> None:
-    state_file.parent.mkdir(parents=True, exist_ok=True)
-    state_file.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_text_if_changed(state_file, json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def decode_output(raw: bytes) -> str:
@@ -134,8 +135,15 @@ def build_pending_report(
             lines.append(step.stderr)
         lines.append("```")
         lines.append("")
-    report_file.parent.mkdir(parents=True, exist_ok=True)
-    report_file.write_text("\n".join(lines), encoding="utf-8")
+    content = "\n".join(lines)
+    existing_text = report_file.read_text(encoding="utf-8") if report_file.exists() else None
+    if existing_text:
+        existing_generated_at = parse_metadata_value(existing_text, "generated_at_utc")
+        if existing_generated_at:
+            stable = replace_metadata_value(content, "generated_at_utc", existing_generated_at)
+            if stable == existing_text:
+                content = existing_text
+    write_text_if_changed(report_file, content, encoding="utf-8")
 
 
 def main() -> int:
@@ -143,6 +151,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--only")
+    parser.add_argument("--prune-orphans", action="store_true")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
 
@@ -161,9 +170,14 @@ def main() -> int:
     if args.only:
         summary_args.extend(["--only", args.only])
 
+    prune_args = ["--dry-run"]
+    if args.apply and args.prune_orphans:
+        prune_args = ["--apply"]
+
     steps_order: list[tuple[str, list[str]]] = [
         ("scan_raw.py", []),
         ("build_summaries.py", summary_args),
+        ("prune_orphan_summaries.py", prune_args),
         ("reindex_wiki.py", []),
         ("refresh_questions.py", []),
         ("refresh_overview.py", []),

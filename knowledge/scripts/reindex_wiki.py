@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from _write_if_changed import write_text_if_changed
+
 
 def append_summary_links(
     lines: list[str],
@@ -59,8 +61,9 @@ def main() -> int:
             continue
         append_summary_links(lines, wiki, group_dir, summary_files, "###")
 
-    (wiki / "index.md").write_text("\n".join(lines), encoding="utf-8")
+    changed = write_text_if_changed(wiki / "index.md", "\n".join(lines), encoding="utf-8")
     print("reindexed=knowledge/wiki/index.md")
+    print(f"changed={str(changed).lower()}")
     return 0
 
 

@@ -5,6 +5,7 @@ import re
 from datetime import date
 from pathlib import Path
 
+from _write_if_changed import parse_metadata_value, replace_metadata_value, write_text_if_changed
 
 TAG_PATTERN = re.compile(r"^\s*(?:-\s+)?\[(GAP|CONFLICT|QUESTION)\]\s*(.+?)\s*$")
 PLACEHOLDER_TEXT = "待 AI Code 读取 raw 后生成。"
@@ -130,6 +131,23 @@ def related_summaries_for(root: Path, raw_file: Path, all_raw_files: list[Path],
     return related[:max_items]
 
 
+def parse_existing_related_summaries(text: str) -> list[str]:
+    items: list[str] = []
+    in_block = False
+    for line in text.splitlines():
+        if line.startswith("- related_summaries:"):
+            in_block = True
+            continue
+        if in_block:
+            if line.startswith("  - "):
+                items.append(line[4:].strip())
+                continue
+            if not line.strip():
+                continue
+            break
+    return [item for item in items if item]
+
+
 def build_raw_lookup_rules() -> list[str]:
     """返回必须回查 raw 的通用规则（结构性内容，非语义）。"""
     return [
@@ -215,9 +233,31 @@ def extract_semantic_status(text: str) -> str:
     return "pending"
 
 
+def with_stable_timestamps(content: str, existing_text: str | None, today_str: str) -> str:
+    if not existing_text:
+        return content
+
+    existing_semantic_updated = parse_metadata_value(existing_text, "semantic_updated_at")
+    existing_updated = parse_metadata_value(existing_text, "updated_at")
+    stable = content
+    if existing_semantic_updated:
+        stable = replace_metadata_value(stable, "semantic_updated_at", existing_semantic_updated)
+    if existing_updated:
+        stable = replace_metadata_value(stable, "updated_at", existing_updated)
+    if stable == existing_text:
+        return existing_text
+    return content
+
+
 # ---- 核心生成函数 ----
 
-def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path], force_regenerate: bool = False) -> str:
+def build_summary_content(
+    root: Path,
+    raw_file: Path,
+    all_raw_files: list[Path],
+    force_regenerate: bool = False,
+    refresh_related: bool = False,
+) -> str:
     lines = raw_file.read_text(encoding="utf-8").splitlines()
     group = source_group_for(raw_file)
     title = title_for(lines, raw_file)
@@ -245,6 +285,10 @@ def build_summary_content(root: Path, raw_file: Path, all_raw_files: list[Path],
         status = extract_status(existing_text)
         confidence = extract_confidence(existing_text)
         semantic_status = extract_semantic_status(existing_text)
+        if not refresh_related:
+            existing_related = parse_existing_related_summaries(existing_text)
+            if existing_related:
+                related = existing_related
     else:
         # ---- 骨架模式：占位符 ----
         s1 = PLACEHOLDER_TEXT
@@ -331,6 +375,7 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--only")
     parser.add_argument("--force-regenerate", action="store_true")
+    parser.add_argument("--refresh-related", action="store_true")
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[1]
@@ -342,19 +387,31 @@ def main() -> int:
         raw_files = [p for p in raw_files if p.resolve() == target.resolve()]
 
     updated: list[str] = []
+    written: list[str] = []
     created_dirs: set[Path] = set()
+    all_raw_files = list_raw_files(raw_root)
     for raw_file in raw_files:
         summary_file = summary_path_for(root, raw_file)
-        content = build_summary_content(root, raw_file, list_raw_files(raw_root), force_regenerate=args.force_regenerate)
+        content = build_summary_content(
+            root,
+            raw_file,
+            all_raw_files,
+            force_regenerate=args.force_regenerate,
+            refresh_related=args.refresh_related,
+        )
+        existing_text = summary_file.read_text(encoding="utf-8") if summary_file.exists() else None
+        content = with_stable_timestamps(content, existing_text, date.today().isoformat())
         if args.apply and not args.dry_run:
-            summary_file.parent.mkdir(parents=True, exist_ok=True)
             created_dirs.add(summary_file.parent)
-            summary_file.write_text(content, encoding="utf-8")
+            if write_text_if_changed(summary_file, content, encoding="utf-8"):
+                written.append(summary_file.relative_to(root).as_posix())
         updated.append(summary_file.relative_to(root).as_posix())
 
     mode = "dry-run" if args.dry_run or not args.apply else "apply"
     print(f"mode={mode}")
     print(f"summary_count={len(updated)}")
+    if args.apply and not args.dry_run:
+        print(f"written_count={len(written)}")
     for item in updated:
         print(item)
     return 0

@@ -1,9 +1,9 @@
 # Pending Semantic Summaries
 
-- total: 142
+- total: 139
 - pending_generate: 0
 - pending_review: 0
-- completed: 142
+- completed: 139
 
 ## 待 AI 生成
 
@@ -98,9 +98,6 @@
 - knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md
 - knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md
 - knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md
-- knowledge/wiki/summaries/业务/权限管理/40_蓝图消费地图.md
-- knowledge/wiki/summaries/业务/权限管理/41_业务蓝图移交.md
-- knowledge/wiki/summaries/业务/权限管理/42_体验蓝图移交.md
 - knowledge/wiki/summaries/业务/权限管理/50_帮助文档权限差异.md
 - knowledge/wiki/summaries/业务/权限管理/README.md
 - knowledge/wiki/summaries/业务/组织架构/00_领域概述.md

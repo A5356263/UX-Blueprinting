@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from _write_if_changed import write_text_if_changed
+
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
@@ -61,8 +63,8 @@ def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None
     ]
 
     report_path = root / "outputs" / "reports" / "pending_semantic_summaries.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text("\n".join(report_lines), encoding="utf-8")
+    changed = write_text_if_changed(report_path, "\n".join(report_lines), encoding="utf-8")
+    print(f"changed={str(changed).lower()}")
 
 
 if __name__ == "__main__":

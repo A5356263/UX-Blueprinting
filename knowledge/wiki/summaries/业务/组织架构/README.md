@@ -1,4 +1,4 @@
-# organization
+# 组织架构
 
 - page_id: PG-SUMMARY-BUSINESS-业务-组织架构-README
 - page_type: summary
@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 组织架构
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-21
-- updated_at: 2026-05-21
+- semantic_updated_at: 2026-05-27
+- updated_at: 2026-05-27
 - related_summaries:
   - knowledge/wiki/summaries/业务/组织架构/00_领域概述.md
   - knowledge/wiki/summaries/业务/组织架构/10_组织架构设计.md

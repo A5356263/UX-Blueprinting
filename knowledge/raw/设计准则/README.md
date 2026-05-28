@@ -1,30 +1,30 @@
-# knowledge/raw/设计准则
+# 设计准则
 
-本目录用于存放跨业务、跨产品复用的通用设计原则。
+## 这是什么
+
+这是设计准则知识库的二级路由入口，用于存放跨业务、跨产品复用的通用设计原则。
 
 它服务的是体验推导、自检、风险识别与原则引用，不服务业务规则定义。
 
-## 当前结构
+它不承载正式业务事实正文，也不承载主链路消费说明。
 
-- `accessibility.md`
-- `cognition.md`
-- `flow_mode.md`
-- `governance.md`
-- `information_architecture.md`
-- `quality.md`
-- `readability.md`
-- `usability.md`
-- `visual.md`
+## 编号段
 
-## 使用方式
+本目录按主题文件组织，每个 `<topic>.md` 对应一个设计原则主题：
 
-1. 先通过 Wiki 命中机制定位相关 guideline 主题
-2. 再回查本目录命中的 `<topic>.md` 正文真源
-3. 输出体验要求、风险点、自检问句时，只引用当前任务真正相关的原则
+- `accessibility.md` — 无障碍设计
+- `cognition.md` — 认知负荷
+- `flow_mode.md` — 流程模式
+- `governance.md` — 治理
+- `information_architecture.md` — 信息架构
+- `quality.md` — 体验质量
+- `readability.md` — 可读性
+- `usability.md` — 可用性
+- `visual.md` — 视觉
 
 ## 场景路由
 
-本段是轻量路由入口，不替代各主题 raw 正文。AI 应先根据 facts.md 与 business_blueprint.md 识别体验场景，再读取对应 summary；命中 summary 后必须继续读取其 source_refs 指向的 raw。
+路由只说明"该读什么"，不规定"必须怎么设计"。最终方案仍必须回到业务事实、状态边界、异常阻断、风险保护和待确认问题。
 
 - 信息组织、页面结构、模块分组：优先读信息架构、视觉、认知。
 - 操作流程、步骤拆分、任务闭环：优先读流程模式、可用性、认知。
@@ -39,8 +39,6 @@
 - 无障碍、可感知、可操作：优先读无障碍、可用性、可读性。
 - 体验质量评估、有效性、效率、满意度：优先读质量、可用性、认知。
 
-路由只说明“该读什么”，不规定“必须怎么设计”。最终方案仍必须回到业务事实、状态边界、异常阻断、风险保护和待确认问题。
-
 ## 边界
 
 - 放通用设计原则，不放业务规则
@@ -52,3 +50,5 @@
 - 按主题文件维护，不维护 task/trigger 路由索引
 - 新增主题时，直接新增 `<topic>.md`
 - 调整主题内容后，需同步重建 Wiki summaries 与 index/overview/questions
+- 不在本目录中沉淀主链路消费地图、蓝图移交说明或下游执行指令
+- 做结构替换时不保留兼容层，确认替换后直接移除旧知识位

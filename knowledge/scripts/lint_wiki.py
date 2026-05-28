@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from _write_if_changed import write_text_if_changed
+
 
 REQUIRED_SUMMARY_FIELDS = [
     "page_id:",
@@ -118,20 +120,23 @@ def main() -> int:
             issues.append(f"missing_system_page:{required.relative_to(repo_root).as_posix()}")
 
     report = root / "outputs" / "lint" / "latest_lint_report.md"
+    orphan_report = root / "outputs" / "reports" / "orphan_summaries.md"
     lines = [
         "# Wiki Lint Report",
         "",
         f"- raw_total: {len(raw_files)}",
         f"- summary_total: {len(summary_files)}",
         f"- issue_total: {len(issues)}",
+        f"- orphan_report: {orphan_report.relative_to(repo_root).as_posix() if orphan_report.exists() else 'missing'}",
         "",
         "## Issues",
         "",
         *([f"- {issue}" for issue in issues] if issues else ["- none"]),
         "",
     ]
-    report.write_text("\n".join(lines), encoding="utf-8")
+    changed = write_text_if_changed(report, "\n".join(lines), encoding="utf-8")
     print(f"report={report}")
+    print(f"changed={str(changed).lower()}")
     return 0 if not issues else 1
 
 

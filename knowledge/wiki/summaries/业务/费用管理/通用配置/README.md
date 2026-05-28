@@ -1,4 +1,4 @@
-# general_config
+# 通用配置
 
 - page_id: PG-SUMMARY-BUSINESS-业务-费用管理-通用配置-README
 - page_type: summary
@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 通用配置
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-21
-- updated_at: 2026-05-21
+- semantic_updated_at: 2026-05-27
+- updated_at: 2026-05-27
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/通用配置/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
@@ -54,8 +54,7 @@
 
 ## 6. 缺口 / 冲突 / 不确定项
 
-- [GAP] 全部27篇操作指引正文未采集
-- [GAP] 56条常见问题正文未采集
+- none
 
 ## 7. 邻近阅读
 

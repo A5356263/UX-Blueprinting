@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 
+from _write_if_changed import parse_metadata_value, replace_metadata_value, write_text_if_changed
 
 def count_markers(files: list[Path], marker: str) -> int:
     """只统计以 [MARKER] 开头的真实问题标记行，忽略正文中普通提及。"""
@@ -16,6 +17,18 @@ def count_markers(files: list[Path], marker: str) -> int:
         except UnicodeDecodeError:
             continue
     return count
+
+
+def with_stable_timestamp(content: str, existing_text: str | None, today_str: str) -> str:
+    if not existing_text:
+        return content
+    existing_updated = parse_metadata_value(existing_text, "updated_at")
+    stable = content
+    if existing_updated:
+        stable = replace_metadata_value(stable, "updated_at", existing_updated)
+    if stable == existing_text:
+        return existing_text
+    return content
 
 
 def main() -> int:
@@ -62,8 +75,12 @@ def main() -> int:
             "",
         ]
     )
-    (root / "wiki" / "overview.md").write_text(content, encoding="utf-8")
+    overview_path = root / "wiki" / "overview.md"
+    existing_text = overview_path.read_text(encoding="utf-8") if overview_path.exists() else None
+    content = with_stable_timestamp(content, existing_text, date.today().isoformat())
+    changed = write_text_if_changed(overview_path, content, encoding="utf-8")
     print("refreshed=knowledge/wiki/overview.md")
+    print(f"changed={str(changed).lower()}")
     return 0
 
 

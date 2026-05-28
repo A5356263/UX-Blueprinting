@@ -123,3 +123,26 @@ description: Safely ingest non-standard materials into this repository's knowled
 - 新增了哪些文件
 - 哪些文件属于“必须更新 / 命中但不更新 / 暂不处理”
 - 还剩哪些 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
+## Health Check Trigger
+
+When this skill is used for knowledge ingestion, raw deletion sync, knowledge cleanup, or large-module ingestion, do a lightweight health check first:
+
+1. Run `python knowledge/scripts/prune_orphan_summaries.py --dry-run`
+2. If orphan summaries exist, list:
+   - summary path
+   - missing `source_path`
+   - suggested action
+3. Do not delete immediately; wait for user confirmation
+4. After confirmation, run `python knowledge/scripts/update_wiki.py --apply --prune-orphans`
+5. Then re-check `knowledge/outputs/reports/pending_semantic_summaries.md`
+6. If summary sections 1-4 are semantically missing, only prompt; do not auto-fill by default
+
+## Large Module Ingestion Trigger
+
+When the new material cannot be merged stably into an existing domain, or a new business domain is needed:
+
+1. Read `knowledge/raw/业务/README.md`
+2. Read the target domain README or a nearby example
+3. Read `knowledge/templates/业务知识入库/`
+4. Output a short ingestion plan before writing raw
+5. Only write raw after user confirmation, then refresh wiki

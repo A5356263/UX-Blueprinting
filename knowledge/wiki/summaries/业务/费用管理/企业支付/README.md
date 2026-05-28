@@ -1,4 +1,4 @@
-# corporate_payment
+# 企业支付
 
 - page_id: PG-SUMMARY-BUSINESS-业务-费用管理-企业支付-README
 - page_type: summary
@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 企业支付
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-21
-- updated_at: 2026-05-21
+- semantic_updated_at: 2026-05-27
+- updated_at: 2026-05-27
 - related_summaries:
   - knowledge/wiki/summaries/业务/费用管理/企业支付/00_领域概述.md
   - knowledge/wiki/summaries/业务/费用管理/企业支付/10_企业支付.md

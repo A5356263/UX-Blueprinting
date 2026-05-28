@@ -1,4 +1,4 @@
-# service_management
+# 服务管理
 
 - page_id: PG-SUMMARY-BUSINESS-业务-服务管理-README
 - page_type: summary
@@ -9,8 +9,8 @@
 - summary_role: ai_route_card
 - domain: 服务管理
 - semantic_status: ai_generated
-- semantic_updated_at: 2026-05-21
-- updated_at: 2026-05-21
+- semantic_updated_at: 2026-05-27
+- updated_at: 2026-05-27
 - related_summaries:
   - knowledge/wiki/summaries/业务/服务管理/00_领域概述.md
   - knowledge/wiki/summaries/业务/服务管理/10_服务人员授权.md

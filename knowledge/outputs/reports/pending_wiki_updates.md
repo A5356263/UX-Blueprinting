@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-21T14:28:45+00:00
+- generated_at_utc: 2026-05-27T15:58:36+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -8,6 +8,7 @@
 
 - scan_raw.py: ok
 - build_summaries.py: ok
+- prune_orphan_summaries.py: ok
 - reindex_wiki.py: ok
 - refresh_questions.py: ok
 - refresh_overview.py: ok
@@ -16,15 +17,11 @@
 
 ## Changed Raw Sources
 
-- raw/业务/人事服务/组织管理/10_组织架构.md
-- raw/业务/协同办公/协同工具/10_协同工具.md
-- raw/业务/审批管理/10_审批管理.md
+- none
 
 ## Updated Summaries
 
-- wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
-- wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
-- wiki/summaries/业务/审批管理/10_审批管理.md
+- none
 
 ## Notes
 
@@ -38,7 +35,7 @@
 
 ```text
 raw_root=E:\AI设计\体验蓝图构建思路\knowledge\raw
-file_count=142
+file_count=139
 业务/README.md
 业务/人事服务/00_领域概述.md
 业务/人事服务/README.md
@@ -122,9 +119,6 @@ file_count=142
 业务/权限管理/30_体验风险模式.md
 业务/权限管理/31_体验翻译需求.md
 业务/权限管理/32_文案与解释策略.md
-业务/权限管理/40_蓝图消费地图.md
-业务/权限管理/41_业务蓝图移交.md
-业务/权限管理/42_体验蓝图移交.md
 业务/权限管理/50_帮助文档权限差异.md
 业务/权限管理/README.md
 业务/组织架构/00_领域概述.md
@@ -186,8 +180,8 @@ file_count=142
 ### build_summaries.py
 
 ```text
-mode=apply
-summary_count=142
+mode=dry-run
+summary_count=139
 wiki/summaries/业务/README.md
 wiki/summaries/业务/人事服务/00_领域概述.md
 wiki/summaries/业务/人事服务/README.md
@@ -271,9 +265,6 @@ wiki/summaries/业务/权限管理/25_审计契约.md
 wiki/summaries/业务/权限管理/30_体验风险模式.md
 wiki/summaries/业务/权限管理/31_体验翻译需求.md
 wiki/summaries/业务/权限管理/32_文案与解释策略.md
-wiki/summaries/业务/权限管理/40_蓝图消费地图.md
-wiki/summaries/业务/权限管理/41_业务蓝图移交.md
-wiki/summaries/业务/权限管理/42_体验蓝图移交.md
 wiki/summaries/业务/权限管理/50_帮助文档权限差异.md
 wiki/summaries/业务/权限管理/README.md
 wiki/summaries/业务/组织架构/00_领域概述.md
@@ -332,33 +323,45 @@ wiki/summaries/设计准则/认知.md
 wiki/summaries/设计准则/质量.md
 ```
 
+### prune_orphan_summaries.py
+
+```text
+report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\reports\orphan_summaries.md
+orphan_count=0
+```
+
 ### reindex_wiki.py
 
 ```text
-reindexed=knowledge/wiki/index.md
+reindexed=knowledge/wiki/index.md
+changed=false
 ```
 
 ### refresh_questions.py
 
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
-question_count=78
+question_count=128
+changed=false
 ```
 
 ### refresh_overview.py
 
 ```text
-refreshed=knowledge/wiki/overview.md
+refreshed=knowledge/wiki/overview.md
+changed=false
 ```
 
 ### refresh_semantic_summary_report.py
 
 ```text
+changed=false
 refreshed=knowledge/outputs/reports/pending_semantic_summaries.md
 ```
 
 ### lint_wiki.py
 
 ```text
-report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\lint\latest_lint_report.md
+report=E:\AI设计\体验蓝图构建思路\knowledge\outputs\lint\latest_lint_report.md
+changed=false
 ```

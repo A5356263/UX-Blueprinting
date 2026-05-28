@@ -4,6 +4,7 @@ import re
 from datetime import date
 from pathlib import Path
 
+from _write_if_changed import parse_metadata_value, replace_metadata_value, write_text_if_changed
 
 TAG_PATTERN = re.compile(r"^\s*(?:-\s+)?\[(GAP|CONFLICT|QUESTION)\]\s*(.+?)\s*$")
 
@@ -27,6 +28,18 @@ def extract_questions(file: Path, root: Path) -> list[dict[str, str]]:
 def summary_path_for_raw(root: Path, raw_file: Path) -> str:
     rel = raw_file.relative_to(root / "raw").as_posix()
     return f"knowledge/wiki/summaries/{rel}"
+
+
+def with_stable_timestamp(content: str, existing_text: str | None, today_str: str) -> str:
+    if not existing_text:
+        return content
+    existing_updated = parse_metadata_value(existing_text, "updated_at")
+    stable = content
+    if existing_updated:
+        stable = replace_metadata_value(stable, "updated_at", existing_updated)
+    if stable == existing_text:
+        return existing_text
+    return content
 
 
 def main() -> int:
@@ -90,9 +103,13 @@ def main() -> int:
         lines.extend(["- none", ""])
 
     out = wiki_root / "questions.md"
-    out.write_text("\n".join(lines), encoding="utf-8")
+    content = "\n".join(lines)
+    existing_text = out.read_text(encoding="utf-8") if out.exists() else None
+    content = with_stable_timestamp(content, existing_text, date.today().isoformat())
+    changed = write_text_if_changed(out, content, encoding="utf-8")
     print(f"questions={out}")
     print(f"question_count={len(deduped)}")
+    print(f"changed={str(changed).lower()}")
     return 0
 
 
