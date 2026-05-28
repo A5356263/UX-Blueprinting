@@ -365,6 +365,14 @@ HANDOFF_PHRASE_STOPWORDS = {
     "审批方",
 }
 
+OPTIONAL_HANDOFF_SECTION_MARKERS = [
+    "可作为设计建议的内容",
+    "可作为设计建议",
+    "设计建议",
+    "建议参考",
+    "可选建议",
+]
+
 HANDOFF_SIGNAL_KEYWORDS = [
     "互斥",
     "冲突",
@@ -1133,6 +1141,11 @@ def is_meaningful_handoff_phrase(text: str) -> bool:
     return normalized not in {normalize_handoff_phrase(item) for item in HANDOFF_PHRASE_STOPWORDS}
 
 
+def is_optional_handoff_section_heading(text: str) -> bool:
+    normalized = normalize_handoff_line(text)
+    return any(marker in normalized for marker in OPTIONAL_HANDOFF_SECTION_MARKERS)
+
+
 def extract_handoff_requirements(section_text: str) -> dict[str, list[str]]:
     items = {key: [] for key in HANDOFF_CATEGORY_LABELS}
     current_category: str | None = None
@@ -1149,7 +1162,7 @@ def extract_handoff_requirements(section_text: str) -> dict[str, list[str]]:
         if matched_category:
             current_category = matched_category
             continue
-        if "可作为设计建议的内容" in normalized:
+        if is_optional_handoff_section_heading(normalized):
             current_category = None
             continue
         if current_category is None:
