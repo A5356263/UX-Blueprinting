@@ -6,6 +6,18 @@ from pathlib import Path
 from packages.common import get_project_runtime_dir
 
 
+_WEAK_RAW_REASON_PHRASES = {
+    "了解背景",
+    "用于了解背景",
+    "作为参考",
+    "仅作参考",
+    "可能有用",
+    "背景参考",
+    "for reference",
+    "background reference",
+}
+
+
 def _dedupe_keep_order(values: list[str]) -> list[str]:
     seen: set[str] = set()
     deduped: list[str] = []
@@ -60,18 +72,45 @@ def _normalize_ref_list(raw_values: object) -> list[str]:
     return _dedupe_keep_order([str(item) for item in raw_values if isinstance(item, str)])
 
 
+def _build_raw_ref_warnings(selected_refs: dict[str, list[str]], reason_items: list[dict[str, str]]) -> list[str]:
+    reason_by_ref = {item["ref"]: item["reason"] for item in reason_items if item.get("ref")}
+    warnings: list[str] = []
+
+    for group in ("business_refs", "guideline_refs"):
+        for ref in selected_refs.get(group, []):
+            if not ref.startswith("knowledge/raw/"):
+                continue
+            reason = reason_by_ref.get(ref, "").strip()
+            if not reason:
+                warnings.append(
+                    f"raw ref 缺少 selection_reason：{ref}；建议补充该 raw 的路由来源、使用阶段和具体判断用途。"
+                )
+                continue
+            normalized_reason = " ".join(reason.replace("，", " ").replace("。", " ").split()).lower()
+            if normalized_reason in _WEAK_RAW_REASON_PHRASES:
+                warnings.append(
+                    f"raw ref 说明偏弱：{ref}；建议补充该 raw 的路由来源、使用阶段和具体判断用途。"
+                )
+
+    return warnings
+
+
 def build_knowledge_consumption_plan(task_id: str) -> dict[str, object]:
     payload = _read_uxb_route_decision(task_id)
     knowledge_selection = payload.get("knowledge_selection")
     if not isinstance(knowledge_selection, dict):
         knowledge_selection = {}
 
+    selected_refs = {
+        "business_refs": _normalize_ref_list(knowledge_selection.get("business_refs")),
+        "guideline_refs": _normalize_ref_list(knowledge_selection.get("guideline_refs")),
+        "complexity_refs": _normalize_ref_list(knowledge_selection.get("complexity_refs")),
+    }
+    selection_reasons = _normalize_reason_items(knowledge_selection.get("selection_reasons"))
+
     return {
         "selection_source": _selection_source(task_id),
-        "selected_refs": {
-            "business_refs": _normalize_ref_list(knowledge_selection.get("business_refs")),
-            "guideline_refs": _normalize_ref_list(knowledge_selection.get("guideline_refs")),
-            "complexity_refs": _normalize_ref_list(knowledge_selection.get("complexity_refs")),
-        },
-        "selection_reasons": _normalize_reason_items(knowledge_selection.get("selection_reasons")),
+        "selected_refs": selected_refs,
+        "selection_reasons": selection_reasons,
+        "warnings": _build_raw_ref_warnings(selected_refs, selection_reasons),
     }

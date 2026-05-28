@@ -142,6 +142,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
 
     warnings = list(resolved.get("warnings", []))
     selection_plan = build_knowledge_consumption_plan(task_id)
+    warnings.extend(str(item) for item in selection_plan.get("warnings", []) if str(item).strip())
 
     reference_items_raw: list[dict[str, object]] = []
     for field, consumed_by in {

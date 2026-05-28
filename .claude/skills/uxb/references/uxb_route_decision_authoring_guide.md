@@ -191,6 +191,16 @@
 
 如果说不清，就不要选。
 
+## Raw refs 选择要求
+
+当 `business_refs` 或 `guideline_refs` 中包含 `knowledge/raw/**` 时，`selection_reasons` 还要补清三点：
+
+1. 路由来源：该 raw 由哪个 summary / README / index 线索命中。
+2. 使用阶段：该 raw 主要支撑 facts / business / experience 中哪个阶段。
+3. 具体判断点：该 raw 用于确认什么规则、对象关系、状态、流程、字段、路径、异常或边界。
+
+如果无法说明以上三点，应先退回 summary / README 层，不要直接选择 raw。
+
 ## required_outputs 判断
 
 不要先想“我想跑哪条路径”，而要先想“当前事实能支撑到什么深度”。

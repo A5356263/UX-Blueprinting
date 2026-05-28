@@ -98,6 +98,14 @@ knowledge/wiki/index.md
 - 需要证据
 - 用户要求可追溯来源
 
+## 知识消费深度
+
+正式做知识选择前，先判断这次需要读到什么深度：
+
+- `L1 领域定位 / 方向判断`：只读 `index + summary + 领域 README`，不直接选择 raw。
+- `L2 UXB 路由判断 / 轻量蓝图判断`：summary 为主，领域 README 辅助；只有需要确认具体规则、对象关系、状态、流程、字段、路径、异常或边界时，才选择少量 raw。
+- `L3 正式 facts / business / experience 生成`：可以消费 raw，但 raw 必须已经由 summary / README 路由命中，并写入 `uxb_route_decision.json`。
+
 ## 正式任务前的知识选择
 
 当用户确认进入正式 UXB 主链路时，知识不再由代码自动选择，而是由 UXB 先写入：
@@ -117,6 +125,18 @@ knowledge/wiki/index.md
 7. 不为了证明“参考过指南”而选设计指南
 8. raw 只在 summary 不足、需要证据或需要关键细节时选择
 9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `business_refs` 或 `guideline_refs`
+
+### Raw 选择必要性
+
+`business_refs` / `guideline_refs` 默认优先选择 summary、领域 README 或入口型知识。
+
+如果选择 `knowledge/raw/**`，`selection_reasons` 至少要说明：
+
+1. 该 raw 由哪个 summary / README / index 线索命中。
+2. 该 raw 主要支撑 facts / business / experience 中哪个阶段。
+3. 该 raw 支撑什么具体判断点。
+
+不要因为“保险”“可能有用”“了解背景”直接选择大量 raw。
 
 ### 什么时候优先选文件级 ref
 

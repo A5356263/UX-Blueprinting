@@ -120,6 +120,86 @@ FORBIDDEN_TERMS = {
     ],
 }
 
+FORMAL_SKELETON_ARTIFACTS = {
+    "facts.md",
+    "business_blueprint.md",
+    "business_note.md",
+    "business_blueprint_lite.md",
+    "experience_blueprint.md",
+}
+
+SKELETON_MIN_TEXT_LENGTH = {
+    "facts.md": 500,
+    "business_note.md": 500,
+    "business_blueprint_lite.md": 800,
+    "business_blueprint.md": 1200,
+    "experience_blueprint.md": 1500,
+}
+
+SKELETON_CORE_SECTION_TITLES = {
+    "facts.md": [
+        "任务概述",
+        "功能范围",
+        "关键业务规则",
+        "状态流转",
+        "异常与边界",
+        "依赖与前置条件",
+        "开放问题与缺口",
+    ],
+    "business_blueprint.md": [
+        "1. 一句话结论",
+        "2. 需求是否成立",
+        "3. 值不值得做",
+        "4. 应该做成什么能力形态",
+        "5. 推荐业务方案",
+        "6. 必须守住的规则和边界",
+        "7. 主要风险与保护策略",
+        "8. 方案承接要求",
+        "9. 待确认问题",
+    ],
+    "business_note.md": [
+        "1. 业务依据",
+        "2. 核心业务规则影响",
+        "3. 体验可承接内容",
+        "4. 升级信号",
+        "5. 待确认问题",
+    ],
+    "business_blueprint_lite.md": [
+        "1. 一句话结论",
+        "2. 关键业务规则",
+        "3. 边界与风险",
+        "4. 体验承接要求",
+        "5. 升级信号",
+        "6. 待确认问题",
+    ],
+    "experience_blueprint.md": [
+        "1. 旅程图",
+        "2. 交互流程总览",
+        "3. 主交互流程",
+        "4. 次交互流程",
+        "5. 异常与阻断流程",
+        "6. 页面 / 弹窗 / 抽屉设计",
+        "7. 状态与反馈文案",
+        "8. 待确认问题",
+    ],
+}
+
+TEMPLATE_HINT_MARKERS = [
+    "请在这里",
+    "按需求文档中的功能单元逐个描述",
+    "用自然语言描述重要的业务规则",
+    "描述关键状态的变化过程",
+    "描述什么情况下会失败、阻断、冲突",
+    "直接回答：能不能做、建议怎么做",
+    "比较至少两种路径",
+    "后续 experience 阶段必须承接的内容",
+    "展开非主路径任务",
+    "仅在实际装配并使用了 guideline refs 或业务知识时填写",
+    "不要填写：",
+    "影响：<说明影响",
+    "建议确认方：<",
+]
+
 
 def _print_repair_guidance(project_id: str) -> None:
     remediation_dir = get_project_remediation_dir(project_id)
@@ -386,6 +466,10 @@ def infer_issue_category(stage: str, message: str) -> str:
         return "quality_gap"
     if "缺少栏目" in message or "缺少必需章节" in message or ("缺少" in message and "## " in message):
         return "structure_missing"
+    if "必需章节为空" in message:
+        return "empty_required_section"
+    if "模板骨架" in message or "模板提示语" in message or "无实质内容" in message or "只有表头没有真实数据" in message or "只有模板列表" in message:
+        return "skeleton_content"
     if "placeholder" in lowered or "占位" in message:
         return "placeholder_residue"
     if "设计指南" in message or "guideline" in lowered:
@@ -849,6 +933,132 @@ def count_real_list_items(text: str) -> int:
     return sum(1 for line in text.splitlines() if LIST_ITEM_PATTERN.match(line) and not PLACEHOLDER_PATTERN.search(line))
 
 
+def is_formal_skeleton_artifact(file_name: str) -> bool:
+    return file_name in FORMAL_SKELETON_ARTIFACTS
+
+
+def is_placeholder_line(line: str) -> bool:
+    stripped = strip_markdown_inline(line).strip()
+    if not stripped:
+        return False
+    if PLACEHOLDER_PATTERN.search(stripped):
+        return True
+    upper = stripped.upper()
+    return upper in {"TODO", "[TODO]"} or stripped.startswith(("<填写", "<问题标题>", "<状态名称>", "<设计依据>", "<缺失项>"))
+
+
+def is_template_hint_line(line: str) -> bool:
+    stripped = strip_markdown_inline(line).strip()
+    if not stripped:
+        return False
+    if is_placeholder_line(stripped):
+        return True
+    if stripped.startswith("> 本模板定义"):
+        return True
+    return any(marker in stripped for marker in TEMPLATE_HINT_MARKERS)
+
+
+def count_meaningful_lines(section_text: str) -> int:
+    count = 0
+    for line in section_text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith(("#", "```")):
+            continue
+        if TABLE_SEPARATOR_PATTERN.match(stripped):
+            continue
+        if is_placeholder_line(stripped) or is_template_hint_line(stripped):
+            continue
+        cleaned = strip_markdown_inline(stripped)
+        cleaned = re.sub(r"^\s*(?:[-*]|\d+\.)\s+", "", cleaned)
+        if len(re.sub(r"\s+", "", cleaned)) < 4:
+            continue
+        count += 1
+    return count
+
+
+def section_has_meaningful_content(section_text: str) -> bool:
+    if count_meaningful_lines(section_text) >= 2:
+        return True
+    if count_meaningful_lines(section_text) >= 1 and effective_text_length(section_text) >= 12:
+        return True
+    if count_real_list_items(section_text) >= 1:
+        return True
+    if count_real_table_rows(section_text) >= 1:
+        return True
+    return False
+
+
+def effective_text_length(text: str) -> int:
+    meaningful_parts: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith(("#", "```")):
+            continue
+        if TABLE_SEPARATOR_PATTERN.match(stripped):
+            continue
+        if is_placeholder_line(stripped) or is_template_hint_line(stripped):
+            continue
+        cleaned = strip_markdown_inline(stripped)
+        cleaned = re.sub(r"^\s*(?:[-*]|\d+\.)\s+", "", cleaned)
+        meaningful_parts.append(cleaned)
+    return len(re.sub(r"\s+", "", "".join(meaningful_parts)))
+
+
+def check_required_section_bodies(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
+    if not is_formal_skeleton_artifact(file_name):
+        return
+    sections = parse_h2_sections(content)
+    for heading in STAGE_REQUIRED_HEADINGS.get(file_name, []):
+        title = heading.replace("## ", "", 1)
+        section_text = sections.get(title, "")
+        if not section_text:
+            continue
+        if not section_has_meaningful_content(section_text):
+            add_issue(issues, "blocker", f"{file_name} 必需章节为空：{heading}")
+
+
+def check_skeleton_content(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
+    if not is_formal_skeleton_artifact(file_name):
+        return
+
+    sections = parse_h2_sections(content)
+    total_length = effective_text_length(content)
+    min_length = SKELETON_MIN_TEXT_LENGTH.get(file_name, 0)
+    if min_length and total_length < min_length:
+        add_issue(issues, "blocker", f"{file_name} 正文长度明显不足，仍像模板骨架")
+
+    if any(is_template_hint_line(line) for line in content.splitlines()):
+        add_issue(issues, "blocker", f"{file_name} 仍包含模板提示语，请先替换为真实内容")
+
+    core_titles = SKELETON_CORE_SECTION_TITLES.get(file_name, [])
+    if core_titles:
+        empty_core_count = 0
+        checked_core_count = 0
+        for title in core_titles:
+            section_text = sections.get(title, "")
+            if not section_text:
+                continue
+            checked_core_count += 1
+            if not section_has_meaningful_content(section_text):
+                empty_core_count += 1
+        if checked_core_count and empty_core_count * 2 >= checked_core_count:
+            add_issue(issues, "blocker", f"{file_name} 超过一半核心章节仍无实质内容，整体仍像骨架")
+
+    for section_title, section_text in sections.items():
+        if not section_text.strip():
+            continue
+        if "|" in section_text and count_real_table_rows(section_text) == 0 and TABLE_SEPARATOR_PATTERN.search(section_text):
+            add_issue(issues, "blocker", f"{file_name} 的“{section_title}”只有表头没有真实数据")
+            break
+        if LIST_ITEM_PATTERN.search(section_text) and count_real_list_items(section_text) == 0:
+            add_issue(issues, "blocker", f"{file_name} 的“{section_title}”只有模板列表，没有真实条目")
+            break
+
+
 def count_text_diagrams(text: str) -> int:
     fenced_count = text.count("```text")
     diagram_lines = 0
@@ -1078,8 +1288,10 @@ def check_forbidden_terms(file_name: str, content: str, issues: list[tuple[str, 
 
 
 def check_placeholders(file_name: str, content: str, issues: list[tuple[str, str]]) -> None:
+    if not is_formal_skeleton_artifact(file_name):
+        return
     if PLACEHOLDER_PATTERN.search(content):
-        add_issue(issues, "warning", f"{file_name} 仍包含占位内容")
+        add_issue(issues, "blocker", f"{file_name} 仍包含模板占位内容，请先填充真实内容后再进入下一阶段")
 
 
 def check_required_files(required_paths: list[Path], issues: list[tuple[str, str]]) -> None:
@@ -1570,7 +1782,7 @@ def analyze_experience_blueprint(
         add_issue(issues, "warning", "experience_blueprint.md 页面设计检测不到结构化内容，请确认已用自然语言写清各页面")
 
     if state_feedback_pair_count == 0:
-        add_issue(issues, "blocker", "experience_blueprint.md 缺少状态与异常处理信息")
+        add_issue(issues, "warning", "experience_blueprint.md 状态与反馈内容偏少，建议补充状态口径、反馈和可操作信息")
 
     if not pending_section.strip():
         add_issue(issues, "warning", "experience_blueprint.md 待确认问题为空，建议显式标注不确定项")
@@ -1581,7 +1793,7 @@ def analyze_experience_blueprint(
         add_issue(issues, "warning", "experience_blueprint.md 附录内容偏少，建议补充设计指南与业务知识消费说明")
 
     if not has_exception_coverage:
-        add_issue(issues, "blocker", "experience_blueprint.md 仅覆盖 happy path，未显式覆盖异常态 / 阻断态")
+        add_issue(issues, "warning", "experience_blueprint.md 异常态 / 阻断态覆盖偏弱，建议补充关键异常流程和反馈")
 
     for pattern, message in EXPERIENCE_MACHINE_LINE_PATTERNS:
         if pattern.search(core_text):
@@ -1838,8 +2050,10 @@ def run_validate_outputs(project_id: str) -> int:
         if not content:
             continue
         check_required_headings(file_name, content, issues)
-        check_forbidden_terms(file_name, content, issues)
         check_placeholders(file_name, content, issues)
+        check_required_section_bodies(file_name, content, issues)
+        check_skeleton_content(file_name, content, issues)
+        check_forbidden_terms(file_name, content, issues)
         check_runtime_leakage_guard(file_name, content, issues)
         checked_files.append(f"projects/{project_id}/workspace/{file_name}")
     if facts_text:
@@ -1847,7 +2061,6 @@ def run_validate_outputs(project_id: str) -> int:
 
     business_metrics: dict[str, object] = {}
     experience_metrics: dict[str, object] = {}
-    handoff_metrics: dict[str, object] = {}
     coverage_lines = ["not_run"]
 
     if facts_text and business_text:
@@ -1857,12 +2070,6 @@ def run_validate_outputs(project_id: str) -> int:
     if facts_text and business_text and experience_text:
         experience_metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
-        handoff_metrics, handoff_issues, coverage_lines = analyze_natural_language_handoff(
-            business_text,
-            experience_text,
-            context_manifest,
-        )
-        extend_issues(issues, handoff_issues)
 
     resolved = context_manifest.get("resolved", {})
     has_directory_ref = bool(resolved.get("has_directory_ref"))
@@ -1909,7 +2116,6 @@ def run_validate_outputs(project_id: str) -> int:
         "missing_output_count": len(missing_outputs),
         "business_depth": business_metrics,
         "experience_depth": experience_metrics,
-        "experience_handoff": handoff_metrics,
     }
     payload = build_final_payload(
         project_id,
@@ -2043,8 +2249,10 @@ def run_facts_gate(project_id: str) -> int:
     facts_text = read_text(facts_path)
     if facts_text:
         check_required_headings("facts.md", facts_text, issues)
-        check_forbidden_terms("facts.md", facts_text, issues)
         check_placeholders("facts.md", facts_text, issues)
+        check_required_section_bodies("facts.md", facts_text, issues)
+        check_skeleton_content("facts.md", facts_text, issues)
+        check_forbidden_terms("facts.md", facts_text, issues)
         check_runtime_leakage_guard("facts.md", facts_text, issues)
         check_facts_source_guard(project_id, facts_text, issues)
 
@@ -2131,8 +2339,10 @@ def run_business_gate(project_id: str) -> int:
 
     if business_text:
         check_required_headings("business_blueprint.md", business_text, issues)
-        check_forbidden_terms("business_blueprint.md", business_text, issues)
         check_placeholders("business_blueprint.md", business_text, issues)
+        check_required_section_bodies("business_blueprint.md", business_text, issues)
+        check_skeleton_content("business_blueprint.md", business_text, issues)
+        check_forbidden_terms("business_blueprint.md", business_text, issues)
         check_runtime_leakage_guard("business_blueprint.md", business_text, issues)
         metrics, business_depth_issues = analyze_business_blueprint(facts_text, business_text)
         extend_issues(issues, business_depth_issues)
@@ -2212,8 +2422,10 @@ def run_business_note_gate(project_id: str) -> int:
 
     if note_text:
         check_required_headings("business_note.md", note_text, issues)
-        check_forbidden_terms("business_note.md", note_text, issues)
         check_placeholders("business_note.md", note_text, issues)
+        check_required_section_bodies("business_note.md", note_text, issues)
+        check_skeleton_content("business_note.md", note_text, issues)
+        check_forbidden_terms("business_note.md", note_text, issues)
         check_runtime_leakage_guard("business_note.md", note_text, issues)
         impact_text = _section_text(note_text, "## 2. 核心业务规则影响")
         for dimension in ["权限", "数据范围", "审批", "状态机", "业务对象关系"]:
@@ -2263,8 +2475,10 @@ def run_business_lite_gate(project_id: str) -> int:
 
     if business_lite_text:
         check_required_headings("business_blueprint_lite.md", business_lite_text, issues)
-        check_forbidden_terms("business_blueprint_lite.md", business_lite_text, issues)
         check_placeholders("business_blueprint_lite.md", business_lite_text, issues)
+        check_required_section_bodies("business_blueprint_lite.md", business_lite_text, issues)
+        check_skeleton_content("business_blueprint_lite.md", business_lite_text, issues)
+        check_forbidden_terms("business_blueprint_lite.md", business_lite_text, issues)
         check_runtime_leakage_guard("business_blueprint_lite.md", business_lite_text, issues)
         for heading in ["## 2. 关键业务规则", "## 3. 边界与风险", "## 4. 体验承接要求"]:
             if len(_section_text(business_lite_text, heading)) < 20:
@@ -2326,8 +2540,10 @@ def run_experience_gate(project_id: str) -> int:
 
     if experience_text:
         check_required_headings("experience_blueprint.md", experience_text, issues)
-        check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_placeholders("experience_blueprint.md", experience_text, issues)
+        check_required_section_bodies("experience_blueprint.md", experience_text, issues)
+        check_skeleton_content("experience_blueprint.md", experience_text, issues)
+        check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_runtime_leakage_guard("experience_blueprint.md", experience_text, issues)
         metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_text, experience_text)
         extend_issues(issues, experience_depth_issues)
@@ -2393,8 +2609,10 @@ def run_experience_lite_gate(project_id: str) -> int:
 
     if experience_text:
         check_required_headings("experience_blueprint.md", experience_text, issues)
-        check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_placeholders("experience_blueprint.md", experience_text, issues)
+        check_required_section_bodies("experience_blueprint.md", experience_text, issues)
+        check_skeleton_content("experience_blueprint.md", experience_text, issues)
+        check_forbidden_terms("experience_blueprint.md", experience_text, issues)
         check_runtime_leakage_guard("experience_blueprint.md", experience_text, issues)
         if business_context:
             metrics, experience_depth_issues = analyze_experience_blueprint(facts_text, business_context, experience_text)
@@ -2465,8 +2683,10 @@ def run_validate_lite(project_id: str) -> int:
         if not content:
             continue
         check_required_headings(file_name, content, issues)
-        check_forbidden_terms(file_name, content, issues)
         check_placeholders(file_name, content, issues)
+        check_required_section_bodies(file_name, content, issues)
+        check_skeleton_content(file_name, content, issues)
+        check_forbidden_terms(file_name, content, issues)
         check_runtime_leakage_guard(file_name, content, issues)
 
     if execution_mode == "fast":
