@@ -1,0 +1,152 @@
+{
+  "project_id": "self-service-permission",
+  "generated_at": "2026-05-28T08:21:33+00:00",
+  "decision_source": "uxb_route_decision.json",
+  "requested_route": "auto",
+  "execution_mode": "full",
+  "planned_steps": [
+    "route-decision",
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive"
+  ],
+  "uxb_route_decision": {
+    "project_id": "self-service-permission",
+    "status": "confirmed",
+    "source_path": "projects/self-service-permission/runtime/uxb_route_decision.json",
+    "schema_version": "uxb_route_decision@3.0",
+    "created_by": "uxb_ai",
+    "confirmed_by_user": true,
+    "can_execute_mainline": true,
+    "judgment": {
+      "demand_type": "complex_business_requirement",
+      "business_depth": "business_blueprint",
+      "experience_output": "experience_blueprint",
+      "reason": "本次需求新增一条完整的权限获取通道，改变了权限来源模型（新增 SELF_SERVICE 来源类型）、引入了新的业务对象（申请单）和状态机（draft→pending→approved→effective→revoked）、涉及审批中台跨模块集成、需要与三种现有治理模式兼容。底层业务骨架六问中五问命中：对象关系、业务规则、状态机、生效机制、外部回写链路均发生变化。体验设计压力覆盖三角色、高信息密度、多异常分支和跨端承接。属于高复杂度需求，必须先做完整业务判断再输出体验蓝图。当前信息足以支撑正式产出：需求目标清楚、关键对象关系已收敛、输出深度有依据、剩余不确定项（审批表单实现方式、关闭审查报告、来源文案粒度）不影响业务蓝图层判断。"
+    },
+    "complexity_judgment": {
+      "business_change": [
+        "新增业务对象「权限申请单」",
+        "新增权限来源类型 SELF_SERVICE",
+        "新增申请单状态机（draft→pending→approved→effective→revoked）",
+        "新增可申请范围规则（管理员配置、敏感角色排除）",
+        "新增审批人默认规则与异常处理链路",
+        "审批通过后自动授权（新生效机制）",
+        "跨模块集成审批中台"
+      ],
+      "experience_pressure": [
+        "三角色界面：管理员配置端 + 员工申请端 + 审批人审批端",
+        "高信息密度：权限列表、申请表单、审批详情",
+        "多异常分支：审批人缺失、审批超时、治理模式交互、关闭能力边界、范围冲突",
+        "跨端：PC + 移动端",
+        "新概念边界：自助申请与管理员授予需清晰区分"
+      ],
+      "uncertainties": [
+        {
+          "item": "审批表单实现方式（复用审批中台自定义表单 vs 权限模块内置固定表单）",
+          "blocking": false,
+          "reason": "不影响业务对象、规则和状态机的定义，只影响体验承接阶段的具体交互方案"
+        },
+        {
+          "item": "管理员关闭能力时是否需要提供权限审查报告",
+          "blocking": false,
+          "reason": "属于关闭流程的细化功能，不影响核心链路设计"
+        },
+        {
+          "item": "自助申请权限的来源显示文案粒度",
+          "blocking": false,
+          "reason": "属于体验翻译层面的细节，在体验蓝图阶段决策即可"
+        }
+      ]
+    },
+    "knowledge_selection": {
+      "business_refs": [
+        "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "knowledge/raw/业务/权限管理/14_角色边界.md",
+        "knowledge/raw/业务/权限管理/20_决策链契约.md",
+        "knowledge/raw/业务/审批管理/10_审批管理.md"
+      ],
+      "guideline_refs": [
+        "knowledge/raw/设计准则/治理.md",
+        "knowledge/raw/设计准则/流程模式.md",
+        "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+      ],
+      "complexity_refs": [
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        ".claude/skills/uxb/references/complexity/01_domain_router.md"
+      ],
+      "selection_reasons": [
+        {
+          "ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+          "reason": "确认权限域的整体边界和上游依赖关系，为新增能力定位提供领域上下文"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+          "reason": "确认现有6大能力域的结构，判断新能力应作为第7能力域还是嵌入现有能力"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+          "reason": "核心参考——需要在此文件中扩展 SELF_SERVICE 来源类型，定义其来源标识、effect_modifier 和 modifier_source_of_truth"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+          "reason": "确认现有治理模式互斥关系和状态模型，保证自助申请与治理模式兼容而非互斥"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/14_角色边界.md",
+          "reason": "确认各角色在权限体系中的可见和可操作边界，为员工端入口和申请范围提供角色约束依据"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+          "reason": "确认权限判定链路结构，为新增 SELF_SERVICE 来源后的决策链路变化提供依据"
+        },
+        {
+          "ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
+          "reason": "确认审批中台的节点类型、审批人来源和流程设计能力，为自助申请的审批链路设计提供能力边界"
+        },
+        {
+          "ref": "knowledge/raw/设计准则/治理.md",
+          "reason": "为管理员配置端的治理类交互提供设计约束"
+        },
+        {
+          "ref": "knowledge/raw/设计准则/流程模式.md",
+          "reason": "为申请→审批→生效的流程设计提供模式参考"
+        },
+        {
+          "ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+          "reason": "为异常分支（审批人缺失、审批超时、范围冲突等）的错误提示设计提供原则"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+          "reason": "支撑复杂度判断的标准依据，六问五中确认高复杂度"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+          "reason": "确认跨域范围：管理后台（权限配置）+ 协同办公（审批流程）+ 平台门户（员工入口）"
+        }
+      ]
+    },
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md"
+    ],
+    "execution_notes": [
+      "业务蓝图需优先处理：来源模型扩展、申请单状态机、可申请范围规则、审批链路设计、治理兼容策略",
+      "体验蓝图需覆盖三角色界面：管理员配置端、员工申请与查看端、审批人审批端",
+      "审批中台集成方式需在业务蓝图层确认，体验蓝图只承接不决策"
+    ],
+    "execution_mode": "full",
+    "validation_errors": []
+  }
+}
