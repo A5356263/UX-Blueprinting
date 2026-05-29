@@ -9,8 +9,8 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 7
-- info_count: 9
+- warning_count: 9
+- info_count: 7
 
 ## Output Status
 
@@ -27,34 +27,34 @@
 
 ## Warnings
 
-- 承接检查：business_blueprint.md 已把“可作为设计建议：”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“员工端入口位置和引导方式”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“审批决策的二次确认（避免误操作）”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“审批端的批量处理能力”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“申请列表的排序和筛选建议”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已点名角色要求“管理员的配置体验（能力开关、范围圈定、审批设置、...”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。
-- 承接检查：business_blueprint.md 明确要求主流程闭环包含“管理员关闭能力 → 员工端变化 → 已生效权限不...”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。
+- business gate 状态为 warning
+- business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。
+- experience gate 状态为 warning
+- experience_blueprint.md 主交互流程缺少可对应的节点详情标题
+- 承接检查：business_blueprint.md 已把“服务人员不开放”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
+- 承接检查：business_blueprint.md 已把“白名单为空时的空状态和提示”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 已把“超管角色不进入白名单”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
+- 承接检查：business_blueprint.md 已点名角色要求“审批端：审批处理页（复用审批中台）”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。
+- 承接检查：business_blueprint.md 已点名角色要求“管理者端：自助申请配置页”，但 experience_blueprint.md 还没有给出对应的清晰路径、页面或职责承接。
 
 ## Infos
 
-- business gate 状态：passed
-- experience gate 状态：passed
 - facts gate 状态：passed
-- 自然语言承接检查：主流程闭环覆盖：1/2
-- 自然语言承接检查：异常与阻断覆盖：5/5
+- 自然语言承接检查：主流程闭环覆盖：3/3
+- 自然语言承接检查：异常与阻断覆盖：4/5
 - 自然语言承接检查：状态与反馈覆盖：3/3
-- 自然语言承接检查：角色路径覆盖：2/3
-- 自然语言承接检查：设计指南装配：3 条
-- 自然语言承接检查：风险保护承接：3/8
+- 自然语言承接检查：角色路径覆盖：1/3
+- 自然语言承接检查：设计指南装配：2 条
+- 自然语言承接检查：风险保护承接：3/5
 
 ## 自然语言承接检查
 
-- 角色路径覆盖：2/3
-- 主流程闭环覆盖：1/2
-- 异常与阻断覆盖：5/5
+- 角色路径覆盖：1/3
+- 主流程闭环覆盖：3/3
+- 异常与阻断覆盖：4/5
 - 状态与反馈覆盖：3/3
-- 风险保护承接：3/8
-- 设计指南装配：3 条
+- 风险保护承接：3/5
+- 设计指南装配：2 条
 
 ## Machine Status
 

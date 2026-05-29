@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: passed
+- status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 0
+- warning_count: 1
 - info_count: 1
 
 - project_id: self-service-permission
@@ -27,8 +27,8 @@
 
 ## Warnings
 
-- none
+- experience_blueprint.md 主交互流程缺少可对应的节点详情标题
 
 ## Infos
 
-- business 阶段状态：passed
+- business 阶段状态：warning

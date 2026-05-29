@@ -1,10 +1,10 @@
 {
   "project_id": "self-service-permission",
-  "status": "passed",
-  "generated_at": "2026-05-28T14:28:15+00:00",
+  "status": "failed",
+  "generated_at": "2026-05-29T14:03:34+00:00",
   "requested_route": "auto",
   "execution_mode": "full",
-  "stopped_at": "",
+  "stopped_at": "archive",
   "steps": [
     {
       "command": "route-decision",
@@ -48,11 +48,7 @@
     },
     {
       "command": "archive",
-      "exit_code": 0
-    },
-    {
-      "command": "preview",
-      "exit_code": 0
+      "exit_code": 1
     }
   ],
   "actual_outputs": [

@@ -1,6 +1,6 @@
 {
   "project_id": "self-service-permission",
-  "generated_at": "2026-05-28T14:28:15+00:00",
+  "generated_at": "2026-05-29T14:03:34+00:00",
   "decision_source": "uxb_route_decision.json",
   "requested_route": "auto",
   "execution_mode": "full",
@@ -26,49 +26,49 @@
     "confirmed_by_user": true,
     "can_execute_mainline": true,
     "judgment": {
-      "demand_type": "复杂业务需求",
-      "business_depth": "完整业务蓝图",
-      "experience_output": "完整体验蓝图",
-      "reason": "本次需求引入了一种新的权限来源路径（员工自助申请），属于底层业务骨架变化，不是局部体验优化。六问全部命中：新增业务对象（申请单）、新增权限来源类型（SELF_SERVICE_APPLICATION）、新增状态机（申请单生命周期）、改变生效机制（审批后自动授权，不同于管理员直授）、改变数据口径（需区分自助申请来源与管理授予来源）、涉及外部回写（审批通过后的授权记录与审计追踪）。体验设计压力涉及三个角色（管理员、员工、审批人）、管理端与员工端两套异构体验、高信息密度页面、多条异常分支（审批人缺失、能力中途关闭等）。已确认三个关键业务决策（与现有治理模式的关系、可申请范围、关闭能力后的处理），可支撑完整业务蓝图和完整体验蓝图的生成。剩余不确定项（审批人默认规则、撤销、附件、入口位置、统计需求等）影响方案细化但不阻断当前阶段的正式产出。"
+      "demand_type": "complex_business_requirement",
+      "business_depth": "full_business_blueprint",
+      "experience_output": "experience_blueprint",
+      "reason": "本次为复杂业务需求。新增权限申请对象、申请状态流转、审批后自动授权的生效机制，改变权限体系的授予链路（从管理员直授扩展到自助申请+审批），需跨域接入审批中台，并与现有治理模式定义互斥关系。需求目标清楚、关键对象关系基本清楚、用户已确认第一期最小范围，适合执行完整业务蓝图+体验蓝图。"
     },
     "complexity_judgment": {
       "business_change": [
-        "对象关系：新增'权限申请单'作为独立业务对象，新增SELF_SERVICE_APPLICATION来源路径，建立员工→申请单→审批→授权的关系链",
-        "业务规则：新增可申请范围圈定规则、敏感权限排除规则、审批路由规则、能力开关与进行中申请的边界规则",
-        "状态机：申请单完整生命周期（draft→pending→approved/rejected→effective→revoked），与能力开关状态的联动",
-        "生效机制：自助申请路径下的权限必须经过审批才生效，与管理员直授的即时生效路径不同",
-        "数据口径：需区分'自助申请获得'与'管理员授予'两类权限来源，影响权限查询和审计追踪",
-        "外部回写：审批通过后的自动授权涉及权限来源记录写入和审计日志"
+        "新增业务对象：权限申请单及其状态（申请中/已通过/已拒绝/已撤销）",
+        "新增来源模型：SELF_SERVICE_APPLICATION",
+        "新增状态流转：申请→审批→自动授权，与管理员直授链路共存",
+        "改变生效机制：从管理员直接授予变为申请→审批→自动授权",
+        "新增生效范围控制：角色白名单机制",
+        "跨域依赖：复用审批中台能力",
+        "互斥关系：与双管理员互审模式建议互斥"
       ],
       "experience_pressure": [
-        "三个角色（管理员、员工、审批人），每个角色的任务目标、信息需求和操作路径完全不同",
-        "管理端需承载：能力开关、范围圈定、审批规则配置——属于高信息密度配置页",
-        "员工端需承载：已有权限查看、可申请权限浏览、申请提交、申请记录追踪——从查看到申请的完整路径",
-        "审批端需承载：申请内容查看、审批决策、批量处理——需要足够的上下文信息支撑审批判断",
-        "多条异常分支：审批人不存在、审批链路异常、能力中途关闭、申请被拒后的员工感知",
-        "跨端一致性：管理端与员工端对'权限来源'的解释需保持一致口径"
+        "涉及三个角色：管理员、员工、审批人，各自有不同的配置/查看/操作页面",
+        "员工端新增入口和权限查看页面",
+        "管理端新增自助申请配置模块",
+        "场景化入口设计（权限不足时快捷申请）",
+        "权限来源标识（管理员授予 vs 自助申请）",
+        "关闭能力时的存量保护（在途申请处理）",
+        "审批异常兜底（审批人不存在/离职/超时）"
       ],
       "uncertainties": [
-        "审批人默认规则（组织负责人/管理员/自定义流程）待确认，影响审批路由设计",
-        "审批中申请是否可撤销待确认，影响申请状态机",
-        "员工端入口位置待确认，影响导航和信息架构",
-        "是否需要申请统计/使用情况看板待确认"
+        "具体审批流配置是和现有审批中台完全复用，还是需要权限域特有配置界面（待审批中台对接阶段确认）",
+        "员工端入口的具体组件位置和交互层级尚未确定"
       ]
     },
     "knowledge_selection": {
       "business_refs": [
-        "knowledge/raw/业务/权限管理/03_业务对象.md",
-        "knowledge/raw/业务/权限管理/04_对象关系.md",
-        "knowledge/raw/业务/权限管理/21_来源模型.md",
-        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-        "knowledge/raw/业务/权限管理/20_决策链契约.md",
-        "knowledge/raw/业务/权限管理/10_能力地图.md",
-        "knowledge/raw/业务/审批管理/10_审批管理.md"
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+        "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+        "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+        "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+        "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md"
       ],
       "guideline_refs": [
-        "knowledge/raw/设计准则/流程模式.md",
-        "knowledge/raw/设计准则/信息架构.md",
-        "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+        "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "knowledge/wiki/summaries/设计准则/信息架构.md"
       ],
       "complexity_refs": [
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
@@ -77,70 +77,69 @@
       ],
       "selection_reasons": [
         {
-          "ref": "knowledge/raw/业务/权限管理/03_业务对象.md",
-          "reason": "支撑facts阶段的业务对象建模：需要基于现有七类对象（subject/resource/action/scope/source/modifier/state）定义'权限申请单'的新对象属性，确保新对象与现有对象模型一致。影响business_blueprint.md中的对象定义和experience_blueprint.md中的字段设计。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+          "reason": "确认权限域整体范围、边界、能力域划分，支撑facts阶段判断权限体系现有结构和定位"
         },
         {
-          "ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
-          "reason": "支撑business阶段的关联设计：需要确认新增的申请单对象如何嵌入现有的前置/覆盖/叠加/边界关系框架，特别是申请来源与现有ACL_DIRECT、RBAC_ROLE来源的叠加关系。影响business_blueprint.md中的对象关系图。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+          "reason": "确认现有权限配置任务场景，支撑business阶段判断自助申请链路与现有任务路径的关系"
         },
         {
-          "ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
-          "reason": "支撑business阶段的核心判断——新增SELF_SERVICE_APPLICATION来源类型：需要基于现有source_enum（ACL_DIRECT/RBAC_ROLE/APP_VISIBILITY/COLLAB_VISIBILITY）和effect_modifier结构，定义新来源的source_of_truth和优先级。影响business_blueprint.md中的来源模型扩展。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+          "reason": "确认现有权限页面结构和交互语义，支撑experience阶段判断员工端和管理端页面的表达方案"
         },
         {
-          "ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-          "reason": "支撑business阶段的状态机设计：需要基于现有六类状态（draft/pending/approved/rejected/effective/revoked）和actor_responsibility结构，设计申请单的状态流转和每个状态下的可见/可操作/交接关系。影响business_blueprint.md中的状态模型和experience_blueprint.md中的状态反馈设计。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+          "reason": "确认权限判定层级（L0-L3），支撑business阶段判断自助申请在权限体系中的定位和影响层级"
         },
         {
-          "ref": "knowledge/raw/业务/权限管理/20_决策链契约.md",
-          "reason": "支撑business阶段的决策链扩展：需要确认自助申请路径如何嵌入现有四层判定链路（L0可见性→L1功能权限→L2数据权限→L3治理与生效），确保final_effective_rule公式在新路径下的完整性。影响business_blueprint.md中的决策链说明。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+          "reason": "确认现有权限来源分类，支撑business阶段定义新增SELF_SERVICE_APPLICATION来源及与现有来源的叠加关系"
         },
         {
-          "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
-          "reason": "支撑experience阶段的页面归属判断：需要基于现有能力到页面的映射关系，确定自助申请配置页和管理页面的合理归属位置，避免能力散落或入口分裂。影响experience_blueprint.md中的页面清单和导航设计。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
+          "reason": "确认权限域核心规则，支撑business阶段判断自助申请需要遵循或新增的规则边界"
         },
         {
-          "ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
-          "reason": "支撑business阶段的审批集成设计：自助申请的审批链路依赖审批管理域，需要确认审批流程设计、发布与授权的标准方式，确保权限变更审批闭环完整。影响business_blueprint.md中的审批规则和experience_blueprint.md中的审批体验。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+          "reason": "确认现有治理状态模型，支撑business阶段设计申请状态流转与治理状态的关系"
         },
         {
-          "ref": "knowledge/raw/设计准则/流程模式.md",
-          "reason": "支撑experience阶段的流程承接设计：申请→审批→生效是一个典型的多步流程模式，需要参考流程模式准则设计状态可见性、步骤引导和节点反馈。影响experience_blueprint.md中的流程承接方案。"
+          "ref": "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+          "reason": "确认权限域体验表达要求，支撑experience阶段确保表达口径符合权限域规范"
         },
         {
-          "ref": "knowledge/raw/设计准则/信息架构.md",
-          "reason": "支撑experience阶段的信息架构设计：管理端配置页、员工端申请入口、审批端处理页三者的信息层级和组织方式需要统一。影响experience_blueprint.md中的页面信息架构。"
+          "ref": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+          "reason": "支撑experience阶段设计申请流程中的反馈、报错、异常说明体验"
         },
         {
-          "ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-          "reason": "支撑experience阶段的异常反馈设计：审批人不存在、审批链路异常、能力中途关闭、申请被拒等异常场景需要统一的反馈形式和文案策略。影响experience_blueprint.md中的异常处理和反馈设计。"
+          "ref": "knowledge/wiki/summaries/设计准则/信息架构.md",
+          "reason": "支撑experience阶段判断员工端和管理端入口在导航和信息架构中的落点"
         },
         {
           "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-          "reason": "复杂度判断的通用标准，支撑本次判断的方法论基础。"
+          "reason": "通用复杂度判断标准，已用于本次需求类型判断"
         },
         {
           "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
-          "reason": "领域识别规则，确认权限管理归属管理后台领域，并触发admin_console领域卡片。"
+          "reason": "领域识别规则，已用于定位管理后台领域"
         },
         {
           "ref": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
-          "reason": "管理后台领域卡片，确认'改角色与数据权限边界'属于该领域的高复杂度触发点，验证本次复杂度判断的合理性。"
+          "reason": "管理后台领域高/中/低复杂度触发点，已用于确认复杂度判断依据"
         }
       ]
     },
     "required_outputs": [
       "facts.md",
       "business_blueprint.md",
-      "experience_blueprint.md",
-      "gap_list.md",
-      "check_report.md"
+      "experience_blueprint.md"
     ],
     "execution_notes": [
-      "本次为全链路执行（facts → business → experience），不做lite裁剪",
-      "审批管理为外部依赖域，business阶段需标注依赖关系和集成要求",
-      "余下的不确定项在business_blueprint中标注为[TO CONFIRM]，不阻断当前阶段生成"
+      "不确定项当前不阻断正式执行：审批流配置方式待审批中台对接阶段确认，员工端入口层级后续细化",
+      "第一期最小范围已确认：按角色申请、数据权限不开放自选、白名单机制、默认组织负责人审批",
+      "与双管理员互审模式建议互斥，需要再后续互斥规则页面确认",
+      "关闭能力策略：不回收已有权限，默认继续审批在途申请"
     ],
     "execution_mode": "full",
     "validation_errors": []
