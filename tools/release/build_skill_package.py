@@ -52,70 +52,28 @@ if __name__ == "__main__":
     raise SystemExit(main())
 """
 
-RELEASE_README_TEMPLATE = """# {package_name} 使用说明
-
-## 使用方式
-
-继续使用原有命令：
-
-```bash
-python -m packages <command> <project-id>
-```
-
-也可以使用：
-
-```bash
-bash run_packages.sh <command> <project-id>
-```
-
-或 Windows：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\\run_packages.ps1 <command> <project-id>
-```
-
-## 核心目录
-
-- `.agent/skills/`：发行包内保留的一套技能说明与参考资料。
-- `specs/`：规则真源。
-- `templates/`：产物模板。
-- `knowledge/`：知识资产。
-- `projects/`：项目输入与输出目录。
-- `memory/`：长期记忆与偏好配置。
-
-## 不建议手动修改
-
-- `.agent/skills/`
-- `specs/`
-- `templates/`
-- `bin/`
-- `packages/`
-
-## 知识更新
-
-知识入库请优先使用 `knowledge-ingestion` Skill。
-稳定知识最终进入 `knowledge/raw/`，再刷新 `knowledge/wiki/`。
-"""
-
 SOURCE_REQUIRED_ITEMS = {
+    ".codex",
     ".claude",
     "specs",
     "templates",
     "knowledge",
+    "memory",
     "projects",
     "CLAUDE.md",
     "CODEX.md",
     "README.md",
     "run_packages.ps1",
     "run_packages.sh",
+    ".gitignore",
+    ".mcp.json",
+    "skills-lock.json",
 }
 
 EXCLUDED_RELATIVE_PATHS = {
     ".git",
     ".github",
     ".playwright-mcp",
-    ".claude",
-    ".codex",
     "build",
     "dist",
     "release",
@@ -123,18 +81,10 @@ EXCLUDED_RELATIVE_PATHS = {
     "_uxstrategy_release_build",
     "docs",
     "input",
-    "memory",
     "test",
     "tools",
-    "specs",
-    "templates",
     "知识候选区",
     "PPT.MD",
-    "CLAUDE.md",
-    "CODEX.md",
-    ".mcp.json",
-    "skills-lock.json",
-    ".gitignore",
 }
 
 EXCLUDED_NAME_PATTERNS = {
@@ -156,23 +106,6 @@ SOURCE_HIDDEN_PATHS = {
     "packages/generation",
     "packages/validate",
     "packages/capability_registry",
-}
-
-TEXT_EXTENSIONS = {
-    ".json",
-    ".jsonl",
-    ".md",
-    ".ps1",
-    ".py",
-    ".sh",
-    ".txt",
-    ".yaml",
-    ".yml",
-}
-
-ALLOWED_AGENT_SKILLS = {
-    "knowledge-ingestion",
-    "uxb",
 }
 
 
@@ -216,6 +149,25 @@ def require_source_entrypoint(root: Path) -> None:
         )
 
 
+def require_supported_build_environment(root: Path) -> None:
+    if platform.system().lower() != "darwin":
+        return
+
+    result = run([sys.executable, "-m", "pip", "show", "pathlib"], cwd=root)
+    if result.returncode != 0:
+        return
+
+    raise SystemExit(
+        "macOS build environment check failed:\n"
+        "Detected the obsolete `pathlib` backport in the current Python environment. "
+        "This package conflicts with PyInstaller on modern Python.\n\n"
+        "Recommended fix:\n"
+        "1. Use a clean virtual environment for packaging\n"
+        "2. Remove the backport package: `pip uninstall pathlib -y`\n"
+        "3. Re-run: `python ./tools/release/build_skill_package.py`"
+    )
+
+
 def require_pyinstaller(root: Path) -> None:
     result = run([sys.executable, "-m", "PyInstaller", "--version"], cwd=root)
     if result.returncode == 0:
@@ -255,8 +207,7 @@ def is_excluded(rel_path: Path, package_name: str, zip_name: str) -> bool:
         return True
     if rel_posix == zip_name:
         return True
-    name = rel_path.name
-    return any(fnmatch(name, pattern) for pattern in EXCLUDED_NAME_PATTERNS)
+    return any(fnmatch(rel_path.name, pattern) for pattern in EXCLUDED_NAME_PATTERNS)
 
 
 def copy_release_workspace(source_root: Path, stage_root: Path, package_name: str, zip_name: str) -> None:
@@ -284,8 +235,6 @@ def build_core_binary(source_root: Path, build_root: Path) -> Path:
     dist_dir = build_root / "core_build" / "dist"
     work_dir = build_root / "core_build" / "work"
     spec_dir = build_root / "core_build" / "spec"
-    specs_source = (source_root / "specs").resolve()
-    templates_source = (source_root / "templates").resolve()
     dist_dir.mkdir(parents=True, exist_ok=True)
     work_dir.mkdir(parents=True, exist_ok=True)
     spec_dir.mkdir(parents=True, exist_ok=True)
@@ -303,10 +252,6 @@ def build_core_binary(source_root: Path, build_root: Path) -> Path:
         "packages",
         "--collect-data",
         "packages",
-        "--add-data",
-        f"{specs_source}{os.pathsep}specs",
-        "--add-data",
-        f"{templates_source}{os.pathsep}templates",
         "--distpath",
         str(dist_dir),
         "--workpath",
@@ -338,105 +283,6 @@ def copy_core_binary(core_path: Path, stage_root: Path) -> None:
         target.chmod(target.stat().st_mode | 0o111)
 
 
-def extract_section(markdown: str, heading: str) -> str:
-    marker = f"## {heading}\n"
-    start = markdown.find(marker)
-    if start == -1:
-        return ""
-    start += len(marker)
-    next_index = markdown.find("\n## ", start)
-    end = len(markdown) if next_index == -1 else next_index
-    return markdown[start:end].strip()
-
-
-def build_agent_markdown(source_root: Path) -> str:
-    code_md = (source_root / "CODEX.md").read_text(encoding="utf-8")
-    claude_md = (source_root / "CLAUDE.md").read_text(encoding="utf-8")
-
-    sections: list[str] = ["# AGENT.md"]
-
-    code_execution = extract_section(code_md, "编码执行约束")
-    if code_execution:
-        sections.append("## 编码执行约束\n\n" + code_execution)
-
-    language_rules = extract_section(claude_md, "语言与沟通规则")
-    if language_rules:
-        sections.append("## 语言与沟通规则\n\n" + language_rules)
-
-    path_rules = extract_section(code_md, "路径与目录规则")
-    if path_rules:
-        sections.append("## 路径与目录规则\n\n" + path_rules)
-
-    capability_rules = extract_section(code_md, "能力模块边界规则")
-    if capability_rules:
-        sections.append("## 能力模块边界规则\n\n" + capability_rules)
-
-    git_rules = extract_section(claude_md, "Git 提交规则")
-    if git_rules:
-        sections.append("## Git 提交规则\n\n" + git_rules)
-
-    scope = extract_section(code_md, "适用范围") or extract_section(claude_md, "适用范围")
-    if scope:
-        sections.append("## 适用范围\n\n" + scope)
-
-    return "\n\n".join(section.strip() for section in sections if section.strip()) + "\n"
-
-
-def install_agent_assets(source_root: Path, stage_root: Path) -> None:
-    source_agent = source_root / ".claude"
-    target_agent = stage_root / ".agent"
-    shutil.copytree(source_agent, target_agent)
-
-    skills_dir = target_agent / "skills"
-    for child in skills_dir.iterdir():
-        if child.is_dir() and child.name not in ALLOWED_AGENT_SKILLS:
-            shutil.rmtree(child)
-
-    agent_md = build_agent_markdown(source_root)
-    (stage_root / "AGENT.md").write_text(agent_md, encoding="utf-8")
-
-
-def reset_projects_directory(source_root: Path, stage_root: Path) -> None:
-    source_projects = source_root / "projects"
-    target_projects = stage_root / "projects"
-    if target_projects.exists():
-        shutil.rmtree(target_projects)
-    target_projects.mkdir(parents=True, exist_ok=True)
-
-    readme_path = source_projects / "README.md"
-    if readme_path.exists():
-        shutil.copy2(readme_path, target_projects / "README.md")
-
-
-def rewrite_agent_references(stage_root: Path) -> None:
-    replacements = {
-        ".claude/skills/": ".agent/skills/",
-        ".codex/skills/": ".agent/skills/",
-        ".claude\\skills\\": ".agent\\skills\\",
-        ".codex\\skills\\": ".agent\\skills\\",
-    }
-
-    for path in stage_root.rglob("*"):
-        if not path.is_file():
-            continue
-        if path.suffix.lower() not in TEXT_EXTENSIONS and path.name not in {"AGENT.md", "README.md", "RELEASE_README.md"}:
-            continue
-        try:
-            original = path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            continue
-        updated = original
-        for source_text, target_text in replacements.items():
-            updated = updated.replace(source_text, target_text)
-        if updated != original:
-            path.write_text(updated, encoding="utf-8")
-
-
-def write_release_readme(stage_root: Path, package_name: str) -> None:
-    readme_path = stage_root / "RELEASE_README.md"
-    readme_path.write_text(RELEASE_README_TEMPLATE.format(package_name=package_name), encoding="utf-8")
-
-
 def validate_release(stage_root: Path) -> None:
     validation_env = os.environ.copy()
     validation_env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -465,32 +311,31 @@ def validate_release(stage_root: Path) -> None:
             )
 
     required_paths = [
-        ".agent/skills/uxb/SKILL.md",
-        ".agent/skills/knowledge-ingestion/SKILL.md",
+        ".codex",
+        ".claude",
+        "specs",
+        "templates",
         "knowledge/raw",
         "knowledge/wiki",
+        "memory",
+        "projects",
         "run_packages.ps1",
         "run_packages.sh",
-        "AGENT.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "README.md",
+        ".gitignore",
+        ".mcp.json",
+        "skills-lock.json",
     ]
     for rel_path in required_paths:
         if not (stage_root / rel_path).exists():
             raise SystemExit(f"Release validation failed: missing required asset `{rel_path}`.")
 
     forbidden_paths = [
-        ".claude",
-        ".codex",
-        "CLAUDE.md",
-        "CODEX.md",
-        ".mcp.json",
-        "skills-lock.json",
         "tools",
         "docs",
-        "memory",
-        "specs",
-        "templates",
         "知识候选区",
-        ".gitignore",
         ".git",
         "input",
         "test",
@@ -563,7 +408,7 @@ def create_build_root(source_root: Path) -> Path:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build the UXstrategy release package with only the core delivery assets.")
+    parser = argparse.ArgumentParser(description="Build the UXstrategy release package while only processing packages/.")
     parser.add_argument("--package-name", default="UXstrategy")
     parser.add_argument("--output-dir", default=".")
     return parser.parse_args()
@@ -582,6 +427,7 @@ def main() -> int:
     baseline_status = inspect_source_tree(source_root)
     ensure_expected_root_items(source_root)
     require_source_entrypoint(source_root)
+    require_supported_build_environment(source_root)
     require_pyinstaller(source_root)
 
     build_root = create_build_root(source_root)
@@ -592,12 +438,8 @@ def main() -> int:
         stage_root.mkdir(parents=True, exist_ok=True)
 
         copy_release_workspace(source_root, stage_root, package_name, zip_name)
-        install_agent_assets(source_root, stage_root)
-        reset_projects_directory(source_root, stage_root)
-        rewrite_agent_references(stage_root)
         write_release_entrypoints(stage_root)
         copy_core_binary(core_path, stage_root)
-        write_release_readme(stage_root, package_name)
         validate_release(stage_root)
 
         output_dir.mkdir(parents=True, exist_ok=True)
