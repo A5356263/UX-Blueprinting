@@ -42,8 +42,6 @@ def main() -> int:
     env.setdefault("UXB_ROOT", str(root))
     env.setdefault("UXB_PROJECTS_DIR", str(root / "projects"))
     env.setdefault("UXB_KNOWLEDGE_DIR", str(root / "knowledge"))
-    env.setdefault("UXB_SPECS_DIR", str(root / "specs"))
-    env.setdefault("UXB_TEMPLATES_DIR", str(root / "templates"))
     env.setdefault("UXB_MEMORY_DIR", str(root / "memory"))
 
     completed = subprocess.run([str(core), *sys.argv[1:]], env=env)
@@ -128,6 +126,8 @@ EXCLUDED_RELATIVE_PATHS = {
     "memory",
     "test",
     "tools",
+    "specs",
+    "templates",
     "知识候选区",
     "PPT.MD",
     "CLAUDE.md",
@@ -284,6 +284,8 @@ def build_core_binary(source_root: Path, build_root: Path) -> Path:
     dist_dir = build_root / "core_build" / "dist"
     work_dir = build_root / "core_build" / "work"
     spec_dir = build_root / "core_build" / "spec"
+    specs_source = (source_root / "specs").resolve()
+    templates_source = (source_root / "templates").resolve()
     dist_dir.mkdir(parents=True, exist_ok=True)
     work_dir.mkdir(parents=True, exist_ok=True)
     spec_dir.mkdir(parents=True, exist_ok=True)
@@ -301,6 +303,10 @@ def build_core_binary(source_root: Path, build_root: Path) -> Path:
         "packages",
         "--collect-data",
         "packages",
+        "--add-data",
+        f"{specs_source}{os.pathsep}specs",
+        "--add-data",
+        f"{templates_source}{os.pathsep}templates",
         "--distpath",
         str(dist_dir),
         "--workpath",
@@ -461,8 +467,6 @@ def validate_release(stage_root: Path) -> None:
     required_paths = [
         ".agent/skills/uxb/SKILL.md",
         ".agent/skills/knowledge-ingestion/SKILL.md",
-        "specs/README.md",
-        "templates",
         "knowledge/raw",
         "knowledge/wiki",
         "run_packages.ps1",
@@ -483,6 +487,8 @@ def validate_release(stage_root: Path) -> None:
         "tools",
         "docs",
         "memory",
+        "specs",
+        "templates",
         "知识候选区",
         ".gitignore",
         ".git",

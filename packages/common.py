@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from pathlib import Path
 
 
@@ -24,11 +25,21 @@ def get_knowledge_root_dir() -> Path:
 
 
 def get_specs_root_dir() -> Path:
-    return _env_path("UXB_SPECS_DIR", get_repo_root() / "specs")
+    env_value = os.environ.get("UXB_SPECS_DIR")
+    if env_value:
+        return Path(env_value).resolve()
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS) / "specs"
+    return get_repo_root() / "specs"
 
 
 def get_templates_root_dir() -> Path:
-    return _env_path("UXB_TEMPLATES_DIR", get_repo_root() / "templates")
+    env_value = os.environ.get("UXB_TEMPLATES_DIR")
+    if env_value:
+        return Path(env_value).resolve()
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS) / "templates"
+    return get_repo_root() / "templates"
 
 
 def get_memory_root_dir() -> Path:
