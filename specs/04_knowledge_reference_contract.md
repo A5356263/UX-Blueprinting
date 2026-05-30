@@ -2,7 +2,7 @@
 
 ## Goal
 
-定义任务在第四阶段之后如何装配知识与设计参考。
+定义任务在主链路执行前后，如何按 `Summary First / Raw Later` 原则装配知识与设计参考。
 
 ## Single Source Of Judgment
 
@@ -10,11 +10,11 @@
 
 - `projects/<project-id>/runtime/uxb_route_decision.json`
 
-代码不得再根据以下信息自动补知识：
+工程代码不得再根据以下信息自动补知识：
 
 - `Domain`
 - 关键词
-- summary / source_refs 链路
+- summary/source refs 邻接关系
 - 默认 budget
 - fallback 推荐
 
@@ -24,17 +24,18 @@
 
 1. task card 中的 `template_refs`
 2. task card 中的 `check_refs`
-3. `uxb_route_decision.json.knowledge_selection.business_refs`
-4. `uxb_route_decision.json.knowledge_selection.guideline_refs`
-5. `uxb_route_decision.json.knowledge_selection.complexity_refs`
+3. `uxb_route_decision.json.knowledge_selection.summary_refs`
+4. `uxb_route_decision.json.knowledge_selection.raw_escalation_plan`
+5. `uxb_route_decision.json.knowledge_selection.stage_refs`
 
 ## Reference Rules
 
-- 所有引用必须是仓库相对路径
-- wildcard 引用不得直接复制到 `context_bundle/`
-- 如果 UXB 没有显式选择某个知识文件，代码不得自行补装
-- 如果 UXB 显式选择的是文件，就按文件复制
-- 如果 UXB 或 task card 显式选择的是目录，就按目录原样复制；代码不得再做语义级收窄或补链
+- 所有引用必须是仓库相对路径。
+- wildcard 引用不得直接复制到 `context_bundle/`。
+- 如果 UXB 没有显式选择某个知识文件，代码不得自行补装。
+- `summary_refs` 负责路由和范围收敛，不等于 truth source 替代。
+- `raw` 只能来自 `raw_escalation_plan`，且必须带 `routed_by_summary`、`why_summary_not_enough`、`used_for_stage`、`decision_points`。
+- `stage_refs` 只声明当前 stage 可消费的 summary/raw，不得变相扩张为“主链路默认全读 raw”。
 
 ## Context Assembly Requirements
 
@@ -43,8 +44,9 @@
 - 读取 `source/task_card.md`
 - 读取 `runtime/uxb_route_decision.json`
 - 校验显式 refs 是否存在
-- 只复制模板、检查项和 UXB 显式选择 refs 到 `runtime/context_bundle/`
+- 只复制模板、检查项和 UXB 显式登记 refs 到 `runtime/context_bundle/`
 - 把装配结果统一记录到 `runtime/context_manifest.json`
+- 同步产出 `runtime/knowledge_trace.json`
 
 ## Required Manifest Fields
 
@@ -52,7 +54,7 @@
 
 - `task_card_source`
 - `selection_source`
-- `selected_refs`
+- `knowledge_trace`
 - `assembled_refs`
 - `missing_refs`
 - `references`
@@ -64,6 +66,7 @@
 其中：
 
 - `selection_source` 必须指向 `projects/<project-id>/runtime/uxb_route_decision.json`
+- `knowledge_trace` 必须显式记录 `summary_refs / raw_escalation_plan / stage_refs`
 - `references[*].selected_by` 用于区分哪些材料由 `uxb_ai` 显式指定
 - `context_manifest.json` 是唯一正式装配记录
 

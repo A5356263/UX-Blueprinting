@@ -26,7 +26,7 @@
 
 - `projects/<project-id>/source/requirement.md`
 - `projects/<project-id>/source/background.md`
-- 任务显式引用的 Wiki / 业务知识（仅用于术语校准）
+- 任务已登记到 `knowledge_trace` 的 summary / raw（仅在 summary 不足且 facts 阶段被允许读取时使用，用于术语校准或精确边界核对）
 
 ## 输出
 

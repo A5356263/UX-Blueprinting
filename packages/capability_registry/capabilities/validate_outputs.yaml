@@ -4,7 +4,7 @@
   "type": "final_check",
   "stage": "final",
   "entrypoint": "python -m packages validate <project-id>",
-  "description": "执行最终输出检查，校验正式产物、阶段边界、handoff 与 UXB 判断一致性。",
+  "description": "执行最终输出检查，校验正式产物、阶段边界、状态一致性与显性承接问题；只发现问题，不替主 AI 做业务或体验裁决。",
   "required_inputs": [
     "projects/<project-id>/workspace/facts.md",
     "projects/<project-id>/workspace/business_blueprint.md",

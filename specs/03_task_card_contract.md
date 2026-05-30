@@ -73,7 +73,9 @@
 
 - `knowledge_refs`
 - `wiki_refs`
-- `guideline_refs`
+- `summary_refs`
+- `raw_escalation_plan`
+- `stage_refs`
 - `primary_knowledge_entries`
 - `fallback_source_refs`
 - `fallback_conditions`
@@ -119,6 +121,6 @@ task card 的解析结果只在运行时内存中使用，不再要求落盘生�
 - 缺少必需 section
 - `Protocol Name` / `Protocol Version` / `Task ID` 缺失
 - `Required Outputs` 为空
-- 任一 output 路径不在 `projects/<project-id>/workspace/` 下
+- 任一 output 路径不在 `projects/<project-id>/workspace/` 内
 - `Templates` 或 `Checks` section 存在但无法解析为路径
 - `Task Goal` 或 `Constraints` 无法解析为可读条目

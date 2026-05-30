@@ -1,21 +1,10 @@
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
-from packages.common import get_project_runtime_dir
+from packages.route_decision import load_uxb_execution_decision
 
 
-_WEAK_RAW_REASON_PHRASES = {
-    "了解背景",
-    "用于了解背景",
-    "作为参考",
-    "仅作参考",
-    "可能有用",
-    "背景参考",
-    "for reference",
-    "background reference",
-}
+def _selection_source(task_id: str) -> str:
+    return f"projects/{task_id}/runtime/uxb_route_decision.json"
 
 
 def _dedupe_keep_order(values: list[str]) -> list[str]:
@@ -30,87 +19,80 @@ def _dedupe_keep_order(values: list[str]) -> list[str]:
     return deduped
 
 
-def _selection_source(task_id: str) -> str:
-    return f"projects/{task_id}/runtime/uxb_route_decision.json"
-
-
-def _read_uxb_route_decision(task_id: str) -> dict[str, object]:
-    route_path = get_project_runtime_dir(task_id) / "uxb_route_decision.json"
-    if not route_path.exists() or not route_path.is_file():
-        return {}
-    try:
-        payload = json.loads(route_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {}
-    return payload if isinstance(payload, dict) else {}
-
-
-def _normalize_reason_items(raw_items: object) -> list[dict[str, str]]:
-    if not isinstance(raw_items, list):
-        return []
-
-    normalized_items: list[dict[str, str]] = []
-    seen: set[tuple[str, str]] = set()
-    for item in raw_items:
-        if not isinstance(item, dict):
-            continue
-        ref = str(item.get("ref") or "").replace("\\", "/").strip()
-        reason = str(item.get("reason") or "").strip()
-        if not ref:
-            continue
-        key = (ref, reason)
-        if key in seen:
-            continue
-        seen.add(key)
-        normalized_items.append({"ref": ref, "reason": reason})
-    return normalized_items
-
-
-def _normalize_ref_list(raw_values: object) -> list[str]:
-    if not isinstance(raw_values, list):
-        return []
-    return _dedupe_keep_order([str(item) for item in raw_values if isinstance(item, str)])
-
-
-def _build_raw_ref_warnings(selected_refs: dict[str, list[str]], reason_items: list[dict[str, str]]) -> list[str]:
-    reason_by_ref = {item["ref"]: item["reason"] for item in reason_items if item.get("ref")}
-    warnings: list[str] = []
-
-    for group in ("business_refs", "guideline_refs"):
-        for ref in selected_refs.get(group, []):
-            if not ref.startswith("knowledge/raw/"):
-                continue
-            reason = reason_by_ref.get(ref, "").strip()
-            if not reason:
-                warnings.append(
-                    f"raw ref 缺少 selection_reason：{ref}；建议补充该 raw 的路由来源、使用阶段和具体判断用途。"
-                )
-                continue
-            normalized_reason = " ".join(reason.replace("，", " ").replace("。", " ").split()).lower()
-            if normalized_reason in _WEAK_RAW_REASON_PHRASES:
-                warnings.append(
-                    f"raw ref 说明偏弱：{ref}；建议补充该 raw 的路由来源、使用阶段和具体判断用途。"
-                )
-
-    return warnings
+def _stage_summary_refs(summary_refs: dict[str, list[str]]) -> dict[str, dict[str, list[str]]]:
+    business_refs = _dedupe_keep_order(summary_refs.get("business", []))
+    guideline_refs = _dedupe_keep_order(summary_refs.get("guideline", []))
+    complexity_refs = _dedupe_keep_order(summary_refs.get("complexity", []))
+    return {
+        "facts": {
+            "summary_refs": complexity_refs,
+            "raw_refs": [],
+        },
+        "business": {
+            "summary_refs": business_refs + [item for item in complexity_refs if item not in business_refs],
+            "raw_refs": [],
+        },
+        "experience": {
+            "summary_refs": guideline_refs,
+            "raw_refs": [],
+        },
+    }
 
 
 def build_knowledge_consumption_plan(task_id: str) -> dict[str, object]:
-    payload = _read_uxb_route_decision(task_id)
-    knowledge_selection = payload.get("knowledge_selection")
+    decision = load_uxb_execution_decision(task_id)
+    if str(decision.get("status") or "") != "confirmed":
+        return {
+            "selection_source": _selection_source(task_id),
+            "summary_refs": {"business": [], "guideline": [], "complexity": []},
+            "raw_escalation_plan": [],
+            "stage_refs": {stage: {"summary_refs": [], "raw_refs": []} for stage in ("facts", "business", "experience")},
+            "selection_reasons": [],
+            "warnings": [],
+            "errors": [str(item) for item in decision.get("validation_errors", []) if str(item).strip()],
+        }
+
+    knowledge_selection = decision.get("knowledge_selection")
     if not isinstance(knowledge_selection, dict):
         knowledge_selection = {}
 
-    selected_refs = {
-        "business_refs": _normalize_ref_list(knowledge_selection.get("business_refs")),
-        "guideline_refs": _normalize_ref_list(knowledge_selection.get("guideline_refs")),
-        "complexity_refs": _normalize_ref_list(knowledge_selection.get("complexity_refs")),
+    summary_refs = knowledge_selection.get("summary_refs")
+    if not isinstance(summary_refs, dict):
+        summary_refs = {}
+    normalized_summary_refs = {
+        "business": _dedupe_keep_order([str(item) for item in summary_refs.get("business", []) if isinstance(item, str)]),
+        "guideline": _dedupe_keep_order([str(item) for item in summary_refs.get("guideline", []) if isinstance(item, str)]),
+        "complexity": _dedupe_keep_order([str(item) for item in summary_refs.get("complexity", []) if isinstance(item, str)]),
     }
-    selection_reasons = _normalize_reason_items(knowledge_selection.get("selection_reasons"))
+
+    raw_escalation_plan_raw = knowledge_selection.get("raw_escalation_plan")
+    raw_escalation_plan = raw_escalation_plan_raw if isinstance(raw_escalation_plan_raw, list) else []
+    stage_refs = _stage_summary_refs(normalized_summary_refs)
+
+    for item in raw_escalation_plan:
+        if not isinstance(item, dict):
+            continue
+        raw_ref = str(item.get("raw_ref") or "").replace("\\", "/").strip()
+        if not raw_ref:
+            continue
+        for stage in [str(stage_name).strip() for stage_name in item.get("used_for_stage", []) if str(stage_name).strip()]:
+            if stage not in stage_refs:
+                continue
+            stage_refs[stage]["raw_refs"].append(raw_ref)
+
+    for stage_payload in stage_refs.values():
+        stage_payload["summary_refs"] = _dedupe_keep_order(stage_payload.get("summary_refs", []))
+        stage_payload["raw_refs"] = _dedupe_keep_order(stage_payload.get("raw_refs", []))
+
+    selection_reasons_raw = knowledge_selection.get("selection_reasons")
+    selection_reasons = selection_reasons_raw if isinstance(selection_reasons_raw, list) else []
 
     return {
         "selection_source": _selection_source(task_id),
-        "selected_refs": selected_refs,
+        "summary_refs": normalized_summary_refs,
+        "raw_escalation_plan": raw_escalation_plan,
+        "stage_refs": stage_refs,
         "selection_reasons": selection_reasons,
-        "warnings": _build_raw_ref_warnings(selected_refs, selection_reasons),
+        "warnings": [],
+        "errors": [],
     }

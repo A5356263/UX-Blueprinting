@@ -42,7 +42,6 @@ def main() -> int:
     env.setdefault("UXB_ROOT", str(root))
     env.setdefault("UXB_PROJECTS_DIR", str(root / "projects"))
     env.setdefault("UXB_KNOWLEDGE_DIR", str(root / "knowledge"))
-    env.setdefault("UXB_MEMORY_DIR", str(root / "memory"))
 
     completed = subprocess.run([str(core), *sys.argv[1:]], env=env)
     return int(completed.returncode)
@@ -53,27 +52,22 @@ if __name__ == "__main__":
 """
 
 SOURCE_REQUIRED_ITEMS = {
-    ".codex",
     ".claude",
     "specs",
     "templates",
     "knowledge",
-    "memory",
     "projects",
-    "CLAUDE.md",
-    "CODEX.md",
     "README.md",
     "run_packages.ps1",
     "run_packages.sh",
     ".gitignore",
-    ".mcp.json",
-    "skills-lock.json",
 }
 
 EXCLUDED_RELATIVE_PATHS = {
     ".git",
     ".github",
     ".playwright-mcp",
+    ".codex",
     "build",
     "dist",
     "release",
@@ -81,8 +75,13 @@ EXCLUDED_RELATIVE_PATHS = {
     "_uxstrategy_release_build",
     "docs",
     "input",
+    "memory",
     "test",
     "tools",
+    ".mcp.json",
+    "CLAUDE.md",
+    "CODEX.md",
+    "skills-lock.json",
     "知识候选区",
     "PPT.MD",
 }
@@ -106,6 +105,12 @@ SOURCE_HIDDEN_PATHS = {
     "packages/generation",
     "packages/validate",
     "packages/capability_registry",
+}
+
+ALLOWED_CLAUDE_SKILLS = {
+    "uxb",
+    "knowledge-ingestion",
+    "grill-me",
 }
 
 
@@ -222,6 +227,25 @@ def copy_release_workspace(source_root: Path, stage_root: Path, package_name: st
             shutil.copy2(item, target)
 
 
+def trim_claude_skills(stage_root: Path) -> None:
+    claude_root = stage_root / ".claude"
+    skills_dir = claude_root / "skills"
+
+    if not skills_dir.exists():
+        raise SystemExit("Release validation failed: `.claude/skills` is missing.")
+
+    for child in skills_dir.iterdir():
+        if child.name not in ALLOWED_CLAUDE_SKILLS:
+            if child.is_dir():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+
+    for skill_name in sorted(ALLOWED_CLAUDE_SKILLS):
+        if not (skills_dir / skill_name).exists():
+            raise SystemExit(f"Release validation failed: missing `.claude/skills/{skill_name}`.")
+
+
 def write_release_entrypoints(stage_root: Path) -> None:
     packages_dir = stage_root / "packages"
     if packages_dir.exists():
@@ -311,28 +335,31 @@ def validate_release(stage_root: Path) -> None:
             )
 
     required_paths = [
-        ".codex",
         ".claude",
+        ".claude/skills/uxb",
+        ".claude/skills/knowledge-ingestion",
+        ".claude/skills/grill-me",
         "specs",
         "templates",
         "knowledge/raw",
         "knowledge/wiki",
-        "memory",
         "projects",
         "run_packages.ps1",
         "run_packages.sh",
-        "CLAUDE.md",
-        "CODEX.md",
         "README.md",
         ".gitignore",
-        ".mcp.json",
-        "skills-lock.json",
     ]
     for rel_path in required_paths:
         if not (stage_root / rel_path).exists():
             raise SystemExit(f"Release validation failed: missing required asset `{rel_path}`.")
 
     forbidden_paths = [
+        ".codex",
+        "memory",
+        ".mcp.json",
+        "CLAUDE.md",
+        "CODEX.md",
+        "skills-lock.json",
         "tools",
         "docs",
         "知识候选区",
@@ -438,6 +465,7 @@ def main() -> int:
         stage_root.mkdir(parents=True, exist_ok=True)
 
         copy_release_workspace(source_root, stage_root, package_name, zip_name)
+        trim_claude_skills(stage_root)
         write_release_entrypoints(stage_root)
         copy_core_binary(core_path, stage_root)
         validate_release(stage_root)

@@ -49,10 +49,29 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
         return []
 
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    knowledge_trace = payload.get("knowledge_trace")
+    if isinstance(knowledge_trace, dict):
+        stage_refs = knowledge_trace.get("stage_refs")
+        if isinstance(stage_refs, dict):
+            stage_payload = stage_refs.get(stage)
+            if isinstance(stage_payload, dict):
+                refs = []
+                for key in ("summary_refs", "raw_refs"):
+                    values = stage_payload.get(key, [])
+                    if isinstance(values, list):
+                        refs.extend(str(value).replace("\\", "/").strip() for value in values if str(value).strip())
+                deduped: list[str] = []
+                seen: set[str] = set()
+                for ref in refs:
+                    if not ref or ref in seen:
+                        continue
+                    seen.add(ref)
+                    deduped.append(ref)
+                return deduped
+
     references = payload.get("references")
     if not isinstance(references, list):
         return []
-
     refs: list[str] = []
     for item in references:
         if not isinstance(item, dict):

@@ -99,6 +99,40 @@ def _clean_list(value: object, limit: int | None = None) -> list[str]:
     return items[:limit] if limit is not None else items
 
 
+def _stage_knowledge_refs(project_id: str, stage: str) -> tuple[list[str], list[str], dict[str, str]]:
+    manifest = _read_context_manifest(project_id)
+    if not manifest:
+        return [], [], {}
+
+    knowledge_trace = manifest.get("knowledge_trace")
+    stage_payload: dict[str, object] = {}
+    if isinstance(knowledge_trace, dict):
+        stage_refs = knowledge_trace.get("stage_refs")
+        if isinstance(stage_refs, dict):
+            stage_candidate = stage_refs.get(stage)
+            if isinstance(stage_candidate, dict):
+                stage_payload = stage_candidate
+
+    summary_refs = _clean_list(stage_payload.get("summary_refs")) if stage_payload else []
+    raw_refs = _clean_list(stage_payload.get("raw_refs")) if stage_payload else []
+
+    reason_map: dict[str, str] = {}
+    references = manifest.get("references")
+    if isinstance(references, list):
+        for item in references:
+            if not isinstance(item, dict):
+                continue
+            consumed_by = [str(value).strip() for value in item.get("consumed_by", []) if str(value).strip()]
+            if stage not in consumed_by:
+                continue
+            reference = str(item.get("reference") or "").replace("\\", "/").strip()
+            if not reference or reference in reason_map:
+                continue
+            reason_map[reference] = str(item.get("selection_reason") or item.get("why_summary_not_enough") or "").strip()
+
+    return summary_refs, raw_refs, reason_map
+
+
 def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
     decision = _read_uxb_route_decision(project_id)
     if not decision:
@@ -139,30 +173,17 @@ def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
 
 
 def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list[str], list[str], list[dict[str, str]]]:
-    manifest = _read_context_manifest(project_id)
-    if not manifest:
-        return [], [], [], []
-
-    references = manifest.get("references")
-    if not isinstance(references, list):
-        return [], [], [], []
-
+    summary_refs, raw_refs, reason_map = _stage_knowledge_refs(project_id, "experience")
     guideline_refs: list[str] = []
     reasons: list[dict[str, str]] = []
-    seen: set[str] = set()
-    for item in references:
-        if not isinstance(item, dict):
+    for reference in [*summary_refs, *raw_refs]:
+        normalized = reference.replace("\\", "/").strip()
+        if "设计准则" not in normalized and "guideline" not in normalized.lower():
             continue
-        if str(item.get("group") or "").strip() != "guideline_refs":
-            continue
-        reference = str(item.get("reference") or "").replace("\\", "/").strip()
-        if not reference or reference in seen:
-            continue
-        seen.add(reference)
-        guideline_refs.append(reference)
-        reasons.append({"guideline": reference, "reason": str(item.get("selection_reason") or "").strip()})
+        guideline_refs.append(normalized)
+        reasons.append({"guideline": normalized, "reason": reason_map.get(normalized, "")})
 
-    return [], guideline_refs, [], reasons
+    return [], guideline_refs, raw_refs, reasons
 
 
 def _build_experience_prompt_preview(project_id: str) -> str:
@@ -172,7 +193,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     gap_text = _read_workspace_file(project_id, "gap_list.md")
     contract_path = get_specs_root_dir() / "10_experience_blueprint_contract.md"
     template_path = get_templates_root_dir() / "experience_blueprint.template.md"
-    guideline_entry_refs, guideline_refs, _, _ = _materialize_experience_guidelines(project_id)
+    guideline_entry_refs, guideline_refs, stage_raw_refs, _ = _materialize_experience_guidelines(project_id)
 
     task_lines = _extract_bullets(task_card_text, limit=8)
     facts_lines = _first_lines(facts_text, limit=12)
@@ -213,6 +234,12 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     else:
         guideline_lines = "- 当前任务未装配显式设计参考，将按业务承接要求保守生成。"
 
+    raw_lines = (
+        "当前阶段允许读取的 raw：\n" + "\n".join(f"- {line}" for line in stage_raw_refs)
+        if stage_raw_refs
+        else "- 当前阶段未登记额外 raw；如 summary 已足够，不要默认升级 raw。"
+    )
+
     return (
         "# Experience Prompt 预览（仅调试）\n\n"
         "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
@@ -230,12 +257,15 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         )
         + "\n\n## 5. 设计参考\n\n"
         + guideline_lines
-        + "\n\n## 6. 知识使用规则\n\n"
+        + "\n\n## 6. 当前阶段 raw\n\n"
+        + raw_lines
+        + "\n\n## 7. 知识使用规则\n\n"
         "- 只使用 UXB AI 明确指定并已经装配到 context 的知识与设计参考。\n"
         "- 不根据关键词自动补充其他知识，也不自动扩展额外原文材料。\n"
+        "- 如 summary 已足够，不要因为进入正式主链路就默认继续读取 raw。\n"
         "- 如果 facts 或 business 事实不足，只能暴露缺口与待确认项，不能自行补判断。\n"
         "- 输出方案时，需要说清反馈时机、反馈形式、用户可见文案和用户下一步。\n"
-        + "\n\n## 7. 设计原则摘要\n\n"
+        + "\n\n## 8. 设计原则摘要\n\n"
         "- 先写旅程图，再写交互流程总览、主流程、次流程与异常阻断流程。\n"
         "- 旅程图必须基于角色路径正式生成，不得从 HTML 或交互流程反推。\n"
         "- 旅程图使用“角色：节点 → 节点 → 节点”的路径表达；依据不足时进入“旅程缺口”，不要把依据和规则塞回路径节点。\n"
@@ -244,9 +274,9 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         "- 附录除设计指南消费外，还要说明业务知识如何转成体验策略与落点。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
         "- 禁止重做事实抽取、业务判断或需求全文重述。\n\n"
-        "## 8. 待确认问题\n\n"
+        "## 9. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
-        + "\n\n## 9. 输出模板要求\n\n"
+        + "\n\n## 10. 输出模板要求\n\n"
         f"- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
         "- `## 1. 旅程图`\n"
@@ -274,10 +304,19 @@ def run_generate_facts(project_id: str) -> int:
         return 0
 
     print("facts.md 不存在，请 AI 根据以下文件生成：")
+    facts_summary_refs, facts_raw_refs, _ = _stage_knowledge_refs(project_id, "facts")
     print("  - specs/08_fact_extraction_contract.md")
     print("  - templates/facts.template.md")
     print(f"  - projects/{project_id}/source/requirement.md")
     print(f"  - projects/{project_id}/source/background.md")
+    if facts_summary_refs:
+        print("当前阶段允许读取的 summary：")
+        for ref in facts_summary_refs:
+            print(f"  - {ref}")
+    if facts_raw_refs:
+        print("当前阶段允许读取的 raw：")
+        for ref in facts_raw_refs:
+            print(f"  - {ref}")
     return 1
 
 
@@ -292,11 +331,20 @@ def run_generate_business(project_id: str) -> int:
 
     print("business_blueprint.md 不存在，请 AI 根据以下文件生成：")
     judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    business_summary_refs, business_raw_refs, _ = _stage_knowledge_refs(project_id, "business")
     if judgment_lines:
         print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/09_business_blueprint_contract.md")
     print("  - templates/business_blueprint.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
+    if business_summary_refs:
+        print("当前阶段允许读取的 summary：")
+        for ref in business_summary_refs:
+            print(f"  - {ref}")
+    if business_raw_refs:
+        print("当前阶段允许读取的 raw：")
+        for ref in business_raw_refs:
+            print(f"  - {ref}")
     if judgment_lines:
         print("UXB 判断摘要：")
         for line in judgment_lines:
@@ -315,11 +363,20 @@ def run_generate_business_note(project_id: str) -> int:
 
     print("business_note.md 不存在，请 AI 根据以下文件生成：")
     judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    business_summary_refs, business_raw_refs, _ = _stage_knowledge_refs(project_id, "business")
     if judgment_lines:
         print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/16_business_note_contract.md")
     print("  - templates/business_note.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
+    if business_summary_refs:
+        print("当前阶段允许读取的 summary：")
+        for ref in business_summary_refs:
+            print(f"  - {ref}")
+    if business_raw_refs:
+        print("当前阶段允许读取的 raw：")
+        for ref in business_raw_refs:
+            print(f"  - {ref}")
     if judgment_lines:
         print("UXB 判断摘要：")
         for line in judgment_lines:
@@ -338,11 +395,20 @@ def run_generate_business_lite(project_id: str) -> int:
 
     print("business_blueprint_lite.md 不存在，请 AI 根据以下文件生成：")
     judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="business")
+    business_summary_refs, business_raw_refs, _ = _stage_knowledge_refs(project_id, "business")
     if judgment_lines:
         print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
     print("  - specs/17_business_blueprint_lite_contract.md")
     print("  - templates/business_blueprint_lite.template.md")
     print(f"  - projects/{project_id}/workspace/facts.md")
+    if business_summary_refs:
+        print("当前阶段允许读取的 summary：")
+        for ref in business_summary_refs:
+            print(f"  - {ref}")
+    if business_raw_refs:
+        print("当前阶段允许读取的 raw：")
+        for ref in business_raw_refs:
+            print(f"  - {ref}")
     if judgment_lines:
         print("UXB 判断摘要：")
         for line in judgment_lines:
@@ -357,6 +423,7 @@ def run_generate_experience(project_id: str) -> int:
     if not experience_path.exists():
         print("experience_blueprint.md 不存在，请 AI 根据以下文件生成：")
         judgment_lines = _uxb_judgment_prompt_lines(project_id, target_stage="experience")
+        experience_summary_refs, experience_raw_refs, _ = _stage_knowledge_refs(project_id, "experience")
         if judgment_lines:
             print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
         print("  - specs/10_experience_blueprint_contract.md")
@@ -371,12 +438,19 @@ def run_generate_experience(project_id: str) -> int:
         else:
             print(f"  - projects/{project_id}/workspace/business_blueprint.md")
         print("  - test/Experience_Blueprint 理想效果.md")
+        if experience_summary_refs:
+            print("当前阶段允许读取的 summary：")
+            for ref in experience_summary_refs:
+                print(f"  - {ref}")
+        if experience_raw_refs:
+            print("当前阶段允许读取的 raw：")
+            for ref in experience_raw_refs:
+                print(f"  - {ref}")
         if judgment_lines:
             print("UXB 判断摘要：")
             for line in judgment_lines:
                 print(f"  {line}")
         return 1
-
 
     _update_experience_guideline_usage(project_id)
     upsert_generated_provenance(project_id, "packages.generation", "generate-experience")

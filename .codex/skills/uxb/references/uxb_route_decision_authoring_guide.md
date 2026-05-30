@@ -179,6 +179,8 @@
 ```json
 {
   "ref": "<path>",
+  "type": "summary|raw",
+  "used_for_stage": ["facts|business|experience"],
   "reason": "说明这份资料支撑哪个判断，或支撑哪段正式产出"
 }
 ```
@@ -193,7 +195,7 @@
 
 ## Raw refs 选择要求
 
-当 `business_refs` 或 `guideline_refs` 中包含 `knowledge/raw/**` 时，`selection_reasons` 还要补清三点：
+`knowledge/raw/**` 不应直接写进 `summary_refs`。如果 summary 不够，需要把 raw 写进 `raw_escalation_plan`，并补清三点：
 
 1. 路由来源：该 raw 由哪个 summary / README / index 线索命中。
 2. 使用阶段：该 raw 主要支撑 facts / business / experience 中哪个阶段。

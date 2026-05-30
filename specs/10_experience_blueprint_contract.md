@@ -21,18 +21,28 @@ experience 阶段不负责：
 - 接口设计
 - 重新做业务判断
 
+## 体验推导责任
+
+experience 阶段必须承接 business 阶段已经形成的业务判断，并将其转译为角色路径、任务流、页面结构、状态反馈、异常阻断和保护策略。
+
+- experience 不得重新裁决需求是否成立
+- experience 不得绕过 business 阶段自行判断能力形态
+- 体验推导必须基于当前业务边界展开，不得只根据需求文档罗列页面功能
+- 异常、阻断、冲突、不可用、中途放弃、状态不同步都是正式体验内容，不是附属说明
+- 不得用“体验友好”“提示清晰”等空泛表述替代具体页面结构、状态和文案
+
 ## 输入
 
 - `projects/<project-id>/workspace/facts.md`
 - `projects/<project-id>/workspace/business_blueprint.md`
 - `projects/<project-id>/runtime/uxb_route_decision.json`
-- 已装配进 `runtime/context_bundle/` 的 guideline / business / complexity refs
+- 已登记到 `knowledge_trace` 且被装配进 `runtime/context_bundle/` 的 experience summary / experience raw，以及必要 business raw
 
 ## 设计参考使用规则
 
-- 只能使用 UXB 明确选中的 `guideline_refs`
+- 只能使用 UXB 明确选中的 summary 和已登记 stage raw
 - 不根据关键词自动命中设计指南
-- 不根据 guideline summary 自动展开 raw
+- 不根据 guideline summary 自动展开 raw；只有 summary 不足时，才能读取已登记 raw
 - 不自动补充额外 guideline
 - guideline 只吸收原则，不在正文暴露内部路径或编号
 
@@ -210,6 +220,9 @@ experience 阶段不负责：
 - 旅程图正式存在，且其内容能在正文或附录中找到依据支撑
 - 状态模块为统一口径表，而非长段流程复述
 - 正文不暴露内部执行术语
+- `## 5. 异常与阻断流程` 不是附录，且至少说明触发条件、系统反馈、用户下一步
+- `## 6. 页面 / 弹窗 / 抽屉设计` 能体现结构化空间、信息层级和异常状态下的结构变化
+- 明确承接 business 中提出的边界、风险和保护策略
 
 ## 失败条件
 
@@ -217,3 +230,6 @@ experience 阶段不负责：
 - 把设计参考写成自动路由、自动升级或内部判断说明
 - 页面文案是元指令而不是用户可见文本
 - 依赖未装配知识或自行脑补 guideline / 业务语义
+- 只展开 Happy Path，异常与阻断明显薄弱
+- 通过 experience 阶段重新判断需求是否成立或能力形态
+- 页面设计停留在功能罗列或视觉形容，没有结构和反馈落点

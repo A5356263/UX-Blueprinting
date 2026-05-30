@@ -173,6 +173,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
     bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
     if route_code == 0:
         append_command_if_provenance_exists(project_id, "route-decision")
+        execution_decision = load_uxb_execution_decision(project_id)
 
     try:
         assemble_code = run_context_assemble(project_id, strict=strict)

@@ -4,7 +4,7 @@
 - page_type: system
 - status: active
 - confidence: medium
-- updated_at: 2026-05-28
+- updated_at: 2026-05-29
 
 ## 当前概况
 
@@ -19,11 +19,11 @@
 
 ## 最近更新的 Raw
 
+- raw/业务/权限管理/31_体验翻译需求.md
 - raw/业务/权限管理/15_页面载体语义.md
 - raw/业务/项目背景/00_领域概述.md
 - raw/业务/项目背景/README.md
 - raw/业务/账户与企业生命周期/00_领域概述.md
-- raw/业务/账户与企业生命周期/README.md
 
 ## 无 Summary 的 Raw
 

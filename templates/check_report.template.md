@@ -3,6 +3,7 @@
 > 本文件是 `projects/<project-id>/workspace/check_status.json` 的人读说明版。
 > 它只用于帮助理解检查结果，不作为 gate / validate / repair 的机器判断依据。
 > 机器判断请以 `check_status.json` 为准。
+> 检查器只发现结构缺失、状态不一致、承接断点和明显质量风险，不替主 AI 判断需求是否成立、值不值得做或该采用什么方案。
 
 ## Summary
 

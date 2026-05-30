@@ -1,0 +1,14 @@
+{
+  "project_id": "self-service-permission",
+  "generated_at": "2026-05-30T14:54:14.307831+00:00",
+  "consumed_memory_ids": [],
+  "extracted_candidate_ids": [],
+  "accepted_memory_ids": [],
+  "rejected_memory_ids": [],
+  "deferred_memory_ids": [],
+  "source_artifacts": [
+    "projects/self-service-permission/runtime/context_manifest.json",
+    "projects/self-service-permission/workspace/check_status.json",
+    "projects/self-service-permission/runtime/remediation/issue_index.json"
+  ]
+}

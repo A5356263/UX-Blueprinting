@@ -124,13 +124,13 @@ knowledge/wiki/index.md
 6. 不为了保险全量选择业务知识
 7. 不为了证明“参考过指南”而选设计指南
 8. raw 只在 summary 不足、需要证据或需要关键细节时选择
-9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `business_refs` 或 `guideline_refs`
+9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `summary_refs` 或 `raw_escalation_plan`
 
 ### Raw 选择必要性
 
-`business_refs` / `guideline_refs` 默认优先选择 summary、领域 README 或入口型知识。
+`summary_refs` 默认优先选择 summary、领域 README 或入口型知识。
 
-如果选择 `knowledge/raw/**`，`selection_reasons` 至少要说明：
+如果需要选择 `knowledge/raw/**`，不要直接放进 `summary_refs`。应写入 `raw_escalation_plan`，并至少说明：
 
 1. 该 raw 由哪个 summary / README / index 线索命中。
 2. 该 raw 主要支撑 facts / business / experience 中哪个阶段。

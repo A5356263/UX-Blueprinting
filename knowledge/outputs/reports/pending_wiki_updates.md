@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-28T07:15:32+00:00
+- generated_at_utc: 2026-05-29T13:37:28+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -17,11 +17,11 @@
 
 ## Changed Raw Sources
 
-- raw/业务/权限管理/15_页面载体语义.md
+- none
 
 ## Updated Summaries
 
-- wiki/summaries/业务/权限管理/15_页面载体语义.md
+- none
 
 ## Notes
 
@@ -182,8 +182,8 @@ file_count=139
 ```text
 mode=apply
 summary_count=1
-written_count=0
-wiki/summaries/业务/权限管理/15_页面载体语义.md
+written_count=1
+wiki/summaries/业务/权限管理/31_体验翻译需求.md
 ```
 
 ### prune_orphan_summaries.py
@@ -212,7 +212,7 @@ changed=false
 
 ```text
 refreshed=knowledge/wiki/overview.md
-changed=true
+changed=false
 ```
 
 ### refresh_semantic_summary_report.py

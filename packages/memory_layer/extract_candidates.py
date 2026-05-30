@@ -14,19 +14,20 @@ def _load_task_context(project_id: str) -> dict[str, Any]:
     task_contract = source_payload.get("task_contract")
     if not isinstance(task_contract, dict):
         task_contract = {}
-    selected_refs = source_payload.get("selected_refs")
-    if not isinstance(selected_refs, dict):
-        selected_refs = {}
+    knowledge_trace = source_payload.get("knowledge_trace")
+    if not isinstance(knowledge_trace, dict):
+        knowledge_trace = {}
+    summary_refs = knowledge_trace.get("summary_refs")
+    if not isinstance(summary_refs, dict):
+        summary_refs = {}
+    business_refs = [str(value) for value in summary_refs.get("business", []) if isinstance(value, str)]
+    guideline_refs = [str(value) for value in summary_refs.get("guideline", []) if isinstance(value, str)]
+    complexity_refs = [str(value) for value in summary_refs.get("complexity", []) if isinstance(value, str)]
     return {
         "project_id": project_id,
         "domain": str(task_contract.get("domain") or ""),
-        "guideline_refs": [str(value) for value in selected_refs.get("guideline_refs", []) if isinstance(value, str)],
-        "knowledge_refs": [
-            str(value)
-            for key in ("business_refs", "complexity_refs")
-            for value in selected_refs.get(key, [])
-            if isinstance(value, str)
-        ],
+        "guideline_refs": guideline_refs,
+        "knowledge_refs": business_refs + [value for value in complexity_refs if value not in business_refs],
     }
 
 

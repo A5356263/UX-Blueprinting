@@ -1,0 +1,69 @@
+{
+  "schema_version": "uxb_route_decision@4.0",
+  "project_id": "repair-loop-basic-pass",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "judgment": {
+    "demand_type": "benchmark_sample",
+    "business_depth": "business_note_only",
+    "experience_output": "experience_blueprint",
+    "reason": "这是一个最小正向 benchmark，用于验证 sample-check 可以识别基础样例结构完整且状态通过。"
+  },
+  "complexity_judgment": {
+    "business_change": [],
+    "experience_pressure": [],
+    "uncertainties": []
+  },
+  "knowledge_selection": {
+    "summary_refs": {
+      "business": [
+        "knowledge/wiki/summaries/业务/README.md"
+      ],
+      "guideline": [],
+      "complexity": [
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+      ]
+    },
+    "raw_escalation_plan": [],
+    "stage_refs": {
+      "facts": {
+        "raw_refs": []
+      },
+      "business": {
+        "raw_refs": []
+      },
+      "experience": {
+        "raw_refs": []
+      }
+    },
+    "selection_reasons": [
+      {
+        "ref": "knowledge/wiki/summaries/业务/README.md",
+        "type": "summary",
+        "used_for_stage": [
+          "business"
+        ],
+        "reason": "benchmark 只需要一个最小业务 summary 路由入口来验证新 schema 的结构完整性。"
+      },
+      {
+        "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        "type": "summary",
+        "used_for_stage": [
+          "facts"
+        ],
+        "reason": "用于满足前期复杂度参考的最小输入要求。"
+      }
+    ]
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_note.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "该样例不参与真实蓝图生成，只用于 benchmark 回归。"
+    ]
+  }
+}

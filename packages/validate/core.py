@@ -323,11 +323,7 @@ BUSINESS_CODE_LIKE_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"\b[a-z][a-z0-9_]*\b\s*(?:→|->)\s*\b[a-z][a-z0-9_]*\b"),
 ]
 
-ROLE_ALIASES: dict[str, list[str]] = {
-    "超管": ["超管", "超级管理员"],
-    "员工": ["员工"],
-    "审批人": ["审批人", "组织负责人"],
-}
+ROLE_ALIASES: dict[str, list[str]] = {}
 
 HANDOFF_CATEGORY_LABELS = {
     "roles": "必须覆盖的角色",
@@ -338,7 +334,7 @@ HANDOFF_CATEGORY_LABELS = {
 }
 
 HANDOFF_GENERIC_PHRASES = {
-    "roles": ["角色", "配置方", "申请方", "审批方"],
+    "roles": ["角色"],
     "flows": ["主流程", "流程", "路径", "闭环"],
     "exceptions": ["异常", "阻断", "拦截", "失败"],
     "states": ["状态", "反馈", "结果"],
@@ -360,9 +356,6 @@ HANDOFF_PHRASE_STOPWORDS = {
     "异常",
     "状态",
     "风险",
-    "配置方",
-    "申请方",
-    "审批方",
 }
 
 OPTIONAL_HANDOFF_SECTION_MARKERS = [
@@ -377,29 +370,18 @@ HANDOFF_SIGNAL_KEYWORDS = [
     "互斥",
     "冲突",
     "关闭",
-    "审批",
-    "审批人",
-    "权限",
-    "员工",
-    "管理员",
-    "范围",
-    "申请",
     "超时",
     "失败",
     "拒绝",
     "通过",
     "未完成",
-    "校验",
-    "配置",
     "通知",
     "结果",
     "生效",
-    "来源",
     "查询",
     "导出",
     "敏感",
     "时效",
-    "离职",
     "兜底",
 ]
 
@@ -638,6 +620,19 @@ def _string_list(value: object) -> list[str]:
     return [item for item in value if isinstance(item, str) and item.strip()]
 
 
+def _manifest_knowledge_trace(manifest: dict[str, object]) -> dict[str, object]:
+    knowledge_trace = manifest.get("knowledge_trace")
+    return knowledge_trace if isinstance(knowledge_trace, dict) else {}
+
+
+def _guideline_summary_refs_from_manifest(manifest: dict[str, object]) -> list[str]:
+    knowledge_trace = _manifest_knowledge_trace(manifest)
+    summary_refs = knowledge_trace.get("summary_refs")
+    if not isinstance(summary_refs, dict):
+        return []
+    return _string_list(summary_refs.get("guideline"))
+
+
 def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> None:
     runtime_dir = get_project_runtime_dir(project_id)
     manifest_path = runtime_dir / "context_manifest.json"
@@ -693,8 +688,44 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
         if not ref_path.exists():
             add_issue(issues, "blocker", f"context_manifest.json 引用了不存在的 ref：{reference}")
 
-    if not isinstance(manifest.get("selected_refs"), dict):
-        add_issue(issues, "warning", "context_manifest.json 缺少 selected_refs")
+    knowledge_trace = _manifest_knowledge_trace(manifest)
+    if not knowledge_trace:
+        add_issue(issues, "blocker", "context_manifest.json 缺少 knowledge_trace")
+        return
+
+    summary_refs = knowledge_trace.get("summary_refs")
+    if not isinstance(summary_refs, dict):
+        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 summary_refs")
+        return
+
+    raw_escalation_plan = knowledge_trace.get("raw_escalation_plan")
+    if not isinstance(raw_escalation_plan, list):
+        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 raw_escalation_plan")
+        return
+
+    stage_refs = knowledge_trace.get("stage_refs")
+    if not isinstance(stage_refs, dict):
+        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 stage_refs")
+        return
+
+    if not _string_list(summary_refs.get("business")):
+        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.summary_refs.business 为空")
+    if not _string_list(summary_refs.get("complexity")):
+        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.summary_refs.complexity 为空")
+
+    declared_raw_refs = {
+        str(item.get("raw_ref") or "").replace("\\", "/").strip()
+        for item in raw_escalation_plan
+        if isinstance(item, dict) and str(item.get("raw_ref") or "").strip()
+    }
+    for stage in ("facts", "business", "experience"):
+        stage_payload = stage_refs.get(stage)
+        if not isinstance(stage_payload, dict):
+            add_issue(issues, "warning", f"context_manifest.json.knowledge_trace.stage_refs 缺少 {stage}")
+            continue
+        for raw_ref in _string_list(stage_payload.get("raw_refs")):
+            if raw_ref not in declared_raw_refs:
+                add_issue(issues, "blocker", f"context_manifest.json.knowledge_trace.stage_refs.{stage}.raw_refs 包含未登记 raw：{raw_ref}")
     if not isinstance(manifest.get("assembled_refs"), list):
         add_issue(issues, "warning", "context_manifest.json 缺少 assembled_refs")
     if not isinstance(manifest.get("missing_refs"), list):
@@ -1199,7 +1230,6 @@ def extract_handoff_match_phrases(item_text: str, category: str) -> list[str]:
     cleaned_candidates: list[str] = []
     for candidate in candidates:
         cleaned = normalize_handoff_line(candidate)
-        cleaned = re.sub(r"^(?:配置方|申请方|审批方)\s*[:：]?\s*", "", cleaned)
         cleaned = cleaned.strip(" -:：")
         if not is_meaningful_handoff_phrase(cleaned):
             continue
@@ -1889,22 +1919,9 @@ def analyze_natural_language_handoff(
 
     role_items = handoff_requirements.get("roles", [])
     if not role_items:
-        required_roles = {
-            role: aliases
-            for role, aliases in ROLE_ALIASES.items()
-            if contains_any_phrase(handover_section or business_text, aliases)
-        }
-        role_hits = count_role_mentions(experience_signal_text, required_roles or ROLE_ALIASES)
-        required_role_count = len(required_roles or ROLE_ALIASES)
-        covered_role_count = sum(1 for covered in role_hits.values() if covered)
-        coverage_lines.append(f"角色路径覆盖：{covered_role_count}/{required_role_count}")
-        for role, covered in role_hits.items():
-            if role in (required_roles or ROLE_ALIASES) and not covered:
-                add_issue(
-                    issues,
-                    "warning",
-                    f"承接检查：business_blueprint.md 要求覆盖“{role}”角色路径，但 experience_blueprint.md 还没有给出这类角色的清晰任务路径或页面承接。",
-                )
+        required_role_count = 0
+        covered_role_count = 0
+        coverage_lines.append("角色路径覆盖：not_declared")
     else:
         covered_role_count = 0
         for item_text in role_items:
@@ -1978,11 +1995,7 @@ def analyze_natural_language_handoff(
         )
     coverage_lines.append(f"风险保护承接：{covered_risk_count}/{len(risk_items)}")
 
-    guideline_refs_used: list[str] = []
-    if context_manifest:
-        selected_refs = context_manifest.get("selected_refs")
-        if isinstance(selected_refs, dict):
-            guideline_refs_used = _string_list(selected_refs.get("guideline_refs"))
+    guideline_refs_used: list[str] = _guideline_summary_refs_from_manifest(context_manifest or {})
 
     has_guideline_appendix = "设计指南消费说明" in experience_text
     claims_guideline_consumed = has_guideline_appendix and any(marker in experience_text for marker in ("已消费", "消费的设计指南", "消费指南"))
@@ -2441,9 +2454,10 @@ def run_business_note_gate(project_id: str) -> int:
         check_forbidden_terms("business_note.md", note_text, issues)
         check_runtime_leakage_guard("business_note.md", note_text, issues)
         impact_text = _section_text(note_text, "## 2. 核心业务规则影响")
-        for dimension in ["权限", "数据范围", "审批", "状态机", "业务对象关系"]:
-            if dimension not in impact_text:
-                add_issue(issues, "blocker", f"business_note.md 未说明核心业务规则影响维度：{dimension}")
+        impact_list_items = count_real_list_items(impact_text)
+        impact_subblocks = len(re.findall(r"^\*\*.+?\*\*\s*$", impact_text, re.MULTILINE))
+        if impact_subblocks < 2 and impact_list_items < 3:
+            add_issue(issues, "blocker", "business_note.md 的“## 2. 核心业务规则影响”内容明显不足，尚未形成可承接的轻量业务判断")
         if "体验可承接" not in note_text and not _section_text(note_text, "## 3. 体验可承接内容"):
             add_issue(issues, "blocker", "business_note.md 缺少 experience 可承接内容")
 
