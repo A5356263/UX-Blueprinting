@@ -6,76 +6,52 @@
     "summary_refs": {
       "business": [
         "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-        "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-        "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
         "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-        "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
         "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-        "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md"
+        "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md"
       ],
       "guideline": [
+        "knowledge/wiki/summaries/设计准则/流程模式.md",
         "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "knowledge/wiki/summaries/设计准则/信息架构.md"
+        "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+        "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md"
       ],
       "complexity": [
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
         ".claude/skills/uxb/references/complexity/01_domain_router.md",
-        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+        ".claude/skills/uxb/references/complexity/domains/collaboration.md"
       ]
     },
     "raw_escalation_plan": [
       {
-        "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
-        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-        "why_summary_not_enough": "business 需要确认来源枚举、source_of_truth、来源叠加关系和新增 SELF_SERVICE_APPLICATION 的正式约束，summary 只能支撑路由与初判。",
+        "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+        "why_summary_not_enough": "summary已覆盖治理触发点和状态模型框架，但自助申请模式的状态设计需要精确的互斥规则原文、状态流转定义和责任人交接关系，summary层面的概括不足以支撑正式business阶段的规则判断",
         "used_for_stage": [
-          "business",
-          "experience"
+          "facts",
+          "business"
         ],
         "decision_points": [
-          "判断员工自助申请是否需要成为新的权限来源",
-          "判断该来源与 ACL_DIRECT、RBAC_ROLE 的关系",
-          "判断体验层是否需要向用户解释来源差异"
+          "确认双管理员模式与子管理员模式的精确互斥规则表述",
+          "确认状态流转中每个状态的who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state",
+          "确认治理状态影响生效但不改变授予事实来源这一规则如何适用于自助申请场景"
         ]
       },
       {
-        "raw_ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
-        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-        "why_summary_not_enough": "business 需要精确确认哪些规则边界不能放开，以及自助申请与既有权限规则的约束关系。",
+        "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+        "why_summary_not_enough": "summary已覆盖来源枚举框架，但自助申请作为新来源类型，需要确认来源模型的精确优先级规则和叠加关系，summary层面的概括不足以支撑business阶段的来源体系扩展判断",
         "used_for_stage": [
           "business"
         ],
         "decision_points": [
-          "判断自助申请需要遵守或新增的规则边界",
-          "判断哪些场景必须阻断、审批或保护"
-        ]
-      },
-      {
-        "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-        "why_summary_not_enough": "business 和 experience 都需要确认治理状态、生效时点、关闭能力及在途申请处理的完整状态规则。",
-        "used_for_stage": [
-          "business",
-          "experience"
-        ],
-        "decision_points": [
-          "判断申请状态流转与治理状态的关系",
-          "判断关闭能力时的存量保护和在途处理策略",
-          "判断体验层需要暴露哪些中间状态和反馈"
-        ]
-      },
-      {
-        "raw_ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "routed_by_summary": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "why_summary_not_enough": "experience 需要更细地确认权限不足、审批异常、处理中和状态阻断的反馈位置、反馈形式和用户下一步。",
-        "used_for_stage": [
-          "experience"
-        ],
-        "decision_points": [
-          "判断权限不足与审批异常的反馈形式",
-          "判断处理中、已失效等状态阻断的用户可见文案",
-          "判断高风险阻断是否需要弹窗或其他保护动作"
+          "确认当前权限来源的完整枚举和优先级排序",
+          "确定自助申请作为新来源类型在来源体系中的插入位置",
+          "确认自助申请获得的权限与直授、角色继承等来源的叠加和覆盖规则"
         ]
       }
     ],
@@ -84,84 +60,82 @@
         "summary_refs": [
           ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
           ".claude/skills/uxb/references/complexity/01_domain_router.md",
-          ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+          ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+          ".claude/skills/uxb/references/complexity/domains/collaboration.md"
         ],
-        "raw_refs": []
+        "raw_refs": [
+          "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+        ]
       },
       "business": {
         "summary_refs": [
           "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-          "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-          "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-          "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+          "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+          "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+          "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
           "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-          "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
           "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-          "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+          "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
           ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
           ".claude/skills/uxb/references/complexity/01_domain_router.md",
-          ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+          ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+          ".claude/skills/uxb/references/complexity/domains/collaboration.md"
         ],
         "raw_refs": [
-          "knowledge/raw/业务/权限管理/21_来源模型.md",
-          "knowledge/raw/业务/权限管理/23_规则契约.md",
-          "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+          "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+          "knowledge/raw/业务/权限管理/21_来源模型.md"
         ]
       },
       "experience": {
         "summary_refs": [
+          "knowledge/wiki/summaries/设计准则/流程模式.md",
           "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-          "knowledge/wiki/summaries/设计准则/信息架构.md"
+          "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+          "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md"
         ],
-        "raw_refs": [
-          "knowledge/raw/业务/权限管理/21_来源模型.md",
-          "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-          "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
-        ]
+        "raw_refs": []
       }
     }
   },
   "assembled_refs": [
     "templates/facts.template.md",
-    "templates/business_blueprint.template.md",
+    "templates/business_blueprint_lite.template.md",
     "templates/experience_blueprint.template.md",
     "templates/gap_list.template.md",
     "templates/check_report.template.md",
     "specs/06_check_contract.md",
     "specs/08_fact_extraction_contract.md",
-    "specs/09_business_blueprint_contract.md",
+    "specs/17_business_blueprint_lite_contract.md",
     "specs/10_experience_blueprint_contract.md",
     ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
     ".claude/skills/uxb/references/complexity/01_domain_router.md",
     ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+    ".claude/skills/uxb/references/complexity/domains/collaboration.md",
     "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-    "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-    "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-    "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+    "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+    "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+    "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
     "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-    "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
     "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-    "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+    "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+    "knowledge/wiki/summaries/设计准则/流程模式.md",
     "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-    "knowledge/wiki/summaries/设计准则/信息架构.md",
-    "knowledge/raw/业务/权限管理/21_来源模型.md",
-    "knowledge/raw/业务/权限管理/21_来源模型.md",
-    "knowledge/raw/业务/权限管理/23_规则契约.md",
+    "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+    "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md",
     "knowledge/raw/业务/权限管理/24_治理状态模型.md",
     "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-    "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    "knowledge/raw/业务/权限管理/21_来源模型.md"
   ],
   "missing_refs": [],
-  "reference_count": 28,
+  "reference_count": 27,
   "task_contract": {
     "task_goal": [
-      "用一句话说明本次任务要解决什么问题",
-      "说明本次输出主要服务于哪类评审、设计或重构工作"
+      "为\"员工自助申请权限\"功能输出轻量业务蓝图和体验方案，解决当前权限由管理员集中分配带来的效率问题和沟通成本",
+      "本次输出主要服务于产品方案评审和体验设计对齐"
     ],
     "task_scenario": [
-      "描述本次任务场景",
-      "说明这是新建、补充、校对、重构还是审查任务",
-      "说明本次任务主要落在 facts / business / experience 的哪一层，或覆盖全链路"
+      "这是新建任务，基于已有需求文档（低完整度+高完整度两份）输出正式业务判断和体验策略",
+      "本次任务覆盖 facts / business / experience 全链路，business 阶段采用 lite 深度"
     ],
     "execution_constraints": [
       "不得臆造业务事实",
@@ -178,21 +152,22 @@
       "先读本文档",
       "再读 `Required Inputs`",
       "生成 facts.md",
-      "生成 business 产物",
+      "生成 business_blueprint_lite.md",
       "生成 experience_blueprint.md",
-      "运行 validate / coverage / archive / preview"
+      "生成 gap_list.md",
+      "运行 check / archive / preview"
     ],
     "notes": [
-      "UXB 应在执行前写好 `projects/self-service-permission/runtime/uxb_route_decision.json`",
-      "如任务只做到某一阶段，可在 `Task Scenario` 和 `Required Outputs` 中明确裁剪"
+      "UXB 已生成 `projects/self-service-permission/runtime/uxb_route_decision.json`，执行模式为 standard",
+      "需求文档中有两份参考：低完整度（业务框架）和高完整度（详细交互规格），事实提取以低完整度为主、高完整度补充细节",
+      "UXB 已自行分析三个关键设计判断：模式互斥关系、数据权限范围选择、关闭后权限处理"
     ],
     "required_inputs": [
-      "projects/self-service-permission/source/requirement.md",
-      "projects/self-service-permission/source/background.md"
+      "projects/self-service-permission/source/requirement.md"
     ],
     "required_outputs": [
       "projects/self-service-permission/workspace/facts.md",
-      "projects/self-service-permission/workspace/business_blueprint.md",
+      "projects/self-service-permission/workspace/business_blueprint_lite.md",
       "projects/self-service-permission/workspace/experience_blueprint.md",
       "projects/self-service-permission/workspace/gap_list.md",
       "projects/self-service-permission/workspace/check_report.md",
@@ -222,7 +197,7 @@
       "copied": true
     },
     {
-      "reference": "templates/business_blueprint.template.md",
+      "reference": "templates/business_blueprint_lite.template.md",
       "group": "template_refs",
       "consumed_by": [
         "facts",
@@ -235,9 +210,9 @@
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "templates/business_blueprint.template.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/templates/business_blueprint.template.md",
-      "requested_reference": "templates/business_blueprint.template.md",
+      "source": "templates/business_blueprint_lite.template.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/templates/business_blueprint_lite.template.md",
+      "requested_reference": "templates/business_blueprint_lite.template.md",
       "exists": true,
       "copied": true
     },
@@ -340,7 +315,7 @@
       "copied": true
     },
     {
-      "reference": "specs/09_business_blueprint_contract.md",
+      "reference": "specs/17_business_blueprint_lite_contract.md",
       "group": "check_refs",
       "consumed_by": [
         "gate",
@@ -352,9 +327,9 @@
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "specs/09_business_blueprint_contract.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/specs/09_business_blueprint_contract.md",
-      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "source": "specs/17_business_blueprint_lite_contract.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/specs/17_business_blueprint_lite_contract.md",
+      "requested_reference": "specs/17_business_blueprint_lite_contract.md",
       "exists": true,
       "copied": true
     },
@@ -385,7 +360,7 @@
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "通用复杂度判断标准，支撑本次需求类型和执行深度判断。",
+      "selection_reason": "通用复杂度判断标准，提供底层业务改动六问和体验设计压力五问的判断框架",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -404,7 +379,7 @@
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "领域识别规则，支撑前期定位管理后台与权限相关领域。",
+      "selection_reason": "领域识别信号和高误判边界类型，辅助确认需求跨管理后台和协同办公两个领域",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -423,7 +398,7 @@
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "管理后台领域复杂度触发点，支撑确认本次需要完整业务与体验蓝图。",
+      "selection_reason": "管理后台领域的复杂度触发点（改角色与数据权限边界、改配置生效机制），与当前需求直接相关",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -435,13 +410,32 @@
       "copied": true
     },
     {
+      "reference": ".claude/skills/uxb/references/complexity/domains/collaboration.md",
+      "group": "summary_refs.complexity",
+      "consumed_by": [
+        "facts",
+        "business"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "协同办公领域的复杂度触发点（审批流程接入），与当前需求的审批链路对接相关",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/domains/collaboration.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/complexity/domains/collaboration.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/domains/collaboration.md",
+      "exists": true,
+      "copied": true
+    },
+    {
       "reference": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认权限域整体范围、边界、能力域划分，支撑前期判断权限体系现有结构和定位。",
+      "selection_reason": "定位权限管理域的完整边界、上下游依赖和核心能力，为业务判断提供领域全景上下文",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -453,56 +447,56 @@
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认现有权限配置任务场景，支撑 business 判断自助申请链路与现有任务路径的关系。",
+      "selection_reason": "确认权限判断链中的七类基础对象定义，评估自助申请模式是否需要新增对象或仅复用现有对象结构",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/11_任务场景.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "source": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+      "reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认现有权限页面结构和交互语义，支撑 experience 判断员工端和管理端页面的表达方向。",
+      "selection_reason": "确认前置/覆盖/叠加/边界四层关系，判断自助申请生成的权限结果如何与现有直授、角色继承叠加解释",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/15_页面载体语义.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+      "source": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+      "reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "确认权限判定层级，支撑 business 判断自助申请在权限体系中的定位和影响层级。",
+      "selection_reason": "对照现有权限管理完整能力清单，确认自助申请能力在能力地图中的位置和与邻近能力的关系",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/20_决策链契约.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+      "source": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
       "exists": true,
       "copied": true
     },
@@ -513,7 +507,7 @@
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "用于判断需求是否涉及新增权限来源、来源解释和 source_of_truth。",
+      "selection_reason": "确认权限来源枚举和优先级规则，判断自助申请作为新来源类型的嵌入位置",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -525,31 +519,13 @@
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-      "group": "summary_refs.business",
-      "consumed_by": [
-        "business"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "用于判断自助申请需要遵循或新增的规则边界。",
-      "routed_by_summary": "",
-      "why_summary_not_enough": "",
-      "decision_points": [],
-      "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/23_规则契约.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-      "exists": true,
-      "copied": true
-    },
-    {
       "reference": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "用于判断治理状态、生效时点和关闭能力的关键状态承接。",
+      "selection_reason": "确认治理触发点、状态模型和模式互斥约束，直接支撑自助申请模式的状态设计和互斥规则判断",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -561,20 +537,38 @@
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+      "reference": "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
       "group": "summary_refs.business",
       "consumed_by": [
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "用于确认权限域体验表达要求，保证 experience 口径不偏离领域约束。",
+      "selection_reason": "理解审批域的边界和能力，确认自助申请的审批流程是复用现有审批引擎还是需要新增审批模板类型",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/权限管理/31_体验翻译需求.md",
-      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+      "source": "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/business/审批管理/00_领域概述.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "group": "summary_refs.guideline",
+      "consumed_by": [
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "多步骤配置流程和申请→审批→生效的端到端流程设计，需要流程模式指导",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/guideline/流程模式.md",
+      "requested_reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
       "exists": true,
       "copied": true
     },
@@ -585,7 +579,7 @@
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "用于判断任务是否涉及异常反馈、状态阻断与用户下一步说明。",
+      "selection_reason": "模式互斥阻断、在途流程冲突、校验失败等异常分支较多，需要反馈与报错设计指南支撑异常体验设计",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
@@ -597,85 +591,60 @@
       "copied": true
     },
     {
-      "reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "reference": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
       "group": "summary_refs.guideline",
       "consumed_by": [
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "用于判断员工端和管理端入口在导航与信息架构中的落点。",
+      "selection_reason": "权限域特有的体验风险模式，帮助识别自助申请场景中可能出现的权限混淆、来源不清等体验风险",
       "routed_by_summary": "",
       "why_summary_not_enough": "",
       "decision_points": [],
       "type": "file",
-      "source": "knowledge/wiki/summaries/设计准则/信息架构.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/summaries/guideline/信息架构.md",
-      "requested_reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "source": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "business"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑来源模型、新增来源及来源解释的精确判断。",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "why_summary_not_enough": "business 需要确认来源枚举、source_of_truth、来源叠加关系和新增 SELF_SERVICE_APPLICATION 的正式约束，summary 只能支撑路由与初判。",
-      "decision_points": [
-        "判断员工自助申请是否需要成为新的权限来源",
-        "判断该来源与 ACL_DIRECT、RBAC_ROLE 的关系",
-        "判断体验层是否需要向用户解释来源差异"
-      ],
-      "type": "file",
-      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/raw/business/业务/权限管理/21_来源模型.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "group": "raw_refs",
+      "reference": "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md",
+      "group": "summary_refs.guideline",
       "consumed_by": [
         "experience"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑来源模型、新增来源及来源解释的精确判断。",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "why_summary_not_enough": "business 需要确认来源枚举、source_of_truth、来源叠加关系和新增 SELF_SERVICE_APPLICATION 的正式约束，summary 只能支撑路由与初判。",
-      "decision_points": [
-        "判断员工自助申请是否需要成为新的权限来源",
-        "判断该来源与 ACL_DIRECT、RBAC_ROLE 的关系",
-        "判断体验层是否需要向用户解释来源差异"
-      ],
+      "selection_reason": "模式互斥提示、申请范围说明、状态解释等需要符合权限域既有文案策略，保持一致性",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
       "type": "file",
-      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/raw/experience/业务/权限管理/21_来源模型.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "source": "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md",
       "exists": true,
       "copied": true
     },
     {
-      "reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "group": "raw_refs",
       "consumed_by": [
-        "business"
+        "facts"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑规则边界、阻断条件和保护策略判断。",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-      "why_summary_not_enough": "business 需要精确确认哪些规则边界不能放开，以及自助申请与既有权限规则的约束关系。",
+      "selection_reason": "确认治理状态模型中的精确互斥规则和状态流转定义，直接支撑自助申请模式的状态设计和互斥规则判断",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "why_summary_not_enough": "summary已覆盖治理触发点和状态模型框架，但自助申请模式的状态设计需要精确的互斥规则原文、状态流转定义和责任人交接关系，summary层面的概括不足以支撑正式business阶段的规则判断",
       "decision_points": [
-        "判断自助申请需要遵守或新增的规则边界",
-        "判断哪些场景必须阻断、审批或保护"
+        "确认双管理员模式与子管理员模式的精确互斥规则表述",
+        "确认状态流转中每个状态的who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state",
+        "确认治理状态影响生效但不改变授予事实来源这一规则如何适用于自助申请场景"
       ],
       "type": "file",
-      "source": "knowledge/raw/业务/权限管理/23_规则契约.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/raw/business/业务/权限管理/23_规则契约.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/raw/facts/业务/权限管理/24_治理状态模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
       "exists": true,
       "copied": true
     },
@@ -686,13 +655,13 @@
         "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑治理状态、生效时点、关闭策略和中间状态承接。",
+      "selection_reason": "确认治理状态模型中的精确互斥规则和状态流转定义，直接支撑自助申请模式的状态设计和互斥规则判断",
       "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "why_summary_not_enough": "business 和 experience 都需要确认治理状态、生效时点、关闭能力及在途申请处理的完整状态规则。",
+      "why_summary_not_enough": "summary已覆盖治理触发点和状态模型框架，但自助申请模式的状态设计需要精确的互斥规则原文、状态流转定义和责任人交接关系，summary层面的概括不足以支撑正式business阶段的规则判断",
       "decision_points": [
-        "判断申请状态流转与治理状态的关系",
-        "判断关闭能力时的存量保护和在途处理策略",
-        "判断体验层需要暴露哪些中间状态和反馈"
+        "确认双管理员模式与子管理员模式的精确互斥规则表述",
+        "确认状态流转中每个状态的who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state",
+        "确认治理状态影响生效但不改变授予事实来源这一规则如何适用于自助申请场景"
       ],
       "type": "file",
       "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
@@ -702,46 +671,24 @@
       "copied": true
     },
     {
-      "reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
       "group": "raw_refs",
       "consumed_by": [
-        "experience"
+        "business"
       ],
       "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑治理状态、生效时点、关闭策略和中间状态承接。",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "why_summary_not_enough": "business 和 experience 都需要确认治理状态、生效时点、关闭能力及在途申请处理的完整状态规则。",
+      "selection_reason": "确认权限来源的完整枚举和优先级规则，确定自助申请作为新来源类型的嵌入位置和叠加规则",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "why_summary_not_enough": "summary已覆盖来源枚举框架，但自助申请作为新来源类型，需要确认来源模型的精确优先级规则和叠加关系，summary层面的概括不足以支撑business阶段的来源体系扩展判断",
       "decision_points": [
-        "判断申请状态流转与治理状态的关系",
-        "判断关闭能力时的存量保护和在途处理策略",
-        "判断体验层需要暴露哪些中间状态和反馈"
+        "确认当前权限来源的完整枚举和优先级排序",
+        "确定自助申请作为新来源类型在来源体系中的插入位置",
+        "确认自助申请获得的权限与直授、角色继承等来源的叠加和覆盖规则"
       ],
       "type": "file",
-      "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/raw/experience/业务/权限管理/24_治理状态模型.md",
-      "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "exists": true,
-      "copied": true
-    },
-    {
-      "reference": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "group": "raw_refs",
-      "consumed_by": [
-        "experience"
-      ],
-      "selected_by": "uxb_ai",
-      "selection_reason": "正式支撑异常反馈位置、反馈形式和用户下一步的细节判断。",
-      "routed_by_summary": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "why_summary_not_enough": "experience 需要更细地确认权限不足、审批异常、处理中和状态阻断的反馈位置、反馈形式和用户下一步。",
-      "decision_points": [
-        "判断权限不足与审批异常的反馈形式",
-        "判断处理中、已失效等状态阻断的用户可见文案",
-        "判断高风险阻断是否需要弹窗或其他保护动作"
-      ],
-      "type": "file",
-      "source": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "destination": "projects/self-service-permission/runtime/context_bundle/raw/experience/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "requested_reference": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "destination": "projects/self-service-permission/runtime/context_bundle/raw/business/业务/权限管理/21_来源模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
       "exists": true,
       "copied": true
     }
@@ -751,9 +698,9 @@
   "reference_summary": {
     "template_ref_count": 5,
     "check_ref_count": 4,
-    "summary_ref_count": 13,
-    "raw_ref_count": 6,
-    "assembled_ref_count": 28
+    "summary_ref_count": 15,
+    "raw_ref_count": 3,
+    "assembled_ref_count": 27
   },
   "stage_boundaries": {
     "facts": [],

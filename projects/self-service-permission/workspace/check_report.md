@@ -9,17 +9,15 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 4
-- info_count: 1
+- warning_count: 2
+- info_count: 2
 
 ## Output Status
 
 - projects/self-service-permission/workspace/facts.md: present
-- projects/self-service-permission/workspace/business_blueprint.md: present
+- projects/self-service-permission/workspace/business_note.md: missing
+- projects/self-service-permission/workspace/business_blueprint_lite.md: present
 - projects/self-service-permission/workspace/experience_blueprint.md: present
-- projects/self-service-permission/workspace/gap_list.md: present
-- projects/self-service-permission/workspace/check_report.md: present
-- projects/self-service-permission/workspace/check_status.json: present
 
 ## Blockers
 
@@ -27,18 +25,17 @@
 
 ## Warnings
 
-- business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。
-- experience_blueprint.md 主交互流程缺少可对应的节点详情标题
-- business gate 状态为 warning
-- experience gate 状态为 warning
+- coverage-lite: experience 未明显承接轻量业务产物中的维度：边界
+- experience_lite gate 状态为 warning
 
 ## Infos
 
-- facts gate 状态：passed
+- business_lite gate 状态：passed
+- 轻量承接检查：covered_signals=5 missing_signals=1
 
 ## 自然语言承接检查
 
-- not_run
+- covered_signals=5 missing_signals=1
 
 ## Machine Status
 

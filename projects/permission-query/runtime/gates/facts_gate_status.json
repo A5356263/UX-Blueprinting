@@ -1,0 +1,99 @@
+{
+  "project_id": "permission-query",
+  "stage": "facts",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "business",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-05-31T06:47:55.292725+00:00",
+  "checked_files": [
+    "projects/permission-query/source/task_card.md",
+    "projects/permission-query/source/requirement.md",
+    "projects/permission-query/source/background.md",
+    "projects/permission-query/runtime/context_manifest.json",
+    "projects/permission-query/runtime/provenance.json",
+    "projects/permission-query/workspace/facts.md"
+  ],
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "facts.md 输入来源引用不完整"
+    ],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "facts_gate",
+      "stage": "facts",
+      "severity": "warning",
+      "category": "depth_insufficient",
+      "message": "facts.md 输入来源引用不完整",
+      "target_artifacts": [
+        "projects/permission-query/workspace/facts.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-query/source/task_card.md",
+        "projects/permission-query/source/requirement.md",
+        "projects/permission-query/source/background.md",
+        "projects/permission-query/runtime/context_manifest.json",
+        "projects/permission-query/runtime/provenance.json",
+        "projects/permission-query/workspace/facts.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts.md 输入来源引用不完整"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-query/source/task_card.md",
+            "projects/permission-query/source/requirement.md",
+            "projects/permission-query/source/background.md",
+            "projects/permission-query/runtime/context_manifest.json",
+            "projects/permission-query/runtime/provenance.json",
+            "projects/permission-query/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "dimension_coverage": {
+              "overview": 1,
+              "features": 1,
+              "rules": 1,
+              "states": 1,
+              "exceptions": 1,
+              "dependencies": 1,
+              "gaps": 1
+            },
+            "gap_count": 8,
+            "knowledge_derived_fact_count": 0
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "dimension_coverage": {
+      "overview": 1,
+      "features": 1,
+      "rules": 1,
+      "states": 1,
+      "exceptions": 1,
+      "dependencies": 1,
+      "gaps": 1
+    },
+    "gap_count": 8,
+    "knowledge_derived_fact_count": 0
+  }
+}

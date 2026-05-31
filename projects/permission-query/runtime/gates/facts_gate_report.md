@@ -1,0 +1,35 @@
+# Stage Gate Report
+
+## Summary
+
+- status: warning
+- has_blocker: false
+- blocker_count: 0
+- warning_count: 1
+- info_count: 0
+
+- project_id: permission-query
+- stage: facts
+- next_stage: business
+- can_proceed: true
+
+## Checked Files
+
+- projects/permission-query/source/task_card.md
+- projects/permission-query/source/requirement.md
+- projects/permission-query/source/background.md
+- projects/permission-query/runtime/context_manifest.json
+- projects/permission-query/runtime/provenance.json
+- projects/permission-query/workspace/facts.md
+
+## Blockers
+
+- none
+
+## Warnings
+
+- facts.md 输入来源引用不完整
+
+## Infos
+
+- none

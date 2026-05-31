@@ -1,10 +1,10 @@
 {
   "project_id": "self-service-permission",
-  "status": "failed",
-  "generated_at": "2026-05-29T14:03:34+00:00",
+  "status": "passed",
+  "generated_at": "2026-05-31T02:10:01+00:00",
   "requested_route": "auto",
-  "execution_mode": "full",
-  "stopped_at": "archive",
+  "execution_mode": "standard",
+  "stopped_at": "",
   "steps": [
     {
       "command": "route-decision",
@@ -23,11 +23,11 @@
       "exit_code": 0
     },
     {
-      "command": "generate-business",
+      "command": "generate-business-lite",
       "exit_code": 0
     },
     {
-      "command": "gate-business",
+      "command": "gate-business-lite",
       "exit_code": 0
     },
     {
@@ -35,25 +35,25 @@
       "exit_code": 0
     },
     {
-      "command": "gate-experience",
+      "command": "gate-experience-lite",
       "exit_code": 0
     },
     {
-      "command": "validate",
+      "command": "validate-lite",
       "exit_code": 0
     },
     {
-      "command": "coverage",
+      "command": "coverage-lite",
       "exit_code": 0
     },
     {
-      "command": "archive",
-      "exit_code": 1
+      "command": "preview",
+      "exit_code": 0
     }
   ],
   "actual_outputs": [
     "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/workspace/facts.md",
-    "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/workspace/business_blueprint.md",
+    "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/workspace/business_blueprint_lite.md",
     "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/workspace/experience_blueprint.md",
     "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/workspace/check_status.json",
     "E:/AI设计/体验蓝图构建思路/projects/self-service-permission/runtime/routed_main_plan.json",

@@ -1,16 +1,16 @@
 {
   "project_id": "self-service-permission",
-  "generated_at": "2026-05-29T14:07:58+00:00",
+  "generated_at": "2026-05-31T02:10:01+00:00",
   "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\runtime\\preview",
   "output_path": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\runtime\\preview\\index.html",
   "server_host": "127.0.0.1",
   "server_port": 0,
   "preview_url": "",
   "ready_state": "built",
-  "business_section_count": 11,
+  "business_section_count": 7,
   "experience_section_count": 10,
   "flow_count": 0,
   "page_count": 0,
-  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\exports\\final\\business_blueprint.md",
-  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\exports\\final\\experience_blueprint.md"
+  "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\workspace\\business_blueprint_lite.md",
+  "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-service-permission\\workspace\\experience_blueprint.md"
 }

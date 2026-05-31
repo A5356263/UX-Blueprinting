@@ -2,76 +2,52 @@
   "summary_refs": {
     "business": [
       "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-      "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-      "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-      "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
       "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
       "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md"
+      "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md"
     ],
     "guideline": [
+      "knowledge/wiki/summaries/设计准则/流程模式.md",
       "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "knowledge/wiki/summaries/设计准则/信息架构.md"
+      "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md"
     ],
     "complexity": [
       ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
       ".claude/skills/uxb/references/complexity/01_domain_router.md",
-      ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+      ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+      ".claude/skills/uxb/references/complexity/domains/collaboration.md"
     ]
   },
   "raw_escalation_plan": [
     {
-      "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-      "why_summary_not_enough": "business 需要确认来源枚举、source_of_truth、来源叠加关系和新增 SELF_SERVICE_APPLICATION 的正式约束，summary 只能支撑路由与初判。",
+      "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "why_summary_not_enough": "summary已覆盖治理触发点和状态模型框架，但自助申请模式的状态设计需要精确的互斥规则原文、状态流转定义和责任人交接关系，summary层面的概括不足以支撑正式business阶段的规则判断",
       "used_for_stage": [
-        "business",
-        "experience"
+        "facts",
+        "business"
       ],
       "decision_points": [
-        "判断员工自助申请是否需要成为新的权限来源",
-        "判断该来源与 ACL_DIRECT、RBAC_ROLE 的关系",
-        "判断体验层是否需要向用户解释来源差异"
+        "确认双管理员模式与子管理员模式的精确互斥规则表述",
+        "确认状态流转中每个状态的who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state",
+        "确认治理状态影响生效但不改变授予事实来源这一规则如何适用于自助申请场景"
       ]
     },
     {
-      "raw_ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
-      "why_summary_not_enough": "business 需要精确确认哪些规则边界不能放开，以及自助申请与既有权限规则的约束关系。",
+      "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "why_summary_not_enough": "summary已覆盖来源枚举框架，但自助申请作为新来源类型，需要确认来源模型的精确优先级规则和叠加关系，summary层面的概括不足以支撑business阶段的来源体系扩展判断",
       "used_for_stage": [
         "business"
       ],
       "decision_points": [
-        "判断自助申请需要遵守或新增的规则边界",
-        "判断哪些场景必须阻断、审批或保护"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-      "why_summary_not_enough": "business 和 experience 都需要确认治理状态、生效时点、关闭能力及在途申请处理的完整状态规则。",
-      "used_for_stage": [
-        "business",
-        "experience"
-      ],
-      "decision_points": [
-        "判断申请状态流转与治理状态的关系",
-        "判断关闭能力时的存量保护和在途处理策略",
-        "判断体验层需要暴露哪些中间状态和反馈"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "routed_by_summary": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-      "why_summary_not_enough": "experience 需要更细地确认权限不足、审批异常、处理中和状态阻断的反馈位置、反馈形式和用户下一步。",
-      "used_for_stage": [
-        "experience"
-      ],
-      "decision_points": [
-        "判断权限不足与审批异常的反馈形式",
-        "判断处理中、已失效等状态阻断的用户可见文案",
-        "判断高风险阻断是否需要弹窗或其他保护动作"
+        "确认当前权限来源的完整枚举和优先级排序",
+        "确定自助申请作为新来源类型在来源体系中的插入位置",
+        "确认自助申请获得的权限与直授、角色继承等来源的叠加和覆盖规则"
       ]
     }
   ],
@@ -80,40 +56,40 @@
       "summary_refs": [
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
         ".claude/skills/uxb/references/complexity/01_domain_router.md",
-        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+        ".claude/skills/uxb/references/complexity/domains/collaboration.md"
       ],
-      "raw_refs": []
+      "raw_refs": [
+        "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+      ]
     },
     "business": {
       "summary_refs": [
         "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
-        "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
-        "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
         "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
-        "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
         "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-        "knowledge/wiki/summaries/业务/权限管理/31_体验翻译需求.md",
+        "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
         ".claude/skills/uxb/references/complexity/01_domain_router.md",
-        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+        ".claude/skills/uxb/references/complexity/domains/collaboration.md"
       ],
       "raw_refs": [
-        "knowledge/raw/业务/权限管理/21_来源模型.md",
-        "knowledge/raw/业务/权限管理/23_规则契约.md",
-        "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "knowledge/raw/业务/权限管理/21_来源模型.md"
       ]
     },
     "experience": {
       "summary_refs": [
+        "knowledge/wiki/summaries/设计准则/流程模式.md",
         "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
-        "knowledge/wiki/summaries/设计准则/信息架构.md"
+        "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+        "knowledge/wiki/summaries/业务/权限管理/32_文案与解释策略.md"
       ],
-      "raw_refs": [
-        "knowledge/raw/业务/权限管理/21_来源模型.md",
-        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-        "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
-      ]
+      "raw_refs": []
     }
   }
 }

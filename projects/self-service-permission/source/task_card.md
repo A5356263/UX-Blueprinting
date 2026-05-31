@@ -10,24 +10,22 @@
 
 ## Task Goal
 
-- 用一句话说明本次任务要解决什么问题
-- 说明本次输出主要服务于哪类评审、设计或重构工作
+- 为"员工自助申请权限"功能输出轻量业务蓝图和体验方案，解决当前权限由管理员集中分配带来的效率问题和沟通成本
+- 本次输出主要服务于产品方案评审和体验设计对齐
 
 ## Task Scenario
 
-- 描述本次任务场景
-- 说明这是新建、补充、校对、重构还是审查任务
-- 说明本次任务主要落在 facts / business / experience 的哪一层，或覆盖全链路
+- 这是新建任务，基于已有需求文档（低完整度+高完整度两份）输出正式业务判断和体验策略
+- 本次任务覆盖 facts / business / experience 全链路，business 阶段采用 lite 深度
 
 ## Required Inputs
 
 - projects/self-service-permission/source/requirement.md
-- projects/self-service-permission/source/background.md
 
 ## Required Outputs
 
 - projects/self-service-permission/workspace/facts.md
-- projects/self-service-permission/workspace/business_blueprint.md
+- projects/self-service-permission/workspace/business_blueprint_lite.md
 - projects/self-service-permission/workspace/experience_blueprint.md
 - projects/self-service-permission/workspace/gap_list.md
 - projects/self-service-permission/workspace/check_report.md
@@ -38,9 +36,10 @@
 1. 先读本文档
 2. 再读 `Required Inputs`
 3. 生成 facts.md
-4. 生成 business 产物
+4. 生成 business_blueprint_lite.md
 5. 生成 experience_blueprint.md
-6. 运行 validate / coverage / archive / preview
+6. 生成 gap_list.md
+7. 运行 check / archive / preview
 
 ## Constraints
 
@@ -57,7 +56,7 @@
 ## Templates
 
 - templates/facts.template.md
-- templates/business_blueprint.template.md
+- templates/business_blueprint_lite.template.md
 - templates/experience_blueprint.template.md
 - templates/gap_list.template.md
 - templates/check_report.template.md
@@ -66,7 +65,7 @@
 
 - specs/06_check_contract.md
 - specs/08_fact_extraction_contract.md
-- specs/09_business_blueprint_contract.md
+- specs/17_business_blueprint_lite_contract.md
 - specs/10_experience_blueprint_contract.md
 
 ## Result Locations
@@ -86,7 +85,7 @@
 
 ## Business Output Requirements
 
-参考对应业务合同和模板，不在 task card 中重复写内部判断逻辑
+参考 `specs/17_business_blueprint_lite_contract.md` 和 `templates/business_blueprint_lite.template.md`
 
 ## Experience Output Requirements
 
@@ -94,5 +93,6 @@
 
 ## Notes
 
-- UXB 应在执行前写好 `projects/self-service-permission/runtime/uxb_route_decision.json`
-- 如任务只做到某一阶段，可在 `Task Scenario` 和 `Required Outputs` 中明确裁剪
+- UXB 已生成 `projects/self-service-permission/runtime/uxb_route_decision.json`，执行模式为 standard
+- 需求文档中有两份参考：低完整度（业务框架）和高完整度（详细交互规格），事实提取以低完整度为主、高完整度补充细节
+- UXB 已自行分析三个关键设计判断：模式互斥关系、数据权限范围选择、关闭后权限处理
