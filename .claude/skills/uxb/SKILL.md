@@ -30,6 +30,14 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 不把复杂度判断做成关键词命中或硬编码规则
 - 复杂度判断先看底层业务改动，再看体验设计压力
 
+### 上位推理提醒
+
+- 需求描述不是结论，先判断它到底改变了什么，再判断它像什么需求
+- 用户给出的方案、抱怨或目标，不等于问题本质；先分清事实、判断、诉求和假设
+- 不要顺着需求字面直接走 happy path；要主动寻找前提是否成立、是否存在断点、错位、冲突或关键缺口
+- 命中某个业务域或某份 summary，不等于知识已经足够；要继续判断“它支撑了什么、还没支撑什么”
+- 不要为了推进主链路弱化阻断型不确定项；如果关键前提不清，就停在判断而不是假装可执行
+
 ## 用户侧表达
 
 用户侧固定激活引导语、简洁回复结构、启动前判断和禁用术语，统一见：
@@ -93,6 +101,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 先给业务与体验判断
 - 默认停留在咨询，不自动建任务
 - 用户明确要正式产物时，再转正式任务
+- 优先找断点、错位、承接缺失、前提冲突和信息缺口，不急着顺着用户表述给方案
 
 ### 3. 正式蓝图任务态
 
@@ -173,6 +182,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 写清不确定项
 - 判断 `can_execute_mainline`
 - 判断 `execution.required_outputs`
+- 判断 summary 是否真的足够，以及哪些判断点必须升级 raw
 
 ### 判断单阶段不做什么
 
@@ -181,6 +191,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 不通读所有 raw
 - 不把知识原文复制进判断单
 - 不为了保险全量选择资料
+- 不把“像某类需求”直接当成“问题本质已经成立”
 
 ### 判断不准时
 
