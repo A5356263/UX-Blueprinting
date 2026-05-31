@@ -4,7 +4,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from packages.common import get_project_runtime_dir, get_repo_root
+from packages.common import (
+    extract_uxb_complexity_ref_suffix,
+    get_project_runtime_dir,
+    get_repo_root,
+    normalize_repo_ref,
+    repo_ref_to_path,
+)
 
 
 SUPPORTED_UXB_SCHEMA_VERSIONS = {"uxb_route_decision@4.0"}
@@ -33,7 +39,7 @@ def _clean_string_list(value: object) -> list[str]:
     cleaned: list[str] = []
     seen: set[str] = set()
     for item in value:
-        text = str(item).replace("\\", "/").strip()
+        text = normalize_repo_ref(str(item))
         if not text or text in seen:
             continue
         seen.add(text)
@@ -102,7 +108,7 @@ def _infer_execution_mode(required_outputs: list[str]) -> tuple[str, list[str]]:
 
 def _is_allowed_summary_route_ref(ref: str, group: str) -> bool:
     if group == "complexity":
-        return ref.startswith(".claude/skills/uxb/references/complexity/")
+        return extract_uxb_complexity_ref_suffix(ref) is not None
     if ref.startswith("knowledge/wiki/summaries/"):
         return True
     if group == "business" and ref.startswith("knowledge/raw/业务/") and (
@@ -151,7 +157,11 @@ def _normalize_raw_escalation_plan(value: object) -> list[dict[str, Any]]:
 
 
 def _validate_ref_exists(repo_root: Path, ref: str, label: str, errors: list[str]) -> None:
-    ref_path = repo_root / Path(ref.replace("/", "\\"))
+    try:
+        ref_path = repo_root / repo_ref_to_path(ref)
+    except ValueError as exc:
+        errors.append(f"{label} is invalid: {exc}")
+        return
     if not ref_path.exists():
         errors.append(f"{label} does not exist: {ref}")
 

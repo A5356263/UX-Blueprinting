@@ -62,7 +62,7 @@ STAGE_REQUIRED_HEADINGS = {
         "## 5. 待确认问题",
     ],
     "business_blueprint_lite.md": [
-        "## 0. 路线说明",
+        "## 0. 本次关键业务判断",
         "## 1. 一句话结论",
         "## 2. 关键业务规则",
         "## 3. 边界与风险",
@@ -2414,6 +2414,11 @@ def _read_execution_decision(project_id: str) -> dict[str, object]:
     return load_uxb_execution_decision(project_id)
 
 
+def _final_check_execution_mode(project_id: str) -> str:
+    decision = _read_execution_decision(project_id)
+    return str(decision.get("execution_mode") or "").strip()
+
+
 def _add_execution_mode_info(project_id: str, issues: list[tuple[str, str]], expected_modes: set[str]) -> None:
     decision = _read_execution_decision(project_id)
     mode = str(decision.get("execution_mode") or "")
@@ -2765,6 +2770,12 @@ def run_validate_lite(project_id: str) -> int:
     return 0 if status != "failed" else 1
 
 
+def run_validate_for_current_mode(project_id: str) -> int:
+    if _final_check_execution_mode(project_id) in {"fast", "standard"}:
+        return run_validate_lite(project_id)
+    return run_validate_outputs(project_id)
+
+
 def run_coverage_lite(project_id: str) -> int:
     workspace_dir = get_workspace_dir(project_id)
     report_path = workspace_dir / "check_report.md"
@@ -2826,3 +2837,9 @@ def run_coverage_lite(project_id: str) -> int:
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
+
+
+def run_coverage_for_current_mode(project_id: str) -> int:
+    if _final_check_execution_mode(project_id) in {"fast", "standard"}:
+        return run_coverage_lite(project_id)
+    return run_coverage_check(project_id)

@@ -4,15 +4,15 @@
   "type": "final_check",
   "stage": "final",
   "entrypoint": "python -m packages validate <project-id>",
-  "description": "执行最终输出检查，校验正式产物、阶段边界、状态一致性与显性承接问题；只发现问题，不替主 AI 做业务或体验裁决。",
+  "description": "执行最终输出检查，并按当前 execution mode 自动选择 full 或 lite 校验路径；只发现问题，不替主 AI 做业务或体验裁决。",
   "required_inputs": [
     "projects/<project-id>/workspace/facts.md",
-    "projects/<project-id>/workspace/business_blueprint.md",
+    "projects/<project-id>/workspace/business_blueprint.md 或 business_blueprint_lite.md 或 business_note.md",
     "projects/<project-id>/workspace/experience_blueprint.md",
     "projects/<project-id>/runtime/context_manifest.json",
     "projects/<project-id>/runtime/gates/facts_gate_status.json",
-    "projects/<project-id>/runtime/gates/business_gate_status.json",
-    "projects/<project-id>/runtime/gates/experience_gate_status.json"
+    "projects/<project-id>/runtime/gates/business_gate_status.json 或 business_lite_gate_status.json 或 business_note_gate_status.json",
+    "projects/<project-id>/runtime/gates/experience_gate_status.json 或 experience_lite_gate_status.json"
   ],
   "declared_outputs": [
     "projects/<project-id>/workspace/check_report.md",

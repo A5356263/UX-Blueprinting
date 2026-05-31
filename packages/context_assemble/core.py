@@ -6,14 +6,21 @@ import shutil
 import stat
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_repo_root
+from packages.common import (
+    extract_uxb_complexity_ref_suffix,
+    get_project_runtime_dir,
+    get_repo_root,
+    normalize_repo_ref,
+    repo_ref_to_path,
+    to_repo_ref,
+)
 from packages.knowledge_consumption import build_knowledge_consumption_plan
 from packages.provenance import append_command_if_provenance_exists
 from packages.task_card_resolve import resolve_task_card_file
 
 
 def to_repo_relative(repo_root: Path, path: Path) -> str:
-    return str(path.resolve().relative_to(repo_root.resolve())).replace("\\", "/")
+    return to_repo_ref(path, repo_root)
 
 
 def _on_rmtree_error(func, path, exc_info) -> None:
@@ -39,7 +46,7 @@ def _selection_reason_by_ref(selection_plan: dict[str, object]) -> dict[str, str
 
 
 def _bundle_reference_label(reference: str, group: str, consumed_by: list[str]) -> str:
-    normalized = reference.replace("\\", "/").strip()
+    normalized = normalize_repo_ref(reference)
     if group == "template_refs":
         if normalized.startswith("templates/"):
             return f"templates/{normalized[len('templates/'):]}"
@@ -56,8 +63,10 @@ def _bundle_reference_label(reference: str, group: str, consumed_by: list[str]) 
         return f"summaries/guideline/{normalized[len('knowledge/wiki/summaries/设计准则/'):]}"
     if group == "summary_refs.business" and normalized.startswith("knowledge/raw/业务/"):
         return f"summaries/business/route_cards/{normalized[len('knowledge/raw/业务/'):]}"
-    if group == "summary_refs.complexity" and normalized.startswith(".claude/skills/uxb/references/complexity/"):
-        return f"complexity/{normalized[len('.claude/skills/uxb/references/complexity/'):]}"
+    if group == "summary_refs.complexity":
+        complexity_suffix = extract_uxb_complexity_ref_suffix(normalized)
+        if complexity_suffix:
+            return f"complexity/{complexity_suffix}"
     if group == "raw_refs" and normalized.startswith("knowledge/raw/"):
         stage = consumed_by[0] if consumed_by else "shared"
         return f"raw/{stage}/{normalized[len('knowledge/raw/'):]}"
@@ -65,7 +74,7 @@ def _bundle_reference_label(reference: str, group: str, consumed_by: list[str]) 
 
 
 def copy_path(repo_root: Path, target_root: Path, source_path: Path, reference_label: str) -> dict[str, str]:
-    destination = target_root / Path(reference_label.replace("/", "\\"))
+    destination = target_root / repo_ref_to_path(reference_label)
     destination.parent.mkdir(parents=True, exist_ok=True)
 
     if source_path.is_dir():
@@ -84,15 +93,22 @@ def copy_path(repo_root: Path, target_root: Path, source_path: Path, reference_l
 
 
 def resolve_reference_for_copy(repo_root: Path, reference: str) -> str:
-    normalized_ref = reference.replace("\\", "/").strip()
-    source = repo_root / Path(normalized_ref.replace("/", "\\"))
+    normalized_ref = normalize_repo_ref(reference)
     if not normalized_ref:
         raise ValueError("Reference cannot be empty")
+    source = repo_root / repo_ref_to_path(normalized_ref)
     if not source.exists():
         raise FileNotFoundError(f"Reference not found: {normalized_ref}")
-    if "*" in normalized_ref or "?" in normalized_ref:
-        raise ValueError(f"Wildcard reference cannot be copied directly: {normalized_ref}")
     return normalized_ref
+
+
+def safe_rmtree(path: Path) -> None:
+    if not path.exists():
+        return
+    try:
+        shutil.rmtree(path, onexc=_on_rmtree_error)
+    except TypeError:
+        shutil.rmtree(path, onerror=_on_rmtree_error)
 
 
 def _knowledge_reference_items(selection_plan: dict[str, object]) -> list[dict[str, object]]:
@@ -189,7 +205,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     runtime_dir = get_project_runtime_dir(task_id)
     context_bundle_dir = runtime_dir / "context_bundle"
     if context_bundle_dir.exists():
-        shutil.rmtree(context_bundle_dir, onexc=_on_rmtree_error)
+        safe_rmtree(context_bundle_dir)
     context_bundle_dir.mkdir(parents=True, exist_ok=True)
 
     resolved, task_card_path = resolve_task_card_file(task_id)
@@ -235,7 +251,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         for item in reference_items:
             reference = str(item["reference"])
             resolved_reference = resolve_reference_for_copy(repo_root, reference)
-            source_path = repo_root / Path(resolved_reference.replace("/", "\\"))
+            source_path = repo_root / repo_ref_to_path(resolved_reference)
             copied_item = dict(item)
             bundle_reference = _bundle_reference_label(reference, str(item.get("group", "")), list(item.get("consumed_by", [])))
             copied_item.update(copy_path(repo_root, context_bundle_dir, source_path, bundle_reference))

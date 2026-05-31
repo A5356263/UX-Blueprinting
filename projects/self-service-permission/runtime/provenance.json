@@ -20,6 +20,7 @@
     "gate-experience-lite",
     "validate-lite",
     "coverage-lite",
-    "preview"
+    "preview",
+    "validate"
   ]
 }

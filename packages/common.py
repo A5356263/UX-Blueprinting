@@ -5,6 +5,9 @@ import os
 from pathlib import Path
 
 
+UXB_COMPLEXITY_REF_MARKER = "skills/uxb/references/complexity/"
+
+
 def _env_path(env_var: str, default: Path) -> Path:
     value = os.environ.get(env_var)
     return Path(value).resolve() if value else default
@@ -108,6 +111,31 @@ def write_project_meta(project_id: str, payload: dict[str, object]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
+
+
+def normalize_repo_ref(ref: str) -> str:
+    return str(ref or "").replace("\\", "/").strip().lstrip("/")
+
+
+def repo_ref_to_path(ref: str) -> Path:
+    normalized = normalize_repo_ref(ref)
+    if not normalized:
+        raise ValueError("Repository reference cannot be empty")
+    if "*" in normalized or "?" in normalized:
+        raise ValueError(f"Wildcard reference cannot be copied directly: {normalized}")
+    return Path(*normalized.split("/"))
+
+
+def to_repo_ref(path: Path, repo_root: Path) -> str:
+    return path.resolve().relative_to(repo_root.resolve()).as_posix()
+
+
+def extract_uxb_complexity_ref_suffix(ref: str) -> str | None:
+    normalized = normalize_repo_ref(ref)
+    marker_index = normalized.find(UXB_COMPLEXITY_REF_MARKER)
+    if marker_index == -1:
+        return None
+    return normalized[marker_index + len(UXB_COMPLEXITY_REF_MARKER) :]
 
 
 def list_project_ids(include_excluded: bool = False) -> list[str]:

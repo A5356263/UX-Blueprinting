@@ -6,9 +6,9 @@
 
 ## Summary
 
-- status: warning
-- has_blocker: false
-- blocker_count: 0
+- status: failed
+- has_blocker: true
+- blocker_count: 1
 - warning_count: 2
 - info_count: 2
 
@@ -21,7 +21,7 @@
 
 ## Blockers
 
-- none
+- business_blueprint_lite.md 缺少栏目：## 0. 本次关键业务判断
 
 ## Warnings
 

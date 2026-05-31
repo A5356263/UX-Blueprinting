@@ -2,7 +2,7 @@
 
 ## 目标
 
-基于 `facts.md`、`business_blueprint.md` 与 UXB 已确认判断，生成可评审的 `experience_blueprint.md`。
+基于 `facts.md`、当前执行深度对应的 business 产物与 UXB 已确认判断，生成可评审的 `experience_blueprint.md`。
 
 ## 阶段定位
 
@@ -35,6 +35,8 @@ experience 阶段必须承接 business 阶段已经形成的业务判断，并�
 
 - `projects/<project-id>/workspace/facts.md`
 - `projects/<project-id>/workspace/business_blueprint.md`
+- `projects/<project-id>/workspace/business_blueprint_lite.md`
+- `projects/<project-id>/workspace/business_note.md`
 - `projects/<project-id>/runtime/uxb_route_decision.json`
 - 已登记到 `knowledge_trace` 且被装配进 `runtime/context_bundle/` 的 experience summary / experience raw，以及必要 business raw
 
@@ -89,7 +91,7 @@ experience 阶段必须承接 business 阶段已经形成的业务判断，并�
 
 ## 生成前自检
 
-在输出 `experience_blueprint.md` 之前，应先回看当前任务的 `business_blueprint.md`，做一次轻量自检：
+在输出 `experience_blueprint.md` 之前，应先回看当前任务实际使用的 business 产物，做一次轻量自检：
 
 - business 明确点名的角色，experience 中是否都有对应的路径、页面或职责落点
 - business 明确要求闭环的流程，experience 中是否都能找到清晰的流程、反馈或结果去向

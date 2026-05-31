@@ -146,13 +146,13 @@ def main() -> int:
 
         return run_route_decision(args.project_id)
     if args.command == "validate":
-        from packages.validate import run_validate_outputs
+        from packages.validate import run_validate_for_current_mode
 
-        return run_validate_outputs(args.project_id)
+        return run_validate_for_current_mode(args.project_id)
     if args.command == "coverage":
-        from packages.validate import run_coverage_check
+        from packages.validate import run_coverage_for_current_mode
 
-        return run_coverage_check(args.project_id)
+        return run_coverage_for_current_mode(args.project_id)
     if args.command == "gate-facts":
         from packages.validate import run_facts_gate
 

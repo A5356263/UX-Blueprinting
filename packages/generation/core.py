@@ -26,6 +26,14 @@ def _read_source_file(project_id: str, file_name: str) -> str:
     return source_path.read_text(encoding="utf-8")
 
 
+def _read_business_workspace_context(project_id: str) -> tuple[str, str]:
+    for file_name in ("business_blueprint.md", "business_blueprint_lite.md", "business_note.md"):
+        content = _read_workspace_file(project_id, file_name)
+        if content:
+            return file_name, content
+    return "business_blueprint.md", ""
+
+
 def _extract_bullets(text: str, limit: int = 10) -> list[str]:
     bullets: list[str] = []
     for line in text.splitlines():
@@ -189,7 +197,7 @@ def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list
 def _build_experience_prompt_preview(project_id: str) -> str:
     task_card_text = _read_source_file(project_id, "task_card.md")
     facts_text = _read_workspace_file(project_id, "facts.md")
-    business_text = _read_workspace_file(project_id, "business_blueprint.md")
+    business_file_name, business_text = _read_business_workspace_context(project_id)
     gap_text = _read_workspace_file(project_id, "gap_list.md")
     contract_path = get_specs_root_dir() / "10_experience_blueprint_contract.md"
     template_path = get_templates_root_dir() / "experience_blueprint.template.md"
@@ -203,6 +211,12 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         "## 7. 主要风险与保护策略",
         "## 8. 方案承接要求",
         "## 9. 待确认问题",
+        "## 2. 关键业务规则",
+        "## 3. 边界与风险",
+        "## 4. 体验承接要求",
+        "## 2. 核心业务规则影响",
+        "## 3. 体验可承接内容",
+        "## 5. 待确认问题",
     ]
     business_sections: list[tuple[str, list[str]]] = []
     for title in business_section_titles:
@@ -221,7 +235,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         if fallback:
             business_sections = [("business 核心判断", fallback)]
         else:
-            business_sections = [("business 核心判断", ["business_blueprint.md 暂缺或内容不足，请先补齐 business。"])]
+            business_sections = [("business 核心判断", [f"{business_file_name} 暂缺或内容不足，请先补齐 business。"])]
     if not gap_lines:
         gap_lines = ["当前暂无显式待确认问题，但仍需主动筛出是否存在影响核心判断的关键待确认。"]
 
@@ -243,7 +257,7 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     return (
         "# Experience Prompt 预览（仅调试）\n\n"
         "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
-        f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/business_blueprint.md`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
+        f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/{business_file_name}`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
         "## 1. 任务目标\n\n"
         + "\n".join(f"- {line}" for line in task_lines)
         + "\n\n## 2. UXB 判断摘要\n\n"

@@ -4,12 +4,12 @@
   "type": "final_check",
   "stage": "final",
   "entrypoint": "python -m packages coverage <project-id>",
-  "description": "在 validate 基础上补充 facts、business 与 experience 的显性承接覆盖检查，并刷新最终机器状态；只报告断点与风险，不生成固定方案结论。",
+  "description": "在 validate 基础上按当前 execution mode 自动选择 full 或 lite 覆盖检查，并刷新最终机器状态；只报告断点与风险，不生成固定方案结论。",
   "required_inputs": [
     "projects/<project-id>/workspace/check_report.md",
     "projects/<project-id>/workspace/check_status.json",
     "projects/<project-id>/workspace/facts.md",
-    "projects/<project-id>/workspace/business_blueprint.md",
+    "projects/<project-id>/workspace/business_blueprint.md 或 business_blueprint_lite.md 或 business_note.md",
     "projects/<project-id>/workspace/experience_blueprint.md"
   ],
   "declared_outputs": [
