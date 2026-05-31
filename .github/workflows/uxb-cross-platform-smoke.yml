@@ -1,0 +1,68 @@
+name: UXB Cross Platform Smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: smoke-${{ matrix.os }}-py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Show environment
+        shell: bash
+        run: |
+          python --version
+          python - <<'PY'
+          import platform, sys
+          print(sys.platform)
+          print(platform.platform())
+          PY
+
+      - name: Static cross-platform checks
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          bad = []
+          for path in Path("packages").rglob("*.py"):
+              text = path.read_text(encoding="utf-8")
+              if 'replace("/", "\\\\")' in text:
+                  bad.append(str(path))
+          if bad:
+              raise SystemExit("Windows-only path replacement found: " + ", ".join(bad))
+          PY
+
+      - name: Run unit tests
+        shell: bash
+        run: |
+          python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run sample check
+        shell: bash
+        run: |
+          python -m packages sample-check
