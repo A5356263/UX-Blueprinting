@@ -98,6 +98,8 @@ def main() -> int:
     preview.add_argument("--port", type=int, default=0)
     preview.add_argument("--no-serve", action="store_true")
 
+    subparsers.add_parser("env-check")
+
     run_main_parser = subparsers.add_parser("run-main")
     run_main_parser.add_argument("project_id")
     run_main_parser.add_argument("--skip-preview", action="store_true")
@@ -226,6 +228,10 @@ def main() -> int:
             port=args.port,
             serve=not args.no_serve,
         )
+    if args.command == "env-check":
+        from packages.env_check import run_env_check
+
+        return run_env_check()
     if args.command == "run-main":
         from packages.mainline import run_main
 

@@ -1,4 +1,4 @@
-# Business Blueprint
+# 业务蓝图
 
 > 本模板定义 `business_blueprint.md` 的章节结构。
 > 核心原则：用业务分析师的自然语言做判断，不填表，不复制 facts 碎片，不用 ID 编号。

@@ -38,6 +38,24 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 命中某个业务域或某份 summary，不等于知识已经足够；要继续判断“它支撑了什么、还没支撑什么”
 - 不要为了推进主链路弱化阻断型不确定项；如果关键前提不清，就停在判断而不是假装可执行
 
+## 阅读顺序
+
+- 先读完这份 `SKILL.md`，只建立角色、状态、边界和分流意识
+- 然后根据当前状态，最多追加读取 1-3 份最相关 guide，不默认把 `references/` 整包读完
+- 进入正式判断单前，再补读 route decision、knowledge usage 和必要 complexity 资料
+- 只有命中具体领域、具体 summary 或具体阻断点时，才继续向下深读
+
+默认分流：
+
+- 用户侧表达：[`references/user_response_guide.md`](references/user_response_guide.md)
+- 需求类型判断：[`references/demand_type_judgment_guide.md`](references/demand_type_judgment_guide.md)
+- 知识消费：[`references/knowledge_usage_guide.md`](references/knowledge_usage_guide.md)
+- 判断单生成：[`references/uxb_route_decision_authoring_guide.md`](references/uxb_route_decision_authoring_guide.md)
+- 正式执行：[`references/execution_guide.md`](references/execution_guide.md)
+- 知识候选：[`references/knowledge_candidate_guide.md`](references/knowledge_candidate_guide.md)
+
+不要因为目录里文档很多，就顺序通读所有 guide。UXB 的正常工作方式是“先分流，再按需深读”。
+
 ## 用户侧表达
 
 用户侧固定激活引导语、简洁回复结构、启动前判断和禁用术语，统一见：
@@ -158,14 +176,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 3. [references/complexity/01_domain_router.md](references/complexity/01_domain_router.md)
 4. [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)
 
-然后按需读取：
-
-- 命中的领域卡片
-- 与需求相关的业务 summary
-- 与需求相关的设计指南 summary
-- 必要时再读 raw
-
-不要通读整个 `knowledge/`，也不要把所有领域卡片一股脑读完。
+然后按需读取命中的领域卡片、summary 和必要 raw，不要通读整个 `knowledge/`，也不要把所有领域卡片一股脑读完。
 
 ### 写入模板
 
@@ -173,34 +184,9 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 - [assets/uxb_route_decision.template.json](assets/uxb_route_decision.template.json)
 
-### 判断单阶段只做什么
-
-- 判断需求类型
-- 判断复杂度和主要压力
-- 选择业务知识、设计指南、复杂度资料
-- 为每个 ref 写 `selection_reasons`
-- 写清不确定项
-- 判断 `can_execute_mainline`
-- 判断 `execution.required_outputs`
-- 判断 summary 是否真的足够，以及哪些判断点必须升级 raw
-
-### 判断单阶段不做什么
-
-- 不写完整业务蓝图
-- 不写完整体验方案
-- 不通读所有 raw
-- 不把知识原文复制进判断单
-- 不为了保险全量选择资料
-- 不把“像某类需求”直接当成“问题本质已经成立”
-
-### 判断不准时
-
-如果无法确认是否改变对象、规则、状态、生效、口径或外部回写，不得强行写成可执行。
-
-应优先：
-
-- 向用户追问 1-3 个关键问题
-- 或在 `uncertainties` 里写明阻碍点，并把 `can_execute_mainline` 设为 `false`
+判断单阶段的“做什么 / 不做什么 / 判断不准时怎么处理”，统一以
+[references/uxb_route_decision_authoring_guide.md](references/uxb_route_decision_authoring_guide.md)
+为准；这份 `SKILL.md` 只负责把你路由到那里，不再重复展开一遍。
 
 ## 正式执行
 
@@ -216,7 +202,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 - [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)
 
-正式做知识选择时，要明确区分领域 README、`00_领域概述` 和 `knowledge/templates/**` 的角色，不把入口文档或模板当成正式业务事实消费。
+正式做知识选择时，要明确区分领域 README、`00_领域概述` 和 `knowledge/templates/**` 的角色，不把入口文档或模板当成正式业务事实消费；具体升级 raw、选 guideline、控制读取深度，都在该 guide 里处理。
 
 ## 资产地图
 

@@ -6,6 +6,9 @@
 
 用尽量小的读取范围，找到当前问题真正需要的知识，不把 `knowledge/` 整棵树一股脑读进来。
 
+这份 guide 只负责回答“知识怎么读、读到哪一层、什么时候升级 raw”。
+需求类型判断、`required_outputs` 判断、`can_execute_mainline` 判断和判断单字段写法，交给 `references/uxb_route_decision_authoring_guide.md`。
+
 ## 核心规则
 
 - 先判断当前到底要确认什么，再决定读什么
@@ -114,7 +117,7 @@ knowledge/wiki/index.md
 
 - `projects/<project-id>/runtime/uxb_route_decision.json`
 
-判断阶段只做资料选择，不做深度消费。
+判断阶段只做资料选择，不做深度消费；如果你已经开始在脑中决定“该走哪种输出深度、该不该阻断”，说明应该回到 route decision guide，而不是继续在这份知识 guide 里兜圈子。
 
 要求：
 
@@ -129,6 +132,7 @@ knowledge/wiki/index.md
 9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `summary_refs` 或 `raw_escalation_plan`
 
 10. 不要把“命中某个 summary”直接当成“这个问题已经判断完了”；要明确它到底支撑了哪个判断点
+
 ### Raw 选择必要性
 
 `summary_refs` 默认优先选择 summary、领域 README 或入口型知识。

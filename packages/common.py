@@ -44,6 +44,10 @@ def get_memory_root_dir() -> Path:
     return _env_path("UXB_MEMORY_DIR", get_repo_root() / "memory")
 
 
+def get_tmp_root_dir() -> Path:
+    return _env_path("UXB_TMP_DIR", get_repo_root() / ".tmp")
+
+
 def get_examples_root_dir() -> Path:
     env_value = os.environ.get("UXB_EXAMPLES_DIR")
     if env_value:
@@ -93,6 +97,10 @@ def get_project_memory_dir(project_id: str) -> Path:
 
 def get_project_meta_path(project_id: str) -> Path:
     return get_project_dir(project_id) / "meta.json"
+
+
+def get_env_check_report_path() -> Path:
+    return get_tmp_root_dir() / "env-check-report.json"
 
 
 def read_project_meta(project_id: str) -> dict[str, object]:

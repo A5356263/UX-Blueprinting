@@ -1,4 +1,6 @@
-# Task Card
+# 任务卡片
+
+> 说明：以下 `## Protocol`、`## Required Inputs` 等 section 名，以及 `Protocol Name`、`Task ID` 等字段名，当前仍作为执行器稳定解析结构保留，不建议随意改名。
 
 ## Protocol
 

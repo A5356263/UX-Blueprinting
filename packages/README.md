@@ -59,4 +59,5 @@ python -m packages memory-accept <project-id>
 python -m packages memory-summary <project-id>
 python -m packages preview <project-id> --host 127.0.0.1 --port 0
 python -m packages sample-check
+python -m packages env-check
 ```

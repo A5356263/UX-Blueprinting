@@ -1,4 +1,4 @@
-# Task Card Contract
+# 任务卡片合同
 
 ## Goal
 
@@ -35,6 +35,11 @@
 - `## Result Locations`
 - `## Completion Criteria`
 
+说明：
+
+- 上述 section 名当前属于解析稳定标题，现阶段仍保留英文写法
+- 这类英文属于执行器解析结构，不等同于用户侧表达口径
+
 可选但推荐：
 
 - `## Task Scenario`
@@ -57,6 +62,11 @@
 
 - `Task Name`
 - `Domain`
+
+说明：
+
+- `Protocol Name`、`Protocol Version`、`Task ID` 等字段名当前属于解析稳定字段
+- 如需整体中文化，应与解析器实现一并调整，不能只改模板或合同
 
 `Domain` 仅为描述性字段，不再驱动代码自动选知识。
 

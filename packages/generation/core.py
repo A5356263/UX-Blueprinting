@@ -451,7 +451,6 @@ def run_generate_experience(project_id: str) -> int:
             print(f"  - projects/{project_id}/workspace/business_note.md")
         else:
             print(f"  - projects/{project_id}/workspace/business_blueprint.md")
-        print("  - test/Experience_Blueprint 理想效果.md")
         if experience_summary_refs:
             print("当前阶段允许读取的 summary：")
             for ref in experience_summary_refs:

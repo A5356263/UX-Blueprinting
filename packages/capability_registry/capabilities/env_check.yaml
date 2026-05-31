@@ -1,0 +1,21 @@
+{
+  "capability_id": "env_check",
+  "display_name": "Environment Check",
+  "type": "command",
+  "stage": "environment_check",
+  "entrypoint": "python -m packages env-check",
+  "description": "手动触发当前系统与当前 code agent / 宿主环境体检，检查正式链路是否具备稳定运行所需的路径、资源、读写、编码与基础 Python 条件。",
+  "required_inputs": [],
+  "declared_outputs": [
+    ".tmp/env-check-report.json"
+  ],
+  "retryable": true,
+  "review_required": false,
+  "mutates_formal_artifacts": false,
+  "mutates_runtime_state": true,
+  "source_of_truth_refs": [
+    "packages/env_check/core.py",
+    "docs/discussion/UXB研发版本skill/第四期/UXB_env_check_执行策略.md"
+  ],
+  "status": "active"
+}

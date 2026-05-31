@@ -66,8 +66,10 @@ YYYY-MM-DD_HHMM_待归类_候选主题.md
 默认使用：
 
 ```text
-.claude/skills/uxb/assets/knowledge_candidate.template.md
+assets/knowledge_candidate.template.md
 ```
+
+这里指的是“当前 UXB skill 的 assets 模板”，不要把某个宿主目录名当成正式依赖。
 
 候选正文应收敛为 4 个主段落：
 

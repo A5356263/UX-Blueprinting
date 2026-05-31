@@ -24,6 +24,7 @@
     "run_main",
     "run_routed_main",
     "sample_check",
+    "env_check",
     "repair_plan",
     "repair_status",
     "repair_accept",
