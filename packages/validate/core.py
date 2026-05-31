@@ -13,6 +13,8 @@ from packages.common import (
     get_project_source_dir,
     get_project_workspace_dir,
     get_repo_root,
+    normalize_repo_ref,
+    repo_ref_to_path,
 )
 from packages.provenance import append_command_if_provenance_exists, validate_provenance
 from packages.route_decision import load_uxb_execution_decision
@@ -681,10 +683,10 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
     for item in references:
         if not isinstance(item, dict):
             continue
-        reference = str(item.get("reference") or "").replace("\\", "/").strip()
+        reference = normalize_repo_ref(str(item.get("reference") or ""))
         if not reference:
             continue
-        ref_path = repo_root / Path(reference.replace("/", "\\"))
+        ref_path = repo_root / repo_ref_to_path(reference)
         if not ref_path.exists():
             add_issue(issues, "blocker", f"context_manifest.json 引用了不存在的 ref：{reference}")
 
@@ -714,7 +716,7 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
         add_issue(issues, "warning", "context_manifest.json.knowledge_trace.summary_refs.complexity 为空")
 
     declared_raw_refs = {
-        str(item.get("raw_ref") or "").replace("\\", "/").strip()
+        normalize_repo_ref(str(item.get("raw_ref") or ""))
         for item in raw_escalation_plan
         if isinstance(item, dict) and str(item.get("raw_ref") or "").strip()
     }

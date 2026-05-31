@@ -4,7 +4,7 @@ import json
 import re
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_repo_root
+from packages.common import get_project_runtime_dir, get_repo_root, normalize_repo_ref, repo_ref_to_path
 from packages.knowledge_consumption.summary_parser import parse_summary_metadata
 
 from .schemas import KnowledgeNote
@@ -59,7 +59,7 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
                 for key in ("summary_refs", "raw_refs"):
                     values = stage_payload.get(key, [])
                     if isinstance(values, list):
-                        refs.extend(str(value).replace("\\", "/").strip() for value in values if str(value).strip())
+                        refs.extend(normalize_repo_ref(str(value)) for value in values if str(value).strip())
                 deduped: list[str] = []
                 seen: set[str] = set()
                 for ref in refs:
@@ -86,7 +86,8 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
 
 
 def _read_note(repo_root: Path, note_id: str, ref_path: str) -> KnowledgeNote | None:
-    path = repo_root / Path(ref_path.replace("/", "\\"))
+    normalized_ref = normalize_repo_ref(ref_path)
+    path = repo_root / repo_ref_to_path(normalized_ref)
     if not path.exists() or not path.is_file():
         return None
     text = path.read_text(encoding="utf-8")
@@ -112,7 +113,7 @@ def load_knowledge_notes(project_id: str, stage: str) -> list[KnowledgeNote]:
     deduped: list[str] = []
     seen: set[str] = set()
     for ref in raw_refs:
-        normalized = ref.replace("\\", "/").strip()
+        normalized = normalize_repo_ref(ref)
         if not normalized or normalized in seen or "*" in normalized:
             continue
         seen.add(normalized)
