@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from packages.common import get_project_exports_dir, get_project_workspace_dir
+from packages.common import get_project_workspace_dir
 
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 _SECTION_NUMBER_RE = re.compile(r"^\d+(?:\.\d+)?\s*[\.．、]?\s*")
@@ -35,10 +35,7 @@ _NON_SUMMARY_ROLE_LABELS = {
 
 
 def _read_source(project_id: str, filename: str) -> tuple[Path, str]:
-    candidates = [
-        get_project_exports_dir(project_id) / "final" / filename,
-        get_project_workspace_dir(project_id) / filename,
-    ]
+    candidates = [get_project_workspace_dir(project_id) / filename]
     for path in candidates:
         if path.exists():
             return path, path.read_text(encoding="utf-8")

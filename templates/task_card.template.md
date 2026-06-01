@@ -42,7 +42,7 @@
 3. 生成 facts.md
 4. 生成 business 产物
 5. 生成 experience_blueprint.md
-6. 运行 validate / coverage / archive / preview
+6. 运行 validate / coverage / preview
 
 ## Constraints
 
@@ -74,7 +74,7 @@
 ## Result Locations
 
 - 执行中结果: projects/{{TASK_ID}}/workspace/
-- 归档结果: projects/{{TASK_ID}}/exports/final/
+- 预览产物: projects/{{TASK_ID}}/runtime/preview/
 
 ## Completion Criteria
 

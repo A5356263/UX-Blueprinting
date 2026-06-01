@@ -5,7 +5,6 @@ from pathlib import Path
 
 from packages.common import (
     get_project_dir,
-    get_project_exports_dir,
     get_project_gates_dir,
     get_project_source_dir,
     get_project_workspace_dir,
@@ -50,9 +49,8 @@ def run_task_bootstrap(
     source_dir = get_project_source_dir(project_id)
     workspace_dir = get_project_workspace_dir(project_id)
     gates_dir = get_project_gates_dir(project_id)
-    exports_dir = get_project_exports_dir(project_id)
 
-    for path in [source_dir, workspace_dir, gates_dir, exports_dir]:
+    for path in [source_dir, workspace_dir, gates_dir]:
         path.mkdir(parents=True, exist_ok=True)
 
     for template_name, (target, output_name) in TEMPLATE_MAP.items():
@@ -107,6 +105,13 @@ def run_task_bootstrap(
         ),
         force,
     )
+
+    from packages.project_structure_check import run_project_structure_check
+
+    check_code = run_project_structure_check(project_id)
+    if check_code != 0:
+        print(f"Project structure check failed: {project_dir}")
+        return check_code
 
     print(f"Project created: {project_dir}")
     return 0

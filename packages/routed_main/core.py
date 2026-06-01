@@ -5,8 +5,7 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
-from packages.archive import run_archive_artifacts
-from packages.common import get_project_exports_dir, get_project_runtime_dir, get_project_workspace_dir
+from packages.common import get_project_runtime_dir, get_project_workspace_dir
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
 from packages.generation import (
@@ -58,13 +57,16 @@ def _actual_outputs(project_id: str) -> list[str]:
 
 
 def _has_preview_source(project_id: str) -> bool:
-    exports_dir = get_project_exports_dir(project_id) / "final"
     workspace_dir = get_project_workspace_dir(project_id)
-    candidates = [
-        exports_dir / "experience_blueprint.md",
-        workspace_dir / "experience_blueprint.md",
+    experience_path = workspace_dir / "experience_blueprint.md"
+    business_candidates = [
+        workspace_dir / "business_blueprint.md",
+        workspace_dir / "business_blueprint_lite.md",
+        workspace_dir / "business_note.md",
     ]
-    return any(path.exists() and path.is_file() and path.stat().st_size > 0 for path in candidates)
+    has_experience = experience_path.exists() and experience_path.is_file() and experience_path.stat().st_size > 0
+    has_business = any(path.exists() and path.is_file() and path.stat().st_size > 0 for path in business_candidates)
+    return has_experience and has_business
 
 
 def _steps_for_execution_mode(execution_mode: str) -> list[tuple[str, Callable[[str], int]]]:
@@ -78,7 +80,6 @@ def _steps_for_execution_mode(execution_mode: str) -> list[tuple[str, Callable[[
             ("gate-experience", run_experience_gate),
             ("validate", run_validate_outputs),
             ("coverage", run_coverage_check),
-            ("archive", run_archive_artifacts),
         ]
     if execution_mode == "standard":
         return [
@@ -237,7 +238,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
             if preview_code == 0:
                 append_command_if_provenance_exists(project_id, "preview")
         else:
-            print("Preview skipped: missing usable experience_blueprint.md after mainline success.")
+            print("Preview skipped: missing usable business/experience workspace sources after mainline success.")
 
     report = {
         "project_id": project_id,

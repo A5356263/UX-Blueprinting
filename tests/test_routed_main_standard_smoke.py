@@ -8,7 +8,7 @@ from pathlib import Path
 
 from packages.common import get_project_dir, get_repo_root
 from packages.provenance import build_generated_provenance, write_provenance
-from packages.routed_main.core import run_routed_main
+from packages.routed_main.core import _steps_for_execution_mode, run_routed_main
 
 
 def _write_text(path: Path, content: str) -> None:
@@ -686,6 +686,10 @@ class RoutedMainStandardSmokeTests(unittest.TestCase):
             "run-routed-main",
         ]:
             self.assertIn(command_name, command_chain)
+
+    def test_full_execution_mode_no_longer_includes_archive(self) -> None:
+        commands = [name for name, _runner in _steps_for_execution_mode("full")]
+        self.assertNotIn("archive", commands)
 
 
 if __name__ == "__main__":

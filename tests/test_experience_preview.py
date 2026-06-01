@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import tempfile
@@ -232,6 +233,25 @@ class ExperiencePreviewTests(unittest.TestCase):
         self.assertNotIn("<link ", html)
         self.assertNotIn("https://", html)
         self.assertNotIn("http://", html)
+
+        from packages.experience_preview.write_preview_runtime import write_preview_runtime
+
+        write_preview_runtime(
+            self.project_id,
+            model,
+            host="127.0.0.1",
+            port=0,
+            ready_state="built",
+            preview_url="",
+        )
+        runtime_payload = (preview_dir / "preview_runtime.json").read_text(encoding="utf-8")
+        runtime_json = json.loads(runtime_payload)
+        business_source = str(runtime_json.get("source_business_blueprint") or "").replace("\\", "/")
+        experience_source = str(runtime_json.get("source_experience_blueprint") or "").replace("\\", "/")
+        self.assertIn("/workspace/business_blueprint.md", business_source)
+        self.assertIn("/workspace/experience_blueprint.md", experience_source)
+        self.assertNotIn("/exports/final/", business_source)
+        self.assertNotIn("/exports/final/", experience_source)
 
 
 if __name__ == "__main__":

@@ -40,7 +40,8 @@
 ## 运行方式
 
 ```bash
-python -m packages bootstrap <project-id>
+python -m packages bootstrap <project-id> --domain <domain>
+python -m packages project-structure-check <project-id>
 python -m packages assemble <project-id>
 python -m packages generate-facts <project-id>
 python -m packages generate-business <project-id>
@@ -50,7 +51,6 @@ python -m packages gate-business <project-id>
 python -m packages gate-experience <project-id>
 python -m packages validate <project-id>
 python -m packages coverage <project-id>
-python -m packages archive <project-id>
 python -m packages run-main <project-id>
 python -m packages capabilities-list
 python -m packages capability-show <capability-id>

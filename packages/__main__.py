@@ -99,6 +99,8 @@ def main() -> int:
     preview.add_argument("--no-serve", action="store_true")
 
     subparsers.add_parser("env-check")
+    project_structure_check = subparsers.add_parser("project-structure-check")
+    project_structure_check.add_argument("project_id")
 
     run_main_parser = subparsers.add_parser("run-main")
     run_main_parser.add_argument("project_id")
@@ -232,6 +234,10 @@ def main() -> int:
         from packages.env_check import run_env_check
 
         return run_env_check()
+    if args.command == "project-structure-check":
+        from packages.project_structure_check import run_project_structure_check
+
+        return run_project_structure_check(args.project_id)
     if args.command == "run-main":
         from packages.mainline import run_main
 

@@ -3,8 +3,8 @@
   "display_name": "Task Bootstrap",
   "type": "command",
   "stage": "runtime",
-  "entrypoint": "python -m packages bootstrap <project-id>",
-  "description": "创建项目任务工作区、初始化 source/workspace/runtime/exports 的最小结构，并生成基础占位文件。",
+  "entrypoint": "python -m packages bootstrap <project-id> --domain <domain>",
+  "description": "创建项目任务工作区，初始化 source/workspace/runtime 的最小结构，并生成基础占位文件。",
   "required_inputs": [
     "<project-id>",
     "templates/task_card.template.md",
@@ -26,7 +26,8 @@
     "projects/<project-id>/workspace/check_report.md",
     "projects/<project-id>/workspace/check_status.json",
     "projects/<project-id>/runtime/gates/",
-    "projects/<project-id>/exports/",
+    "projects/<project-id>/runtime/project_structure_check.json",
+    "projects/<project-id>/runtime/project_structure_check.md",
     "projects/<project-id>/meta.json"
   ],
   "dependencies": [],
@@ -38,8 +39,7 @@
     "specs/01_execution_hub_spec.md",
     "packages/__main__.py",
     "packages/task_bootstrap/core.py",
-    "docs/runbook/external_ai_quickstart.md",
-    "docs/runbook/task_execution_flow.md"
+    "docs/runbook/external_ai_quickstart.md"
   ],
   "status": "active"
 }

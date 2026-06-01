@@ -83,6 +83,14 @@ def get_project_exports_dir(project_id: str) -> Path:
     return get_project_dir(project_id) / "exports"
 
 
+def get_project_structure_check_json_path(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "project_structure_check.json"
+
+
+def get_project_structure_check_md_path(project_id: str) -> Path:
+    return get_project_runtime_dir(project_id) / "project_structure_check.md"
+
+
 def get_project_gates_dir(project_id: str) -> Path:
     return get_project_runtime_dir(project_id) / "gates"
 

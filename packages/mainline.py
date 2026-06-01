@@ -3,12 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from packages.archive import run_archive_artifacts
 from packages.common import (
     get_examples_root_dir,
     get_project_preview_dir,
     get_project_remediation_dir,
-    get_project_runtime_dir,
 )
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
@@ -46,12 +44,6 @@ def _print_run_main_repair_guidance(project_id: str, command_name: str) -> None:
                 print(f"- {summary_path}")
             if retry_scope_path.exists():
                 print(f"- {retry_scope_path}")
-        return
-
-    if command_name == "archive":
-        print(f"当前步骤 `{command_name}` 被阻断，建议先执行：python -m packages repair-status {project_id}")
-        if summary_path.exists():
-            print(f"并查看：{summary_path}")
 
 
 def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) -> int:
@@ -65,7 +57,6 @@ def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) 
         ("gate-experience", run_experience_gate),
         ("validate", run_validate_outputs),
         ("coverage", run_coverage_check),
-        ("archive", run_archive_artifacts),
     ]
 
     for command_name, runner in steps:
@@ -90,10 +81,10 @@ def run_main(project_id: str, skip_preview: bool = False, strict: bool = False) 
     try:
         preview_code = run_experience_preview(project_id, host="127.0.0.1", port=0, serve=False)
     except SystemExit as exc:
-        print(f"Preview failed after archive, but mainline remains successful: {exc}")
+        print(f"Preview failed after mainline, but mainline remains successful: {exc}")
         return 0
     if preview_code != 0:
-        print("Preview failed after archive, but mainline remains successful.")
+        print("Preview failed after mainline, but mainline remains successful.")
         return 0
     preview_runtime = _read_json(get_project_preview_dir(project_id) / "preview_runtime.json")
     preview_url = str(preview_runtime.get("preview_url") or "").strip()

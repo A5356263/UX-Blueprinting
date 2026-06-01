@@ -15,10 +15,9 @@
 - `projects/<project-id>/workspace/check_report.md`
 - `projects/<project-id>/workspace/check_status.json`
 
-归档产物：
+预览产物：
 
-- `projects/<project-id>/exports/final/`
-- `projects/<project-id>/exports/checks/`
+- `projects/<project-id>/runtime/preview/`
 
 ## facts.md
 

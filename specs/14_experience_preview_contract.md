@@ -15,20 +15,18 @@
 
 体验蓝图读取优先级：
 
-1. `projects/<project-id>/exports/final/experience_blueprint.md`
-2. `projects/<project-id>/workspace/experience_blueprint.md`
+1. `projects/<project-id>/workspace/experience_blueprint.md`
 
 业务蓝图读取优先级：
 
-1. `projects/<project-id>/exports/final/business_blueprint.md`
-2. `projects/<project-id>/workspace/business_blueprint.md`
-3. `projects/<project-id>/workspace/business_blueprint_lite.md`
-4. `projects/<project-id>/workspace/business_note.md`
+1. `projects/<project-id>/workspace/business_blueprint.md`
+2. `projects/<project-id>/workspace/business_blueprint_lite.md`
+3. `projects/<project-id>/workspace/business_note.md`
 
 约束：
 
 - 预览层必须以 `experience_blueprint.md` 作为必需输入。
-- 仅当归档版不存在时，才降级读取 `workspace/*.md`。
+- preview 默认只读取 `workspace/*.md`。
 
 ## 输出合同
 
