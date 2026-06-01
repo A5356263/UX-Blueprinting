@@ -118,6 +118,13 @@ def _inline_md(text: str) -> str:
     return text
 
 
+def _strip_markdown_markers(text: str) -> str:
+    cleaned = text.strip()
+    cleaned = re.sub(r"^\*\*(.+?)\*\*$", r"\1", cleaned)
+    cleaned = re.sub(r"^`(.+?)`$", r"\1", cleaned)
+    return cleaned.strip()
+
+
 def _normalize_markdown_body(body: str) -> str:
     text = body.strip()
     if not text:
@@ -200,7 +207,7 @@ def _extract_journey_gaps(body: str) -> list[str]:
 
 
 def _strip_role_hint(heading: str) -> str:
-    text = heading.strip()
+    text = _strip_markdown_markers(heading)
     if "：" in text:
         return text.split("：", 1)[0].strip()
     if ":" in text:
@@ -240,8 +247,9 @@ def _parse_journey_paths(body: str) -> list[dict[str, Any]]:
             continue
         role, path = content.split("：", 1)
         nodes = [node.strip() for node in re.split(r"\s*(?:->|→)\s*", path) if node.strip()]
-        if role.strip() and nodes:
-            paths.append({"role": role.strip(), "nodes": nodes})
+        role = _strip_markdown_markers(role)
+        if role and nodes:
+            paths.append({"role": role, "nodes": nodes})
     if paths:
         return paths
     for sub in _split_subsections(body, 3):
@@ -286,20 +294,23 @@ def _remove_journey_path_lines(body: str) -> str:
 def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     in_node_block = False
-    for line in body.splitlines():
-        stripped = line.strip()
+    lines = body.splitlines()
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].strip()
         if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
             in_node_block = True
+            i += 1
             continue
-        if in_node_block and stripped.startswith("**"):
-            break
         if in_node_block and stripped.startswith("- "):
             content = stripped[2:].strip()
             if "：" not in content and ":" not in content:
+                i += 1
                 continue
             role, path = re.split(r"[:：]", content, maxsplit=1)
             role = role.strip()
             if not role:
+                i += 1
                 continue
             node_items: list[dict[str, Any]] = []
             for part in re.split(r"\s*(?:->|→)\s*", path):
@@ -315,6 +326,41 @@ def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
                     node_items.append({"id": None, "name": segment, "has_detail": False})
             if role and node_items:
                 rows.append({"role": role, "nodes": node_items})
+            i += 1
+            continue
+        if (in_node_block or re.fullmatch(r"\*\*.+?\*\*", stripped)) and re.fullmatch(r"\*\*.+?\*\*", stripped):
+            role = re.sub(r"[：:]\s*$", "", stripped.strip("*").strip()).strip()
+            path_line = ""
+            j = i + 1
+            while j < len(lines):
+                candidate = lines[j].strip()
+                if not candidate:
+                    j += 1
+                    continue
+                if candidate.startswith("**"):
+                    break
+                path_line = candidate
+                break
+            if role and path_line and ("→" in path_line or "->" in path_line):
+                node_items: list[dict[str, Any]] = []
+                for part in re.split(r"\s*(?:->|→)\s*", path_line):
+                    segment = part.strip()
+                    if not segment:
+                        continue
+                    match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
+                    if match:
+                        node_items.append(
+                            {"id": match.group(1).strip(), "name": match.group(2).strip(), "has_detail": True}
+                        )
+                    else:
+                        node_items.append({"id": None, "name": segment, "has_detail": False})
+                if node_items:
+                    rows.append({"role": role, "nodes": node_items})
+                    i = j + 1
+                    continue
+        if in_node_block and stripped.startswith("**"):
+            break
+        i += 1
     return rows
 
 
@@ -322,18 +368,37 @@ def _remove_interaction_summary_node_block(body: str) -> str:
     lines = body.splitlines()
     kept: list[str] = []
     in_node_block = False
-    for line in lines:
+    i = 0
+    while i < len(lines):
+        line = lines[i]
         stripped = line.strip()
         if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
             in_node_block = True
+            i += 1
             continue
         if in_node_block and stripped.startswith("- "):
+            i += 1
             continue
         if in_node_block and not stripped:
+            i += 1
             continue
+        if (in_node_block or re.fullmatch(r"\*\*.+?\*\*", stripped)) and re.fullmatch(r"\*\*.+?\*\*", stripped):
+            j = i + 1
+            while j < len(lines):
+                candidate = lines[j].strip()
+                if not candidate:
+                    j += 1
+                    continue
+                break
+            if j < len(lines):
+                candidate = lines[j].strip()
+                if candidate and not candidate.startswith("**") and ("→" in candidate or "->" in candidate):
+                    i = j + 1
+                    continue
         if in_node_block:
             in_node_block = False
         kept.append(line)
+        i += 1
     return "\n".join(kept).strip()
 
 

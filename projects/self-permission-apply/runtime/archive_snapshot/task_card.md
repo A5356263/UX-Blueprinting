@@ -1,0 +1,98 @@
+# 任务卡片
+
+## Protocol
+
+- Protocol Name: Cross-AI Task Card
+- Protocol Version: v0.3
+- Task ID: self-permission-apply
+- Task Name: 员工自助申请权限
+- Domain: 权限管理
+
+## Task Goal
+
+- 本次任务要解决：在企业权限管理系统中新增员工自助申请权限的能力，使员工可以查看自己的权限、主动申请权限、经审批后自动获得授权，同时保留管理员对申请范围和审批流程的控制。
+- 本次输出主要服务于业务方案评审和体验方案设计。
+
+## Task Scenario
+
+- 本次任务场景：在已有权限管理体系上新增"员工自助申请"这一新的权限授予通路，涉及底层对象关系变化、状态机扩展、审批生效机制引入。
+- 本次任务为新建任务，覆盖 facts → business → experience 全链路。
+- 复杂度评估为高复杂度：涉及新增业务对象（权限申请单）、改变状态机（申请单生命周期 + 能力开关状态交互）、改变生效机制（从直接授权变为审批后自动生效）。
+
+## Required Inputs
+
+- projects/self-permission-apply/source/requirement.md
+- projects/self-permission-apply/source/background.md
+
+## Required Outputs
+
+- projects/self-permission-apply/workspace/facts.md
+- projects/self-permission-apply/workspace/business_blueprint.md
+- projects/self-permission-apply/workspace/experience_blueprint.md
+- projects/self-permission-apply/workspace/gap_list.md
+- projects/self-permission-apply/workspace/check_report.md
+- projects/self-permission-apply/workspace/check_status.json
+
+## Read Order
+
+1. 先读本文档
+2. 再读 Required Inputs
+3. 生成 facts.md
+4. 生成 business 产物
+5. 生成 experience_blueprint.md
+6. 运行 validate / coverage / archive / preview
+
+## Constraints
+
+- 不得臆造业务事实
+- 信息不足处保留 [GAP]
+- 正式产出必须写入 workspace/
+- 不得用聊天回复替代正式文档产物
+- facts 阶段不得把引用知识提升为当前任务已确认事实
+- business 阶段不得输出 UI 方案或实现方案
+- experience 阶段不得输出高保真视觉稿或研发实现细节
+- runtime/uxb_route_decision.json 是执行判断与知识选择唯一来源
+- task_card.md 不能替代 UXB 做复杂度判断、知识选择或执行深度判断
+
+## Templates
+
+- templates/facts.template.md
+- templates/business_blueprint.template.md
+- templates/experience_blueprint.template.md
+- templates/gap_list.template.md
+- templates/check_report.template.md
+
+## Checks
+
+- specs/06_check_contract.md
+- specs/08_fact_extraction_contract.md
+- specs/09_business_blueprint_contract.md
+- specs/10_experience_blueprint_contract.md
+
+## Result Locations
+
+- 执行中结果: projects/self-permission-apply/workspace/
+- 归档结果: projects/self-permission-apply/exports/final/
+
+## Completion Criteria
+
+- 必需输出文件全部存在
+- check_report.md 已生成
+- 无 blocker
+
+## Facts Output Requirements
+
+参考 specs/08_fact_extraction_contract.md 和 templates/facts.template.md
+
+## Business Output Requirements
+
+参考对应业务合同和模板，不在 task card 中重复写内部判断逻辑
+
+## Experience Output Requirements
+
+参考 specs/10_experience_blueprint_contract.md 和 templates/experience_blueprint.template.md
+
+## Notes
+
+- UXB 应在执行前写好 projects/self-permission-apply/runtime/uxb_route_decision.json
+- 部分关键业务约束（如互斥范围、审批人规则）当前尚未明确，将在业务判断阶段标记为 [GAP] 并在 gap_list.md 中追踪

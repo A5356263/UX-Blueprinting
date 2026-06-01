@@ -1,10 +1,10 @@
 {
   "project_id": "self-permission-apply",
   "status": "failed",
-  "generated_at": "2026-06-01T01:09:57+00:00",
+  "generated_at": "2026-06-01T08:56:34+00:00",
   "requested_route": "auto",
   "execution_mode": "full",
-  "stopped_at": "archive",
+  "stopped_at": "gate-facts",
   "steps": [
     {
       "command": "route-decision",
@@ -20,34 +20,6 @@
     },
     {
       "command": "gate-facts",
-      "exit_code": 0
-    },
-    {
-      "command": "generate-business",
-      "exit_code": 0
-    },
-    {
-      "command": "gate-business",
-      "exit_code": 0
-    },
-    {
-      "command": "generate-experience",
-      "exit_code": 0
-    },
-    {
-      "command": "gate-experience",
-      "exit_code": 0
-    },
-    {
-      "command": "validate",
-      "exit_code": 0
-    },
-    {
-      "command": "coverage",
-      "exit_code": 0
-    },
-    {
-      "command": "archive",
       "exit_code": 1
     }
   ],
@@ -56,8 +28,7 @@
     "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/workspace/business_blueprint.md",
     "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/workspace/experience_blueprint.md",
     "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/workspace/check_status.json",
-    "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/runtime/routed_main_plan.json",
-    "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/runtime/routed_main_report.json"
+    "E:/AI设计/体验蓝图构建思路/projects/self-permission-apply/runtime/routed_main_plan.json"
   ],
   "recommend_enable_routed_execution": false,
   "recommendation_reason": "当前执行判断已收敛到 UXB 已确认结果；是否默认启用，仍应基于样例和真实任务继续验证。"

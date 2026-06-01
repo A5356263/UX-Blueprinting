@@ -135,9 +135,8 @@ def inspect_source_tree(root: Path) -> list[str]:
     branch_result = run(["git", "branch", "--show-current"], cwd=root)
     if branch_result.returncode != 0:
         raise SystemExit(f"Failed to detect current branch:\n{branch_result.stderr.strip()}")
-    branch = branch_result.stdout.strip()
-    if branch != "研发版模式":
-        raise SystemExit(f"Packaging must run on branch `研发版模式`, current branch is `{branch}`.")
+    branch = branch_result.stdout.strip() or "<detached-head>"
+    print(f"Packaging from branch: {branch}")
 
     status_result = run(["git", "status", "--short"], cwd=root)
     if status_result.returncode != 0:

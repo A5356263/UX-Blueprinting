@@ -239,9 +239,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex: 1 1 auto;
-  min-width: 0;
+  min-width: max-content;
 }
 
 .summary-row {
@@ -294,7 +294,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   min-width: max-content;
   margin-bottom: 10px;
 }
@@ -313,7 +313,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: max-content;
 }
 
 .journey-path-node {
@@ -452,8 +453,6 @@ body {
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .content { padding: 20px 16px 60px; }
-  .summary-row,
-  .journey-path-row { flex-wrap: wrap; }
 }
 """
 

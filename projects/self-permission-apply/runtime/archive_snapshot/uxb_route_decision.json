@@ -1,0 +1,136 @@
+{
+  "schema_version": "uxb_route_decision@4.0",
+  "project_id": "self-permission-apply",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "judgment": {
+    "demand_type": "复杂业务需求",
+    "business_depth": "business_blueprint",
+    "experience_output": "experience_blueprint",
+    "reason": "本次需求不是局部体验优化或既有能力扩展。它新增了'员工申请→审批→自动授权'这一条权限分配通路，改变了现有权限体系从'仅管理员分配'到'管理员分配+员工申请双通道'的底层分配方式。底层业务骨架发生多项变化：(1)新增'权限申请单'业务对象，涉及申请人、审批人、申请内容、审批结果、授权结果的多方关系；(2)新增申请单状态机（提交→审批→授权/驳回），且需要与能力开关状态（开启/关闭中/已关闭）设计交互；(3)生效机制从直接授权变为审批后自动生效；(4)需要定义可申请范围、权限互斥、敏感权限排除、审批人规则等多条新规则。基于现有权限域知识（对象模型、决策链契约、治理状态模型），当前信息已足以支撑正式输出，关键不确定项以[GAP]形式在业务和体验蓝图中标记追踪。用户已明确确认执行。"
+  },
+  "complexity_judgment": {
+    "business_change": [
+      "新增业务对象：权限申请单，涉及申请人→申请内容→审批人→授权结果的关系链条",
+      "改变生效机制：从已授予即生效变为申请→审批→自动授权",
+      "新增状态机：申请单生命周期（草稿→提交→审批中→通过/驳回→授权生效）",
+      "新增状态交互：能力开关状态与进行中申请的交互（关闭时待审批/审批中申请的处理）",
+      "新增规则集：可申请范围定义、敏感权限排除、审批人规则、服务人员排除",
+      "数据口径变化：员工可见权限与可申请权限是两套不同的范围定义"
+    ],
+    "experience_pressure": [
+      "涉及3个角色：管理员（配置者）、员工（申请者）、审批人（审批者），每个角色的任务路径和页面不同",
+      "信息密度较高：权限列表展示、申请表单、审批列表、申请记录查询",
+      "异常分支多：审批驳回、审批超时、审批人不存在、关闭中申请、范围变更等",
+      "概念边界模糊：可见范围vs可申请范围、自助模式vs现有治理模式、已授权vs已生效"
+    ],
+    "uncertainties": [
+      "自助申请模式与现有权限治理模式（双管理员/子管理员隔离/权限变更审批）的互斥范围和规则未明确",
+      "员工可申请的对象类型（角色、功能权限、或两者都支持）未确定",
+      "可申请范围配置方式（按角色/按功能权限/其他）未确定",
+      "审批人规则（默认审批人、异常兜底、审批链配置）未确定",
+      "管理员关闭能力后已生效权限的保留策略未确定",
+      "敏感权限/黑名单排除机制是否需要实现未确定"
+    ]
+  },
+  "knowledge_selection": {
+    "summary_refs": {
+      "business": [
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md"
+      ],
+      "guideline": [],
+      "complexity": [
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        ".claude/skills/uxb/references/complexity/01_domain_router.md",
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+      ]
+    },
+    "raw_escalation_plan": [],
+    "stage_refs": {
+      "facts": {
+        "raw_refs": []
+      },
+      "business": {
+        "raw_refs": []
+      },
+      "experience": {
+        "raw_refs": []
+      }
+    },
+    "selection_reasons": [
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "type": "summary",
+        "used_for_stage": ["facts", "business"],
+        "reason": "用于建立权限管理领域的边界认知，理解核心问题和上游依赖，支撑 facts 阶段的范围判断和 business 阶段的领域边界说明"
+      },
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "type": "summary",
+        "used_for_stage": ["facts", "business"],
+        "reason": "用于参考现有权限对象模型（subject、resource、action、scope、source、modifier、state），为新增'权限申请单'对象提供建模参照"
+      },
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "type": "summary",
+        "used_for_stage": ["business"],
+        "reason": "用于理解现有对象前置、覆盖、叠加关系，判断新增申请对象如何融入现有权限判断链"
+      },
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "type": "summary",
+        "used_for_stage": ["facts", "business"],
+        "reason": "用于了解现有权限能力与页面承载关系，判断新能力落在哪个位置，以及与现有能力的边界"
+      },
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
+        "type": "summary",
+        "used_for_stage": ["business"],
+        "reason": "用于参考现有权限判断链（可见性→功能权限→数据范围→治理生效），判断自申请授权如何接入或扩展现有判断链路"
+      },
+      {
+        "ref": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+        "type": "summary",
+        "used_for_stage": ["facts", "business"],
+        "reason": "用于理解现有治理状态模型（draft→pending→approved→rejected→effective→revoked），为申请单状态设计和模式互斥判断提供参照"
+      },
+      {
+        "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        "type": "summary",
+        "used_for_stage": [],
+        "reason": "用于支撑此次复杂度判断，明确底层业务改动六问和体验设计压力五问的结论"
+      },
+      {
+        "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+        "type": "summary",
+        "used_for_stage": [],
+        "reason": "用于领域识别，确认本次需求主要落在管理后台/权限管理领域"
+      },
+      {
+        "ref": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+        "type": "summary",
+        "used_for_stage": [],
+        "reason": "用于确认管理后台领域的高/中/低复杂度触发点，支撑复杂度判断"
+      }
+    ]
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md",
+      "gap_list.md"
+    ],
+    "notes": [
+      "不确定项不影响当前正式输出——关键不确定项将在 business_blueprint 中以 [GAP] 标记，并在 gap_list 中统一追踪",
+      "design guideline 知识暂不选择——体验阶段如需要复杂反馈设计指南，可在 experience 阶段补充读取",
+      "raw_escalation_plan 为空——当前 summary 层知识已足以支撑业务判断，如 facts 或 business 阶段需要具体规则细节，可按需升级到 raw"
+    ]
+  }
+}

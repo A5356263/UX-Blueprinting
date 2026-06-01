@@ -1,7 +1,7 @@
 {
   "project_id": "self-permission-apply",
   "task_name": "员工自助申请权限",
-  "domain": "管理后台",
+  "domain": "权限管理",
   "status": "draft",
   "project_role": "real_project",
   "read_only": false,

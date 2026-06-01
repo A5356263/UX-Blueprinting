@@ -140,6 +140,37 @@ class ExperiencePreviewTests(unittest.TestCase):
         self.assertEqual(len(model["experience"]["pages"]), 2)
         self.assertEqual(len(model["experience"]["state_rows"]), 2)
         self.assertIn("旅程缺口", sections["journey"]["body_html"])
+        self.assertEqual(len(model["experience"]["interaction_summary"]["rows"]), 2)
+
+    def test_build_preview_model_parses_bold_role_summary_rows(self) -> None:
+        workspace = self.projects_dir / self.project_id / "workspace"
+        _write_text(
+            workspace / "experience_blueprint.md",
+            """
+# 体验蓝图
+
+## 2. 交互流程总览
+
+**管理员配置流程：**
+进入权限管理 → 开启申请能力 → 发布生效
+
+**员工申请流程：**
+查看已有权限 → 提交申请 → 查看结果
+
+**异常流程重点：**
+
+- 审批人缺失
+""",
+        )
+
+        model = build_preview_model(self.project_id)
+        rows = model["experience"]["interaction_summary"]["rows"]
+
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]["role"], "管理员配置流程")
+        self.assertEqual(rows[0]["nodes"][0]["name"], "进入权限管理")
+        self.assertEqual(rows[1]["role"], "员工申请流程")
+        self.assertEqual(rows[1]["nodes"][-1]["name"], "查看结果")
 
     def test_rendered_preview_keeps_self_contained_layout_and_component_shells(self) -> None:
         model = build_preview_model(self.project_id)
@@ -157,6 +188,12 @@ class ExperiencePreviewTests(unittest.TestCase):
         self.assertIn("state-feedback-table-wrap", html)
         self.assertIn("journey-visual", html)
         self.assertIn("summary-visual", html)
+        self.assertIn(".summary-path {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: nowrap;", html)
+        self.assertIn(".journey-path-nodes {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: nowrap;", html)
+        self.assertNotIn('<div class="summary-role">异常流程重点</div>', html)
+        self.assertNotIn('<span class="summary-step">审批人缺失</span>', html)
+        self.assertIn("异常流程重点", html)
+        self.assertIn("审批人缺失", html)
         self.assertNotIn("<link ", html)
         self.assertNotIn("https://", html)
         self.assertNotIn("http://", html)
