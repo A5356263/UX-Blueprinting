@@ -255,7 +255,7 @@ body {
 .summary-row:last-child { margin-bottom: 0; }
 
 .summary-role {
-  min-width: 128px;
+  min-width: 96px;
   padding: 4px 0;
   font-size: 13px;
   font-weight: 600;
@@ -393,6 +393,26 @@ body {
   font-size: 15px;
   font-weight: 600;
   color: var(--accent-strong);
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3,
+.experience-component[data-section-key="secondary-flow"] .section-body h3,
+.experience-component[data-section-key="exception-flow"] .section-body h3 {
+  margin: 32px 0 10px;
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="secondary-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="exception-flow"] .section-body h3:first-child {
+  margin-top: 0;
+}
+
+.experience-component .section-body .flow-field-label {
+  margin-top: 20px;
+}
+
+.experience-component .section-body .flow-field-label + * {
+  margin-top: 0;
 }
 
 .component-card-body > *:last-child {
@@ -630,6 +650,38 @@ def _render_note_list(items: list[str]) -> str:
     return "".join(parts)
 
 
+def _render_detail_flow_groups_stable(groups: list[dict[str, Any]]) -> str:
+    if not groups:
+        return ""
+    parts: list[str] = []
+    for group in groups:
+        group_name = str(group.get("name", "")).strip()
+        if group_name:
+            parts.append(f"<h3>{html_mod.escape(group_name)}</h3>")
+
+        group_body_html = str(group.get("body_html", "") or "")
+        if group_body_html:
+            parts.append(_soften_code_blocks(group_body_html))
+            continue
+
+        nodes = group.get("nodes") or []
+        for node in nodes:
+            node_name = str(node.get("name", "")).strip()
+            if node_name and node_name != group_name:
+                parts.append(f"<h4>{html_mod.escape(node_name)}</h4>")
+
+            description_html = str(node.get("description_html", "") or "")
+            if description_html:
+                parts.append(_soften_code_blocks(description_html))
+
+            for key, label in FLOW_FIELD_LABELS:
+                rendered = _render_flow_value(str(node.get(key, "") or ""))
+                if rendered:
+                    parts.append(f'<p class="flow-field-label"><strong>{html_mod.escape(label)}：</strong></p>')
+                    parts.append(rendered)
+    return "".join(parts)
+
+
 def _render_titled_note_list(title: str, items: list[str]) -> str:
     if not items:
         return ""
@@ -676,9 +728,9 @@ def _render_experience_section(section: dict[str, Any], exp: dict[str, Any]) -> 
             body_parts.append(_soften_code_blocks(intro_html))
         body_html = "".join(body_parts) or _soften_code_blocks(fallback_body_html)
     elif section_key in {"main-flow", "secondary-flow"}:
-        body_html = _render_detail_flow_groups((exp.get("detail_flows") or {}).get(section.get("heading", ""), [])) or _soften_code_blocks(fallback_body_html)
+        body_html = _render_detail_flow_groups_stable((exp.get("detail_flows") or {}).get(section.get("heading", ""), [])) or _soften_code_blocks(fallback_body_html)
     elif section_key in {"exception-flow", "page-structure"}:
-        body_html = _render_detail_flow_groups(
+        body_html = _render_detail_flow_groups_stable(
             [{"name": sub.get("heading", ""), "body_html": sub.get("body_html", "")} for sub in (section.get("subsections") or [])]
         ) or _soften_code_blocks(fallback_body_html)
     elif section_key == "state-feedback":

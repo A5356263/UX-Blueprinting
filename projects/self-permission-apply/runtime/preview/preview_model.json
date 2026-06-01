@@ -106,9 +106,9 @@
         "anchor": "2-交互流程总览",
         "section_key": "flow-overview",
         "component": "flow-overview-section",
-        "intro_html": "",
+        "intro_html": "<p><strong>异常流程重点：</strong></p>\n<ul><li>员工无直属上级 → 提交时提示并自动转交</li><li>重复申请 → 提交时阻止</li><li>可申请角色被移除 → 在途申请不受影响，草稿提示失效</li><li>能力被关闭 → 员工端入口变为不可用</li><li>审批人失效 → 管理员收到提醒</li></ul>",
         "subsections": [],
-        "body_html": ""
+        "body_html": "<p><strong>异常流程重点：</strong></p>\n<ul><li>员工无直属上级 → 提交时提示并自动转交</li><li>重复申请 → 提交时阻止</li><li>可申请角色被移除 → 在途申请不受影响，草稿提示失效</li><li>能力被关闭 → 员工端入口变为不可用</li><li>审批人失效 → 管理员收到提醒</li></ul>"
       },
       {
         "heading": "3. 主交互流程",
@@ -427,21 +427,6 @@
               "id": "3.6",
               "name": "查看并处理权限申请",
               "has_detail": true
-            }
-          ]
-        },
-        {
-          "role": "异常流程重点",
-          "nodes": [
-            {
-              "id": null,
-              "name": "- 员工无直属上级",
-              "has_detail": false
-            },
-            {
-              "id": null,
-              "name": "提交时提示并自动转交",
-              "has_detail": false
             }
           ]
         }

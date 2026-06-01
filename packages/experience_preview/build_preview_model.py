@@ -23,6 +23,16 @@ _EXPERIENCE_SECTION_COMPONENTS: list[tuple[str, str, str]] = [
     ("附录", "appendix", "appendix-section"),
 ]
 
+_NON_SUMMARY_ROLE_LABELS = {
+    "异常流程重点",
+    "异常重点",
+    "阻断流程",
+    "阻断重点",
+    "风险重点",
+    "注意事项",
+    "补充说明",
+}
+
 
 def _read_source(project_id: str, filename: str) -> tuple[Path, str]:
     candidates = [
@@ -123,6 +133,17 @@ def _strip_markdown_markers(text: str) -> str:
     cleaned = re.sub(r"^\*\*(.+?)\*\*$", r"\1", cleaned)
     cleaned = re.sub(r"^`(.+?)`$", r"\1", cleaned)
     return cleaned.strip()
+
+
+def _normalize_summary_role_label(text: str) -> str:
+    normalized = _strip_markdown_markers(text)
+    normalized = re.sub(r"[：:]\s*$", "", normalized).strip()
+    return normalized
+
+
+def _is_summary_role_label(text: str) -> bool:
+    normalized = _normalize_summary_role_label(text)
+    return bool(normalized) and normalized not in _NON_SUMMARY_ROLE_LABELS
 
 
 def _normalize_markdown_body(body: str) -> str:
@@ -292,113 +313,67 @@ def _remove_journey_path_lines(body: str) -> str:
 
 
 def _parse_interaction_summary(body: str) -> list[dict[str, Any]]:
+    match = re.search(r"(?m)^\*\*分角色交互流程[:：]?\*\*\s*$", body)
+    if not match:
+        return []
+
+    block = body[match.end() :]
+    next_heading = re.search(r"(?m)^\*\*.+?\*\*\s*$", block)
+    if next_heading:
+        block = block[: next_heading.start()]
+
     rows: list[dict[str, Any]] = []
-    in_node_block = False
-    lines = body.splitlines()
-    i = 0
-    while i < len(lines):
-        stripped = lines[i].strip()
-        if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
-            in_node_block = True
-            i += 1
+    for raw_line in block.splitlines():
+        stripped = raw_line.strip()
+        if not stripped.startswith("- "):
             continue
-        if in_node_block and stripped.startswith("- "):
-            content = stripped[2:].strip()
-            if "：" not in content and ":" not in content:
-                i += 1
-                continue
-            role, path = re.split(r"[:：]", content, maxsplit=1)
-            role = role.strip()
-            if not role:
-                i += 1
-                continue
-            node_items: list[dict[str, Any]] = []
-            for part in re.split(r"\s*(?:->|→)\s*", path):
-                segment = part.strip()
-                if not segment:
-                    continue
-                match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
-                if match:
-                    node_id = match.group(1).strip()
-                    name = match.group(2).strip()
-                    node_items.append({"id": node_id, "name": name, "has_detail": True})
-                else:
-                    node_items.append({"id": None, "name": segment, "has_detail": False})
-            if role and node_items:
-                rows.append({"role": role, "nodes": node_items})
-            i += 1
+        content = stripped[2:].strip()
+        if "：" not in content and ":" not in content:
             continue
-        if (in_node_block or re.fullmatch(r"\*\*.+?\*\*", stripped)) and re.fullmatch(r"\*\*.+?\*\*", stripped):
-            role = re.sub(r"[：:]\s*$", "", stripped.strip("*").strip()).strip()
-            path_line = ""
-            j = i + 1
-            while j < len(lines):
-                candidate = lines[j].strip()
-                if not candidate:
-                    j += 1
-                    continue
-                if candidate.startswith("**"):
-                    break
-                path_line = candidate
-                break
-            if role and path_line and ("→" in path_line or "->" in path_line):
-                node_items: list[dict[str, Any]] = []
-                for part in re.split(r"\s*(?:->|→)\s*", path_line):
-                    segment = part.strip()
-                    if not segment:
-                        continue
-                    match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
-                    if match:
-                        node_items.append(
-                            {"id": match.group(1).strip(), "name": match.group(2).strip(), "has_detail": True}
-                        )
-                    else:
-                        node_items.append({"id": None, "name": segment, "has_detail": False})
-                if node_items:
-                    rows.append({"role": role, "nodes": node_items})
-                    i = j + 1
-                    continue
-        if in_node_block and stripped.startswith("**"):
-            break
-        i += 1
+        role, path = re.split(r"[:：]", content, maxsplit=1)
+        role = _normalize_summary_role_label(role)
+        if not _is_summary_role_label(role):
+            continue
+        node_items: list[dict[str, Any]] = []
+        for part in re.split(r"\s*(?:->|→)\s*", path):
+            segment = part.strip()
+            if not segment:
+                continue
+            detail_match = re.match(r"^节点\s+([0-9]+(?:\.[0-9a-zA-Z]+)?)\s+(.+)$", segment)
+            if detail_match:
+                node_items.append(
+                    {
+                        "id": detail_match.group(1).strip(),
+                        "name": detail_match.group(2).strip(),
+                        "has_detail": True,
+                    }
+                )
+            else:
+                node_items.append({"id": None, "name": segment, "has_detail": False})
+        if role and node_items:
+            rows.append({"role": role, "nodes": node_items})
     return rows
 
 
 def _remove_interaction_summary_node_block(body: str) -> str:
     lines = body.splitlines()
     kept: list[str] = []
-    in_node_block = False
-    i = 0
-    while i < len(lines):
-        line = lines[i]
+    in_summary_block = False
+    for line in lines:
         stripped = line.strip()
         if stripped in {"**分角色交互流程：**", "**分角色交互流程:**"}:
-            in_node_block = True
-            i += 1
+            in_summary_block = True
             continue
-        if in_node_block and stripped.startswith("- "):
-            i += 1
+        if in_summary_block:
+            if re.fullmatch(r"\*\*.+?\*\*", stripped):
+                in_summary_block = False
+                kept.append(line)
+                continue
+            if not stripped or stripped.startswith("- "):
+                continue
+            kept.append(line)
             continue
-        if in_node_block and not stripped:
-            i += 1
-            continue
-        if (in_node_block or re.fullmatch(r"\*\*.+?\*\*", stripped)) and re.fullmatch(r"\*\*.+?\*\*", stripped):
-            j = i + 1
-            while j < len(lines):
-                candidate = lines[j].strip()
-                if not candidate:
-                    j += 1
-                    continue
-                break
-            if j < len(lines):
-                candidate = lines[j].strip()
-                if candidate and not candidate.startswith("**") and ("→" in candidate or "->" in candidate):
-                    i = j + 1
-                    continue
-        if in_node_block:
-            in_node_block = False
         kept.append(line)
-        i += 1
     return "\n".join(kept).strip()
 
 

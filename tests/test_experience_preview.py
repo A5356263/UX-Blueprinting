@@ -142,7 +142,7 @@ class ExperiencePreviewTests(unittest.TestCase):
         self.assertIn("旅程缺口", sections["journey"]["body_html"])
         self.assertEqual(len(model["experience"]["interaction_summary"]["rows"]), 2)
 
-    def test_build_preview_model_parses_bold_role_summary_rows(self) -> None:
+    def test_build_preview_model_does_not_visualize_non_whitelisted_summary_blocks(self) -> None:
         workspace = self.projects_dir / self.project_id / "workspace"
         _write_text(
             workspace / "experience_blueprint.md",
@@ -165,12 +165,44 @@ class ExperiencePreviewTests(unittest.TestCase):
 
         model = build_preview_model(self.project_id)
         rows = model["experience"]["interaction_summary"]["rows"]
+        flow_section = next(section for section in model["experience"]["sections"] if section["section_key"] == "flow-overview")
+
+        self.assertEqual(rows, [])
+        self.assertIn("管理员配置流程", flow_section["body_html"])
+        self.assertIn("员工申请流程", flow_section["body_html"])
+        self.assertIn("异常流程重点", flow_section["body_html"])
+        self.assertIn("审批人缺失", flow_section["body_html"])
+
+    def test_build_preview_model_excludes_exception_focus_from_summary_rows(self) -> None:
+        workspace = self.projects_dir / self.project_id / "workspace"
+        _write_text(
+            workspace / "experience_blueprint.md",
+            """
+# 体验蓝图
+
+## 2. 交互流程总览
+
+**分角色交互流程：**
+
+- 管理员：进入后台 → 开启功能 → 保存生效
+- 员工：查看权限 → 提交申请 → 查看结果
+
+**异常流程重点：**
+
+- 员工无直属上级 → 提交时提示并自动转交
+- 重复申请 → 提交时阻止
+""",
+        )
+
+        model = build_preview_model(self.project_id)
+        rows = model["experience"]["interaction_summary"]["rows"]
+        flow_section = next(section for section in model["experience"]["sections"] if section["section_key"] == "flow-overview")
 
         self.assertEqual(len(rows), 2)
-        self.assertEqual(rows[0]["role"], "管理员配置流程")
-        self.assertEqual(rows[0]["nodes"][0]["name"], "进入权限管理")
-        self.assertEqual(rows[1]["role"], "员工申请流程")
-        self.assertEqual(rows[1]["nodes"][-1]["name"], "查看结果")
+        self.assertEqual([row["role"] for row in rows], ["管理员", "员工"])
+        self.assertIn("异常流程重点", flow_section["body_html"])
+        self.assertIn("员工无直属上级", flow_section["body_html"])
+        self.assertIn("重复申请", flow_section["body_html"])
 
     def test_rendered_preview_keeps_self_contained_layout_and_component_shells(self) -> None:
         model = build_preview_model(self.project_id)
@@ -188,8 +220,11 @@ class ExperiencePreviewTests(unittest.TestCase):
         self.assertIn("state-feedback-table-wrap", html)
         self.assertIn("journey-visual", html)
         self.assertIn("summary-visual", html)
+        self.assertIn(".summary-role {\n  min-width: 96px;", html)
         self.assertIn(".summary-path {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: nowrap;", html)
         self.assertIn(".journey-path-nodes {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: nowrap;", html)
+        self.assertIn('.experience-component[data-section-key="main-flow"] .section-body h3,\n.experience-component[data-section-key="secondary-flow"] .section-body h3,\n.experience-component[data-section-key="exception-flow"] .section-body h3 {\n  margin: 32px 0 10px;', html)
+        self.assertIn('.experience-component .section-body .flow-field-label {\n  margin-top: 20px;', html)
         self.assertNotIn('<div class="summary-role">异常流程重点</div>', html)
         self.assertNotIn('<span class="summary-step">审批人缺失</span>', html)
         self.assertIn("异常流程重点", html)
