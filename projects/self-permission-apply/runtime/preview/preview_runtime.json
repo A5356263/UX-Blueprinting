@@ -1,16 +1,16 @@
 {
   "project_id": "self-permission-apply",
-  "generated_at": "2026-06-01T13:21:11+00:00",
+  "generated_at": "2026-06-01T14:04:16+00:00",
   "output_dir": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-permission-apply\\runtime\\preview",
   "output_path": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-permission-apply\\runtime\\preview\\index.html",
   "server_host": "127.0.0.1",
-  "server_port": 0,
-  "preview_url": "",
-  "ready_state": "built",
+  "server_port": 57188,
+  "preview_url": "http://127.0.0.1:57188/",
+  "ready_state": "ready",
   "business_section_count": 11,
   "experience_section_count": 10,
-  "flow_count": 11,
-  "page_count": 4,
+  "flow_count": 12,
+  "page_count": 6,
   "source_business_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-permission-apply\\exports\\final\\business_blueprint.md",
   "source_experience_blueprint": "E:\\AI设计\\体验蓝图构建思路\\projects\\self-permission-apply\\exports\\final\\experience_blueprint.md"
 }

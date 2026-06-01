@@ -1,5 +1,7 @@
 # 任务卡片
 
+> 说明：以下 `## Protocol`、`## Required Inputs` 等 section 名，以及 `Protocol Name`、`Task ID` 等字段名，当前仍作为执行器稳定解析结构保留，不建议随意改名。
+
 ## Protocol
 
 - Protocol Name: Cross-AI Task Card
@@ -10,14 +12,14 @@
 
 ## Task Goal
 
-- 本次任务要解决：在企业权限管理系统中新增员工自助申请权限的能力，使员工可以查看自己的权限、主动申请权限、经审批后自动获得授权，同时保留管理员对申请范围和审批流程的控制。
-- 本次输出主要服务于业务方案评审和体验方案设计。
+- 为「员工自助申请权限」做完整业务判断和体验蓝图，使员工可以查看已有权限、主动申请角色权限、通过审批后自动授权，同时管理员可控制申请范围和审批流程
+- 本次输出服务于产品方案评审和体验设计启动
 
 ## Task Scenario
 
-- 本次任务场景：在已有权限管理体系上新增"员工自助申请"这一新的权限授予通路，涉及底层对象关系变化、状态机扩展、审批生效机制引入。
-- 本次任务为新建任务，覆盖 facts → business → experience 全链路。
-- 复杂度评估为高复杂度：涉及新增业务对象（权限申请单）、改变状态机（申请单生命周期 + 能力开关状态交互）、改变生效机制（从直接授权变为审批后自动生效）。
+- 基于低完整度需求文档，新增一套员工自助申请权限的完整业务模型和体验方案
+- 这是新建任务，覆盖全链路（facts → business → experience）
+- 主要压力在业务骨架变化（新对象、新来源、新状态机）和跨角色体验承接（管理端/员工端/审批端）
 
 ## Required Inputs
 
@@ -36,7 +38,7 @@
 ## Read Order
 
 1. 先读本文档
-2. 再读 Required Inputs
+2. 再读 `Required Inputs`
 3. 生成 facts.md
 4. 生成 business 产物
 5. 生成 experience_blueprint.md
@@ -45,14 +47,14 @@
 ## Constraints
 
 - 不得臆造业务事实
-- 信息不足处保留 [GAP]
-- 正式产出必须写入 workspace/
+- 信息不足处保留 `[GAP]`
+- 正式产出必须写入 `workspace/`
 - 不得用聊天回复替代正式文档产物
 - facts 阶段不得把引用知识提升为当前任务已确认事实
 - business 阶段不得输出 UI 方案或实现方案
 - experience 阶段不得输出高保真视觉稿或研发实现细节
-- runtime/uxb_route_decision.json 是执行判断与知识选择唯一来源
-- task_card.md 不能替代 UXB 做复杂度判断、知识选择或执行深度判断
+- `runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源
+- `task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断
 
 ## Templates
 
@@ -77,12 +79,12 @@
 ## Completion Criteria
 
 - 必需输出文件全部存在
-- check_report.md 已生成
+- `check_report.md` 已生成
 - 无 blocker
 
 ## Facts Output Requirements
 
-参考 specs/08_fact_extraction_contract.md 和 templates/facts.template.md
+参考 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`
 
 ## Business Output Requirements
 
@@ -90,9 +92,9 @@
 
 ## Experience Output Requirements
 
-参考 specs/10_experience_blueprint_contract.md 和 templates/experience_blueprint.template.md
+参考 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`
 
 ## Notes
 
-- UXB 应在执行前写好 projects/self-permission-apply/runtime/uxb_route_decision.json
-- 部分关键业务约束（如互斥范围、审批人规则）当前尚未明确，将在业务判断阶段标记为 [GAP] 并在 gap_list.md 中追踪
+- UXB 应在执行前写好 `projects/self-permission-apply/runtime/uxb_route_decision.json`
+- 如任务只做到某一阶段，可在 `Task Scenario` 和 `Required Outputs` 中明确裁剪

@@ -1,11 +1,11 @@
 {
   "project_id": "self-permission-apply",
   "stage": "business",
-  "status": "passed",
+  "status": "warning",
   "can_proceed": true,
   "next_stage": "experience",
   "generated_by": "packages.validate",
-  "updated_at": "2026-06-01T08:58:18.405067+00:00",
+  "updated_at": "2026-06-01T13:57:47.071792+00:00",
   "checked_files": [
     "projects/self-permission-apply/workspace/facts.md",
     "projects/self-permission-apply/workspace/business_blueprint.md",
@@ -13,13 +13,15 @@
     "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
   ],
   "blocker_count": 0,
-  "warning_count": 0,
+  "warning_count": 1,
   "info_count": 1,
   "issues": {
     "blockers": [],
-    "warnings": [],
+    "warnings": [
+      "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。"
+    ],
     "infos": [
-      "facts 阶段状态：warning"
+      "facts 阶段状态：passed"
     ]
   },
   "issue_details_version": "1.0",
@@ -27,9 +29,9 @@
     {
       "source": "business_gate",
       "stage": "business",
-      "severity": "info",
-      "category": "quality_gap",
-      "message": "facts 阶段状态：warning",
+      "severity": "warning",
+      "category": "experience_state_feedback_gap",
+      "message": "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。",
       "target_artifacts": [
         "projects/self-permission-apply/workspace/business_blueprint.md"
       ],
@@ -47,7 +49,7 @@
       "evidence": [
         {
           "type": "message",
-          "value": "facts 阶段状态：warning"
+          "value": "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。"
         },
         {
           "type": "checked_files",
@@ -61,14 +63,65 @@
         {
           "type": "metrics",
           "value": {
-            "option_compare_count": 12,
-            "value_assessment_item_count": 10,
-            "risk_item_count": 8,
-            "unresolved_gap_count": 2,
+            "option_compare_count": 20,
+            "value_assessment_item_count": 11,
+            "risk_item_count": 20,
+            "unresolved_gap_count": 0,
             "has_appendix": true,
-            "appendix_item_count": 6,
-            "referenced_fact_section_count": 4,
-            "handover_item_count": 20,
+            "appendix_item_count": 17,
+            "referenced_fact_section_count": 5,
+            "handover_item_count": 22,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        }
+      ]
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts 阶段状态：passed",
+      "target_artifacts": [
+        "projects/self-permission-apply/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/self-permission-apply/workspace/facts.md",
+        "projects/self-permission-apply/workspace/business_blueprint.md",
+        "projects/self-permission-apply/runtime/provenance.json",
+        "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts 阶段状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-permission-apply/workspace/facts.md",
+            "projects/self-permission-apply/workspace/business_blueprint.md",
+            "projects/self-permission-apply/runtime/provenance.json",
+            "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "option_compare_count": 20,
+            "value_assessment_item_count": 11,
+            "risk_item_count": 20,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "appendix_item_count": 17,
+            "referenced_fact_section_count": 5,
+            "handover_item_count": 22,
             "handover_keyword_count": 5,
             "has_handover_empty_talk": false
           }
@@ -77,14 +130,14 @@
     }
   ],
   "metrics": {
-    "option_compare_count": 12,
-    "value_assessment_item_count": 10,
-    "risk_item_count": 8,
-    "unresolved_gap_count": 2,
+    "option_compare_count": 20,
+    "value_assessment_item_count": 11,
+    "risk_item_count": 20,
+    "unresolved_gap_count": 0,
     "has_appendix": true,
-    "appendix_item_count": 6,
-    "referenced_fact_section_count": 4,
-    "handover_item_count": 20,
+    "appendix_item_count": 17,
+    "referenced_fact_section_count": 5,
+    "handover_item_count": 22,
     "handover_keyword_count": 5,
     "has_handover_empty_talk": false
   }

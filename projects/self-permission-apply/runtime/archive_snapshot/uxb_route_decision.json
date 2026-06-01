@@ -6,117 +6,246 @@
   "can_execute_mainline": true,
   "judgment": {
     "demand_type": "复杂业务需求",
-    "business_depth": "business_blueprint",
-    "experience_output": "experience_blueprint",
-    "reason": "本次需求不是局部体验优化或既有能力扩展。它新增了'员工申请→审批→自动授权'这一条权限分配通路，改变了现有权限体系从'仅管理员分配'到'管理员分配+员工申请双通道'的底层分配方式。底层业务骨架发生多项变化：(1)新增'权限申请单'业务对象，涉及申请人、审批人、申请内容、审批结果、授权结果的多方关系；(2)新增申请单状态机（提交→审批→授权/驳回），且需要与能力开关状态（开启/关闭中/已关闭）设计交互；(3)生效机制从直接授权变为审批后自动生效；(4)需要定义可申请范围、权限互斥、敏感权限排除、审批人规则等多条新规则。基于现有权限域知识（对象模型、决策链契约、治理状态模型），当前信息已足以支撑正式输出，关键不确定项以[GAP]形式在业务和体验蓝图中标记追踪。用户已明确确认执行。"
+    "business_depth": "deep",
+    "experience_output": "full",
+    "reason": "本次需求引入了一种全新的权限获取方式——员工从「只能等管理员分配」变成「可以主动发起申请、通过审批后自动授权」。底层业务骨架发生变化：新增权限申请单业务对象、新增自助申请来源类型（source_enum 需扩展）、新增申请→审批→授权的状态机链路、新增能力开启/关闭的生命周期管理。体验设计压力横跨管理员配置端、员工申请端、审批人处理端三端，涉及角色多、异常分支多、信息密度高。当前信息足以支撑完整业务蓝图输出：需求目标清楚、关键对象关系已通过知识库确认、15 个不明确事项已有明确判断结论、剩余不确定项不会让正式产出失真。"
   },
   "complexity_judgment": {
     "business_change": [
-      "新增业务对象：权限申请单，涉及申请人→申请内容→审批人→授权结果的关系链条",
-      "改变生效机制：从已授予即生效变为申请→审批→自动授权",
-      "新增状态机：申请单生命周期（草稿→提交→审批中→通过/驳回→授权生效）",
-      "新增状态交互：能力开关状态与进行中申请的交互（关闭时待审批/审批中申请的处理）",
-      "新增规则集：可申请范围定义、敏感权限排除、审批人规则、服务人员排除",
-      "数据口径变化：员工可见权限与可申请权限是两套不同的范围定义"
+      "新增业务对象：权限申请单（含申请记录、审批记录）",
+      "改变来源模型：需新增自助申请来源（source_enum 扩展），并定义来源优先级",
+      "改变状态机：新增申请→审批中→通过/拒绝→授权/撤销的完整状态链路",
+      "改变生效机制：自助申请的权限审批通过后才生效，区别于管理员直授即时生效",
+      "新增能力生命周期：管理员可开启/关闭自助申请能力，需定义关闭时的在途与已授权处理规则",
+      "与现有治理模式的关系：需明确与权限变更审批模式、子管理员模式、双管理员模式的共存与区分"
     ],
     "experience_pressure": [
-      "涉及3个角色：管理员（配置者）、员工（申请者）、审批人（审批者），每个角色的任务路径和页面不同",
-      "信息密度较高：权限列表展示、申请表单、审批列表、申请记录查询",
-      "异常分支多：审批驳回、审批超时、审批人不存在、关闭中申请、范围变更等",
-      "概念边界模糊：可见范围vs可申请范围、自助模式vs现有治理模式、已授权vs已生效"
+      "三端承接：管理端（配置可申请范围与审批规则）、员工端（查看权限+发起申请）、审批端（处理申请）",
+      "角色数量多：超级管理员、权限管理员、员工、审批人，各角色信息结构和操作路径不同",
+      "异常分支多：审批人不存在、审批链路断裂、关闭能力时在途申请处理、重复申请、权限已变更",
+      "信息密度高：员工权限列表需展示来源、申请表单需承载角色选择与原因说明、审批详情需完整呈现申请内容",
+      "概念边界：需区分「管理员分配」与「自助申请」两种权限来源，员工端与管理端都要能解释",
+      "查询排障整合：现有权限查询页需能展示和区分自助申请来源，避免加剧 RISK-005"
     ],
     "uncertainties": [
-      "自助申请模式与现有权限治理模式（双管理员/子管理员隔离/权限变更审批）的互斥范围和规则未明确",
-      "员工可申请的对象类型（角色、功能权限、或两者都支持）未确定",
-      "可申请范围配置方式（按角色/按功能权限/其他）未确定",
-      "审批人规则（默认审批人、异常兜底、审批链配置）未确定",
-      "管理员关闭能力后已生效权限的保留策略未确定",
-      "敏感权限/黑名单排除机制是否需要实现未确定"
+      "申请频率限制是否需要（同一员工短时间内重复申请同一角色）——不阻断，可在业务蓝图中作为建议提出",
+      "审批超时自动处理是否需要（超过 N 天未审批自动取消或升级）——不阻断，第一版保持简单",
+      "员工端权限列表是否需要隐藏不可申请的角色——不阻断，属于体验设计细节"
     ]
   },
   "knowledge_selection": {
     "summary_refs": {
       "business": [
-        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
-        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-        "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
-        "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md"
+        "knowledge/wiki/summaries/业务/权限管理/README.md"
       ],
       "guideline": [],
       "complexity": [
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-        ".claude/skills/uxb/references/complexity/01_domain_router.md",
-        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
+        ".claude/skills/uxb/references/complexity/01_domain_router.md"
       ]
     },
-    "raw_escalation_plan": [],
+    "raw_escalation_plan": [
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只提供了领域职责边界的概要描述，需要 raw 中的完整相邻域边界定义（组织域、审批域、应用域、协作域）来支撑自助申请跨域依赖分析",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认权限域与审批域的边界关系，判断自助申请的审批链路如何与审批中台对接", "确认权限域与组织域的边界关系，判断员工直属上级作为审批人是否可行"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/03_业务对象.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了七类业务对象的名称和一句话定义，需要 raw 中每类对象的最小属性定义来支撑申请单对象建模",
+        "used_for_stage": ["facts"],
+        "decision_points": ["确认 subject/resource/action/scope/source/modifier/state 的最小属性，判断申请单需要新增哪些对象属性", "确认 source 对象的 source_enum 和 source_priority 结构，为自助申请新来源定义提供依据"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了对象关系的类型名称，需要 raw 中的完整前置/覆盖/叠加/边界关系来定位自助申请来源在关系层级中的位置",
+        "used_for_stage": ["facts"],
+        "decision_points": ["确认前置关系（可见性→功能权限→数据范围→治理状态）中自助申请来源的插入位置", "确认叠加关系中个人直授与角色授予的共存规则，判断自助申请来源如何参与叠加"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只提供了能力域的一级分类，需要 raw 中完整的能力→页面承载映射来判断自助申请需要新增哪些页面",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认现有六大能力域（用户直授/角色授权/全局治理/协作可见性/查询排障/应用级治理）的页面承载，判断自助申请应作为新能力域还是扩展现有能力", "确认查询排障能力现有的按用户查询结果结构，判断自助申请来源的展示位置"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/11_任务场景.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了任务场景名称，需要 raw 中的完整任务→页面/路径映射来判断自助申请引入后的任务路径扩展",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认现有高频任务场景（按人授权/批量授权/角色分发/查询排障）的完整路径，判断自助申请需要新增哪些任务场景", "确认「查看某人为什么有权限」场景中的来源展示字段，判断自助申请来源如何融入"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/14_角色边界.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了角色分类，需要 raw 中各角色的完整可见/可操作边界来定义自助申请各角色的能力范围",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认超管/子管理员/普通管理员/员工的可见与可操作边界", "判断员工在自助申请场景下的可见范围（哪些角色可以申请）和操作范围（申请/撤销/查看记录）"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了判定链路的层级名称，需要 raw 中的完整 L0-L3 判定逻辑和 final_effective_rule 来设计自助申请来源接入判定链路的方式",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认 L0-L3 判定链路（可见性→功能权限→数据范围→治理生效）的完整规则", "判断自助申请来源应接入 L1（功能权限层）还是 L3（治理与生效层）", "确认 final_effective_rule 公式是否因新增来源而需要调整"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了 source_enum 的四个值名称，需要 raw 中完整的来源优先级和来源真源定义来设计新来源的定位",
+        "used_for_stage": ["facts"],
+        "decision_points": ["确认现有 source_enum（ACL_DIRECT/RBAC_ROLE/APP_VISIBILITY/COLLAB_VISIBILITY）的完整定义", "确认 source_priority 中各类来源的覆盖/叠加规则", "为自助申请新来源定义 source_enum 值和优先级位置"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了原因码的五个域，需要 raw 中完整的原因码枚举和定位字段来设计自助申请场景的新增原因码",
+        "used_for_stage": ["experience"],
+        "decision_points": ["确认现有原因码体系（VISIBILITY/GRANT/SCOPE/GOVERNANCE/BOUNDARY）的结构", "设计自助申请场景的可能新增原因码（如申请被拒、能力已关闭、不在可申请范围等）"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了规则编号和名称，需要 raw 中 R-001 至 R-010 的完整规则条件、类型和失败结果来设计自助申请的业务规则",
+        "used_for_stage": ["business"],
+        "decision_points": ["重点参考 R-007（治理影响生效）判断自助申请审批通过后何时生效", "参考 R-009（治理模式互斥）判断自助申请与现有治理模式的共存关系", "参考 R-001/R-002（可见性前置/覆盖）判断员工查看可申请角色时的展示规则"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了治理触发点和状态枚举，需要 raw 中完整的状态模型和 actor_responsibility 约定来设计申请状态机",
+        "used_for_stage": ["business"],
+        "decision_points": ["确认 state_model（draft/pending/approved/rejected/effective/revoked）的各状态语义", "确认 actor_responsibility 的四个维度（who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state），为申请各状态定义责任矩阵"]
+      },
+      {
+        "raw_ref": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+        "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "why_summary_not_enough": "summary 只列出了体验风险编号和名称，需要 raw 中 TR-001~006 和 RISK-001~008 的完整触发条件、用户伤害和必须暴露字段来设计体验风险缓解策略",
+        "used_for_stage": ["experience"],
+        "decision_points": ["重点参考 TR-003（概念不增殖）防止自助申请引入过多新概念", "参考 RISK-002（权限来源不透明）确保自助申请来源在查询页可解释", "参考 RISK-005（跨模块散落）确保自助申请不加剧查询分裂", "参考 TR-001（可解释性优先）确保权限结果仍可回答「来自哪里」"]
+      }
+    ],
     "stage_refs": {
       "facts": {
-        "raw_refs": []
+        "raw_refs": [
+          "knowledge/raw/业务/权限管理/03_业务对象.md",
+          "knowledge/raw/业务/权限管理/04_对象关系.md",
+          "knowledge/raw/业务/权限管理/21_来源模型.md"
+        ]
       },
       "business": {
-        "raw_refs": []
+        "raw_refs": [
+          "knowledge/raw/业务/权限管理/01_范围与边界.md",
+          "knowledge/raw/业务/权限管理/10_能力地图.md",
+          "knowledge/raw/业务/权限管理/11_任务场景.md",
+          "knowledge/raw/业务/权限管理/14_角色边界.md",
+          "knowledge/raw/业务/权限管理/20_决策链契约.md",
+          "knowledge/raw/业务/权限管理/23_规则契约.md",
+          "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+        ]
       },
       "experience": {
-        "raw_refs": []
+        "raw_refs": [
+          "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+          "knowledge/raw/业务/权限管理/30_体验风险模式.md"
+        ]
       }
     },
     "selection_reasons": [
       {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "ref": "knowledge/wiki/summaries/业务/权限管理/README.md",
         "type": "summary",
-        "used_for_stage": ["facts", "business"],
-        "reason": "用于建立权限管理领域的边界认知，理解核心问题和上游依赖，支撑 facts 阶段的范围判断和 business 阶段的领域边界说明"
-      },
-      {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
-        "type": "summary",
-        "used_for_stage": ["facts", "business"],
-        "reason": "用于参考现有权限对象模型（subject、resource、action、scope、source、modifier、state），为新增'权限申请单'对象提供建模参照"
-      },
-      {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
-        "type": "summary",
-        "used_for_stage": ["business"],
-        "reason": "用于理解现有对象前置、覆盖、叠加关系，判断新增申请对象如何融入现有权限判断链"
-      },
-      {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
-        "type": "summary",
-        "used_for_stage": ["facts", "business"],
-        "reason": "用于了解现有权限能力与页面承载关系，判断新能力落在哪个位置，以及与现有能力的边界"
-      },
-      {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/20_决策链契约.md",
-        "type": "summary",
-        "used_for_stage": ["business"],
-        "reason": "用于参考现有权限判断链（可见性→功能权限→数据范围→治理生效），判断自申请授权如何接入或扩展现有判断链路"
-      },
-      {
-        "ref": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
-        "type": "summary",
-        "used_for_stage": ["facts", "business"],
-        "reason": "用于理解现有治理状态模型（draft→pending→approved→rejected→effective→revoked），为申请单状态设计和模式互斥判断提供参照"
+        "used_for_stage": ["facts", "business", "experience"],
+        "reason": "权限管理领域二级路由卡，用于确认领域内文件编号段的职责边界和阅读顺序，是后续所有 raw 文件的入口路由来源"
       },
       {
         "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-        "type": "summary",
-        "used_for_stage": [],
-        "reason": "用于支撑此次复杂度判断，明确底层业务改动六问和体验设计压力五问的结论"
+        "type": "complexity",
+        "used_for_stage": ["business"],
+        "reason": "通用复杂度判断标准，提供底层业务改动六问和体验设计压力五问，支撑需求类型判断和输出深度决策"
       },
       {
         "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
-        "type": "summary",
-        "used_for_stage": [],
-        "reason": "用于领域识别，确认本次需求主要落在管理后台/权限管理领域"
+        "type": "complexity",
+        "used_for_stage": ["business"],
+        "reason": "领域识别与领域卡片读取规则，确认权限管理属于管理后台领域，权限+审批涉及协同办公跨域"
       },
       {
-        "ref": ".claude/skills/uxb/references/complexity/domains/admin_console.md",
-        "type": "summary",
-        "used_for_stage": [],
-        "reason": "用于确认管理后台领域的高/中/低复杂度触发点，支撑复杂度判断"
+        "ref": "knowledge/raw/业务/权限管理/03_业务对象.md",
+        "type": "raw",
+        "used_for_stage": ["facts"],
+        "reason": "确认七类业务对象的最小属性定义，支撑申请单对象建模和来源模型扩展"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "type": "raw",
+        "used_for_stage": ["facts"],
+        "reason": "确认前置/覆盖/叠加/边界四类对象关系，支撑自助申请来源在对象关系层级中的定位"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "type": "raw",
+        "used_for_stage": ["facts"],
+        "reason": "确认 source_enum、source_priority、source_of_truth 完整定义，支撑自助申请新来源的设计"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认权限域与审批域、组织域、应用域、协作域的边界关系，支撑自助申请跨域依赖分析"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认现有六大能力域和页面承载映射，支撑自助申请作为新能力的定位和页面规划"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/11_任务场景.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认现有高频任务场景和页面路径，支撑自助申请引入后的任务场景扩展和路径整合"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/14_角色边界.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认各角色的可见/可操作边界，支撑自助申请各角色的能力范围定义"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认 L0-L3 判定链路和 final_effective_rule 公式，支撑自助申请来源接入判定链路的设计"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认 R-001~R-010 核心规则，重点参考治理影响生效和治理模式互斥规则"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "type": "raw",
+        "used_for_stage": ["business"],
+        "reason": "确认 state_model 和 actor_responsibility 约定，支撑申请状态机设计和各状态责任矩阵定义"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+        "type": "raw",
+        "used_for_stage": ["experience"],
+        "reason": "确认原因码体系结构，支撑自助申请场景新增原因码设计"
+      },
+      {
+        "ref": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+        "type": "raw",
+        "used_for_stage": ["experience"],
+        "reason": "确认 TR-001~006 和 RISK-001~008 的触发条件与缓解要求，支撑体验风险识别和缓解策略"
       }
     ]
   },
@@ -124,13 +253,14 @@
     "required_outputs": [
       "facts.md",
       "business_blueprint.md",
-      "experience_blueprint.md",
-      "gap_list.md"
+      "experience_blueprint.md"
     ],
     "notes": [
-      "不确定项不影响当前正式输出——关键不确定项将在 business_blueprint 中以 [GAP] 标记，并在 gap_list 中统一追踪",
-      "design guideline 知识暂不选择——体验阶段如需要复杂反馈设计指南，可在 experience 阶段补充读取",
-      "raw_escalation_plan 为空——当前 summary 层知识已足以支撑业务判断，如 facts 或 business 阶段需要具体规则细节，可按需升级到 raw"
+      "自助申请引入新的权限来源，需在 facts 阶段明确 source_enum 扩展方案",
+      "申请状态机可复用现有 state_model（draft/pending/approved/rejected/effective/revoked），但需扩展具体场景语义",
+      "与审批中台的关系属于跨域依赖，权限域负责定义需求，审批域负责流程配置",
+      "员工端入口位置和具体交互细节属于 experience 阶段处理，business 阶段只定义信息架构要求",
+      "非阻断不确定项（申请频率限制、审批超时、角色展示方式）在蓝图中作为建议或待定项标注"
     ]
   }
 }

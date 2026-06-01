@@ -2,10 +2,10 @@
 
 ## Summary
 
-- status: warning
+- status: passed
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 1
+- warning_count: 0
 - info_count: 0
 
 - project_id: self-permission-apply
@@ -28,7 +28,7 @@
 
 ## Warnings
 
-- facts.md 输入来源引用不完整
+- none
 
 ## Infos
 

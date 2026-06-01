@@ -31,4 +31,4 @@
 
 ## Infos
 
-- business 阶段状态：passed
+- business 阶段状态：warning
