@@ -1,0 +1,184 @@
+{
+  "summary_refs": {
+    "business": [
+      "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+      "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+      "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md"
+    ],
+    "guideline": [
+      "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/wiki/summaries/设计准则/流程模式.md"
+    ],
+    "complexity": [
+      ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      ".claude/skills/uxb/references/complexity/01_domain_router.md"
+    ]
+  },
+  "raw_escalation_plan": [
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "why_summary_not_enough": "需要确认治理状态模型的具体状态流转规则和互斥条款细节，summary 已提供状态枚举但未展开每条规则的精确定义",
+      "used_for_stage": [
+        "business"
+      ],
+      "decision_points": [
+        "治理状态模型是否可承接自助申请的审批生命周期",
+        "双管理员模式与子管理员模式互斥条款的具体描述"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "why_summary_not_enough": "需要确认来源枚举的具体定义和治理修饰因子的分离原则，summary 已给出枚举值但未展开每条来源的完整上下文",
+      "used_for_stage": [
+        "business"
+      ],
+      "decision_points": [
+        "现有来源枚举是否需新增'自助申请'路径标记",
+        "治理修饰因子与授予来源的分离原则如何应用"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "why_summary_not_enough": "需要确认可见性/功能权限/数据范围/治理状态的前置覆盖关系的完整描述，summary 已概括原则但未展开完整关系链",
+      "used_for_stage": [
+        "business",
+        "experience"
+      ],
+      "decision_points": [
+        "可见性、功能权限、数据范围、治理状态的前置/覆盖关系",
+        "员工端权限视图的展示范围边界"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "why_summary_not_enough": "需要领域概述的完整定义和上游依赖的完整描述，summary 已概括核心语义但未展开完整依赖关系",
+      "used_for_stage": [
+        "facts"
+      ],
+      "decision_points": [
+        "权限域核心语义和职责范围",
+        "与上游领域的依赖关系"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "why_summary_not_enough": "需要确认域边界划分的完整描述，summary 已概括但未展开各域之间的详细边界",
+      "used_for_stage": [
+        "facts"
+      ],
+      "decision_points": [
+        "权限域与审批域、组织域、应用域的边界切分",
+        "自助申请模式中各域的职责划分"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "why_summary_not_enough": "需要确认现有治理模式配置入口的完整列表和页面路径，summary 已列举能力但未展开入口路径",
+      "used_for_stage": [
+        "facts"
+      ],
+      "decision_points": [
+        "现有治理模式配置入口的页面位置",
+        "自助申请配置入口的最佳放置位置"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+      "why_summary_not_enough": "需要确认完整的原因码枚举和定位字段定义，summary 已给出原因码族但未展开每条原因码的完整规范",
+      "used_for_stage": [
+        "business",
+        "experience"
+      ],
+      "decision_points": [
+        "冲突原因码体系的具体枚举值",
+        "自助申请被阻断时的错误码映射"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+      "why_summary_not_enough": "需要确认审批流程设计的完整规则细节，包括审批人来源类型、节点类型、超时策略的完整描述",
+      "used_for_stage": [
+        "facts"
+      ],
+      "decision_points": [
+        "审批流程设计能力的具体支持范围",
+        "审批人来源类型的完整列表",
+        "超时策略的配置规则"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/设计准则/流程模式.md",
+      "routed_by_summary": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "why_summary_not_enough": "需要完整的流程模式设计规范，summary 已概括但未展开多步骤交互的具体设计规则",
+      "used_for_stage": [
+        "experience"
+      ],
+      "decision_points": [
+        "三角色多步流程的交互模式设计规范",
+        "审批流程的交互承接规则"
+      ]
+    }
+  ],
+  "stage_refs": {
+    "facts": {
+      "summary_refs": [
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        ".claude/skills/uxb/references/complexity/01_domain_router.md"
+      ],
+      "raw_refs": [
+        "knowledge/raw/业务/权限管理/00_领域概述.md",
+        "knowledge/raw/业务/权限管理/01_范围与边界.md",
+        "knowledge/raw/业务/权限管理/10_能力地图.md",
+        "knowledge/raw/业务/审批管理/10_审批管理.md"
+      ]
+    },
+    "business": {
+      "summary_refs": [
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+        "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+        "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+        "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+        ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+        ".claude/skills/uxb/references/complexity/01_domain_router.md"
+      ],
+      "raw_refs": [
+        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+        "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "knowledge/raw/业务/权限管理/22_冲突原因码.md"
+      ]
+    },
+    "experience": {
+      "summary_refs": [
+        "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "knowledge/wiki/summaries/设计准则/流程模式.md"
+      ],
+      "raw_refs": [
+        "knowledge/raw/业务/权限管理/04_对象关系.md",
+        "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+        "knowledge/raw/设计准则/流程模式.md"
+      ]
+    }
+  }
+}

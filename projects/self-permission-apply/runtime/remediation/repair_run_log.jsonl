@@ -1,0 +1,1 @@
+{"ts": "2026-06-01T01:04:23.857243+00:00", "cycle_id": "2026-06-01T01:04:23.857259+00:00", "event": "plan_generated", "actor": "packages.repair_loop", "issue_ids": ["FACT-2446D678", "FACT-492DDFBE", "FACT-59FD36E7", "RUN-FCB57B57", "RUN-A3AFE22C"], "result": {"repair_loop_status": "blocked", "open_issue_count": 5}}

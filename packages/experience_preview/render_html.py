@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html as html_mod
+import re
 from pathlib import Path
 from typing import Any
 
@@ -344,6 +345,110 @@ body {
   color: var(--text-soft);
 }
 
+.component-intro:empty,
+.component-visuals:empty,
+.component-cards:empty,
+.component-notes:empty {
+  display: none;
+}
+
+.component-intro {
+  margin-bottom: 12px;
+}
+
+.component-intro:last-child {
+  margin-bottom: 0;
+}
+
+.component-visuals {
+  margin-bottom: 12px;
+}
+
+.component-visuals:last-child {
+  margin-bottom: 0;
+}
+
+.component-cards {
+  display: block;
+}
+
+.component-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.component-card:last-child {
+  margin-bottom: 0;
+}
+
+.component-card + .component-card {
+  margin-top: 6px;
+}
+
+.component-card-title {
+  margin: 18px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.component-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.component-note-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.component-note-item {
+  padding: 8px 0 8px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  position: relative;
+}
+
+.component-note-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.component-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.component-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.state-feedback-table-wrap {
+  overflow-x: auto;
+}
+
+.state-feedback-table-wrap table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .content { padding: 20px 16px 60px; }
@@ -351,6 +456,19 @@ body {
   .journey-path-row { flex-wrap: wrap; }
 }
 """
+
+FLOW_FIELD_LABELS: list[tuple[str, str]] = [
+    ("user_action", "用户动作"),
+    ("system_feedback", "系统反馈"),
+    ("explanation", "需要前置解释的信息"),
+    ("copy_text", "建议文案"),
+    ("success_copy", "成功反馈"),
+    ("error_copy", "异常提示"),
+    ("failure_copy", "失败反馈"),
+    ("buttons", "按钮"),
+    ("next_step", "下一步"),
+    ("options_note", "选项说明文案"),
+]
 
 
 def _render_interaction_summary(summary: dict[str, Any]) -> str:
@@ -411,6 +529,181 @@ def _render_sections(sections: list[dict[str, Any]], section_visuals: dict[str, 
     return "\n".join(parts)
 
 
+def _soften_code_blocks(body_html: str) -> str:
+    def _replace(match: re.Match[str]) -> str:
+        raw = html_mod.unescape(match.group(1)).strip()
+        if not raw:
+            return ""
+        lines = [line.rstrip() for line in raw.splitlines()]
+        rendered = "<br>".join(html_mod.escape(line) for line in lines)
+        return f"<p>{rendered}</p>"
+
+    return re.sub(r"<pre><code>([\s\S]*?)</code></pre>", _replace, body_html)
+
+
+def _render_flow_value(value: str) -> str:
+    value = str(value or "").strip()
+    if not value:
+        return ""
+    html = value
+    if "<" not in value:
+        html = _mdish_to_html(value)
+    return _soften_code_blocks(html)
+
+
+def _mdish_to_html(text: str) -> str:
+    lines = [line.rstrip() for line in text.splitlines()]
+    parts: list[str] = []
+    bullet_buffer: list[str] = []
+
+    def flush_bullets() -> None:
+        nonlocal bullet_buffer
+        if bullet_buffer:
+            items = "".join(f"<li>{html_mod.escape(item)}</li>" for item in bullet_buffer)
+            parts.append(f"<ul>{items}</ul>")
+            bullet_buffer = []
+
+    paragraph_lines: list[str] = []
+
+    def flush_paragraph() -> None:
+        nonlocal paragraph_lines
+        if paragraph_lines:
+            parts.append(f"<p>{'<br>'.join(html_mod.escape(line) for line in paragraph_lines)}</p>")
+            paragraph_lines = []
+
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if not stripped:
+            flush_bullets()
+            flush_paragraph()
+            continue
+        if stripped.startswith("- "):
+            flush_paragraph()
+            bullet_buffer.append(stripped[2:].strip())
+            continue
+        flush_bullets()
+        paragraph_lines.append(stripped)
+
+    flush_bullets()
+    flush_paragraph()
+    return "".join(parts)
+
+
+def _render_detail_flow_groups(groups: list[dict[str, Any]]) -> str:
+    if not groups:
+        return ""
+    parts: list[str] = []
+    for group in groups:
+        group_name = str(group.get("name", "")).strip()
+        if group_name:
+            parts.append(f"<h3>{html_mod.escape(group_name)}</h3>")
+
+        group_body_html = str(group.get("body_html", "") or "")
+        if group_body_html:
+            parts.append(_soften_code_blocks(group_body_html))
+            continue
+
+        nodes = group.get("nodes") or []
+        for node in nodes:
+            node_name = str(node.get("name", "")).strip()
+            if node_name and node_name != group_name:
+                parts.append(f"<h4>{html_mod.escape(node_name)}</h4>")
+
+            description_html = str(node.get("description_html", "") or "")
+            if description_html:
+                parts.append(_soften_code_blocks(description_html))
+
+            for key, label in FLOW_FIELD_LABELS:
+                rendered = _render_flow_value(str(node.get(key, "") or ""))
+                if rendered:
+                    parts.append(f"<p><strong>{html_mod.escape(label)}：</strong></p>")
+                    parts.append(rendered)
+    return "".join(parts)
+
+
+def _render_note_list(items: list[str]) -> str:
+    if not items:
+        return ""
+    parts = ['<ul class="component-note-list">']
+    for item in items:
+        parts.append(f'<li class="component-note-item">{html_mod.escape(str(item))}</li>')
+    parts.append("</ul>")
+    return "".join(parts)
+
+
+def _render_titled_note_list(title: str, items: list[str]) -> str:
+    if not items:
+        return ""
+    return f"<h3>{html_mod.escape(title)}</h3>{_render_note_list(items)}"
+
+
+def _render_state_feedback_table(rows: list[dict[str, str]]) -> str:
+    if not rows:
+        return ""
+    headers = list(rows[0].keys())
+    thead = "".join(f"<th>{html_mod.escape(header)}</th>" for header in headers)
+    tbody_rows: list[str] = []
+    for row in rows:
+        cells = "".join(f"<td>{html_mod.escape(str(row.get(header, '')))}</td>" for header in headers)
+        tbody_rows.append(f"<tr>{cells}</tr>")
+    return (
+        '<div class="state-feedback-table-wrap"><table>'
+        f"<thead><tr>{thead}</tr></thead><tbody>{''.join(tbody_rows)}</tbody></table></div>"
+    )
+
+
+def _render_experience_section(section: dict[str, Any], exp: dict[str, Any]) -> str:
+    section_key = str(section.get("section_key", "generic"))
+    heading = html_mod.escape(str(section.get("heading", "")))
+    anchor = html_mod.escape(str(section.get("anchor", "")))
+    intro_html = str(section.get("intro_html") or "")
+    fallback_body_html = str(section.get("body_html") or "")
+
+    body_parts: list[str] = []
+
+    if section_key == "journey":
+        visual_html = _render_journey_visual(exp.get("journey") or {})
+        if visual_html:
+            body_parts.append(visual_html)
+        notes_html = _render_titled_note_list("旅程缺口", (exp.get("journey") or {}).get("gaps") or [])
+        if notes_html:
+            body_parts.append(notes_html)
+        body_html = "".join(body_parts) or _soften_code_blocks(intro_html or fallback_body_html)
+    elif section_key == "flow-overview":
+        summary_html = _render_interaction_summary(exp.get("interaction_summary") or {})
+        if summary_html:
+            body_parts.append(summary_html)
+        if intro_html:
+            body_parts.append(_soften_code_blocks(intro_html))
+        body_html = "".join(body_parts) or _soften_code_blocks(fallback_body_html)
+    elif section_key in {"main-flow", "secondary-flow"}:
+        body_html = _render_detail_flow_groups((exp.get("detail_flows") or {}).get(section.get("heading", ""), [])) or _soften_code_blocks(fallback_body_html)
+    elif section_key in {"exception-flow", "page-structure"}:
+        body_html = _render_detail_flow_groups(
+            [{"name": sub.get("heading", ""), "body_html": sub.get("body_html", "")} for sub in (section.get("subsections") or [])]
+        ) or _soften_code_blocks(fallback_body_html)
+    elif section_key == "state-feedback":
+        table_html = _render_state_feedback_table(exp.get("state_rows") or [])
+        if table_html:
+            body_parts.append(table_html)
+        if intro_html:
+            body_parts.append(_soften_code_blocks(intro_html))
+        body_html = "".join(body_parts) or _soften_code_blocks(fallback_body_html)
+    else:
+        body_html = _soften_code_blocks(fallback_body_html)
+
+    return (
+        f'<div class="section-block experience-component" id="{anchor}" data-section-key="{html_mod.escape(section_key)}">'
+        f'<h2 class="section-heading">{heading}</h2>'
+        f'<div class="section-body">{body_html}</div>'
+        "</div>"
+    )
+
+
+def _render_experience_sections(exp: dict[str, Any]) -> str:
+    return "\n".join(_render_experience_section(section, exp) for section in exp["sections"])
+
+
 def _render_nav_items(sections: list[dict[str, Any]]) -> str:
     parts: list[str] = []
     for section in sections:
@@ -442,7 +735,7 @@ def _render_business(model: dict[str, Any]) -> str:
 
 def _render_experience(model: dict[str, Any]) -> str:
     exp = model["experience"]
-    sections_html = _render_sections(exp["sections"], _experience_section_visuals(exp))
+    sections_html = _render_experience_sections(exp)
     return (
         '<div class="content-panel hidden" id="content-experience">'
         f'<h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">{html_mod.escape(exp["title"])}</h1>'

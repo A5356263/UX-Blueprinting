@@ -8,6 +8,20 @@ from typing import Any
 from packages.common import get_project_exports_dir, get_project_workspace_dir
 
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+_SECTION_NUMBER_RE = re.compile(r"^\d+(?:\.\d+)?\s*[\.．、]?\s*")
+
+_EXPERIENCE_SECTION_COMPONENTS: list[tuple[str, str, str]] = [
+    ("本次关键设计判断", "judgment", "judgment-section"),
+    ("旅程图", "journey", "journey-section"),
+    ("交互流程总览", "flow-overview", "flow-overview-section"),
+    ("主交互流程", "main-flow", "main-flow-section"),
+    ("次交互流程", "secondary-flow", "secondary-flow-section"),
+    ("异常与阻断流程", "exception-flow", "exception-flow-section"),
+    ("页面 / 弹窗 / 抽屉设计", "page-structure", "page-structure-section"),
+    ("状态与反馈文案", "state-feedback", "state-feedback-section"),
+    ("待确认问题", "open-questions", "open-question-section"),
+    ("附录", "appendix", "appendix-section"),
+]
 
 
 def _read_source(project_id: str, filename: str) -> tuple[Path, str]:
@@ -69,11 +83,50 @@ def _split_subsections(text: str, level: int) -> list[dict[str, Any]]:
     return result
 
 
+def _section_heading_base(heading: str) -> str:
+    normalized = _SECTION_NUMBER_RE.sub("", heading.strip())
+    return normalized.replace("：", ":").strip()
+
+
+def _resolve_experience_section_meta(heading: str) -> tuple[str, str]:
+    normalized = _section_heading_base(heading)
+    for marker, section_key, component in _EXPERIENCE_SECTION_COMPONENTS:
+        if normalized == marker or normalized.startswith(marker):
+            return section_key, component
+    return "generic", "generic-section"
+
+
+def _body_before_subsections(text: str, level: int) -> str:
+    prefix = "#" * level
+    pattern = re.compile(rf"^{prefix}\s+.+?$", re.MULTILINE)
+    match = pattern.search(text)
+    return text[: match.start()].strip() if match else text.strip()
+
+
+def _renderable_subsections(text: str, level: int = 3) -> list[dict[str, Any]]:
+    rendered: list[dict[str, Any]] = []
+    for sub in _split_subsections(text, level):
+        body_html = _md_body_to_html(sub["body"])
+        rendered.append({"heading": sub["heading"], "body_html": body_html, "anchor": _make_anchor(sub["heading"])})
+    return rendered
+
+
 def _inline_md(text: str) -> str:
     text = html_mod.escape(text)
     text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
     text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
     return text
+
+
+def _normalize_markdown_body(body: str) -> str:
+    text = body.strip()
+    if not text:
+        return ""
+    whole_fence = re.fullmatch(r"```[^\n`]*\n([\s\S]*?)\n```", text)
+    if whole_fence:
+        return whole_fence.group(1).strip()
+    text = re.sub(r"```[^\n`]*\n\s*\n```", "", text)
+    return text.strip()
 
 
 def _is_table_separator(line: str) -> bool:
@@ -112,6 +165,18 @@ def _extract_markdown_table(lines: list[str]) -> tuple[list[str], list[list[str]
     return [], []
 
 
+def _remove_first_markdown_table(text: str) -> str:
+    lines = text.splitlines()
+    for i in range(len(lines) - 1):
+        if lines[i].strip().startswith("|") and _is_table_separator(lines[i + 1]):
+            j = i + 2
+            while j < len(lines) and lines[j].strip().startswith("|"):
+                j += 1
+            remaining = lines[:i] + lines[j:]
+            return "\n".join(remaining).strip()
+    return text.strip()
+
+
 def _plain_cell_text(text: str) -> str:
     text = text.replace("<br>", "\n").replace("<br/>", "\n").replace("<br />", "\n")
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
@@ -134,6 +199,30 @@ def _extract_journey_gaps(body: str) -> list[str]:
     return items
 
 
+def _strip_role_hint(heading: str) -> str:
+    text = heading.strip()
+    if "：" in text:
+        return text.split("：", 1)[0].strip()
+    if ":" in text:
+        return text.split(":", 1)[0].strip()
+    return text
+
+
+def _parse_arrow_nodes_from_block(text: str) -> list[str]:
+    nodes: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("```"):
+            continue
+        parts = [part.strip(" -") for part in re.split(r"\s*(?:->|→)\s*", stripped) if part.strip(" -")]
+        nodes.extend(parts)
+    deduped: list[str] = []
+    for node in nodes:
+        if node and (not deduped or deduped[-1] != node):
+            deduped.append(node)
+    return deduped
+
+
 def _parse_journey_paths(body: str) -> list[dict[str, Any]]:
     paths: list[dict[str, Any]] = []
     in_gap_section = False
@@ -153,10 +242,29 @@ def _parse_journey_paths(body: str) -> list[dict[str, Any]]:
         nodes = [node.strip() for node in re.split(r"\s*(?:->|→)\s*", path) if node.strip()]
         if role.strip() and nodes:
             paths.append({"role": role.strip(), "nodes": nodes})
+    if paths:
+        return paths
+    for sub in _split_subsections(body, 3):
+        role = _strip_role_hint(sub["heading"])
+        nodes = _parse_arrow_nodes_from_block(sub["body"])
+        if role and nodes:
+            paths.append({"role": role, "nodes": nodes})
     return paths
 
 
 def _remove_journey_path_lines(body: str) -> str:
+    if _split_subsections(body, 3):
+        kept: list[str] = []
+        in_gap_section = False
+        for line in body.splitlines():
+            stripped = line.strip()
+            if re.match(r"^###\s+旅程缺口\s*$", stripped):
+                in_gap_section = True
+                kept.append(line)
+                continue
+            if in_gap_section:
+                kept.append(line)
+        return "\n".join(kept).strip()
     lines = body.splitlines()
     kept: list[str] = []
     in_gap_section = False
@@ -230,6 +338,7 @@ def _remove_interaction_summary_node_block(body: str) -> str:
 
 
 def _md_body_to_html(body: str) -> str:
+    body = _normalize_markdown_body(body)
     if not body:
         return ""
     result: list[str] = []
@@ -380,6 +489,7 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
     for section in experience_sections:
         heading = section["heading"]
         body = section["body"]
+        section_key, component = _resolve_experience_section_meta(heading)
 
         if heading == "2. 交互流程总览":
             interaction_summary = {
@@ -449,6 +559,15 @@ def build_preview_model(project_id: str) -> dict[str, Any]:
                 if stripped.startswith("- "):
                     states.append(stripped[2:])
 
+        subsection_level = 3 if section_key in {"main-flow", "secondary-flow", "exception-flow", "page-structure"} else 0
+        intro_source = _body_before_subsections(body, subsection_level) if subsection_level else body.strip()
+        if section_key == "state-feedback":
+            intro_source = _remove_first_markdown_table(body)
+
+        section["section_key"] = section_key
+        section["component"] = component
+        section["intro_html"] = _md_body_to_html(intro_source)
+        section["subsections"] = _renderable_subsections(body, subsection_level) if subsection_level else []
         section["body_html"] = _md_body_to_html(body)
         section.pop("body")
 

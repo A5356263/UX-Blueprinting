@@ -1,0 +1,449 @@
+{
+  "project_id": "self-permission-apply",
+  "generated_at": "2026-06-01T01:09:57+00:00",
+  "decision_source": "uxb_route_decision.json",
+  "requested_route": "auto",
+  "execution_mode": "full",
+  "planned_steps": [
+    "route-decision",
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "archive"
+  ],
+  "uxb_route_decision": {
+    "project_id": "self-permission-apply",
+    "status": "confirmed",
+    "source_path": "projects/self-permission-apply/runtime/uxb_route_decision.json",
+    "schema_version": "uxb_route_decision@4.0",
+    "created_by": "uxb_ai",
+    "confirmed_by_user": true,
+    "can_execute_mainline": true,
+    "judgment": {
+      "demand_type": "复杂业务需求，跨权限管理域、审批管理域、员工端入口",
+      "business_depth": "需要完整业务蓝图——权限新增来源路径、新增治理模式、与已有模式互斥规则待定义",
+      "experience_output": "体验蓝图——涉及三个角色（管理员配置/员工申请/审批人处理）、跨端（管理后台+员工端+审批端）、异常分支多",
+      "reason": "（1）属于复杂业务需求：已超出局部体验优化，不是既有能力简单扩展，改变权限的授予路径和生效机制。用户在需求文档中明确标注多处'帮我补充'和第11节15项不确定因素，说明业务判断尚未完成。（2）当前输出深度合适：权限域已有成熟的对象模型、来源模型、治理状态模型和冲突原因码体系，审批域已有完整的审批流程引擎，足以支撑完整业务蓝图。5项关键不确定因素已由UXB基于业务知识做出推理判断并在complexity_judgment中说明。（3）当前可执行：用户明确要求'你帮我定，然后输出蓝图'，确认进入正式执行；关键不确定因素已有判断依据；资料选择已收敛到最小集合。"
+    },
+    "complexity_judgment": {
+      "business_change": [
+        "新增治理模式'自助申请模式'——当前权限管理模式包含双管理员模式、权限变更审批模式、子管理员模式，本次新增第四种模式",
+        "新增权限来源路径——从'仅管理员授予'变为'员工申请→审批→自动生效'，生效链路发生变化",
+        "新增业务规则——可申请范围规则、敏感权限排除规则、与现有治理模式互斥规则、关闭时的状态处理规则",
+        "扩展使用现有治理状态模型——pending→approved→effective→rejected 流程已在现有治理状态模型中定义，可直接承接",
+        "新增跨域联动——权限域（治理配置）→审批域（审批流程）→员工端（申请入口和记录）"
+      ],
+      "experience_pressure": [
+        "三角色并行——管理员（配置范围/审批流/开关）、员工（查权限/提申请/看状态）、审批人（处理申请）各需独立入口和视图",
+        "异常分支多——审批人不存在、超时未处理、关闭时申请进行中、敏感权限被申请、模式冲突检测等",
+        "跨端——管理后台配置 vs 员工端申请 vs 审批端处理，需要保持状态一致和入口清晰",
+        "概念边界需说清——'自助申请'与现有治理模式的关系、'敏感权限'的判定标准、已授予权限的归属解释"
+      ],
+      "uncertainties": [
+        {
+          "item": "自助申请模式与现有权限治理模式（双管理员/权限变更审批/子管理员）的互斥关系",
+          "type": "阻断型",
+          "uxb_judgment": "与权限变更审批模式可共存（两者目标不同：自助申请是员工发起，权限变更审批是管理员发起的变更也需要审批）；与双管理员模式存在冲突（双管理员要求两个管理员确认，自助申请只需一个审批人），建议设置为互斥或限制双管理员模式下禁用部分自助申请范围；与子管理员模式可共存。此判断需要在业务蓝图中作为规则契约明确写出。",
+          "can_proceed": true
+        },
+        {
+          "item": "员工可申请角色、功能权限还是两者都支持",
+          "type": "阻断型",
+          "uxb_judgment": "两者都支持。角色申请（RBAC_ROLE）适合批量权限场景，功能权限申请（ACL_DIRECT）适合精细化控制。管理员可在配置页面分别设置可申请的角色列表和可申请的功能权限列表。",
+          "can_proceed": true
+        },
+        {
+          "item": "哪些角色/权限不能被员工申请（敏感权限排除）",
+          "type": "阻断型",
+          "uxb_judgment": "需要支持敏感权限排除机制。默认排除：超管角色、管理后台全局配置类权限、涉及财务/税务敏感数据的权限。管理员可在配置中自定义排除列表。",
+          "can_proceed": true
+        },
+        {
+          "item": "审批人默认是谁 + 审批人不存在时的处理",
+          "type": "阻断型",
+          "uxb_judgment": "默认审批人为员工的直接上级（组织架构负责人），这是最常见的审批场景。同时支持管理员自定义审批流程（复用现有OA审批引擎的能力）。审批人不存在时：如果组织架构负责人未配置，则自动向上寻找到更高层负责人；如果完全无可用审批人，申请被阻止并提示'当前无可用审批人，请联系管理员配置'。",
+          "can_proceed": true
+        },
+        {
+          "item": "关闭能力后已授予权限是否保留 + 正在审批中的申请如何处理",
+          "type": "阻断型",
+          "uxb_judgment": "关闭后：（1）已通过并生效的权限保留不变（权限来源被标记为'自助申请'但不影响已生效状态）；（2）正在审批中的申请允许继续完成审批（避免在途申请状态丢失）；（3）新申请入口关闭，员工不能再提交新申请。",
+          "can_proceed": true
+        }
+      ]
+    },
+    "knowledge_selection": {
+      "summary_refs": {
+        "business": [
+          "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+          "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+          "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+          "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+          "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+          "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+          "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+          "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+          "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+          "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md"
+        ],
+        "guideline": [
+          "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+          "knowledge/wiki/summaries/设计准则/流程模式.md"
+        ],
+        "complexity": [
+          ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+          ".claude/skills/uxb/references/complexity/01_domain_router.md"
+        ]
+      },
+      "raw_escalation_plan": [
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+          "why_summary_not_enough": "需要确认治理状态模型的具体状态流转规则和互斥条款细节，summary 已提供状态枚举但未展开每条规则的精确定义",
+          "used_for_stage": [
+            "business"
+          ],
+          "decision_points": [
+            "治理状态模型是否可承接自助申请的审批生命周期",
+            "双管理员模式与子管理员模式互斥条款的具体描述"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+          "why_summary_not_enough": "需要确认来源枚举的具体定义和治理修饰因子的分离原则，summary 已给出枚举值但未展开每条来源的完整上下文",
+          "used_for_stage": [
+            "business"
+          ],
+          "decision_points": [
+            "现有来源枚举是否需新增'自助申请'路径标记",
+            "治理修饰因子与授予来源的分离原则如何应用"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+          "why_summary_not_enough": "需要确认可见性/功能权限/数据范围/治理状态的前置覆盖关系的完整描述，summary 已概括原则但未展开完整关系链",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "decision_points": [
+            "可见性、功能权限、数据范围、治理状态的前置/覆盖关系",
+            "员工端权限视图的展示范围边界"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+          "why_summary_not_enough": "需要领域概述的完整定义和上游依赖的完整描述，summary 已概括核心语义但未展开完整依赖关系",
+          "used_for_stage": [
+            "facts"
+          ],
+          "decision_points": [
+            "权限域核心语义和职责范围",
+            "与上游领域的依赖关系"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+          "why_summary_not_enough": "需要确认域边界划分的完整描述，summary 已概括但未展开各域之间的详细边界",
+          "used_for_stage": [
+            "facts"
+          ],
+          "decision_points": [
+            "权限域与审批域、组织域、应用域的边界切分",
+            "自助申请模式中各域的职责划分"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+          "why_summary_not_enough": "需要确认现有治理模式配置入口的完整列表和页面路径，summary 已列举能力但未展开入口路径",
+          "used_for_stage": [
+            "facts"
+          ],
+          "decision_points": [
+            "现有治理模式配置入口的页面位置",
+            "自助申请配置入口的最佳放置位置"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+          "why_summary_not_enough": "需要确认完整的原因码枚举和定位字段定义，summary 已给出原因码族但未展开每条原因码的完整规范",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "decision_points": [
+            "冲突原因码体系的具体枚举值",
+            "自助申请被阻断时的错误码映射"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
+          "routed_by_summary": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+          "why_summary_not_enough": "需要确认审批流程设计的完整规则细节，包括审批人来源类型、节点类型、超时策略的完整描述",
+          "used_for_stage": [
+            "facts"
+          ],
+          "decision_points": [
+            "审批流程设计能力的具体支持范围",
+            "审批人来源类型的完整列表",
+            "超时策略的配置规则"
+          ]
+        },
+        {
+          "raw_ref": "knowledge/raw/设计准则/流程模式.md",
+          "routed_by_summary": "knowledge/wiki/summaries/设计准则/流程模式.md",
+          "why_summary_not_enough": "需要完整的流程模式设计规范，summary 已概括但未展开多步骤交互的具体设计规则",
+          "used_for_stage": [
+            "experience"
+          ],
+          "decision_points": [
+            "三角色多步流程的交互模式设计规范",
+            "审批流程的交互承接规则"
+          ]
+        }
+      ],
+      "stage_refs": {
+        "business": {
+          "raw_refs": [
+            "knowledge/raw/业务/权限管理/04_对象关系.md",
+            "knowledge/raw/业务/权限管理/21_来源模型.md",
+            "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+            "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+          ]
+        },
+        "experience": {
+          "raw_refs": [
+            "knowledge/raw/设计准则/流程模式.md"
+          ]
+        },
+        "facts": {
+          "raw_refs": [
+            "knowledge/raw/业务/权限管理/00_领域概述.md",
+            "knowledge/raw/业务/权限管理/01_范围与边界.md",
+            "knowledge/raw/业务/权限管理/10_能力地图.md",
+            "knowledge/raw/业务/审批管理/10_审批管理.md"
+          ]
+        }
+      },
+      "selection_reasons": [
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts",
+            "business"
+          ],
+          "reason": "建立权限域的定义、核心语义、上游依赖和稳定结论，确认权限域负责什么、不负责什么，支撑业务判断的域归属和职责切分"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts",
+            "business"
+          ],
+          "reason": "确认权限域与审批域、组织域、应用域的边界切分，明确自助申请模式中各域的责任划分"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business"
+          ],
+          "reason": "确认权限判断七类主体对象（subject/resource/action/scope/source/modifier/state），支撑自助申请的领域模型设计"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "reason": "确认可见性→功能权限→数据范围→治理状态的前置关系，支撑员工端权限展示范围的设计"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "确认权限域现有能力承载页面和治理模式配置入口，支撑判断自助申请配置应放在哪个能力入口"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business"
+          ],
+          "reason": "确认现有来源枚举和来源解释原则，用于判断自助审批通过后权限来源如何标记和解释"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/22_冲突原因码.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "reason": "确认冲突原因码体系，支撑权限被阻断或申请失败时的用户侧错误解释设计"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business"
+          ],
+          "reason": "确认治理状态模型（draft->pending->approved->effective->rejected->revoked），判断自助申请审批生命周期是否可复用现有模型"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/审批管理/00_领域概述.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts",
+            "business"
+          ],
+          "reason": "确认审批域边界和核心能力模块，判断自助申请的审批流程应如何与现有OA审批引擎对接"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+          "type": "summary",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "reason": "确认审批流程设计能力（6种审批人来源、5种节点类型、超时策略），支撑审批配置页面和审批流程交互设计"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+          "type": "summary",
+          "used_for_stage": [
+            "experience"
+          ],
+          "reason": "支撑异常分支和状态变更时的用户反馈设计（申请提交成功/失败、审批通过/拒绝、被阻断时的解释文案）"
+        },
+        {
+          "ref": "knowledge/wiki/summaries/设计准则/流程模式.md",
+          "type": "summary",
+          "used_for_stage": [
+            "experience"
+          ],
+          "reason": "支撑三角色多步流程的交互模式设计（申请流程、审批流程、配置流程）"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "通用复杂度判断标准，用于判断需求属于低/中/高复杂度，支撑选择 required_outputs 深度"
+        },
+        {
+          "ref": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+          "type": "summary",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "领域识别规则，用于判断需求命中的业务域，支撑跨领域知识选择和 domain 参数配置"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+          "type": "raw",
+          "used_for_stage": [
+            "business"
+          ],
+          "reason": "治理状态模型的具体状态流转规则和互斥条款，确认自助申请审批生命周期是否可复用现有 pending→approved→effective→rejected 链路"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+          "type": "raw",
+          "used_for_stage": [
+            "business"
+          ],
+          "reason": "来源枚举的具体定义和治理修饰因子分离原则，确定自助申请审批通过后的权限路径标记方式"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
+          "type": "raw",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "reason": "可见性→功能权限→数据范围→治理状态的前置覆盖关系，支撑员工端权限视图展示范围和权限解释"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/00_领域概述.md",
+          "type": "raw",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "权限域核心语义、职责范围和上游依赖，支撑业务蓝图的域归属判断"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+          "type": "raw",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "权限域与审批域、组织域、应用域的详细边界划分，明确自助申请模式中各域职责"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
+          "type": "raw",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "现有治理模式配置入口的页面列表，支撑判断自助申请配置入口的最佳放置位置"
+        },
+        {
+          "ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+          "type": "raw",
+          "used_for_stage": [
+            "business",
+            "experience"
+          ],
+          "reason": "原因码体系的具体枚举值和定位字段，支撑自助申请被阻断时的用户侧错误解释"
+        },
+        {
+          "ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
+          "type": "raw",
+          "used_for_stage": [
+            "facts"
+          ],
+          "reason": "审批流程设计的详细规则（审批人来源、节点类型、超时策略），支撑审批配置页面设计和审批流程对接"
+        },
+        {
+          "ref": "knowledge/raw/设计准则/流程模式.md",
+          "type": "raw",
+          "used_for_stage": [
+            "experience"
+          ],
+          "reason": "多步骤交互设计规范，支撑三角色审批流程的体验承接"
+        }
+      ]
+    },
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md"
+    ],
+    "execution_notes": [
+      "facts 阶段聚焦：现状梳理（现有权限治理模式、员工端现有入口、审批引擎现状）",
+      "business 阶段聚焦：自助申请模式定义、可申请范围模型、敏感权限排除规则、审批流程默认配置、关闭能力的状态处理规则、现有治理模式的互斥矩阵",
+      "experience 阶段聚焦：管理端配置页面设计（3个角色入口）、员工端申请流程设计（查权限→选权限→填原因→提交→看状态）、审批端处理设计、异常分支处理",
+      "5项阻断型不确定因素已在 complexity_judgment.uncertainties 中由UXB做出推理判断，正式产出中需写入'UXB建议'并标注'需产品确认'的标记"
+    ],
+    "execution_mode": "full",
+    "validation_errors": []
+  }
+}
