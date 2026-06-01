@@ -23,14 +23,16 @@ REQUIRED_CORE_OUTPUTS = {"facts.md", "experience_blueprint.md"}
 ALLOWED_STAGES = {"facts", "business", "experience"}
 
 
-def _read_json(path: Path) -> dict[str, Any]:
+def _load_json_payload(path: Path) -> tuple[dict[str, Any], str | None]:
     if not path.exists() or not path.is_file():
-        return {}
+        return {}, "missing"
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {}
-    return payload if isinstance(payload, dict) else {}
+    except json.JSONDecodeError as error:
+        return {}, f"invalid_json: line {error.lineno} column {error.colno} ({error.msg})"
+    if not isinstance(payload, dict):
+        return {}, "invalid_root_type"
+    return payload, None
 
 
 def _clean_string_list(value: object) -> list[str]:
@@ -261,11 +263,21 @@ def _validate_knowledge_selection(
 
 def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
     path = _uxb_route_decision_path(project_id)
-    payload = _read_json(path)
+    payload, load_error = _load_json_payload(path)
     validation_errors: list[str] = []
 
-    if not payload:
+    if load_error == "missing":
         validation_errors.append("Missing runtime/uxb_route_decision.json")
+    elif load_error == "invalid_root_type":
+        validation_errors.append("runtime/uxb_route_decision.json must be a JSON object")
+    elif load_error and load_error.startswith("invalid_json:"):
+        validation_errors.append(
+            "runtime/uxb_route_decision.json is invalid JSON: "
+            + load_error[len("invalid_json: ") :]
+            + ". Common causes: unescaped ASCII double quotes inside string values, or writing explanation prose into the JSON file."
+        )
+
+    if not payload:
         return {
             "project_id": project_id,
             "status": "needs_rejudgment",

@@ -105,6 +105,12 @@ projects/<project-id>/source/background.md
 
 如果用户还没确认，停在摘要和判断阶段，不要往后跑。
 
+写判断单时再补一条执行约束：
+
+- 不要把修复说明、排查结论、代码围栏或自然语言解释写进 `uxb_route_decision.json`
+- 如果字符串里需要引用中文术语，优先用 `「」` 或 `“”`，避免未转义的 ASCII 双引号破坏 JSON
+- 如果 `route-decision` 校验失败，不要在原坏 JSON 上持续缝补，直接从 `assets/uxb_route_decision.template.json` 重新覆盖重写
+
 ## 质量边界
 
 这个 skill 不替代执行中枢本身的质量判断。

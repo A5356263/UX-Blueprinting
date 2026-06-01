@@ -294,3 +294,30 @@
 - `assets/uxb_route_decision.template.json`
 
 不要把完整业务方案、完整体验方案或知识原文写进这个文件。它是判断单，不是蓝图正文。
+
+## JSON 稳定写法
+
+先复制模板，再只替换值，不要临时改字段结构。
+
+必须遵守：
+
+1. JSON 结构键名一律保持模板原样，不要自己改名，不要写别名
+2. `knowledge_selection` 下的正式字段名只能是 `raw_escalation_plan`
+3. 不要把 `escalation_plan`、`raw_plan`、`raw_escalations` 之类名字写进去
+4. 结构引号必须是 JSON 标准 ASCII 双引号 `"`
+5. 字符串内容里如果想引用中文词语，优先用 `「」` 或 `“”`，不要再裸写一个未转义的 ASCII 双引号
+6. 不要把“我来修复”“确认两个问题”“JSON 解析失败”等说明文字写进 JSON 文件
+7. 不要输出代码围栏、解释段落或修复说明；文件内容本身只保留 JSON 对象
+
+最常见的坏写法：
+
+- 在 `reason`、`notes`、`uncertainties` 这类字符串里直接插入未转义的 `"`，导致 JSON 断裂
+- 看到 `raw_escalation_plan` 后，擅自改成自己更顺手的字段名
+- 把报错信息、修复说明、检查结论一起写进 JSON 文件
+
+如果已经写坏，不要在坏 JSON 上继续补丁式改字。正确做法是：
+
+1. 重新复制 `assets/uxb_route_decision.template.json`
+2. 按模板重填一次值
+3. 保持键名完全不变
+4. 再执行 `python -m packages route-decision <project-id>` 做一次结构校验
