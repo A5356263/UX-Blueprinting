@@ -2,18 +2,33 @@ from __future__ import annotations
 
 import argparse
 import os
-import platform
 import shutil
 import subprocess
 import sys
 from datetime import datetime
-from fnmatch import fnmatch
 from pathlib import Path
 
+import PyInstaller.__main__
 
-THIN_INIT = '"""UXB release package thin entry."""\n'
 
-THIN_MAIN = """from __future__ import annotations
+ALLOWED_CLAUDE_SKILLS = {"grill-me", "knowledge-ingestion", "uxb"}
+ALLOWED_CODEX_SKILLS = {"grill-me", "knowledge-ingestion", "uxb", "scripts"}
+ROOT_FILES = {
+    ".gitignore",
+    "README.md",
+    "run_packages.ps1",
+    "run_packages.sh",
+}
+ROOT_DIRS = {
+    "knowledge",
+    "specs",
+    "templates",
+}
+PROJECTS_README = Path("projects/README.md")
+INPUT_SOURCE = Path("input/自助权限申请/需求文档_员工自助申请权限.md")
+INPUT_TARGET = Path("input/需求文档_员工自助申请权限.md")
+RELEASE_INIT = '"""UXB release package thin entry."""\n'
+RELEASE_MAIN = """from __future__ import annotations
 
 import os
 import subprocess
@@ -51,78 +66,15 @@ if __name__ == "__main__":
     raise SystemExit(main())
 """
 
-SOURCE_REQUIRED_ITEMS = {
-    ".claude",
-    "specs",
-    "templates",
-    "knowledge",
-    "projects",
-    "README.md",
-    "run_packages.ps1",
-    "run_packages.sh",
-    ".gitignore",
-}
-
-EXCLUDED_RELATIVE_PATHS = {
-    ".git",
-    ".github",
-    ".playwright-mcp",
-    ".codex",
-    "build",
-    "dist",
-    "release",
-    "_uxb_release_build",
-    "_uxstrategy_release_build",
-    "docs",
-    "input",
-    "memory",
-    "test",
-    "tools",
-    ".mcp.json",
-    "CLAUDE.md",
-    "CODEX.md",
-    "skills-lock.json",
-    "知识候选区",
-    "PPT.MD",
-}
-
-EXCLUDED_NAME_PATTERNS = {
-    "__pycache__",
-    ".pytest_cache",
-    ".mypy_cache",
-    ".ruff_cache",
-    ".DS_Store",
-    "Thumbs.db",
-    "*.pyc",
-    "*.pyo",
-    "*.pyd",
-}
-
-SOURCE_HIDDEN_PATHS = {
-    "packages/common.py",
-    "packages/mainline.py",
-    "packages/context_assemble",
-    "packages/generation",
-    "packages/validate",
-    "packages/capability_registry",
-}
-
-ALLOWED_CLAUDE_SKILLS = {
-    "uxb",
-    "knowledge-ingestion",
-    "grill-me",
-}
-
 
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def run(command: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         command,
         cwd=str(cwd),
-        env=env,
         text=True,
         encoding="utf-8",
         errors="replace",
@@ -144,47 +96,9 @@ def inspect_source_tree(root: Path) -> list[str]:
     return [line.rstrip() for line in status_result.stdout.splitlines() if line.strip()]
 
 
-def require_source_entrypoint(root: Path) -> None:
-    result = run([sys.executable, "-m", "packages", "--help"], cwd=root)
-    if result.returncode != 0:
-        raise SystemExit(
-            "Source entrypoint validation failed:\n"
-            f"{result.stdout.strip()}\n{result.stderr.strip()}".strip()
-        )
-
-
-def require_supported_build_environment(root: Path) -> None:
-    if platform.system().lower() != "darwin":
-        return
-
-    result = run([sys.executable, "-m", "pip", "show", "pathlib"], cwd=root)
-    if result.returncode != 0:
-        return
-
-    raise SystemExit(
-        "macOS build environment check failed:\n"
-        "Detected the obsolete `pathlib` backport in the current Python environment. "
-        "This package conflicts with PyInstaller on modern Python.\n\n"
-        "Recommended fix:\n"
-        "1. Use a clean virtual environment for packaging\n"
-        "2. Remove the backport package: `pip uninstall pathlib -y`\n"
-        "3. Re-run: `python ./tools/release/build_skill_package.py`"
-    )
-
-
-def require_pyinstaller(root: Path) -> None:
-    result = run([sys.executable, "-m", "PyInstaller", "--version"], cwd=root)
-    if result.returncode == 0:
-        return
-    install_result = run([sys.executable, "-m", "pip", "install", "pyinstaller"], cwd=root)
-    if install_result.returncode != 0:
-        raise SystemExit(
-            "Failed to install PyInstaller:\n"
-            f"{install_result.stdout.strip()}\n{install_result.stderr.strip()}".strip()
-        )
-
-
 def detect_platform_tag() -> str:
+    import platform
+
     system = platform.system().lower()
     machine = platform.machine().lower()
     arch_map = {
@@ -203,113 +117,215 @@ def detect_platform_tag() -> str:
     return f"{system}-{arch}"
 
 
-def is_excluded(rel_path: Path, package_name: str, zip_name: str) -> bool:
-    rel_posix = rel_path.as_posix()
-    if rel_posix in EXCLUDED_RELATIVE_PATHS:
-        return True
-    if rel_posix == package_name or rel_posix.startswith(f"{package_name}/"):
-        return True
-    if rel_posix == zip_name:
-        return True
-    return any(fnmatch(rel_path.name, pattern) for pattern in EXCLUDED_NAME_PATTERNS)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build a strict-whitelist UXstrategy release package.")
+    parser.add_argument("--package-name", default="UXstrategy")
+    parser.add_argument("--output-dir", default=".")
+    return parser.parse_args()
 
 
-def copy_release_workspace(source_root: Path, stage_root: Path, package_name: str, zip_name: str) -> None:
-    for item in source_root.iterdir():
-        rel_path = Path(item.name)
-        if is_excluded(rel_path, package_name, zip_name):
-            continue
-        target = stage_root / item.name
-        if item.is_dir():
-            shutil.copytree(item, target, ignore=shutil.ignore_patterns(*EXCLUDED_NAME_PATTERNS))
-        else:
-            shutil.copy2(item, target)
+def create_build_root(source_root: Path) -> Path:
+    build_root = source_root.parent / "_uxstrategy_release_build"
+    if build_root.exists():
+        shutil.rmtree(build_root)
+    build_root.mkdir(parents=True, exist_ok=True)
+    return build_root
 
 
-def trim_claude_skills(stage_root: Path) -> None:
-    claude_root = stage_root / ".claude"
-    skills_dir = claude_root / "skills"
-
-    if not skills_dir.exists():
-        raise SystemExit("Release validation failed: `.claude/skills` is missing.")
-
-    for child in skills_dir.iterdir():
-        if child.name not in ALLOWED_CLAUDE_SKILLS:
-            if child.is_dir():
-                shutil.rmtree(child)
-            else:
-                child.unlink()
-
-    for skill_name in sorted(ALLOWED_CLAUDE_SKILLS):
-        if not (skills_dir / skill_name).exists():
-            raise SystemExit(f"Release validation failed: missing `.claude/skills/{skill_name}`.")
+def require_path(path: Path) -> None:
+    if not path.exists():
+        raise SystemExit(f"Required packaging source is missing: {path}")
 
 
-def write_release_entrypoints(stage_root: Path) -> None:
+def copy_file(source_root: Path, stage_root: Path, rel_path: Path) -> None:
+    source = source_root / rel_path
+    require_path(source)
+    target = stage_root / rel_path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
+
+
+def copy_dir(source_root: Path, stage_root: Path, rel_path: Path) -> None:
+    source = source_root / rel_path
+    require_path(source)
+    target = stage_root / rel_path
+    shutil.copytree(source, target, dirs_exist_ok=True)
+
+
+def copy_selected_skill_dirs(source_root: Path, stage_root: Path, base_dir: Path, allowed_names: set[str]) -> None:
+    skills_root = source_root / base_dir
+    require_path(skills_root)
+    for name in sorted(allowed_names):
+        source = skills_root / name
+        require_path(source)
+        target = stage_root / base_dir / name
+        shutil.copytree(source, target, dirs_exist_ok=True)
+
+
+def write_release_packages_shell(stage_root: Path) -> None:
     packages_dir = stage_root / "packages"
-    if packages_dir.exists():
-        shutil.rmtree(packages_dir)
     packages_dir.mkdir(parents=True, exist_ok=True)
-    (packages_dir / "__init__.py").write_text(THIN_INIT, encoding="utf-8")
-    (packages_dir / "__main__.py").write_text(THIN_MAIN, encoding="utf-8")
+    (packages_dir / "__init__.py").write_text(RELEASE_INIT, encoding="utf-8")
+    (packages_dir / "__main__.py").write_text(RELEASE_MAIN, encoding="utf-8")
 
 
-def build_core_binary(source_root: Path, build_root: Path) -> Path:
-    dist_dir = build_root / "core_build" / "dist"
-    work_dir = build_root / "core_build" / "work"
-    spec_dir = build_root / "core_build" / "spec"
-    dist_dir.mkdir(parents=True, exist_ok=True)
-    work_dir.mkdir(parents=True, exist_ok=True)
-    spec_dir.mkdir(parents=True, exist_ok=True)
+def build_core_executable(source_root: Path, stage_root: Path, build_root: Path) -> None:
+    bin_dir = stage_root / "bin"
+    bin_dir.mkdir(parents=True, exist_ok=True)
+    work_dir = build_root / "pyinstaller-work"
+    spec_dir = build_root / "pyinstaller-spec"
+    dist_dir = bin_dir
 
-    command = [
-        sys.executable,
-        "-m",
-        "PyInstaller",
+    for path in (work_dir, spec_dir):
+        if path.exists():
+            shutil.rmtree(path)
+        path.mkdir(parents=True, exist_ok=True)
+
+    entrypoint = source_root / "packages" / "__main__.py"
+    require_path(entrypoint)
+
+    data_sep = ";" if os.name == "nt" else ":"
+    args = [
         "--noconfirm",
         "--clean",
         "--onefile",
         "--name",
         "uxb-core",
-        "--collect-submodules",
-        "packages",
-        "--collect-data",
-        "packages",
         "--distpath",
         str(dist_dir),
         "--workpath",
         str(work_dir),
         "--specpath",
         str(spec_dir),
-        "packages/__main__.py",
+        "--add-data",
+        f"{source_root / 'packages' / 'capability_registry'}{data_sep}packages/capability_registry",
+        "--add-data",
+        f"{source_root / 'packages' / 'route_decision' / 'rules.json'}{data_sep}packages/route_decision",
+        str(entrypoint),
     ]
-    result = run(command, cwd=source_root)
-    if result.returncode != 0:
-        raise SystemExit(
-            "PyInstaller build failed:\n"
-            f"{result.stdout.strip()}\n{result.stderr.strip()}".strip()
-        )
-
-    exe_name = "uxb-core.exe" if os.name == "nt" else "uxb-core"
-    core_path = dist_dir / exe_name
-    if not core_path.exists():
-        raise SystemExit(f"Compiled core executable not found: {core_path}")
-    return core_path
+    old_cwd = Path.cwd()
+    try:
+        os.chdir(source_root)
+        PyInstaller.__main__.run(args)
+    finally:
+        os.chdir(old_cwd)
 
 
-def copy_core_binary(core_path: Path, stage_root: Path) -> None:
-    bin_dir = stage_root / "bin"
-    bin_dir.mkdir(parents=True, exist_ok=True)
-    target = bin_dir / core_path.name
-    shutil.copy2(core_path, target)
-    if os.name != "nt":
-        target.chmod(target.stat().st_mode | 0o111)
+def build_release_workspace(source_root: Path, stage_root: Path, build_root: Path) -> None:
+    for name in sorted(ROOT_DIRS):
+        copy_dir(source_root, stage_root, Path(name))
+
+    for name in sorted(ROOT_FILES):
+        copy_file(source_root, stage_root, Path(name))
+
+    copy_selected_skill_dirs(source_root, stage_root, Path(".claude/skills"), ALLOWED_CLAUDE_SKILLS)
+    copy_selected_skill_dirs(source_root, stage_root, Path(".codex/skills"), ALLOWED_CODEX_SKILLS)
+    copy_file(source_root, stage_root, PROJECTS_README)
+
+    input_source = source_root / INPUT_SOURCE
+    require_path(input_source)
+    input_target = stage_root / INPUT_TARGET
+    input_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(input_source, input_target)
+
+    write_release_packages_shell(stage_root)
+    build_core_executable(source_root, stage_root, build_root)
+
+
+def cleanup_validation_artifacts(stage_root: Path) -> None:
+    shutil.rmtree(stage_root / ".tmp", ignore_errors=True)
+    shutil.rmtree(stage_root / "projects" / "dist-smoke", ignore_errors=True)
+    shutil.rmtree(stage_root / "packages" / "__pycache__", ignore_errors=True)
 
 
 def validate_release(stage_root: Path) -> None:
-    validation_env = os.environ.copy()
-    validation_env["PYTHONDONTWRITEBYTECODE"] = "1"
-    for command in [
+    exe_name = "uxb-core.exe" if sys.platform.startswith("win") else "uxb-core"
+    required_paths = [
+        "bin",
+        f"bin/{exe_name}",
+        "packages/__init__.py",
+        "packages/__main__.py",
+        "specs",
+        "templates",
+        "knowledge",
+        ".claude/skills/grill-me",
+        ".claude/skills/knowledge-ingestion",
+        ".claude/skills/uxb",
+        ".codex/skills/grill-me",
+        ".codex/skills/knowledge-ingestion",
+        ".codex/skills/uxb",
+        ".codex/skills/scripts",
+        "projects/README.md",
+        "input/需求文档_员工自助申请权限.md",
+        "README.md",
+        ".gitignore",
+        "run_packages.ps1",
+        "run_packages.sh",
+    ]
+    for rel_path in required_paths:
+        if not (stage_root / rel_path).exists():
+            raise SystemExit(f"Release validation failed: missing required asset `{rel_path}`.")
+
+    forbidden_paths = [
+        "tests",
+        "test",
+        "docs",
+        "tools",
+        "memory",
+        "build",
+        "dist",
+        "release",
+        ".mcp.json",
+        "CLAUDE.md",
+        "CODEX.md",
+        "packages/examples",
+        "packages/README.md",
+        "packages/common.py",
+        "packages/archive",
+        "packages/generation",
+        "packages/validate",
+        "packages/repair_loop",
+    ]
+    for rel_path in forbidden_paths:
+        if (stage_root / rel_path).exists():
+            raise SystemExit(f"Release validation failed: excluded path still present `{rel_path}`.")
+
+    projects_dir = stage_root / "projects"
+    project_entries = sorted(path.name for path in projects_dir.iterdir())
+    if project_entries != ["README.md"]:
+        raise SystemExit(
+            "Release validation failed: `projects/` must contain only README.md, "
+            f"got: {project_entries}"
+        )
+
+    input_dir = stage_root / "input"
+    input_entries = sorted(path.name for path in input_dir.iterdir())
+    if input_entries != ["需求文档_员工自助申请权限.md"]:
+        raise SystemExit(
+            "Release validation failed: `input/` must contain only 需求文档_员工自助申请权限.md, "
+            f"got: {input_entries}"
+        )
+
+    package_entries = sorted(path.name for path in (stage_root / "packages").iterdir())
+    if package_entries != ["__init__.py", "__main__.py"]:
+        raise SystemExit(
+            "Release validation failed: `packages/` must contain only thin entry files, "
+            f"got: {package_entries}"
+        )
+
+    init_text = (stage_root / "packages" / "__init__.py").read_text(encoding="utf-8").strip()
+    if init_text != '"""UXB release package thin entry."""':
+        raise SystemExit("Release validation failed: unexpected packages/__init__.py release marker.")
+
+    claude_entries = sorted(path.name for path in (stage_root / ".claude" / "skills").iterdir())
+    if claude_entries != sorted(ALLOWED_CLAUDE_SKILLS):
+        raise SystemExit(f"Release validation failed: unexpected .claude skills {claude_entries}")
+
+    codex_entries = sorted(path.name for path in (stage_root / ".codex" / "skills").iterdir())
+    if codex_entries != sorted(ALLOWED_CODEX_SKILLS):
+        raise SystemExit(f"Release validation failed: unexpected .codex skills {codex_entries}")
+
+    validation_commands = [
         [sys.executable, "-m", "packages", "--help"],
         [sys.executable, "-m", "packages", "capabilities-list"],
         [
@@ -324,8 +340,10 @@ def validate_release(stage_root: Path) -> None:
             "权限管理",
             "--force",
         ],
-    ]:
-        result = run(command, cwd=stage_root, env=validation_env)
+        [sys.executable, "-m", "packages", "project-structure-check", "dist-smoke"],
+    ]
+    for command in validation_commands:
+        result = run(command, cwd=stage_root)
         if result.returncode != 0:
             raise SystemExit(
                 "Release validation failed:\n"
@@ -333,66 +351,7 @@ def validate_release(stage_root: Path) -> None:
                 f"{result.stdout.strip()}\n{result.stderr.strip()}".strip()
             )
 
-    required_paths = [
-        ".claude",
-        ".claude/skills/uxb",
-        ".claude/skills/knowledge-ingestion",
-        ".claude/skills/grill-me",
-        "specs",
-        "templates",
-        "knowledge/raw",
-        "knowledge/wiki",
-        "projects",
-        "run_packages.ps1",
-        "run_packages.sh",
-        "README.md",
-        ".gitignore",
-    ]
-    for rel_path in required_paths:
-        if not (stage_root / rel_path).exists():
-            raise SystemExit(f"Release validation failed: missing required asset `{rel_path}`.")
-
-    forbidden_paths = [
-        ".codex",
-        "memory",
-        ".mcp.json",
-        "CLAUDE.md",
-        "CODEX.md",
-        "skills-lock.json",
-        "tools",
-        "docs",
-        "知识候选区",
-        ".git",
-        "input",
-        "test",
-        "PPT.MD",
-    ]
-    for rel_path in forbidden_paths:
-        if (stage_root / rel_path).exists():
-            raise SystemExit(f"Release validation failed: excluded path still present `{rel_path}`.")
-
-    packages_dir = stage_root / "packages"
-    pycache_dir = packages_dir / "__pycache__"
-    if pycache_dir.exists():
-        shutil.rmtree(pycache_dir)
-    expected = {packages_dir / "__init__.py", packages_dir / "__main__.py"}
-    actual = {path for path in packages_dir.iterdir()}
-    if actual != expected:
-        raise SystemExit("Release validation failed: packages/ must contain only __init__.py and __main__.py.")
-
-    for rel_path in SOURCE_HIDDEN_PATHS:
-        if (stage_root / rel_path).exists():
-            raise SystemExit(f"Release validation failed: source path still present `{rel_path}`.")
-
-    if not (stage_root / "projects" / "dist-smoke").exists():
-        raise SystemExit("Release validation failed: bootstrap smoke project was not created.")
-    shutil.rmtree(stage_root / "projects" / "dist-smoke", ignore_errors=True)
-
-
-def ensure_expected_root_items(source_root: Path) -> None:
-    missing = [item for item in sorted(SOURCE_REQUIRED_ITEMS) if not (source_root / item).exists()]
-    if missing:
-        raise SystemExit(f"Required source items are missing: {', '.join(missing)}")
+    cleanup_validation_artifacts(stage_root)
 
 
 def make_zip(staging_parent: Path, package_name: str, output_path: Path) -> None:
@@ -425,21 +384,6 @@ def ensure_source_tree_unchanged(root: Path, baseline: list[str], output_path: P
         )
 
 
-def create_build_root(source_root: Path) -> Path:
-    build_root = source_root.parent / "_uxstrategy_release_build"
-    if build_root.exists():
-        shutil.rmtree(build_root)
-    build_root.mkdir(parents=True, exist_ok=True)
-    return build_root
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build the UXstrategy release package while only processing packages/.")
-    parser.add_argument("--package-name", default="UXstrategy")
-    parser.add_argument("--output-dir", default=".")
-    return parser.parse_args()
-
-
 def main() -> int:
     args = parse_args()
     source_root = repo_root()
@@ -451,22 +395,13 @@ def main() -> int:
     output_path = output_dir / zip_name
 
     baseline_status = inspect_source_tree(source_root)
-    ensure_expected_root_items(source_root)
-    require_source_entrypoint(source_root)
-    require_supported_build_environment(source_root)
-    require_pyinstaller(source_root)
-
     build_root = create_build_root(source_root)
     try:
-        core_path = build_core_binary(source_root, build_root)
         staging_parent = build_root / "staging"
         stage_root = staging_parent / package_name
         stage_root.mkdir(parents=True, exist_ok=True)
 
-        copy_release_workspace(source_root, stage_root, package_name, zip_name)
-        trim_claude_skills(stage_root)
-        write_release_entrypoints(stage_root)
-        copy_core_binary(core_path, stage_root)
+        build_release_workspace(source_root, stage_root, build_root)
         validate_release(stage_root)
 
         output_dir.mkdir(parents=True, exist_ok=True)

@@ -5,7 +5,7 @@
   "can_proceed": true,
   "next_stage": "business",
   "generated_by": "packages.validate",
-  "updated_at": "2026-06-01T13:57:46.770233+00:00",
+  "updated_at": "2026-06-01T15:58:59.530981+00:00",
   "checked_files": [
     "projects/self-permission-apply/source/task_card.md",
     "projects/self-permission-apply/source/requirement.md",
@@ -34,7 +34,7 @@
       "dependencies": 1,
       "gaps": 1
     },
-    "gap_count": 4,
+    "gap_count": 15,
     "knowledge_derived_fact_count": 0
   }
 }

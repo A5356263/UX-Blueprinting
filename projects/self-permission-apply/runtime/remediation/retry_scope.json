@@ -2,18 +2,17 @@
   "project_id": "self-permission-apply",
   "scope_version": "1.0",
   "recommended_commands": [
-    "python -m packages gate-business self-permission-apply",
     "python -m packages gate-experience self-permission-apply",
     "python -m packages validate self-permission-apply",
     "python -m packages coverage self-permission-apply"
   ],
   "backtrack_required": false,
-  "highest_required_stage": "business",
+  "highest_required_stage": "experience",
   "rationale": [
-    "BIZ-2C46F0CE 需要从 business 阶段开始重跑，修复模式为 patch_current_artifact。",
-    "EXP-0C049F45 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
-    "EXP-449E593B 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
-    "EXP-7575EA4B 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
-    "EXP-85AE2E30 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。"
+    "EXP-8A59FF45 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "EXP-E18EEB74 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "EXP-F366C9E2 需要从 experience 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "RUN-A3AFE22C 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-FCB57B57 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。"
   ]
 }

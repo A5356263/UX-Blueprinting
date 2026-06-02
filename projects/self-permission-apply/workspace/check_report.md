@@ -9,8 +9,8 @@
 - status: warning
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 12
-- info_count: 7
+- warning_count: 10
+- info_count: 8
 
 ## Output Status
 
@@ -27,37 +27,36 @@
 
 ## Warnings
 
-- business gate 状态为 warning
-- business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。
 - experience gate 状态为 warning
 - experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达
-- 承接检查：business_blueprint.md 已把“可申请范围过宽 → 通过配置页的默认行为和提示保...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“可申请角色被管理员在审批中移除 → 在途申请不受...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
-- 承接检查：business_blueprint.md 已把“审批链路断裂 → 通过兜底机制和异常提醒保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“概念增殖 → 通过界面语言和操作路径保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
-- 承接检查：business_blueprint.md 已把“管理员在审批期间直接给员工分配了同一角色 → 需...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
-- 承接检查：business_blueprint.md 已把“能力关闭时员工正在填写申请 → 提示能力已关闭”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
-- 承接检查：business_blueprint.md 要求解释“权限来源（管理员分配 vs 自助申请）及区分方式”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。
-- 承接检查：business_blueprint.md 要求解释“能力开启/关闭状态及对应员工端表现”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。
+- 承接检查：business_blueprint.md 已把“员工在待审批状态下撤销申请”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 已把“员工尝试申请不在可申请范围内的权限”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 已把“审批链路断裂时的降级处理”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
+- 承接检查：business_blueprint.md 已把“管理员尝试同时开启互斥的治理模式”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 明确要求主流程闭环包含“员工查看权限并发起申请”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。
+- 承接检查：business_blueprint.md 明确要求主流程闭环包含“审批通过后自动授权，结果反馈给员工”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。
+- 承接检查：business_blueprint.md 要求解释“关闭能力后权限状态的变化（已授权限保留、来源标记...”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。
+- 承接检查：business_blueprint.md 要求解释“权限来源的展示方式（角色分配、管理员直授、自助申...”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。
 
 ## Infos
 
+- business gate 状态：passed
 - facts gate 状态：passed
-- 自然语言承接检查：主流程闭环覆盖：4/4
-- 自然语言承接检查：异常与阻断覆盖：2/5
+- 自然语言承接检查：主流程闭环覆盖：3/5
+- 自然语言承接检查：异常与阻断覆盖：3/6
 - 自然语言承接检查：状态与反馈覆盖：1/3
 - 自然语言承接检查：角色路径覆盖：3/3
-- 自然语言承接检查：设计指南装配：0 条
-- 自然语言承接检查：风险保护承接：0/3
+- 自然语言承接检查：设计指南装配：2 条
+- 自然语言承接检查：风险保护承接：3/4
 
 ## 自然语言承接检查
 
 - 角色路径覆盖：3/3
-- 主流程闭环覆盖：4/4
-- 异常与阻断覆盖：2/5
+- 主流程闭环覆盖：3/5
+- 异常与阻断覆盖：3/6
 - 状态与反馈覆盖：1/3
-- 风险保护承接：0/3
-- 设计指南装配：0 条
+- 风险保护承接：3/4
+- 设计指南装配：2 条
 
 ## Machine Status
 

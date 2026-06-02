@@ -1,162 +1,103 @@
 {
   "summary_refs": {
     "business": [
-      "knowledge/wiki/summaries/业务/权限管理/README.md"
+      "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
+      "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md"
     ],
-    "guideline": [],
+    "guideline": [
+      "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/wiki/summaries/设计准则/流程模式.md"
+    ],
     "complexity": [
       ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-      ".claude/skills/uxb/references/complexity/01_domain_router.md"
+      ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      ".claude/skills/uxb/references/complexity/domains/admin_console.md"
     ]
   },
   "raw_escalation_plan": [
     {
-      "raw_ref": "knowledge/raw/业务/权限管理/01_范围与边界.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只提供了领域职责边界的概要描述，需要 raw 中的完整相邻域边界定义（组织域、审批域、应用域、协作域）来支撑自助申请跨域依赖分析",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "确认权限域与审批域的边界关系，判断自助申请的审批链路如何与审批中台对接",
-        "确认权限域与组织域的边界关系，判断员工直属上级作为审批人是否可行"
-      ]
-    },
-    {
       "raw_ref": "knowledge/raw/业务/权限管理/03_业务对象.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了七类业务对象的名称和一句话定义，需要 raw 中每类对象的最小属性定义来支撑申请单对象建模",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "why_summary_not_enough": "summary 只提供了最小属性列表，需要查看完整属性定义和字段说明来建模申请单和申请记录的对象结构",
       "used_for_stage": [
         "facts"
       ],
       "decision_points": [
-        "确认 subject/resource/action/scope/source/modifier/state 的最小属性，判断申请单需要新增哪些对象属性",
-        "确认 source 对象的 source_enum 和 source_priority 结构，为自助申请新来源定义提供依据"
+        "确认权限域主体、资源、动作、范围、来源、修饰因子、状态七类对象的完整属性",
+        "判断申请单应对齐哪些现有对象模型"
       ]
     },
     {
       "raw_ref": "knowledge/raw/业务/权限管理/04_对象关系.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了对象关系的类型名称，需要 raw 中的完整前置/覆盖/叠加/边界关系来定位自助申请来源在关系层级中的位置",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "why_summary_not_enough": "summary 只提供了邻近阅读线索，需要查 raw 确认主体、角色、来源之间的精确关系，判断自助申请在现有对象图中的插入位置",
       "used_for_stage": [
         "facts"
       ],
       "decision_points": [
-        "确认前置关系（可见性→功能权限→数据范围→治理状态）中自助申请来源的插入位置",
-        "确认叠加关系中个人直授与角色授予的共存规则，判断自助申请来源如何参与叠加"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/10_能力地图.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只提供了能力域的一级分类，需要 raw 中完整的能力→页面承载映射来判断自助申请需要新增哪些页面",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "确认现有六大能力域（用户直授/角色授权/全局治理/协作可见性/查询排障/应用级治理）的页面承载，判断自助申请应作为新能力域还是扩展现有能力",
-        "确认查询排障能力现有的按用户查询结果结构，判断自助申请来源的展示位置"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/11_任务场景.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了任务场景名称，需要 raw 中的完整任务→页面/路径映射来判断自助申请引入后的任务路径扩展",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "确认现有高频任务场景（按人授权/批量授权/角色分发/查询排障）的完整路径，判断自助申请需要新增哪些任务场景",
-        "确认「查看某人为什么有权限」场景中的来源展示字段，判断自助申请来源如何融入"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/14_角色边界.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了角色分类，需要 raw 中各角色的完整可见/可操作边界来定义自助申请各角色的能力范围",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "确认超管/子管理员/普通管理员/员工的可见与可操作边界",
-        "判断员工在自助申请场景下的可见范围（哪些角色可以申请）和操作范围（申请/撤销/查看记录）"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/20_决策链契约.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了判定链路的层级名称，需要 raw 中的完整 L0-L3 判定逻辑和 final_effective_rule 来设计自助申请来源接入判定链路的方式",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "确认 L0-L3 判定链路（可见性→功能权限→数据范围→治理生效）的完整规则",
-        "判断自助申请来源应接入 L1（功能权限层）还是 L3（治理与生效层）",
-        "确认 final_effective_rule 公式是否因新增来源而需要调整"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了 source_enum 的四个值名称，需要 raw 中完整的来源优先级和来源真源定义来设计新来源的定位",
-      "used_for_stage": [
-        "facts"
-      ],
-      "decision_points": [
-        "确认现有 source_enum（ACL_DIRECT/RBAC_ROLE/APP_VISIBILITY/COLLAB_VISIBILITY）的完整定义",
-        "确认 source_priority 中各类来源的覆盖/叠加规则",
-        "为自助申请新来源定义 source_enum 值和优先级位置"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了原因码的五个域，需要 raw 中完整的原因码枚举和定位字段来设计自助申请场景的新增原因码",
-      "used_for_stage": [
-        "experience"
-      ],
-      "decision_points": [
-        "确认现有原因码体系（VISIBILITY/GRANT/SCOPE/GOVERNANCE/BOUNDARY）的结构",
-        "设计自助申请场景的可能新增原因码（如申请被拒、能力已关闭、不在可申请范围等）"
-      ]
-    },
-    {
-      "raw_ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了规则编号和名称，需要 raw 中 R-001 至 R-010 的完整规则条件、类型和失败结果来设计自助申请的业务规则",
-      "used_for_stage": [
-        "business"
-      ],
-      "decision_points": [
-        "重点参考 R-007（治理影响生效）判断自助申请审批通过后何时生效",
-        "参考 R-009（治理模式互斥）判断自助申请与现有治理模式的共存关系",
-        "参考 R-001/R-002（可见性前置/覆盖）判断员工查看可申请角色时的展示规则"
+        "确认主体与角色的绑定关系",
+        "确认来源类型之间的优先级和互斥关系",
+        "判断自助申请来源在现有关系中的插入位置"
       ]
     },
     {
       "raw_ref": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了治理触发点和状态枚举，需要 raw 中完整的状态模型和 actor_responsibility 约定来设计申请状态机",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+      "why_summary_not_enough": "summary 只列出了状态枚举名称，需要查 raw 确认每个状态对应的可见责任人和可执行动作，用于对齐自助申请的状态机",
       "used_for_stage": [
         "business"
       ],
       "decision_points": [
-        "确认 state_model（draft/pending/approved/rejected/effective/revoked）的各状态语义",
-        "确认 actor_responsibility 的四个维度（who_can_view/who_can_act/what_actions_allowed/handoff_to_next_state），为申请各状态定义责任矩阵"
+        "确认现有治理状态流转的精确规则",
+        "确认每个状态的 actor_responsibility 定义方式",
+        "对齐自助申请的状态枚举与现有治理状态模型"
       ]
     },
     {
-      "raw_ref": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
-      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/README.md",
-      "why_summary_not_enough": "summary 只列出了体验风险编号和名称，需要 raw 中 TR-001~006 和 RISK-001~008 的完整触发条件、用户伤害和必须暴露字段来设计体验风险缓解策略",
+      "raw_ref": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
+      "why_summary_not_enough": "summary 只提供了规则分类和原因码枚举，需要查 raw 确认前置规则、约束规则、互斥规则的精确条款，防止自助申请规则与现有规则冲突",
       "used_for_stage": [
-        "experience"
+        "business"
       ],
       "decision_points": [
-        "重点参考 TR-003（概念不增殖）防止自助申请引入过多新概念",
-        "参考 RISK-002（权限来源不透明）确保自助申请来源在查询页可解释",
-        "参考 RISK-005（跨模块散落）确保自助申请不加剧查询分裂",
-        "参考 TR-001（可解释性优先）确保权限结果仍可回答「来自哪里」"
+        "确认可见性前置规则的完整条件",
+        "确认功能权限先于数据权限的精确约束",
+        "确认子管理员模式与双管理员模式互斥的规则写法，用于类比自助申请与权限变更审批的互斥表达"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "why_summary_not_enough": "summary 只提供了来源枚举名称，需要查 raw 确认各来源的优先级关系和 true source 定义，用于判断自助申请作为新来源的插入策略",
+      "used_for_stage": [
+        "business"
+      ],
+      "decision_points": [
+        "确认 ACL_DIRECT、RBAC_ROLE、APP_VISIBILITY、COLLAB_VISIBILITY 的优先级顺序",
+        "确认治理修饰因子与来源的关系",
+        "判断自助申请来源应插入的优先级位置"
+      ]
+    },
+    {
+      "raw_ref": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "routed_by_summary": "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
+      "why_summary_not_enough": "summary 覆盖了审批能力总览但未展开具体配置参数，需要查 raw 确认审批人来源、节点类型、超时策略的精确配置项，用于自助申请审批流程的复用设计",
+      "used_for_stage": [
+        "business"
+      ],
+      "decision_points": [
+        "确认6种审批人来源的具体配置参数",
+        "确认超时处理4种策略的触发条件和约束",
+        "确认审批表单与业务数据的关联方式"
       ]
     }
   ],
@@ -164,36 +105,43 @@
     "facts": {
       "summary_refs": [
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-        ".claude/skills/uxb/references/complexity/01_domain_router.md"
+        ".claude/skills/uxb/references/complexity/01_domain_router.md",
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
       ],
       "raw_refs": [
         "knowledge/raw/业务/权限管理/03_业务对象.md",
-        "knowledge/raw/业务/权限管理/04_对象关系.md",
-        "knowledge/raw/业务/权限管理/21_来源模型.md"
+        "knowledge/raw/业务/权限管理/04_对象关系.md"
       ]
     },
     "business": {
       "summary_refs": [
-        "knowledge/wiki/summaries/业务/权限管理/README.md",
+        "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+        "knowledge/wiki/summaries/业务/权限管理/01_范围与边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+        "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+        "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+        "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+        "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+        "knowledge/wiki/summaries/业务/权限管理/23_规则契约.md",
+        "knowledge/wiki/summaries/业务/权限管理/24_治理状态模型.md",
+        "knowledge/wiki/summaries/业务/审批管理/10_审批管理.md",
         ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
-        ".claude/skills/uxb/references/complexity/01_domain_router.md"
+        ".claude/skills/uxb/references/complexity/01_domain_router.md",
+        ".claude/skills/uxb/references/complexity/domains/admin_console.md"
       ],
       "raw_refs": [
-        "knowledge/raw/业务/权限管理/01_范围与边界.md",
-        "knowledge/raw/业务/权限管理/10_能力地图.md",
-        "knowledge/raw/业务/权限管理/11_任务场景.md",
-        "knowledge/raw/业务/权限管理/14_角色边界.md",
-        "knowledge/raw/业务/权限管理/20_决策链契约.md",
+        "knowledge/raw/业务/权限管理/24_治理状态模型.md",
         "knowledge/raw/业务/权限管理/23_规则契约.md",
-        "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+        "knowledge/raw/业务/权限管理/21_来源模型.md",
+        "knowledge/raw/业务/审批管理/10_审批管理.md"
       ]
     },
     "experience": {
-      "summary_refs": [],
-      "raw_refs": [
-        "knowledge/raw/业务/权限管理/22_冲突原因码.md",
-        "knowledge/raw/业务/权限管理/30_体验风险模式.md"
-      ]
+      "summary_refs": [
+        "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+        "knowledge/wiki/summaries/设计准则/流程模式.md"
+      ],
+      "raw_refs": []
     }
   }
 }

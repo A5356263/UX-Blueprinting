@@ -1,12 +1,12 @@
 {
   "project_id": "self-permission-apply",
-  "generated_at": "2026-06-01T14:01:00.976645+00:00",
-  "issue_count": 15,
-  "open_issue_count": 10,
-  "blocker_count": 0,
-  "warning_count": 10,
+  "generated_at": "2026-06-01T15:58:59.073417+00:00",
+  "issue_count": 5,
+  "open_issue_count": 5,
+  "blocker_count": 1,
+  "warning_count": 4,
   "info_count": 0,
-  "repair_loop_status": "planned",
+  "repair_loop_status": "blocked",
   "source_artifacts": [
     {
       "source": "facts_gate",
@@ -43,528 +43,147 @@
   ],
   "issues": [
     {
-      "issue_id": "FACT-2446D678",
-      "source": "facts_gate",
-      "stage": "facts",
+      "issue_id": "EXP-8A59FF45",
+      "source": "experience_gate",
+      "stage": "experience",
       "severity": "blocker",
+      "category": "skeleton_content",
+      "title": "experience 阶段存在 skeleton_content 问题",
+      "description": "experience 阶段发现 skeleton_content 问题：experience_blueprint.md 仍包含模板提示语，请先替换为真实内容",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 仍包含模板提示语，请先替换为真实内容"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-permission-apply/workspace/facts.md",
+            "projects/self-permission-apply/workspace/business_blueprint.md",
+            "projects/self-permission-apply/workspace/experience_blueprint.md",
+            "projects/self-permission-apply/runtime/provenance.json",
+            "projects/self-permission-apply/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "journey_item_count": 2,
+            "flow_count": 2,
+            "page_inventory_item_count": 4,
+            "state_feedback_pair_count": 1,
+            "appendix_item_count": 3,
+            "exception_coverage": true,
+            "core_table_count": 4,
+            "summary_node_count": 1,
+            "main_flow_heading_count": 0
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "experience_blueprint.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-permission-apply/workspace/facts.md",
+            "projects/self-permission-apply/workspace/business_blueprint.md",
+            "projects/self-permission-apply/workspace/experience_blueprint.md",
+            "projects/self-permission-apply/runtime/provenance.json",
+            "projects/self-permission-apply/runtime/gates/business_gate_status.json"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/self-permission-apply/workspace/experience_blueprint.md"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 experience_blueprint.md 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "experience_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "EXP-E18EEB74",
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
       "category": "structure_missing",
-      "title": "facts 阶段存在 structure_missing 问题",
-      "description": "facts 阶段发现 structure_missing 问题：facts.md 未显式承接 requirement/background 输入来源",
+      "title": "experience 阶段存在 structure_missing 问题",
+      "description": "experience 阶段发现 structure_missing 问题：experience_blueprint.md 主交互流程缺少可对应的节点详情标题",
       "evidence": [
         {
           "type": "message",
-          "value": "facts.md 未显式承接 requirement/background 输入来源"
+          "value": "experience_blueprint.md 主交互流程缺少可对应的节点详情标题"
         },
         {
           "type": "status_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_status.json"
         },
         {
           "type": "report_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "dimension_coverage": {
-              "overview": 1,
-              "features": 1,
-              "rules": 1,
-              "states": 1,
-              "exceptions": 1,
-              "dependencies": 1,
-              "gaps": 1
-            },
-            "gap_count": 2,
-            "knowledge_derived_fact_count": 0
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "facts.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/08_fact_extraction_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/facts.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "修复 facts.md 中当前阶段未达标的内容"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-facts",
-        "gate-business",
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "facts_gate"
-      ],
-      "status": "resolved",
-      "status_reason": "facts.md已修复，facts gate已通过",
-      "status_updated_at": "2026-06-01T14:00:31.682845+00:00"
-    },
-    {
-      "issue_id": "FACT-492DDFBE",
-      "source": "facts_gate",
-      "stage": "facts",
-      "severity": "blocker",
-      "category": "skeleton_content",
-      "title": "facts 阶段存在 skeleton_content 问题",
-      "description": "facts 阶段发现 skeleton_content 问题：facts.md 正文长度明显不足，仍像模板骨架",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "facts.md 正文长度明显不足，仍像模板骨架"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "dimension_coverage": {
-              "overview": 1,
-              "features": 1,
-              "rules": 1,
-              "states": 1,
-              "exceptions": 1,
-              "dependencies": 1,
-              "gaps": 1
-            },
-            "gap_count": 2,
-            "knowledge_derived_fact_count": 0
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "facts.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/08_fact_extraction_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/facts.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "修复 facts.md 中当前阶段未达标的内容"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-facts",
-        "gate-business",
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "facts_gate"
-      ],
-      "status": "resolved",
-      "status_reason": "facts.md已填充真实内容",
-      "status_updated_at": "2026-06-01T14:00:31.879085+00:00"
-    },
-    {
-      "issue_id": "FACT-59FD36E7",
-      "source": "facts_gate",
-      "stage": "facts",
-      "severity": "blocker",
-      "category": "skeleton_content",
-      "title": "facts 阶段存在 skeleton_content 问题",
-      "description": "facts 阶段发现 skeleton_content 问题：facts.md 仍包含模板提示语，请先替换为真实内容",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "facts.md 仍包含模板提示语，请先替换为真实内容"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/runtime/gates/facts_gate_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "dimension_coverage": {
-              "overview": 1,
-              "features": 1,
-              "rules": 1,
-              "states": 1,
-              "exceptions": 1,
-              "dependencies": 1,
-              "gaps": 1
-            },
-            "gap_count": 2,
-            "knowledge_derived_fact_count": 0
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "facts.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/source/task_card.md",
-            "projects/self-permission-apply/source/requirement.md",
-            "projects/self-permission-apply/source/background.md",
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/workspace/facts.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/08_fact_extraction_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/facts.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "修复 facts.md 中当前阶段未达标的内容"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-facts",
-        "gate-business",
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "facts_gate"
-      ],
-      "status": "resolved",
-      "status_reason": "facts.md模板提示语已替换为真实内容",
-      "status_updated_at": "2026-06-01T14:00:32.077554+00:00"
-    },
-    {
-      "issue_id": "BIZ-2C46F0CE",
-      "source": "business_gate",
-      "stage": "business",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "business 阶段存在 experience_state_feedback_gap 问题",
-      "description": "business 阶段发现 experience_state_feedback_gap 问题：business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/runtime/gates/business_gate_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/runtime/gates/business_gate_report.md"
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_report.md"
         },
         {
           "type": "checked_files",
           "value": [
             "projects/self-permission-apply/workspace/facts.md",
             "projects/self-permission-apply/workspace/business_blueprint.md",
+            "projects/self-permission-apply/workspace/experience_blueprint.md",
             "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
+            "projects/self-permission-apply/runtime/gates/business_gate_status.json"
           ]
         },
         {
           "type": "metrics",
           "value": {
-            "option_compare_count": 20,
-            "value_assessment_item_count": 11,
-            "risk_item_count": 20,
-            "unresolved_gap_count": 0,
-            "has_appendix": true,
-            "appendix_item_count": 17,
-            "referenced_fact_section_count": 5,
-            "handover_item_count": 22,
-            "handover_keyword_count": 5,
-            "has_handover_empty_talk": false
+            "journey_item_count": 2,
+            "flow_count": 2,
+            "page_inventory_item_count": 4,
+            "state_feedback_pair_count": 1,
+            "appendix_item_count": 3,
+            "exception_coverage": true,
+            "core_table_count": 4,
+            "summary_node_count": 1,
+            "main_flow_heading_count": 0
           }
         },
         {
           "type": "artifact_name",
-          "value": "business_blueprint.md"
+          "value": "experience_blueprint.md"
         },
         {
           "type": "checked_files",
           "value": [
             "projects/self-permission-apply/workspace/facts.md",
             "projects/self-permission-apply/workspace/business_blueprint.md",
+            "projects/self-permission-apply/workspace/experience_blueprint.md",
             "projects/self-permission-apply/runtime/provenance.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
-          ]
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/09_business_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-business",
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "business_gate",
-        "validate"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-0C049F45",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_exception_handling_gap",
-      "title": "experience 阶段存在 experience_exception_handling_gap 问题",
-      "description": "experience 阶段发现 experience_exception_handling_gap 问题：承接检查：business_blueprint.md 已把“审批链路断裂 → 通过兜底机制和异常提醒保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“审批链路断裂 → 通过兜底机制和异常提醒保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
+            "projects/self-permission-apply/runtime/gates/business_gate_status.json"
           ]
         }
       ],
@@ -574,13 +193,12 @@
         "specs/06_check_contract.md"
       ],
       "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
         "projects/self-permission-apply/workspace/experience_blueprint.md"
       ],
       "repair_mode": "patch_current_artifact",
       "suggested_actions": [
         "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的触发条件、系统反馈和用户下一步，保持修复范围只落在对应异常节点"
+        "修复 experience_blueprint.md 中当前阶段未达标的内容"
       ],
       "upstream_backtrack_required": false,
       "upstream_backtrack_stage": null,
@@ -590,861 +208,7 @@
         "coverage"
       ],
       "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-449E593B",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_business_consumption_gap",
-      "title": "experience 阶段存在 experience_business_consumption_gap 问题",
-      "description": "experience 阶段发现 experience_business_consumption_gap 问题：承接检查：business_blueprint.md 已把“可申请范围过宽 → 通过配置页的默认行为和提示保...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“可申请范围过宽 → 通过配置页的默认行为和提示保...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "只补 business_blueprint.md 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-7575EA4B",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "experience 阶段存在 experience_state_feedback_gap 问题",
-      "description": "experience 阶段发现 experience_state_feedback_gap 问题：承接检查：business_blueprint.md 已把“能力关闭时员工正在填写申请 → 提示能力已关闭”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“能力关闭时员工正在填写申请 → 提示能力已关闭”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-85AE2E30",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "experience 阶段存在 experience_state_feedback_gap 问题",
-      "description": "experience 阶段发现 experience_state_feedback_gap 问题：承接检查：business_blueprint.md 已把“管理员在审批期间直接给员工分配了同一角色 → 需...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“管理员在审批期间直接给员工分配了同一角色 → 需...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-987590DE",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "experience 阶段存在 experience_state_feedback_gap 问题",
-      "description": "experience 阶段发现 experience_state_feedback_gap 问题：承接检查：business_blueprint.md 要求解释“能力开启/关闭状态及对应员工端表现”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 要求解释“能力开启/关闭状态及对应员工端表现”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-B227C03E",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "experience 阶段存在 experience_state_feedback_gap 问题",
-      "description": "experience 阶段发现 experience_state_feedback_gap 问题：承接检查：business_blueprint.md 要求解释“权限来源（管理员分配 vs 自助申请）及区分方式”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 要求解释“权限来源（管理员分配 vs 自助申请）及区分方式”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-C10CA364",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_business_consumption_gap",
-      "title": "experience 阶段存在 experience_business_consumption_gap 问题",
-      "description": "experience 阶段发现 experience_business_consumption_gap 问题：承接检查：business_blueprint.md 已把“概念增殖 → 通过界面语言和操作路径保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“概念增殖 → 通过界面语言和操作路径保护”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "只补 business_blueprint.md 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
-      ],
-      "status": "open"
-    },
-    {
-      "issue_id": "EXP-ED1E1039",
-      "source": "coverage",
-      "stage": "experience",
-      "severity": "warning",
-      "category": "experience_state_feedback_gap",
-      "title": "experience 阶段存在 experience_state_feedback_gap 问题",
-      "description": "experience 阶段发现 experience_state_feedback_gap 问题：承接检查：business_blueprint.md 已把“可申请角色被管理员在审批中移除 → 在途申请不受...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
-      "evidence": [
-        {
-          "type": "message",
-          "value": "承接检查：business_blueprint.md 已把“可申请角色被管理员在审批中移除 → 在途申请不受...”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。"
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
-        },
-        {
-          "type": "artifact_name",
-          "value": "experience_blueprint.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        }
-      ],
-      "violated_contract_refs": [
-        "specs/11_repair_loop_contract.md",
-        "specs/10_experience_blueprint_contract.md",
-        "specs/06_check_contract.md"
-      ],
-      "target_artifacts": [
-        "projects/self-permission-apply/workspace/business_blueprint.md",
-        "projects/self-permission-apply/workspace/experience_blueprint.md"
-      ],
-      "repair_mode": "patch_current_artifact",
-      "suggested_actions": [
-        "不要整稿重写，优先做局部补修",
-        "补齐 business_blueprint.md 的状态含义、页面反馈和用户下一步，不要只写状态名"
-      ],
-      "upstream_backtrack_required": false,
-      "upstream_backtrack_stage": null,
-      "retry_scope_hint": [
-        "gate-experience",
-        "validate",
-        "coverage"
-      ],
-      "related_sources": [
-        "coverage"
+        "experience_gate"
       ],
       "status": "open"
     },
@@ -1482,15 +246,15 @@
         {
           "type": "metrics",
           "value": {
-            "journey_item_count": 3,
-            "flow_count": 72,
-            "page_inventory_item_count": 105,
-            "state_feedback_pair_count": 17,
-            "appendix_item_count": 10,
+            "journey_item_count": 2,
+            "flow_count": 2,
+            "page_inventory_item_count": 4,
+            "state_feedback_pair_count": 1,
+            "appendix_item_count": 3,
             "exception_coverage": true,
-            "core_table_count": 105,
-            "summary_node_count": 7,
-            "main_flow_heading_count": 7
+            "core_table_count": 4,
+            "summary_node_count": 1,
+            "main_flow_heading_count": 0
           }
         },
         {
@@ -1506,71 +270,6 @@
             "projects/self-permission-apply/runtime/provenance.json",
             "projects/self-permission-apply/runtime/gates/business_gate_status.json"
           ]
-        },
-        {
-          "type": "status_path",
-          "value": "projects/self-permission-apply/workspace/check_status.json"
-        },
-        {
-          "type": "report_path",
-          "value": "projects/self-permission-apply/workspace/check_report.md"
-        },
-        {
-          "type": "checked_files",
-          "value": [
-            "projects/self-permission-apply/runtime/context_manifest.json",
-            "projects/self-permission-apply/runtime/gates/business_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
-            "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
-            "projects/self-permission-apply/workspace/business_blueprint.md",
-            "projects/self-permission-apply/workspace/check_report.md",
-            "projects/self-permission-apply/workspace/check_status.json",
-            "projects/self-permission-apply/workspace/experience_blueprint.md"
-          ]
-        },
-        {
-          "type": "metrics",
-          "value": {
-            "required_output_count": 6,
-            "completed_output_count": 6,
-            "missing_output_count": 0,
-            "business_depth": {
-              "option_compare_count": 20,
-              "value_assessment_item_count": 11,
-              "risk_item_count": 20,
-              "unresolved_gap_count": 0,
-              "has_appendix": true,
-              "appendix_item_count": 17,
-              "referenced_fact_section_count": 5,
-              "handover_item_count": 22,
-              "handover_keyword_count": 5,
-              "has_handover_empty_talk": false
-            },
-            "experience_depth": {
-              "journey_item_count": 3,
-              "flow_count": 72,
-              "page_inventory_item_count": 105,
-              "state_feedback_pair_count": 17,
-              "appendix_item_count": 10,
-              "exception_coverage": true,
-              "core_table_count": 105,
-              "summary_node_count": 7,
-              "main_flow_heading_count": 7
-            },
-            "coverage": {
-              "required_role_count": 3,
-              "covered_role_count": 3,
-              "required_flow_step_count": 4,
-              "covered_flow_step_count": 4,
-              "required_exception_count": 5,
-              "covered_exception_count": 2,
-              "required_state_count": 3,
-              "covered_state_count": 1,
-              "required_risk_count": 3,
-              "covered_risk_count": 0,
-              "guideline_refs_used_count": 0
-            }
-          }
         }
       ],
       "violated_contract_refs": [
@@ -1594,8 +293,7 @@
         "coverage"
       ],
       "related_sources": [
-        "experience_gate",
-        "validate"
+        "experience_gate"
       ],
       "status": "open"
     },
@@ -1646,9 +344,7 @@
       "related_sources": [
         "runtime"
       ],
-      "status": "deferred",
-      "status_reason": "trace_index.json为运行时产物，非阻塞",
-      "status_updated_at": "2026-06-01T14:00:32.436076+00:00"
+      "status": "open"
     },
     {
       "issue_id": "RUN-FCB57B57",
@@ -1697,10 +393,7 @@
       "related_sources": [
         "runtime"
       ],
-      "status": "deferred",
-      "status_reason": "gate_metrics.json为运行时产物，非阻塞",
-      "status_updated_at": "2026-06-01T14:00:32.262940+00:00"
+      "status": "open"
     }
-  ],
-  "updated_at": "2026-06-01T14:01:00.994409+00:00"
+  ]
 }

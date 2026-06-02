@@ -12,14 +12,14 @@
 
 ## Task Goal
 
-- 为「员工自助申请权限」做完整业务判断和体验蓝图，使员工可以查看已有权限、主动申请角色权限、通过审批后自动授权，同时管理员可控制申请范围和审批流程
-- 本次输出服务于产品方案评审和体验设计启动
+- 用一句话说明本次任务要解决什么问题
+- 说明本次输出主要服务于哪类评审、设计或重构工作
 
 ## Task Scenario
 
-- 基于低完整度需求文档，新增一套员工自助申请权限的完整业务模型和体验方案
-- 这是新建任务，覆盖全链路（facts → business → experience）
-- 主要压力在业务骨架变化（新对象、新来源、新状态机）和跨角色体验承接（管理端/员工端/审批端）
+- 描述本次任务场景
+- 说明这是新建、补充、校对、重构还是审查任务
+- 说明本次任务主要落在 facts / business / experience 的哪一层，或覆盖全链路
 
 ## Required Inputs
 
@@ -42,7 +42,7 @@
 3. 生成 facts.md
 4. 生成 business 产物
 5. 生成 experience_blueprint.md
-6. 运行 validate / coverage / archive / preview
+6. 运行 validate / coverage / preview
 
 ## Constraints
 
@@ -74,7 +74,7 @@
 ## Result Locations
 
 - 执行中结果: projects/self-permission-apply/workspace/
-- 归档结果: projects/self-permission-apply/exports/final/
+- 预览产物: projects/self-permission-apply/runtime/preview/
 
 ## Completion Criteria
 
