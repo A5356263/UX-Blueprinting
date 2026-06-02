@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-import importlib
 import json
+import os
 import platform
+import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -10,7 +12,6 @@ from typing import Any
 
 from packages.common import (
     get_env_check_report_path,
-    get_examples_root_dir,
     get_knowledge_root_dir,
     get_projects_root_dir,
     get_repo_root,
@@ -18,9 +19,6 @@ from packages.common import (
     get_templates_root_dir,
     get_tmp_root_dir,
 )
-
-
-HOST_PATH_MARKERS = (".cl" + "aude/", ".co" + "dex/")
 
 
 def _now_iso() -> str:
@@ -58,15 +56,31 @@ def _write_report(report_path: Path, payload: dict[str, Any]) -> None:
     report_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def _check_required_roots() -> dict[str, Any]:
-    repo_root = get_repo_root()
+def _release_core_path(repo_root: Path) -> Path:
+    name = "uxb-core.exe" if os.name == "nt" else "uxb-core"
+    return repo_root / "bin" / name
+
+
+def _is_release_layout(repo_root: Path) -> bool:
+    init_path = repo_root / "packages" / "__init__.py"
+    if not init_path.exists():
+        return False
+    if not _release_core_path(repo_root).exists():
+        return False
+    try:
+        marker = init_path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return False
+    return marker == '"""UXB release package thin entry."""'
+
+
+def _check_required_roots(repo_root: Path) -> dict[str, Any]:
     roots = {
         "repo_root": repo_root,
         "projects_root": get_projects_root_dir(),
         "templates_root": get_templates_root_dir(),
         "specs_root": get_specs_root_dir(),
         "knowledge_root": get_knowledge_root_dir(),
-        "examples_root": get_examples_root_dir(),
     }
 
     missing = {name: str(path) for name, path in roots.items() if not path.exists()}
@@ -74,20 +88,82 @@ def _check_required_roots() -> dict[str, Any]:
         return _make_check(
             "required_roots",
             "failed",
-            "关键目录缺失，当前环境无法稳定运行正式链路",
+            "Release runtime roots are missing; the package cannot run stably on this machine.",
             details={"missing": missing, "resolved_roots": {name: str(path) for name, path in roots.items()}},
         )
 
     return _make_check(
         "required_roots",
         "passed",
-        "关键目录存在，正式链路所需根路径可识别",
+        "Release runtime roots are present.",
         details={"resolved_roots": {name: str(path) for name, path in roots.items()}},
     )
 
 
-def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
-    del repo_root
+def _check_release_layout(repo_root: Path) -> dict[str, Any]:
+    core_path = _release_core_path(repo_root)
+    packages_dir = repo_root / "packages"
+    init_path = packages_dir / "__init__.py"
+    main_path = packages_dir / "__main__.py"
+
+    details = {
+        "core_path": str(core_path),
+        "packages_dir": str(packages_dir),
+        "is_release_layout": _is_release_layout(repo_root),
+    }
+
+    if core_path.exists():
+        missing = [str(path.relative_to(repo_root)) for path in (init_path, main_path) if not path.exists()]
+        if missing:
+            return _make_check(
+                "release_layout",
+                "failed",
+                "Release thin-entry files are missing.",
+                details={**details, "missing": missing},
+            )
+        return _make_check(
+            "release_layout",
+            "passed",
+            "Release executable and thin entry files are present.",
+            details=details,
+        )
+
+    return _make_check(
+        "release_layout",
+        "warning",
+        "Release executable was not found in the current root; env-check is running outside a packaged release.",
+        fixable=False,
+        details=details,
+    )
+
+
+def _check_platform_match(repo_root: Path) -> dict[str, Any]:
+    core_path = _release_core_path(repo_root)
+    system_name = platform.system().lower()
+    if core_path.exists():
+        if os.name == "nt":
+            return _make_check(
+                "platform_match",
+                "passed",
+                "Current Windows environment matches the packaged executable format.",
+                details={"platform": platform.platform(), "core_path": str(core_path)},
+            )
+        return _make_check(
+            "platform_match",
+            "failed",
+            "A Windows release executable was found, but the current system is not Windows.",
+            details={"platform": platform.platform(), "core_path": str(core_path)},
+        )
+
+    return _make_check(
+        "platform_match",
+        "warning",
+        f"No packaged executable was found for explicit platform verification. Current system: {system_name}.",
+        details={"platform": platform.platform()},
+    )
+
+
+def _check_tmp_roundtrip() -> dict[str, Any]:
     tmp_dir = get_tmp_root_dir()
     created_tmp_dir = False
     if not tmp_dir.exists():
@@ -96,7 +172,7 @@ def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
 
     probe_file = tmp_dir / ".env-check-utf8-probe.txt"
     probe_dir = tmp_dir / ".env-check-delete-probe"
-    payload = "env-check utf-8 探针：中文路径与内容校验\n"
+    payload = "env-check utf-8 probe: 中文路径与内容校验\n"
     try:
         probe_file.write_text(payload, encoding="utf-8")
         restored = probe_file.read_text(encoding="utf-8")
@@ -104,7 +180,7 @@ def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
             return _make_check(
                 "tmp_roundtrip",
                 "failed",
-                "UTF-8 读写回环结果不一致，当前环境可能存在编码问题",
+                "UTF-8 roundtrip failed in the package temp area.",
                 details={"tmp_dir": str(tmp_dir), "probe_file": str(probe_file)},
             )
         probe_dir.mkdir(exist_ok=True)
@@ -112,7 +188,7 @@ def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
         return _make_check(
             "tmp_roundtrip",
             "failed",
-            "根目录临时路径不可读写，当前环境无法稳定执行临时文件操作",
+            "The package temp area is not readable and writable.",
             details={"tmp_dir": str(tmp_dir), "error": str(exc)},
         )
     finally:
@@ -128,7 +204,7 @@ def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
         return _make_check(
             "tmp_roundtrip",
             "warning",
-            "根目录临时目录原本不存在，已自动创建；当前环境可继续运行",
+            "The package temp area was missing and has been created successfully.",
             fixable=True,
             details={"tmp_dir": str(tmp_dir)},
         )
@@ -136,7 +212,7 @@ def _check_tmp_roundtrip(repo_root: Path) -> dict[str, Any]:
     return _make_check(
         "tmp_roundtrip",
         "passed",
-        "根目录临时路径可读写，UTF-8 与删除行为正常",
+        "The package temp area supports UTF-8 read/write and cleanup.",
         details={"tmp_dir": str(tmp_dir)},
     )
 
@@ -151,7 +227,7 @@ def _check_projects_writable(projects_root: Path) -> dict[str, Any]:
             return _make_check(
                 "projects_writable",
                 "failed",
-                "projects 根目录不存在且无法自动创建，当前环境无法稳定写入项目产物",
+                "The projects directory cannot be created in the current environment.",
                 details={"projects_root": str(projects_root), "error": str(exc)},
             )
 
@@ -163,7 +239,7 @@ def _check_projects_writable(projects_root: Path) -> dict[str, Any]:
         return _make_check(
             "projects_writable",
             "failed",
-            "projects 根目录不可写，当前环境无法稳定执行正式产物写入",
+            "The projects directory is not writable.",
             details={"projects_root": str(projects_root), "error": str(exc)},
         )
 
@@ -171,7 +247,7 @@ def _check_projects_writable(projects_root: Path) -> dict[str, Any]:
         return _make_check(
             "projects_writable",
             "warning",
-            "projects 根目录原本不存在，已自动创建；当前环境可继续运行",
+            "The projects directory was missing and has been created successfully.",
             fixable=True,
             details={"projects_root": str(projects_root)},
         )
@@ -179,76 +255,160 @@ def _check_projects_writable(projects_root: Path) -> dict[str, Any]:
     return _make_check(
         "projects_writable",
         "passed",
-        "projects 根目录可写，项目运行时产物可正常创建",
+        "The projects directory is writable.",
         details={"projects_root": str(projects_root)},
     )
 
 
-def _check_python_runtime() -> dict[str, Any]:
-    modules = [
-        "packages.__main__",
-        "packages.common",
-        "packages.context_assemble.core",
-        "packages.route_decision.core",
-        "packages.routed_main.core",
-        "packages.validate.core",
+def _run_cli_command(command: list[str], cwd: Path) -> tuple[int, str]:
+    completed = subprocess.run(
+        command,
+        cwd=str(cwd),
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        check=False,
+    )
+    output = "\n".join(part for part in [completed.stdout.strip(), completed.stderr.strip()] if part).strip()
+    return int(completed.returncode), output
+
+
+def _packages_command(repo_root: Path, *args: str) -> list[str]:
+    if _is_release_layout(repo_root):
+        return [str(_release_core_path(repo_root)), *args]
+    return [sys.executable, "-m", "packages", *args]
+
+
+def _check_cli_entrypoint(repo_root: Path) -> dict[str, Any]:
+    command = _packages_command(repo_root, "--help")
+    returncode, output = _run_cli_command(command, cwd=repo_root)
+    if returncode != 0:
+        return _make_check(
+            "cli_entrypoint",
+            "failed",
+            "The package CLI entrypoint could not start.",
+            details={"command": " ".join(command), "output": output},
+        )
+    return _make_check(
+        "cli_entrypoint",
+        "passed",
+        "The package CLI entrypoint starts successfully.",
+        details={"command": " ".join(command)},
+    )
+
+
+def _check_capability_listing(repo_root: Path) -> dict[str, Any]:
+    command = _packages_command(repo_root, "capabilities-list")
+    returncode, output = _run_cli_command(command, cwd=repo_root)
+    if returncode != 0:
+        return _make_check(
+            "capability_listing",
+            "failed",
+            "The package could not list capabilities.",
+            details={"command": " ".join(command), "output": output},
+        )
+    return _make_check(
+        "capability_listing",
+        "passed",
+        "The package can list capabilities.",
+        details={"command": " ".join(command)},
+    )
+
+
+def _check_run_script(repo_root: Path) -> dict[str, Any]:
+    if os.name != "nt":
+        return _make_check(
+            "run_script",
+            "warning",
+            "Windows PowerShell launch script was not verified because the current system is not Windows.",
+            details={"platform": platform.platform()},
+        )
+
+    script_path = repo_root / "run_packages.ps1"
+    if not script_path.exists():
+        return _make_check(
+            "run_script",
+            "failed",
+            "The Windows launch script is missing.",
+            details={"script_path": str(script_path)},
+        )
+
+    command = [
+        "powershell",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(script_path),
+        "capabilities-list",
     ]
-    imported: list[str] = []
+    returncode, output = _run_cli_command(command, cwd=repo_root)
+    if returncode != 0:
+        return _make_check(
+            "run_script",
+            "failed",
+            "The Windows launch script could not start the package.",
+            details={"command": " ".join(command), "output": output},
+        )
+    return _make_check(
+        "run_script",
+        "passed",
+        "The Windows launch script can start the package.",
+        details={"command": "powershell -ExecutionPolicy Bypass -File run_packages.ps1 capabilities-list"},
+    )
+
+
+def _check_smoke_project(repo_root: Path) -> dict[str, Any]:
+    project_id = "env-check-smoke"
+    projects_root = get_projects_root_dir()
+    project_dir = projects_root / project_id
+    if project_dir.exists():
+        shutil.rmtree(project_dir, ignore_errors=True)
+
+    commands = [
+        _packages_command(
+            repo_root,
+            "bootstrap",
+            project_id,
+            "--task-name",
+            "Env Check Smoke",
+            "--domain",
+            "权限管理",
+            "--force",
+        ),
+        _packages_command(repo_root, "project-structure-check", project_id),
+    ]
+    outputs: list[dict[str, str | int]] = []
     try:
-        for module_name in modules:
-            importlib.import_module(module_name)
-            imported.append(module_name)
-    except Exception as exc:  # noqa: BLE001
-        return _make_check(
-            "python_runtime",
-            "failed",
-            "正式执行层模块导入失败，当前 Python 环境无法稳定运行项目",
-            details={
-                "python_version": sys.version,
-                "failed_module": modules[len(imported)],
-                "imported_modules": imported,
-                "error": f"{type(exc).__name__}: {exc}",
-            },
-        )
+        for command in commands:
+            returncode, output = _run_cli_command(command, cwd=repo_root)
+            outputs.append({"command": " ".join(command), "returncode": returncode, "output": output})
+            if returncode != 0:
+                return _make_check(
+                    "smoke_project",
+                    "failed",
+                    "The package could not complete the minimal bootstrap smoke flow.",
+                    details={"project_id": project_id, "steps": outputs},
+                )
+    finally:
+        shutil.rmtree(project_dir, ignore_errors=True)
 
     return _make_check(
-        "python_runtime",
+        "smoke_project",
         "passed",
-        "当前 Python 环境可导入正式执行层模块",
-        details={"python_version": sys.version, "imported_modules": imported},
+        "The package completed the minimal bootstrap smoke flow successfully.",
+        details={"project_id": project_id, "steps": outputs},
     )
 
 
-def _check_host_path_independence(repo_root: Path) -> dict[str, Any]:
-    hits: list[str] = []
-    for path in (repo_root / "packages").rglob("*.py"):
-        text = path.read_text(encoding="utf-8")
-        if any(marker in text for marker in HOST_PATH_MARKERS):
-            hits.append(path.relative_to(repo_root).as_posix())
-
-    if hits:
-        return _make_check(
-            "host_path_independence",
-            "failed",
-            "正式 packages 代码中仍存在宿主 skill 路径依赖，换系统或换 code agent 时可能失稳",
-            details={"files": hits},
-        )
-
-    return _make_check(
-        "host_path_independence",
-        "passed",
-        "正式 packages 代码未发现宿主 skill 路径依赖",
-        details={},
-    )
-
-
-def _build_report(checks: list[dict[str, Any]]) -> dict[str, Any]:
+def _build_report(checks: list[dict[str, Any]], *, mode: str) -> dict[str, Any]:
     repo_root = get_repo_root()
     status = _status_from_checks(checks)
     warnings = [item["message"] for item in checks if item.get("status") == "warning"]
     errors = [item["message"] for item in checks if item.get("status") == "failed"]
     can_continue = status != "failed"
     return {
+        "mode": mode,
         "status": status,
         "checked_at": _now_iso(),
         "repo_root": str(repo_root),
@@ -263,9 +423,9 @@ def _build_report(checks: list[dict[str, Any]]) -> dict[str, Any]:
         "errors": errors,
         "can_continue_mainline": can_continue,
         "recommended_next_action": (
-            "可以继续执行主链路"
+            "The package can continue running in the current environment."
             if can_continue
-            else "请先修复环境阻断项，再执行主链路"
+            else "Fix the blocking environment issues before using this package."
         ),
     }
 
@@ -280,6 +440,7 @@ def _print_summary(payload: dict[str, Any], report_path: Path) -> None:
     failed_count = sum(1 for item in checks if item.get("status") == "failed")
 
     print("env-check summary")
+    print(f"- mode: {payload.get('mode')}")
     print(f"- status: {status}")
     print(f"- passed_checks: {passed_count}")
     print(f"- warning_checks: {warning_count}")
@@ -302,13 +463,17 @@ def _print_summary(payload: dict[str, Any], report_path: Path) -> None:
 def run_env_check() -> int:
     repo_root = get_repo_root()
     checks = [
-        _check_required_roots(),
-        _check_tmp_roundtrip(repo_root),
+        _check_required_roots(repo_root),
+        _check_release_layout(repo_root),
+        _check_platform_match(repo_root),
+        _check_tmp_roundtrip(),
         _check_projects_writable(get_projects_root_dir()),
-        _check_python_runtime(),
-        _check_host_path_independence(repo_root),
+        _check_cli_entrypoint(repo_root),
+        _check_capability_listing(repo_root),
+        _check_run_script(repo_root),
+        _check_smoke_project(repo_root),
     ]
-    payload = _build_report(checks)
+    payload = _build_report(checks, mode="package_runtime")
     report_path = get_env_check_report_path()
     _write_report(report_path, payload)
     _print_summary(payload, report_path)

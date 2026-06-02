@@ -328,6 +328,7 @@ def validate_release(stage_root: Path) -> None:
     validation_commands = [
         [sys.executable, "-m", "packages", "--help"],
         [sys.executable, "-m", "packages", "capabilities-list"],
+        [sys.executable, "-m", "packages", "env-check"],
         [
             sys.executable,
             "-m",
