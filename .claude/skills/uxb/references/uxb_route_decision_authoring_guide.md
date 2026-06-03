@@ -187,36 +187,27 @@
 2. 命中的领域路由资料
 3. 明显能帮助判断深度的领域卡片
 
-## selection_reasons 写法
+## knowledge_selection 写法
 
-每个被选中的 ref 都必须写理由，格式固定为：
+`knowledge_selection` 现在只保留两个正式字段：
 
 ```json
 {
-  "ref": "<path>",
-  "type": "summary|raw",
-  "used_for_stage": ["facts|business|experience"],
-  "reason": "说明这份资料支撑哪个判断，或支撑哪段正式产出"
+  "files": [
+    "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+    "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+    ".codex/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+  ],
+  "reasoning": "先用 summary 缩小到页面载体语义，再补 raw 确认具体边界，并带一份 complexity 资料约束判断深度。"
 }
 ```
 
-理由至少要回答三件事：
+填写要求：
 
-1. 为什么这次要读
-2. 支撑哪个判断
-3. 影响哪类正式输出
-
-如果说不清，就不要选。
-
-## Raw refs 选择要求
-
-`knowledge/raw/**` 不应直接写进 `summary_refs`。如果 summary 不够，需要把 raw 写进 `raw_escalation_plan`，并补清三点：
-
-1. 路由来源：该 raw 由哪个 summary / README / index 线索命中。
-2. 使用阶段：该 raw 主要支撑 facts / business / experience 中哪个阶段。
-3. 具体判断点：该 raw 用于确认什么规则、对象关系、状态、流程、字段、路径、异常或边界。
-
-如果无法说明以上三点，应先退回 summary / README 层，不要直接选择 raw。
+1. `files` 只列这次真正计划读取的知识文件，保持最小集合
+2. `reasoning` 用 3-5 句话说明整体思路，不再逐条写每个 ref 的工程理由
+3. 不为了“更完整”把一整域 summary 或 raw 全量塞进去
+4. raw 可以直接进入 `files`，前提是你说得清它为什么必要
 
 ## required_outputs 判断
 
@@ -294,3 +285,30 @@
 - `assets/uxb_route_decision.template.json`
 
 不要把完整业务方案、完整体验方案或知识原文写进这个文件。它是判断单，不是蓝图正文。
+
+## JSON 稳定写法
+
+先复制模板，再只替换值，不要临时改字段结构。
+
+必须遵守：
+
+1. JSON 结构键名一律保持模板原样，不要自己改名，不要写别名
+2. `knowledge_selection` 下的正式字段名只能是 `files` 和 `reasoning`
+3. 不要把 `summary_refs`、`raw_escalation_plan`、`stage_refs`、`selection_reasons` 留在新文件里
+4. 结构引号必须是 JSON 标准 ASCII 双引号 `"`
+5. 字符串内容里如果想引用中文词语，优先用 `「」` 或 `“”`，不要再裸写一个未转义的 ASCII 双引号
+6. 不要把“我来修复”“确认两个问题”“JSON 解析失败”等说明文字写进 JSON 文件
+7. 不要输出代码围栏、解释段落或修复说明；文件内容本身只保留 JSON 对象
+
+最常见的坏写法：
+
+- 在 `reason`、`notes`、`uncertainties` 这类字符串里直接插入未转义的 `"`，导致 JSON 断裂
+- 把 `files` / `reasoning` 又写回旧的 `summary_refs` / `raw_escalation_plan`
+- 把报错信息、修复说明、检查结论一起写进 JSON 文件
+
+如果已经写坏，不要在坏 JSON 上继续补丁式改字。正确做法是：
+
+1. 重新复制 `assets/uxb_route_decision.template.json`
+2. 按模板重填一次值
+3. 保持键名完全不变
+4. 再执行 `python -m packages route-decision <project-id>` 做一次结构校验

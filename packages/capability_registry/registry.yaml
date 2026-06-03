@@ -7,6 +7,7 @@
     "context_assemble",
     "generate_facts",
     "route_decision",
+    "route_decision_options",
     "generate_business",
     "generate_business_note",
     "generate_business_lite",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "uxb_route_decision@4.0",
+  "schema_version": "uxb_route_decision@5.0",
   "project_id": "<project-id>",
   "created_by": "uxb_ai",
   "confirmed_by_user": false,
@@ -16,31 +16,8 @@
     "uncertainties": []
   },
   "knowledge_selection": {
-    "summary_refs": {
-      "business": [],
-      "guideline": [],
-      "complexity": []
-    },
-    "raw_escalation_plan": [],
-    "stage_refs": {
-      "facts": {
-        "raw_refs": []
-      },
-      "business": {
-        "raw_refs": []
-      },
-      "experience": {
-        "raw_refs": []
-      }
-    },
-    "selection_reasons": [
-      {
-        "ref": "",
-        "type": "summary",
-        "used_for_stage": [],
-        "reason": ""
-      }
-    ]
+    "files": [],
+    "reasoning": ""
   },
   "execution": {
     "required_outputs": [],

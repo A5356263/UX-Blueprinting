@@ -74,10 +74,6 @@ def main() -> int:
     lines = [
         "# Knowledge Wiki Questions",
         "",
-        "- page_id: PG-SYSTEM-QUESTIONS",
-        "- page_type: system",
-        "- status: active",
-        "- confidence: medium",
         f"- updated_at: {date.today().isoformat()}",
         "",
         "## 显式未决项",

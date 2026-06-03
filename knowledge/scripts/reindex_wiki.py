@@ -36,12 +36,6 @@ def main() -> int:
     lines: list[str] = [
         "# Knowledge Wiki Index",
         "",
-        "- page_id: PG-SYSTEM-INDEX",
-        "- page_type: system",
-        "- status: active",
-        "- confidence: medium",
-        "- related_summaries: []",
-        "",
         "## System Pages",
         "",
         "- [overview](overview.md)",

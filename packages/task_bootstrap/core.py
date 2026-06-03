@@ -3,23 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from packages.common import (
-    get_project_dir,
-    get_project_gates_dir,
-    get_project_source_dir,
-    get_project_workspace_dir,
-    get_templates_root_dir,
-)
+from packages.common import get_project_dir, get_project_gates_dir, get_project_source_dir, get_project_workspace_dir, get_templates_root_dir
 
 
 TEMPLATE_MAP = {
     "task_card.template.md": ("source", "task_card.md"),
-    "facts.template.md": ("workspace", "facts.md"),
-    "business_blueprint.template.md": ("workspace", "business_blueprint.md"),
-    "experience_blueprint.template.md": ("workspace", "experience_blueprint.md"),
-    "gap_list.template.md": ("workspace", "gap_list.md"),
-    "check_report.template.md": ("workspace", "check_report.md"),
-    "check_status.template.json": ("workspace", "check_status.json"),
 }
 
 

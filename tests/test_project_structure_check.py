@@ -43,6 +43,12 @@ class ProjectStructureCheckTests(unittest.TestCase):
         check_md = project_dir / "runtime" / "project_structure_check.md"
         self.assertTrue(check_json.exists())
         self.assertTrue(check_md.exists())
+        self.assertFalse((project_dir / "workspace" / "facts.md").exists())
+        self.assertFalse((project_dir / "workspace" / "business_blueprint.md").exists())
+        self.assertFalse((project_dir / "workspace" / "experience_blueprint.md").exists())
+        self.assertFalse((project_dir / "workspace" / "gap_list.md").exists())
+        self.assertFalse((project_dir / "workspace" / "check_report.md").exists())
+        self.assertFalse((project_dir / "workspace" / "check_status.json").exists())
         payload = json.loads(check_json.read_text(encoding="utf-8"))
         self.assertEqual(payload.get("status"), "passed")
         self.assertEqual(payload.get("missing_entries"), [])
@@ -60,6 +66,86 @@ class ProjectStructureCheckTests(unittest.TestCase):
         payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
         self.assertEqual(payload.get("status"), "failed")
         self.assertIn("runtime/", payload.get("missing_entries", []))
+
+    def test_structure_check_blocks_workspace_template_pollution(self) -> None:
+        project_id = "workspace-template"
+        project_dir = self.projects_dir / project_id
+        (project_dir / "source").mkdir(parents=True, exist_ok=True)
+        (project_dir / "workspace").mkdir(parents=True, exist_ok=True)
+        (project_dir / "runtime").mkdir(parents=True, exist_ok=True)
+        (project_dir / "meta.json").write_text("{}", encoding="utf-8")
+        (project_dir / "workspace" / "facts.template.md").write_text("template", encoding="utf-8")
+
+        exit_code = run_project_structure_check(project_id)
+        self.assertEqual(exit_code, 1)
+
+        payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
+        self.assertEqual(payload.get("status"), "failed")
+        issue_paths = {item["path"] for item in payload.get("issues", [])}
+        self.assertIn(f"projects/{project_id}/workspace/facts.template.md", issue_paths)
+
+    def test_structure_check_blocks_runtime_formal_artifact_pollution(self) -> None:
+        project_id = "runtime-pollution"
+        project_dir = self.projects_dir / project_id
+        (project_dir / "source").mkdir(parents=True, exist_ok=True)
+        (project_dir / "workspace").mkdir(parents=True, exist_ok=True)
+        (project_dir / "runtime").mkdir(parents=True, exist_ok=True)
+        (project_dir / "meta.json").write_text("{}", encoding="utf-8")
+        (project_dir / "runtime" / "experience_blueprint.md").write_text("content", encoding="utf-8")
+
+        exit_code = run_project_structure_check(project_id)
+        self.assertEqual(exit_code, 1)
+
+        payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
+        self.assertEqual(payload.get("status"), "failed")
+        issue_paths = {item["path"] for item in payload.get("issues", [])}
+        self.assertIn(f"projects/{project_id}/runtime/experience_blueprint.md", issue_paths)
+
+    def test_structure_check_blocks_source_runtime_status_pollution(self) -> None:
+        project_id = "source-status"
+        project_dir = self.projects_dir / project_id
+        (project_dir / "source").mkdir(parents=True, exist_ok=True)
+        (project_dir / "workspace").mkdir(parents=True, exist_ok=True)
+        (project_dir / "runtime").mkdir(parents=True, exist_ok=True)
+        (project_dir / "meta.json").write_text("{}", encoding="utf-8")
+        (project_dir / "source" / "check_status.json").write_text("{}", encoding="utf-8")
+
+        exit_code = run_project_structure_check(project_id)
+        self.assertEqual(exit_code, 1)
+
+        payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
+        self.assertEqual(payload.get("status"), "failed")
+        issue_paths = {item["path"] for item in payload.get("issues", [])}
+        self.assertIn(f"projects/{project_id}/source/check_status.json", issue_paths)
+
+    def test_structure_check_blocks_task_id_mismatch(self) -> None:
+        project_id = "task-a"
+        project_dir = self.projects_dir / project_id
+        (project_dir / "source").mkdir(parents=True, exist_ok=True)
+        (project_dir / "workspace").mkdir(parents=True, exist_ok=True)
+        (project_dir / "runtime").mkdir(parents=True, exist_ok=True)
+        (project_dir / "meta.json").write_text("{}", encoding="utf-8")
+        (project_dir / "source" / "task_card.md").write_text(
+            "\n".join(
+                [
+                    "## Protocol",
+                    "",
+                    "- Protocol Name: UXB",
+                    "- Protocol Version: 1.0",
+                    "- Task ID: task-b",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        exit_code = run_project_structure_check(project_id)
+        self.assertEqual(exit_code, 1)
+
+        payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
+        self.assertEqual(payload.get("status"), "failed")
+        issue_paths = {item["path"] for item in payload.get("issues", [])}
+        self.assertIn(f"projects/{project_id}/source/task_card.md", issue_paths)
 
 
 if __name__ == "__main__":

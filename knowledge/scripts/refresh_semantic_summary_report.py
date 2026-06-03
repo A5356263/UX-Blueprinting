@@ -14,8 +14,12 @@ def main() -> int:
 
 
 def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None:
-    """生成语义待处理报告，基于 semantic_status 分类。"""
-    PLACEHOLDER = "待 AI Code 读取 raw 后生成。"
+    """生成语义待处理报告，基于轻路由卡占位内容分类。"""
+    placeholders = {
+        "待 AI Code 读取 raw 后补充这份知识的定位。",
+        "待 AI Code 读取 raw 后补充触发信号。",
+        "待 AI Code 读取 raw 后补充稳定结论。",
+    }
 
     pending_generate: list[str] = []
     pending_review: list[str] = []
@@ -24,21 +28,11 @@ def build_pending_semantic_report(root: Path, summary_files: list[Path]) -> None
     for sf in summary_files:
         text = sf.read_text(encoding="utf-8")
         rel = sf.relative_to(root).as_posix()
-        has_placeholder = PLACEHOLDER in text
-        semantic_status = ""
-        for line in text.splitlines():
-            if line.strip().startswith("- semantic_status:"):
-                semantic_status = line.split(":", 1)[1].strip()
-
-        if not semantic_status or semantic_status == "pending" or has_placeholder:
-            reason = "missing" if not semantic_status else semantic_status
-            pending_generate.append(f"- summary_path: knowledge/{rel}\n  - reason: semantic_status={reason}")
-        elif semantic_status == "needs_review":
-            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: semantic_status=needs_review")
-        elif semantic_status == "ai_generated" and not has_placeholder:
-            completed.append(f"- knowledge/{rel}")
+        has_placeholder = any(item in text for item in placeholders)
+        if has_placeholder:
+            pending_generate.append(f"- summary_path: knowledge/{rel}\n  - reason: 仍包含轻路由卡占位内容")
         else:
-            pending_review.append(f"- summary_path: knowledge/{rel}\n  - reason: unexpected state")
+            completed.append(f"- knowledge/{rel}")
 
     report_lines = [
         "# Pending Semantic Summaries",

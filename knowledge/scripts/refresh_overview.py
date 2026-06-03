@@ -48,10 +48,6 @@ def main() -> int:
         [
             "# Knowledge Wiki Overview",
             "",
-            "- page_id: PG-SYSTEM-OVERVIEW",
-            "- page_type: system",
-            "- status: active",
-            "- confidence: medium",
             f"- updated_at: {date.today().isoformat()}",
             "",
             "## 当前概况",

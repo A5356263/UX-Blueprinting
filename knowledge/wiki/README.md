@@ -24,5 +24,5 @@
 - summary 与 raw 保持同名、镜像路径、一对一对应
 - 默认先读 summary，不够再回查 raw
 - 显式保留 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
-- related summaries 只表达弱关系，不表达知识图谱
+- 轻路由卡不承担邻接关系字段或知识图谱职责
 - overview 只做机械统计，questions 只做显式问题聚合

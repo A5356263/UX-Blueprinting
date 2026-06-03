@@ -35,6 +35,9 @@ def main() -> int:
     route_decision = subparsers.add_parser("route-decision")
     route_decision.add_argument("project_id")
 
+    route_decision_options = subparsers.add_parser("route-decision-options")
+    route_decision_options.add_argument("project_id")
+
     validate = subparsers.add_parser("validate")
     validate.add_argument("project_id")
 
@@ -149,6 +152,10 @@ def main() -> int:
         from packages.route_decision import run_route_decision
 
         return run_route_decision(args.project_id)
+    if args.command == "route-decision-options":
+        from packages.route_decision import run_route_decision_options
+
+        return run_route_decision_options(args.project_id)
     if args.command == "validate":
         from packages.validate import run_validate_for_current_mode
 

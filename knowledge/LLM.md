@@ -96,15 +96,11 @@
 
 不得自动推断问题，不得替作者补问。
 
-### 2.7 related summaries 是弱关系
+### 2.7 轻路由卡不承担邻接图谱
 
-summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语义知识图谱。
+轻路由卡只负责帮助 AI 判断这份 raw 值不值得继续读。
 
-约束：
-
-- 单页建议 3 到 5 个链接
-- 只链接存在的 summary
-- 不再引入 registry / block sync
+不要为了“补全关系”再恢复独立的邻接关系字段、registry 或 block sync。
 
 ---
 
@@ -177,25 +173,17 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 
 每个 summary 至少包含：
 
-- `page_id`
-- `page_type: summary`
 - `source_path`
-- `source_group`
-- `status`
-- `confidence`
+- `domain`
+- `summary_role: light_route_card`
 - `updated_at`
-- `source_refs`
-- `related_summaries`
 
-正文包含7个路由节：
+正文包含 4 个路由节：
 
-1. 知识定位 — 这份 raw 解决什么判断问题
-2. 任务触发线索 — 哪些任务问题会触发它
-3. 覆盖内容 — 覆盖的对象、能力、页面、规则、状态、风险
-4. 可直接使用的稳定结论
-5. 必须回查 raw 的情况
-6. 缺口 / 冲突 / 不确定项
-7. 邻近阅读
+1. 定位 — 这份 raw 主要解决什么判断
+2. 触发信号 — 什么场景下值得升级读这份 raw
+3. 稳定结论 — 可以直接复用的稳定判断
+4. 已知缺口 — 当前还没覆盖或还没确认的点
 
 ### 4.3 何时必须回查 raw
 
@@ -217,7 +205,6 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 - 生成 mirrored summaries
 - 刷新 index / overview / questions
 - 检查 raw-summary 一对一映射
-- 检查 related summaries 坏链
 - 检查 `source_path` 已失效的 orphan summary
 - 用户确认后清理 orphan summary
 - 统计 summary 1-4 语义节缺失状态
@@ -280,25 +267,20 @@ summary 里的 `related_summaries` 只表达阅读邻接关系，不表达高语
 当用户说“填充 <域> 的 summary”或类似表述时，按以下步骤执行：
 
 1. 读取 `knowledge/outputs/reports/pending_semantic_summaries.md`
-2. 筛选 `semantic_status: pending` 且属于目标域的 summary
+2. 筛选仍包含轻路由卡占位内容且属于目标域的 summary
 3. 对每个目标 summary：
    - 从头部元数据中的 `source_path` 读取对应 raw
    - 基于 raw 实际内容填写以下 4 个语义节：
-     - `## 1. 知识定位`
-     - `## 2. 任务触发线索`
-     - `## 3. 覆盖内容`
-     - `## 4. 可直接使用的稳定结论`
-   - 更新元数据：
-     - `semantic_status: ai_generated`
-     - `confidence: medium` 或 `high`
-     - `semantic_updated_at: 当前日期`
+     - `## 定位`
+     - `## 触发信号`
+     - `## 稳定结论`
+     - `## 已知缺口`
 4. 目标域全部完成后，运行：
    `python knowledge/scripts/refresh_semantic_summary_report.py`
 
 执行约束：
 
 - 逐域推进，一次只处理一个域
-- 已存在的 Section 5-7 不改动
 - 不修改 raw 原文
 - 保持原文 meaning，不补写 raw 中没有的推测性结论
 - 保留显式的 `[GAP]`、`[CONFLICT]`、`[QUESTION]`

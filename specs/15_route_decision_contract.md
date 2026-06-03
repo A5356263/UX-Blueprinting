@@ -43,6 +43,8 @@
 - `confirmed_by_user == true`
 - `can_execute_mainline == true`
 - `execution.required_outputs` 存在
+- `knowledge_selection.files` 为非空字符串列表
+- `knowledge_selection.reasoning` 为非空字符串
 
 校验失败时，应输出 `needs_rejudgment` 语义，而不是补写新判断。
 

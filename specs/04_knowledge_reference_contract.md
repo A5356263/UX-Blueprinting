@@ -24,18 +24,15 @@
 
 1. task card 中的 `template_refs`
 2. task card 中的 `check_refs`
-3. `uxb_route_decision.json.knowledge_selection.summary_refs`
-4. `uxb_route_decision.json.knowledge_selection.raw_escalation_plan`
-5. `uxb_route_decision.json.knowledge_selection.stage_refs`
+3. `uxb_route_decision.json.knowledge_selection.files`
 
 ## Reference Rules
 
 - 所有引用必须是仓库相对路径。
 - wildcard 引用不得直接复制到 `context_bundle/`。
 - 如果 UXB 没有显式选择某个知识文件，代码不得自行补装。
-- `summary_refs` 负责路由和范围收敛，不等于 truth source 替代。
-- `raw` 只能来自 `raw_escalation_plan`，且必须带 `routed_by_summary`、`why_summary_not_enough`、`used_for_stage`、`decision_points`。
-- `stage_refs` 只声明当前 stage 可消费的 summary/raw，不得变相扩张为“主链路默认全读 raw”。
+- `knowledge_selection.files` 只声明本次任务计划读取的知识文件，不得自动扩张为整域全量读取。
+- `knowledge_selection.reasoning` 只解释整体知识选择思路，不承担逐条工程字段对齐职责。
 
 ## Context Assembly Requirements
 
@@ -66,7 +63,7 @@
 其中：
 
 - `selection_source` 必须指向 `projects/<project-id>/runtime/uxb_route_decision.json`
-- `knowledge_trace` 必须显式记录 `summary_refs / raw_escalation_plan / stage_refs`
+- `knowledge_trace` 必须显式记录 `files / reasoning`
 - `references[*].selected_by` 用于区分哪些材料由 `uxb_ai` 显式指定
 - `context_manifest.json` 是唯一正式装配记录
 

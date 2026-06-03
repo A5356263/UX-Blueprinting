@@ -17,17 +17,14 @@ def _load_task_context(project_id: str) -> dict[str, Any]:
     knowledge_trace = source_payload.get("knowledge_trace")
     if not isinstance(knowledge_trace, dict):
         knowledge_trace = {}
-    summary_refs = knowledge_trace.get("summary_refs")
-    if not isinstance(summary_refs, dict):
-        summary_refs = {}
-    business_refs = [str(value) for value in summary_refs.get("business", []) if isinstance(value, str)]
-    guideline_refs = [str(value) for value in summary_refs.get("guideline", []) if isinstance(value, str)]
-    complexity_refs = [str(value) for value in summary_refs.get("complexity", []) if isinstance(value, str)]
+    files = [str(value) for value in knowledge_trace.get("files", []) if isinstance(value, str)]
+    guideline_refs = [value for value in files if "knowledge/wiki/summaries/设计准则/" in value]
+    business_refs = [value for value in files if value.startswith("knowledge/") and value not in guideline_refs]
     return {
         "project_id": project_id,
         "domain": str(task_contract.get("domain") or ""),
         "guideline_refs": guideline_refs,
-        "knowledge_refs": business_refs + [value for value in complexity_refs if value not in business_refs],
+        "knowledge_refs": business_refs,
     }
 
 

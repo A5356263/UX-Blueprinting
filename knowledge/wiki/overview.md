@@ -1,21 +1,17 @@
 # Knowledge Wiki Overview
 
-- page_id: PG-SYSTEM-OVERVIEW
-- page_type: system
-- status: active
-- confidence: medium
-- updated_at: 2026-05-29
+- updated_at: 2026-06-03
 
 ## 当前概况
 
 - raw_total: 139
 - summary_total: 139
 - summary_coverage: 139/139
-- gap_count: 183
+- gap_count: 166
 - conflict_count: 2
 - question_marker_count: 62
 - raw_without_summary: 0
-- questions_total: 128
+- questions_total: 117
 
 ## 最近更新的 Raw
 

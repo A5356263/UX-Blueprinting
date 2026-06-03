@@ -23,26 +23,19 @@
 
 每个 summary 至少包含以下头部字段：
 
-- `page_id`
-- `page_type: summary`
 - `source_path`
-- `source_group`
-- `status`
-- `confidence`
+- `domain`
+- `summary_role: light_route_card`
 - `updated_at`
-- `source_refs`
-- `related_summaries`
 
 ## Summary 正文结构
 
 建议固定为：
 
-1. 这份原始资料讲什么
-2. 适用范围 / 不适用范围
-3. 关键事实
-4. 关键术语 / 关键对象
-5. 当前缺口 / 冲突 / 问题
-6. 相关摘要 / 建议继续阅读
+1. 定位
+2. 触发信号
+3. 稳定结论
+4. 已知缺口
 
 ## 一对一镜像规则
 
@@ -58,16 +51,6 @@ summary 与 raw 必须保持：
 knowledge/raw/业务/权限管理/15_页面载体语义.md
 -> knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md
 ```
-
-## 弱关系规则
-
-`related_summaries` 仅表达阅读邻接关系。
-
-约束：
-
-- 单页建议 3 到 5 个链接
-- 只链接存在的 summary
-- 不表达 entity / relation / topic 级知识图谱关系
 
 ## 标记规范
 

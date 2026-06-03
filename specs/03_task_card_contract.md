@@ -83,9 +83,8 @@
 
 - `knowledge_refs`
 - `wiki_refs`
-- `summary_refs`
-- `raw_escalation_plan`
-- `stage_refs`
+- `knowledge_selection.files`
+- `knowledge_selection.reasoning`
 - `primary_knowledge_entries`
 - `fallback_source_refs`
 - `fallback_conditions`

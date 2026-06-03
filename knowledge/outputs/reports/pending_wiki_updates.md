@@ -1,6 +1,6 @@
 # Pending Wiki Updates
 
-- generated_at_utc: 2026-05-29T13:37:28+00:00
+- generated_at_utc: 2026-06-03T14:41:03+00:00
 - orchestrator: knowledge/scripts/update_wiki.py
 - state_file: outputs/reports/update_wiki_state.json
 
@@ -180,10 +180,147 @@ file_count=139
 ### build_summaries.py
 
 ```text
-mode=apply
-summary_count=1
-written_count=1
-wiki/summaries/业务/权限管理/31_体验翻译需求.md
+mode=dry-run
+summary_count=139
+wiki/summaries/业务/README.md
+wiki/summaries/业务/人事服务/00_领域概述.md
+wiki/summaries/业务/人事服务/README.md
+wiki/summaries/业务/人事服务/员工管理/00_领域概述.md
+wiki/summaries/业务/人事服务/员工管理/14_员工花名册.md
+wiki/summaries/业务/人事服务/员工管理/15_合同管理.md
+wiki/summaries/业务/人事服务/员工管理/16_入职生命周期.md
+wiki/summaries/业务/人事服务/员工管理/50_常见问题.md
+wiki/summaries/业务/人事服务/员工管理/README.md
+wiki/summaries/业务/人事服务/客户管理/00_领域概述.md
+wiki/summaries/业务/人事服务/客户管理/10_客户管理.md
+wiki/summaries/业务/人事服务/客户管理/README.md
+wiki/summaries/业务/人事服务/招聘管理/00_领域概述.md
+wiki/summaries/业务/人事服务/招聘管理/10_招聘管理.md
+wiki/summaries/业务/人事服务/招聘管理/50_常见问题.md
+wiki/summaries/业务/人事服务/招聘管理/README.md
+wiki/summaries/业务/人事服务/组织管理/00_领域概述.md
+wiki/summaries/业务/人事服务/组织管理/10_组织架构.md
+wiki/summaries/业务/人事服务/组织管理/13_编制管理.md
+wiki/summaries/业务/人事服务/组织管理/14_岗位与职级管理.md
+wiki/summaries/业务/人事服务/组织管理/50_常见问题.md
+wiki/summaries/业务/人事服务/组织管理/README.md
+wiki/summaries/业务/人事服务/考勤管理/00_领域概述.md
+wiki/summaries/业务/人事服务/考勤管理/10_考勤管理.md
+wiki/summaries/业务/人事服务/考勤管理/README.md
+wiki/summaries/业务/企业设置/00_领域概述.md
+wiki/summaries/业务/企业设置/10_企业信息展示.md
+wiki/summaries/业务/企业设置/11_企业登录页自定义.md
+wiki/summaries/业务/企业设置/12_企业文化.md
+wiki/summaries/业务/企业设置/README.md
+wiki/summaries/业务/协同办公/00_领域概述.md
+wiki/summaries/业务/协同办公/README.md
+wiki/summaries/业务/协同办公/协同工具/00_领域概述.md
+wiki/summaries/业务/协同办公/协同工具/10_协同工具.md
+wiki/summaries/业务/协同办公/协同工具/README.md
+wiki/summaries/业务/协同办公/智能报表/00_领域概述.md
+wiki/summaries/业务/协同办公/智能报表/10_智能报表.md
+wiki/summaries/业务/协同办公/智能报表/README.md
+wiki/summaries/业务/安全管理/00_领域概述.md
+wiki/summaries/业务/安全管理/10_安全水印.md
+wiki/summaries/业务/安全管理/11_操作记录.md
+wiki/summaries/业务/安全管理/12_安全设置.md
+wiki/summaries/业务/安全管理/README.md
+wiki/summaries/业务/审批管理/00_领域概述.md
+wiki/summaries/业务/审批管理/10_审批管理.md
+wiki/summaries/业务/审批管理/README.md
+wiki/summaries/业务/工作台与全局入口/00_领域概述.md
+wiki/summaries/业务/工作台与全局入口/10_工作台.md
+wiki/summaries/业务/工作台与全局入口/11_全局导航与服务入口.md
+wiki/summaries/业务/工作台与全局入口/README.md
+wiki/summaries/业务/应用管理/00_领域概述.md
+wiki/summaries/业务/应用管理/10_应用管理.md
+wiki/summaries/业务/应用管理/11_应用组装.md
+wiki/summaries/业务/应用管理/README.md
+wiki/summaries/业务/成员管理/00_领域概述.md
+wiki/summaries/业务/成员管理/10_成员加入与邀请.md
+wiki/summaries/业务/成员管理/11_成员退出与离职交接.md
+wiki/summaries/业务/成员管理/12_成员分组.md
+wiki/summaries/业务/成员管理/13_外部人员.md
+wiki/summaries/业务/成员管理/README.md
+wiki/summaries/业务/服务管理/00_领域概述.md
+wiki/summaries/业务/服务管理/10_服务人员授权.md
+wiki/summaries/业务/服务管理/README.md
+wiki/summaries/业务/权限管理/00_领域概述.md
+wiki/summaries/业务/权限管理/01_范围与边界.md
+wiki/summaries/业务/权限管理/02_术语表.md
+wiki/summaries/业务/权限管理/03_业务对象.md
+wiki/summaries/业务/权限管理/04_对象关系.md
+wiki/summaries/业务/权限管理/10_能力地图.md
+wiki/summaries/业务/权限管理/11_任务场景.md
+wiki/summaries/业务/权限管理/12_查询与配置路径.md
+wiki/summaries/业务/权限管理/13_路由地图.md
+wiki/summaries/业务/权限管理/14_角色边界.md
+wiki/summaries/业务/权限管理/15_页面载体语义.md
+wiki/summaries/业务/权限管理/20_决策链契约.md
+wiki/summaries/业务/权限管理/21_来源模型.md
+wiki/summaries/业务/权限管理/22_冲突原因码.md
+wiki/summaries/业务/权限管理/23_规则契约.md
+wiki/summaries/业务/权限管理/24_治理状态模型.md
+wiki/summaries/业务/权限管理/25_审计契约.md
+wiki/summaries/业务/权限管理/30_体验风险模式.md
+wiki/summaries/业务/权限管理/31_体验翻译需求.md
+wiki/summaries/业务/权限管理/32_文案与解释策略.md
+wiki/summaries/业务/权限管理/50_帮助文档权限差异.md
+wiki/summaries/业务/权限管理/README.md
+wiki/summaries/业务/组织架构/00_领域概述.md
+wiki/summaries/业务/组织架构/10_组织架构设计.md
+wiki/summaries/业务/组织架构/11_法律实体.md
+wiki/summaries/业务/组织架构/12_成本中心.md
+wiki/summaries/业务/组织架构/13_职能与视图模型.md
+wiki/summaries/业务/组织架构/14_成员绑定与范围生成.md
+wiki/summaries/业务/组织架构/15_运行时流程与遗留映射.md
+wiki/summaries/业务/组织架构/README.md
+wiki/summaries/业务/账户与企业生命周期/00_领域概述.md
+wiki/summaries/业务/账户与企业生命周期/10_开通路径.md
+wiki/summaries/业务/账户与企业生命周期/11_企业创建与认证.md
+wiki/summaries/业务/账户与企业生命周期/12_企业状态与变更.md
+wiki/summaries/业务/账户与企业生命周期/13_超级管理员变更.md
+wiki/summaries/业务/账户与企业生命周期/14_账号常见问题.md
+wiki/summaries/业务/账户与企业生命周期/15_个人账号安全.md
+wiki/summaries/业务/账户与企业生命周期/README.md
+wiki/summaries/业务/费用管理/00_领域概述.md
+wiki/summaries/业务/费用管理/README.md
+wiki/summaries/业务/费用管理/企业支付/00_领域概述.md
+wiki/summaries/业务/费用管理/企业支付/10_企业支付.md
+wiki/summaries/业务/费用管理/企业支付/README.md
+wiki/summaries/业务/费用管理/差旅服务/00_领域概述.md
+wiki/summaries/业务/费用管理/差旅服务/10_差旅服务.md
+wiki/summaries/业务/费用管理/差旅服务/README.md
+wiki/summaries/业务/费用管理/日常报销/00_领域概述.md
+wiki/summaries/业务/费用管理/日常报销/10_日常报销.md
+wiki/summaries/业务/费用管理/日常报销/README.md
+wiki/summaries/业务/费用管理/通用配置/00_领域概述.md
+wiki/summaries/业务/费用管理/通用配置/10_通用配置.md
+wiki/summaries/业务/费用管理/通用配置/README.md
+wiki/summaries/业务/项目背景/00_领域概述.md
+wiki/summaries/业务/项目背景/01_产品定位.md
+wiki/summaries/业务/项目背景/02_平台角色与终端.md
+wiki/summaries/业务/项目背景/03_产品能力版图.md
+wiki/summaries/业务/项目背景/04_产品优势与服务模式.md
+wiki/summaries/业务/项目背景/05_管理控制台能力概览.md
+wiki/summaries/业务/项目背景/README.md
+wiki/summaries/设计准则/README.md
+wiki/summaries/设计准则/信息架构.md
+wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md
+wiki/summaries/设计准则/反馈与报错/01_反馈形式选择原则.md
+wiki/summaries/设计准则/反馈与报错/02_报错与状态文案模板.md
+wiki/summaries/设计准则/反馈与报错/03_通用报错场景案例.md
+wiki/summaries/设计准则/反馈与报错/04_人事与薪酬场景案例.md
+wiki/summaries/设计准则/反馈与报错/05_财税场景案例.md
+wiki/summaries/设计准则/反馈与报错/README.md
+wiki/summaries/设计准则/可用性.md
+wiki/summaries/设计准则/可读性.md
+wiki/summaries/设计准则/无障碍.md
+wiki/summaries/设计准则/治理.md
+wiki/summaries/设计准则/流程模式.md
+wiki/summaries/设计准则/视觉.md
+wiki/summaries/设计准则/认知.md
+wiki/summaries/设计准则/质量.md
 ```
 
 ### prune_orphan_summaries.py
@@ -204,15 +341,15 @@ changed=false
 
 ```text
 questions=E:\AI设计\体验蓝图构建思路\knowledge\wiki\questions.md
-question_count=128
-changed=false
+question_count=117
+changed=true
 ```
 
 ### refresh_overview.py
 
 ```text
 refreshed=knowledge/wiki/overview.md
-changed=false
+changed=true
 ```
 
 ### refresh_semantic_summary_report.py

@@ -59,7 +59,7 @@ python knowledge/scripts/update_wiki.py --apply --only <raw-file-path>
 - 是否先改 raw
 - summary 是否已生成或更新
 - summary 元数据是否完整
-- `source_refs` 是否指向真实 raw 文件
+- `source_path` 是否指向真实 raw 文件
 - 新增 summary 时，`knowledge/wiki/index.md` 是否同步更新
 - `knowledge/wiki/questions.md` 是否收录 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
 - 如果脚本会写日志，`knowledge/wiki/log.md` 是否有对应维护痕迹
@@ -71,8 +71,8 @@ raw 更新后必须检查对应 summary。
 检查内容：
 
 - summary 是否存在
-- `source_refs` 是否仍指向正确 raw
-- summary 的 1-4 节是否还包含旧路径、旧菜单、旧术语、旧规则
+- `source_path` 是否仍指向正确 raw
+- summary 的定位 / 触发信号 / 稳定结论 是否还包含旧路径、旧菜单、旧术语、旧规则
 - summary 的稳定结论是否需要同步更新
 - `[GAP] / [QUESTION] / [CONFLICT]` 是否进入 questions 汇总
 
@@ -155,7 +155,7 @@ mainline code changes
 - 已运行 `python knowledge/scripts/update_wiki.py --apply`
 - summary 已更新
 - index 已更新
-- source_refs 检查通过
+- source_path 检查通过
 
 ### 未决项
 - [GAP] xxx

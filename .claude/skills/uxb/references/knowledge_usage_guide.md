@@ -124,24 +124,24 @@ knowledge/wiki/index.md
 1. 先从 `knowledge/wiki/index.md`、summary、route card 或领域入口缩小范围
 2. 先回答“这次到底要确认什么问题”，再选 ref
 3. 优先选择后续正式产物会直接消费的最小文件集合
-4. 每个 ref 都必须写入 `knowledge_selection.selection_reasons`
-5. 如果说不清为什么需要这份资料、支撑哪个判断、影响哪个正式输出，就不要选
+4. 把本次计划读取的文件统一写入 `knowledge_selection.files`
+5. 用 `knowledge_selection.reasoning` 说明整体知识选择思路
 6. 不为了保险全量选择业务知识
 7. 不为了证明“参考过指南”而选设计指南
 8. raw 只在 summary 不足、需要证据或需要关键细节时选择
-9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `summary_refs` 或 `raw_escalation_plan`
+9. 不把 `knowledge/templates/**` 选进 `uxb_route_decision.json` 的 `files`
 
 10. 不要把“命中某个 summary”直接当成“这个问题已经判断完了”；要明确它到底支撑了哪个判断点
 
 ### Raw 选择必要性
 
-`summary_refs` 默认优先选择 summary、领域 README 或入口型知识。
+`files` 默认优先放 summary、领域 README 或入口型知识。
 
-如果需要选择 `knowledge/raw/**`，不要直接放进 `summary_refs`。应写入 `raw_escalation_plan`，并至少说明：
+如果需要选择 `knowledge/raw/**`，可以直接写进 `files`，但要先确认：
 
-1. 该 raw 由哪个 summary / README / index 线索命中。
-2. 该 raw 主要支撑 facts / business / experience 中哪个阶段。
-3. 该 raw 支撑什么具体判断点。
+1. 该 raw 是由哪个 summary / README / index 线索命中的。
+2. 它支撑什么具体判断点。
+3. 为什么 summary 还不够。
 
 
 如果升级 raw 的理由只是“可能有用”“更保险”“顺手看看”，那就不该升级。

@@ -629,10 +629,14 @@ def _manifest_knowledge_trace(manifest: dict[str, object]) -> dict[str, object]:
 
 def _guideline_summary_refs_from_manifest(manifest: dict[str, object]) -> list[str]:
     knowledge_trace = _manifest_knowledge_trace(manifest)
-    summary_refs = knowledge_trace.get("summary_refs")
-    if not isinstance(summary_refs, dict):
+    files = knowledge_trace.get("files")
+    if not isinstance(files, list):
         return []
-    return _string_list(summary_refs.get("guideline"))
+    return [
+        str(item)
+        for item in files
+        if isinstance(item, str) and item.strip() and "knowledge/wiki/summaries/设计准则/" in item
+    ]
 
 
 def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> None:
@@ -695,39 +699,17 @@ def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, st
         add_issue(issues, "blocker", "context_manifest.json 缺少 knowledge_trace")
         return
 
-    summary_refs = knowledge_trace.get("summary_refs")
-    if not isinstance(summary_refs, dict):
-        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 summary_refs")
+    files = knowledge_trace.get("files")
+    if not isinstance(files, list):
+        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 files")
         return
 
-    raw_escalation_plan = knowledge_trace.get("raw_escalation_plan")
-    if not isinstance(raw_escalation_plan, list):
-        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 raw_escalation_plan")
-        return
+    if not _string_list(files):
+        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.files 为空")
 
-    stage_refs = knowledge_trace.get("stage_refs")
-    if not isinstance(stage_refs, dict):
-        add_issue(issues, "blocker", "context_manifest.json.knowledge_trace 缺少 stage_refs")
-        return
-
-    if not _string_list(summary_refs.get("business")):
-        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.summary_refs.business 为空")
-    if not _string_list(summary_refs.get("complexity")):
-        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.summary_refs.complexity 为空")
-
-    declared_raw_refs = {
-        normalize_repo_ref(str(item.get("raw_ref") or ""))
-        for item in raw_escalation_plan
-        if isinstance(item, dict) and str(item.get("raw_ref") or "").strip()
-    }
-    for stage in ("facts", "business", "experience"):
-        stage_payload = stage_refs.get(stage)
-        if not isinstance(stage_payload, dict):
-            add_issue(issues, "warning", f"context_manifest.json.knowledge_trace.stage_refs 缺少 {stage}")
-            continue
-        for raw_ref in _string_list(stage_payload.get("raw_refs")):
-            if raw_ref not in declared_raw_refs:
-                add_issue(issues, "blocker", f"context_manifest.json.knowledge_trace.stage_refs.{stage}.raw_refs 包含未登记 raw：{raw_ref}")
+    reasoning = str(knowledge_trace.get("reasoning") or "").strip()
+    if not reasoning:
+        add_issue(issues, "warning", "context_manifest.json.knowledge_trace.reasoning 为空")
     if not isinstance(manifest.get("assembled_refs"), list):
         add_issue(issues, "warning", "context_manifest.json 缺少 assembled_refs")
     if not isinstance(manifest.get("missing_refs"), list):

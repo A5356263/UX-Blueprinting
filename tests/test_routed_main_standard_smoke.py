@@ -541,7 +541,7 @@ def _route_decision(project_id: str) -> dict[str, object]:
     business_summary = "knowledge/wiki/summaries/业务/README.md"
     complexity_summary = ".codex/skills/uxb/references/complexity/00_core_complexity_judgment.md"
     return {
-        "schema_version": "uxb_route_decision@4.0",
+        "schema_version": "uxb_route_decision@5.0",
         "project_id": project_id,
         "created_by": "uxb_ai",
         "confirmed_by_user": True,
@@ -558,31 +558,8 @@ def _route_decision(project_id: str) -> dict[str, object]:
             "uncertainties": ["默认有效期和审批意见展示范围仍需确认"],
         },
         "knowledge_selection": {
-            "summary_refs": {
-                "business": [business_summary],
-                "guideline": [],
-                "complexity": [complexity_summary],
-            },
-            "raw_escalation_plan": [],
-            "stage_refs": {
-                "facts": {"raw_refs": []},
-                "business": {"raw_refs": []},
-                "experience": {"raw_refs": []},
-            },
-            "selection_reasons": [
-                {
-                    "ref": business_summary,
-                    "type": "summary",
-                    "used_for_stage": ["facts", "business", "experience"],
-                    "reason": "用业务 summary 约束标准模式 smoke 项目的业务范围、状态闭环和异常边界。",
-                },
-                {
-                    "ref": complexity_summary,
-                    "type": "summary",
-                    "used_for_stage": ["facts"],
-                    "reason": "用复杂度参考保证 routed main 仍按 UXB judgment 的稳定入口执行。",
-                },
-            ],
+            "files": [business_summary, complexity_summary],
+            "reasoning": "用业务 summary 约束标准模式 smoke 项目的业务范围、状态闭环和异常边界，并用复杂度参考约束主链路入口判断。",
         },
         "execution": {
             "required_outputs": [

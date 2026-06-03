@@ -27,24 +27,6 @@ def _on_rmtree_error(func, path, exc_info) -> None:
     del exc_info
     os.chmod(path, stat.S_IWRITE)
     func(path)
-
-
-def _selection_reason_by_ref(selection_plan: dict[str, object]) -> dict[str, str]:
-    selection_reasons = selection_plan.get("selection_reasons")
-    if not isinstance(selection_reasons, list):
-        return {}
-
-    normalized: dict[str, str] = {}
-    for item in selection_reasons:
-        if not isinstance(item, dict):
-            continue
-        ref = str(item.get("ref") or "").replace("\\", "/").strip()
-        if not ref or ref in normalized:
-            continue
-        normalized[ref] = str(item.get("reason") or "").strip()
-    return normalized
-
-
 def _bundle_reference_label(reference: str, group: str, consumed_by: list[str]) -> str:
     normalized = normalize_repo_ref(reference)
     if group == "template_refs":
@@ -57,17 +39,15 @@ def _bundle_reference_label(reference: str, group: str, consumed_by: list[str]) 
         if normalized.startswith("specs/"):
             return f"specs/{normalized[len('specs/'):]}"
         return f"checks/{Path(normalized).name}"
-    if group == "summary_refs.business" and normalized.startswith("knowledge/wiki/summaries/业务/"):
+    if group == "business_summary" and normalized.startswith("knowledge/wiki/summaries/业务/"):
         return f"summaries/business/{normalized[len('knowledge/wiki/summaries/业务/'):]}"
-    if group == "summary_refs.guideline" and normalized.startswith("knowledge/wiki/summaries/设计准则/"):
+    if group == "guideline_summary" and normalized.startswith("knowledge/wiki/summaries/设计准则/"):
         return f"summaries/guideline/{normalized[len('knowledge/wiki/summaries/设计准则/'):]}"
-    if group == "summary_refs.business" and normalized.startswith("knowledge/raw/业务/"):
-        return f"summaries/business/route_cards/{normalized[len('knowledge/raw/业务/'):]}"
-    if group == "summary_refs.complexity":
+    if group == "complexity_ref":
         complexity_suffix = extract_uxb_complexity_ref_suffix(normalized)
         if complexity_suffix:
             return f"complexity/{complexity_suffix}"
-    if group == "raw_refs" and normalized.startswith("knowledge/raw/"):
+    if group == "raw_ref" and normalized.startswith("knowledge/raw/"):
         stage = consumed_by[0] if consumed_by else "shared"
         return f"raw/{stage}/{normalized[len('knowledge/raw/'):]}"
     return normalized
@@ -111,71 +91,39 @@ def safe_rmtree(path: Path) -> None:
         shutil.rmtree(path, onerror=_on_rmtree_error)
 
 
+def _knowledge_group(reference: str) -> str:
+    normalized = normalize_repo_ref(reference)
+    if extract_uxb_complexity_ref_suffix(normalized) is not None:
+        return "complexity_ref"
+    if normalized.startswith("knowledge/wiki/summaries/设计准则/"):
+        return "guideline_summary"
+    if normalized.startswith("knowledge/wiki/summaries/"):
+        return "business_summary"
+    if normalized.startswith("knowledge/raw/"):
+        return "raw_ref"
+    return "knowledge_ref"
+
+
 def _knowledge_reference_items(selection_plan: dict[str, object]) -> list[dict[str, object]]:
-    summary_refs = selection_plan.get("summary_refs")
-    if not isinstance(summary_refs, dict):
-        summary_refs = {}
-    stage_refs = selection_plan.get("stage_refs")
-    if not isinstance(stage_refs, dict):
-        stage_refs = {}
-    raw_escalation_plan = selection_plan.get("raw_escalation_plan")
-    if not isinstance(raw_escalation_plan, list):
-        raw_escalation_plan = []
+    files = selection_plan.get("files")
+    if not isinstance(files, list):
+        files = []
+    reasoning = str(selection_plan.get("reasoning") or "").strip()
 
-    reason_by_ref = _selection_reason_by_ref(selection_plan)
     items: list[dict[str, object]] = []
-
-    stage_summary_membership: dict[str, list[str]] = {}
-    for stage, stage_payload in stage_refs.items():
-        if not isinstance(stage_payload, dict):
-            continue
-        for reference in [str(value).replace("\\", "/").strip() for value in stage_payload.get("summary_refs", []) if str(value).strip()]:
-            stage_summary_membership.setdefault(reference, [])
-            if stage not in stage_summary_membership[reference]:
-                stage_summary_membership[reference].append(str(stage))
-
-    summary_group_by_ref: dict[str, str] = {}
-    for category in ("business", "guideline", "complexity"):
-        for ref in [str(value).replace("\\", "/").strip() for value in summary_refs.get(category, []) if str(value).strip()]:
-            summary_group_by_ref[ref] = f"summary_refs.{category}"
-
-    for ref, consumed_by in stage_summary_membership.items():
+    for reference in [str(value).replace("\\", "/").strip() for value in files if str(value).strip()]:
         items.append(
             {
-                "reference": ref,
-                "group": summary_group_by_ref.get(ref, "summary_refs.business"),
-                "consumed_by": list(consumed_by),
+                "reference": reference,
+                "group": _knowledge_group(reference),
+                "consumed_by": ["facts", "business", "experience"],
                 "selected_by": "uxb_ai",
-                "selection_reason": reason_by_ref.get(ref, ""),
+                "selection_reason": reasoning,
                 "routed_by_summary": "",
                 "why_summary_not_enough": "",
                 "decision_points": [],
             }
         )
-
-    for item in raw_escalation_plan:
-        if not isinstance(item, dict):
-            continue
-        raw_ref = str(item.get("raw_ref") or "").replace("\\", "/").strip()
-        if not raw_ref:
-            continue
-        routed_by_summary = str(item.get("routed_by_summary") or "").replace("\\", "/").strip()
-        why_summary_not_enough = str(item.get("why_summary_not_enough") or "").strip()
-        decision_points = [str(value).strip() for value in item.get("decision_points", []) if str(value).strip()]
-        for stage in [str(value).strip() for value in item.get("used_for_stage", []) if str(value).strip()]:
-            items.append(
-                {
-                    "reference": raw_ref,
-                    "group": "raw_refs",
-                    "consumed_by": [stage],
-                    "selected_by": "uxb_ai",
-                    "selection_reason": reason_by_ref.get(raw_ref, why_summary_not_enough),
-                    "routed_by_summary": routed_by_summary,
-                    "why_summary_not_enough": why_summary_not_enough,
-                    "decision_points": decision_points,
-                }
-            )
-
     return items
 
 
@@ -278,17 +226,9 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "domain": resolved.get("domain", ""),
     }
 
-    summary_refs = selection_plan.get("summary_refs", {})
-    if not isinstance(summary_refs, dict):
-        summary_refs = {}
     knowledge_trace = {
-        "summary_refs": {
-            "business": list(summary_refs.get("business", [])),
-            "guideline": list(summary_refs.get("guideline", [])),
-            "complexity": list(summary_refs.get("complexity", [])),
-        },
-        "raw_escalation_plan": selection_plan.get("raw_escalation_plan", []),
-        "stage_refs": selection_plan.get("stage_refs", {}),
+        "files": list(selection_plan.get("files", [])) if isinstance(selection_plan.get("files"), list) else [],
+        "reasoning": str(selection_plan.get("reasoning") or "").strip(),
     }
     manifest = {
         "task_id": task_id,
@@ -305,8 +245,8 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "reference_summary": {
             "template_ref_count": len(resolved.get("template_refs", [])),
             "check_ref_count": len(resolved.get("check_refs", [])),
-            "summary_ref_count": sum(len(values) for values in knowledge_trace["summary_refs"].values()),
-            "raw_ref_count": len([item for item in copied if str(item.get("group", "")) == "raw_refs"]),
+            "knowledge_file_count": len(knowledge_trace["files"]),
+            "raw_ref_count": len([item for item in copied if str(item.get("group", "")) == "raw_ref"]),
             "assembled_ref_count": len(copied),
         },
         "stage_boundaries": {

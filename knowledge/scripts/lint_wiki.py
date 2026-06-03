@@ -6,31 +6,31 @@ from _write_if_changed import write_text_if_changed
 
 
 REQUIRED_SUMMARY_FIELDS = [
+    "source_path:",
+    "domain:",
+    "summary_role: light_route_card",
+    "updated_at:",
+]
+
+REQUIRED_SUMMARY_HEADINGS = [
+    "## 定位",
+    "## 触发信号",
+    "## 稳定结论",
+    "## 已知缺口",
+]
+
+FORBIDDEN_LEGACY_MARKERS = [
     "page_id:",
     "page_type: summary",
-    "source_path:",
     "source_group:",
-    "status:",
-    "confidence:",
-    "updated_at:",
     "source_refs:",
     "related_summaries:",
-    "semantic_status:",
+    "## 1. 知识定位",
+    "## 2. 任务触发线索",
+    "## 3. 覆盖内容",
+    "## 5. 必须回查 raw 的情况",
+    "## 7. 邻近阅读",
 ]
-
-# FORBIDDEN_OLD_TITLES 是迁移期检查项。
-# 用于防止旧 summary 模板（机械摘要型）残留。
-# 后续 summary 全量稳定后，可移除或改为可选检查（如 --check-legacy-summary）。
-FORBIDDEN_OLD_TITLES = [
-    "这份原始资料讲什么",
-    "适用范围 / 不适用范围",
-    "关键事实",
-    "关键术语 / 关键对象",
-    "相关摘要 / 建议继续阅读",
-]
-
-PLACEHOLDER_TEXT = "待 AI Code 读取 raw 后生成。"
-
 
 def summary_path_for(root: Path, raw_file: Path) -> Path:
     rel = raw_file.relative_to(root / "raw")
@@ -44,31 +44,27 @@ def parse_source_path(text: str) -> str | None:
     return None
 
 
-def parse_related_summaries(text: str) -> list[str]:
-    items: list[str] = []
-    in_block = False
-    for line in text.splitlines():
-        if line.startswith("- related_summaries:"):
-            in_block = True
+def _has_bullets_after_heading(text: str, heading: str) -> bool:
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != heading:
             continue
-        if in_block:
-            if line.startswith("  - "):
-                items.append(line[4:].strip())
+        for follow in lines[index + 1 :]:
+            stripped = follow.strip()
+            if not stripped:
                 continue
-            if line.strip() == "":
-                continue
-            break
-    return items
+            if stripped.startswith("## "):
+                return False
+            return stripped.startswith("- ")
+    return False
 
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     repo_root = root.parent
-    raw_files = sorted(p for p in (root / "raw").rglob("*.md") if p.is_file())
-    summary_files = sorted(p for p in (root / "wiki" / "summaries").rglob("*.md") if p.is_file())
+    raw_files = sorted(path for path in (root / "raw").rglob("*.md") if path.is_file())
+    summary_files = sorted(path for path in (root / "wiki" / "summaries").rglob("*.md") if path.is_file())
     issues: list[str] = []
-
-    summary_lookup = {p.relative_to(root / "wiki" / "summaries").as_posix(): p for p in summary_files}
 
     for raw_file in raw_files:
         summary_file = summary_path_for(root, raw_file)
@@ -78,9 +74,14 @@ def main() -> int:
     for summary_file in summary_files:
         text = summary_file.read_text(encoding="utf-8")
         rel = summary_file.relative_to(repo_root).as_posix()
+
         for field in REQUIRED_SUMMARY_FIELDS:
             if field not in text:
                 issues.append(f"missing_field:{rel}:{field}")
+        for heading in REQUIRED_SUMMARY_HEADINGS:
+            if heading not in text:
+                issues.append(f"missing_heading:{rel}:{heading}")
+
         source_path = parse_source_path(text)
         if not source_path:
             issues.append(f"missing_source_path:{rel}")
@@ -88,31 +89,20 @@ def main() -> int:
             source_file = repo_root / source_path
             if not source_file.exists():
                 issues.append(f"broken_source_path:{rel}:{source_path}")
-        for related in parse_related_summaries(text):
-            if related == "none":
-                continue
-            related_rel = related.replace("knowledge/wiki/summaries/", "")
-            if related_rel not in summary_lookup:
-                issues.append(f"broken_related_summary:{rel}:{related}")
-        for old_title in FORBIDDEN_OLD_TITLES:
-            if old_title in text:
-                issues.append(f"forbidden_old_title:{rel}:{old_title}")
 
-        # active summary 不应包含占位符文本
-        if "- status: active" in text and PLACEHOLDER_TEXT in text:
-            issues.append(f"active_summary_has_placeholder:{rel}")
+        if not _has_bullets_after_heading(text, "## 触发信号"):
+            issues.append(f"missing_trigger_bullets:{rel}")
+        if not _has_bullets_after_heading(text, "## 稳定结论"):
+            issues.append(f"missing_conclusion_bullets:{rel}")
+        if not _has_bullets_after_heading(text, "## 已知缺口"):
+            issues.append(f"missing_gap_bullets:{rel}")
 
-        # ai_generated 不应含占位符文本
-        if "- semantic_status: ai_generated" in text and PLACEHOLDER_TEXT in text:
-            issues.append(f"ai_generated_has_placeholder:{rel}")
+        for marker in FORBIDDEN_LEGACY_MARKERS:
+            if marker in text:
+                issues.append(f"forbidden_legacy_marker:{rel}:{marker}")
 
     index_file = root / "wiki" / "index.md"
-    if index_file.exists():
-        index_text = index_file.read_text(encoding="utf-8")
-        for forbidden in ["concepts/", "entities/", "topics/", "relations/", "synthesis/", "sources/"]:
-            if forbidden in index_text:
-                issues.append(f"forbidden_index_reference:{forbidden}")
-    else:
+    if not index_file.exists():
         issues.append("missing_index:knowledge/wiki/index.md")
 
     for required in [root / "wiki" / "overview.md", root / "wiki" / "questions.md"]:

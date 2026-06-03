@@ -112,18 +112,8 @@ def _stage_knowledge_refs(project_id: str, stage: str) -> tuple[list[str], list[
     if not manifest:
         return [], [], {}
 
-    knowledge_trace = manifest.get("knowledge_trace")
-    stage_payload: dict[str, object] = {}
-    if isinstance(knowledge_trace, dict):
-        stage_refs = knowledge_trace.get("stage_refs")
-        if isinstance(stage_refs, dict):
-            stage_candidate = stage_refs.get(stage)
-            if isinstance(stage_candidate, dict):
-                stage_payload = stage_candidate
-
-    summary_refs = _clean_list(stage_payload.get("summary_refs")) if stage_payload else []
-    raw_refs = _clean_list(stage_payload.get("raw_refs")) if stage_payload else []
-
+    summary_refs: list[str] = []
+    raw_refs: list[str] = []
     reason_map: dict[str, str] = {}
     references = manifest.get("references")
     if isinstance(references, list):
@@ -136,9 +126,13 @@ def _stage_knowledge_refs(project_id: str, stage: str) -> tuple[list[str], list[
             reference = str(item.get("reference") or "").replace("\\", "/").strip()
             if not reference or reference in reason_map:
                 continue
-            reason_map[reference] = str(item.get("selection_reason") or item.get("why_summary_not_enough") or "").strip()
+            if reference.startswith("knowledge/raw/"):
+                raw_refs.append(reference)
+            else:
+                summary_refs.append(reference)
+            reason_map[reference] = str(item.get("selection_reason") or "").strip()
 
-    return summary_refs, raw_refs, reason_map
+    return _clean_list(summary_refs), _clean_list(raw_refs), reason_map
 
 
 def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:

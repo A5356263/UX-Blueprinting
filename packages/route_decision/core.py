@@ -10,19 +10,16 @@ from packages.common import (
     get_repo_root,
     normalize_repo_ref,
     repo_ref_to_path,
+    to_repo_ref,
 )
 
-
-SUPPORTED_UXB_SCHEMA_VERSIONS = {"uxb_route_decision@4.0"}
+SUPPORTED_UXB_SCHEMA_VERSIONS = {"uxb_route_decision@5.0"}
 BUSINESS_OUTPUTS = {
     "business_note.md": "fast",
     "business_blueprint_lite.md": "standard",
     "business_blueprint.md": "full",
 }
 REQUIRED_CORE_OUTPUTS = {"facts.md", "experience_blueprint.md"}
-ALLOWED_STAGES = {"facts", "business", "experience"}
-
-
 def _load_json_payload(path: Path) -> tuple[dict[str, Any], str | None]:
     if not path.exists() or not path.is_file():
         return {}, "missing"
@@ -46,39 +43,6 @@ def _clean_string_list(value: object) -> list[str]:
             continue
         seen.add(text)
         cleaned.append(text)
-    return cleaned
-
-
-def _clean_stage_list(value: object) -> list[str]:
-    values = [item for item in _clean_string_list(value) if item in ALLOWED_STAGES]
-    return values
-
-
-def _clean_reason_items(value: object) -> list[dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-
-    cleaned: list[dict[str, Any]] = []
-    seen: set[tuple[str, str]] = set()
-    for item in value:
-        if not isinstance(item, dict):
-            continue
-        ref = str(item.get("ref") or "").replace("\\", "/").strip()
-        reason = str(item.get("reason") or "").strip()
-        if not ref:
-            continue
-        key = (ref, reason)
-        if key in seen:
-            continue
-        seen.add(key)
-        cleaned.append(
-            {
-                "ref": ref,
-                "type": str(item.get("type") or "").strip(),
-                "used_for_stage": _clean_stage_list(item.get("used_for_stage")),
-                "reason": reason,
-            }
-        )
     return cleaned
 
 
@@ -108,56 +72,6 @@ def _infer_execution_mode(required_outputs: list[str]) -> tuple[str, list[str]]:
     return BUSINESS_OUTPUTS[selected_business_outputs[0]], errors
 
 
-def _is_allowed_summary_route_ref(ref: str, group: str) -> bool:
-    if group == "complexity":
-        return extract_uxb_complexity_ref_suffix(ref) is not None
-    if ref.startswith("knowledge/wiki/summaries/"):
-        return True
-    if group == "business" and ref.startswith("knowledge/raw/业务/") and (
-        ref.endswith("/README.md") or ref.endswith("/00_领域概述.md")
-    ):
-        return True
-    return False
-
-
-def _normalize_stage_refs(value: object) -> dict[str, dict[str, list[str]]]:
-    stage_refs = value if isinstance(value, dict) else {}
-    normalized: dict[str, dict[str, list[str]]] = {}
-    for stage in sorted(ALLOWED_STAGES):
-        stage_payload = stage_refs.get(stage) if isinstance(stage_refs, dict) else {}
-        if not isinstance(stage_payload, dict):
-            stage_payload = {}
-        normalized[stage] = {
-            "raw_refs": _clean_string_list(stage_payload.get("raw_refs")),
-        }
-    return normalized
-
-
-def _normalize_raw_escalation_plan(value: object) -> list[dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-
-    plan: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for item in value:
-        if not isinstance(item, dict):
-            continue
-        raw_ref = str(item.get("raw_ref") or "").replace("\\", "/").strip()
-        if not raw_ref or raw_ref in seen:
-            continue
-        seen.add(raw_ref)
-        plan.append(
-            {
-                "raw_ref": raw_ref,
-                "routed_by_summary": str(item.get("routed_by_summary") or "").replace("\\", "/").strip(),
-                "why_summary_not_enough": str(item.get("why_summary_not_enough") or "").strip(),
-                "used_for_stage": _clean_stage_list(item.get("used_for_stage")),
-                "decision_points": _clean_string_list(item.get("decision_points")),
-            }
-        )
-    return plan
-
-
 def _validate_ref_exists(repo_root: Path, ref: str, label: str, errors: list[str]) -> None:
     try:
         ref_path = repo_root / repo_ref_to_path(ref)
@@ -173,92 +87,62 @@ def _validate_knowledge_selection(
 ) -> tuple[dict[str, Any], list[str]]:
     repo_root = get_repo_root()
     errors: list[str] = []
+    files = _clean_string_list(knowledge_selection.get("files"))
+    reasoning = str(knowledge_selection.get("reasoning") or "").strip()
 
-    raw_summary_refs = knowledge_selection.get("summary_refs")
-    if not isinstance(raw_summary_refs, dict):
-        raw_summary_refs = {}
-        errors.append("uxb_route_decision.knowledge_selection.summary_refs must be an object")
+    if not files:
+        errors.append("knowledge_selection.files cannot be empty")
+    if not reasoning:
+        errors.append("knowledge_selection.reasoning cannot be empty")
 
-    summary_refs = {
-        "business": _clean_string_list(raw_summary_refs.get("business")),
-        "guideline": _clean_string_list(raw_summary_refs.get("guideline")),
-        "complexity": _clean_string_list(raw_summary_refs.get("complexity")),
+    for ref in files:
+        if ref.startswith("knowledge/templates/"):
+            errors.append(f"knowledge_selection.files cannot include knowledge templates: {ref}")
+            continue
+        if extract_uxb_complexity_ref_suffix(ref) is None and not ref.startswith("knowledge/"):
+            errors.append(f"knowledge_selection.files contains unsupported knowledge ref: {ref}")
+            continue
+        _validate_ref_exists(repo_root, ref, "knowledge file", errors)
+
+    return {"files": files, "reasoning": reasoning}, errors
+
+
+def _sorted_repo_refs(paths: list[Path], repo_root: Path) -> list[str]:
+    refs = [to_repo_ref(path, repo_root) for path in paths if path.exists() and path.is_file()]
+    return sorted(dict.fromkeys(refs))
+
+
+def _route_decision_option_refs() -> dict[str, list[str]]:
+    repo_root = get_repo_root()
+    complexity_root = repo_root / ".codex" / "skills" / "uxb" / "references" / "complexity"
+    summaries_root = repo_root / "knowledge" / "wiki" / "summaries"
+    raw_business_root = repo_root / "knowledge" / "raw" / "业务"
+
+    complexity_refs = _sorted_repo_refs(list(complexity_root.rglob("*.md")), repo_root) if complexity_root.exists() else []
+
+    guideline_paths: list[Path] = []
+    business_summary_paths: list[Path] = []
+    if summaries_root.exists():
+        for path in summaries_root.rglob("*.md"):
+            relative_ref = to_repo_ref(path, repo_root)
+            if relative_ref.startswith("knowledge/wiki/summaries/设计准则/"):
+                guideline_paths.append(path)
+            else:
+                business_summary_paths.append(path)
+
+    business_entry_paths: list[Path] = []
+    if raw_business_root.exists():
+        for path in raw_business_root.rglob("README.md"):
+            business_entry_paths.append(path)
+        for path in raw_business_root.rglob("00_领域概述.md"):
+            business_entry_paths.append(path)
+
+    return {
+        "complexity": complexity_refs,
+        "business_summary": _sorted_repo_refs(business_summary_paths, repo_root),
+        "business_entry": _sorted_repo_refs(business_entry_paths, repo_root),
+        "guideline": _sorted_repo_refs(guideline_paths, repo_root),
     }
-
-    if not summary_refs["business"]:
-        errors.append("knowledge_selection.summary_refs.business cannot be empty")
-    if not summary_refs["complexity"]:
-        errors.append("knowledge_selection.summary_refs.complexity cannot be empty")
-
-    for group, refs in summary_refs.items():
-        for ref in refs:
-            if not _is_allowed_summary_route_ref(ref, group):
-                errors.append(
-                    f"knowledge_selection.summary_refs.{group} contains unsupported route ref: {ref}"
-                )
-                continue
-            if ref.startswith("knowledge/raw/") and not (ref.endswith("/README.md") or ref.endswith("/00_领域概述.md")):
-                errors.append(f"raw ref cannot appear directly in summary_refs: {ref}")
-            _validate_ref_exists(repo_root, ref, f"summary ref ({group})", errors)
-
-    raw_escalation_plan = _normalize_raw_escalation_plan(knowledge_selection.get("raw_escalation_plan"))
-    raw_by_ref = {item["raw_ref"]: item for item in raw_escalation_plan}
-    declared_route_refs = set(summary_refs["business"] + summary_refs["guideline"])
-
-    for item in raw_escalation_plan:
-        raw_ref = str(item["raw_ref"])
-        routed_by_summary = str(item["routed_by_summary"])
-        why_summary_not_enough = str(item["why_summary_not_enough"])
-        used_for_stage = list(item["used_for_stage"])
-        decision_points = list(item["decision_points"])
-
-        if not raw_ref.startswith("knowledge/raw/"):
-            errors.append(f"raw_escalation_plan.raw_ref must start with knowledge/raw/: {raw_ref}")
-        _validate_ref_exists(repo_root, raw_ref, "raw escalation ref", errors)
-
-        if not routed_by_summary:
-            errors.append(f"raw escalation entry is missing routed_by_summary: {raw_ref}")
-        elif routed_by_summary not in declared_route_refs:
-            errors.append(
-                f"raw escalation entry routed_by_summary must be declared in summary_refs.business/guideline: {raw_ref}"
-            )
-        else:
-            _validate_ref_exists(repo_root, routed_by_summary, "routed_by_summary", errors)
-
-        if not why_summary_not_enough:
-            errors.append(f"raw escalation entry is missing why_summary_not_enough: {raw_ref}")
-        if not used_for_stage:
-            errors.append(f"raw escalation entry is missing used_for_stage: {raw_ref}")
-        if not decision_points:
-            errors.append(f"raw escalation entry is missing decision_points: {raw_ref}")
-
-    stage_refs = _normalize_stage_refs(knowledge_selection.get("stage_refs"))
-    for stage, stage_payload in stage_refs.items():
-        for raw_ref in stage_payload.get("raw_refs", []):
-            if raw_ref not in raw_by_ref:
-                errors.append(f"stage_refs.{stage}.raw_refs contains undeclared raw ref: {raw_ref}")
-                continue
-            if stage not in raw_by_ref[raw_ref]["used_for_stage"]:
-                errors.append(
-                    f"stage_refs.{stage}.raw_refs contains raw ref not granted for this stage: {raw_ref}"
-                )
-
-    selection_reasons = _clean_reason_items(knowledge_selection.get("selection_reasons"))
-    reason_map = {str(item.get("ref") or ""): str(item.get("reason") or "").strip() for item in selection_reasons}
-    required_reason_refs = set(summary_refs["business"] + summary_refs["guideline"] + summary_refs["complexity"] + list(raw_by_ref.keys()))
-    for ref in sorted(required_reason_refs):
-        if not reason_map.get(ref):
-            errors.append(f"knowledge_selection.selection_reasons is missing reason for ref: {ref}")
-
-    return (
-        {
-            "summary_refs": summary_refs,
-            "raw_escalation_plan": raw_escalation_plan,
-            "stage_refs": stage_refs,
-            "selection_reasons": selection_reasons,
-        },
-        errors,
-    )
 
 
 def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
@@ -284,12 +168,7 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
             "source_path": f"projects/{project_id}/runtime/uxb_route_decision.json",
             "required_outputs": [],
             "execution_mode": "",
-            "knowledge_selection": {
-                "summary_refs": {"business": [], "guideline": [], "complexity": []},
-                "raw_escalation_plan": [],
-                "stage_refs": {stage: {"raw_refs": []} for stage in sorted(ALLOWED_STAGES)},
-                "selection_reasons": [],
-            },
+            "knowledge_selection": {"files": [], "reasoning": ""},
             "validation_errors": validation_errors,
         }
 
@@ -370,3 +249,24 @@ def run_route_decision(project_id: str) -> int:
     for item in _clean_string_list(decision.get("validation_errors")):
         print(f"- {item}")
     return 1
+
+
+def run_route_decision_options(project_id: str) -> int:
+    del project_id
+    refs = _route_decision_option_refs()
+
+    sections = [
+        ("可用 complexity refs：", refs["complexity"]),
+        ("可用 business summary refs：", refs["business_summary"]),
+        ("可用 business entry refs：", refs["business_entry"]),
+        ("可用 guideline summary refs：", refs["guideline"]),
+    ]
+    for title, items in sections:
+        print(title)
+        if not items:
+            print("- <none>")
+        else:
+            for item in items:
+                print(f"- {item}")
+        print("")
+    return 0

@@ -33,9 +33,13 @@ def _parse_bullets(text: str) -> list[str]:
 def _classify_note(path_text: str, text: str) -> str:
     metadata = parse_summary_metadata(text)
     source_group = str(metadata.get("source_group") or "")
-    if metadata.get("page_type") == "summary" and source_group in {"business", "guideline", "inbox"}:
+    if str(metadata.get("summary_role") or "").strip() == "light_route_card" and source_group in {"business", "guideline", "inbox"}:
         return source_group
     lowered = path_text.lower()
+    if "knowledge/wiki/summaries/设计准则/" in lowered:
+        return "guideline"
+    if "knowledge/wiki/summaries/" in lowered:
+        return "business"
     if "knowledge/wiki" in lowered:
         return "wiki"
     if "knowledge/raw" in lowered:
@@ -49,26 +53,6 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
         return []
 
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-    knowledge_trace = payload.get("knowledge_trace")
-    if isinstance(knowledge_trace, dict):
-        stage_refs = knowledge_trace.get("stage_refs")
-        if isinstance(stage_refs, dict):
-            stage_payload = stage_refs.get(stage)
-            if isinstance(stage_payload, dict):
-                refs = []
-                for key in ("summary_refs", "raw_refs"):
-                    values = stage_payload.get(key, [])
-                    if isinstance(values, list):
-                        refs.extend(normalize_repo_ref(str(value)) for value in values if str(value).strip())
-                deduped: list[str] = []
-                seen: set[str] = set()
-                for ref in refs:
-                    if not ref or ref in seen:
-                        continue
-                    seen.add(ref)
-                    deduped.append(ref)
-                return deduped
-
     references = payload.get("references")
     if not isinstance(references, list):
         return []

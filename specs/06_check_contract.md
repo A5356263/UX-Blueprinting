@@ -64,8 +64,7 @@
 - `context_manifest.json.task_contract` 存在
 - `context_manifest.json.selection_source` 指向 `runtime/uxb_route_decision.json`
 - `context_manifest.json.knowledge_trace` 存在
-- `context_manifest.json.knowledge_trace.summary_refs` 存在
-- `context_manifest.json.knowledge_trace.stage_refs` 存在
+- `context_manifest.json.knowledge_trace.files` 存在
 - `context_manifest.json.assembled_refs` 存在
 - `context_manifest.json.missing_refs` 存在
 

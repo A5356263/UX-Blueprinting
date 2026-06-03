@@ -27,7 +27,7 @@ knowledge/
 - `knowledge/raw/**` 是事实来源。
 - `knowledge/wiki/summaries/**` 是 AI 路由卡层。
 - `knowledge/wiki/index.md` 是主链路默认入口。
-- 主链路应先读 summary，再通过 `source_refs` 回查 raw 获取细节、证据和完整规则。
+- 主链路应先读 summary，再通过 `source_path` 回查 raw 获取细节、证据和完整规则。
 
 ## 稳定协议
 
@@ -127,33 +127,10 @@ raw 更新后，要同步刷新 wiki。
 期望的 summary 元数据：
 
 ```md
-- page_id:
-- page_type: summary
 - source_path:
-- source_group:
-- status:
-- confidence:
-- summary_role: ai_route_card
 - domain:
-- source_refs:
-- related_summaries:
+- summary_role: light_route_card
+- updated_at:
 ```
 
-业务 summary：
-
-```md
-- source_group: business
-- domain: 对应业务域
-```
-
-准则 summary：
-
-```md
-- source_group: guideline
-```
-
-体验相关 summary 可以带：
-
-```md
-- stage_hint: experience
-```
+`domain` 用于表达业务域或“设计准则”这类归属信息。

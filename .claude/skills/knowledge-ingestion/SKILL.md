@@ -82,7 +82,7 @@ description: Safely ingest non-standard materials into this repository's knowled
 3. 旧表述线索命中的文件。
 4. 新表述线索命中的文件。
 5. 相关领域的 README、`00_领域概述`、同目录相关能力文件。
-6. 被 summary `related_summaries` 指向的邻近文件。
+6. 同目录或同领域下已命中的邻近 summary / raw 文件。
 
 只有在以下情况才扩大范围：
 
@@ -93,7 +93,7 @@ description: Safely ingest non-standard materials into this repository's knowled
 
 ## 按需读取这些参考文件
 
-- 需要确认 `knowledge/` 结构、命名协议、summary 元数据契约和 `source_refs` 规则时，读 [references/knowledge-protocol.md](references/knowledge-protocol.md)。
+- 需要确认 `knowledge/` 结构、命名协议、summary 元数据契约和 `source_path` 规则时，读 [references/knowledge-protocol.md](references/knowledge-protocol.md)。
 - 需要按输入类型处理帮助中心、操作指引、FAQ、截图、视频、会议纪要、需求草稿或知识候选区文件时，读 [references/input-adaptation.md](references/input-adaptation.md)。
 - 收尾前，以及任务容易放错位置或违反约束时，读 [references/validation.md](references/validation.md)。
 
