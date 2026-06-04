@@ -1,0 +1,618 @@
+{
+  "task_id": "self-permission-apply",
+  "task_card_source": "projects/self-permission-apply/source/task_card.md",
+  "selection_source": "projects/self-permission-apply/runtime/uxb_route_decision.json",
+  "knowledge_trace": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+      "knowledge/raw/业务/审批管理/00_领域概述.md",
+      "knowledge/raw/业务/审批管理/10_审批管理.md",
+      ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+    ],
+    "reasoning": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。"
+  },
+  "assembled_refs": [
+    "templates/facts.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md",
+    "templates/gap_list.template.md",
+    "templates/check_report.template.md",
+    "specs/06_check_contract.md",
+    "specs/08_fact_extraction_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md",
+    "knowledge/raw/业务/权限管理/00_领域概述.md",
+    "knowledge/raw/业务/权限管理/01_范围与边界.md",
+    "knowledge/raw/业务/权限管理/03_业务对象.md",
+    "knowledge/raw/业务/权限管理/04_对象关系.md",
+    "knowledge/raw/业务/权限管理/11_任务场景.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+    "knowledge/raw/业务/权限管理/20_决策链契约.md",
+    "knowledge/raw/业务/权限管理/21_来源模型.md",
+    "knowledge/raw/业务/权限管理/23_规则契约.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+    "knowledge/raw/业务/审批管理/00_领域概述.md",
+    "knowledge/raw/业务/审批管理/10_审批管理.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+  ],
+  "missing_refs": [],
+  "reference_count": 25,
+  "task_contract": {
+    "task_goal": [
+      "为「员工自助申请权限」能力输出完整业务蓝图和体验蓝图",
+      "本次输出主要服务于产品评审和体验设计工作",
+      "核心要解决：在已有权限体系中新增员工主动申请路径，同时保证管理员可控、审批可追踪、关闭可兜底"
+    ],
+    "task_scenario": [
+      "本次是新建任务，从需求文档出发输出正式蓝图产物",
+      "任务覆盖完整链路：facts → business → experience",
+      "需求类型：复杂业务需求——涉及权限来源模型扩展、治理模式规则、申请单状态机、跨域审批承接"
+    ],
+    "execution_constraints": [
+      "不得臆造业务事实",
+      "信息不足处保留 `[GAP]`",
+      "正式产出必须写入 `workspace/`",
+      "不得用聊天回复替代正式文档产物",
+      "facts 阶段不得把引用知识提升为当前任务已确认事实",
+      "business 阶段不得输出 UI 方案或实现方案",
+      "experience 阶段不得输出高保真视觉稿或研发实现细节",
+      "`runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源",
+      "`task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断"
+    ],
+    "read_order": [
+      "先读本文档",
+      "再读 `Required Inputs`",
+      "生成 facts.md",
+      "生成 business 产物",
+      "生成 experience_blueprint.md",
+      "运行 validate / coverage / preview"
+    ],
+    "notes": [
+      "UXB 应在执行前写好 `projects/self-permission-apply/runtime/uxb_route_decision.json`",
+      "15个不明确事项已在 source/requirement.md 中完成处理，不构成阻断"
+    ],
+    "required_inputs": [
+      "projects/self-permission-apply/source/requirement.md",
+      "projects/self-permission-apply/source/background.md"
+    ],
+    "required_outputs": [
+      "projects/self-permission-apply/workspace/facts.md",
+      "projects/self-permission-apply/workspace/business_blueprint.md",
+      "projects/self-permission-apply/workspace/experience_blueprint.md",
+      "projects/self-permission-apply/workspace/gap_list.md",
+      "projects/self-permission-apply/workspace/check_report.md",
+      "projects/self-permission-apply/workspace/check_status.json"
+    ],
+    "domain": "管理后台"
+  },
+  "references": [
+    {
+      "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/facts.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/check_report.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/00_领域概述.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/01_范围与边界.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/04_对象关系.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/11_任务场景.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/14_角色边界.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/15_页面载体语义.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/20_决策链契约.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/21_来源模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/23_规则契约.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/24_治理状态模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/30_体验风险模式.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/32_文案与解释策略.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/审批管理/00_领域概述.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/审批管理/00_领域概述.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/审批管理/00_领域概述.md",
+      "requested_reference": "knowledge/raw/业务/审批管理/00_领域概述.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/审批管理/10_审批管理.md",
+      "requested_reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "group": "complexity_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/complexity/00_core_complexity_judgment.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "exists": true,
+      "copied": true
+    }
+  ],
+  "warnings": [],
+  "strict_mode": false,
+  "reference_summary": {
+    "template_ref_count": 5,
+    "check_ref_count": 4,
+    "knowledge_file_count": 16,
+    "raw_ref_count": 15,
+    "assembled_ref_count": 25
+  },
+  "stage_boundaries": {
+    "facts": [],
+    "business": [],
+    "experience": []
+  },
+  "facts_extraction_boundary": [],
+  "business_judgment_boundary": [],
+  "experience_translation_boundary": []
+}

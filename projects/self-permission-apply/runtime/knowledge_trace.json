@@ -1,0 +1,21 @@
+{
+  "files": [
+    "knowledge/raw/业务/权限管理/00_领域概述.md",
+    "knowledge/raw/业务/权限管理/01_范围与边界.md",
+    "knowledge/raw/业务/权限管理/03_业务对象.md",
+    "knowledge/raw/业务/权限管理/04_对象关系.md",
+    "knowledge/raw/业务/权限管理/11_任务场景.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/权限管理/15_页面载体语义.md",
+    "knowledge/raw/业务/权限管理/20_决策链契约.md",
+    "knowledge/raw/业务/权限管理/21_来源模型.md",
+    "knowledge/raw/业务/权限管理/23_规则契约.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/权限管理/32_文案与解释策略.md",
+    "knowledge/raw/业务/审批管理/00_领域概述.md",
+    "knowledge/raw/业务/审批管理/10_审批管理.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+  ],
+  "reasoning": "facts阶段需确认权限核心模型（对象、关系、决策链、来源模型）和审批基础设施边界，以判断新增申请路径的插入点和审批承接方式。business阶段需使用规则契约（R-007治理影响生效、R-009治理模式互斥）和治理状态模型来设计申请单状态机和关闭语义。experience阶段需参考页面载体语义确定入口承接、参考体验风险模式（RISK-002来源不透明等）处理员工端权限认知、参考文案策略设计来源标签和状态说明。审批管理raw用于确认审批流程配置能力和兜底机制。整体选择原则：每个文件都对应至少一个后续产出阶段的具体判断需求，不包含「可能有用」的文件。"
+}

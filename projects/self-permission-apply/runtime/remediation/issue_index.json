@@ -1,0 +1,312 @@
+{
+  "project_id": "self-permission-apply",
+  "generated_at": "2026-06-03T15:23:25.728299+00:00",
+  "issue_count": 4,
+  "open_issue_count": 4,
+  "blocker_count": 3,
+  "warning_count": 1,
+  "info_count": 0,
+  "repair_loop_status": "blocked",
+  "source_artifacts": [
+    {
+      "source": "facts_gate",
+      "stage": "facts",
+      "status_path": "projects/self-permission-apply/runtime/gates/facts_gate_status.json",
+      "report_path": "projects/self-permission-apply/runtime/gates/facts_gate_report.md",
+      "status_exists": true,
+      "report_exists": true
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "status_path": "projects/self-permission-apply/runtime/gates/business_gate_status.json",
+      "report_path": "projects/self-permission-apply/runtime/gates/business_gate_report.md",
+      "status_exists": false,
+      "report_exists": false
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "status_path": "projects/self-permission-apply/runtime/gates/experience_gate_status.json",
+      "report_path": "projects/self-permission-apply/runtime/gates/experience_gate_report.md",
+      "status_exists": false,
+      "report_exists": false
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "status_path": "projects/self-permission-apply/workspace/check_status.json",
+      "report_path": "projects/self-permission-apply/workspace/check_report.md",
+      "status_exists": false,
+      "report_exists": false
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "FACT-2446D678",
+      "source": "facts_gate",
+      "stage": "facts",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "facts 阶段存在 structure_missing 问题",
+      "description": "facts 阶段发现 structure_missing 问题：facts.md 未显式承接 requirement/background 输入来源",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts.md 未显式承接 requirement/background 输入来源"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/gates/facts_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/gates/facts_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-permission-apply/source/task_card.md",
+            "projects/self-permission-apply/source/requirement.md",
+            "projects/self-permission-apply/source/background.md",
+            "projects/self-permission-apply/runtime/context_manifest.json",
+            "projects/self-permission-apply/runtime/provenance.json",
+            "projects/self-permission-apply/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "dimension_coverage": {
+              "overview": 1,
+              "features": 1,
+              "rules": 1,
+              "states": 1,
+              "exceptions": 1,
+              "dependencies": 1,
+              "gaps": 1
+            },
+            "gap_count": 11,
+            "knowledge_derived_fact_count": 0
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "facts.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/self-permission-apply/source/task_card.md",
+            "projects/self-permission-apply/source/requirement.md",
+            "projects/self-permission-apply/source/background.md",
+            "projects/self-permission-apply/runtime/context_manifest.json",
+            "projects/self-permission-apply/runtime/provenance.json",
+            "projects/self-permission-apply/workspace/facts.md"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/self-permission-apply/workspace/facts.md"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 facts.md 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-facts",
+        "gate-business",
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "facts_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-A9818A93",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/self-permission-apply/workspace/check_status.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing machine check status: projects/self-permission-apply/workspace/check_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/workspace/check_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/workspace/check_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/self-permission-apply/workspace/check_status.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/self-permission-apply/workspace/check_status.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 check_status.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-FCB57B57",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/self-permission-apply/runtime/gate_metrics.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/self-permission-apply/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/gates/business_gate_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/self-permission-apply/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/gates/experience_gate_report.md"
+        },
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/self-permission-apply/runtime/gate_metrics.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/gate_metrics.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/self-permission-apply/runtime/gate_metrics.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-A3AFE22C",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "warning",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/self-permission-apply/runtime/trace_index.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/self-permission-apply/runtime/trace_index.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    }
+  ]
+}

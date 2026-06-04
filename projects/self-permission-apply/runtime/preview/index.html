@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体验策略 — self-permission-apply</title>
+<style>
+
+:root {
+  --bg: #f5f4ed;
+  --panel: #faf9f5;
+  --panel-strong: #faf9f5;
+  --panel-subtle: #f2f0e8;
+  --line: #e8e6dc;
+  --line-strong: #d8d1c2;
+  --text: #2b2b28;
+  --text-muted: #6b6a64;
+  --text-soft: #75746e;
+  --accent: #1f6b5b;
+  --accent-soft: #e2f1eb;
+  --accent-strong: #155245;
+  --warn: #8a5a14;
+  --warn-soft: #f6ead5;
+  --danger: #8b3a3a;
+  --danger-soft: #f8e4e1;
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.hidden { display: none !important; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 14px 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 0 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sidebar-header h2 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  color: var(--accent-strong);
+}
+
+.project-badge {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  padding: 10px 12px 0;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.tab-btn.active {
+  background: var(--panel-strong);
+  color: var(--accent-strong);
+  border-bottom-color: var(--panel-strong);
+  font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0 8px;
+}
+
+.nav-section { padding: 0 16px; }
+
+.nav-item {
+  display: block;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 1px 0;
+  transition: all 0.12s;
+  cursor: pointer;
+}
+
+.nav-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
+.nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+.nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+
+.content {
+  flex: 1;
+  padding: 32px 40px 80px;
+  max-width: 1080px;
+}
+
+.content-panel { display: block; }
+.content-panel.hidden { display: none; }
+
+.section-block {
+  margin-bottom: 36px;
+  scroll-margin-top: 24px;
+}
+
+.section-heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-heading.level-2 {
+  font-size: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading.level-3 {
+  font-size: 15px;
+  color: var(--text-muted);
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.section-body { font-size: 15px; }
+.section-body p { margin: 0 0 10px; }
+.section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
+.section-body ul li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  margin: 2px 0;
+}
+.section-body ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+.section-body strong { color: var(--accent-strong); font-weight: 600; }
+.section-body code {
+  background: var(--panel-subtle);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+}
+.section-body pre {
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.section-body h3,
+.section-body h4,
+.section-body h5,
+.section-body h6 {
+  margin: 18px 0 10px;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 18px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+}
+.section-body th,
+.section-body td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.section-body th {
+  background: var(--panel-subtle);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+.section-body ol li { padding: 4px 0; }
+
+.summary-visual,
+.journey-visual {
+  margin: 0 0 18px;
+  padding: 12px;
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.summary-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  min-width: max-content;
+}
+
+.summary-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
+}
+
+.summary-row:last-child { margin-bottom: 0; }
+
+.summary-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  flex: 0 0 auto;
+}
+
+.flow-arrow,
+.summary-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.summary-step {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.summary-step strong {
+  color: var(--accent-strong);
+  margin-right: 4px;
+}
+
+.journey-path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  margin-bottom: 10px;
+}
+
+.journey-path-row:last-child { margin-bottom: 0; }
+
+.journey-path-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.journey-path-nodes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.journey-path-node {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.journey-path-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.preview-footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.component-intro:empty,
+.component-visuals:empty,
+.component-cards:empty,
+.component-notes:empty {
+  display: none;
+}
+
+.component-intro {
+  margin-bottom: 12px;
+}
+
+.component-intro:last-child {
+  margin-bottom: 0;
+}
+
+.component-visuals {
+  margin-bottom: 12px;
+}
+
+.component-visuals:last-child {
+  margin-bottom: 0;
+}
+
+.component-cards {
+  display: block;
+}
+
+.component-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.component-card:last-child {
+  margin-bottom: 0;
+}
+
+.component-card + .component-card {
+  margin-top: 6px;
+}
+
+.component-card-title {
+  margin: 18px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3,
+.experience-component[data-section-key="secondary-flow"] .section-body h3,
+.experience-component[data-section-key="exception-flow"] .section-body h3 {
+  margin: 32px 0 10px;
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="secondary-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="exception-flow"] .section-body h3:first-child {
+  margin-top: 0;
+}
+
+.experience-component .section-body .flow-field-label {
+  margin-top: 20px;
+}
+
+.experience-component .section-body .flow-field-label + * {
+  margin-top: 0;
+}
+
+.component-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.component-note-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.component-note-item {
+  padding: 8px 0 8px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  position: relative;
+}
+
+.component-note-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.component-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.component-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.state-feedback-table-wrap {
+  overflow-x: auto;
+}
+
+.state-feedback-table-wrap table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 20px 16px 60px; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>体验策略</h2>
+    <span class="project-badge">self-permission-apply</span>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" data-panel="business">业务蓝图</button>
+    <button class="tab-btn" data-panel="experience">体验蓝图</button>
+  </div>
+  <div class="sidebar-nav" id="nav-business">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键设计判断">0. 本次关键设计判断</a>
+<a class="nav-item " data-target="1-一句话结论">1. 一句话结论</a>
+<a class="nav-item " data-target="2-需求是否成立">2. 需求是否成立</a>
+<a class="nav-item " data-target="3-值不值得做">3. 值不值得做</a>
+<a class="nav-item " data-target="4-应该做成什么能力形态">4. 应该做成什么能力形态</a>
+<a class="nav-item " data-target="5-推荐业务方案">5. 推荐业务方案</a>
+<a class="nav-item " data-target="6-必须守住的规则和边界">6. 必须守住的规则和边界</a>
+<a class="nav-item " data-target="7-主要风险与保护策略">7. 主要风险与保护策略</a>
+<a class="nav-item " data-target="8-方案承接要求">8. 方案承接要求</a>
+<a class="nav-item " data-target="9-待确认问题">9. 待确认问题</a>
+<a class="nav-item " data-target="附录-事实-知识与判断追踪">附录：事实、知识与判断追踪</a></div>
+  </div>
+  <div class="sidebar-nav hidden" id="nav-experience">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键设计判断">0. 本次关键设计判断</a>
+<a class="nav-item " data-target="1-旅程图">1. 旅程图</a>
+<a class="nav-item " data-target="2-交互流程总览">2. 交互流程总览</a>
+<a class="nav-item " data-target="3-主交互流程">3. 主交互流程</a>
+<a class="nav-item " data-target="4-次交互流程">4. 次交互流程</a>
+<a class="nav-item " data-target="5-异常与阻断流程">5. 异常与阻断流程</a>
+<a class="nav-item " data-target="6-页面-弹窗-抽屉设计">6. 页面 / 弹窗 / 抽屉设计</a>
+<a class="nav-item " data-target="7-状态与反馈文案">7. 状态与反馈文案</a>
+<a class="nav-item " data-target="8-待确认问题">8. 待确认问题</a>
+<a class="nav-item " data-target="附录-设计指南消费说明">附录：设计指南消费说明</a></div>
+  </div>
+</nav>
+<main class="content">
+  <div class="content-panel" id="content-business"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">业务蓝图</h1><div class="section-block" id="0-本次关键设计判断">
+<h2 class="section-heading ">0. 本次关键设计判断</h2>
+<div class="section-body"><p><strong>判断：</strong></p>
+<p>需求成立。这不是一个局部页面调整，而是改变了权限获得的基本方式——在管理员分配之外新增了员工主动申请的路径。需要先讲清业务规则和边界，再做体验方案。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>权限获得方式从「管理员单向分配」扩展为「管理员分配 + 员工申请」双路径，需要明确两条路径的优先级和互不干扰规则</li><li>管理员需要新增一个能力开关和两项配置（可申请角色范围、审批流程绑定），这是管理员权限治理面的新增负担</li><li>员工首次面对「看懂自己有什么权限、判断自己缺什么、主动发起申请」的全新认知链路，体验承接压力大</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>以角色为申请单位，构建在已有角色体系和审批体系之上，不另起炉灶</li><li>管理员控制面收敛在现有权限管理模式页中，不新增独立配置入口</li><li>关闭能力时不回收已授权限，审批中申请统一退回，降低企业管理风险顾虑</li><li>一期只覆盖员工角色，不做服务人员扩展</li></ul>
+<p><strong>不建议方案：</strong></p>
+<ul><li>不建议让员工直接申请功能权限或自选数据权限范围——认知门槛太高，管理员的配置和维护成本也会成倍增加</li><li>不建议自建审批引擎——已有审批管理能力完善，复用即可，重复建设只会增加系统复杂度</li></ul>
+<p><strong>关键待确认：</strong></p>
+<ol><li>员工端入口放在工作台还是个人信息区，影响首页信息架构和入口分发策略</li><li>「敏感角色」排除的具体名单范围和判断标准</li></ol>
+<p>&gt; 更多待确认问题详见 <code>## 9. 待确认问题</code>。</p></div>
+</div>
+<div class="section-block" id="1-一句话结论">
+<h2 class="section-heading ">1. 一句话结论</h2>
+<div class="section-body"><p>能做。建议作为已有权限体系的扩展能力构建：以角色为申请单位、复用已有审批引擎、管理员控制开关和范围、关闭时不回收已授权限。核心判断是：这件事的价值不在于「又做了一种授权方式」，而在于填补了「管理员预料不到的个体权限需求」这个真实缺口。</p></div>
+</div>
+<div class="section-block" id="2-需求是否成立">
+<h2 class="section-heading ">2. 需求是否成立</h2>
+<div class="section-body"><h3>解决的问题</h3>
+<p>企业权限由管理员集中分配。现有三条权限获得路径——管理员直授、角色批量分发、角色自动授权规则——的发起人和维护人始终是管理员。角色自动授权规则可以处理可预测的规则化分发（按部门、职务、成员组匹配），但覆盖不了跨部门协作、临时项目组、特殊报表权限等「管理员预料不到但员工自己知道缺什么」的场景。</p>
+<p>这些场景下员工只能线下找人沟通，在中大型企业里沟通成本高、授权时效不稳定。部分企业超管就是老板本人，业务人员频繁找老板要权限既不现实也不高效。</p>
+<h3>是否成立</h3>
+<p><strong>成立。</strong> 这个需求解决的是一个真实问题，不是伪需求。</p>
+<p>在以下前提下需求不成立，但当前这些前提都不成立：</p>
+<ul><li>如果企业中所有权限需求都可以被自动授权规则预测和覆盖，则不需要员工自助申请。但在实际业务中，临时协作、跨部门项目、个性化报表权限等不可预测场景始终存在。</li><li>如果管理员可以实时响应每一个权限需求，则不需要。但在中大型企业里这不可行。</li></ul>
+<p>需求没有出现局部诉求扩大化的问题。文档中明确划定了一期范围——只做角色申请、不做功能权限和数据权限自选、服务人员不支持——范围控制是克制的。</p>
+<h3>判断依据</h3>
+<ul><li>从已有权限体系的10个任务场景来看，员工在所有现有场景中都是被动接收方，确实缺少主动发起路径</li><li>竞品参考中金蝶已有相近功能方向，说明行业中存在同类需求</li><li>初步价值指标「至少3家客户使用」说明需求方对价值验证本身也持谨慎态度，没有夸大</li></ul></div>
+</div>
+<div class="section-block" id="3-值不值得做">
+<h2 class="section-heading ">3. 值不值得做</h2>
+<div class="section-body"><h3>收益</h3>
+<ul><li><strong>减少线下沟通成本</strong>：员工不需要每次缺权限都找管理员，从「找人」变成「走流程」</li><li><strong>提升授权时效</strong>：审批流程标准化后，授权速度不再取决于管理员个人响应时间</li><li><strong>权限需求可见化</strong>：申请记录本身就是一份「员工实际需要什么权限」的数据来源，后续可以用来优化角色设计</li><li><strong>管理员减负</strong>：把不可预测的零散权限需求从管理员手动操作中剥离出来</li></ul>
+<h3>系统代价</h3>
+<ul><li><strong>配置面增加</strong>：管理员需要在每个角色上维护一个「允许员工申请」开关，这是一个新增的管理负担。角色数量越多，维护成本越高</li><li><strong>审批链路叠加</strong>：新增一种审批场景类型，审批人需要理解「权限申请」和「其他审批」的区别，增加认知负担</li><li><strong>权限来源复杂度</strong>：权限来源从两类（直授、角色授予）增加到三类（直授、角色授予、自助申请），查询排障和审计时需要区分，增加系统解释成本</li><li><strong>关闭语义的边界处理</strong>：「关闭不回收」虽然降低了企业顾虑，但也意味着关闭后的权限残留需要单独治理</li></ul>
+<h3>综合判断</h3>
+<p><strong>值得做。</strong> 收益集中在解决真实痛点，系统代价虽然存在但可控。最大的代价——权限来源复杂度增加——是「员工能看到来源」这个正向体验的自然代价，不是无谓的复杂度。配置面增加可以通过好的默认值（全部角色默认不可申请）和批量操作来缓解。</p></div>
+</div>
+<div class="section-block" id="4-应该做成什么能力形态">
+<h2 class="section-heading ">4. 应该做成什么能力形态</h2>
+<div class="section-body"><p>比较三种路径：</p>
+<h3>路径A：独立功能模块</h3>
+<p>在权限管理之外新建一个独立的自助申请模块，包含自己的配置页、申请页、审批页和记录页。</p>
+<ul><li>优点：隔离性好，不影响现有权限管理</li><li>缺点：和已有权限体系割裂，角色数据需要同步，权限来源需要跨模块解释，员工在两个地方看权限。建设成本高、后续维护成本也高</li></ul>
+<h3>路径B：扩展现有权限治理模式（推荐）</h3>
+<p>在已有权限管理模式页中新增「员工自助申请」开关和配套配置。员工端在现有权限视图上扩展申请入口和记录区。审批侧复用已有审批管理能力。</p>
+<ul><li>优点：构建在已有体系之上，不引入新的模型隔离；角色、权限、来源、审计等能力直接复用；管理员在一个地方管理所有权限模式</li><li>缺点：权限管理模式页的信息密度进一步增加，需要做好信息层级</li></ul>
+<h3>路径C：暂不产品化，先做审批流程模板</h3>
+<p>只提供一个审批流程模板，管理员如果需要让员工申请权限，自己配置审批流程并结合角色自动授权规则模拟。</p>
+<ul><li>优点：零开发成本</li><li>缺点：解决不了核心痛点——员工没有发起入口，管理员仍然需要手动维护每个角色的适用范围。本质上是用旧工具拼凑新场景</li></ul>
+<h3>推荐</h3>
+<p><strong>路径B：扩展现有权限治理模式。</strong> 这是唯一能在合理成本内解决核心痛点的路径。构建在已有体系之上，避免重复建设，同时保证管理员在统一的地方管理所有权限模式。</p></div>
+</div>
+<div class="section-block" id="5-推荐业务方案">
+<h2 class="section-heading ">5. 推荐业务方案</h2>
+<div class="section-body"><h3>角色与职责</h3>
+<p><strong>超级管理员/权限管理员：</strong></p>
+<ul><li>在权限管理模式页中开启或关闭「员工自助申请权限」能力</li><li>在角色管理中标记每个角色是否允许员工申请（默认关闭）</li><li>绑定审批流程（从已有审批流程中选择或新建）</li><li>查看申请记录和审计日志</li></ul>
+<p><strong>员工：</strong></p>
+<ul><li>在「我的权限」页面查看自己当前拥有的所有权限及每条权限的来源（角色自带 / 管理员直授 / 自助申请）</li><li>在可申请角色列表中看到管理员已标记为可申请、且自己尚未拥有的角色</li><li>选择一个角色、填写申请原因、提交申请</li><li>查看自己所有申请的状态（审批中 / 已通过 / 已拒绝 / 已撤销 / 已退回）</li><li>撤销状态为审批中的申请</li></ul>
+<p><strong>审批人：</strong></p>
+<ul><li>在审批待办中看到权限申请，包含申请人、申请角色、角色包含的权限说明、申请原因</li><li>同意或拒绝</li><li>审批通过后，系统自动将对应角色授予申请人</li></ul>
+<h3>主流程闭环</h3>
+<p>完整流程分为四个阶段：</p>
+<p><strong>第一阶段：管理员开启能力</strong></p>
+<ol><li>管理员进入权限管理模式页</li><li>开启「员工自助申请权限」</li><li>系统检查：是否已有审批流程可用。若无，提示先配置审批流程</li><li>管理员进入角色管理页，逐个标记「允许员工申请」的角色。系统预置拦截：超级管理员角色、含删除/批量操作/财务数据等高危功能点的角色不可标记</li><li>管理员在自助申请设置中绑定审批流程（默认建议直属上级单级审批）</li><li>能力生效，员工端出现申请入口</li></ol>
+<p><strong>第二阶段：员工申请</strong></p>
+<ol><li>员工进入「我的权限」页面，查看已有权限及来源</li><li>点击「申请权限」，看到可申请角色列表</li><li>选择一个角色，查看角色说明（包含哪些功能权限）</li><li>填写申请原因，提交申请</li><li>申请进入审批流程，状态变为「审批中」</li></ol>
+<p><strong>第三阶段：审批与授权</strong></p>
+<ol><li>审批人收到待办</li><li>查看申请详情：申请人、申请角色、角色权限说明、申请原因</li><li>同意 → 系统自动将角色授予申请人，权限即刻生效，申请状态变为「已通过」</li><li>拒绝 → 申请状态变为「已拒绝」，流程结束</li></ol>
+<p><strong>第四阶段：员工查看结果</strong></p>
+<ol><li>员工在「我的申请」中看到状态更新</li><li>已通过：在「我的权限」中可以看到新获得的角色，来源标注为「自助申请」</li><li>已拒绝：可查看拒绝原因，可重新发起申请</li></ol>
+<h3>前置配置</h3>
+<p>管理员在开启能力前必须完成：</p>
+<ul><li>至少标记一个角色为「允许员工申请」</li><li>绑定一个有效的审批流程</li></ul>
+<p>两项未完成时，系统不允开启，并提示缺失项。</p>
+<h3>结果回写与记录沉淀</h3>
+<ul><li><strong>授权记录</strong>：审批通过后自动授权，记录到审计日志（谁、对谁、授予什么角色、来源为自助申请、关联申请单编号、操作时间）</li><li><strong>申请记录</strong>：每笔申请全程留痕，包括提交时间、审批人、审批时间、审批结果、授权结果</li><li><strong>操作日志</strong>：能力开启/关闭、角色标记变更均记录到操作日志</li></ul></div>
+</div>
+<div class="section-block" id="6-必须守住的规则和边界">
+<h2 class="section-heading ">6. 必须守住的规则和边界</h2>
+<div class="section-body"><h3>不能放开的限制</h3>
+<ol><li><strong>敏感角色不可申请</strong>：超管角色、含删除/批量操作/财务数据等高危功能点的角色，系统预置拦截，不可标记为可申请。排除名单需由产品和安全方确认</li><li><strong>审批必须存在</strong>：开启能力前必须绑定审批流程。若审批流程后续被删除，能力自动关闭，但已授权限不回收</li><li><strong>员工只能申请角色，不能直接申请功能权限或选择数据权限范围</strong>：数据范围由管理员在角色中预定义，或审批通过后管理员单独补充</li><li><strong>员工只能看到和申请自己尚未拥有的角色</strong></li><li><strong>服务人员不可使用此能力</strong></li></ol>
+<h3>必须审批的场景</h3>
+<ul><li>所有权限申请都必须经过审批，不存在免审批通道</li><li>员工不能以任何方式绕过审批直接获得权限</li></ul>
+<h3>必须二次确认的操作</h3>
+<ul><li>管理员关闭自助申请能力：弹窗告知关闭后果（不再接受新申请、审批中申请将被退回、已授权限保留），需二次确认</li><li>员工撤销申请：弹窗告知撤销后不可恢复，需二次确认</li></ul>
+<h3>必须前置说明的信息</h3>
+<ul><li>开启能力前，向管理员说明该能力与已有权限治理模式的关系：不是互斥关系，但依赖审批流程已配置</li><li>员工申请前，展示角色的权限说明，让员工理解申请的是什么</li><li>审批人处理前，展示申请人、申请角色、角色权限详情和申请原因</li><li>关闭能力时，向管理员明确三种后果：新申请阻断、进行中申请退回、已授权限保留</li></ul></div>
+</div>
+<div class="section-block" id="7-主要风险与保护策略">
+<h2 class="section-heading ">7. 主要风险与保护策略</h2>
+<div class="section-body"><h3>风险一：可申请范围设置过宽导致安全风险</h3>
+<ul><li><strong>风险</strong>：管理员将过多角色（甚至含敏感权限的角色）标记为可申请，员工可能申请到不合适的权限</li><li><strong>影响</strong>：数据安全、功能滥用、合规风险</li><li><strong>缓解</strong>：系统预置敏感角色排除名单，阻止标记；建议在角色列表中以视觉区分「建议开放」和「需谨慎开放」的角色</li></ul>
+<h3>风险二：审批流程配置错误或审批人不存在</h3>
+<ul><li><strong>风险</strong>：审批链路配置错误导致申请无法流转，或默认审批人字段为空导致无人处理</li><li><strong>影响</strong>：申请积压、员工体验差、管理员需要手动干预</li><li><strong>缓解</strong>：开启能力时校验审批流程有效性；审批人不存在时向上查找（直属上级→部门负责人→超管兜底）；复用审批管理的超时提醒和自动升级策略</li></ul>
+<h3>风险三：关闭能力时的边界处理不当</h3>
+<ul><li><strong>风险</strong>：管理员关闭能力后发现审批中的申请不知如何处理，或担心已授权权限会成为安全隐患</li><li><strong>影响</strong>：企业不敢使用该能力，或关闭后产生遗留问题</li><li><strong>缓解</strong>：「关闭不回收」语义明确且在产品中清晰告知；审批中申请统一退回并附说明；已授权限如需回收通过现有权限工具单独操作</li></ul>
+<h3>风险四：员工认知门槛和培训成本</h3>
+<ul><li><strong>风险</strong>：员工不熟悉权限体系，不理解角色的含义，可能随意申请或不知道申请什么</li><li><strong>影响</strong>：无效申请增加审批人负担、员工体验差、培训成本上升</li><li><strong>缓解</strong>：角色需有清晰的权限说明文案；可申请列表展示角色名称和简要说明；申请时展示角色包含的具体权限</li></ul>
+<h3>风险五：权限来源复杂度增加</h3>
+<ul><li><strong>风险</strong>：权限来源从两类变成三类，员工和管理员在查权限、排故障时需要区分来源</li><li><strong>影响</strong>：查询排障效率下降、审计复杂度增加</li><li><strong>缓解</strong>：员工权限视图强制展示每条权限的来源标签；审计日志中关联申请单编号；这是正向体验的合理代价</li></ul></div>
+</div>
+<div class="section-block" id="8-方案承接要求">
+<h2 class="section-heading ">8. 方案承接要求</h2>
+<div class="section-body"><p>后续体验设计阶段必须承接以下内容。</p>
+<h3>必须覆盖的角色</h3>
+<ul><li>超级管理员/权限管理员：能力开关、角色标记、流程绑定、关闭确认</li><li>员工：权限查看、发起申请、申请记录、撤销申请</li><li>审批人：审批待办、申请详情、同意/拒绝</li></ul>
+<h3>必须闭环的主流程</h3>
+<ul><li>管理员开启能力 → 标记角色 → 绑定流程 → 能力生效</li><li>员工查看权限 → 选择角色 → 提交申请 → 等待审批</li><li>审批人查看申请 → 处理 → 系统自动授权或拒绝</li><li>员工查看结果 → 确认权限生效</li><li>管理员关闭能力 → 退回审批中申请 → 能力关闭</li></ul>
+<h3>必须处理的异常</h3>
+<ul><li>可申请列表为空（无已标记角色或员工已拥有全部）</li><li>提交时审批流程不可用</li><li>审批人不存在时的兜底流转</li><li>关闭能力时审批中申请被退回的通知</li><li>敏感角色被尝试标记时的阻断提示</li><li>申请时角色已被管理员直接授予（重复授权）</li><li>员工状态变化（离职/停用）时审批中申请的处理</li></ul>
+<h3>必须解释的状态</h3>
+<ul><li>申请单的每个状态（审批中、已通过、已拒绝、已撤销、已退回）及其含义</li><li>权限来源的三种类型（角色自带、管理员直授、自助申请）及其区别</li><li>能力开启和关闭对员工端的不同影响</li><li>审批通过后权限「即刻生效」的含义</li></ul>
+<h3>必须保护的风险</h3>
+<ul><li>角色权限说明不清晰导致员工误申请 → 角色列表需展示权限详情</li><li>关闭能力后员工的困惑 → 关闭时发送通知说明</li><li>申请被拒绝后的重复提交 → 可重新申请，但需提示审批结果和拒绝原因</li><li>管理员忘记标记角色 → 能力开启后若无可申请角色，管理员端提示</li></ul>
+<h3>可作为设计建议的内容</h3>
+<ul><li>员工端入口位置：建议放在工作台或个人中心，具体位置由体验阶段确定</li><li>角色列表的信息层级：角色名称 → 角色说明 → 包含权限数 → 可展开查看详情</li><li>审批人视图的信息层级：申请人信息 → 申请角色 → 角色权限详情 → 申请原因 → 操作按钮</li></ul></div>
+</div>
+<div class="section-block" id="9-待确认问题">
+<h2 class="section-heading ">9. 待确认问题</h2>
+<div class="section-body"><ol><li><strong>敏感角色排除名单的具体范围</strong></li></ol>
+<p>影响：决定哪些角色系统预置拦截、哪些由管理员自行判断。名单过宽增加管理员配置负担，过窄存在安全风险。<br>建议确认方：产品 + 安全</p>
+<ol><li><strong>员工端入口位置</strong></li></ol>
+<p>影响：决定首页信息架构、入口分发策略和员工发现路径。工作台入口曝光高但可能喧宾夺主，个人信息区入口低调但可能发现率低。<br>建议确认方：产品 + 设计</p>
+<ol><li><strong>申请原因是否必填、字数上限</strong></li></ol>
+<p>影响：必填可提升审批质量但增加申请阻力，字数过少可能信息不足。<br>建议确认方：产品</p>
+<ol><li><strong>员工离职或停用时审批中申请的处理</strong></li></ol>
+<p>影响：涉及申请单状态机边界和权限回收时机。当前 facts 中标记为 [GAP]。<br>建议确认方：产品</p>
+<ol><li><strong>审批通过时员工已通过其他途径拥有同一角色的处理</strong></li></ol>
+<p>影响：涉及授权幂等性和审批人体验。当前 facts 中标记为 [GAP]。建议静默跳过授权并提示「该员工已拥有此角色」。<br>建议确认方：产品 + 技术</p>
+<ol><li><strong>移动端是否支持发起申请和查看状态</strong></li></ol>
+<p>影响：决定一期交互方案是否需要考虑响应式或多端适配。当前 facts 中标记为 [GAP]。<br>建议确认方：产品</p>
+<ol><li><strong>消息通知的渠道和文案</strong></li></ol>
+<p>影响：申请提交后、审批结果、关闭退回等关键节点是否需要通知、通过什么渠道、通知内容。<br>建议确认方：产品 + 设计</p></div>
+</div>
+<div class="section-block" id="附录-事实-知识与判断追踪">
+<h2 class="section-heading ">附录：事实、知识与判断追踪</h2>
+<div class="section-body"><h3>需求事实来源</h3>
+<p>本文档所有关于功能范围、业务规则和状态流转的判断，均来自 <code>workspace/facts.md</code>（基于 <code>source/requirement.md</code> 和 <code>source/background.md</code> 澄清）。</p>
+<h3>业务知识引用</h3>
+<p>以下判断使用了已装配的业务知识：</p>
+<ul><li><strong>权限来源模型</strong>（<code>21_来源模型</code>）：用于判断新增的「自助申请」在已有来源体系（直授、角色授予）中的位置——作为第三种权限获得路径，不改变已有来源的优先级和计算规则</li><li><strong>决策链契约</strong>（<code>20_决策链契约</code>）：用于确认 L0 可见性 → L1 功能权限 → L2 数据权限 → L3 治理与生效的层级关系在自助申请场景中仍然完整适用</li><li><strong>规则契约 R-009 治理模式互斥</strong>（<code>23_规则契约</code>）：用于判断自助申请与子管理员、双管理员等已有治理模式的关系——不互斥，但依赖权限变更审批模式的前置配置</li><li><strong>规则契约 R-007 治理影响生效</strong>（<code>23_规则契约</code>）：用于设计审批通过后自动授权、权限即刻生效的机制——审批是治理手段，不改变授予事实，但决定何时生效</li><li><strong>治理状态模型</strong>（<code>24_治理状态模型</code>）：用于设计申请单的状态机——草稿→审批中→已通过/已拒绝/已撤销→已生效，以及每个状态的 actor responsibility</li><li><strong>角色边界</strong>（<code>14_角色边界</code>）：用于确认员工在现有体系中的默认定位（被动接收方），以及自助申请对员工角色的改变</li><li><strong>审批管理体系</strong>（<code>审批管理/10_审批管理</code>）：用于确认复用已有审批能力的可行性——审批人来源、超时策略、多人审批方式均可直接复用</li></ul>
+<h3>关键判断推导</h3>
+<ul><li>「需求成立」的判断来自：已有任务场景中员工无主动发起路径的 gap + 不可预测权限需求的真实存在 + 竞品方向验证</li><li>「以角色为申请单位」的判断来自：员工认知门槛 + 管理员配置成本 + 与已有角色体系的契合度</li><li>「关闭不回收」的判断来自：降低企业使用顾虑 + 权限回收应通过已有工具而非能力开关</li><li>「路径B 扩展既有体系」的判断来自：避免重复建设 + 权限来源统一解释 + 管理面统一入口</li></ul></div>
+</div></div>
+  <div class="content-panel hidden" id="content-experience"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">体验蓝图</h1><div class="section-block experience-component" id="0-本次关键设计判断" data-section-key="judgment"><h2 class="section-heading">0. 本次关键设计判断</h2><div class="section-body"><p><strong>判断：</strong></p>
+<p>本次体验方案的重点不是新增很多页面，而是把三条角色路径（管理员配置 → 员工申请 → 审批处理 → 自动授权）无缝接入现有权限体系和审批体系，同时把异常反馈和关闭兜底说清楚。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>管理员侧：现有权限管理模式页需要扩展一个新开关和配套设置区，角色管理页每个角色多一个开关，信息密度增加</li><li>员工侧：需要构建三个全新的页面——我的权限（查看已有权限及来源）、申请权限（选择角色并提交）、我的申请（追踪状态）。这是本次体验承接压力最大的部分</li><li>审批侧：复用现有审批待办，但需要让审批人看懂权限申请和普通申请的区别，核心是展示角色包含的具体权限</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>员工端三个页面作为工作台或个人信息区的子页面，从「我的权限」入口进入</li><li>管理员配置内嵌在已有权限管理模式页和角色管理页中，不新增独立配置页</li><li>所有异常反馈以页面内提示为主，弹窗为辅，避免打断用户操作流</li><li>关闭能力的确认使用弹窗，醒目告知三种后果</li></ul>
+<p><strong>不建议方案：</strong></p>
+<ul><li>不建议在员工首页直接放申请入口——员工不是在每次打开系统时都需要申请权限，首页入口会造成干扰</li><li>不建议为每个异常场景设计独立弹窗——大多数异常用页面内提示即可，弹窗只用于关闭确认和撤销确认</li></ul>
+<p><strong>关键待确认：</strong></p>
+<ol><li>员工端的「我的权限」入口放在工作台哪个位置——这决定了入口的发现率和首页信息架构调整</li></ol>
+<p>&gt; 更多待确认问题详见 <code>## 8. 待确认问题</code>。</p></div></div>
+<div class="section-block experience-component" id="1-旅程图" data-section-key="journey"><h2 class="section-heading">1. 旅程图</h2><div class="section-body"><div class="journey-visual"><div class="journey-path-row"><div class="journey-path-role">员工</div><div class="journey-path-nodes"><span class="journey-path-node">发现缺少权限</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看自己已有权限和来源</span><span class="journey-path-arrow">→</span><span class="journey-path-node">浏览可申请角色</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择角色并填写原因</span><span class="journey-path-arrow">→</span><span class="journey-path-node">提交申请</span><span class="journey-path-arrow">→</span><span class="journey-path-node">等待审批</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看审批结果</span><span class="journey-path-arrow">→</span><span class="journey-path-node">确认权限已生效</span></div></div><div class="journey-path-row"><div class="journey-path-role">管理员</div><div class="journey-path-nodes"><span class="journey-path-node">评估是否开放自助申请</span><span class="journey-path-arrow">→</span><span class="journey-path-node">检查审批流程是否就绪</span><span class="journey-path-arrow">→</span><span class="journey-path-node">开启能力</span><span class="journey-path-arrow">→</span><span class="journey-path-node">标记可申请角色</span><span class="journey-path-arrow">→</span><span class="journey-path-node">绑定审批流程</span><span class="journey-path-arrow">→</span><span class="journey-path-node">后续观察申请数据</span><span class="journey-path-arrow">→</span><span class="journey-path-node">必要时关闭能力</span></div></div><div class="journey-path-row"><div class="journey-path-role">审批人</div><div class="journey-path-nodes"><span class="journey-path-node">收到待办</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看申请人信息和申请角色</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看角色包含的权限详情</span><span class="journey-path-arrow">→</span><span class="journey-path-node">判断是否同意</span><span class="journey-path-arrow">→</span><span class="journey-path-node">同意或拒绝</span><span class="journey-path-arrow">→</span><span class="journey-path-node">确认处理完成</span></div></div></div><h3>旅程缺口</h3><ul class="component-note-list"><li class="component-note-item">缺少员工端入口位置的明确依据，影响「发现缺少权限」这个起点的具体承载方式</li><li class="component-note-item">缺少消息通知渠道的明确规则，影响「等待审批」和「查看审批结果」两个节点的通知承接</li><li class="component-note-item">缺少管理员「后续观察申请数据」的看板或统计页面依据</li></ul></div></div>
+<div class="section-block experience-component" id="2-交互流程总览" data-section-key="flow-overview"><h2 class="section-heading">2. 交互流程总览</h2><div class="section-body"><div class="summary-visual main-node-map"><div class="summary-row"><div class="summary-role">管理员</div><div class="summary-path"><span class="summary-step">进入权限管理模式页</span><span class="summary-arrow">→</span><span class="summary-step">开启「员工自助申请权限」</span><span class="summary-arrow">→</span><span class="summary-step">校验审批流程是否可用</span><span class="summary-arrow">→</span><span class="summary-step">进入角色管理页</span><span class="summary-arrow">→</span><span class="summary-step">逐个标记可申请角色（系统拦截敏感角色）</span><span class="summary-arrow">→</span><span class="summary-step">返回设置区绑定审批流程</span><span class="summary-arrow">→</span><span class="summary-step">能力生效</span><span class="summary-arrow">→</span><span class="summary-step">后续可在设置区调整配置或关闭能力</span></div></div><div class="summary-row"><div class="summary-role">员工</div><div class="summary-path"><span class="summary-step">进入「我的权限」</span><span class="summary-arrow">→</span><span class="summary-step">查看已有权限及来源</span><span class="summary-arrow">→</span><span class="summary-step">发现缺口</span><span class="summary-arrow">→</span><span class="summary-step">进入「申请权限」</span><span class="summary-arrow">→</span><span class="summary-step">浏览可申请角色列表</span><span class="summary-arrow">→</span><span class="summary-step">选中角色查看权限详情</span><span class="summary-arrow">→</span><span class="summary-step">填写申请原因</span><span class="summary-arrow">→</span><span class="summary-step">提交申请</span><span class="summary-arrow">→</span><span class="summary-step">申请进入「我的申请」列表</span><span class="summary-arrow">→</span><span class="summary-step">等待审批结果</span><span class="summary-arrow">→</span><span class="summary-step">查看结果（已通过：确认权限生效 / 已拒绝：查看原因，可重新申请）</span></div></div><div class="summary-row"><div class="summary-role">审批人</div><div class="summary-path"><span class="summary-step">收到审批待办</span><span class="summary-arrow">→</span><span class="summary-step">查看申请详情（申请人、角色、权限说明、原因）</span><span class="summary-arrow">→</span><span class="summary-step">同意（自动授权完成）或拒绝（流程结束）</span><span class="summary-arrow">→</span><span class="summary-step">确认处理结果</span></div></div></div><p><strong>异常流程重点：</strong></p>
+<ul><li>可申请角色列表为空（无已标记角色或员工已拥有全部）</li><li>提交申请时审批流程不可用</li><li>审批人不存在时的兜底流转</li><li>管理员关闭能力时审批中申请被退回</li><li>员工撤销审批中的申请</li><li>敏感角色被尝试标记为可申请</li><li>审批通过时员工已通过其他途径拥有同一角色</li></ul></div></div>
+<div class="section-block experience-component" id="3-主交互流程" data-section-key="main-flow"><h2 class="section-heading">3. 主交互流程</h2><div class="section-body"><h3>节点 3.1：管理员开启自助申请能力</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员进入权限管理模式页，在现有治理模式列表中找到「员工自助申请权限」开关，点击开启。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>系统检查两项前置条件：（1）是否已有可用的审批流程；（2）是否已有至少一个角色被标记为可申请。若审批流程不可用，提示「尚未配置审批流程，请先在审批管理中创建审批流程」。若无可申请角色，仅做轻提示「开启后需在角色管理中标记可申请角色」，不阻断开启操作。两项条件均满足时，能力即刻生效。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><p>开启前，页面需说明该能力的含义：「开启后，员工可以在「我的权限」中查看自己的权限并发起权限申请。申请需经过审批，审批通过后系统自动授权。」</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>开关标签：「员工自助申请权限」</li><li>开关说明：「允许员工自助查看权限并发起角色申请，审批通过后自动授权」</li><li>前置校验提示（无审批流程时）：「尚未配置审批流程，请先在审批管理中创建审批流程后再开启」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>进入角色管理页标记可申请角色，或进入设置区绑定审批流程。</p><h3>节点 3.2：管理员标记可申请角色</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员进入角色管理页，在角色列表中看到每个角色行新增的「允许员工申请」开关。逐个开启需要开放的角色。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>开启角色开关时，系统校验该角色是否在敏感角色排除名单中。若命中排除名单，开关不可操作，旁边显示提示文案。成功开启的角色即刻出现在员工可申请列表中。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><p>角色列表需展示每个角色的权限概要（包含的功能权限数量或关键功能权限名称），帮助管理员判断是否适合开放。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>开关标签：「允许员工申请」</li><li>开关说明：「开启后，员工可在「申请权限」中看到此角色并发起申请」</li><li>敏感角色提示：「此角色包含敏感权限，不可设为员工可申请」</li><li>空态提示（所有角色均未标记时）：「尚未标记任何可申请角色，员工端将无可申请内容」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>返回权限管理模式页的设置区，绑定审批流程。</p><h3>节点 3.3：员工查看已有权限</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>员工进入「我的权限」页面。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>页面展示员工当前拥有的所有权限，按角色维度组织。每个角色卡片显示：角色名称、角色简要说明、权限来源标签（角色自带 / 管理员直授 / 自助申请）、获得时间。页面顶部有「申请权限」入口按钮。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><p>页面需说明「权限来源」的含义，帮助员工理解为什么有这些权限、哪些是系统默认给的、哪些是自己申请的。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>页面标题：「我的权限」</li><li>页面说明：「以下是你当前拥有的角色和权限。如需更多权限，可点击「申请权限」发起申请」</li><li>来源标签文案：「角色自带」「管理员分配」「自助申请」</li><li>空态（员工无任何权限时）：「暂未拥有任何权限。如需权限，请联系管理员或点击「申请权限」」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>员工识别缺口后，点击「申请权限」进入角色选择页。</p><h3>节点 3.4：员工发起权限申请</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>员工在「申请权限」页面浏览可申请角色列表。每个角色卡片显示角色名称、角色权限说明、包含的功能权限数量。点击某个角色可展开查看具体权限列表。选中角色后，进入申请表单页，填写申请原因，点击提交。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>提交成功后，申请单生成，状态为「审批中」。页面跳转到「我的申请」列表，新申请出现在列表顶部。同时系统向审批人发送待办通知。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><p>角色卡片需展示角色包含的具体权限，帮助员工判断是否确实需要这个角色。申请原因字段需提示填写建议。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>页面标题：「申请权限」</li><li>页面说明：「以下角色可供申请。选择一个角色并填写申请原因，提交后将由审批人审核」</li><li>角色权限展开提示：「包含 XX 项功能权限：权限A、权限B、权限C」</li><li>申请原因标签：「申请原因」</li><li>申请原因提示：「请简要说明为什么需要此权限，以便审批人了解你的使用场景」</li><li>提交按钮：「提交申请」</li><li>提交成功提示：「申请已提交，请等待审批」</li><li>空态（无可申请角色时）：「当前暂无可申请的角色。如你需要更多权限，请联系管理员」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>等待审批结果，可在「我的申请」中追踪状态。</p><h3>节点 3.5：审批人处理权限申请</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>审批人在审批待办列表中看到权限申请。点击进入申请详情，查看申请人姓名、所在部门、申请角色名称、角色包含的权限列表、申请原因。判断后点击「同意」或「拒绝」。拒绝时需填写拒绝原因。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>同意：系统自动将角色授予申请人，权限即刻生效。申请单状态变为「已通过」。系统向员工发送通知。拒绝：申请单状态变为「已拒绝」。系统向员工发送通知（含拒绝原因）。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><p>申请详情页需展示角色包含的具体权限，帮助审批人判断授权的合理性。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>详情页标题：「权限申请 - [申请人姓名]」</li><li>信息区标签：「申请人」「所属部门」「申请角色」「申请时间」</li><li>角色权限区标题：「申请角色包含以下权限」</li><li>申请原因区标题：「申请原因」</li><li>同意按钮：「同意授权」</li><li>拒绝按钮：「拒绝」</li><li>拒绝原因输入提示：「请填写拒绝原因（将告知申请人）」</li><li>同意成功提示：「已同意，权限已自动授予申请人」</li><li>拒绝成功提示：「已拒绝」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>审批人返回待办列表继续处理其他事项。系统自动完成授权或通知。</p><h3>节点 3.6：员工查看申请结果</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>员工在「我的申请」列表中看到申请状态更新。点击已通过的申请查看详情。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>已通过：申请详情展示审批人、审批时间、授权完成状态。员工可点击「查看我的权限」跳转到权限页面确认新权限已生效。已拒绝：申请详情展示审批人、拒绝时间、拒绝原因。员工可点击「重新申请」发起新的申请。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>已通过状态标签：「已通过」</li><li>已通过详情提示：「你的申请已通过审批，角色 [角色名称] 已授予你的账号」</li><li>已拒绝状态标签：「已拒绝」</li><li>已拒绝详情提示：「你的申请未被通过。拒绝原因：[原因]」</li><li>重新申请按钮：「重新申请」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>已通过：确认权限已生效，正常使用。已拒绝：根据拒绝原因决定是否重新申请。</p><h3>节点 3.7：管理员关闭自助申请能力</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员进入权限管理模式页，在「员工自助申请权限」开关处点击关闭。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>系统弹出确认弹窗，明确告知关闭后的三种后果：（1）员工端不再显示申请入口；（2）当前所有审批中的申请将被退回；（3）已通过申请获得的权限保留，不受影响。管理员确认后，能力关闭。所有审批中的申请自动退回，申请单状态变为「已退回」，员工收到通知。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>弹窗标题：「确认关闭员工自助申请权限」</li><li>弹窗正文：「关闭后：员工端将不再显示申请入口；当前所有审批中的申请将被退回；已通过申请获得的权限将保留，不受影响。确认关闭？」</li><li>确认按钮：「确认关闭」</li><li>取消按钮：「暂不关闭」</li><li>关闭成功提示：「员工自助申请权限已关闭」</li><li>退回通知（给员工）：「自助申请权限能力已由管理员关闭，你的申请 [角色名称] 已被退回」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>管理员可在任意时间重新开启能力。已退回的申请不可恢复，员工需在能力重新开启后重新提交。</p></div></div>
+<div class="section-block experience-component" id="4-次交互流程" data-section-key="secondary-flow"><h2 class="section-heading">4. 次交互流程</h2><div class="section-body"><h3>节点 4.1：员工撤销审批中的申请</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>员工在「我的申请」列表中找到状态为「审批中」的申请，点击「撤销申请」。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>弹出确认弹窗「撤销后不可恢复，确认撤销？」。确认后，申请单状态变为「已撤销」，审批人待办中移除该申请。审批人收到撤销通知。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>撤销按钮：「撤销申请」</li><li>确认弹窗标题：「确认撤销申请」</li><li>确认弹窗正文：「撤销后该申请将失效。如需此权限，可重新提交申请」</li><li>确认按钮：「确认撤销」</li><li>撤销成功提示：「申请已撤销」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>员工可重新发起申请。</p><h3>节点 4.2：管理员调整可申请角色配置</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员在角色管理页中，将之前标记为可申请的角色改为不可申请（关闭开关）。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>系统提示「关闭后，该角色将不在员工可申请列表中显示。已通过申请获得该角色的员工不受影响」。确认后，该角色从员工可申请列表中移除。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>关闭提示：「关闭后，该角色将不再出现在员工可申请列表中。已通过申请获得此角色的员工不受影响」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>配置即刻生效。</p><h3>节点 4.3：管理员更换绑定的审批流程</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员在自助申请设置区，更换绑定的审批流程。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>系统提示「更换审批流程后，新提交的申请将使用新流程。当前已在审批中的申请仍按原流程处理」。确认后，新流程生效。</p><p class="flow-field-label"><strong>下一步：</strong></p><p>新提交的申请走新流程。</p><h3>节点 4.4：员工重新申请被拒绝的角色</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>员工在「我的申请」中找到状态为「已拒绝」的申请，点击「重新申请」。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>系统跳转到申请表单页，预填上次申请的角色和原因。员工可修改申请原因后重新提交。生成新的申请单，进入审批流程。</p><p class="flow-field-label"><strong>下一步：</strong></p><p>新申请进入审批流程。</p></div></div>
+<div class="section-block experience-component" id="5-异常与阻断流程" data-section-key="exception-flow"><h2 class="section-heading">5. 异常与阻断流程</h2><div class="section-body"><h3>异常 5.1：可申请角色列表为空</h3><p><strong>发生时机：</strong> 员工进入「申请权限」页面时</p>
+<p><strong>触发条件：</strong> 管理员尚未标记任何角色为可申请，或员工已通过其他途径拥有全部可申请角色</p>
+<p><strong>判断依据：</strong> business_blueprint.md §6「不能放开的限制」中规定员工只能申请自己尚未拥有的角色</p>
+<p><strong>反馈形式：</strong> 页面空状态</p>
+<p><strong>系统反馈：</strong> 「当前暂无可申请的角色。如你需要更多权限，请联系管理员」</p>
+<p><strong>用户下一步：</strong> 联系管理员确认配置，或检查自己是否已拥有所需权限</p><h3>异常 5.2：提交申请时审批流程不可用</h3><p><strong>发生时机：</strong> 员工点击提交申请时</p>
+<p><strong>触发条件：</strong> 管理员开启了自助申请能力但审批流程已被删除或停用</p>
+<p><strong>判断依据：</strong> business_blueprint.md §6「审批必须存在」规则</p>
+<p><strong>反馈形式：</strong> 页面内提示，提交按钮置灰</p>
+<p><strong>系统反馈：</strong> 「审批流程暂不可用，请联系管理员」</p>
+<p><strong>用户下一步：</strong> 联系管理员。不可提交申请</p><h3>异常 5.3：审批人不存在</h3><p><strong>发生时机：</strong> 审批流转时</p>
+<p><strong>触发条件：</strong> 员工直属上级字段为空，且部门负责人字段为空</p>
+<p><strong>判断依据：</strong> business_blueprint.md §5 中的审批兜底规则</p>
+<p><strong>反馈形式：</strong> 系统自动流转，对员工和审批人均不可见</p>
+<p><strong>系统反馈：</strong> 系统自动将申请兜底到超级管理员</p>
+<p><strong>用户下一步：</strong> 无需用户操作</p><h3>异常 5.4：管理员关闭能力时审批中申请被退回</h3><p><strong>发生时机：</strong> 管理员确认关闭自助申请能力时</p>
+<p><strong>触发条件：</strong> 存在状态为「审批中」的申请</p>
+<p><strong>判断依据：</strong> business_blueprint.md §6「必须二次确认的操作」</p>
+<p><strong>反馈形式：</strong> 对管理员为关闭确认弹窗（含三种后果说明）；对员工为「我的申请」中状态更新为「已退回」；对审批人为待办消失</p>
+<p><strong>系统反馈（员工端）：</strong> 「自助申请权限能力已由管理员关闭，你的申请 [角色名称] 已被退回」</p>
+<p><strong>用户下一步（员工）：</strong> 等待能力重新开启后重新提交申请。不可恢复已退回的申请</p><h3>异常 5.5：管理员尝试标记敏感角色为可申请</h3><p><strong>发生时机：</strong> 管理员在角色管理页中尝试开启敏感角色的「允许员工申请」开关</p>
+<p><strong>触发条件：</strong> 该角色在系统预置的敏感角色排除名单中</p>
+<p><strong>判断依据：</strong> business_blueprint.md §6「敏感角色不可申请」</p>
+<p><strong>反馈形式：</strong> 开关不可操作，旁边显示禁止提示</p>
+<p><strong>系统反馈：</strong> 「此角色包含敏感权限，不可设为员工可申请」</p>
+<p><strong>用户下一步：</strong> 选择其他角色</p><h3>异常 5.6：审批通过时员工已拥有同一角色</h3><p><strong>发生时机：</strong> 审批人点击「同意」时</p>
+<p><strong>触发条件：</strong> 在审批期间，管理员已通过其他途径（直授或角色分配）将该角色授予申请人</p>
+<p><strong>判断依据：</strong> business_blueprint.md §9 待确认问题第5条。当前 facts 中标记为 [GAP]</p>
+<p><strong>反馈形式：</strong> 审批人端提示</p>
+<p><strong>系统反馈：</strong> 建议方案：「该员工已拥有此角色，无需重复授权」。静默跳过授权操作，申请单状态仍标记为「已通过」但附注「角色已存在，已跳过授权」</p>
+<p><strong>用户下一步：</strong> [GAP] 具体提示文案和流程细节待确认</p><h3>异常 5.7：员工在职状态变化时审批中申请的处理</h3><p><strong>发生时机：</strong> 员工申请正在审批中时，该员工被停用或标记为离职</p>
+<p><strong>触发条件：</strong> 员工在职状态发生变化</p>
+<p><strong>判断依据：</strong> business_blueprint.md §9 待确认问题第4条。当前 facts 中标记为 [GAP]</p>
+<p><strong>反馈形式：</strong> [GAP]</p>
+<p><strong>系统反馈：</strong> [GAP] 当前未定义此场景的处理规则</p>
+<p><strong>用户下一步：</strong> [GAP]</p></div></div>
+<div class="section-block experience-component" id="6-页面-弹窗-抽屉设计" data-section-key="page-structure"><h2 class="section-heading">6. 页面 / 弹窗 / 抽屉设计</h2><div class="section-body"><h3>页面 6.1：权限管理模式页（管理端扩展现有页面）</h3><p><strong>页面目标：</strong> 让管理员在一个地方查看和管理所有权限治理模式的开关状态</p>
+<p><strong>进入条件：</strong> 超级管理员或权限管理员，从管理后台进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 页面标题：权限管理模式                             |<br>| 说明：管理权限相关的治理模式开关和配置               |<br>+--------------------------------------------------+<br>| 治理模式列表                                       |<br>| +--------------------------------------------------+<br>| | 子管理员模式            [已开启] [配置]           |<br>| | 说明：为指定人员下放管理范围与授权上限             |<br>| +--------------------------------------------------+<br>| | 双管理员互审模式        [已关闭] [配置]           |<br>| | 说明：高危权限操作需双方审批后生效                 |<br>| +--------------------------------------------------+<br>| | 权限变更审批模式        [已开启] [配置]           |<br>| | 说明：将权限变更纳入审批流治理                     |<br>| +--------------------------------------------------+<br>| | 员工自助申请权限   [关闭] → [开启后展开设置区]    |  ← 新增<br>| | 说明：允许员工自助查看权限并发起角色申请            |<br>| +--------------------------------------------------+<br>| 自助申请设置区（开启后展开）                        |  ← 新增<br>| +--------------------------------------------------+<br>| | 审批流程：[选择已有审批流程 ▼]                    |<br>| | 可申请角色：共 N 个角色  [前往角色管理标记]       |<br>| +--------------------------------------------------+<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 审批流程状态提示（可用 / 不可用）、可申请角色数量提示</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>无可申请角色时：设置区显示「尚未标记任何可申请角色，员工端将无可申请内容。[前往角色管理]」</li><li>审批流程不可用时：设置区显示警告「审批流程不可用，员工将无法提交申请。[前往审批管理]」</li><li>能力关闭时：设置区收起</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「员工自助申请权限」</li><li>说明：「允许员工自助查看权限并发起角色申请，审批通过后自动授权」</li><li>审批流程选择标签：「绑定审批流程」</li><li>角色管理入口：「前往角色管理标记可申请角色」</li></ul>
+<p><strong>按钮：</strong></p>
+<ul><li>主按钮：开关按钮（开启/关闭）</li><li>次按钮：前往角色管理、前往审批管理</li></ul>
+<p><strong>成功反馈：</strong> 「员工自助申请权限已开启」<br><strong>失败反馈：</strong> 「开启失败：[原因]」</p><h3>页面 6.2：角色管理页（管理端扩展现有页面）</h3><p><strong>页面目标：</strong> 在现有角色管理列表中新增「允许员工申请」开关列</p>
+<p><strong>进入条件：</strong> 超级管理员或权限管理员，从角色管理进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 页面标题：角色管理                                 |<br>| 搜索栏 / 筛选 / 新建角色                           |<br>+--------------------------------------------------+<br>| 角色列表                                           |<br>| +--------------------------------------------------+<br>| | 角色名称 | 包含权限 | 成员数 | 允许员工申请 | 操作 |<br>| | 销售专员 | 12项     | 45人   | [开关 关]     | ...  |  ← 新增列<br>| | 报表查看 | 5项      | 12人   | [开关 开]     | ...  |<br>| | 财务主管 | 18项     | 3人    | [不可申请 ⓘ]  | ...  |  ← 敏感角色<br>| +--------------------------------------------------+<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 敏感角色不可申请提示（hover 展示原因）</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>敏感角色：开关替换为「不可申请」文字 + 信息图标，hover 展示「此角色包含敏感权限，不可设为员工可申请」</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>列标题：「允许员工申请」</li><li>开关开启态提示：「已开放，员工可申请」</li><li>开关关闭态提示：「未开放」</li><li>敏感角色提示：「此角色包含敏感权限，不可设为员工可申请」</li></ul><h3>页面 6.3：我的权限（员工端新页面）</h3><p><strong>页面目标：</strong> 让员工查看自己当前拥有的所有角色和权限，了解来源，并从这里发起权限申请</p>
+<p><strong>进入条件：</strong> 员工已登录，从工作台或个人中心进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 页面标题：我的权限                                 |<br>| 说明：以下是你当前拥有的角色和权限。如需更多权限，   |<br>| 可点击右上角「申请权限」                           |<br>| [申请权限] 按钮（右上角）                           |<br>+--------------------------------------------------+<br>| 我的角色列表                                       |<br>| +--------------------------------------------------+<br>| | 销售专员                                   角色自带 |<br>| | 包含 12 项功能权限：客户管理、订单查看、...         |<br>| | 获得时间：2024-03-01                              |<br>| +--------------------------------------------------+<br>| | 报表查看                                  自助申请 |<br>| | 包含 5 项功能权限：销售报表、业绩报表、...          |<br>| | 获得时间：2025-01-15  申请单号：SQ20250115-001    |<br>| +--------------------------------------------------+<br>| | 数据导出                                  管理员分配 |<br>| | 包含 3 项功能权限：数据导出、导出记录、...          |<br>| | 获得时间：2024-06-20                              |<br>| +--------------------------------------------------+<br>+--------------------------------------------------+<br>| 底部：帮助入口「不了解权限？查看帮助」               |<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 权限来源标签（角色自带 / 管理员分配 / 自助申请），三种颜色区分</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>员工无任何权限时：空状态「暂未拥有任何权限。如需权限，请联系管理员或点击下方按钮发起申请」+「申请权限」按钮</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「我的权限」</li><li>说明：「以下是你当前拥有的角色和权限」</li><li>来源标签：「角色自带」「管理员分配」「自助申请」</li><li>权限数：「包含 N 项功能权限」</li><li>申请单号：「申请单号：SQ...」仅自助申请来源显示</li><li>申请权限按钮：「申请权限」</li></ul>
+<p><strong>按钮：</strong></p>
+<ul><li>主按钮：「申请权限」（页面右上角）</li><li>次按钮：「查看帮助」（页面底部）</li></ul><h3>页面 6.4：申请权限（员工端新页面）</h3><p><strong>页面目标：</strong> 让员工浏览可申请角色、了解角色内容、提交申请</p>
+<p><strong>进入条件：</strong> 从「我的权限」页面点击「申请权限」进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| ← 返回我的权限                                     |<br>| 页面标题：申请权限                                 |<br>| 说明：以下角色可供申请。选择一个角色并填写申请原因，   |<br>| 提交后将由审批人审核                               |<br>+--------------------------------------------------+<br>| 可申请角色列表                                     |<br>| +--------------------------------------------------+<br>| | 项目管理员                              [展开 ▼]  |<br>| | 适用于跨部门项目协作，可管理项目成员和项目数据      |<br>| | 包含 8 项功能权限 [点击展开查看详情]      [申请]   |<br>| +--------------------------------------------------+<br>| | 知识库编辑                              [展开 ▼]  |<br>| | 适用于需要编辑和维护知识库内容的场景               |<br>| | 包含 3 项功能权限 [点击展开查看详情]      [申请]   |<br>| +--------------------------------------------------+<br>+--------------------------------------------------+</p>
+<p><strong>点击「申请」后进入申请表单（新页面或抽屉）：</strong></p>
+<p>+--------------------------------------------------+<br>| ← 返回角色列表                                     |<br>| 申请角色：项目管理员                                |<br>+--------------------------------------------------+<br>| 角色权限详情                                       |<br>| 包含以下 8 项功能权限：                             |<br>| 项目创建、项目成员管理、项目数据查看、项目数据导出、   |<br>| 项目归档、项目删除、任务分配、进度查看               |<br>+--------------------------------------------------+<br>| 申请原因 *                                         |<br>| [                                            ]     |<br>| 请简要说明为什么需要此权限，以便审批人了解你的使用场景 |<br>+--------------------------------------------------+<br>| [取消]  [提交申请]                                  |<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 角色权限展开区、申请原因输入区</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>可申请列表为空：空状态「当前暂无可申请的角色。如你需要更多权限，请联系管理员」</li><li>审批流程不可用：申请按钮置灰，提示「审批流程暂不可用，请联系管理员」</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「申请权限」</li><li>说明：「以下角色可供申请。选择一个角色并填写申请原因，提交后将由审批人审核」</li><li>展开按钮：「展开」「收起」</li><li>权限详情标题：「角色权限详情」</li><li>申请原因必填标记：「*」</li><li>申请原因提示：「请简要说明为什么需要此权限，以便审批人了解你的使用场景」</li><li>提交按钮：「提交申请」</li><li>取消按钮：「取消」</li></ul>
+<p><strong>成功反馈：</strong> 「申请已提交，请等待审批」→ 自动跳转到「我的申请」页面</p>
+<p><strong>失败反馈：</strong> 「提交失败：[原因]，请重试」</p><h3>页面 6.5：我的申请（员工端新页面）</h3><p><strong>页面目标：</strong> 让员工查看所有申请记录和当前状态，追踪审批进度</p>
+<p><strong>进入条件：</strong> 从「我的权限」页面进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 页面标题：我的申请                                 |<br>| 筛选：[全部] [审批中] [已通过] [已拒绝] [已撤销]     |<br>+--------------------------------------------------+<br>| 申请列表                                           |<br>| +--------------------------------------------------+<br>| | 项目管理员                                       |<br>| | 申请时间：2025-06-03 14:30    状态：[审批中]      |<br>| | 审批人：张经理                          [撤销申请] |<br>| +--------------------------------------------------+<br>| | 知识库编辑                                       |<br>| | 申请时间：2025-05-28 09:15    状态：[已通过]      |<br>| | 审批人：李总监                           [查看详情]|<br>| +--------------------------------------------------+<br>| | 报表查看                                         |<br>| | 申请时间：2025-05-20 16:00    状态：[已拒绝]      |<br>| | 审批人：王主管     拒绝原因：当前部门暂无此需求     |<br>| | [重新申请]                                       |<br>| +--------------------------------------------------+<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 状态标签颜色区分——审批中（蓝色）、已通过（绿色）、已拒绝（红色）、已撤销（灰色）、已退回（橙色）</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>无申请记录：空状态「暂无申请记录。如需申请权限，请前往「申请权限」」+「申请权限」按钮</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「我的申请」</li><li>筛选标签：「全部」「审批中」「已通过」「已拒绝」「已撤销」</li><li>状态标签：「审批中」「已通过」「已拒绝」「已撤销」「已退回」</li><li>撤销按钮：「撤销申请」</li><li>重新申请按钮：「重新申请」</li><li>拒绝原因前缀：「拒绝原因：」</li></ul><h3>弹窗 6.6：撤销申请确认弹窗</h3><p><strong>弹窗目标：</strong> 确认员工是否要撤销审批中的申请</p>
+<p><strong>进入条件：</strong> 员工在「我的申请」中点击「撤销申请」</p>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「确认撤销申请」</li><li>正文：「撤销后该申请将失效。如需此权限，可重新提交申请」</li><li>确认按钮：「确认撤销」</li><li>取消按钮：「暂不撤销」</li></ul>
+<p><strong>成功反馈：</strong> 「申请已撤销」<br><strong>失败反馈：</strong> 「撤销失败，请重试」</p><h3>弹窗 6.7：关闭自助申请能力确认弹窗</h3><p><strong>弹窗目标：</strong> 确认管理员是否关闭能力，醒目告知三种后果</p>
+<p><strong>进入条件：</strong> 管理员在权限管理模式页点击关闭「员工自助申请权限」</p>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「确认关闭员工自助申请权限」</li><li>正文：</li><li>「关闭后，以下三种情况将同时发生：」</li><li>「1. 员工端将不再显示申请入口，员工无法提交新申请」</li><li>「2. 当前所有审批中（共 N 笔）的申请将被退回」</li><li>「3. 已通过申请获得的权限将保留，不受影响」</li><li>确认按钮：「确认关闭」</li><li>取消按钮：「暂不关闭」</li></ul>
+<p><strong>成功反馈：</strong> 「员工自助申请权限已关闭」<br><strong>失败反馈：</strong> 「关闭失败：[原因]，请重试」</p><h3>页面 6.8：审批待办 - 权限申请详情（审批端复用现有页面）</h3><p><strong>页面目标：</strong> 审批人查看权限申请的详细信息并做出审批决定</p>
+<p><strong>进入条件：</strong> 审批人从审批待办列表点击权限申请</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| ← 返回待办列表                                     |<br>| 权限申请详情                                       |<br>+--------------------------------------------------+<br>| 申请人信息                                         |<br>| 姓名：张三                                         |<br>| 所属部门：销售部 / 华东大区                         |<br>| 申请时间：2025-06-03 14:30                         |<br>+--------------------------------------------------+<br>| 申请角色                                           |<br>| 角色名称：项目管理员                                |<br>| 角色说明：适用于跨部门项目协作                       |<br>| 包含以下权限：                                      |<br>| 项目创建、项目成员管理、项目数据查看、项目数据导出、   |<br>| 项目归档、项目删除、任务分配、进度查看               |<br>+--------------------------------------------------+<br>| 申请原因                                           |<br>| 因参与华东区Q3新客户项目，需要项目管理员权限来协调     |<br>| 跨部门资源和跟踪项目进度                            |<br>+--------------------------------------------------+<br>| [拒绝]  [同意授权]                                  |<br>+--------------------------------------------------+</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>点击同意时检测到员工已拥有该角色（异常5.6）：提示「该员工已拥有此角色，无需重复授权」，不执行授权但可标记为已通过</li><li>审批流程异常（如超时）：显示超时提示和处理建议</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>页面标题：「权限申请详情」</li><li>信息区标签：「申请人」「所属部门」「申请时间」</li><li>角色区标题：「申请角色」</li><li>权限区标题：「包含以下权限」</li><li>原因区标题：「申请原因」</li><li>同意按钮：「同意授权」</li><li>拒绝按钮：「拒绝」</li><li>拒绝原因输入（拒绝时展开）：输入框 + 提示「请填写拒绝原因（将告知申请人）」</li></ul>
+<p><strong>成功反馈：</strong> 「已同意，权限已自动授予申请人」或「已拒绝」<br><strong>失败反馈：</strong> 「操作失败：[原因]，请重试」</p></div></div>
+<div class="section-block experience-component" id="7-状态与反馈文案" data-section-key="state-feedback"><h2 class="section-heading">7. 状态与反馈文案</h2><div class="section-body"><div class="state-feedback-table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>审批中</td><td>申请已提交，等待审批人处理</td><td>员工、审批人</td><td>员工可撤销；审批人可同意/拒绝</td><td>「等待审批中」</td></tr><tr><td>已通过</td><td>审批人同意，权限已自动授予</td><td>员工、审批人、管理员</td><td>员工可查看权限是否生效</td><td>「已通过，权限已生效」</td></tr><tr><td>已拒绝</td><td>审批人拒绝，流程结束</td><td>员工、审批人</td><td>员工可查看拒绝原因，可重新申请</td><td>「未通过」</td></tr><tr><td>已撤销</td><td>员工主动撤回审批中的申请</td><td>员工、审批人</td><td>不可恢复</td><td>「已撤销」</td></tr><tr><td>已退回</td><td>管理员关闭能力，审批中申请被系统退回</td><td>员工、管理员</td><td>不可恢复，需重新提交</td><td>「能力已关闭，申请已退回」</td></tr><tr><td>已开启</td><td>自助申请能力已启用</td><td>管理员、员工</td><td>管理员可关闭或调整配置；员工可发起申请</td><td>「员工自助申请权限已开启」</td></tr><tr><td>已关闭</td><td>自助申请能力已停用</td><td>管理员、员工</td><td>管理员可重新开启</td><td>「员工自助申请权限已关闭」</td></tr></tbody></table></div><h3>权限来源标签</h3>
+<table><thead><tr><th>来源</th><th>含义</th><th>适用对象</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>角色自带</td><td>权限来自员工所属角色的默认配置</td><td>员工</td><td>「角色自带」</td></tr><tr><td>管理员分配</td><td>权限由管理员直接授予</td><td>员工、管理员</td><td>「管理员分配」</td></tr><tr><td>自助申请</td><td>权限通过员工自助申请并经审批获得</td><td>员工、管理员</td><td>「自助申请」</td></tr></tbody></table></div></div>
+<div class="section-block experience-component" id="8-待确认问题" data-section-key="open-questions"><h2 class="section-heading">8. 待确认问题</h2><div class="section-body"><ol><li><strong>员工端入口位置</strong></li></ol>
+<p>影响：决定「我的权限」入口的发现率、首页信息架构和导航层级。放在工作台曝光高但需要调整首页布局，放在个人信息区入口低调但发现率可能偏低。<br>建议确认方：产品 + 设计</p>
+<ol><li><strong>消息通知渠道和文案</strong></li></ol>
+<p>影响：申请提交后、审批结果、关闭退回等关键节点通过什么渠道通知（系统消息 / 推送 / 短信）、通知内容如何表达。<br>建议确认方：产品 + 设计</p>
+<ol><li><strong>申请原因是否必填、字数上限</strong></li></ol>
+<p>影响：影响申请表单的交互约束和错误提示设计。当前方案按必填处理，但未确认字数上限。<br>建议确认方：产品</p>
+<ol><li><strong>审批通过时员工已拥有同一角色的处理</strong></li></ol>
+<p>影响：影响审批人的操作反馈（静默跳过还是提示确认）。当前方案建议静默跳过并提示，但需最终确认。<br>建议确认方：产品 + 技术</p>
+<ol><li><strong>员工离职或停用时审批中申请的处理</strong></li></ol>
+<p>影响：影响申请单状态机的终态设计和权限回收时机。当前未定义。<br>建议确认方：产品</p>
+<ol><li><strong>移动端是否支持发起申请和查看状态</strong></li></ol>
+<p>影响：决定是否需要多端适配、移动端页面结构是否需要单独设计。<br>建议确认方：产品</p>
+<ol><li><strong>敏感角色排除名单的具体确认</strong></li></ol>
+<p>影响：决定角色管理页中哪些角色开关不可操作、提示文案的具体表达。需要在开发前由产品和安全方确认名单。<br>建议确认方：产品 + 安全</p></div></div>
+<div class="section-block experience-component" id="附录-设计指南消费说明" data-section-key="appendix"><h2 class="section-heading">附录：设计指南消费说明</h2><div class="section-body"><h3>1. 设计指南消费</h3>
+<p>本次体验蓝图未装配独立的设计指南文件。体验策略主要基于业务蓝图中的边界、风险和保护策略推导，具体如下。</p>
+<h3>2. 业务知识消费</h3>
+<table><thead><tr><th>业务知识</th><th>关键规则 / 事实</th><th>转换成的体验策略</th><th>落点</th></tr></thead><tbody><tr><td>权限来源模型（21_来源模型）</td><td>权限有直授、角色授予等不同来源</td><td>员工「我的权限」中每条权限显示来源标签（角色自带 / 管理员分配 / 自助申请）</td><td>页面6.3、状态表7</td></tr><tr><td>决策链契约（20_决策链契约）</td><td>L0可见性→L1功能权限→L2数据权限→L3治理</td><td>员工申请角色后，审批通过即获得角色下全部功能权限（L1），数据权限（L2）由管理员预定义在角色中</td><td>页面6.4</td></tr><tr><td>体验风险模式 RISK-002（30_体验风险模式）</td><td>权限来源不透明是已知体验风险</td><td>在所有涉及权限展示的位置强制带出来源标签，不依赖员工自行推断</td><td>页面6.3、6.5</td></tr><tr><td>规则契约 R-009（23_规则契约）</td><td>子管理员与双管理员互斥</td><td>自助申请不跟任何模式互斥，管理端不需要额外展示互斥警告</td><td>页面6.1</td></tr><tr><td>治理状态模型（24_治理状态模型）</td><td>治理模式不改变授予事实，但影响生效方式</td><td>审批通过后「即刻生效」的体验承诺有业务依据</td><td>节点3.5、3.6</td></tr><tr><td>审批管理（10_审批管理）</td><td>支持6种审批人来源、4种超时策略、多人审批方式</td><td>审批兜底（向上查找→超管）和超时处理复用已有能力，体验设计侧不需要重做</td><td>节点3.5、异常5.3</td></tr></tbody></table>
+<h3>3. 知识缺口</h3>
+<table><thead><tr><th>缺失信息</th><th>影响模块</th><th>建议补充方向</th></tr></thead><tbody><tr><td>员工端入口位置</td><td>页面6.3「我的权限」的入口和导航路径</td><td>产品 + 设计确认入口策略</td></tr><tr><td>消息通知渠道</td><td>节点3.4/3.5/3.7中的通知承接</td><td>产品确认通知渠道和优先级</td></tr><tr><td>敏感角色排除名单</td><td>页面6.2角色管理中的开关可操作性</td><td>产品 + 安全确认名单</td></tr><tr><td>移动端策略</td><td>页面6.3-6.5是否需要多端适配</td><td>产品确认一期是否支持移动端</td></tr></tbody></table></div></div></div>
+  <footer class="preview-footer">
+    来源：E:\AI设计\体验蓝图构建思路\projects\self-permission-apply\workspace\experience_blueprint.md &nbsp;|&nbsp; 版本 v3
+  </footer>
+</main>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-btn');
+  var navBusiness = document.getElementById('nav-business');
+  var navExperience = document.getElementById('nav-experience');
+  var contentBusiness = document.getElementById('content-business');
+  var contentExperience = document.getElementById('content-experience');
+  var current = 'business';
+
+  function switchPanel(name) {
+    current = name;
+    tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === name); });
+    navBusiness.classList.toggle('hidden', name !== 'business');
+    navExperience.classList.toggle('hidden', name !== 'experience');
+    contentBusiness.classList.toggle('hidden', name !== 'business');
+    contentExperience.classList.toggle('hidden', name !== 'experience');
+  }
+
+  tabs.forEach(function(t) {
+    t.addEventListener('click', function() { switchPanel(t.dataset.panel); });
+  });
+
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
+      if (panel !== current) switchPanel(panel);
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
