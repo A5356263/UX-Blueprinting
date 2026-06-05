@@ -46,10 +46,10 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 | 阶段 | 性质 | 可见性 | 内容 |
 | --- | --- | --- | --- |
-| 分析阶段 | UXB 的内部判断过程 | 对用户不可见 | 读需求 / 读知识 → 判断需求类型 → 复杂度判断 → 问题定性或现象定性 |
-| 任务摘要 | 分析结论的外部表达 | 对用户可见，需确认 | 判断、影响、建议、需要确认 |
+| 分析阶段 | UXB 的分析对话过程 | 对用户可见 | 读需求 / 读知识 → 显式问题定性或现象定性 → 复杂度判断 → 判断、影响、建议、需要确认 |
+| 任务摘要 | 进入正式任务前的收敛结果 | 对用户可见，需确认 | 已确认的问题、主要影响、建议处理、仍需确认 |
 
-问题定性或现象定性只属于分析阶段，不直接写进正式判断单和蓝图产物。
+问题定性或现象定性可以在分析阶段对用户显式说出来，但不直接写进正式判断单和蓝图产物。
 
 ### 问题定性（需求文档场景）
 
@@ -62,8 +62,10 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 回答规则：
 
 - 三个问题逐一回答，每个问题 1-3 句话
-- 如果没有发现错位、偷换或阻断前提，再进入任务摘要
-- 如果发现信号，必须在后续任务摘要的判断或需要确认中体现
+- 这是分析阶段里要对用户显式说出来的核心判断，不是纯内部步骤
+- 如果发现影响方向的关键问题，先停下来和用户讨论，不要抢先推进到任务摘要或正式任务
+- 如果没有发现错位、偷换或阻断前提，再继续复杂度判断和后续分析结果
+- 如果发现信号，必须在后续分析结果的判断或需要确认中体现
 
 ### 现象定性（体验诊断场景）
 
@@ -99,7 +101,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 ## 用户侧表达
 
-用户侧固定激活引导语、简洁回复结构、启动前判断和禁用术语，统一见：
+用户侧固定激活引导语、分析阶段显式回复结构、任务摘要表达和禁用术语，统一见：
 
 - [references/user_response_guide.md](references/user_response_guide.md)
 
@@ -117,7 +119,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 ## 正式任务启动前的需求类型判断
 
-每次用户给出需求、需求文档、截图或较完整问题时，先在内部判断，再对用户做一次简短引导。
+每次用户给出需求、需求文档、截图或较完整问题时，先完成判断，再把关键分析过程用用户听得懂的话显式说出来。
 
 先判断这次改动到底改了什么：
 
@@ -189,7 +191,8 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 当请求已经足够清楚，可以变成正式 UXB 任务时：
 
-- 用用户看得懂的话整理任务摘要
+- 先完成分析阶段，把需求定义清楚
+- 再用用户看得懂的话整理任务摘要
 - 摘要聚焦：要解决什么、我的判断、主要影响、建议处理、仍需确认
 - 先给摘要，等确认，再创建任务
 - 任务很复杂时，把详细展开放进正式输入文件，不把聊天摘要写成小型蓝图
@@ -260,6 +263,8 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 不把主链路实现细节当作用户侧沟通内容
 - 不自动写正式知识库
 - 不用规则替代 UXB 的业务与体验判断
+- 不把问题定性藏成纯内部步骤
+- 不让 `gate / validate / coverage` 参与分析阶段的语义判断
 
 ## 最终体验标准
 

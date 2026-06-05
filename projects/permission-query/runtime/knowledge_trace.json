@@ -1,0 +1,17 @@
+{
+  "files": [
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+    ".claude/skills/uxb/references/complexity/01_domain_router.md",
+    ".claude/skills/uxb/references/complexity/domains/admin_console.md",
+    "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+    "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+    "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+    "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+    "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+    "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+    "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+    "knowledge/wiki/summaries/业务/权限管理/15_页面载体语义.md",
+    "knowledge/wiki/summaries/设计准则/信息架构.md"
+  ],
+  "reasoning": "本次需求命中权限管理领域，核心是补齐查询能力。知识选择围绕三个判断点展开：一是确认现有权限对象模型和能力边界（03_业务对象、04_对象关系、10_能力地图），二是确认当前查询路径的已有能力和结构性缺口（12_查询与配置路径），三是确认三类角色的视角差异和页面承载方式（14_角色边界、15_页面载体语义、11_任务场景）。设计准则方面选信息架构 guideline，支撑多维度查询的信息层级和筛选机制设计。复杂度资料选核心判断标准、领域路由和管理后台领域卡片，用于约束判断深度。summary 已足够支撑当前判断，暂不升级 raw。"
+}
