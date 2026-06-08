@@ -1,0 +1,25 @@
+{
+  "project_id": "self-permission-apply",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "5f7077777d805ffde0e3dd02e0393259e6ccc3e3082968c88294833136d0ae32",
+  "task_card_hash": "ecd756fe229af283436246c539b2f1bcf0ccd0f04c14dc45bd3b2388f347b421",
+  "generated_at": "2026-06-08T07:09:26+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business-lite",
+    "run-routed-main",
+    "route-decision",
+    "assemble",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite",
+    "preview"
+  ]
+}

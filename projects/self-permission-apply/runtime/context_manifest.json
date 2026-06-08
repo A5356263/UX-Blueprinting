@@ -1,0 +1,442 @@
+{
+  "task_id": "self-permission-apply",
+  "task_card_source": "projects/self-permission-apply/source/task_card.md",
+  "selection_source": "projects/self-permission-apply/runtime/uxb_route_decision.json",
+  "knowledge_trace": {
+    "files": [
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/审批管理/10_审批管理.md",
+      ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+    ],
+    "reasoning": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。"
+  },
+  "assembled_refs": [
+    "templates/facts.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md",
+    "templates/gap_list.template.md",
+    "templates/check_report.template.md",
+    "specs/06_check_contract.md",
+    "specs/08_fact_extraction_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md",
+    "knowledge/raw/业务/权限管理/21_来源模型.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/20_决策链契约.md",
+    "knowledge/raw/业务/权限管理/23_规则契约.md",
+    "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/审批管理/10_审批管理.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+  ],
+  "missing_refs": [],
+  "reference_count": 18,
+  "task_contract": {
+    "execution_constraints": [
+      "不得臆造业务事实",
+      "信息不足处保留 `[GAP]`",
+      "正式产出必须写入 `workspace/`",
+      "不得用聊天回复替代正式文档产物",
+      "facts 阶段不得把引用知识提升为当前任务已确认事实",
+      "business 阶段不得输出 UI 方案或实现方案",
+      "experience 阶段不得输出高保真视觉稿或研发实现细节",
+      "`runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源",
+      "`task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断"
+    ],
+    "required_inputs": [
+      "projects/self-permission-apply/source/requirement.md",
+      "projects/self-permission-apply/source/background.md"
+    ],
+    "required_outputs": [
+      "projects/self-permission-apply/workspace/facts.md",
+      "projects/self-permission-apply/workspace/business_blueprint.md",
+      "projects/self-permission-apply/workspace/experience_blueprint.md",
+      "projects/self-permission-apply/workspace/gap_list.md",
+      "projects/self-permission-apply/workspace/check_report.md",
+      "projects/self-permission-apply/workspace/check_status.json"
+    ],
+    "domain": "管理后台"
+  },
+  "references": [
+    {
+      "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/facts.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/check_report.template.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/21_来源模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/24_治理状态模型.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/20_决策链契约.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/23_规则契约.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/23_规则契约.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/22_冲突原因码.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/30_体验风险模式.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/权限管理/14_角色边界.md",
+      "requested_reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "group": "raw_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/raw/facts/业务/审批管理/10_审批管理.md",
+      "requested_reference": "knowledge/raw/业务/审批管理/10_审批管理.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "group": "complexity_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "destination": "projects/self-permission-apply/runtime/context_bundle/complexity/00_core_complexity_judgment.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "exists": true,
+      "copied": true
+    }
+  ],
+  "warnings": [],
+  "strict_mode": false,
+  "reference_summary": {
+    "template_ref_count": 5,
+    "check_ref_count": 4,
+    "knowledge_file_count": 9,
+    "raw_ref_count": 8,
+    "assembled_ref_count": 18
+  },
+  "stage_boundaries": {
+    "facts": [],
+    "business": [],
+    "experience": []
+  },
+  "facts_extraction_boundary": [],
+  "business_judgment_boundary": [],
+  "experience_translation_boundary": []
+}

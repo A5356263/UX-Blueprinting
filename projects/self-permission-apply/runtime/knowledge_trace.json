@@ -1,0 +1,14 @@
+{
+  "files": [
+    "knowledge/raw/业务/权限管理/21_来源模型.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/20_决策链契约.md",
+    "knowledge/raw/业务/权限管理/23_规则契约.md",
+    "knowledge/raw/业务/权限管理/22_冲突原因码.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/审批管理/10_审批管理.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md"
+  ],
+  "reasoning": "本次核心是权限治理模型扩展——新增员工侧触发端但不改变底层来源枚举、决策链和状态机。需要来源模型确定权限归属路径，治理状态模型确定申请到审批到生效的状态流转，决策链契约和规则契约确保生效判定不退化，冲突原因码覆盖异常场景的可解释性，体验风险模式约束设计防错方向，角色边界确认多角色入口差异，审批管理支撑审批流复用设计。复杂度资料约束输出深度为中等。"
+}
