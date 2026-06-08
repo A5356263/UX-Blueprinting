@@ -4,17 +4,9 @@
   "created_by": "uxb_ai",
   "confirmed_by_user": true,
   "can_execute_mainline": true,
-  "judgment": {
-    "demand_type": "benchmark_sample",
-    "business_depth": "business_note_only",
-    "experience_output": "experience_blueprint",
-    "reason": "这是一个最小正向 benchmark，用于验证 sample-check 可以识别基础样例结构完整且状态通过。"
-  },
-  "complexity_judgment": {
-    "business_change": [],
-    "experience_pressure": [],
-    "uncertainties": []
-  },
+  "business_depth": "business_note_only",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
   "knowledge_selection": {
     "files": [
       "knowledge/wiki/summaries/业务/README.md",

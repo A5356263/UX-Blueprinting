@@ -140,37 +140,27 @@ def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
     if not decision:
         return []
 
-    judgment = decision.get("judgment")
-    if not isinstance(judgment, dict):
-        judgment = {}
-    complexity_judgment = decision.get("complexity_judgment")
-    if not isinstance(complexity_judgment, dict):
-        complexity_judgment = {}
-
-    demand_type = str(judgment.get("demand_type") or "").strip()
-    business_depth = str(judgment.get("business_depth") or "").strip()
-    experience_output = str(judgment.get("experience_output") or "").strip()
-    reason = str(judgment.get("reason") or "").strip()
-    business_change = "；".join(_clean_list(complexity_judgment.get("business_change"), limit=3))
-    experience_pressure = "；".join(_clean_list(complexity_judgment.get("experience_pressure"), limit=3))
-    uncertainties = "；".join(_clean_list(complexity_judgment.get("uncertainties"), limit=3))
+    business_depth = str(decision.get("business_depth") or "").strip()
+    experience_output = str(decision.get("experience_output") or "").strip()
+    experience_pressure = "；".join(_clean_list(decision.get("experience_pressure"), limit=3))
+    execution = decision.get("execution")
+    if not isinstance(execution, dict):
+        execution = {}
+    required_outputs = "、".join(_clean_list(execution.get("required_outputs"), limit=6))
+    execution_notes = "；".join(_clean_list(execution.get("notes"), limit=3))
 
     lines: list[str] = []
-    if demand_type:
-        lines.append(f"- UXB 判断的需求类型：{demand_type}")
     if target_stage == "business" and business_depth:
         lines.append(f"- 这次需要达到的业务判断深度：{business_depth}")
     if target_stage == "experience" and experience_output:
         lines.append(f"- 这次需要产出的体验结果：{experience_output}")
-    if business_change:
-        lines.append(f"- 需要重点承接的业务变化：{business_change}")
     if experience_pressure and target_stage == "experience":
         lines.append(f"- 需要重点承接的体验压力：{experience_pressure}")
-    if uncertainties:
-        lines.append(f"- 仍待明确的不确定项：{uncertainties}")
-    if reason:
-        lines.append(f"- UXB 给出的判断原因：{reason}")
-    lines.append("- 正文只吸收业务含义，不直接复述 runtime 中的内部执行字段。")
+    if required_outputs:
+        lines.append(f"- 本次主链路必须产出的文件：{required_outputs}")
+    if execution_notes:
+        lines.append(f"- 本次执行提示：{execution_notes}")
+    lines.append("- 这里只读取执行控制信息，不把 runtime 当成需求语义来源。")
     return lines
 
 
@@ -190,7 +180,6 @@ def _materialize_experience_guidelines(project_id: str) -> tuple[list[str], list
 
 def _build_experience_prompt_preview(project_id: str) -> str:
     task_card_text = _read_source_file(project_id, "task_card.md")
-    facts_text = _read_workspace_file(project_id, "facts.md")
     business_file_name, business_text = _read_business_workspace_context(project_id)
     gap_text = _read_workspace_file(project_id, "gap_list.md")
     contract_path = get_specs_root_dir() / "10_experience_blueprint_contract.md"
@@ -198,7 +187,6 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     guideline_entry_refs, guideline_refs, stage_raw_refs, _ = _materialize_experience_guidelines(project_id)
 
     task_lines = _extract_bullets(task_card_text, limit=8)
-    facts_lines = _first_lines(facts_text, limit=12)
     business_section_titles = [
         "## 5. 推荐业务方案",
         "## 6. 必须守住的规则和边界",
@@ -222,8 +210,6 @@ def _build_experience_prompt_preview(project_id: str) -> str:
 
     if not task_lines:
         task_lines = ["请结合当前任务上下文补全任务目标。"]
-    if not facts_lines:
-        facts_lines = ["facts.md 暂缺或内容不足，请先补齐 facts。"]
     if not business_sections:
         fallback = _first_lines(business_text, limit=12)
         if fallback:
@@ -251,29 +237,27 @@ def _build_experience_prompt_preview(project_id: str) -> str:
     return (
         "# Experience Prompt 预览（仅调试）\n\n"
         "> 说明：此文件仅用于排查，不参与主链路生成与评审。\n"
-        f"> 权威输入：`projects/{project_id}/workspace/facts.md`、`projects/{project_id}/workspace/{business_file_name}`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
+        f"> 权威输入：`projects/{project_id}/workspace/{business_file_name}`、`{contract_path.as_posix()}`、`{template_path.as_posix()}`\n\n"
         "## 1. 任务目标\n\n"
         + "\n".join(f"- {line}" for line in task_lines)
         + "\n\n## 2. UXB 判断摘要\n\n"
         + ("\n".join(judgment_lines) if judgment_lines else "- 当前未提供 uxb_route_decision.json，请先补齐 UXB 判断后再执行主链路。")
-        + "\n\n## 3. facts 摘要\n\n"
-        + "\n".join(f"- {line}" for line in facts_lines)
-        + "\n\n## 4. business 核心判断与承接要求\n\n"
+        + "\n\n## 3. business 核心判断与承接要求\n\n"
         + "\n\n".join(
             f"### {section_title}\n" + "\n".join(f"- {line}" for line in section_lines)
             for section_title, section_lines in business_sections
         )
-        + "\n\n## 5. 设计参考\n\n"
+        + "\n\n## 4. 设计参考\n\n"
         + guideline_lines
-        + "\n\n## 6. 当前阶段 raw\n\n"
+        + "\n\n## 5. 当前阶段 raw\n\n"
         + raw_lines
-        + "\n\n## 7. 知识使用规则\n\n"
+        + "\n\n## 6. 知识使用规则\n\n"
         "- 只使用 UXB AI 明确指定并已经装配到 context 的知识与设计参考。\n"
         "- 不根据关键词自动补充其他知识，也不自动扩展额外原文材料。\n"
         "- 如 summary 已足够，不要因为进入正式主链路就默认继续读取 raw。\n"
         "- 如果 facts 或 business 事实不足，只能暴露缺口与待确认项，不能自行补判断。\n"
         "- 输出方案时，需要说清反馈时机、反馈形式、用户可见文案和用户下一步。\n"
-        + "\n\n## 8. 设计原则摘要\n\n"
+        + "\n\n## 7. 设计原则摘要\n\n"
         "- 先写旅程图，再写交互流程总览、主流程、次流程与异常阻断流程。\n"
         "- 旅程图必须基于角色路径正式生成，不得从 HTML 或交互流程反推。\n"
         "- 旅程图使用“角色：节点 → 节点 → 节点”的路径表达；依据不足时进入“旅程缺口”，不要把依据和规则塞回路径节点。\n"
@@ -285,9 +269,9 @@ def _build_experience_prompt_preview(project_id: str) -> str:
         "- 附录除设计指南消费外，还要说明业务知识如何转成体验策略与落点。\n"
         "- 文案必须给具体草案，不写抽象策略句。\n"
         "- 禁止重做事实抽取、业务判断或需求全文重述。\n\n"
-        "## 9. 待确认问题\n\n"
+        "## 8. 待确认问题\n\n"
         + "\n".join(f"- {line}" for line in gap_lines)
-        + "\n\n## 10. 输出模板要求\n\n"
+        + "\n\n## 9. 输出模板要求\n\n"
         f"- 输出文件：`projects/{project_id}/workspace/experience_blueprint.md`\n"
         "- 固定章节：\n"
         "- `## 1. 旅程图`\n"
@@ -441,7 +425,6 @@ def run_generate_experience(project_id: str) -> int:
             print(f"  - projects/{project_id}/runtime/uxb_route_decision.json")
         print("  - specs/10_experience_blueprint_contract.md")
         print("  - templates/experience_blueprint.template.md")
-        print(f"  - projects/{project_id}/workspace/facts.md")
         business_lite_path = workspace_dir / "business_blueprint_lite.md"
         business_note_path = workspace_dir / "business_note.md"
         if business_lite_path.exists():

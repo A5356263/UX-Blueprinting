@@ -6,15 +6,16 @@
 
 ## Positioning
 
-`task_card.md` 是执行说明书，不是判断文件。
+`task_card.md` 是工程入口，不是判断文件。
 
 它负责：
 
-- 描述任务目标、输入、输出、约束、模板、检查项和结果位置
-- 给执行器提供可解析的模板与检查引用
+- 提供稳定可解析的执行入口结构
+- 声明输入、输出、约束、模板与检查引用
 
 它不负责：
 
+- 需求语义输入
 - 复杂度判断
 - 知识选择
 - 执行深度或主链路准入判断
@@ -26,29 +27,11 @@
 必须存在：
 
 - `## Protocol`
-- `## Task Goal`
 - `## Required Inputs`
 - `## Required Outputs`
 - `## Constraints`
 - `## Templates`
 - `## Checks`
-- `## Result Locations`
-- `## Completion Criteria`
-
-说明：
-
-- 上述 section 名当前属于解析稳定标题，现阶段仍保留英文写法
-- 这类英文属于执行器解析结构，不等同于用户侧表达口径
-
-可选但推荐：
-
-- `## Task Scenario`
-- `## Read Order`
-- `## Platform Optimizations`
-- `## Facts Output Requirements`
-- `## Business Output Requirements`
-- `## Experience Output Requirements`
-- `## Notes`
 
 ## Protocol Fields
 
@@ -74,13 +57,23 @@
 
 解析器只允许从 task card 中提取：
 
-- 任务描述类字段
+- `task_id`
+- `protocol_name`
+- `protocol_version`
+- `task_name`
+- `domain`
+- `execution_constraints`
+- `required_inputs`
+- `required_outputs`
 - `template_refs`
 - `check_refs`
-- 输出边界说明
 
 解析器不得再从 task card 中提取或生成：
 
+- `task_goal`
+- `task_scenario`
+- `read_order`
+- `notes`
 - `knowledge_refs`
 - `wiki_refs`
 - `knowledge_selection.files`
@@ -107,20 +100,11 @@ task card 的解析结果只在运行时内存中使用，不再要求落盘生�
 - `protocol_version`
 - `task_name`
 - `domain`
-- `task_goal`
-- `task_scenario`
 - `execution_constraints`
-- `read_order`
-- `notes`
 - `required_inputs`
 - `required_outputs`
 - `template_refs`
 - `check_refs`
-- `result_locations`
-- `completion_criteria`
-- `facts_output_requirements`
-- `business_output_requirements`
-- `experience_output_requirements`
 - `warnings`
 - `errors`
 
@@ -132,4 +116,4 @@ task card 的解析结果只在运行时内存中使用，不再要求落盘生�
 - `Required Outputs` 为空
 - 任一 output 路径不在 `projects/<project-id>/workspace/` 内
 - `Templates` 或 `Checks` section 存在但无法解析为路径
-- `Task Goal` 或 `Constraints` 无法解析为可读条目
+- `Constraints` 无法解析为可读条目

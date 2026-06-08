@@ -5,7 +5,7 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_project_workspace_dir
+from packages.common import get_project_runtime_dir, get_project_source_dir, get_project_workspace_dir
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
 from packages.generation import (
@@ -15,6 +15,7 @@ from packages.generation import (
     run_generate_experience,
     run_generate_facts,
 )
+from packages.project_structure_check import run_project_structure_check
 from packages.provenance import append_command_if_provenance_exists
 from packages.route_decision import load_uxb_execution_decision, run_route_decision
 from packages.validate import (
@@ -28,6 +29,13 @@ from packages.validate import (
     run_facts_gate,
     run_validate_lite,
     run_validate_outputs,
+)
+
+
+BOOTSTRAP_PLACEHOLDER_MARKERS = (
+    "请在这里粘贴原始需求正文",
+    "请在这里补充背景资料、约束、相关链接或历史上下文",
+    "如果目前信息不足，也请显式写出缺失信息",
 )
 
 
@@ -109,6 +117,30 @@ def _print_repair_hint(project_id: str, command_name: str) -> None:
         )
 
 
+def _formal_input_errors(project_id: str) -> list[str]:
+    source_dir = get_project_source_dir(project_id)
+    required_files = {
+        "source/task_card.md": source_dir / "task_card.md",
+        "source/requirement.md": source_dir / "requirement.md",
+        "source/background.md": source_dir / "background.md",
+    }
+    errors: list[str] = []
+
+    for label, path in required_files.items():
+        if not path.exists() or not path.is_file():
+            errors.append(f"Missing {label}")
+
+    for label in ("source/requirement.md", "source/background.md"):
+        path = required_files[label]
+        if not path.exists() or not path.is_file():
+            continue
+        content = path.read_text(encoding="utf-8")
+        if any(marker in content for marker in BOOTSTRAP_PLACEHOLDER_MARKERS):
+            errors.append(f"{label} still contains bootstrap placeholder content")
+
+    return errors
+
+
 def _write_execution_report(
     report_path: Path,
     project_id: str,
@@ -123,6 +155,7 @@ def _write_execution_report(
         "project_id": project_id,
         "status": status,
         "generated_at": _now_iso(),
+        "mainline_entry": "user_confirmed_formal_blueprint_task",
         "stopped_at": stopped_at,
         "message": message,
         "blocking_issue": blocking_issue,
@@ -146,11 +179,37 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
     report_path = runtime_dir / "routed_main_report.json"
     runtime_dir.mkdir(parents=True, exist_ok=True)
 
-    bootstrap_results: list[dict[str, object]] = []
+    setup_results: list[dict[str, object]] = []
+    structure_code = run_project_structure_check(project_id)
+    setup_results.append({"command": "project-structure-check", "exit_code": structure_code})
+    if structure_code != 0:
+        message = "执行发现正式蓝图主链路前半段未完成，请先完成项目目录初始化后再继续。"
+        _write_execution_report(report_path, project_id, "failed", "project-structure-check", setup_results, message=message)
+        print(message)
+        print(f"routed_main_report.json: {report_path}")
+        return 1
+
+    input_errors = _formal_input_errors(project_id)
+    if input_errors:
+        message = "执行发现正式输入尚未准备完成，请先用已确认的分析结论覆盖 bootstrap 骨架后再继续。"
+        _write_execution_report(
+            report_path,
+            project_id,
+            "failed",
+            "formal-inputs",
+            setup_results,
+            message=message,
+            blocking_issue="; ".join(input_errors),
+        )
+        print(message)
+        print("; ".join(input_errors))
+        print(f"routed_main_report.json: {report_path}")
+        return 1
+
     execution_decision = load_uxb_execution_decision(project_id)
     if str(execution_decision.get("status") or "") != "confirmed":
         route_code = run_route_decision(project_id)
-        bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
+        setup_results.append({"command": "route-decision", "exit_code": route_code})
         blocking_issue = "; ".join(
             str(item) for item in execution_decision.get("validation_errors", []) if str(item).strip()
         )
@@ -160,7 +219,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
             project_id,
             "needs_rejudgment",
             "precheck",
-            bootstrap_results,
+            setup_results,
             message=message,
             blocking_issue=blocking_issue,
         )
@@ -171,7 +230,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         return 1
 
     route_code = run_route_decision(project_id)
-    bootstrap_results.append({"command": "route-decision", "exit_code": route_code})
+    setup_results.append({"command": "route-decision", "exit_code": route_code})
     if route_code == 0:
         append_command_if_provenance_exists(project_id, "route-decision")
         execution_decision = load_uxb_execution_decision(project_id)
@@ -183,15 +242,15 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         message = str(exc)
         if message:
             print(message)
-        bootstrap_results.append({"command": "assemble", "exit_code": assemble_code, "message": message})
-        _write_execution_report(report_path, project_id, "failed", "assemble", bootstrap_results, message=message)
+        setup_results.append({"command": "assemble", "exit_code": assemble_code, "message": message})
+        _write_execution_report(report_path, project_id, "failed", "assemble", setup_results, message=message)
         print(f"routed_main_report.json: {report_path}")
         return assemble_code
 
-    bootstrap_results.append({"command": "assemble", "exit_code": assemble_code})
+    setup_results.append({"command": "assemble", "exit_code": assemble_code})
     append_command_if_provenance_exists(project_id, "assemble")
     if assemble_code != 0:
-        _write_execution_report(report_path, project_id, "failed", "assemble", bootstrap_results)
+        _write_execution_report(report_path, project_id, "failed", "assemble", setup_results)
         return assemble_code
 
     execution_mode = str(execution_decision.get("execution_mode") or "")
@@ -202,12 +261,13 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         "decision_source": "uxb_route_decision.json",
         "requested_route": route,
         "execution_mode": execution_mode,
-        "planned_steps": [item["command"] for item in bootstrap_results] + [name for name, _ in steps],
+        "mainline_entry": "user_confirmed_formal_blueprint_task",
+        "planned_steps": [item["command"] for item in setup_results] + [name for name, _ in steps],
         "uxb_route_decision": execution_decision,
     }
     _write_json(plan_path, plan)
 
-    results: list[dict[str, object]] = list(bootstrap_results)
+    results: list[dict[str, object]] = list(setup_results)
     status = "passed"
     stopped_at = ""
     for command_name, runner in steps:
@@ -246,6 +306,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         "generated_at": _now_iso(),
         "requested_route": route,
         "execution_mode": execution_mode,
+        "mainline_entry": "user_confirmed_formal_blueprint_task",
         "stopped_at": stopped_at,
         "steps": results,
         "actual_outputs": _actual_outputs(project_id),

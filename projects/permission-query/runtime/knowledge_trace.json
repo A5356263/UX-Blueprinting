@@ -1,0 +1,15 @@
+{
+  "files": [
+    "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+    "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+    "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+    "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+    "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+    "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+    "knowledge/wiki/summaries/设计准则/信息架构.md",
+    "knowledge/wiki/summaries/设计准则/流程模式.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+    ".claude/skills/uxb/references/complexity/01_domain_router.md"
+  ],
+  "reasoning": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。"
+}

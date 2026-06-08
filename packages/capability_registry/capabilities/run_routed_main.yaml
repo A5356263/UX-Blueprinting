@@ -4,9 +4,11 @@
   "type": "command",
   "stage": "mainline",
   "entrypoint": "python -m packages run-routed-main <project-id> [--route auto]",
-  "description": "按 UXB 已确认判断驱动主链路执行。",
+  "description": "按 UXB 已确认判断推进正式蓝图主链路的后续生成段。",
   "required_inputs": [
+    "projects/<project-id>/source/task_card.md",
     "projects/<project-id>/source/requirement.md",
+    "projects/<project-id>/source/background.md",
     "projects/<project-id>/runtime/uxb_route_decision.json"
   ],
   "declared_outputs": [

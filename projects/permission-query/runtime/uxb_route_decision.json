@@ -1,0 +1,45 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "permission-query",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint_lite",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [
+    "信息架构重构：查询层与配置层需分离设计，不能混在同一页面",
+    "多角色视角：超管、子管理员、审计人员查询可见边界不同，需分别定义",
+    "查询结果可解释性：每条结果必须带来源、生效状态、范围边界，否则管理员不敢用",
+    "多维度查询：按人、按角色、按权限、按变更四类维度信息组织逻辑不同，不宜强行合一",
+    "查完即改的衔接：查询页不做编辑但需提供去配置的自然入口，避免操作断流"
+  ],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "knowledge/wiki/summaries/设计准则/流程模式.md",
+      ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      ".claude/skills/uxb/references/complexity/01_domain_router.md"
+    ],
+    "reasoning": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint_lite.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "本次是正式沉淀执行",
+      "优先聚焦按人查维度（链路最完整），按角色查和按权限反查作为后续扩展",
+      "按权限反查数据链路当前为 GAP，需在输出中显式标注",
+      "审计场景的变更台账作为独立能力建议，不混入本次查询能力范围",
+      "子管理员查询可见边界如知识不足则标记 GAP 继续推进"
+    ]
+  }
+}

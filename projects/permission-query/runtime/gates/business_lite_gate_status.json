@@ -1,0 +1,71 @@
+{
+  "project_id": "permission-query",
+  "stage": "business_lite",
+  "status": "passed",
+  "can_proceed": true,
+  "next_stage": "experience",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-06-07T13:17:19.479601+00:00",
+  "checked_files": [
+    "projects/permission-query/workspace/facts.md",
+    "projects/permission-query/workspace/business_blueprint_lite.md",
+    "projects/permission-query/runtime/uxb_route_decision.json",
+    "projects/permission-query/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [],
+    "infos": [
+      "执行模式：standard"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "business_lite_gate",
+      "stage": "business_lite",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "执行模式：standard",
+      "target_artifacts": [
+        "projects/permission-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-query/workspace/facts.md",
+        "projects/permission-query/workspace/business_blueprint_lite.md",
+        "projects/permission-query/runtime/uxb_route_decision.json",
+        "projects/permission-query/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "执行模式：standard"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-query/workspace/facts.md",
+            "projects/permission-query/workspace/business_blueprint_lite.md",
+            "projects/permission-query/runtime/uxb_route_decision.json",
+            "projects/permission-query/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "artifact": "business_blueprint_lite.md"
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "artifact": "business_blueprint_lite.md"
+  }
+}

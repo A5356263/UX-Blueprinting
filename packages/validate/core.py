@@ -22,18 +22,18 @@ from packages.route_decision import load_uxb_execution_decision
 
 STAGE_REQUIRED_HEADINGS = {
     "facts.md": [
-        "## 任务概述",
-        "## 功能范围",
-        "## 关键业务规则",
-        "## 状态流转",
-        "## 异常与边界",
-        "## 依赖与前置条件",
-        "## 开放问题与缺口",
+        "## 1. 核心需求事实",
+        "## 2. 功能范围",
+        "## 3. 关键业务规则",
+        "## 4. 状态流转",
+        "## 5. 异常与边界",
+        "## 6. 依赖与前置条件",
+        "## 7. GAP / 待确认",
     ],
     "business_blueprint.md": [
         "## 0. 本次关键设计判断",
         "## 1. 一句话结论",
-        "## 2. 需求是否成立",
+        "## 2. 这件事为什么值得正式做",
         "## 3. 值不值得做",
         "## 4. 应该做成什么能力形态",
         "## 5. 推荐业务方案",
@@ -140,17 +140,17 @@ SKELETON_MIN_TEXT_LENGTH = {
 
 SKELETON_CORE_SECTION_TITLES = {
     "facts.md": [
-        "任务概述",
-        "功能范围",
-        "关键业务规则",
-        "状态流转",
-        "异常与边界",
-        "依赖与前置条件",
-        "开放问题与缺口",
+        "1. 核心需求事实",
+        "2. 功能范围",
+        "3. 关键业务规则",
+        "4. 状态流转",
+        "5. 异常与边界",
+        "6. 依赖与前置条件",
+        "7. GAP / 待确认",
     ],
     "business_blueprint.md": [
         "1. 一句话结论",
-        "2. 需求是否成立",
+        "2. 这件事为什么值得正式做",
         "3. 值不值得做",
         "4. 应该做成什么能力形态",
         "5. 推荐业务方案",
@@ -216,25 +216,19 @@ def _print_repair_guidance(project_id: str) -> None:
         if retry_scope_path.exists():
             print(f"- {retry_scope_path}")
 FORBIDDEN_TERM_ALLOWED_SECTIONS = {
-    "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
+    "facts.md": {"1. 核心需求事实", "7. GAP / 待确认"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
     "experience_blueprint.md": {"2. 交互流程总览", "3. 主交互流程", "附录：设计指南消费说明"},
 }
 BOUNDARY_DECLARATION_FLAGS = ["不输出", "不得输出", "不覆盖", "不包含", "不进入", "非范围", "暂不展开", "任务边界", "评审边界", "不覆盖范围"]
 
-FACTS_RUNTIME_SOURCE_ALLOWED_SECTIONS = {
-    "任务意图",
-    "事实来源说明",
-    "范围与非范围",
-    "已知约束",
-    "开放问题与缺口",
-}
+FACTS_RUNTIME_SOURCE_ALLOWED_SECTIONS = {"1. 核心需求事实", "7. GAP / 待确认"}
 FACTS_RUNTIME_SOURCE_BLOCKED_SECTIONS = {
-    "功能范围",
-    "关键业务规则",
-    "状态流转",
-    "异常与边界",
-    "依赖与前置条件",
+    "2. 功能范围",
+    "3. 关键业务规则",
+    "4. 状态流转",
+    "5. 异常与边界",
+    "6. 依赖与前置条件",
 }
 RUNTIME_SOURCE_REF_MARKERS = [
     "context_manifest.json",
@@ -256,7 +250,7 @@ RUNTIME_LEAKAGE_TERMS = [
     "generation 结构",
 ]
 RUNTIME_LEAKAGE_ALLOWED_SECTIONS = {
-    "facts.md": {"任务意图", "事实来源说明", "范围与非范围", "已知约束", "开放问题与缺口"},
+    "facts.md": {"1. 核心需求事实", "7. GAP / 待确认"},
     "business_blueprint.md": {"附录 E：链路自检信息"},
     "experience_blueprint.md": {"2. 交互流程总览", "3. 主交互流程", "附录：设计指南消费说明"},
 }
@@ -661,12 +655,12 @@ def check_runtime_contract(project_id: str, issues: list[tuple[str, str]]) -> No
         add_issue(issues, "blocker", "context_manifest.json 缺少 task_contract")
         return
 
-    if not _string_list(task_contract.get("task_goal")):
-        add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 task_goal")
     if not _string_list(task_contract.get("execution_constraints")):
         add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 execution_constraints")
-    if not _string_list(task_contract.get("read_order")):
-        add_issue(issues, "warning", "context_manifest.json.task_contract 缺少 read_order")
+    if not _string_list(task_contract.get("required_inputs")):
+        add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 required_inputs")
+    if not _string_list(task_contract.get("required_outputs")):
+        add_issue(issues, "blocker", "context_manifest.json.task_contract 缺少 required_outputs")
 
 
 def check_knowledge_consumption_plan(project_id: str, issues: list[tuple[str, str]]) -> None:
@@ -1570,13 +1564,13 @@ def write_runtime_extension_artifacts(
 
 def compute_dimension_coverage(facts_text: str) -> dict[str, int]:
     keys = {
-        "overview": ["## 任务概述"],
-        "features": ["## 功能范围"],
-        "rules": ["## 关键业务规则"],
-        "states": ["## 状态流转"],
-        "exceptions": ["## 异常与边界"],
-        "dependencies": ["## 依赖与前置条件"],
-        "gaps": ["## 开放问题与缺口"],
+        "overview": ["## 1. 核心需求事实"],
+        "features": ["## 2. 功能范围"],
+        "rules": ["## 3. 关键业务规则"],
+        "states": ["## 4. 状态流转"],
+        "exceptions": ["## 5. 异常与边界"],
+        "dependencies": ["## 6. 依赖与前置条件"],
+        "gaps": ["## 7. GAP / 待确认"],
     }
     result: dict[str, int] = {}
     for key, patterns in keys.items():
@@ -1667,7 +1661,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     handover_keyword_count = count_keywords_present(handover_section, ["角色", "流程", "状态", "异常", "风险"])
     handover_item_count = max(count_real_table_rows(handover_section), count_real_list_items(handover_section))
     has_handover_empty_talk = contains_any(handover_section, ["后续根据实际情况设计", "按实际情况调整", "后续再细化", "待后续补齐"])
-    fact_section_keywords = ["任务概述", "功能范围", "关键业务规则", "状态流转", "异常与边界", "开放问题与缺口"]
+    fact_section_keywords = ["1. 核心需求事实", "2. 功能范围", "3. 关键业务规则", "4. 状态流转", "5. 异常与边界", "7. GAP / 待确认"]
     referenced_fact_sections = [item for item in fact_section_keywords if item in facts_text and item in appendix_section]
 
     if not stance_section.strip():
@@ -1708,7 +1702,7 @@ def analyze_business_blueprint(facts_text: str, business_text: str) -> tuple[dic
     business_core_sections = [
         summary_section,
         stance_section,
-        sections.get("2. 需求是否成立", ""),
+        sections.get("2. 这件事为什么值得正式做", ""),
         value_section,
         capability_section,
         plan_section,
@@ -2273,15 +2267,11 @@ def run_facts_gate(project_id: str) -> int:
         elif covered_count < 7:
             add_issue(issues, "warning", "facts.md 章节覆盖仍偏粗")
 
-        source_hits, knowledge_hits = evaluate_facts_source_legality(project_id, facts_text)
-        if source_hits == 0:
-            add_issue(issues, "blocker", "facts.md 未显式承接 requirement/background 输入来源")
-        elif source_hits < 2:
-            add_issue(issues, "warning", "facts.md 输入来源引用不完整")
-        if knowledge_hits and source_hits == 0:
-            add_issue(issues, "blocker", "facts.md 可能将知识补写为输入事实，请补充输入来源追溯")
+        _, knowledge_hits = evaluate_facts_source_legality(project_id, facts_text)
+        if knowledge_hits and "[FACT]" not in facts_text and "[CONFIRMED]" not in facts_text:
+            add_issue(issues, "warning", "facts.md 引用了知识线索，但事实状态标记不足，请确认没有把知识直接写成当前任务事实")
 
-        if "[GAP]" not in facts_text and "## 开放问题与缺口" not in facts_text:
+        if "[GAP]" not in facts_text and "## 7. GAP / 待确认" not in facts_text:
             add_issue(issues, "warning", "facts.md 未显式暴露缺口")
 
     context_manifest = read_json(context_manifest_path)

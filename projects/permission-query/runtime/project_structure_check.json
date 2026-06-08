@@ -1,0 +1,16 @@
+{
+  "project_id": "permission-query",
+  "status": "passed",
+  "checked_at": "2026-06-07T13:08:24+00:00",
+  "project_dir": "E:/AI设计/体验蓝图构建思路/projects/permission-query",
+  "required_entries": [
+    "source/",
+    "workspace/",
+    "runtime/",
+    "meta.json"
+  ],
+  "missing_entries": [],
+  "issues": [],
+  "blocker_count": 0,
+  "warning_count": 0
+}

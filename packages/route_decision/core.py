@@ -20,6 +20,10 @@ BUSINESS_OUTPUTS = {
     "business_blueprint.md": "full",
 }
 REQUIRED_CORE_OUTPUTS = {"facts.md", "experience_blueprint.md"}
+SUPPORTED_BUSINESS_DEPTHS = {"business_note_only", "business_blueprint_lite", "business_blueprint"}
+SUPPORTED_EXPERIENCE_OUTPUTS = {"experience_blueprint"}
+
+
 def _load_json_payload(path: Path) -> tuple[dict[str, Any], str | None]:
     if not path.exists() or not path.is_file():
         return {}, "missing"
@@ -107,6 +111,28 @@ def _validate_knowledge_selection(
     return {"files": files, "reasoning": reasoning}, errors
 
 
+def _clean_scalar(value: object) -> str:
+    return str(value or "").strip()
+
+
+def _validate_enum(
+    value: str,
+    *,
+    field_name: str,
+    allowed: set[str],
+    errors: list[str],
+) -> str:
+    normalized = value.strip()
+    if not normalized:
+        errors.append(f"{field_name} cannot be empty")
+        return ""
+    if normalized not in allowed:
+        errors.append(
+            f"{field_name} is unsupported. Supported values: " + ", ".join(sorted(allowed))
+        )
+    return normalized
+
+
 def _sorted_repo_refs(paths: list[Path], repo_root: Path) -> list[str]:
     refs = [to_repo_ref(path, repo_root) for path in paths if path.exists() and path.is_file()]
     return sorted(dict.fromkeys(refs))
@@ -166,6 +192,9 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
             "project_id": project_id,
             "status": "needs_rejudgment",
             "source_path": f"projects/{project_id}/runtime/uxb_route_decision.json",
+            "business_depth": "",
+            "experience_output": "",
+            "experience_pressure": [],
             "required_outputs": [],
             "execution_mode": "",
             "knowledge_selection": {"files": [], "reasoning": ""},
@@ -189,14 +218,19 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
     if not can_execute_mainline:
         validation_errors.append("uxb_route_decision.can_execute_mainline must be true")
 
-    judgment = payload.get("judgment")
-    if not isinstance(judgment, dict):
-        judgment = {}
-        validation_errors.append("uxb_route_decision.judgment must be an object")
-
-    complexity_judgment = payload.get("complexity_judgment")
-    if not isinstance(complexity_judgment, dict):
-        complexity_judgment = {}
+    business_depth = _validate_enum(
+        _clean_scalar(payload.get("business_depth")),
+        field_name="uxb_route_decision.business_depth",
+        allowed=SUPPORTED_BUSINESS_DEPTHS,
+        errors=validation_errors,
+    )
+    experience_output = _validate_enum(
+        _clean_scalar(payload.get("experience_output")),
+        field_name="uxb_route_decision.experience_output",
+        allowed=SUPPORTED_EXPERIENCE_OUTPUTS,
+        errors=validation_errors,
+    )
+    experience_pressure = _clean_string_list(payload.get("experience_pressure"))
 
     execution = payload.get("execution")
     if not isinstance(execution, dict):
@@ -227,8 +261,9 @@ def load_uxb_execution_decision(project_id: str) -> dict[str, Any]:
         "created_by": created_by,
         "confirmed_by_user": confirmed_by_user,
         "can_execute_mainline": can_execute_mainline,
-        "judgment": judgment,
-        "complexity_judgment": complexity_judgment,
+        "business_depth": business_depth,
+        "experience_output": experience_output,
+        "experience_pressure": experience_pressure,
         "knowledge_selection": normalized_knowledge_selection,
         "required_outputs": required_outputs,
         "execution_notes": _clean_string_list(execution.get("notes")),

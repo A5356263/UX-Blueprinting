@@ -1,0 +1,464 @@
+{
+  "task_id": "permission-query",
+  "task_card_source": "projects/permission-query/source/task_card.md",
+  "selection_source": "projects/permission-query/runtime/uxb_route_decision.json",
+  "knowledge_trace": {
+    "files": [
+      "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "knowledge/wiki/summaries/设计准则/流程模式.md",
+      ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      ".claude/skills/uxb/references/complexity/01_domain_router.md"
+    ],
+    "reasoning": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。"
+  },
+  "assembled_refs": [
+    "templates/facts.template.md",
+    "templates/business_blueprint.template.md",
+    "templates/experience_blueprint.template.md",
+    "templates/gap_list.template.md",
+    "templates/check_report.template.md",
+    "specs/06_check_contract.md",
+    "specs/08_fact_extraction_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md",
+    "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+    "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+    "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+    "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+    "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+    "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+    "knowledge/wiki/summaries/设计准则/信息架构.md",
+    "knowledge/wiki/summaries/设计准则/流程模式.md",
+    ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+    ".claude/skills/uxb/references/complexity/01_domain_router.md"
+  ],
+  "missing_refs": [],
+  "reference_count": 19,
+  "task_contract": {
+    "execution_constraints": [
+      "不得臆造业务事实",
+      "信息不足处保留 `[GAP]`",
+      "正式产出必须写入 `workspace/`",
+      "不得用聊天回复替代正式文档产物",
+      "facts 阶段不得把引用知识提升为当前任务已确认事实",
+      "business 阶段不得输出 UI 方案或实现方案",
+      "experience 阶段不得输出高保真视觉稿或研发实现细节",
+      "`runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源",
+      "`task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断"
+    ],
+    "required_inputs": [
+      "projects/permission-query/source/requirement.md",
+      "projects/permission-query/source/background.md"
+    ],
+    "required_outputs": [
+      "projects/permission-query/workspace/facts.md",
+      "projects/permission-query/workspace/business_blueprint.md",
+      "projects/permission-query/workspace/experience_blueprint.md",
+      "projects/permission-query/workspace/gap_list.md",
+      "projects/permission-query/workspace/check_report.md",
+      "projects/permission-query/workspace/check_status.json"
+    ],
+    "domain": "权限管理"
+  },
+  "references": [
+    {
+      "reference": "templates/facts.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/facts.template.md",
+      "destination": "projects/permission-query/runtime/context_bundle/templates/facts.template.md",
+      "requested_reference": "templates/facts.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/business_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/business_blueprint.template.md",
+      "destination": "projects/permission-query/runtime/context_bundle/templates/business_blueprint.template.md",
+      "requested_reference": "templates/business_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/experience_blueprint.template.md",
+      "destination": "projects/permission-query/runtime/context_bundle/templates/experience_blueprint.template.md",
+      "requested_reference": "templates/experience_blueprint.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/gap_list.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/gap_list.template.md",
+      "destination": "projects/permission-query/runtime/context_bundle/templates/gap_list.template.md",
+      "requested_reference": "templates/gap_list.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "templates/check_report.template.md",
+      "group": "template_refs",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "templates/check_report.template.md",
+      "destination": "projects/permission-query/runtime/context_bundle/templates/check_report.template.md",
+      "requested_reference": "templates/check_report.template.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/06_check_contract.md",
+      "destination": "projects/permission-query/runtime/context_bundle/specs/06_check_contract.md",
+      "requested_reference": "specs/06_check_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/08_fact_extraction_contract.md",
+      "destination": "projects/permission-query/runtime/context_bundle/specs/08_fact_extraction_contract.md",
+      "requested_reference": "specs/08_fact_extraction_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/09_business_blueprint_contract.md",
+      "destination": "projects/permission-query/runtime/context_bundle/specs/09_business_blueprint_contract.md",
+      "requested_reference": "specs/09_business_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "group": "check_refs",
+      "consumed_by": [
+        "gate",
+        "validate"
+      ],
+      "selected_by": "",
+      "selection_reason": "",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "specs/10_experience_blueprint_contract.md",
+      "destination": "projects/permission-query/runtime/context_bundle/specs/10_experience_blueprint_contract.md",
+      "requested_reference": "specs/10_experience_blueprint_contract.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/12_查询与配置路径.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/12_查询与配置路径.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/03_业务对象.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/04_对象关系.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/04_对象关系.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/14_角色边界.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/14_角色边界.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/10_能力地图.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "group": "business_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/business/权限管理/30_体验风险模式.md",
+      "requested_reference": "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "group": "guideline_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/guideline/信息架构.md",
+      "requested_reference": "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "group": "guideline_summary",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "destination": "projects/permission-query/runtime/context_bundle/summaries/guideline/流程模式.md",
+      "requested_reference": "knowledge/wiki/summaries/设计准则/流程模式.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "group": "complexity_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "destination": "projects/permission-query/runtime/context_bundle/complexity/00_core_complexity_judgment.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/00_core_complexity_judgment.md",
+      "exists": true,
+      "copied": true
+    },
+    {
+      "reference": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      "group": "complexity_ref",
+      "consumed_by": [
+        "facts",
+        "business",
+        "experience"
+      ],
+      "selected_by": "uxb_ai",
+      "selection_reason": "核心判断点：(1) 当前查询路径的结构性缺口在哪里；(2) 查询结果应承载的最小对象字段集合；(3) 不同角色在查询场景的可见边界；(4) 查询与配置在信息架构上的分离方式。优先选权限域查询路径卡和对象模型卡定义结果契约，角色边界卡约束多角色视图，体验风险卡指导风险规避。设计准则侧选信息架构和流程模式支撑查询-配置分离和查完即改的衔接设计。",
+      "routed_by_summary": "",
+      "why_summary_not_enough": "",
+      "decision_points": [],
+      "type": "file",
+      "source": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      "destination": "projects/permission-query/runtime/context_bundle/complexity/01_domain_router.md",
+      "requested_reference": ".claude/skills/uxb/references/complexity/01_domain_router.md",
+      "exists": true,
+      "copied": true
+    }
+  ],
+  "warnings": [],
+  "strict_mode": false,
+  "reference_summary": {
+    "template_ref_count": 5,
+    "check_ref_count": 4,
+    "knowledge_file_count": 10,
+    "raw_ref_count": 0,
+    "assembled_ref_count": 19
+  },
+  "stage_boundaries": {
+    "facts": [],
+    "business": [],
+    "experience": []
+  },
+  "facts_extraction_boundary": [],
+  "business_judgment_boundary": [],
+  "experience_translation_boundary": []
+}

@@ -4,7 +4,7 @@
   "type": "command",
   "stage": "mainline_observation",
   "entrypoint": "python -m packages route-decision <project-id>",
-  "description": "校验 UXB 已确认判断，并输出确认或重判提示。",
+  "description": "作为正式蓝图主链路前半段的判断单校验能力，校验 UXB 已确认判断并输出确认或重判提示。",
   "required_inputs": [
     "projects/<project-id>/runtime/uxb_route_decision.json"
   ],

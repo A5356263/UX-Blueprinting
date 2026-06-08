@@ -10,17 +10,6 @@
 - Task Name: {{TASK_NAME}}
 - Domain: {{DOMAIN}}
 
-## Task Goal
-
-- 用一句话说明本次任务要解决什么问题
-- 说明本次输出主要服务于哪类评审、设计或重构工作
-
-## Task Scenario
-
-- 描述本次任务场景
-- 说明这是新建、补充、校对、重构还是审查任务
-- 说明本次任务主要落在 facts / business / experience 的哪一层，或覆盖全链路
-
 ## Required Inputs
 
 - projects/{{TASK_ID}}/source/requirement.md
@@ -34,15 +23,6 @@
 - projects/{{TASK_ID}}/workspace/gap_list.md
 - projects/{{TASK_ID}}/workspace/check_report.md
 - projects/{{TASK_ID}}/workspace/check_status.json
-
-## Read Order
-
-1. 先读本文档
-2. 再读 `Required Inputs`
-3. 生成 facts.md
-4. 生成 business 产物
-5. 生成 experience_blueprint.md
-6. 运行 validate / coverage / preview
 
 ## Constraints
 
@@ -70,31 +50,3 @@
 - specs/08_fact_extraction_contract.md
 - specs/09_business_blueprint_contract.md
 - specs/10_experience_blueprint_contract.md
-
-## Result Locations
-
-- 执行中结果: projects/{{TASK_ID}}/workspace/
-- 预览产物: projects/{{TASK_ID}}/runtime/preview/
-
-## Completion Criteria
-
-- 必需输出文件全部存在
-- `check_report.md` 已生成
-- 无 blocker
-
-## Facts Output Requirements
-
-参考 `specs/08_fact_extraction_contract.md` 和 `templates/facts.template.md`
-
-## Business Output Requirements
-
-参考对应业务合同和模板，不在 task card 中重复写内部判断逻辑
-
-## Experience Output Requirements
-
-参考 `specs/10_experience_blueprint_contract.md` 和 `templates/experience_blueprint.template.md`
-
-## Notes
-
-- UXB 应在执行前写好 `projects/{{TASK_ID}}/runtime/uxb_route_decision.json`
-- 如任务只做到某一阶段，可在 `Task Scenario` 和 `Required Outputs` 中明确裁剪

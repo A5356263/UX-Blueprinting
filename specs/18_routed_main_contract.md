@@ -2,18 +2,25 @@
 
 ## Goal
 
-`run-routed-main` 是按 UXB 已确认判断驱动的主链路执行入口。
+`run-routed-main` 是按 UXB 已确认判断驱动的正式蓝图主链路后续生成入口。
 
 ## Entry Boundary
 
 - `run-routed-main` 的执行判断只来自 `runtime/uxb_route_decision.json`
 - 只允许 `--route auto`
 - 不再接受手动 `fast / standard / full` 覆盖
+- 它不是“是否进入正式蓝图任务”的判断入口
+- 它只承接“用户已经确认进入正式蓝图任务”之后的后续生成段
 
 ## Required Preconditions
 
 执行前必须检查：
 
+- `source/task_card.md` 存在
+- `source/requirement.md` 存在
+- `source/background.md` 存在
+- 项目目录最小结构检查通过
+- `source/requirement.md` / `source/background.md` 不得仍停留在 bootstrap 占位骨架
 - `runtime/uxb_route_decision.json` 存在
 - `schema_version` 受支持
 - `created_by == "uxb_ai"`
@@ -39,6 +46,7 @@
 
 `routed_main_plan.json` 至少记录：
 
+- `mainline_entry`
 - `decision_source`
 - `requested_route`
 - `execution_mode`
@@ -47,6 +55,7 @@
 
 `routed_main_report.json` 至少记录：
 
+- `mainline_entry`
 - `status`
 - `stopped_at`
 - `steps`

@@ -2,7 +2,7 @@
 
 ## Goal
 
-定义 `packages/route_decision` 在第四阶段后的职责边界。
+定义 `packages/route_decision` 在正式蓝图主链路前半段中的职责边界。
 
 ## Positioning
 
@@ -13,6 +13,12 @@
 - 读取 `projects/<project-id>/runtime/uxb_route_decision.json`
 - 做基础结构校验
 - 输出确认结果或 `needs_rejudgment` 提示
+
+它所处的位置是：
+
+- 已完成 `bootstrap`
+- 已写入正式输入
+- 尚未进入 `run-routed-main` 后续生成段
 
 它不再负责：
 

@@ -8,17 +8,11 @@ from packages.common import get_project_source_dir
 
 REQUIRED_SECTIONS = {
     "## Protocol",
-    "## Task Goal",
     "## Required Inputs",
     "## Required Outputs",
     "## Constraints",
     "## Templates",
     "## Checks",
-    "## Result Locations",
-    "## Completion Criteria",
-    "## Facts Output Requirements",
-    "## Business Output Requirements",
-    "## Experience Output Requirements",
 }
 
 REFERENCE_SECTIONS = {
@@ -26,17 +20,24 @@ REFERENCE_SECTIONS = {
     "## Checks": "check_refs",
 }
 
-OUTPUT_REQUIREMENT_SECTIONS = {
-    "## Facts Output Requirements": "facts_output_requirements",
-    "## Business Output Requirements": "business_output_requirements",
-    "## Experience Output Requirements": "experience_output_requirements",
-}
-
 IGNORED_LEGACY_SECTIONS = {
     "## Knowledge",
     "## Wiki",
     "## Design Guidelines",
     "## Knowledge Consumption Policy",
+}
+
+DISALLOWED_LEGACY_SECTIONS = {
+    "## Task Goal",
+    "## Task Scenario",
+    "## Read Order",
+    "## Notes",
+    "## Platform Optimizations",
+    "## Result Locations",
+    "## Completion Criteria",
+    "## Facts Output Requirements",
+    "## Business Output Requirements",
+    "## Experience Output Requirements",
 }
 
 
@@ -105,24 +106,6 @@ def normalize_path_values(items: list[str]) -> list[str]:
     return values
 
 
-def parse_output_requirements(lines: list[str]) -> dict[str, object]:
-    by_subsection: dict[str, list[str]] = {}
-    current = ""
-    for raw_line in lines:
-        stripped = raw_line.strip()
-        if stripped.startswith("### "):
-            current = stripped
-            by_subsection.setdefault(current, [])
-            continue
-        if current:
-            by_subsection[current].append(raw_line)
-    return {
-        "required_sections": parse_bullets(by_subsection.get("### Required Sections", [])),
-        "recommended_id_prefixes": parse_bullets(by_subsection.get("### Recommended ID Prefixes", [])),
-        "boundary": parse_bullets(by_subsection.get("### Boundary", [])),
-    }
-
-
 def parse_raw_section_lines(lines: list[str]) -> list[str]:
     values: list[str] = []
     for raw_line in lines:
@@ -139,14 +122,16 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
     recognized_sections = (
         REQUIRED_SECTIONS
         | set(REFERENCE_SECTIONS.keys())
-        | set(OUTPUT_REQUIREMENT_SECTIONS.keys())
-        | {"## Task Scenario", "## Read Order", "## Notes", "## Platform Optimizations"}
+        | DISALLOWED_LEGACY_SECTIONS
         | IGNORED_LEGACY_SECTIONS
     )
 
     missing_sections = sorted(section for section in REQUIRED_SECTIONS if section not in sections)
     for section in missing_sections:
         errors.append(f"Missing required section: {section}")
+    for section in sorted(DISALLOWED_LEGACY_SECTIONS):
+        if section in sections:
+            errors.append(f"Legacy section is no longer allowed: {section}")
 
     protocol = parse_protocol(sections.get("## Protocol", []))
     protocol_name = protocol.get("Protocol Name", "")
@@ -164,13 +149,6 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
 
     required_inputs = normalize_path_values(parse_bullets(sections.get("## Required Inputs", [])))
     required_outputs = normalize_path_values(parse_bullets(sections.get("## Required Outputs", [])))
-    result_locations = {
-        key or f"location_{index + 1}": value
-        for index, item in enumerate(parse_bullets(sections.get("## Result Locations", [])))
-        for key, value in [split_kv(item)]
-        if value
-    }
-
     if not required_outputs:
         errors.append("Required Outputs is empty")
 
@@ -179,20 +157,13 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         if not output.startswith(workspace_prefix):
             errors.append(f"Output path must stay under workspace: {output}")
 
-    if not result_locations:
-        errors.append("Result Locations is empty or unparseable")
-
     resolved: dict[str, object] = {
         "task_id": parsed_task_id or task_id,
         "protocol_name": protocol_name,
         "protocol_version": protocol_version,
         "task_name": task_name,
         "domain": domain,
-        "task_goal": parse_text_items(sections.get("## Task Goal", [])),
-        "task_scenario": parse_text_items(sections.get("## Task Scenario", [])),
         "execution_constraints": parse_text_items(sections.get("## Constraints", [])),
-        "read_order": parse_text_items(sections.get("## Read Order", [])),
-        "notes": parse_text_items(sections.get("## Notes", [])),
         "required_inputs": required_inputs,
         "required_outputs": required_outputs,
         "template_refs": [],
@@ -205,8 +176,8 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "unparsed_sections": sorted(
             section.replace("## ", "", 1) for section in sections if section not in recognized_sections
         ),
-        "result_locations": result_locations,
-        "completion_criteria": parse_bullets(sections.get("## Completion Criteria", [])),
+        "result_locations": {},
+        "completion_criteria": [],
         "facts_output_requirements": {},
         "business_output_requirements": {},
         "experience_output_requirements": {},
@@ -214,8 +185,6 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         "errors": errors,
     }
 
-    if not resolved["task_goal"]:
-        errors.append("Task Goal is empty or unparseable")
     if not resolved["execution_constraints"]:
         errors.append("Constraints is empty or unparseable")
 
@@ -225,22 +194,6 @@ def resolve_task_card(task_card_text: str, task_id: str) -> dict[str, object]:
         resolved[field] = parsed_values
         if section in sections and bullets and not parsed_values:
             errors.append(f"{section} exists but no valid paths were parsed")
-
-    for section, field in OUTPUT_REQUIREMENT_SECTIONS.items():
-        parsed = parse_output_requirements(sections.get(section, []))
-        resolved[field] = parsed
-        if parsed["required_sections"] and not parsed["boundary"]:
-            warnings.append(f"{section} has required sections but no boundary")
-        if parsed["boundary"] and not parsed["required_sections"]:
-            warnings.append(f"{section} has boundary but no required sections")
-
-    if "## Read Order" not in sections:
-        warnings.append("Read Order section is missing")
-    elif not resolved["read_order"]:
-        warnings.append("Read Order section exists but no readable items were parsed")
-
-    if "## Platform Optimizations" in sections and not parse_bullets(sections["## Platform Optimizations"]):
-        warnings.append("Platform Optimizations section is present but empty")
 
     return resolved
 

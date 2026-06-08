@@ -2,9 +2,9 @@
   "capability_id": "task_bootstrap",
   "display_name": "Task Bootstrap",
   "type": "command",
-  "stage": "runtime",
+  "stage": "mainline",
   "entrypoint": "python -m packages bootstrap <project-id> --domain <domain>",
-  "description": "创建项目任务工作区，初始化 source/workspace/runtime 的最小结构，并只生成 source 输入骨架，不预写 workspace 正式产物模板。",
+  "description": "作为正式蓝图主链路前半段的目录初始化能力，创建项目任务工作区并生成 source 输入骨架。",
   "required_inputs": [
     "<project-id>",
     "templates/task_card.template.md"

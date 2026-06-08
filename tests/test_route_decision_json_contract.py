@@ -15,6 +15,12 @@ class RouteDecisionJsonContractTests(unittest.TestCase):
         template_path = get_repo_root() / ".codex" / "skills" / "uxb" / "assets" / "uxb_route_decision.template.json"
         payload = json.loads(template_path.read_text(encoding="utf-8"))
 
+        self.assertIn("business_depth", payload)
+        self.assertIn("experience_output", payload)
+        self.assertIn("experience_pressure", payload)
+        self.assertNotIn("judgment", payload)
+        self.assertNotIn("complexity_judgment", payload)
+
         knowledge_selection = payload.get("knowledge_selection")
         self.assertIsInstance(knowledge_selection, dict)
         self.assertIn("files", knowledge_selection)

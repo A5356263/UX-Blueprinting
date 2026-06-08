@@ -4,17 +4,9 @@
   "created_by": "uxb_ai",
   "confirmed_by_user": false,
   "can_execute_mainline": false,
-  "judgment": {
-    "demand_type": "",
-    "business_depth": "",
-    "experience_output": "",
-    "reason": ""
-  },
-  "complexity_judgment": {
-    "business_change": [],
-    "experience_pressure": [],
-    "uncertainties": []
-  },
+  "business_depth": "",
+  "experience_output": "",
+  "experience_pressure": [],
   "knowledge_selection": {
     "files": [],
     "reasoning": ""

@@ -216,11 +216,7 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
     business_req = resolved.get("business_output_requirements", {})
     experience_req = resolved.get("experience_output_requirements", {})
     task_contract = {
-        "task_goal": resolved.get("task_goal", []),
-        "task_scenario": resolved.get("task_scenario", []),
         "execution_constraints": resolved.get("execution_constraints", []),
-        "read_order": resolved.get("read_order", []),
-        "notes": resolved.get("notes", []),
         "required_inputs": resolved.get("required_inputs", []),
         "required_outputs": resolved.get("required_outputs", []),
         "domain": resolved.get("domain", ""),

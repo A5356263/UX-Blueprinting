@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体验策略 — permission-query</title>
+<style>
+
+:root {
+  --bg: #f5f4ed;
+  --panel: #faf9f5;
+  --panel-strong: #faf9f5;
+  --panel-subtle: #f2f0e8;
+  --line: #e8e6dc;
+  --line-strong: #d8d1c2;
+  --text: #2b2b28;
+  --text-muted: #6b6a64;
+  --text-soft: #75746e;
+  --accent: #1f6b5b;
+  --accent-soft: #e2f1eb;
+  --accent-strong: #155245;
+  --warn: #8a5a14;
+  --warn-soft: #f6ead5;
+  --danger: #8b3a3a;
+  --danger-soft: #f8e4e1;
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.hidden { display: none !important; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 14px 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 0 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sidebar-header h2 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  color: var(--accent-strong);
+}
+
+.project-badge {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  padding: 10px 12px 0;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.tab-btn.active {
+  background: var(--panel-strong);
+  color: var(--accent-strong);
+  border-bottom-color: var(--panel-strong);
+  font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0 8px;
+}
+
+.nav-section { padding: 0 16px; }
+
+.nav-item {
+  display: block;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 1px 0;
+  transition: all 0.12s;
+  cursor: pointer;
+}
+
+.nav-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
+.nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+.nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+
+.content {
+  flex: 1;
+  padding: 32px 40px 80px;
+  max-width: 1080px;
+}
+
+.content-panel { display: block; }
+.content-panel.hidden { display: none; }
+
+.section-block {
+  margin-bottom: 36px;
+  scroll-margin-top: 24px;
+}
+
+.section-heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-heading.level-2 {
+  font-size: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading.level-3 {
+  font-size: 15px;
+  color: var(--text-muted);
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.section-body { font-size: 15px; }
+.section-body p { margin: 0 0 10px; }
+.section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
+.section-body ul li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  margin: 2px 0;
+}
+.section-body ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+.section-body strong { color: var(--accent-strong); font-weight: 600; }
+.section-body code {
+  background: var(--panel-subtle);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+}
+.section-body pre {
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.section-body h3,
+.section-body h4,
+.section-body h5,
+.section-body h6 {
+  margin: 18px 0 10px;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 18px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+}
+.section-body th,
+.section-body td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.section-body th {
+  background: var(--panel-subtle);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+.section-body ol li { padding: 4px 0; }
+
+.summary-visual,
+.journey-visual {
+  margin: 0 0 18px;
+  padding: 12px;
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.summary-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  min-width: max-content;
+}
+
+.summary-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
+}
+
+.summary-row:last-child { margin-bottom: 0; }
+
+.summary-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  flex: 0 0 auto;
+}
+
+.flow-arrow,
+.summary-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.summary-step {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.summary-step strong {
+  color: var(--accent-strong);
+  margin-right: 4px;
+}
+
+.journey-path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  margin-bottom: 10px;
+}
+
+.journey-path-row:last-child { margin-bottom: 0; }
+
+.journey-path-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.journey-path-nodes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.journey-path-node {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.journey-path-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.preview-footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.component-intro:empty,
+.component-visuals:empty,
+.component-cards:empty,
+.component-notes:empty {
+  display: none;
+}
+
+.component-intro {
+  margin-bottom: 12px;
+}
+
+.component-intro:last-child {
+  margin-bottom: 0;
+}
+
+.component-visuals {
+  margin-bottom: 12px;
+}
+
+.component-visuals:last-child {
+  margin-bottom: 0;
+}
+
+.component-cards {
+  display: block;
+}
+
+.component-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.component-card:last-child {
+  margin-bottom: 0;
+}
+
+.component-card + .component-card {
+  margin-top: 6px;
+}
+
+.component-card-title {
+  margin: 18px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3,
+.experience-component[data-section-key="secondary-flow"] .section-body h3,
+.experience-component[data-section-key="exception-flow"] .section-body h3 {
+  margin: 32px 0 10px;
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="secondary-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="exception-flow"] .section-body h3:first-child {
+  margin-top: 0;
+}
+
+.experience-component .section-body .flow-field-label {
+  margin-top: 20px;
+}
+
+.experience-component .section-body .flow-field-label + * {
+  margin-top: 0;
+}
+
+.component-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.component-note-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.component-note-item {
+  padding: 8px 0 8px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  position: relative;
+}
+
+.component-note-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.component-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.component-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.state-feedback-table-wrap {
+  overflow-x: auto;
+}
+
+.state-feedback-table-wrap table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 20px 16px 60px; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>体验策略</h2>
+    <span class="project-badge">permission-query</span>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" data-panel="business">业务蓝图</button>
+    <button class="tab-btn" data-panel="experience">体验蓝图</button>
+  </div>
+  <div class="sidebar-nav" id="nav-business">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键业务判断">0. 本次关键业务判断</a>
+<a class="nav-item " data-target="1-一句话结论">1. 一句话结论</a>
+<a class="nav-item " data-target="2-关键业务规则">2. 关键业务规则</a>
+<a class="nav-item " data-target="3-边界与风险">3. 边界与风险</a>
+<a class="nav-item " data-target="4-体验承接要求">4. 体验承接要求</a>
+<a class="nav-item " data-target="5-升级信号">5. 升级信号</a>
+<a class="nav-item " data-target="6-待确认问题">6. 待确认问题</a></div>
+  </div>
+  <div class="sidebar-nav hidden" id="nav-experience">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键设计判断">0. 本次关键设计判断</a>
+<a class="nav-item " data-target="1-旅程图">1. 旅程图</a>
+<a class="nav-item " data-target="2-交互流程总览">2. 交互流程总览</a>
+<a class="nav-item " data-target="3-主交互流程">3. 主交互流程</a>
+<a class="nav-item " data-target="4-次交互流程">4. 次交互流程</a>
+<a class="nav-item " data-target="5-异常与阻断流程">5. 异常与阻断流程</a>
+<a class="nav-item " data-target="6-页面-弹窗-抽屉设计">6. 页面 / 弹窗 / 抽屉设计</a>
+<a class="nav-item " data-target="7-状态与反馈文案">7. 状态与反馈文案</a>
+<a class="nav-item " data-target="8-待确认问题">8. 待确认问题</a>
+<a class="nav-item " data-target="附录-设计指南消费说明">附录：设计指南消费说明</a></div>
+  </div>
+</nav>
+<main class="content">
+  <div class="content-panel" id="content-business"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">轻量业务蓝图</h1><div class="section-block" id="0-本次关键业务判断">
+<h2 class="section-heading ">0. 本次关键业务判断</h2>
+<div class="section-body"><p><strong>判断：</strong></p>
+<p>本次在既有权限体系上新建独立的查询解释层，不改底层权限模型和规则引擎，但需要先定清查询边界、结果契约和角色可见性三项关键业务决策，体验才有稳定的承接底座。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>查询能力边界直接影响信息架构设计——哪些维度进本期、哪些延后、哪些独立，决定了导航结构和入口组织</li><li>查询结果契约决定了每个查询视图必须展示哪些字段，体验层面不能自行裁减</li><li>角色可见性约束决定了不同管理员看到的结果集差异，空结果提示和权限提示文案必须分场景处理</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>优先交付按人查（数据链路最完整、使用频次最高），按角色查作为第二优先级，按权限反查在数据链路确认前标记为 GAP 并暂不入本期范围</li><li>查询结果最小契约：每条结果必须带权限名称、资源类型、动作、来源（直授/角色继承/协作可见）、生效状态、数据范围</li><li>查询页独立于配置页存在，导航上分开，但每条结果旁提供「去配置」入口</li></ul>
+<p><strong>本阶段先定清：</strong></p>
+<ul><li>查询维度优先级和分期策略——避免体验设计时把所有维度揉在一起导致哪个都做不深</li><li>查询结果字段契约——这是体验设计的信息密度和布局依据，不确定则页面无法落地</li><li>子管理员查询可见边界的具体规则——这决定了查询结果的过滤逻辑和空结果提示策略</li></ul>
+<p><strong>需要重新判断的信号：</strong></p>
+<ol><li>按权限反查数据链路被确认闭环——届时需要重新评估该维度是否纳入本期或下一期</li><li>审计场景需求被确认为需要独立的历史快照和变更台账能力——届时需要拆分独立任务</li></ol></div>
+</div>
+<div class="section-block" id="1-一句话结论">
+<h2 class="section-heading ">1. 一句话结论</h2>
+<div class="section-body"><p>可以做。建议分维度、分期交付：先按人查（链路最完整），再按角色查，按权限反查待数据链路确认后再定。核心不是「做一个统一查询页」，而是在权限体系中新建独立的解释层，查询与配置在信息架构上分开，查询结果必须可解释（带来源、状态、范围）。</p></div>
+</div>
+<div class="section-block" id="2-关键业务规则">
+<h2 class="section-heading ">2. 关键业务规则</h2>
+<div class="section-body"><p><strong>前提判断：</strong></p>
+<p>当前需求方向成立的前提是——权限管理员确实需要跨配置页拼凑信息的场景长期存在，且现有单条配置路径上的信息完整性不足以替代独立查询视角。如果未来各配置页自身已经能完整展示权限归属关系，则查询页的价值会被削弱。但鉴于权限来源多样（直授、角色、协作）且分散在不同功能域，这个前提在可预见的周期内不会消失。</p>
+<p><strong>核心规则：</strong></p>
+<ul><li>查询与配置职责分离：查询页只做展示和解释，不做编辑。配置操作一律跳转到对应的配置页完成。这不是功能限制，而是防止误操作和保证审计可追溯的安全边界</li><li>查询结果必须展开来源：同一人员通过直授、角色继承、协作可见三条路径获得的同一权限，查询结果中必须分开展示、标注来源，不得合并为一条。这是审计和管理判断的基础</li><li>子管理员可见范围约束：查询时应用「组织范围 × 应用范围」交叉过滤。子管理员查询超出管理范围的人员时，系统返回「当前结果受您的管理范围限制」而非「未查询到权限记录」</li><li>协作可见性独立标注：通过协作关系产生的可见权限，在结果中必须与正式授权权限区分标注，避免审计误判</li><li>查询维度各自独立设计结果视图：按人查的结果以人员为中心组织，按角色查的结果以角色为中心组织，不强行合并为统一视图</li></ul>
+<p><strong>规则边界说明：</strong></p>
+<ul><li>不改变现有权限授予逻辑、角色继承逻辑和决策链</li><li>不改变现有审批流程</li><li>不新增权限类型或权限颗粒度</li><li>查询能力是只读层，不产生新的权限变更记录</li></ul></div>
+</div>
+<div class="section-block" id="3-边界与风险">
+<h2 class="section-heading ">3. 边界与风险</h2>
+<div class="section-body"><p><strong>不能放开的限制：</strong></p>
+<ul><li>查询页不得提供直接授权、回收、转移权限的操作入口</li><li>子管理员不得通过查询页绕过组织范围限制看到全局权限数据</li><li>查询结果不得隐藏或合并权限来源信息</li><li>审计场景的变更台账不纳入本次查询能力范围，变化记录仍以审批域和操作日志为准</li></ul>
+<p><strong>最关键的风险：</strong></p>
+<ol><li><strong>按权限反查数据链路不完整</strong>：若强行上线，结果残缺，用户不会被告知哪些权限未被索引。应对策略：本期不纳入该维度，待链路确认后再独立迭代</li><li><strong>按角色查与角色管理页功能重叠</strong>：若查询视图与角色管理页高度重复，管理员会困惑两者的区别。应对策略：按角色查询聚焦「该角色下所有权限的完整展开视图」，与角色管理页的配置视角形成互补</li><li><strong>子管理员空结果歧义</strong>：查不到结果时无法区分「真的没有」和「没权限看」。应对策略：在查询结果区域显式告知当前查询范围边界</li><li><strong>查询结果量过大</strong>：大型企业按人查可能返回数百条记录。应对策略：默认分页展示，提供按资源类型、来源、状态的筛选和搜索，以及全量导出</li></ol>
+<p><strong>对应保护策略：</strong></p>
+<ul><li>查询操作记入操作日志，但不替代审计记录</li><li>导出操作需二次确认，导出文件带水印和时间戳</li><li>敏感权限（如超级管理员权限）在查询结果中高亮标注</li></ul></div>
+</div>
+<div class="section-block" id="4-体验承接要求">
+<h2 class="section-heading ">4. 体验承接要求</h2>
+<div class="section-body"><p><strong>角色：</strong></p>
+<ul><li>权限管理员（主角色）：日常核对、快速定位、查完即改是核心任务路径</li><li>超级管理员：全局视角、无范围限制、需要导出和异常标注能力</li><li>审计/安全人员：需要导出、需要来源追溯、不需要配置跳转</li></ul>
+<p><strong>流程：</strong></p>
+<ul><li>主流程：进入查询页 → 选择查询维度（按人/按角色） → 输入查询条件 → 查看结果列表 → 筛选/搜索缩小范围 → 展开单条查看详情（含来源路径） → 跳转配置页或导出</li><li>子流程（空结果）：输入查询条件 → 无匹配结果 → 看到空结果提示（区分真无结果和范围受限）</li><li>子流程（导出）：在结果页点击导出 → 二次确认 → 下载带水印的权限清单文件</li></ul>
+<p><strong>进度与结果状态：</strong></p>
+<ul><li>查询加载态：数据量大时展示加载进度或骨架屏</li><li>有结果态：按维度组织的结果列表，每条结果摘要展示权限名+来源+状态，展开后完整展示来源路径、生效条件、数据范围</li><li>空结果态：区分两种情况——真无权限 vs 受管理范围限制</li><li>部分结果态：当某些权限来源路径数据不完整时，在对应条目旁标注数据完整性问题</li></ul>
+<p><strong>异常：</strong></p>
+<ul><li>查询超时：提示缩小查询范围或稍后重试，不建议自动缩小范围</li><li>查询结果中某条来源数据缺失：在该条目旁标注「来源数据不完整」，不隐藏该条目</li><li>导出文件生成失败：提示重试，不静默失败</li><li>无查询页访问权限：拦截并提示向管理员申请权限</li></ul>
+<p><strong>反馈：</strong></p>
+<ul><li>查询操作：即时反馈，查询中显示加载态，查询完成后显示结果数量</li><li>导出操作：二次确认弹窗，导出成功后通知，导出失败提示重试</li><li>范围限制：子管理员进入查询页时，在页面顶部常驻提示当前管理范围</li><li>跳转配置：从查询结果跳转到配置页时，若配置页需要加载，显示过渡态</li></ul>
+<p><strong>文案：</strong></p>
+<ul><li>空结果（真无权限）：「未查询到该人员的权限记录」</li><li>空结果（范围受限）：「当前结果受您的管理范围限制，可能未展示全部权限。如需扩大查询范围，请联系超级管理员」</li><li>来源标注：「直接授予」「通过角色「XXX」继承」「通过协作关系可见」</li><li>数据不完整标注：「该条来源信息不完整，可能影响权限判断」</li><li>导出确认：「确认导出当前查询结果？导出文件包含当前范围内的所有权限记录」</li></ul></div>
+</div>
+<div class="section-block" id="5-升级信号">
+<h2 class="section-heading ">5. 升级信号</h2>
+<div class="section-body"><ul><li>按权限反查数据链路被确认闭环：需要重新评估需求范围，可能新增一个独立查询维度</li><li>审计场景需求被确认需要独立的历史快照和变更台账：需拆分为独立任务，不在本任务内扩展</li><li>权限对象模型或决策链发生变更：需重新评估查询结果契约是否需要调整</li><li>用户反馈按角色查询与角色管理页功能重叠严重：需重新设计按角色查询的差异化价值</li></ul></div>
+</div>
+<div class="section-block" id="6-待确认问题">
+<h2 class="section-heading ">6. 待确认问题</h2>
+<div class="section-body"><ul><li>按角色查询的独立结果视图：角色管理页已可查看角色下权限，独立查询页需要提供什么差异化信息？（建议：展开每个权限的完整来源路径和被授予人员数量）</li><li>查询结果中「数据范围」的展示粒度：当前权限的数据范围字段格式不统一（有的用组织树、有的用标签），查询结果中如何统一呈现需确认</li><li>导出文件的格式和内容层级：是否需要区分按人导出和按查询结果导出？导出文件是否需要包含查询条件元信息（查询时间、查询人、查询范围）？</li></ul></div>
+</div></div>
+  <div class="content-panel hidden" id="content-experience"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">体验蓝图</h1><div class="section-block experience-component" id="0-本次关键设计判断" data-section-key="judgment"><h2 class="section-heading">0. 本次关键设计判断</h2><div class="section-body"><p><strong>判断：</strong></p>
+<p>本次重点不在多造页面，而是用最少的页面承载按人查和按角色查两个核心维度的查询体验，同时把查询结果的可解释性（来源、状态、范围）和子管理员的可见边界约束做透，让管理员查得到、看得懂、敢用。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>信息架构上查询与配置分离——查询入口独立于各配置页，形成新的导航节点，但查询结果页通过「去配置」与配置页保持衔接</li><li>三个角色在同一套页面上的体验差异——超管全量、权限管理员受范围约束、审计人员侧重导出而非配置跳转</li><li>按人查和按角色查使用不同的结果组织逻辑，不能共用同一套列表模板</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>新建权限查询入口（导航层独立），内部按 Tab 或二级入口区分「按人查询」和「按角色查询」</li><li>按人查的结果以人员为维度纵向展开，展示完整权限清单；按角色查的结果以角色为维度展开权限模板</li><li>查询结果中每条权限旁边标注来源标签（直授/角色继承/协作可见），可展开查看完整来源路径</li><li>子管理员进入查询页时，页面顶部常驻管理范围提示；查到空结果时分场景给出不同空状态文案</li><li>审计人员使用与管理员相同的查询页，但结果操作区以导出为主，不突出配置跳转</li></ul>
+<p><strong>不建议方案：</strong></p>
+<ul><li>不做一个「统一查询」页面把所有维度混在同一视图——按人查和按角色查的信息组织逻辑不同，强行合一体验会变差</li><li>不在查询结果中直接放置编辑/删除/授权的操作按钮——防止误操作，保持查询页为纯解释层</li><li>不把按权限反查纳入本期页面设计——数据链路未确认，做了也是残缺体验</li></ul>
+<p><strong>关键待确认：</strong></p>
+<ol><li>查询入口在导航中的具体位置和层级——是独立一级导航还是挂在权限管理下的二级入口</li><li>按角色查询的结果视图是否需要不同于角色管理页的信息维度（如展示每个权限被多少人员持有）</li></ol>
+<p>更多待确认问题详见 <code>## 8. 待确认问题</code>。</p></div></div>
+<div class="section-block experience-component" id="1-旅程图" data-section-key="journey"><h2 class="section-heading">1. 旅程图</h2><div class="section-body"><div class="journey-visual"><div class="journey-path-row"><div class="journey-path-role">权限管理员</div><div class="journey-path-nodes"><span class="journey-path-node">发现需要核对某人权限</span><span class="journey-path-arrow">→</span><span class="journey-path-node">进入权限查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择按人查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">输入人员</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看权限清单</span><span class="journey-path-arrow">→</span><span class="journey-path-node">发现异常权限</span><span class="journey-path-arrow">→</span><span class="journey-path-node">点击来源标签展开来源路径</span><span class="journey-path-arrow">→</span><span class="journey-path-node">点击「去配置」跳转到角色管理或应用管理调整</span><span class="journey-path-arrow">→</span><span class="journey-path-node">返回查询页确认调整结果</span></div></div><div class="journey-path-row"><div class="journey-path-role">超级管理员</div><div class="journey-path-nodes"><span class="journey-path-node">收到审计需求</span><span class="journey-path-arrow">→</span><span class="journey-path-node">进入权限查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择按人查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">输入人员</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看完整权限清单</span><span class="journey-path-arrow">→</span><span class="journey-path-node">导出权限报告</span><span class="journey-path-arrow">→</span><span class="journey-path-node">提交审计</span></div></div><div class="journey-path-row"><div class="journey-path-role">审计/安全人员</div><div class="journey-path-nodes"><span class="journey-path-node">需要排查高风险权限分布</span><span class="journey-path-arrow">→</span><span class="journey-path-node">进入权限查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择按角色查询</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择高风险角色</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看该角色下权限和持有人情况</span><span class="journey-path-arrow">→</span><span class="journey-path-node">导出结果用于审计留档</span></div></div></div><h3>旅程缺口</h3><ul class="component-note-list"><li class="component-note-item">缺少从组织架构或人员列表直接跳转到权限查询的快捷入口——管理员通常先在人员列表发现异常，再去找查询工具，中间断流</li><li class="component-note-item">缺少导出报告的格式预览和内容确认环节——审计人员导出前无法预览导出内容，可能出现导出后再发现内容缺失</li></ul></div></div>
+<div class="section-block experience-component" id="2-交互流程总览" data-section-key="flow-overview"><h2 class="section-heading">2. 交互流程总览</h2><div class="section-body"><div class="summary-visual main-node-map"><div class="summary-row"><div class="summary-role">权限管理员</div><div class="summary-path"><span class="summary-step">进入权限查询</span><span class="summary-arrow">→</span><span class="summary-step">选择查询维度（按人/按角色）</span><span class="summary-arrow">→</span><span class="summary-step">输入查询条件</span><span class="summary-arrow">→</span><span class="summary-step">查看结果列表</span><span class="summary-arrow">→</span><span class="summary-step">筛选或搜索缩小范围</span><span class="summary-arrow">→</span><span class="summary-step">展开单条权限的来源详情</span><span class="summary-arrow">→</span><span class="summary-step">跳转配置页进行修改</span><span class="summary-arrow">→</span><span class="summary-step">确认修改生效</span></div></div><div class="summary-row"><div class="summary-role">超级管理员</div><div class="summary-path"><span class="summary-step">进入权限查询</span><span class="summary-arrow">→</span><span class="summary-step">选择查询维度</span><span class="summary-arrow">→</span><span class="summary-step">输入查询条件</span><span class="summary-arrow">→</span><span class="summary-step">查看全量结果</span><span class="summary-arrow">→</span><span class="summary-step">筛选高风险权限</span><span class="summary-arrow">→</span><span class="summary-step">导出权限清单</span><span class="summary-arrow">→</span><span class="summary-step">归档或提交审计</span></div></div><div class="summary-row"><div class="summary-role">审计/安全人员</div><div class="summary-path"><span class="summary-step">进入权限查询</span><span class="summary-arrow">→</span><span class="summary-step">选择查询维度</span><span class="summary-arrow">→</span><span class="summary-step">输入查询条件</span><span class="summary-arrow">→</span><span class="summary-step">查看结果</span><span class="summary-arrow">→</span><span class="summary-step">导出权限报告（带水印和时间戳）</span><span class="summary-arrow">→</span><span class="summary-step">归档</span></div></div></div><p><strong>异常流程重点：</strong></p>
+<ul><li>子管理员查询超出管理范围的人员时，系统不返回该人员的权限数据，提示范围受限</li><li>查询超时时提示缩小范围重试，不静默失败</li><li>查询结果中某条数据的来源信息不完整时，在该条目旁标注数据质量问题</li><li>导出文件生成失败时明确提示并允许重试</li></ul></div></div>
+<div class="section-block experience-component" id="3-主交互流程" data-section-key="main-flow"><h2 class="section-heading">3. 主交互流程</h2><div class="section-body"><h3>节点 3.1：进入权限查询</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>管理员从导航菜单进入权限查询模块。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>展示查询首页，包含两个查询维度入口（按人查询 / 按角色查询）、使用说明摘要。子管理员页面顶部常驻提示：「当前管理范围：XXX 部门及下属部门」。</p><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><ul><li>这里是查询权限归属关系的地方，不做权限配置</li><li>按人查询：查看某个人员拥有的所有权限</li><li>按角色查询：查看某个角色包含的所有权限</li><li>按权限反查暂未开放</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>页面标题：「权限查询」</li><li>子管理员范围提示：「当前查询范围受您的管理权限限制，仅展示您管理范围内的权限数据」</li><li>按人查询入口文案：「按人员查询 —— 查看某个成员拥有的完整权限」</li><li>按角色查询入口文案：「按角色查询 —— 查看某个角色下包含的权限集合」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>选择按人查询或按角色查询进入对应查询页面。</p><h3>节点 3.2：按人查询 —— 输入查询条件</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>在按人查询页面，通过搜索框输入人员姓名、账号，或从组织架构中选择人员。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>搜索框支持模糊搜索，输入时实时展示匹配的人员列表</li><li>选择人员后，下方显示该人员的基本信息（姓名、部门、岗位）作为确认</li><li>提供「查询」按钮发起查询</li></ul><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><ul><li>支持按姓名或账号搜索</li><li>子管理员只能搜索其管理范围内的人员</li><li>查询结果包含该人员通过直接授予、角色继承和协作可见性获得的所有权限</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>搜索框占位文案：「输入姓名或账号搜索」</li><li>选择人员后确认文案：「即将查询 XXX（部门：XXX · 岗位：XXX）的权限清单」</li><li>查询按钮：「查询」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>点击「查询」，进入结果展示。</p><h3>节点 3.3：按人查询 —— 查看结果</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>查看该人员的权限清单，通过筛选和搜索缩小范围，展开感兴趣的单条权限查看详情。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>结果区域顶部显示结果摘要：「共找到 X 条权限记录」</li><li>每条权限以卡片或行形式展示：权限名称、资源类型、动作、来源标签、生效状态</li><li>来源标签区分三种颜色或图标：直接授予、角色继承（显示具体角色名）、协作可见</li><li>点击单条权限可展开完整来源路径、数据范围说明、生效条件</li><li>支持按资源类型、来源、状态筛选</li><li>支持关键词搜索当前结果</li><li>每条结果旁提供「去配置」文字按钮</li></ul><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><ul><li>同一权限如果通过多条路径获得，会分开展示、分别标注来源</li><li>来源标签解释：直接授予 = 管理员直接给这个人加的；角色继承 = 通过某个角色获得的；协作可见 = 通过协作关系可以看到的</li><li>子管理员的查询结果受管理范围限制，可能不完整</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>结果摘要：「共找到 12 条权限记录，其中直接授予 3 条，角色继承 8 条，协作可见 1 条」</li><li>来源标签：「直接授予」「通过角色「XXX」继承」「通过协作关系可见」</li><li>展开后来源路径说明：「来源路径：角色「华东区管理员」→ 应用「考勤管理」→ 功能权限「考勤数据导出」」</li><li>生效状态：「已生效」「待生效（2026-06-15 起效）」「已失效（2026-05-31 到期）」</li><li>数据范围：「数据范围：华东区（上海、杭州、南京）」</li><li>「去配置」按钮文案：「去配置」</li><li>导出按钮：「导出权限清单」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><ul><li>点击「去配置」跳转到对应配置页</li><li>点击「导出」生成权限清单文件</li><li>返回修改查询条件</li></ul><h3>节点 3.4：从查询结果跳转配置并返回</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>在查询结果中点击某条权限的「去配置」，跳转到对应的配置页面（角色管理/应用管理/数据设置等）进行修改，修改完成后回到查询页确认。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>点击「去配置」后在新标签页打开对应配置页</li><li>配置页加载完成后，自动定位到相关配置区域</li><li>用户完成修改后回到查询页，可点击「重新查询」刷新结果</li></ul><p class="flow-field-label"><strong>需要前置解释的信息：</strong></p><ul><li>配置操作不在查询页内完成，这是为了防止误操作</li><li>修改后需要回到查询页重新查询才能看到最新结果</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>跳转过渡提示：「正在打开角色管理页面...」</li><li>返回后的刷新提示：「修改已完成？点击重新查询查看最新权限结果」</li><li>重新查询按钮：「重新查询」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>返回查询页，点击「重新查询」确认修改生效。</p></div></div>
+<div class="section-block experience-component" id="4-次交互流程" data-section-key="secondary-flow"><h2 class="section-heading">4. 次交互流程</h2><div class="section-body"><h3>节点 4.1：按角色查询 —— 输入查询条件</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>在按角色查询页面，从角色列表中选择一个角色。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><p>展示角色搜索框或角色列表，支持搜索和浏览。选择角色后显示角色基本信息（角色名称、角色描述、关联人员数量）。</p><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>搜索框占位文案：「搜索角色名称」</li><li>选择角色后确认文案：「即将查询角色「XXX」（已关联 XX 名人员）的权限清单」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>点击「查询」查看该角色下的权限集合。</p><h3>节点 4.2：按角色查询 —— 查看结果</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>查看该角色包含的权限集合。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>结果摘要显示权限总数和分类分布</li><li>权限列表按资源类型分组展示（应用权限、菜单权限、操作权限、数据权限等）</li><li>每条权限展示权限名称、资源类型、动作</li><li>可展开查看该权限当前被授予了多少人员</li><li>提供「查看持有人」入口（如有）</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>结果摘要：「角色「华东区管理员」包含 25 条权限，覆盖 3 个应用、12 个菜单、8 个操作、2 个数据范围」</li><li>「查看持有人」按钮：「查看持有该权限的人员」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><ul><li>点击某条权限查看持有人</li><li>切换到按人查询进一步了解具体人员</li></ul><h3>节点 4.3：导出权限清单</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>在查询结果页点击「导出」，系统弹出导出确认弹窗。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>弹窗显示导出内容摘要：导出范围、记录数量、导出格式、包含字段</li><li>用户确认后，系统生成文件并提供下载</li><li>文件带水印（导出时间、导出人）和生成时间戳</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>弹窗标题：「确认导出权限清单」</li><li>弹窗内容：「本次导出包含当前查询范围内的全部 X 条权限记录。导出文件为 Excel 格式，包含权限名称、资源类型、来源、生效状态、数据范围等字段。」</li><li>水印提示：「导出文件包含导出人和导出时间水印」</li><li>确认按钮：「确认导出」</li><li>取消按钮：「取消」</li><li>导出成功反馈：「权限清单已生成，点击下载」</li><li>导出失败反馈：「导出失败，请重试」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>下载文件，或关闭弹窗继续查看。</p><h3>节点 4.4：查询结果筛选与搜索</h3><p class="flow-field-label"><strong>用户动作：</strong></p><p>在查询结果页使用筛选器或搜索框缩小结果范围。</p><p class="flow-field-label"><strong>系统反馈：</strong></p><ul><li>筛选器按资源类型、来源、生效状态分类，选择后即时过滤结果</li><li>搜索框支持对当前结果的关键词搜索，即时过滤</li><li>结果数量随筛选实时更新</li></ul><p class="flow-field-label"><strong>建议文案：</strong></p><ul><li>筛选器标签：「全部类型」「应用权限」「菜单权限」「操作权限」「数据权限」</li><li>来源筛选：「全部来源」「直接授予」「角色继承」「协作可见」</li><li>状态筛选：「全部状态」「已生效」「待生效」「已失效」</li><li>搜索占位文案：「在当前结果中搜索」</li></ul><p class="flow-field-label"><strong>下一步：</strong></p><p>筛选后查看过滤结果，或清除筛选恢复完整列表。</p></div></div>
+<div class="section-block experience-component" id="5-异常与阻断流程" data-section-key="exception-flow"><h2 class="section-heading">5. 异常与阻断流程</h2><div class="section-body"><h3>异常 5.1：子管理员查询范围受限</h3><p><strong>发生时机：</strong> 子管理员搜索或选择超出管理范围的人员时</p>
+<p><strong>触发条件：</strong> 被查询人员不在子管理员的「组织范围 × 应用范围」交叉边界内</p>
+<p><strong>判断依据：</strong> 业务蓝图中「子管理员可见范围约束」规则——查询时应用组织范围 × 应用范围交叉过滤</p>
+<p><strong>反馈形式：</strong> 搜索下拉列表中不展示超出范围的人员；若已选择人员后点击查询，返回空结果态的页面提示</p>
+<p><strong>系统反馈：</strong> 搜索时超出范围的人员不在匹配列表中显示；查询时若人员超出范围，结果区域展示空状态提示</p>
+<p><strong>用户下一步：</strong> 缩小查询范围到自身管理范围内，或联系超级管理员申请扩大管理范围</p>
+<p><strong>建议文案：</strong></p>
+<ul><li>搜索无匹配：「未找到匹配的人员。请确认搜索范围是否在您的管理权限内」</li><li>空结果态（范围受限）：「未找到 XXX 的权限记录。当前结果受您的管理范围限制，可能未展示全部权限数据。如需扩大查询范围，请联系超级管理员」</li></ul><h3>异常 5.2：查询结果中来源数据不完整</h3><p><strong>发生时机：</strong> 查看某条权限的来源详情时</p>
+<p><strong>触发条件：</strong> 该权限的来源路径中某个环节数据缺失（如角色已删除但权限残留、数据同步延迟等）</p>
+<p><strong>判断依据：</strong> 业务蓝图中「查询结果必须可解释」规则——不可以隐藏数据不完整的条目，但必须标注</p>
+<p><strong>反馈形式：</strong> 在该权限条目旁显示警告图标和文字说明</p>
+<p><strong>系统反馈：</strong> 权限条目正常展示，但来源标签旁带警告标记，展开后可看到不完整的具体说明</p>
+<p><strong>用户下一步：</strong> 根据不完整提示判断是否需要进一步排查，或联系技术人员确认</p>
+<p><strong>建议文案：</strong></p>
+<ul><li>条目警告标注：「部分来源信息不完整」</li><li>展开后详情：「该权限的来源路径中「角色名称」信息已不可用（角色可能已被删除），当前仅展示可用信息。建议联系技术人员确认此权限的实际归属」</li><li>数据恢复建议：「如需完整数据，请联系超级管理员或技术人员核查」</li></ul><h3>异常 5.3：查询超时</h3><p><strong>发生时机：</strong> 点击查询后，系统在规定时间内未返回结果</p>
+<p><strong>触发条件：</strong> 数据量过大、系统负载高、或权限计算链路耗时过长</p>
+<p><strong>判断依据：</strong> 业务蓝图中「查询超时保护策略」——提示缩小范围重试，不自动缩小范围</p>
+<p><strong>反馈形式：</strong> 页面中央展示加载超时提示，包含「缩小范围重试」按钮</p>
+<p><strong>系统反馈：</strong> 不静默失败，不自动降级查询范围，明确告知用户超时并提供操作指引</p>
+<p><strong>用户下一步：</strong> 缩小查询范围（如增加筛选条件、选择更小组织范围），或等待系统负载降低后重试</p>
+<p><strong>建议文案：</strong></p>
+<ul><li>超时提示标题：「查询超时」</li><li>提示说明：「当前查询数据量较大，暂时未能完成。建议尝试缩小查询范围后重试。」</li><li>操作按钮：「缩小范围后重试」</li><li>替代建议：「如多次超时，建议联系技术人员检查系统状态」</li></ul><h3>异常 5.4：导出文件生成失败</h3><p><strong>发生时机：</strong> 在查询结果页点击「确认导出」后</p>
+<p><strong>触发条件：</strong> 导出数据量过大、文件生成服务异常、或格式转换失败</p>
+<p><strong>判断依据：</strong> 业务蓝图导出保护策略——导出失败需明确提示并允许重试</p>
+<p><strong>反馈形式：</strong> 弹窗或 toast 提示导出失败</p>
+<p><strong>系统反馈：</strong> 不静默失败，告知用户导出失败并提供重试入口</p>
+<p><strong>用户下一步：</strong> 点击重试，或缩小导出范围后重试</p>
+<p><strong>建议文案：</strong></p>
+<ul><li>失败提示：「导出未能完成，请重试」</li><li>重试按钮：「重新导出」</li><li>缩小范围建议：「如多次失败，建议缩小查询范围后重新导出」</li></ul><h3>异常 5.5：无查询页访问权限</h3><p><strong>发生时机：</strong> 非授权角色尝试进入权限查询模块</p>
+<p><strong>触发条件：</strong> 当前登录用户不在允许使用权限查询的角色范围内</p>
+<p><strong>判断依据：</strong> 业务蓝图中「查询能力是只读层」规则——仍需要授权才能访问</p>
+<p><strong>反馈形式：</strong> 页面拦截提示，不展示任何查询界面</p>
+<p><strong>系统反馈：</strong> 展示无权限页面，告知用户无权访问并提供申请入口</p>
+<p><strong>用户下一步：</strong> 向超级管理员申请权限查询的访问授权</p>
+<p><strong>建议文案：</strong></p>
+<ul><li>页面标题：「暂无访问权限」</li><li>说明：「权限查询功能仅对权限管理员、超级管理员和审计人员开放。如需使用此功能，请联系超级管理员申请授权。」</li><li>申请入口：「申请权限」（跳转到权限申请流程）</li></ul></div></div>
+<div class="section-block experience-component" id="6-页面-弹窗-抽屉设计" data-section-key="page-structure"><h2 class="section-heading">6. 页面 / 弹窗 / 抽屉设计</h2><div class="section-body"><h3>页面 6.1：权限查询首页</h3><p><strong>页面目标：</strong> 作为查询入口，引导管理员选择查询维度</p>
+<p><strong>进入条件：</strong> 用户具有权限查询的访问权限</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 子管理员范围提示（如有）：当前管理范围             |<br>+--------------------------------------------------+<br>| 页面标题：权限查询                                |<br>| 说明文字：查询人员与权限的归属关系                 |<br>+--------------------------------------------------+<br>| +------------------+  +------------------+        |<br>| | 按人员查询       |  | 按角色查询       |        |<br>| | 查看某个成员     |  | 查看某个角色     |        |<br>| | 拥有的完整权限   |  | 包含的权限集合   |        |<br>| | [进入查询]       |  | [进入查询]       |        |<br>| +------------------+  +------------------+        |<br>+--------------------------------------------------+<br>| 「接下来」：按权限反查功能筹备中，敬请期待        |<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 子管理员范围提示常驻顶部；按权限反查入口置灰并标注「筹备中」</p>
+<p><strong>异常状态下的结构变化：</strong> 无权限访问时不展示此页面，直接展示拦截页</p>
+<p><strong>具体文案：</strong></p>
+<ul><li>标题：「权限查询」</li><li>说明：「选择查询维度，查看人员与权限的归属关系」</li><li>按人查询卡片标题：「按人员查询」</li><li>按人查询卡片描述：「查看某个成员拥有的完整权限清单，包括直接授予、角色继承和协作可见的权限」</li><li>按人查询按钮：「进入查询」</li><li>按角色查询卡片标题：「按角色查询」</li><li>按角色查询卡片描述：「查看某个角色下包含的权限集合和授权范围」</li><li>按角色查询按钮：「进入查询」</li><li>筹备中提示：「按权限反查功能筹备中，敬请期待」</li></ul>
+<p><strong>按钮：</strong> 主要按钮为两个维度的「进入查询」；按权限反查按钮置灰不可点击</p>
+<p><strong>成功反馈：</strong> （查询首页无成功反馈，选择维度后进入对应查询页）</p>
+<p><strong>失败反馈：</strong> 页面加载失败时展示加载失败提示和重试按钮</p><h3>页面 6.2：按人查询页</h3><p><strong>页面目标：</strong> 查询并展示某个人员的完整权限清单</p>
+<p><strong>进入条件：</strong> 从查询首页选择按人查询进入，或从其他页面跳转</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 面包屑：权限查询 &gt; 按人员查询                     |<br>| 子管理员范围提示（如有）                          |<br>+--------------------------------------------------+<br>| 查询条件区                                       |<br>| [人员搜索框                      ] [查询]         |<br>| 已选人员：XXX · 部门：XXX · 岗位：XXX            |<br>+--------------------------------------------------+<br>| 结果摘要区                                       |<br>| 共找到 X 条权限记录 | 筛选：[类型][来源][状态]    |<br>| 搜索：[在当前结果中搜索              ] [导出]     |<br>+--------------------------------------------------+<br>| 结果列表区                                       |<br>| +----------------------------------------------+ |<br>| | 权限名称 ｜资源类型｜动作｜来源标签｜状态｜操作  | |<br>| | 考勤导出 ｜考勤管理｜导出｜角色「华东」｜生效 ｜&gt;| |<br>| | 员工导入 ｜员工管理｜导入｜直接授予  ｜生效 ｜&gt;| |<br>| | 报表查看 ｜智能报表｜查看｜协作可见  ｜生效 ｜&gt;| |<br>| +----------------------------------------------+ |<br>| [加载更多]                                       |<br>+--------------------------------------------------+<br>| 展开详情面板（点击单条后展开）                    |<br>| 权限名称：考勤数据导出                            |<br>| 来源路径：角色「华东区管理员」→ 应用「考勤管理」  |<br>|         → 功能权限「考勤数据导出」                |<br>| 数据范围：华东区（上海、杭州、南京）              |<br>| 生效时间：2026-01-01 起，长期有效                 |<br>| [去配置]                                        |<br>+--------------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 查询结果加载态在列表区展示骨架屏；查询结果的摘要、筛选和导出位于结果区顶部工具栏</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>空结果（真无权限）：列表区替换为空状态插图 + 提示文案「未查询到 XXX 的权限记录」</li><li>空结果（范围受限）：空状态插图 + 提示文案「当前结果受您的管理范围限制」 + 建议联系超级管理员</li><li>查询超时：列表区替换为超时提示 + 「缩小范围后重试」按钮</li><li>加载失败：列表区替换为加载失败提示 + 「重试」按钮</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>面包屑：「权限查询 &gt; 按人员查询」</li><li>人员搜索框占位：「输入姓名或账号搜索人员」</li><li>查询按钮：「查询」</li><li>结果摘要：「共找到 {N} 条权限记录，其中直接授予 {A} 条，角色继承 {B} 条，协作可见 {C} 条」</li><li>筛选标签：「全部类型」「功能权限」「数据权限」「表单权限」「字段权限」「报表权限」</li><li>来源筛选：「全部来源」「直接授予」「角色继承」「协作可见」</li><li>状态筛选：「全部状态」「已生效」「待生效」「已失效」</li><li>导出按钮：「导出权限清单」</li><li>「去配置」按钮：「去配置」</li></ul>
+<p><strong>按钮：</strong> 主要按钮「查询」；次要按钮「导出权限清单」；每条结果的操作「去配置」为文字链接</p>
+<p><strong>成功反馈：</strong> 查询完成后结果列表从骨架屏过渡到实际数据，「共找到 X 条」随之更新</p>
+<p><strong>失败反馈：</strong> 查询超时或失败时在列表区展示对应对应错误提示和重试入口</p><h3>页面 6.3：按角色查询页</h3><p><strong>页面目标：</strong> 查询并展示某个角色包含的权限集合</p>
+<p><strong>进入条件：</strong> 从查询首页选择按角色查询进入</p>
+<p><strong>页面结构：</strong></p>
+<p>+--------------------------------------------------+<br>| 面包屑：权限查询 &gt; 按角色查询                     |<br>+--------------------------------------------------+<br>| 查询条件区                                       |<br>| [角色搜索框                      ] [查询]         |<br>| 已选角色：华东区管理员 · 关联 156 名人员          |<br>+--------------------------------------------------+<br>| 结果摘要区                                       |<br>| 共 X 条权限 · 覆盖 3 个应用 ｜ 筛选：[类型]      |<br>| [导出]                                           |<br>+--------------------------------------------------+<br>| 结果列表区（按资源类型分组）                      |<br>| 应用权限（5 条）                                 |<br>| +----------------------------------------------+ |<br>| | 权限名称 ｜动作｜持有人数｜展开                | |<br>| | 考勤管理 ｜查看｜156 人 ｜&gt;                    | |<br>| +----------------------------------------------+ |<br>| 菜单权限（12 条）                                |<br>| +----------------------------------------------+ |<br>| | 权限名称 ｜动作｜持有人数｜展开                | |<br>| | 考勤报表 ｜访问｜156 人 ｜&gt;                    | |<br>| +----------------------------------------------+ |<br>| 操作权限（8 条）                                 |<br>| +----------------------------------------------+ |<br>| | 权限名称 ｜动作｜持有人数｜展开                | |<br>| | 数据导出 ｜导出｜156 人 ｜&gt;                    | |<br>| +----------------------------------------------+ |</p>
+<p><strong>状态反馈区：</strong> 查询加载态显示骨架屏；结果按资源类型分组，每组显示权限数量和分组折叠</p>
+<p><strong>异常状态下的结构变化：</strong></p>
+<ul><li>空结果（角色无权限）：列表区为空状态 + 「该角色下暂无权限记录」</li><li>角色已失效/已删除：查询条件区显示角色状态标记 + 仍可查看历史权限清单</li><li>查询超时：与按人查询页相同的超时处理</li></ul>
+<p><strong>具体文案：</strong></p>
+<ul><li>面包屑：「权限查询 &gt; 按角色查询」</li><li>角色搜索框占位：「搜索角色名称」</li><li>查询按钮：「查询」</li><li>结果摘要：「角色「{角色名}」包含 {N} 条权限，覆盖 {M} 个应用」</li><li>分组标签：「应用权限」「菜单权限」「操作权限」「数据权限」「表单权限」</li><li>持有人数：「{N} 人持有」</li><li>查看持有人按钮：「查看持有人」</li></ul>
+<p><strong>按钮：</strong> 主要按钮「查询」；次要按钮「导出权限清单」</p>
+<p><strong>成功反馈：</strong> 查询完成后分组列表从骨架屏过渡到实际数据</p>
+<p><strong>失败反馈：</strong> 与按人查询页相同</p><h3>弹窗 6.4：导出确认弹窗</h3><p><strong>页面目标：</strong> 在导出权限清单前确认导出内容和范围</p>
+<p><strong>进入条件：</strong> 用户在查询结果页点击「导出」按钮</p>
+<p><strong>页面结构：</strong></p>
+<p>+------------------------------------------+<br>| 确认导出权限清单                         |<br>+------------------------------------------+<br>| 导出范围：当前查询结果                   |<br>| 记录数量：共 {N} 条权限记录              |<br>| 导出格式：Excel (.xlsx)                  |<br>| 包含字段：权限名称、资源类型、动作、来源、|<br>|          生效状态、数据范围、授予时间     |<br>+------------------------------------------+<br>| 导出文件将包含导出人和导出时间水印。      |<br>+------------------------------------------+<br>| [取消]              [确认导出]            |<br>+------------------------------------------+</p>
+<p><strong>状态反馈区：</strong> 导出中按钮变为加载态「正在生成文件...」；导出完成后弹窗关闭，触发文件下载</p>
+<p><strong>异常状态下的结构变化：</strong> 导出失败时弹窗内展示失败提示，按钮变为「重新导出」</p>
+<p><strong>具体文案：</strong></p>
+<ul><li>弹窗标题：「确认导出权限清单」</li><li>范围说明：「导出范围：当前查询结果」</li><li>数量说明：「记录数量：共 {N} 条权限记录」</li><li>格式说明：「导出格式：Excel (.xlsx)」</li><li>字段说明：「包含字段：权限名称、资源类型、动作、来源、生效状态、数据范围」</li><li>水印提示：「导出文件包含导出人信息和导出时间水印，请妥善保管」</li><li>取消按钮：「取消」</li><li>确认按钮：「确认导出」</li></ul>
+<p><strong>成功反馈：</strong> toast 提示「权限清单已生成，正在下载」，触发浏览器下载</p>
+<p><strong>失败反馈：</strong> 弹窗内显示「导出未能完成，请重试」，按钮文字变为「重新导出」</p></div></div>
+<div class="section-block experience-component" id="7-状态与反馈文案" data-section-key="state-feedback"><h2 class="section-heading">7. 状态与反馈文案</h2><div class="section-body"><div class="state-feedback-table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>查询加载中</td><td>系统正在检索权限数据</td><td>所有角色</td><td>等待或取消查询</td><td>「正在查询，请稍候...」</td></tr><tr><td>查询有结果</td><td>查询成功并返回了权限记录</td><td>所有角色</td><td>查看、筛选、展开详情、导出、跳转配置</td><td>「共找到 {N} 条权限记录」</td></tr><tr><td>查询无结果（真）</td><td>该人员或角色确实无权限记录</td><td>所有角色</td><td>修改查询条件</td><td>「未查询到该 {人员/角色} 的权限记录」</td></tr><tr><td>查询无结果（范围受限）</td><td>被查询对象不在当前用户管理范围内</td><td>子管理员</td><td>缩小范围或联系超管</td><td>「当前结果受您的管理范围限制，可能未展示全部权限数据」</td></tr><tr><td>查询超时</td><td>查询请求超时未返回</td><td>所有角色</td><td>缩小范围重试</td><td>「查询超时，建议缩小查询范围后重试」</td></tr><tr><td>查询失败</td><td>系统异常导致查询中断</td><td>所有角色</td><td>重试</td><td>「查询未能完成，请重试」</td></tr><tr><td>已生效</td><td>权限当前处于生效状态</td><td>所有角色</td><td>可跳转配置</td><td>「已生效」</td></tr><tr><td>待生效</td><td>权限已设置但尚未到生效时间</td><td>所有角色</td><td>可跳转配置查看详情</td><td>「待生效（{日期} 起效）」</td></tr><tr><td>已失效</td><td>权限已过期或被撤销</td><td>所有角色</td><td>可查看历史记录</td><td>「已失效（{日期} 到期）」</td></tr><tr><td>来源数据不完整</td><td>某条权限的来源路径存在数据缺失</td><td>所有角色</td><td>可展开查看不完整详情</td><td>「部分来源信息不完整，可能影响权限判断」</td></tr><tr><td>导出中</td><td>正在生成导出文件</td><td>所有角色</td><td>等待</td><td>「正在生成导出文件...」</td></tr><tr><td>导出成功</td><td>导出文件已生成并开始下载</td><td>所有角色</td><td>打开文件</td><td>「权限清单已生成，正在下载」</td></tr><tr><td>导出失败</td><td>导出文件生成过程中出错</td><td>所有角色</td><td>重试</td><td>「导出未能完成，请重试」</td></tr><tr><td>无访问权限</td><td>当前用户无权进入权限查询</td><td>非授权用户</td><td>申请权限</td><td>「暂无访问权限，请联系超级管理员申请授权」</td></tr><tr><td>配置跳转中</td><td>正在从查询页跳转到配置页</td><td>所有角色</td><td>等待</td><td>「正在打开配置页面...」</td></tr></tbody></table></div></div></div>
+<div class="section-block experience-component" id="8-待确认问题" data-section-key="open-questions"><h2 class="section-heading">8. 待确认问题</h2><div class="section-body"><ol><li><strong>查询入口在导航中的具体位置</strong></li></ol>
+<p>影响：决定用户从哪些页面可以进入权限查询，以及查询能力在信息架构中的可见性和可发现性。如果挂在权限管理二级入口下，发现成本会高于独立一级入口。<br>建议确认方：产品 / 设计</p>
+<ol><li><strong>按角色查询是否复用角色管理页</strong></li></ol>
+<p>影响：如果按角色查询与角色管理页高度重叠，体验上需要明确差异化定位。建议按角色查询聚焦「该角色下的完整权限展开视图 + 每项权限的持有人统计」，与角色管理页的配置视角互补。<br>建议确认方：产品</p>
+<ol><li><strong>子管理员管理范围的精确计算规则</strong></li></ol>
+<p>影响：决定查询结果的过滤逻辑和空结果提示是否准确。当前业务蓝图中描述为「组织范围 × 应用范围」交叉约束，但具体计算是否包含子部门、是否包含兼岗部门等细节未定。<br>建议确认方：技术 / 产品</p>
+<ol><li><strong>查询结果中「数据范围」字段的展示格式</strong></li></ol>
+<p>影响：当前不同权限类型的数据范围格式不统一（组织树路径、标签、自定义表达式），在查询结果中如何统一展示直接影响用户理解成本。<br>建议确认方：技术 / 设计</p>
+<ol><li><strong>导出文件的字段完整性和格式规范</strong></li></ol>
+<p>影响：审计人员对导出文件有合规要求（如必须包含查询时间、导出人、数据完整性声明），如果当前不清楚具体合规要求，导出功能可能不满足审计需要。<br>建议确认方：产品 / 业务</p>
+<ol><li><strong>按权限反查功能的预计上线时间</strong></li></ol>
+<p>影响：如果按权限反查在近期上线，查询首页的设计需要预留入口位置；如果长期不可用，「筹备中」的占位方式可能需要调整。<br>建议确认方：产品</p></div></div>
+<div class="section-block experience-component" id="附录-设计指南消费说明" data-section-key="appendix"><h2 class="section-heading">附录：设计指南消费说明</h2><div class="section-body"><h3>1. 设计指南消费</h3>
+<table><thead><tr><th>使用依据</th><th>转换结果</th><th>落点</th></tr></thead><tbody><tr><td>信息架构与可发现性原则：入口命名必须提供可预测线索</td><td>查询首页两个维度卡片同时展示名称和描述，让管理员在选择前就知道每个维度的用途</td><td>查询首页（页面 6.1）</td></tr><tr><td>信息架构与可发现性原则：信息分块按任务语义而非数据结构分组</td><td>按角色查询结果按应用权限、菜单权限、操作权限等任务语义分组，而非按底层数据表分组</td><td>按角色查询页（页面 6.3）</td></tr><tr><td>流程模式选择原则：字段多不等于流程多</td><td>查询场景不拆成步骤条流程，保持单页查询+结果展示的简洁结构</td><td>按人查询页（页面 6.2）</td></tr><tr><td>认知/可读性原则：控制信息密度，线索太多会变成噪音</td><td>每条查询结果摘要只展示权限名称、资源类型、来源标签、状态四项，详细来源路径和范围需点击展开</td><td>查询结果列表（页面 6.2、6.3）</td></tr></tbody></table>
+<h3>2. 业务知识消费</h3>
+<table><thead><tr><th>业务知识</th><th>关键规则 / 事实</th><th>转换成的体验策略</th><th>落点</th></tr></thead><tbody><tr><td>查询与配置路径：查询页是解释层，配置页是治理层</td><td>查询和配置职责不能混写</td><td>查询结果只展示和解释，不提供编辑入口；每条结果旁设「去配置」文字链接跳转</td><td>按人查询结果列表、异常流程</td></tr><tr><td>业务对象模型：权限判断至少涉及主体、资源、动作、范围、来源、修饰因子、状态</td><td>scope、source、modifier、state 是查询结果不可缺的结构字段</td><td>查询结果契约中每条权限必须展示来源标签、生效状态、数据范围；来源分直授/角色/协作三种</td><td>查询结果列表、展开详情面板</td></tr><tr><td>角色边界：子管理员受组织范围×应用范围约束</td><td>可见边界与可操作边界不同</td><td>子管理员查询时过滤结果、空结果区分「真无权限」和「范围受限」</td><td>查询首页、空结果态、异常流程 5.1</td></tr><tr><td>体验风险模式：多来源、覆盖规则是权限体验最高风险点</td><td>不解释来源就无法追责</td><td>每条权限展开后展示完整来源路径，多来源分开展示不合并</td><td>展开详情面板、异常流程 5.2</td></tr><tr><td>对象关系：协作可见性不应被并入授权模型</td><td>协作可见与正式授权必须分开标注</td><td>来源标签独立区分为三种类型，协作可见用独立标签和颜色区分</td><td>结果列表、来源标签设计</td></tr></tbody></table>
+<h3>3. 知识缺口</h3>
+<table><thead><tr><th>缺失信息</th><th>影响模块</th><th>建议补充方向</th></tr></thead><tbody><tr><td>按权限反查的具体数据链路状态</td><td>查询首页入口设计、按权限反查页面</td><td>确认权限项是否已形成稳定索引，以及反向查询的技术可行性</td></tr><tr><td>子管理员管理范围的精确计算规则</td><td>查询结果过滤、子管理员空结果提示</td><td>确认组织范围是否包含子部门、兼岗部门、虚拟组织等边界</td></tr><tr><td>权限变更台账的产品规划</td><td>查询结果与变更历史的关系说明</td><td>确认变更台账是否独立建设，查询结果是否需关联最新变更记录</td></tr></tbody></table></div></div></div>
+  <footer class="preview-footer">
+    来源：E:\AI设计\体验蓝图构建思路\projects\permission-query\workspace\experience_blueprint.md &nbsp;|&nbsp; 版本 v3
+  </footer>
+</main>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-btn');
+  var navBusiness = document.getElementById('nav-business');
+  var navExperience = document.getElementById('nav-experience');
+  var contentBusiness = document.getElementById('content-business');
+  var contentExperience = document.getElementById('content-experience');
+  var current = 'business';
+
+  function switchPanel(name) {
+    current = name;
+    tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === name); });
+    navBusiness.classList.toggle('hidden', name !== 'business');
+    navExperience.classList.toggle('hidden', name !== 'experience');
+    contentBusiness.classList.toggle('hidden', name !== 'business');
+    contentExperience.classList.toggle('hidden', name !== 'experience');
+  }
+
+  tabs.forEach(function(t) {
+    t.addEventListener('click', function() { switchPanel(t.dataset.panel); });
+  });
+
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
+      if (panel !== current) switchPanel(panel);
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

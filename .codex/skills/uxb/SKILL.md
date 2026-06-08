@@ -5,15 +5,15 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 # UXB
 
-这个 skill 负责把 UXB 用成一个用户听得懂的业务与体验入口，而不是内部工程命令说明书。
+这个 skill 负责把 UXB 用成一个用户听得懂的业务与体验入口。
 
-## 核心角色
+## 角色
 
 - 作为业务与体验顾问入口
 - 作为 UXB 任务成型入口
-- 在用户明确确认后，作为 UXB 主链路启动器
+- 在用户明确确认后，作为正式蓝图主链路入口
 
-不要把它用成下面这些角色：
+不要把它用成：
 
 - 仓库维护指南
 - `specs/` 规则代言人
@@ -23,255 +23,253 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 ## 总原则
 
 - 全程使用简体中文、大白话、少术语
-- 先判断需求，再决定是否进入正式任务
-- 默认不暴露 `route`、`pipeline`、`gate`、`validate`、`coverage` 等内部词
+- 分析阶段必须显式，不藏内部判断
+- 先读知识，再分析需求
+- `Step 1` 和 `Step 2` 都必须停下来和用户交流
+- 不让用户看到 `route_decision`、`gate`、`validate`、`coverage` 等内部词
 - 不让用户自己选 `fast / standard / full`
-- 只有用户确认后，才启动正式主链路
-- 不把复杂度判断做成关键词命中或硬编码规则
-- 复杂度判断先看底层业务改动，再看体验设计压力
+- 只有用户确认“进入正式蓝图任务”后，正式主链路才开始
 
-### 上位推理
+## 当前结构
 
-上位推理不是提醒，而是分析阶段里的结构性步骤。
+UXB 的正常顺序固定为：
 
-在给出任务摘要或启动判断之前，先完成一轮内部定性，再决定是否进入正式任务。
+```text
+知识命中
+→ 读 summary
+→ 读对应 raw
+→ Step 1：问题定性 + 问题聚焦
+→ 停顿 / 确认 / 选择
+→ Step 2：5 Why + 体验风险
+→ 停顿 / 确认 / 选择
+→ 分析总结收敛
+→ 主链路前任务摘要
+→ 条件确认
+→ 用户选“进入正式蓝图任务”后正式进入主链路
+```
 
-- 需求描述不是结论，先判断它到底改变了什么，再判断它像什么需求
-- 用户给出的方案、抱怨或目标，不等于问题本质；先分清事实、判断、诉求和假设
-- 不要顺着需求字面直接走 happy path；要主动寻找前提是否成立、是否存在断点、错位、冲突或关键缺口
-- 命中某个业务域或某份 summary，不等于知识已经足够；要继续判断“它支撑了什么、还没支撑什么”
-- 不要为了推进主链路弱化阻断型不确定项；如果关键前提不清，就停在判断而不是假装可执行
+不允许回到下面这种旧顺序：
 
-### 分析阶段与任务摘要的边界
+```text
+看完需求直接分析
+→ 跳过收敛
+→ 直接任务摘要
+→ 直接判断单
+```
 
-| 阶段 | 性质 | 可见性 | 内容 |
-| --- | --- | --- | --- |
-| 分析阶段 | UXB 的分析对话过程 | 对用户可见 | 读需求 / 读知识 → 显式问题定性或现象定性 → 复杂度判断 → 判断、影响、建议、需要确认 |
-| 任务摘要 | 进入正式任务前的收敛结果 | 对用户可见，需确认 | 已确认的问题、主要影响、建议处理、仍需确认 |
+## 先读什么
 
-问题定性或现象定性可以在分析阶段对用户显式说出来，但不直接写进正式判断单和蓝图产物。
+这次不通读整个 `references/`，但必须按场景补读：
 
-### 问题定性（需求文档场景）
+- 用户侧表达：`references/user_response_guide.md`
+- 知识消费：`references/knowledge_usage_guide.md`
+- 主链路前任务摘要：`references/task_submission_guide.md`
+- 用户确认进入正式蓝图任务后：`references/execution_guide.md`
+- 写判断单前：`references/uxb_route_decision_authoring_guide.md`
 
-当用户给的是需求文档、PRD、功能说明或明显带方案倾向的输入时，先回答三问：
+## 分析阶段必须显式
 
-1. 这次给我的是问题还是方案？
-2. 问题描述里有没有偷换？
-3. 如果顺着这个方案走，最可能漏掉的前提是什么？
+用户提交需求、需求文档、功能说明、截图或流程问题时：
 
-回答规则：
+1. 先把这件事的性质说清楚
+2. 再往下分析
+3. 不能只给结论不给分析过程
 
-- 三个问题逐一回答，每个问题 1-3 句话
-- 这是分析阶段里要对用户显式说出来的核心判断，不是纯内部步骤
-- 如果发现影响方向的关键问题，先停下来和用户讨论，不要抢先推进到任务摘要或正式任务
-- 如果没有发现错位、偷换或阻断前提，再继续复杂度判断和后续分析结果
-- 如果发现信号，必须在后续分析结果的判断或需要确认中体现
+分析阶段不是正式文件，也不直接替代 `facts`、`business`、`experience`。
+但分析阶段的有效结论，后面要被收敛进去。
 
-### 现象定性（体验诊断场景）
+## 知识消费主协议
 
-当用户给的是页面截图、流程描述、体验问题，要求判断有没有问题或诊断问题时，先回答三问：
+分析前必须先做知识命中。
 
-1. 用户指出的位置，或我最先注意到的位置，是不是真正的问题位置？
-2. 这个症状是局部的还是系统性的？
-3. 如果只修这个点，上下游会不会产生新断点？
+固定协议只有一条：
 
-回答规则：
+```text
+先命中知识
+→ 先读 summary
+→ 再读该 summary 对应的 raw
+→ 再进入具体分析
+```
 
-- 三个问题逐一回答，每个问题 1-3 句话
-- 如果没有发现错位、系统性病因或新增断点风险，再进入任务摘要
-- 如果发现信号，必须在后续任务摘要里显式体现
+这里不再使用下面这种旧口径：
 
-## 阅读顺序
+- `summary 不够再读 raw`
+- `感觉 summary 够了就停`
 
-- 先读完这份 `SKILL.md`，只建立角色、状态、边界和分流意识
-- 然后根据当前状态，最多追加读取 1-3 份最相关 guide，不默认把 `references/` 整包读完
-- 进入正式判断单前，再补读 route decision、knowledge usage 和必要 complexity 资料
-- 只有命中具体领域、具体 summary 或具体阻断点时，才继续向下深读
+`summary` 是路由层，不是停留层。
 
-默认分流：
+## Step 1
 
-- 用户侧表达：[`references/user_response_guide.md`](references/user_response_guide.md)
-- 需求类型判断：[`references/demand_type_judgment_guide.md`](references/demand_type_judgment_guide.md)
-- 知识消费：[`references/knowledge_usage_guide.md`](references/knowledge_usage_guide.md)
-- 判断单生成：[`references/uxb_route_decision_authoring_guide.md`](references/uxb_route_decision_authoring_guide.md)
-- 正式执行：[`references/execution_guide.md`](references/execution_guide.md)
-- 知识候选：[`references/knowledge_candidate_guide.md`](references/knowledge_candidate_guide.md)
+`Step 1` 固定是：
 
-不要因为目录里文档很多，就顺序通读所有 guide。UXB 的正常工作方式是“先分流，再按需深读”。
+**问题定性 + 问题聚焦**
 
-## 用户侧表达
+至少要回答：
 
-用户侧固定激活引导语、分析阶段显式回复结构、任务摘要表达和禁用术语，统一见：
+1. 需求是在讲问题，还是带着解决方案
+2. 谁遇到这个问题
+3. 现在怎么处理
+4. 为什么重要
+5. 什么算成功
+6. 有什么约束
+7. 如果顺着当前方向继续做，最容易漏掉什么前提
 
-- [references/user_response_guide.md](references/user_response_guide.md)
+要求：
 
-## 复杂度判断资料读取策略
+- 用大白话
+- 不默认用“半成品方案”“偷换”“阻断前提”这类太内部的词做用户侧标题
+- 不重复问两遍一件事
 
-需求复杂度判断采用分层读取：
+### Step 1 后必须硬停
 
-1. 每次优先读取 [references/complexity/00_core_complexity_judgment.md](references/complexity/00_core_complexity_judgment.md)
-2. 根据需求识别领域，必要时读取 [references/complexity/01_domain_router.md](references/complexity/01_domain_router.md)
-3. 命中具体领域或判断不准时，只读取对应领域卡片
-4. 判断依据不足时，读取 [references/complexity/02_uncertain_judgment_questioning.md](references/complexity/02_uncertain_judgment_questioning.md) 并向操作者提问
-5. 产生可复用结论时，参考 [references/complexity/03_knowledge_candidate_reminder.md](references/complexity/03_knowledge_candidate_reminder.md) 做轻量提醒
+`Step 1` 输出后必须停下来。
 
-不要每次通读所有领域卡片，也不要把领域知识整段塞进主文。
+这一步不能继续自动进入 `Step 2`。
 
-## 正式任务启动前的需求类型判断
+停下来要允许用户：
 
-每次用户给出需求、需求文档、截图或较完整问题时，先完成判断，再把关键分析过程用用户听得懂的话显式说出来。
+1. 确认判断
+2. 纠偏
+3. 补充背景
+4. 选择是否继续进入 `Step 2`
+5. 在方向明显不成立时转产品分析
 
-先判断这次改动到底改了什么：
+如果存在真实分叉，而且不同选择会导向不同工作方向或不同产物，优先使用编号选项。
 
-- 是页面表现
-- 是业务能力
-- 是规则边界
-- 是概念定义
-- 是任务路径
+## Step 2
 
-再判断两层事情：
+`Step 2` 固定是：
 
-1. 底层业务改动是否变化
-2. 体验设计压力落在什么地方
+**5 Why + 体验风险**
 
-判断时不要只靠领域词或风险词。要先回答：
+要求：
 
-- 这次到底改变了什么
-- 它是不是只影响局部体验
-- 它会不会改变规则、范围、状态或生效含义
-- 它是不是需要先补业务判断，再出体验方案
+1. 内部必须按 5 Why 逻辑往下追
+2. 对用户输出时，不要求机械列出五层
+3. 但必须让人看得出不是平铺直叙
+4. 不能只剩风险列表
 
-详细判断维度见 [references/demand_type_judgment_guide.md](references/demand_type_judgment_guide.md)。
+可以包含：
 
-## 工作状态
+1. 体验风险
+2. 业务风险
+3. 前提风险
 
-每次请求先在内部判断当前更接近哪一种状态，不把这个标签直接抛给用户。
+但顺序必须是：
 
-### 1. 知识问答态
+```text
+先根因追问
+→ 再收敛真正问题
+→ 再暴露风险
+```
 
-- 适用于用户只是在问规则、流程、状态含义、前置条件、业务知识
-- 本场景不执行问题定性或现象定性
-- 直接回答问题
-- 需要时读取 `knowledge/wiki/index.md`、summary、route card 和必要 raw
-- 不创建 UXB 任务
-- 不输出正式蓝图
-- 不主动把用户推进主链路
+### Step 2 后必须硬停
 
-### 2. 诊断咨询态
+`Step 2` 输出后也必须停下来。
 
-- 适用于用户要你判断某个页面、流程、规则解释、体验断点有没有问题
-- 先给业务与体验判断
-- 默认停留在咨询，不自动建任务
-- 用户明确要正式产物时，再转正式任务
-- 优先找断点、错位、承接缺失、前提冲突和信息缺口，不急着顺着用户表述给方案
+这一步不能直接跳任务摘要，也不能直接写判断单。
 
-### 3. 正式蓝图任务态
+停下来要允许用户：
 
-- 适用于用户给出较完整需求，或在咨询后明确要求正式蓝图
-- 先读、先判断、先整理摘要
-- 摘要必须等待用户确认
-- 用户确认后，再进入正式主链路
-- 正式产物写入 `projects/<project-id>/`
+1. 确认根因和风险判断
+2. 补充关键前提
+3. 允许 AI 继续推理补齐
+4. 进入分析总结收敛
+5. 必要时转产品分析
 
-### 4. 知识维护态
+如果存在真实分叉，而且不同选择会导向不同工作方向或不同产物，优先使用编号选项。
 
-- 适用于用户纠正知识、要求沉淀结论、要求更新知识库
-- 不直接写 `knowledge/`
-- 先整理成知识候选
-- 写入知识候选区前仍需用户确认
+## 分析总结收敛
 
-## 全场景知识候选提醒
+`Step 2` 之后，下一步必须是：
 
-知识候选提醒的触发场景、边界和推荐话术，统一见：
+**分析总结收敛**
 
-- [references/complexity/03_knowledge_candidate_reminder.md](references/complexity/03_knowledge_candidate_reminder.md)
-- [references/knowledge_candidate_guide.md](references/knowledge_candidate_guide.md)
+这一步负责：
 
-## 任务成型
+1. 收住 `Step 1 / Step 2` 的有效结论
+2. 说清当前已经明确的关键判断
+3. 标出仍未确认但会影响后续的内容
+4. 为主链路前任务摘要做准备
 
-当请求已经足够清楚，可以变成正式 UXB 任务时：
+这一步首先是对话内收敛，不是立刻写正式文件。
 
-- 先完成分析阶段，把需求定义清楚
-- 再用用户看得懂的话整理任务摘要
-- 摘要聚焦：要解决什么、我的判断、主要影响、建议处理、仍需确认
-- 先给摘要，等确认，再创建任务
-- 任务很复杂时，把详细展开放进正式输入文件，不把聊天摘要写成小型蓝图
+## 主链路前任务摘要
 
-默认模板见 [assets/task_summary.template.md](assets/task_summary.template.md)。详细规则见 [references/task_submission_guide.md](references/task_submission_guide.md)。
+分析总结收敛之后，才进入主链路前任务摘要。
 
-## UXB 判断单生成
+默认摘要结构保持轻量：
 
-正式执行前，必须先由 UXB 完成需求判断和资料选择，并写入：
+1. 判断
+2. 建议怎么做
+3. 仍需确认
 
-- `projects/<project-id>/runtime/uxb_route_decision.json`
+不默认把“影响”单列出来重复 `Step 2`。
+也不直接对用户说 `facts` 这类内部文件词。
 
-这个文件是执行中枢的唯一判断源。执行中枢只检查、装配和执行，不替 UXB 判断。
+## 条件确认
 
-### 何时必须生成
+主链路前任务摘要之后，必须进入条件确认。
 
-- 用户明确表达“确认 / 开始 / 创建任务 / 走主链路 / 输出正式产物”之后
-- 调用执行中枢之前
+默认 4 条路径是：
 
-如果该文件不存在，不得启动主链路。
+1. 进入正式蓝图任务
+2. 先补充需要确认的
+3. 允许 AI 继续推理补齐后再启动
+4. 转产品分析
 
-### 生成前必须先读
+如果这里存在真实分叉，默认使用编号选项。
 
-1. [references/uxb_route_decision_authoring_guide.md](references/uxb_route_decision_authoring_guide.md)
-2. [references/complexity/00_core_complexity_judgment.md](references/complexity/00_core_complexity_judgment.md)
-3. [references/complexity/01_domain_router.md](references/complexity/01_domain_router.md)
-4. [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)
+## 正式蓝图主链路入口
 
-然后按需读取命中的领域卡片、summary 和必要 raw，不要通读整个 `knowledge/`，也不要把所有领域卡片一股脑读完。
+主链路入口不是 `bootstrap`。
 
-### 写入模板
+真正的入口是：
 
-写入时使用：
+**用户明确选择“进入正式蓝图任务”**
 
-- [assets/uxb_route_decision.template.json](assets/uxb_route_decision.template.json)
+从这一刻开始，主链路内部顺序固定为：
 
-判断单阶段的“做什么 / 不做什么 / 判断不准时怎么处理”，统一以
-[references/uxb_route_decision_authoring_guide.md](references/uxb_route_decision_authoring_guide.md)
-为准；这份 `SKILL.md` 只负责把你路由到那里，不再重复展开一遍。
+```text
+创建项目目录
+→ 写正式输入
+→ 写判断单
+→ 判断单校验
+→ 后续生成阶段
+```
 
-## 正式执行
+## 任务摘要与正式启动
 
-只有用户明确表达“确认 / 开始 / 创建任务 / 走主链路 / 输出正式产物”后，才进入执行。
+主链路前任务摘要和正式启动边界，统一看：
 
-执行方式、真实命令确认、任务创建和质量边界，统一见：
+- `references/task_submission_guide.md`
 
-- [references/execution_guide.md](references/execution_guide.md)
+用户确认进入正式蓝图任务后的执行，统一看：
 
-## 知识使用
+- `references/execution_guide.md`
 
-知识读取范围控制、summary 优先和用户纠错处理，统一见：
+## 判断单
 
-- [references/knowledge_usage_guide.md](references/knowledge_usage_guide.md)
+写 `runtime/uxb_route_decision.json` 前，必须先读：
 
-正式做知识选择时，要明确区分领域 README、`00_领域概述` 和 `knowledge/templates/**` 的角色，不把入口文档或模板当成正式业务事实消费；具体升级 raw、选 guideline、控制读取深度，都在该 guide 里处理。
+- `references/uxb_route_decision_authoring_guide.md`
+- `assets/uxb_route_decision.template.json`
 
-## 资产地图
+判断单是执行判断与知识选择文件，不替代分析阶段对话。
 
-仓库主要区域怎么用，统一见：
+## 复杂度资料
 
-- [references/asset_map.md](references/asset_map.md)
+复杂度相关资料继续保留原结构：
+
+1. `references/complexity/00_core_complexity_judgment.md`
+2. `references/complexity/01_domain_router.md`
+3. 必要时再读命中的领域卡片
+
+不要每次通读所有领域卡片。
 
 ## 边界
 
+- 不把分析阶段做成问卷机
 - 不让用户先理解内部状态名才能继续
-- 不把 UXB 优化成让用户选内部路线
-- 不把复杂度判断写成关键词分类器说明
-- 不把主链路实现细节当作用户侧沟通内容
-- 不自动写正式知识库
-- 不用规则替代 UXB 的业务与体验判断
-- 不把问题定性藏成纯内部步骤
-- 不让 `gate / validate / coverage` 参与分析阶段的语义判断
-
-## 最终体验标准
-
-用户最后应感受到：
-
-- 它能先判断需求轻重
-- 它能用大白话说明为什么这么处理
-- 它不会把内部工程术语丢给用户
-- 它不会小题大做
-- 它也不会漏掉对象、规则、状态、生效、口径、回写这类关键风险
+- 不让工程护栏接管语义判断
+- 不因为这次重建打乱 `facts / business / experience` 已经正确的边界
