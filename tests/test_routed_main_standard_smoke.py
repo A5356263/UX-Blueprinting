@@ -529,7 +529,7 @@ def _route_decision(project_id: str) -> dict[str, object]:
         "can_execute_mainline": True,
         "business_depth": "business_blueprint_lite",
         "experience_output": "experience_blueprint",
-        "experience_pressure": ["需要显式承接状态、异常、阻断和反馈文案"],
+        "experience_pressure": [],
         "knowledge_selection": {
             "files": [business_summary, complexity_summary],
             "reasoning": "用业务 summary 约束标准模式 smoke 项目的业务范围、状态闭环和异常边界，并用复杂度参考辅助执行入口判断。",

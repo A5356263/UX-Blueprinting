@@ -28,7 +28,7 @@
 ## 最小执行清单
 
 1. 在 `source/requirement.md` 粘贴原始需求
-2. 在 `source/background.md` 补充背景与约束
+2. 在 `source/background.md` 补充背景、约束、正式任务分析收敛总结与 GAP
 3. 按执行入口依次运行命令
 4. 在 `workspace/` 查看三份主产物与检查报告
 5. 需要交付镜像时再执行 `archive`

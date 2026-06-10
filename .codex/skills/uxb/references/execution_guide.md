@@ -46,13 +46,16 @@ python -m packages bootstrap <project-id> --task-name "<task-name>" --domain "<d
 
 ## 写正式输入
 
-bootstrap 后，把刚才已经确认过的分析结论写进：
+bootstrap 后，将用户确认进入正式蓝图前已经收敛的信息写入正式输入层：
 
 - `projects/<project-id>/source/requirement.md`
+  - 写原始需求、用户确认后的目标、本次任务范围
 - `projects/<project-id>/source/background.md`
+  - 写背景资料、约束、历史上下文、正式任务分析收敛总结、风险与 GAP
 
-默认不在这个阶段重写聊天记录。
-写的是已经收住的正式输入。
+默认不重写聊天记录。
+默认不把完整推理过程写进去。
+写的是后续 `facts.md` 可以稳定消费的正式输入。
 
 ## 写判断单
 
@@ -62,6 +65,10 @@ bootstrap 后，把刚才已经确认过的分析结论写进：
 - `assets/uxb_route_decision.template.json`
 
 如果判断单缺失，或 `can_execute_mainline` 仍为 `false`，就不要继续。
+
+判断单只写执行路由与知识选择，不写体验压力点、业务语义细节、设计策略或分析过程。
+
+如当前 schema 仍存在 `experience_pressure`，保持空数组 `[]`，不要把 Step2 的体验承接重点写入判断单。
 
 写判断单时仍然遵守：
 

@@ -142,7 +142,6 @@ def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
 
     business_depth = str(decision.get("business_depth") or "").strip()
     experience_output = str(decision.get("experience_output") or "").strip()
-    experience_pressure = "；".join(_clean_list(decision.get("experience_pressure"), limit=3))
     execution = decision.get("execution")
     if not isinstance(execution, dict):
         execution = {}
@@ -154,8 +153,6 @@ def _uxb_judgment_prompt_lines(project_id: str, target_stage: str) -> list[str]:
         lines.append(f"- 这次需要达到的业务判断深度：{business_depth}")
     if target_stage == "experience" and experience_output:
         lines.append(f"- 这次需要产出的体验结果：{experience_output}")
-    if experience_pressure and target_stage == "experience":
-        lines.append(f"- 需要重点承接的体验压力：{experience_pressure}")
     if required_outputs:
         lines.append(f"- 本次主链路必须产出的文件：{required_outputs}")
     if execution_notes:

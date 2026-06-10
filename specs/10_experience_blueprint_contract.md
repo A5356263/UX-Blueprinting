@@ -71,7 +71,7 @@ experience 可以承接局部待确认，但不应承接“主方案未定”。
 
 ## 与执行控制的关系
 
-- experience 可以参考 `experience_output`、`experience_pressure`、`execution_mode`
+- experience 可以参考 `experience_output`、`execution_mode`
 - 这些信息只用于控制输出深度和体验承接重点
 - 这些信息不能替代 business 产物成为需求语义主输入
 - 不得原样暴露执行字段
