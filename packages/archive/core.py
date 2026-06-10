@@ -10,6 +10,7 @@ from packages.common import (
     get_project_runtime_dir,
     get_project_source_dir,
     get_project_workspace_dir,
+    sanitize_json_text,
 )
 from packages.provenance import append_command_if_provenance_exists
 
@@ -29,7 +30,7 @@ def read_json(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}

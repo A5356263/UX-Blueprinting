@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 
 UXB_COMPLEXITY_REF_MARKER = "skills/uxb/references/complexity/"
+_TRAILING_COMMA_RE = re.compile(r",(\s*[\]\}])")
 
 
 def _env_path(env_var: str, default: Path) -> Path:
@@ -111,12 +113,23 @@ def get_env_check_report_path() -> Path:
     return get_tmp_root_dir() / "env-check-report.json"
 
 
+def sanitize_json_text(raw: str) -> str:
+    """Normalize common weak-LLM JSON formatting issues before parsing."""
+    if raw.startswith("\ufeff"):
+        raw = raw[1:]
+    raw = raw.replace("\u201c", '"').replace("\u201d", '"')
+    raw = raw.replace("\u2018", "'").replace("\u2019", "'")
+    raw = raw.replace("\uff1a", ":")
+    raw = raw.replace("\uff0c", ",")
+    return _TRAILING_COMMA_RE.sub(r"\1", raw)
+
+
 def read_project_meta(project_id: str) -> dict[str, object]:
     path = get_project_meta_path(project_id)
     if not path.exists():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}

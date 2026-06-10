@@ -10,6 +10,7 @@ from packages.common import (
     get_repo_root,
     normalize_repo_ref,
     repo_ref_to_path,
+    sanitize_json_text,
     to_repo_ref,
 )
 
@@ -28,7 +29,7 @@ def _load_json_payload(path: Path) -> tuple[dict[str, Any], str | None]:
     if not path.exists() or not path.is_file():
         return {}, "missing"
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError as error:
         return {}, f"invalid_json: line {error.lineno} column {error.colno} ({error.msg})"
     if not isinstance(payload, dict):

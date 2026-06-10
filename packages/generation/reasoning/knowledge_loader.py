@@ -4,7 +4,13 @@ import json
 import re
 from pathlib import Path
 
-from packages.common import get_project_runtime_dir, get_repo_root, normalize_repo_ref, repo_ref_to_path
+from packages.common import (
+    get_project_runtime_dir,
+    get_repo_root,
+    normalize_repo_ref,
+    repo_ref_to_path,
+    sanitize_json_text,
+)
 from packages.knowledge_consumption.summary_parser import parse_summary_metadata
 
 from .schemas import KnowledgeNote
@@ -52,7 +58,7 @@ def _load_reference_paths_from_manifest(project_id: str, stage: str) -> list[str
     if not manifest_path.exists():
         return []
 
-    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload = json.loads(sanitize_json_text(manifest_path.read_text(encoding="utf-8")))
     references = payload.get("references")
     if not isinstance(references, list):
         return []

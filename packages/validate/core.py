@@ -15,6 +15,7 @@ from packages.common import (
     get_repo_root,
     normalize_repo_ref,
     repo_ref_to_path,
+    sanitize_json_text,
 )
 from packages.provenance import append_command_if_provenance_exists, validate_provenance
 from packages.route_decision import load_uxb_execution_decision
@@ -605,7 +606,7 @@ def read_json(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
 
@@ -1511,7 +1512,7 @@ def read_gate_status(project_id: str, stage: str) -> dict[str, object] | None:
     _, status_path = get_gate_paths(project_id, stage)
     if not status_path.exists():
         return None
-    return json.loads(status_path.read_text(encoding="utf-8"))
+    return json.loads(sanitize_json_text(status_path.read_text(encoding="utf-8")))
 
 
 def add_provenance_issues(issues: list[tuple[str, str]], project_id: str, required_commands: list[str]) -> None:

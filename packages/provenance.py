@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from packages.common import get_project_runtime_dir, get_project_source_dir
+from packages.common import get_project_runtime_dir, get_project_source_dir, sanitize_json_text
 
 
 PROVENANCE_FILE = "provenance.json"
@@ -35,7 +35,7 @@ def read_provenance(project_id: str) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from packages.common import get_repo_root
+from packages.common import get_repo_root, sanitize_json_text
 
 
 def get_registry_dir() -> Path:
@@ -26,7 +26,7 @@ def _read_registry_payload(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise SystemExit(f"Missing capability registry file: {path}")
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError as error:
         raise SystemExit(f"Invalid capability registry payload: {path}") from error
     if not isinstance(payload, dict):

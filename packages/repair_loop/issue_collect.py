@@ -11,6 +11,7 @@ from packages.common import (
     get_project_runtime_dir,
     get_project_workspace_dir,
     get_repo_root,
+    sanitize_json_text,
 )
 
 
@@ -63,7 +64,7 @@ def read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return data if isinstance(data, dict) else {}

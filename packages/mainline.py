@@ -7,6 +7,7 @@ from packages.common import (
     get_examples_root_dir,
     get_project_preview_dir,
     get_project_remediation_dir,
+    sanitize_json_text,
 )
 from packages.context_assemble import run_context_assemble
 from packages.experience_preview import run_experience_preview
@@ -103,7 +104,7 @@ def _read_json(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}

@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import json
 
-from packages.common import get_project_runtime_dir, get_project_workspace_dir, get_specs_root_dir, get_templates_root_dir
+from packages.common import (
+    get_project_runtime_dir,
+    get_project_workspace_dir,
+    get_specs_root_dir,
+    get_templates_root_dir,
+    sanitize_json_text,
+)
 from packages.provenance import upsert_generated_provenance
 
 
@@ -83,7 +89,7 @@ def _read_context_manifest(project_id: str) -> dict[str, object] | None:
     if not manifest_path.exists():
         return None
     try:
-        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(manifest_path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return None
     return payload if isinstance(payload, dict) else None
@@ -94,7 +100,7 @@ def _read_uxb_route_decision(project_id: str) -> dict[str, object] | None:
     if not decision_path.exists():
         return None
     try:
-        payload = json.loads(decision_path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(decision_path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return None
     return payload if isinstance(payload, dict) else None

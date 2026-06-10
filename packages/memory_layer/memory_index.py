@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from packages.common import get_memory_root_dir, get_repo_root
+from packages.common import get_memory_root_dir, get_repo_root, sanitize_json_text
 
 
 def now_iso() -> str:
@@ -16,7 +16,7 @@ def read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(sanitize_json_text(path.read_text(encoding="utf-8")))
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}
