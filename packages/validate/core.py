@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1344,15 +1345,23 @@ def resolve_required_output_path(project_id: str, normalized_path: str) -> Path:
 
 def report_summary_lines(status: str, blockers: list[str], warnings: list[str], infos: list[str]) -> list[str]:
     return [
-        "## Summary",
+        "## 1. 检查结果",
         "",
         f"- status: {status}",
+        f"- 是否阻断: {'是' if blockers else '否'}",
         f"- has_blocker: {'true' if blockers else 'false'}",
         f"- blocker_count: {len(blockers)}",
         f"- warning_count: {len(warnings)}",
         f"- info_count: {len(infos)}",
         "",
     ]
+
+
+def should_write_human_report(status: str, warning_count: int) -> bool:
+    debug_flags = ("UXB_DEBUG_REPORTS", "UXB_VERBOSE_REPORTS")
+    if any(str(os.getenv(name, "")).strip().lower() in {"1", "true", "yes", "on"} for name in debug_flags):
+        return True
+    return status != "passed" or warning_count > 0
 
 
 def render_stage_gate_report(
@@ -1365,6 +1374,14 @@ def render_stage_gate_report(
     status: str,
     checked_files: list[str],
 ) -> str:
+    issue_lines: list[str] = []
+    for item in blockers:
+        issue_lines.append(f"- blocker: {item}")
+    for item in warnings:
+        issue_lines.append(f"- warning: {item}")
+    for item in infos:
+        issue_lines.append(f"- info: {item}")
+
     lines = [
         "# Stage Gate Report",
         "",
@@ -1374,16 +1391,19 @@ def render_stage_gate_report(
         f"- next_stage: {next_stage}",
         f"- can_proceed: {'true' if status != 'failed' else 'false'}",
         "",
-        "## Checked Files",
+        "## 2. 问题列表",
         "",
     ]
+    lines.extend(issue_lines or ["- none"])
+    lines.extend(["", "## 3. 检查范围", ""])
     lines.extend([f"- {item}" for item in checked_files] or ["- none"])
-    lines.extend(["", "## Blockers", ""])
-    lines.extend([f"- {item}" for item in blockers] or ["- none"])
-    lines.extend(["", "## Warnings", ""])
-    lines.extend([f"- {item}" for item in warnings] or ["- none"])
-    lines.extend(["", "## Infos", ""])
-    lines.extend([f"- {item}" for item in infos] or ["- none"])
+    lines.extend(["", "## 4. 建议处理", ""])
+    if blockers:
+        lines.append("- 存在 blocker，请先修复对应正式产物后再重跑当前检查。")
+    elif warnings:
+        lines.append("- 当前为 warning，可复核后接受，或补强对应内容后重跑。")
+    else:
+        lines.append("- 当前检查通过，机器状态以对应 *_gate_status.json 为准。")
     return "\n".join(lines) + "\n"
 
 
@@ -1499,13 +1519,20 @@ def write_gate_artifacts(
     infos: list[str],
     checked_files: list[str],
     metrics: dict[str, object],
-) -> tuple[Path, Path, str]:
+) -> tuple[Path | None, Path, str]:
     report_path, status_path = get_gate_paths(project_id, stage)
     payload = build_gate_payload(project_id, stage, next_stage, blockers, warnings, infos, checked_files, metrics)
-    report = render_stage_gate_report(project_id, stage, next_stage, blockers, warnings, infos, str(payload["status"]), checked_files)
-    report_path.write_text(report, encoding="utf-8")
+    status = str(payload["status"])
+    if should_write_human_report(status, len(warnings)):
+        report = render_stage_gate_report(project_id, stage, next_stage, blockers, warnings, infos, status, checked_files)
+        report_path.write_text(report, encoding="utf-8")
+        written_report_path: Path | None = report_path
+    else:
+        if report_path.exists():
+            report_path.unlink()
+        written_report_path = None
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    return report_path, status_path, str(payload["status"])
+    return written_report_path, status_path, status
 
 
 def read_gate_status(project_id: str, stage: str) -> dict[str, object] | None:
@@ -2304,7 +2331,10 @@ def run_facts_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Facts gate finished: {report_path}")
+    if report_path:
+        print(f"Facts gate finished: {report_path}")
+    else:
+        print("Facts gate finished: report skipped (passed without warnings)")
     print(f"Facts gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-facts")
     if status == "failed":
@@ -2361,7 +2391,10 @@ def run_business_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Business gate finished: {report_path}")
+    if report_path:
+        print(f"Business gate finished: {report_path}")
+    else:
+        print("Business gate finished: report skipped (passed without warnings)")
     print(f"Business gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-business")
     if status == "failed":
@@ -2453,7 +2486,10 @@ def run_business_note_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Business note gate finished: {report_path}")
+    if report_path:
+        print(f"Business note gate finished: {report_path}")
+    else:
+        print("Business note gate finished: report skipped (passed without warnings)")
     print(f"Business note gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-business-note")
     if status == "failed":
@@ -2503,7 +2539,10 @@ def run_business_lite_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Business lite gate finished: {report_path}")
+    if report_path:
+        print(f"Business lite gate finished: {report_path}")
+    else:
+        print("Business lite gate finished: report skipped (passed without warnings)")
     print(f"Business lite gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-business-lite")
     if status == "failed":
@@ -2568,7 +2607,10 @@ def run_experience_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Experience gate finished: {report_path}")
+    if report_path:
+        print(f"Experience gate finished: {report_path}")
+    else:
+        print("Experience gate finished: report skipped (passed without warnings)")
     print(f"Experience gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-experience")
     if status == "failed":
@@ -2640,7 +2682,10 @@ def run_experience_lite_gate(project_id: str) -> int:
         checked_files,
         metrics,
     )
-    print(f"Experience lite gate finished: {report_path}")
+    if report_path:
+        print(f"Experience lite gate finished: {report_path}")
+    else:
+        print("Experience lite gate finished: report skipped (passed without warnings)")
     print(f"Experience lite gate status: {status_path}")
     append_command_if_provenance_exists(project_id, "gate-experience-lite")
     if status == "failed":

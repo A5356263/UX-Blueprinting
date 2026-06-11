@@ -11,7 +11,7 @@
 
 阶段 gate 对应输出：
 
-- `projects/<project-id>/runtime/gates/*_gate_report.md`
+- `projects/<project-id>/runtime/gates/*_gate_report.md`（仅在 `failed` / `warning` 或显式 debug / verbose 模式下要求产出）
 - `projects/<project-id>/runtime/gates/*_gate_status.json`
 
 ## Status Levels

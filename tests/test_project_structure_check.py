@@ -42,7 +42,7 @@ class ProjectStructureCheckTests(unittest.TestCase):
         check_json = project_dir / "runtime" / "project_structure_check.json"
         check_md = project_dir / "runtime" / "project_structure_check.md"
         self.assertTrue(check_json.exists())
-        self.assertTrue(check_md.exists())
+        self.assertFalse(check_md.exists())
         self.assertFalse((project_dir / "workspace" / "facts.md").exists())
         self.assertFalse((project_dir / "workspace" / "business_blueprint.md").exists())
         self.assertFalse((project_dir / "workspace" / "experience_blueprint.md").exists())
@@ -66,6 +66,7 @@ class ProjectStructureCheckTests(unittest.TestCase):
         payload = json.loads((project_dir / "runtime" / "project_structure_check.json").read_text(encoding="utf-8"))
         self.assertEqual(payload.get("status"), "failed")
         self.assertIn("runtime/", payload.get("missing_entries", []))
+        self.assertTrue((project_dir / "runtime" / "project_structure_check.md").exists())
 
     def test_structure_check_blocks_workspace_template_pollution(self) -> None:
         project_id = "workspace-template"

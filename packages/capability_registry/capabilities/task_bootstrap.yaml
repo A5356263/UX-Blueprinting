@@ -16,7 +16,6 @@
     "projects/<project-id>/workspace/",
     "projects/<project-id>/runtime/gates/",
     "projects/<project-id>/runtime/project_structure_check.json",
-    "projects/<project-id>/runtime/project_structure_check.md",
     "projects/<project-id>/meta.json"
   ],
   "dependencies": [],

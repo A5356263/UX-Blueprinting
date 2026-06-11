@@ -48,6 +48,13 @@ def _write_json(path: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _resolved_required_outputs(decision: dict[str, object]) -> list[str]:
+    values = decision.get("required_outputs", [])
+    if not isinstance(values, list):
+        return []
+    return [str(item).strip() for item in values if str(item).strip()]
+
+
 def _actual_outputs(project_id: str) -> list[str]:
     workspace_dir = get_project_workspace_dir(project_id)
     runtime_dir = get_project_runtime_dir(project_id)
@@ -263,7 +270,7 @@ def run_routed_main(project_id: str, route: str = "auto", skip_preview: bool = F
         "execution_mode": execution_mode,
         "mainline_entry": "user_confirmed_formal_blueprint_task",
         "planned_steps": [item["command"] for item in setup_results] + [name for name, _ in steps],
-        "uxb_route_decision": execution_decision,
+        "required_outputs": _resolved_required_outputs(execution_decision),
     }
     _write_json(plan_path, plan)
 

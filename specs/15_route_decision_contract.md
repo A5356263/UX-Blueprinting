@@ -25,7 +25,7 @@
 - 基于 source 文件重新推导 route
 - 生成新的 reason / evidence / guardrail
 - 生成 `runtime/route_decision.json`
-- 生成 `route_decision.md`
+- 生成 `runtime/route_decision.md`
 
 ## Input Boundary
 
@@ -66,6 +66,7 @@
 ## Prohibited Behaviors
 
 - 不得生成新的 `route_decision.json`
+- 不得生成新的 `route_decision.md`
 - 不得读取旧规则文件做语义判断
 - 不得输出新的 `reason`
 - 不得输出新的 `evidence`

@@ -10,9 +10,7 @@
     "projects/<project-id>/runtime/gates/business_gate_status.json",
     "projects/<project-id>/runtime/gates/experience_gate_status.json",
     "projects/<project-id>/workspace/check_status.json",
-    "projects/<project-id>/workspace/check_report.md",
-    "projects/<project-id>/runtime/trace_index.json",
-    "projects/<project-id>/runtime/gate_metrics.json"
+    "projects/<project-id>/runtime/context_manifest.json"
   ],
   "declared_outputs": [
     "projects/<project-id>/runtime/remediation/issue_index.json",

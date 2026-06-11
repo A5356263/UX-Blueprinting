@@ -7,16 +7,14 @@
 ## Inputs
 
 至少读取：
-
 - `projects/<project-id>/runtime/context_manifest.json`
 - `projects/<project-id>/workspace/check_status.json`
-- `projects/<project-id>/workspace/check_report.md`
 - `projects/<project-id>/runtime/gates/facts_gate_status.json`
 - `projects/<project-id>/runtime/gates/business_gate_status.json`
 - `projects/<project-id>/runtime/gates/experience_gate_status.json`
 
 如存在，也可读取：
-
+- `projects/<project-id>/workspace/check_report.md`
 - `projects/<project-id>/runtime/uxb_route_decision.json`
 - `projects/<project-id>/runtime/trace_index.json`
 - `projects/<project-id>/runtime/gate_metrics.json`
@@ -28,7 +26,6 @@
 ## Outputs
 
 至少输出：
-
 - `projects/<project-id>/runtime/remediation/issue_index.json`
 - `projects/<project-id>/runtime/remediation/remediation_plan.json`
 - `projects/<project-id>/runtime/remediation/retry_scope.json`

@@ -7,6 +7,7 @@ import uuid
 from pathlib import Path
 
 from packages.common import get_project_dir, get_repo_root
+from packages.context_assemble import run_context_assemble
 from packages.provenance import build_generated_provenance, write_provenance
 from packages.routed_main.core import _steps_for_execution_mode, run_routed_main
 
@@ -614,10 +615,49 @@ class RoutedMainStandardSmokeTests(unittest.TestCase):
 
         runtime_dir = self.project_dir / "runtime"
         workspace_dir = self.project_dir / "workspace"
+        plan = json.loads((runtime_dir / "routed_main_plan.json").read_text(encoding="utf-8"))
         report = json.loads((runtime_dir / "routed_main_report.json").read_text(encoding="utf-8"))
         status = json.loads((workspace_dir / "check_status.json").read_text(encoding="utf-8"))
+        manifest = json.loads((runtime_dir / "context_manifest.json").read_text(encoding="utf-8"))
         provenance = json.loads((runtime_dir / "provenance.json").read_text(encoding="utf-8"))
 
+        self.assertNotIn("uxb_route_decision", plan)
+        self.assertEqual(
+            plan.get("required_outputs"),
+            ["facts.md", "business_blueprint_lite.md", "experience_blueprint.md"],
+        )
+        stage_contexts = manifest.get("stage_contexts", {})
+        self.assertIsInstance(stage_contexts, dict)
+        references = manifest.get("references", [])
+        self.assertTrue(references)
+        first_ref = references[0]
+        self.assertIn("reference", first_ref)
+        self.assertIn("group", first_ref)
+        self.assertIn("consumed_by", first_ref)
+        self.assertIn("source", first_ref)
+        self.assertIn("destination", first_ref)
+        self.assertIn("exists", first_ref)
+        self.assertIn("copied", first_ref)
+        self.assertNotIn("routed_by_summary", first_ref)
+        self.assertNotIn("why_summary_not_enough", first_ref)
+        self.assertNotIn("decision_points", first_ref)
+        self.assertNotIn("selected_by", first_ref)
+        self.assertIn(f"projects/{self.project_id}/source/requirement.md", stage_contexts.get("facts", []))
+        self.assertIn(f"projects/{self.project_id}/source/background.md", stage_contexts.get("facts", []))
+        self.assertIn(f"projects/{self.project_id}/workspace/facts.md", stage_contexts.get("business", []))
+        self.assertIn(f"projects/{self.project_id}/runtime/uxb_route_decision.json", stage_contexts.get("validate", []))
+        self.assertEqual(manifest.get("excluded_refs"), [])
+        self.assertIn(
+            f"projects/{self.project_id}/runtime/context_bundle/shared/complexity/00_core_complexity_judgment.md",
+            stage_contexts.get("business", []),
+        )
+        self.assertTrue((runtime_dir / "context_bundle" / "shared" / "requirement.md").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "shared" / "background.md").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "shared" / "complexity" / "00_core_complexity_judgment.md").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "facts").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "business").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "experience").exists())
+        self.assertTrue((runtime_dir / "context_bundle" / "gate").exists())
         self.assertEqual(report.get("status"), "passed")
         self.assertEqual(report.get("execution_mode"), "standard")
         self.assertEqual(status.get("status"), "passed")

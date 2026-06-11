@@ -254,6 +254,11 @@ def _write_report(project_id: str, status: str, missing: list[str], issues: list
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
+    if status == "passed":
+        if md_path.exists():
+            md_path.unlink()
+        return
+
     lines = [
         "# Project Structure Check",
         "",

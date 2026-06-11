@@ -25,6 +25,8 @@
 1. task card 中的 `template_refs`
 2. task card 中的 `check_refs`
 3. `uxb_route_decision.json.knowledge_selection.files`
+4. `source/requirement.md`
+5. `source/background.md`
 
 ## Reference Rules
 
@@ -40,7 +42,9 @@
 
 - 读取 `source/task_card.md`
 - 读取 `runtime/uxb_route_decision.json`
+- 读取 `source/requirement.md` 与 `source/background.md`
 - 校验显式 refs 是否存在
+- 把 `source/requirement.md` / `source/background.md` 作为 shared 正式输入装配到 `runtime/context_bundle/`
 - 只复制模板、检查项和 UXB 显式登记 refs 到 `runtime/context_bundle/`
 - 把装配结果统一记录到 `runtime/context_manifest.json`
 - 同步产出 `runtime/knowledge_trace.json`
@@ -54,6 +58,8 @@
 - `knowledge_trace`
 - `assembled_refs`
 - `missing_refs`
+- `excluded_refs`
+- `stage_contexts`
 - `references`
 - `reference_summary`
 - `task_contract`
@@ -64,8 +70,10 @@
 
 - `selection_source` 必须指向 `projects/<project-id>/runtime/uxb_route_decision.json`
 - `knowledge_trace` 必须显式记录 `files / reasoning`
-- `references[*].selected_by` 用于区分哪些材料由 `uxb_ai` 显式指定
 - `context_manifest.json` 是唯一正式装配记录
+- `excluded_refs` 用于记录装配阶段未进入上下文的引用及原因；当前默认允许为空
+- `stage_contexts` 用于记录各阶段实际可读材料清单
+- `references[*]` 只保留实际消费字段；未被 generation / validate / knowledge loader 消费的冗余说明字段不应继续写入正式 manifest
 
 ## Prohibited Outputs
 

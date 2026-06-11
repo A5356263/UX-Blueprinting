@@ -41,6 +41,9 @@
 不再要求产出：
 
 - `runtime/route_decision.json`
+- `runtime/route_decision.md`
+- `runtime/task_card_resolved.json`
+- `runtime/knowledge_usage_report.json`
 
 ## Report Requirements
 
@@ -51,7 +54,16 @@
 - `requested_route`
 - `execution_mode`
 - `planned_steps`
-- `uxb_route_decision`
+- `required_outputs`
+
+不得记录：
+
+- 完整 `uxb_route_decision` 对象
+- `reason`
+- `evidence`
+- `matched_signals`
+- `matched_terms`
+- `guardrail_hints`
 
 `routed_main_report.json` 至少记录：
 
