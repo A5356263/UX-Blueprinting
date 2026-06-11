@@ -1,0 +1,31 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "self-permission-apply",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md"
+    ],
+    "reasoning": "本次任务新增了员工自助申请权限这一来源类型，需要在来源模型中明确定位和优先级（21）；审批后自动授权改变了生效机制，需要嵌入现有 L0-L3 判断链路（20）；申请审批全生命周期的状态需要与现有治理状态模型对齐（24）。以上三份是支撑正式业务蓝图所需的最小知识集合。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "可申请范围限定为角色和功能权限，不包含数据范围",
+      "审批人由管理员在配置时指定，未指定时默认路由到超管",
+      "不与双管理员模式互斥，两者可共存",
+      "关闭能力时：关新不关旧，已在审批中的申请正常走完"
+    ]
+  }
+}

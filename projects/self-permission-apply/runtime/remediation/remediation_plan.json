@@ -1,0 +1,98 @@
+{
+  "project_id": "self-permission-apply",
+  "plan_version": "1.0",
+  "generated_at": "2026-06-11T06:30:04.208960+00:00",
+  "open_issue_count": 4,
+  "blocker_count": 3,
+  "warning_count": 1,
+  "repair_units": [
+    {
+      "unit_id": "repair-unit-001",
+      "stage": "facts",
+      "target_artifact": "projects/self-permission-apply/runtime/gate_metrics.json",
+      "issue_ids": [
+        "FACT-C679D334"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "runtime/context_manifest.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "facts gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-002",
+      "stage": "runtime",
+      "target_artifact": "projects/self-permission-apply/runtime/gate_metrics.json",
+      "issue_ids": [
+        "RUN-FCB57B57"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-003",
+      "stage": "runtime",
+      "target_artifact": "projects/self-permission-apply/runtime/trace_index.json",
+      "issue_ids": [
+        "RUN-A3AFE22C"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 trace_index.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-004",
+      "stage": "runtime",
+      "target_artifact": "projects/self-permission-apply/workspace/check_status.json",
+      "issue_ids": [
+        "RUN-A9818A93"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 check_status.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 check_status.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    }
+  ]
+}

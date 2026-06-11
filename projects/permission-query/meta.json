@@ -1,9 +1,0 @@
-{
-  "project_id": "permission-query",
-  "task_name": "权限查询",
-  "domain": "权限管理",
-  "status": "draft",
-  "project_role": "real_project",
-  "read_only": false,
-  "excluded_from_default_scan": false
-}
