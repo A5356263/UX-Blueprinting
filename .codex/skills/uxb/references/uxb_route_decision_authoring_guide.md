@@ -76,6 +76,8 @@
 
 重点是“读哪些资料来支撑判断单”，不是完整讲解知识体系本身。
 
+如果后续大概率会进入 `experience_blueprint.md`，设计知识必须在分析阶段就已经读过，并进入判断单要消费的资料集合；不要把这件事留给工程主链路后补。
+
 ## 复杂度判断
 
 按这个顺序判断：
@@ -125,12 +127,14 @@
 2. `reasoning` 只说明为什么选这些知识，不写业务方案
 3. 不为了“更完整”把整域 summary 或 raw 全量塞进去
 4. raw 可以直接进入 `files`，前提是你能说明它为什么必要
+5. 一旦某类知识被命中，执行顺序仍然保持：先读 `summary`，再读对应 `raw`，再进入分析和判断单写入
 
 ## 字段写法
 
 - `business_depth`：写复杂度驱动后的业务输出深度，不写分析过程
 - `knowledge_selection.files`：只列后续正式产物真正需要消费的知识文件
 - `knowledge_selection.reasoning`：只说明选这些知识的原因，不写业务方案
+- 如果体验蓝图后续要消费设计知识，需要把这部分已在分析阶段读过的资料写进 `knowledge_selection.files`
 - `execution.required_outputs`：写本次必须产出的文件
 - `execution.notes`：只写执行级约束，比如“某项能力作为 GAP 标注”，不写体验方案
 - `experience_output`：如当前 schema 仍存在，按允许值填写，不扩展语义
