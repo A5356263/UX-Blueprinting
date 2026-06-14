@@ -1,0 +1,21 @@
+{
+  "schema_version": "uxb_phase_state@2.0",
+  "project_id": "self-permission-apply",
+  "phase": "final",
+  "execution_mode": "standard",
+  "status": "passed_with_warnings",
+  "target_artifact": "",
+  "target_artifacts": [],
+  "required_inputs": [],
+  "template_refs": [],
+  "rule_refs": [],
+  "preflight_errors": [],
+  "repair_mode": false,
+  "repair_refs": [],
+  "gate_status_refs": [],
+  "warnings": [
+    "experience_lite gate 状态为 warning"
+  ],
+  "created_at": "2026-06-14T07:09:23+00:00",
+  "updated_at": "2026-06-14T07:09:23+00:00"
+}

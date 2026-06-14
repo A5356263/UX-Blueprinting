@@ -46,6 +46,25 @@ python -m packages preview demo-task --host 127.0.0.1 --port 0
 python -m packages run-main demo-task
 ```
 
+## UXB run 推荐流程
+
+如果已经通过 `UXB`（业务与体验分析）确认进入正式蓝图任务，推荐使用：
+
+```bash
+python -m packages run <project-id> --domain 权限管理 --task-name "<task-name>"
+```
+
+后续节奏固定为：
+
+1. 运行 `python -m packages run <project-id>`
+2. 读取 `runtime/phase_state.json`
+3. 只完成当前阶段主产物
+4. 如需修复，只根据 `phase_state.json.preflight_errors` 或 `repair_refs` 继续修同一阶段产物
+5. 再次运行 `python -m packages run <project-id>`
+
+`run-routed-main` 继续保留，但它更偏旧的批处理入口。  
+`uxb run` 更适合 `Agent` 协作式一步一推进。
+
 如需查看当前正式能力面，可运行：
 
 ```bash

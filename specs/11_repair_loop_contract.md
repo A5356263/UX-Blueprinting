@@ -37,3 +37,13 @@
 - 不得重建 UXB 判断
 - 不得把 blocker 伪装成 warning
 - open blocker 未清零前，不得进入 archive
+
+## UXB Run Handoff
+
+当 `uxb run`（流程中控器）接管修复驾驶权时：
+
+- `repair-plan` 仍负责问题收集、归一化、修复计划、`retry_scope`
+- `uxb run` 只负责触发 `repair-plan`、生成当前修复任务卡、在 `ready` 后重跑 `retry_scope` 并执行 `repair-close`
+- `Agent` 只修当前任务卡指定产物，不自己决定重跑命令
+
+`uxb run` 不得新增第二套 `remediation_plan` 逻辑，不得改写既有 `retry_scope`

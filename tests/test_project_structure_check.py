@@ -41,7 +41,7 @@ class ProjectStructureCheckTests(unittest.TestCase):
 
         check_json = project_dir / "runtime" / "project_structure_check.json"
         check_md = project_dir / "runtime" / "project_structure_check.md"
-        self.assertTrue(check_json.exists())
+        self.assertFalse(check_json.exists())
         self.assertFalse(check_md.exists())
         self.assertFalse((project_dir / "workspace" / "facts.md").exists())
         self.assertFalse((project_dir / "workspace" / "business_blueprint.md").exists())
@@ -49,9 +49,6 @@ class ProjectStructureCheckTests(unittest.TestCase):
         self.assertFalse((project_dir / "workspace" / "gap_list.md").exists())
         self.assertFalse((project_dir / "workspace" / "check_report.md").exists())
         self.assertFalse((project_dir / "workspace" / "check_status.json").exists())
-        payload = json.loads(check_json.read_text(encoding="utf-8"))
-        self.assertEqual(payload.get("status"), "passed")
-        self.assertEqual(payload.get("missing_entries"), [])
 
     def test_structure_check_fails_when_runtime_missing(self) -> None:
         project_id = "missing-runtime"

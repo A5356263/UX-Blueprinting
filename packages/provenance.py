@@ -48,9 +48,18 @@ def write_provenance(project_id: str, payload: dict[str, Any]) -> Path:
 
 
 def build_generated_provenance(project_id: str, producer: str, command_name: str) -> dict[str, Any]:
+    return build_generated_provenance_commands(project_id, producer, [command_name])
+
+
+def build_generated_provenance_commands(project_id: str, producer: str, command_names: list[str]) -> dict[str, Any]:
     source_dir = get_project_source_dir(project_id)
     requirement_path = source_dir / "requirement.md"
     task_card_path = source_dir / "task_card.md"
+    command_chain = []
+    for item in command_names:
+        value = str(item).strip()
+        if value and value not in command_chain:
+            command_chain.append(value)
     return {
         "project_id": project_id,
         "generation_mode": "generated",
@@ -61,14 +70,23 @@ def build_generated_provenance(project_id: str, producer: str, command_name: str
         "parent_project_id": "",
         "copied_from_project_id": "",
         "manual_patch_reason": "",
-        "command_chain": [command_name],
+        "command_chain": command_chain,
     }
 
 
 def upsert_generated_provenance(project_id: str, producer: str, command_name: str) -> Path:
+    return upsert_generated_provenance_commands(project_id, producer, [command_name])
+
+
+def upsert_generated_provenance_commands(project_id: str, producer: str, command_names: list[str]) -> Path:
     existing = read_provenance(project_id)
+    normalized_commands: list[str] = []
+    for item in command_names:
+        value = str(item).strip()
+        if value and value not in normalized_commands:
+            normalized_commands.append(value)
     if not existing:
-        return write_provenance(project_id, build_generated_provenance(project_id, producer, command_name))
+        return write_provenance(project_id, build_generated_provenance_commands(project_id, producer, normalized_commands))
 
     source_dir = get_project_source_dir(project_id)
     existing["project_id"] = project_id
@@ -81,8 +99,9 @@ def upsert_generated_provenance(project_id: str, producer: str, command_name: st
     existing["copied_from_project_id"] = str(existing.get("copied_from_project_id") or "")
     existing["manual_patch_reason"] = str(existing.get("manual_patch_reason") or "")
     command_chain = [str(item) for item in existing.get("command_chain", []) if isinstance(item, str)]
-    if command_name not in command_chain:
-        command_chain.append(command_name)
+    for command_name in normalized_commands:
+        if command_name not in command_chain:
+            command_chain.append(command_name)
     existing["command_chain"] = command_chain
     return write_provenance(project_id, existing)
 

@@ -10,17 +10,15 @@
 - 是否阻断: 否
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 2
+- warning_count: 1
 - info_count: 2
 
 ## Output Status
 
 - projects/self-permission-apply/workspace/facts.md: present
-- projects/self-permission-apply/workspace/business_blueprint.md: present
+- projects/self-permission-apply/workspace/business_note.md: missing
+- projects/self-permission-apply/workspace/business_blueprint_lite.md: present
 - projects/self-permission-apply/workspace/experience_blueprint.md: present
-- projects/self-permission-apply/workspace/gap_list.md: present
-- projects/self-permission-apply/workspace/check_report.md: present
-- projects/self-permission-apply/workspace/check_status.json: present
 
 ## Blockers
 
@@ -28,17 +26,16 @@
 
 ## Warnings
 
-- experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达
-- experience gate 状态为 warning
+- experience_lite gate 状态为 warning
 
 ## Infos
 
-- facts gate 状态：passed
-- business gate 状态：passed
+- business_lite gate 状态：passed
+- 轻量承接检查：covered_signals=6 missing_signals=0
 
 ## 自然语言承接检查
 
-- not_run
+- covered_signals=6 missing_signals=0
 
 ## Machine Status
 

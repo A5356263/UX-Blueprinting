@@ -40,6 +40,29 @@
  - 如果是知识问答、体验诊断，执行完后skill会在根目录生成一个“知识候选区”的文件可查看结果。 
  - 如果是正式的输出体验策略，完成后可以在根目录的projects\self-permission-apply\workspace 下查看business_blueprint（业务分析）、experience_blueprint（体验分析）。一般不用看这俩个MD，可以在projects\这是体验策略任务的文件名\runtime\preview 下打开 index 这个文件即可在浏览器中查看视觉效果比较好的信息。 这里补充一句，如果任务执行完没有runtime\preview 这个文件，只要在聊天窗口输入：生成preview 即可。
 
+## 正式蓝图任务推荐执行方式
+
+如果已经在 `UXB`（业务与体验分析）里确认进入正式蓝图任务，推荐直接使用：
+
+```bash
+python -m packages run <project-id> --domain 权限管理 --task-name "<任务名>"
+```
+
+后续不要自己记一串命令，固定节奏就是：
+
+1. 运行 `python -m packages run <project-id>`
+2. 看 `projects\<project-id>\runtime\phase_state.json`
+3. 只处理当前阶段主产物
+4. 如需修复，只根据 `preflight_errors` 或 `repair_refs` 修同一阶段产物
+5. 再运行 `python -m packages run <project-id>`
+
+这样做的好处是：
+
+- 不容易漏步骤
+- 不容易跑错命令
+- 弱模型也更稳定
+- 修复、检查、预览会由中控入口统一推进
+
 
 ## 问题反馈
 在外网还没建好收集表，后续会发出来

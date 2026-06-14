@@ -114,6 +114,27 @@ UXB 的正常顺序固定为：
 - 用户确认进入正式蓝图任务后：`references/execution_guide.md`
 - 写判断单前：`references/uxb_route_decision_authoring_guide.md`
 
+## 正式蓝图入口切换
+
+当用户确认“进入正式蓝图任务”后：
+
+- 不再让 `Agent` 手动执行 `bootstrap / assemble / run-routed-main`
+- 改为引导执行：
+
+```bash
+python -m packages run <project-id> --domain "<domain>" --task-name "<task-name>"
+```
+
+后续固定节奏：
+
+```text
+运行 uxb run
+→ 读取 runtime/phase_state.json
+→ 只处理当前阶段主产物
+→ 如需修复，只根据 preflight_errors 或 repair_refs 修同一阶段产物
+→ 再运行 uxb run
+```
+
 ## 分析阶段必须显式
 
 用户提交需求、需求文档、功能说明、截图或流程问题时：
@@ -169,6 +190,15 @@ UXB 的正常顺序固定为：
 → 再读对应设计 raw
 → 再进入 `Step 2` 或正式交接
 ```
+
+进入正式蓝图前，正式交接文件必须一次补齐：
+
+- `source/task_card.md`
+- `source/requirement.md`
+- `source/background.md`
+- `runtime/uxb_route_decision.json`
+
+缺一项都不要直接启动 `uxb run`。
 
 ## Step 1
 

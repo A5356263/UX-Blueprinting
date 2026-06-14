@@ -647,6 +647,11 @@ class RoutedMainStandardSmokeTests(unittest.TestCase):
         self.assertIn(f"projects/{self.project_id}/workspace/facts.md", stage_contexts.get("business", []))
         self.assertIn(f"projects/{self.project_id}/runtime/uxb_route_decision.json", stage_contexts.get("validate", []))
         self.assertEqual(manifest.get("excluded_refs"), [])
+        self.assertNotIn("reference_summary", manifest)
+        self.assertNotIn("stage_boundaries", manifest)
+        self.assertNotIn("facts_extraction_boundary", manifest)
+        self.assertNotIn("business_judgment_boundary", manifest)
+        self.assertNotIn("experience_translation_boundary", manifest)
         self.assertIn(
             f"projects/{self.project_id}/runtime/context_bundle/shared/complexity/00_core_complexity_judgment.md",
             stage_contexts.get("business", []),

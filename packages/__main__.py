@@ -116,6 +116,15 @@ def main() -> int:
     run_routed_main_parser.add_argument("--skip-preview", action="store_true")
     run_routed_main_parser.add_argument("--strict", action="store_true")
 
+    run_parser = subparsers.add_parser("run")
+    run_parser.add_argument("project_id")
+    run_parser.add_argument("--domain")
+    run_parser.add_argument("--task-name")
+    run_parser.add_argument("--strict", action="store_true")
+    run_parser.add_argument("--skip-preview", action="store_true")
+    run_parser.add_argument("--archive", action="store_true")
+    run_parser.add_argument("--json", action="store_true")
+
     subparsers.add_parser("sample-check")
 
     args = parser.parse_args()
@@ -253,6 +262,10 @@ def main() -> int:
         from packages.routed_main import run_routed_main
 
         return run_routed_main(args.project_id, route=args.route, skip_preview=args.skip_preview, strict=args.strict)
+    if args.command == "run":
+        from packages.uxb_run.cli import main as run_uxb_main
+
+        return run_uxb_main(args)
     if args.command == "sample-check":
         from packages.mainline import run_sample_check
 

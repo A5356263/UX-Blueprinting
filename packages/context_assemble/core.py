@@ -341,9 +341,6 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         print(f"ERROR: {exc}")
         return 1
 
-    facts_req = resolved.get("facts_output_requirements", {})
-    business_req = resolved.get("business_output_requirements", {})
-    experience_req = resolved.get("experience_output_requirements", {})
     task_contract = {
         "execution_constraints": resolved.get("execution_constraints", []),
         "required_inputs": resolved.get("required_inputs", []),
@@ -370,26 +367,9 @@ def run_context_assemble(task_id: str, strict: bool = False) -> int:
         "warnings": warnings,
         "strict_mode": strict,
         "stage_contexts": stage_contexts,
-        "reference_summary": {
-            "template_ref_count": len(resolved.get("template_refs", [])),
-            "check_ref_count": len(resolved.get("check_refs", [])),
-            "knowledge_file_count": len(knowledge_trace["files"]),
-            "raw_ref_count": len([item for item in copied if str(item.get("group", "")) == "raw_ref"]),
-            "assembled_ref_count": len(copied),
-        },
-        "stage_boundaries": {
-            "facts": facts_req.get("boundary", []),
-            "business": business_req.get("boundary", []),
-            "experience": experience_req.get("boundary", []),
-        },
-        "facts_extraction_boundary": facts_req.get("boundary", []),
-        "business_judgment_boundary": business_req.get("boundary", []),
-        "experience_translation_boundary": experience_req.get("boundary", []),
     }
     manifest_path = runtime_dir / "context_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    (runtime_dir / "knowledge_trace.json").write_text(json.dumps(knowledge_trace, ensure_ascii=False, indent=2), encoding="utf-8")
-
     for warning in warnings:
         print(f"WARNING: {warning}")
     print(f"Task card parsed: {task_card_path}")

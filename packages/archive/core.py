@@ -101,8 +101,6 @@ def run_archive_artifacts(task_id: str) -> int:
         copied += 1
     if copy_if_exists(runtime_dir / "context_manifest.json", context_dir / "context_manifest.json"):
         copied += 1
-    if copy_if_exists(runtime_dir / "knowledge_trace.json", context_dir / "knowledge_trace.json"):
-        copied += 1
     if copy_if_exists(runtime_dir / "provenance.json", context_dir / "provenance.json"):
         copied += 1
     if copy_if_exists(remediation_dir / "repair_summary.md", checks_dir / "repair_summary.md"):

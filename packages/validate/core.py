@@ -18,7 +18,7 @@ from packages.common import (
     repo_ref_to_path,
     sanitize_json_text,
 )
-from packages.provenance import append_command_if_provenance_exists, validate_provenance
+from packages.provenance import validate_provenance
 from packages.route_decision import load_uxb_execution_decision
 
 
@@ -2162,7 +2162,6 @@ def run_validate_outputs(project_id: str) -> int:
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Validation finished: {report_path}")
     print(f"Machine status written: {status_path}")
-    append_command_if_provenance_exists(project_id, "validate")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2244,7 +2243,6 @@ def run_coverage_check(project_id: str) -> int:
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Coverage check finished: {report_path}")
     print(f"Machine status updated: {status_path}")
-    append_command_if_provenance_exists(project_id, "coverage")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2336,7 +2334,6 @@ def run_facts_gate(project_id: str) -> int:
     else:
         print("Facts gate finished: report skipped (passed without warnings)")
     print(f"Facts gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-facts")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2396,7 +2393,6 @@ def run_business_gate(project_id: str) -> int:
     else:
         print("Business gate finished: report skipped (passed without warnings)")
     print(f"Business gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-business")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2491,7 +2487,6 @@ def run_business_note_gate(project_id: str) -> int:
     else:
         print("Business note gate finished: report skipped (passed without warnings)")
     print(f"Business note gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-business-note")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2544,7 +2539,6 @@ def run_business_lite_gate(project_id: str) -> int:
     else:
         print("Business lite gate finished: report skipped (passed without warnings)")
     print(f"Business lite gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-business-lite")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2612,7 +2606,6 @@ def run_experience_gate(project_id: str) -> int:
     else:
         print("Experience gate finished: report skipped (passed without warnings)")
     print(f"Experience gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-experience")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2687,7 +2680,6 @@ def run_experience_lite_gate(project_id: str) -> int:
     else:
         print("Experience lite gate finished: report skipped (passed without warnings)")
     print(f"Experience lite gate status: {status_path}")
-    append_command_if_provenance_exists(project_id, "gate-experience-lite")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2784,7 +2776,6 @@ def run_validate_lite(project_id: str) -> int:
     status_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Validate lite finished: {report_path}")
     print(f"Machine status written: {status_path}")
-    append_command_if_provenance_exists(project_id, "validate-lite")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1
@@ -2853,7 +2844,6 @@ def run_coverage_lite(project_id: str) -> int:
     status_path.write_text(json.dumps(status_data, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Coverage lite finished: {report_path}")
     print(f"Machine status updated: {status_path}")
-    append_command_if_provenance_exists(project_id, "coverage-lite")
     if status == "failed":
         _print_repair_guidance(project_id)
     return 0 if status != "failed" else 1

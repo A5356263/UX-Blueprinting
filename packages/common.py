@@ -113,14 +113,104 @@ def get_env_check_report_path() -> Path:
     return get_tmp_root_dir() / "env-check-report.json"
 
 
+def _normalize_curly_json_quotes(raw: str) -> str:
+    """Normalize curly quote delimiters without corrupting valid string content."""
+    result: list[str] = []
+    in_string = False
+    string_mode: str | None = None
+    escape = False
+
+    for char in raw:
+        if not in_string:
+            if char == '"':
+                in_string = True
+                string_mode = "ascii"
+                result.append('"')
+                continue
+            if char == "\u201c":
+                in_string = True
+                string_mode = "curly"
+                result.append('"')
+                continue
+            result.append(char)
+            continue
+
+        if escape:
+            result.append(char)
+            escape = False
+            continue
+
+        if char == "\\":
+            result.append(char)
+            escape = True
+            continue
+
+        if string_mode == "ascii":
+            if char == '"':
+                result.append('"')
+                in_string = False
+                string_mode = None
+                continue
+            result.append(char)
+            continue
+
+        if string_mode == "curly":
+            if char == "\u201d":
+                result.append('"')
+                in_string = False
+                string_mode = None
+                continue
+            result.append(char)
+            continue
+
+    return "".join(result)
+
+
+def _replace_fullwidth_json_punctuation_outside_strings(raw: str) -> str:
+    result: list[str] = []
+    in_string = False
+    escape = False
+
+    for char in raw:
+        if in_string:
+            result.append(char)
+            if escape:
+                escape = False
+                continue
+            if char == "\\":
+                escape = True
+                continue
+            if char == '"':
+                in_string = False
+            continue
+
+        if char == '"':
+            in_string = True
+            result.append(char)
+            continue
+        if char == "\uff1a":
+            result.append(":")
+            continue
+        if char == "\uff0c":
+            result.append(",")
+            continue
+        result.append(char)
+    return "".join(result)
+
+
 def sanitize_json_text(raw: str) -> str:
     """Normalize common weak-LLM JSON formatting issues before parsing."""
     if raw.startswith("\ufeff"):
         raw = raw[1:]
-    raw = raw.replace("\u201c", '"').replace("\u201d", '"')
+    try:
+        json.loads(raw)
+        return raw
+    except json.JSONDecodeError:
+        pass
+
+    raw = _normalize_curly_json_quotes(raw)
     raw = raw.replace("\u2018", "'").replace("\u2019", "'")
-    raw = raw.replace("\uff1a", ":")
-    raw = raw.replace("\uff0c", ",")
+    raw = _replace_fullwidth_json_punctuation_outside_strings(raw)
     return _TRAILING_COMMA_RE.sub(r"\1", raw)
 
 

@@ -240,6 +240,14 @@ def _write_report(project_id: str, status: str, missing: list[str], issues: list
     md_path = get_project_structure_check_md_path(project_id)
     project_dir = get_project_dir(project_id)
 
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    if status == "passed":
+        if json_path.exists():
+            json_path.unlink()
+        if md_path.exists():
+            md_path.unlink()
+        return
+
     payload = {
         "project_id": project_id,
         "status": status,
@@ -251,13 +259,7 @@ def _write_report(project_id: str, status: str, missing: list[str], issues: list
         "blocker_count": sum(1 for item in issues if item["severity"] == "blocker"),
         "warning_count": sum(1 for item in issues if item["severity"] == "warning"),
     }
-    json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-    if status == "passed":
-        if md_path.exists():
-            md_path.unlink()
-        return
 
     lines = [
         "# Project Structure Check",

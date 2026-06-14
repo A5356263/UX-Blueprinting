@@ -4,6 +4,8 @@
 
 `run-routed-main` 是按 UXB 已确认判断驱动的正式蓝图主链路后续生成入口。
 
+它继续保留，但不再是推荐的 `Agent` 协作型逐步中控入口。
+
 ## Entry Boundary
 
 - `run-routed-main` 的执行判断只来自 `runtime/uxb_route_decision.json`
@@ -81,3 +83,17 @@
 - 不得补写新的知识选择
 - 不得替 UXB 改写 required outputs
 - 不得把内部执行模式词汇写入用户可读正文
+
+## Relationship With UXB Run
+
+仓库当前同时保留两个入口：
+
+- `python -m packages run-routed-main <project-id>`
+- `python -m packages run <project-id>`
+
+边界：
+
+- `run-routed-main`：适合旧批处理式主链路推进
+- `uxb run`：适合 `Agent` 协作式的一步一推进、中控任务卡模式
+
+不得把两者混写成同一个入口。

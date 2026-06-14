@@ -1,0 +1,19 @@
+{
+  "schema_version": "uxb_stage_context@2.0",
+  "project_id": "<project-id>",
+  "context": {
+    "selection_source": "runtime/uxb_route_decision.json",
+    "context_manifest_ref": "projects/<project-id>/runtime/context_manifest.json",
+    "context_bundle_ref": "projects/<project-id>/runtime/context_bundle"
+  },
+  "knowledge_trace": {
+    "files": [],
+    "reasoning": ""
+  },
+  "execution_trace": {
+    "generation_mode": "generated",
+    "producer": "uxb_run"
+  },
+  "accumulated_warnings": [],
+  "updated_at": "2026-01-01T00:00:00Z"
+}
