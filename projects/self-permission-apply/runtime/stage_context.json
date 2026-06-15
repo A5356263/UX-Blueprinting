@@ -8,47 +8,95 @@
   },
   "knowledge_trace": {
     "files": [
-      "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
       "knowledge/raw/业务/权限管理/20_决策链契约.md",
       "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "knowledge/raw/业务/权限管理/30_体验风险模式.md"
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/31_体验翻译需求.md",
+      "knowledge/wiki/summaries/设计准则/治理.md",
+      "knowledge/raw/设计准则/治理.md"
     ],
-    "reasoning": "自助申请权限模式是权限管理域的能力扩展，涉及超管与员工角色边界、来源模型扩展（新增审批分配渠道）、决策链复用（L0-L3判断链路不变）和体验风险控制（入口选择、来源透明、治理流程不确定性）。这5份raw足够支撑后续facts、business_blueprint_lite和experience_blueprint的生成。"
+    "reasoning": "本次需求在现有权限体系上引入「审批后自动授权」的新生效链路。业务层面需消费对象模型定义申请单字段、来源模型确认权限落点、决策链契约确认不干扰现有判断顺序；体验层面需消费体验风险模式与翻译需求保障员工侧可解释性，消费治理准则保障默认安全与最小授权原则落地。"
   },
   "execution_trace": {
     "project_id": "self-permission-apply",
     "generation_mode": "generated",
     "producer": "uxb_run",
-    "source_hash": "ffa28525a37c5324278f692778e5635d39d7108d9966746c0c9c47542f556675",
-    "task_card_hash": "13691472f286987e60ed2b48de474cf8b280371a2f29d269d8867ee5e8369e90",
-    "generated_at": "2026-06-14T07:09:23+00:00",
+    "source_hash": "23baae80774a49be9bcb56384deffcc6ba618a7f9b4b7fd3bfbc5d1d27c6754f",
+    "task_card_hash": "680104c22e566dded42159fac6495c407cf283ae1deded11d135f290150f49f3",
+    "generated_at": "2026-06-14T13:51:19+00:00",
     "parent_project_id": "",
     "copied_from_project_id": "",
     "manual_patch_reason": "",
     "command_chain": [
       "generate-facts",
       "gate-facts",
-      "generate-business-lite",
-      "gate-business-lite",
+      "generate-business",
+      "gate-business",
       "generate-experience",
-      "gate-experience-lite",
-      "validate-lite",
-      "coverage-lite",
-      "preview"
+      "gate-experience",
+      "validate",
+      "repair-plan",
+      "coverage",
+      "assemble"
     ]
   },
   "accumulated_warnings": [
     {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类"
+    },
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱"
+    },
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 正文疑似直接复制知识库字段名、枚举值、英文状态或模型名，请转译为业务方能理解的话；如确需保留原始术语，请移动到附录“事实、知识与判断追踪”。"
+    },
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构"
+    },
+    {
       "phase": "experience",
       "source": "gate-experience",
-      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+      "message": "experience_blueprint.md 缺少正式旅程图，或旅程图还没有形成可解析结构"
+    },
+    {
+      "phase": "experience",
+      "source": "gate-experience",
+      "message": "experience_blueprint.md `## 8. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构"
     },
     {
       "phase": "final",
       "source": "check_status",
-      "message": "experience_lite gate 状态为 warning"
+      "message": "business gate 状态为 warning"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "experience gate 状态为 warning"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "experience_blueprint.md `## 8. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构"
     }
   ],
-  "updated_at": "2026-06-14T07:09:23+00:00"
+  "updated_at": "2026-06-14T13:51:20+00:00"
 }

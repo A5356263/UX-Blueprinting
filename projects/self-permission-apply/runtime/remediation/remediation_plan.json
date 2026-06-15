@@ -1,0 +1,105 @@
+{
+  "project_id": "self-permission-apply",
+  "plan_version": "1.0",
+  "generated_at": "2026-06-14T13:49:58.280700+00:00",
+  "open_issue_count": 6,
+  "blocker_count": 1,
+  "warning_count": 5,
+  "repair_units": [
+    {
+      "unit_id": "repair-unit-001",
+      "stage": "business",
+      "target_artifact": "projects/self-permission-apply/workspace/business_blueprint.md",
+      "issue_ids": [
+        "BIZ-54F58B51",
+        "BIZ-66583972"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 business_blueprint.md 中的 experience_business_consumption_gap, experience_role_path_gap 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "workspace/business_blueprint.md",
+        "runtime/trace_index.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "只补 business_blueprint.md 中与 business 承接缺口直接相关的节点、页面、提示或结果反馈，不要整篇重写",
+        "补齐 business_blueprint.md 中缺失角色的主路径或关键次路径，不要把其他角色段落整稿重写"
+      ],
+      "completion_signal": [
+        "business gate 无相关 blocker",
+        "experience 与 final check 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-002",
+      "stage": "experience",
+      "target_artifact": "projects/self-permission-apply/workspace/experience_blueprint.md",
+      "issue_ids": [
+        "EXP-CC2158D9",
+        "EXP-6D585AEF"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 experience_blueprint.md 中的 depth_insufficient, experience_guideline_consumption_gap 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "workspace/business_blueprint.md",
+        "workspace/experience_blueprint.md",
+        "runtime/trace_index.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "补齐 design guideline 的实际消费记录或补足场景对应的设计原则承接，不要回退到硬编码映射",
+        "修复 experience_blueprint.md 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "experience gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-003",
+      "stage": "runtime",
+      "target_artifact": "projects/self-permission-apply/runtime/gate_metrics.json",
+      "issue_ids": [
+        "RUN-FCB57B57"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-004",
+      "stage": "runtime",
+      "target_artifact": "projects/self-permission-apply/runtime/trace_index.json",
+      "issue_ids": [
+        "RUN-A3AFE22C"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 trace_index.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    }
+  ]
+}

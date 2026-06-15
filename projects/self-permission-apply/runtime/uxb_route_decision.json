@@ -4,29 +4,32 @@
   "created_by": "uxb_ai",
   "confirmed_by_user": true,
   "can_execute_mainline": true,
-  "business_depth": "business_blueprint_lite",
+  "business_depth": "business_blueprint",
   "experience_output": "experience_blueprint",
   "experience_pressure": [],
   "knowledge_selection": {
     "files": [
-      "knowledge/raw/业务/权限管理/00_领域概述.md",
-      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
       "knowledge/raw/业务/权限管理/20_决策链契约.md",
       "knowledge/raw/业务/权限管理/21_来源模型.md",
-      "knowledge/raw/业务/权限管理/30_体验风险模式.md"
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/31_体验翻译需求.md",
+      "knowledge/wiki/summaries/设计准则/治理.md",
+      "knowledge/raw/设计准则/治理.md"
     ],
-    "reasoning": "自助申请权限模式是权限管理域的能力扩展，涉及超管与员工角色边界、来源模型扩展（新增审批分配渠道）、决策链复用（L0-L3判断链路不变）和体验风险控制（入口选择、来源透明、治理流程不确定性）。这5份raw足够支撑后续facts、business_blueprint_lite和experience_blueprint的生成。"
+    "reasoning": "本次需求在现有权限体系上引入「审批后自动授权」的新生效链路。业务层面需消费对象模型定义申请单字段、来源模型确认权限落点、决策链契约确认不干扰现有判断顺序；体验层面需消费体验风险模式与翻译需求保障员工侧可解释性，消费治理准则保障默认安全与最小授权原则落地。"
   },
   "execution": {
     "required_outputs": [
       "facts.md",
-      "business_blueprint_lite.md",
+      "business_blueprint.md",
       "experience_blueprint.md"
     ],
     "notes": [
-      "来源模型扩展（APPLICATION_APPROVAL）已在分析阶段推理，business_blueprint_lite中需显式确认",
-      "审批人不可用的兜底策略为GAP，标注不阻塞",
-      "数据权限全量是否允许超管覆盖为待定项，business阶段需标记为风险策略"
+      "审批流程底层能力是否支持权限申请业务类型需作为 GAP 标注",
+      "员工侧权限列表的跨来源聚合逻辑需工程确认，不作为默认设计方案",
+      "治理模式与自助申请审批流的覆盖优先级待产品策略拍板，blueprint 中标为待定",
+      "权限模板粒度定义（按角色映射 vs 按功能点组合）需在 business_blueprint 中展开选项分析"
     ]
   }
 }

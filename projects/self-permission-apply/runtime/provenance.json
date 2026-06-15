@@ -2,21 +2,22 @@
   "project_id": "self-permission-apply",
   "generation_mode": "generated",
   "producer": "uxb_run",
-  "source_hash": "ffa28525a37c5324278f692778e5635d39d7108d9966746c0c9c47542f556675",
-  "task_card_hash": "13691472f286987e60ed2b48de474cf8b280371a2f29d269d8867ee5e8369e90",
-  "generated_at": "2026-06-14T07:09:23+00:00",
+  "source_hash": "23baae80774a49be9bcb56384deffcc6ba618a7f9b4b7fd3bfbc5d1d27c6754f",
+  "task_card_hash": "680104c22e566dded42159fac6495c407cf283ae1deded11d135f290150f49f3",
+  "generated_at": "2026-06-14T13:51:19+00:00",
   "parent_project_id": "",
   "copied_from_project_id": "",
   "manual_patch_reason": "",
   "command_chain": [
     "generate-facts",
     "gate-facts",
-    "generate-business-lite",
-    "gate-business-lite",
+    "generate-business",
+    "gate-business",
     "generate-experience",
-    "gate-experience-lite",
-    "validate-lite",
-    "coverage-lite",
-    "preview"
+    "gate-experience",
+    "validate",
+    "repair-plan",
+    "coverage",
+    "assemble"
   ]
 }
