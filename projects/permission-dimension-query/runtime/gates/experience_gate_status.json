@@ -1,0 +1,146 @@
+{
+  "project_id": "permission-dimension-query",
+  "stage": "experience",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-06-15T15:23:15.054124+00:00",
+  "checked_files": [
+    "projects/permission-dimension-query/workspace/facts.md",
+    "projects/permission-dimension-query/workspace/business_blueprint.md",
+    "projects/permission-dimension-query/workspace/experience_blueprint.md",
+    "projects/permission-dimension-query/runtime/provenance.json",
+    "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 1,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+    ],
+    "infos": [
+      "business 阶段状态：warning"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_exception_handling_gap",
+      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "journey_item_count": 3,
+            "flow_count": 36,
+            "page_inventory_item_count": 38,
+            "state_feedback_pair_count": 15,
+            "appendix_item_count": 20,
+            "exception_coverage": true,
+            "core_table_count": 29,
+            "summary_node_count": 12,
+            "main_flow_heading_count": 4
+          }
+        }
+      ]
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business 阶段状态：warning",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md",
+        "specs/11_repair_loop_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/runtime/provenance.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business 阶段状态：warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/workspace/facts.md",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md",
+            "projects/permission-dimension-query/runtime/provenance.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "journey_item_count": 3,
+            "flow_count": 36,
+            "page_inventory_item_count": 38,
+            "state_feedback_pair_count": 15,
+            "appendix_item_count": 20,
+            "exception_coverage": true,
+            "core_table_count": 29,
+            "summary_node_count": 12,
+            "main_flow_heading_count": 4
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "journey_item_count": 3,
+    "flow_count": 36,
+    "page_inventory_item_count": 38,
+    "state_feedback_pair_count": 15,
+    "appendix_item_count": 20,
+    "exception_coverage": true,
+    "core_table_count": 29,
+    "summary_node_count": 12,
+    "main_flow_heading_count": 4
+  }
+}

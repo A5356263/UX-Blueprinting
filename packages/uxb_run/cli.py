@@ -398,10 +398,19 @@ def _append_warning_entries(project_id: str, state: ProjectRunState, action: Cur
         for item in existing_items
         if isinstance(item, dict)
     }
+    existing_messages_from_gate = {
+        str(item.get("message") or "")
+        for item in existing_items
+        if isinstance(item, dict)
+        and str(item.get("source") or "") != "check_status"
+        and str(item.get("message") or "").strip()
+    }
     entries = []
     for item in warnings:
         key = (action.stage, source, item)
         if key in known:
+            continue
+        if source == "check_status" and item in existing_messages_from_gate:
             continue
         entries.append({"phase": action.stage, "source": source, "message": item})
     write_stage_context(project_id, _build_stage_context(action, state, appended_warnings=entries))

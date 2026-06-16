@@ -1,0 +1,42 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "permission-dimension-query",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/12_查询与配置路径.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "knowledge/wiki/summaries/设计准则/可用性.md",
+      "knowledge/wiki/summaries/设计准则/认知.md",
+      "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "reasoning": "本次任务需要在已有权限对象模型和来源模型之上建立跨域统一查询能力。业务知识选择覆盖对象模型、能力地图、任务场景、来源模型、查询路径缺口和体验风险模式六大维度，这些是定义查询口径层和结果可解释性框架的核心依据。设计知识选择覆盖信息架构（维度组织和结果分组）、可用性（状态可见和错误恢复）、认知（渐进披露和认知负荷控制）、反馈与报错（阻断反馈形式和文案策略）四个方向，这些是体验蓝图阶段的核心判断依据。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "一期范围为用户维度和角色维度，权限维度在间接授权口径确认后纳入",
+      "查询页负责解释不负责配置的边界在 business 阶段必须明确",
+      "访问控制边界（入口可见性 + 查询范围限制）需与查询能力同步设计",
+      "不同域权限颗粒度差异在 facts 阶段需特别关注"
+    ]
+  }
+}

@@ -6,7 +6,7 @@
 - 是否阻断: 否
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 2
+- warning_count: 1
 - info_count: 1
 
 - project_id: self-permission-apply
@@ -16,8 +16,7 @@
 
 ## 2. 问题列表
 
-- warning: business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类
-- warning: business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构
+- warning: business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱
 - info: facts 阶段状态：passed
 
 ## 3. 检查范围

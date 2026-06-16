@@ -1,0 +1,258 @@
+{
+  "task_id": "sub-admin-copy",
+  "status": "warning",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 2,
+  "info_count": 2,
+  "completed_outputs": [
+    "projects/sub-admin-copy/workspace/facts.md",
+    "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+    "projects/sub-admin-copy/workspace/experience_blueprint.md"
+  ],
+  "missing_outputs": [
+    "projects/sub-admin-copy/workspace/business_note.md"
+  ],
+  "generated_by": "packages.validate",
+  "updated_at": "2026-06-15T15:06:30.695837+00:00",
+  "checked_files": [
+    "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+    "projects/sub-admin-copy/workspace/facts.md",
+    "projects/sub-admin-copy/workspace/business_note.md",
+    "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+    "projects/sub-admin-copy/workspace/experience_blueprint.md",
+    "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+    "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+  ],
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "coverage-lite: experience 未明显承接轻量业务产物中的维度：边界",
+      "experience_lite gate 状态为 warning"
+    ],
+    "infos": [
+      "business_lite gate 状态：passed",
+      "轻量承接检查：covered_signals=5 missing_signals=1"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "coverage-lite: experience 未明显承接轻量业务产物中的维度：边界",
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+        "projects/sub-admin-copy/workspace/facts.md",
+        "projects/sub-admin-copy/workspace/business_note.md",
+        "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+        "projects/sub-admin-copy/workspace/experience_blueprint.md",
+        "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+        "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "coverage-lite: experience 未明显承接轻量业务产物中的维度：边界"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+            "projects/sub-admin-copy/workspace/facts.md",
+            "projects/sub-admin-copy/workspace/business_note.md",
+            "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+            "projects/sub-admin-copy/workspace/experience_blueprint.md",
+            "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+            "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "execution_mode": "standard",
+            "validation_mode": "lite",
+            "coverage_lite": {
+              "lines": [
+                "covered_signals=5 missing_signals=1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience_lite gate 状态为 warning",
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+        "projects/sub-admin-copy/workspace/facts.md",
+        "projects/sub-admin-copy/workspace/business_note.md",
+        "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+        "projects/sub-admin-copy/workspace/experience_blueprint.md",
+        "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+        "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_lite gate 状态为 warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+            "projects/sub-admin-copy/workspace/facts.md",
+            "projects/sub-admin-copy/workspace/business_note.md",
+            "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+            "projects/sub-admin-copy/workspace/experience_blueprint.md",
+            "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+            "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "execution_mode": "standard",
+            "validation_mode": "lite",
+            "coverage_lite": {
+              "lines": [
+                "covered_signals=5 missing_signals=1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "business_lite gate 状态：passed",
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+        "projects/sub-admin-copy/workspace/facts.md",
+        "projects/sub-admin-copy/workspace/business_note.md",
+        "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+        "projects/sub-admin-copy/workspace/experience_blueprint.md",
+        "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+        "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_lite gate 状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+            "projects/sub-admin-copy/workspace/facts.md",
+            "projects/sub-admin-copy/workspace/business_note.md",
+            "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+            "projects/sub-admin-copy/workspace/experience_blueprint.md",
+            "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+            "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "execution_mode": "standard",
+            "validation_mode": "lite",
+            "coverage_lite": {
+              "lines": [
+                "covered_signals=5 missing_signals=1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_business_consumption_gap",
+      "message": "轻量承接检查：covered_signals=5 missing_signals=1",
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+        "projects/sub-admin-copy/workspace/facts.md",
+        "projects/sub-admin-copy/workspace/business_note.md",
+        "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+        "projects/sub-admin-copy/workspace/experience_blueprint.md",
+        "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+        "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "轻量承接检查：covered_signals=5 missing_signals=1"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+            "projects/sub-admin-copy/workspace/facts.md",
+            "projects/sub-admin-copy/workspace/business_note.md",
+            "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+            "projects/sub-admin-copy/workspace/experience_blueprint.md",
+            "projects/sub-admin-copy/runtime/gates/business_lite_gate_status.json",
+            "projects/sub-admin-copy/runtime/gates/experience_lite_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "execution_mode": "standard",
+            "validation_mode": "lite",
+            "coverage_lite": {
+              "lines": [
+                "covered_signals=5 missing_signals=1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "execution_mode": "standard",
+    "validation_mode": "lite",
+    "coverage_lite": {
+      "lines": [
+        "covered_signals=5 missing_signals=1"
+      ]
+    }
+  }
+}

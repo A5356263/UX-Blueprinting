@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from packages.task_bootstrap import run_task_bootstrap
-from packages.uxb_run.cli import _write_terminal_report, run_uxb_run
+from packages.uxb_run.cli import _append_warning_entries, _write_terminal_report, run_uxb_run
 from packages.uxb_run.models import CurrentAction, ProjectRunState
 
 
@@ -516,6 +516,60 @@ class UXBRunCliTests(unittest.TestCase):
         phase_state = json.loads((runtime_dir / "phase_state.json").read_text(encoding="utf-8"))
         self.assertEqual(phase_state["status"], "passed_with_warnings")
         self.assertEqual(phase_state["warnings"], [])
+
+    def test_append_warning_entries_skips_duplicate_check_status_message_from_gate(self) -> None:
+        project_id = f"_ci_uxb_run_cli_warning_dedupe_{uuid.uuid4().hex[:8]}"
+        self.project_ids.append(project_id)
+        run_task_bootstrap(project_id, domain="权限管理", task_name="warning dedupe", force=False)
+        project_dir = self.projects_dir / project_id
+        runtime_dir = project_dir / "runtime"
+        _write_json(
+            runtime_dir / "stage_context.json",
+            {
+                "accumulated_warnings": [
+                    {"phase": "business", "source": "gate-business", "message": "覆盖不足"},
+                    {"phase": "business", "source": "gate-business", "message": "待确认问题格式建议"},
+                ]
+            },
+        )
+        action = CurrentAction(
+            project_id=project_id,
+            action_id="final-phase-1",
+            phase="mainline",
+            action_type="phase_work",
+            owner="agent",
+            execution_mode="standard",
+            stage="final",
+            status="requires_agent",
+            target_artifacts=[],
+            required_inputs=[],
+            status_sources=[],
+            blocking_reasons=[],
+        )
+        state = ProjectRunState(
+            project_id=project_id,
+            project_dir=project_dir,
+            project_exists=True,
+            source_ready=True,
+            runtime_dir=runtime_dir,
+            source_dir=project_dir / "source",
+            workspace_dir=project_dir / "workspace",
+            preview_dir=project_dir / "runtime" / "preview",
+            phase_state={},
+            stage_context={
+                "accumulated_warnings": [
+                    {"phase": "business", "source": "gate-business", "message": "覆盖不足"},
+                    {"phase": "business", "source": "gate-business", "message": "待确认问题格式建议"},
+                ]
+            },
+        )
+
+        _append_warning_entries(project_id, state, action, ["覆盖不足", "business gate 状态为 warning"])
+
+        stage_context = json.loads((runtime_dir / "stage_context.json").read_text(encoding="utf-8"))
+        messages = [item.get("message") for item in stage_context["accumulated_warnings"]]
+        self.assertEqual(messages.count("覆盖不足"), 1)
+        self.assertIn("business gate 状态为 warning", messages)
 
 
 if __name__ == "__main__":

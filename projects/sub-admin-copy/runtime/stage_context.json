@@ -1,0 +1,65 @@
+{
+  "schema_version": "uxb_stage_context@2.0",
+  "project_id": "sub-admin-copy",
+  "context": {
+    "selection_source": "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+    "context_manifest_ref": "projects/sub-admin-copy/runtime/context_manifest.json",
+    "context_bundle_ref": "projects/sub-admin-copy/runtime/context_bundle"
+  },
+  "knowledge_trace": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/25_审计契约.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/安全管理/11_操作记录.md",
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "reasoning": "本次任务核心是在子管理员既有能力上新增「复制」批量操作。不改底层决策链骨架，但需权限域的业务对象、角色边界、来源模型和审计契约支撑复制后的来源追溯和操作记录设计；需体验风险模式知识支撑批量操作和治理模式的风险判断；需安全管理域操作记录知识支撑审计文案设计；需流程模式和反馈与报错设计知识支撑弹窗交互和异常反馈。"
+  },
+  "execution_trace": {
+    "project_id": "sub-admin-copy",
+    "generation_mode": "generated",
+    "producer": "uxb_run",
+    "source_hash": "a5cd1836bcb194d5e6f81601e04fb6cff6b0268cbb697553faf40766bfd3fc09",
+    "task_card_hash": "43c0a1566d0f17782a38c920539de187c1eec7b853c5f9720d3aef087e2c87c4",
+    "generated_at": "2026-06-15T15:06:30+00:00",
+    "parent_project_id": "",
+    "copied_from_project_id": "",
+    "manual_patch_reason": "",
+    "command_chain": [
+      "generate-facts",
+      "gate-facts",
+      "generate-business-lite",
+      "gate-business-lite",
+      "generate-experience",
+      "gate-experience-lite",
+      "validate-lite",
+      "coverage-lite",
+      "preview"
+    ]
+  },
+  "accumulated_warnings": [
+    {
+      "phase": "experience",
+      "source": "gate-experience",
+      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "coverage-lite: experience 未明显承接轻量业务产物中的维度：边界"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "experience_lite gate 状态为 warning"
+    }
+  ],
+  "updated_at": "2026-06-15T15:06:30+00:00"
+}

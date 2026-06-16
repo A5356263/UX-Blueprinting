@@ -1,0 +1,91 @@
+{
+  "project_id": "sub-admin-copy",
+  "stage": "experience_lite",
+  "status": "warning",
+  "can_proceed": true,
+  "next_stage": "final-validate",
+  "generated_by": "packages.validate",
+  "updated_at": "2026-06-15T15:06:30.455715+00:00",
+  "checked_files": [
+    "projects/sub-admin-copy/workspace/facts.md",
+    "projects/sub-admin-copy/workspace/business_note.md",
+    "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+    "projects/sub-admin-copy/workspace/experience_blueprint.md",
+    "projects/sub-admin-copy/runtime/provenance.json"
+  ],
+  "blocker_count": 0,
+  "warning_count": 1,
+  "info_count": 0,
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+    ],
+    "infos": []
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "experience_lite_gate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_exception_handling_gap",
+      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达",
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/sub-admin-copy/workspace/facts.md",
+        "projects/sub-admin-copy/workspace/business_note.md",
+        "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+        "projects/sub-admin-copy/workspace/experience_blueprint.md",
+        "projects/sub-admin-copy/runtime/provenance.json"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/workspace/facts.md",
+            "projects/sub-admin-copy/workspace/business_note.md",
+            "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+            "projects/sub-admin-copy/workspace/experience_blueprint.md",
+            "projects/sub-admin-copy/runtime/provenance.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "journey_item_count": 1,
+            "flow_count": 26,
+            "page_inventory_item_count": 20,
+            "state_feedback_pair_count": 7,
+            "appendix_item_count": 10,
+            "exception_coverage": true,
+            "core_table_count": 20,
+            "summary_node_count": 0,
+            "main_flow_heading_count": 5
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "journey_item_count": 1,
+    "flow_count": 26,
+    "page_inventory_item_count": 20,
+    "state_feedback_pair_count": 7,
+    "appendix_item_count": 10,
+    "exception_coverage": true,
+    "core_table_count": 20,
+    "summary_node_count": 0,
+    "main_flow_heading_count": 5
+  }
+}

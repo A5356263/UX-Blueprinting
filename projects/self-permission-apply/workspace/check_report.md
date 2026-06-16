@@ -10,7 +10,7 @@
 - 是否阻断: 否
 - has_blocker: false
 - blocker_count: 0
-- warning_count: 5
+- warning_count: 8
 - info_count: 7
 
 ## Output Status
@@ -29,29 +29,32 @@
 ## Warnings
 
 - business gate 状态为 warning
-- business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构
-- business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类
+- business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱
 - experience gate 状态为 warning
-- experience_blueprint.md `## 8. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构
+- experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达
+- 承接检查：business_blueprint.md 已把“审批流程缺失或审批人不可用时的兜底处理”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 已把“审批超时处理——与OA审批的超时机制对接”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。
+- 承接检查：business_blueprint.md 已把“特殊身份校验失败时的明确报错和替代指引”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。
+- 承接检查：business_blueprint.md 明确要求主流程闭环包含“超管关闭模式→在途流程处理→模式关闭→员工端入口...”，但 experience_blueprint.md 还没有把这一段转成清晰的用户流程、系统反馈或结果去向。
 
 ## Infos
 
 - facts gate 状态：passed
-- 自然语言承接检查：主流程闭环覆盖：0/0
-- 自然语言承接检查：异常与阻断覆盖：0/0
-- 自然语言承接检查：状态与反馈覆盖：0/0
-- 自然语言承接检查：角色路径覆盖：not_declared
-- 自然语言承接检查：设计指南装配：1 条
-- 自然语言承接检查：风险保护承接：0/0
+- 自然语言承接检查：主流程闭环覆盖：2/3
+- 自然语言承接检查：异常与阻断覆盖：2/4
+- 自然语言承接检查：状态与反馈覆盖：3/3
+- 自然语言承接检查：角色路径覆盖：3/3
+- 自然语言承接检查：设计指南装配：0 条
+- 自然语言承接检查：风险保护承接：3/4
 
 ## 自然语言承接检查
 
-- 角色路径覆盖：not_declared
-- 主流程闭环覆盖：0/0
-- 异常与阻断覆盖：0/0
-- 状态与反馈覆盖：0/0
-- 风险保护承接：0/0
-- 设计指南装配：1 条
+- 角色路径覆盖：3/3
+- 主流程闭环覆盖：2/3
+- 异常与阻断覆盖：2/4
+- 状态与反馈覆盖：3/3
+- 风险保护承接：3/4
+- 设计指南装配：0 条
 
 ## Machine Status
 

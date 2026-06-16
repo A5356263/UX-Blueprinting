@@ -1,0 +1,40 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "sub-admin-copy",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint_lite",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/25_审计契约.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/安全管理/11_操作记录.md",
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "reasoning": "本次任务核心是在子管理员既有能力上新增「复制」批量操作。不改底层决策链骨架，但需权限域的业务对象、角色边界、来源模型和审计契约支撑复制后的来源追溯和操作记录设计；需体验风险模式知识支撑批量操作和治理模式的风险判断；需安全管理域操作记录知识支撑审计文案设计；需流程模式和反馈与报错设计知识支撑弹窗交互和异常反馈。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint_lite.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "复制所得权限需在来源模型中可追溯至来源子管理员，作为 ACL_DIRECT 下的子路径标注",
+      "双管理员互审的审批时机和生效规则作为 GAP 标注",
+      "校验失败处理策略（全阻断/部分跳过）作为 GAP 标注",
+      "已有子管理员叠加时的重复去重策略作为 GAP 标注",
+      "「复制」操作名与「叠加」行为的语义张力需在体验蓝图中显式处理"
+    ]
+  }
+}

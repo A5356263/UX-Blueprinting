@@ -1,0 +1,22 @@
+{
+  "project_id": "sub-admin-copy",
+  "generation_mode": "generated",
+  "producer": "uxb_run",
+  "source_hash": "a5cd1836bcb194d5e6f81601e04fb6cff6b0268cbb697553faf40766bfd3fc09",
+  "task_card_hash": "43c0a1566d0f17782a38c920539de187c1eec7b853c5f9720d3aef087e2c87c4",
+  "generated_at": "2026-06-15T15:06:30+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite",
+    "preview"
+  ]
+}

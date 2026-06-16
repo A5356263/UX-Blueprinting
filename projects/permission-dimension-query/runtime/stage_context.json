@@ -1,0 +1,99 @@
+{
+  "schema_version": "uxb_stage_context@2.0",
+  "project_id": "permission-dimension-query",
+  "context": {
+    "selection_source": "projects/permission-dimension-query/runtime/uxb_route_decision.json",
+    "context_manifest_ref": "projects/permission-dimension-query/runtime/context_manifest.json",
+    "context_bundle_ref": "projects/permission-dimension-query/runtime/context_bundle"
+  },
+  "knowledge_trace": {
+    "files": [
+      "knowledge/wiki/summaries/业务/权限管理/00_领域概述.md",
+      "knowledge/wiki/summaries/业务/权限管理/03_业务对象.md",
+      "knowledge/wiki/summaries/业务/权限管理/10_能力地图.md",
+      "knowledge/wiki/summaries/业务/权限管理/11_任务场景.md",
+      "knowledge/wiki/summaries/业务/权限管理/21_来源模型.md",
+      "knowledge/wiki/summaries/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/03_业务对象.md",
+      "knowledge/raw/业务/权限管理/12_查询与配置路径.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/wiki/summaries/设计准则/信息架构.md",
+      "knowledge/wiki/summaries/设计准则/可用性.md",
+      "knowledge/wiki/summaries/设计准则/认知.md",
+      "knowledge/wiki/summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "reasoning": "本次任务需要在已有权限对象模型和来源模型之上建立跨域统一查询能力。业务知识选择覆盖对象模型、能力地图、任务场景、来源模型、查询路径缺口和体验风险模式六大维度，这些是定义查询口径层和结果可解释性框架的核心依据。设计知识选择覆盖信息架构（维度组织和结果分组）、可用性（状态可见和错误恢复）、认知（渐进披露和认知负荷控制）、反馈与报错（阻断反馈形式和文案策略）四个方向，这些是体验蓝图阶段的核心判断依据。"
+  },
+  "execution_trace": {
+    "project_id": "permission-dimension-query",
+    "generation_mode": "generated",
+    "producer": "uxb_run",
+    "source_hash": "4f5538bbbe96554b5666f90dccb073e4dbf63d415503564945d095be4b6ff685",
+    "task_card_hash": "ab0ebbb74d499ce6deb5ad4b4edd0b67e110c1eb93b11cc18504af0d1f6b9a0b",
+    "generated_at": "2026-06-15T15:24:51+00:00",
+    "parent_project_id": "",
+    "copied_from_project_id": "",
+    "manual_patch_reason": "",
+    "command_chain": [
+      "generate-facts",
+      "gate-facts",
+      "generate-business",
+      "gate-business",
+      "generate-experience",
+      "gate-experience",
+      "validate",
+      "repair-plan",
+      "coverage",
+      "preview"
+    ]
+  },
+  "accumulated_warnings": [
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 风险与保护策略内容偏少"
+    },
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 规则与边界描述偏少"
+    },
+    {
+      "phase": "business",
+      "source": "gate-business",
+      "message": "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱"
+    },
+    {
+      "phase": "experience",
+      "source": "gate-experience",
+      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "business gate 状态为 warning"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "experience gate 状态为 warning"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "承接检查：business_blueprint.md 已把“数据加载失败：系统异常时提供重试入口”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "承接检查：business_blueprint.md 已把“查询范围的二次校验：即使入口可见，查询特定对象时...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+    },
+    {
+      "phase": "final",
+      "source": "check_status",
+      "message": "承接检查：business_blueprint.md 要求解释“如果是通过角色获得的，标注来源角色名称”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
+    }
+  ],
+  "updated_at": "2026-06-15T15:24:51+00:00"
+}

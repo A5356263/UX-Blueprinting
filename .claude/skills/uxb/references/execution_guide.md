@@ -91,6 +91,19 @@ python -m packages run <project-id> --domain "<domain>" --task-name "<task-name>
 2. 如需引用中文术语，优先用 `「」` 或 `“”`
 3. 校验失败时，不在坏 JSON 上一直缝补，直接按模板重写
 
+`required_outputs` 格式：
+
+1. 只写文件名，不带 `workspace/` 前缀
+2. 必须包含 `facts.md`
+3. `full` 路径必须包含：
+   - `business_blueprint.md`
+   - `experience_blueprint.md`
+4. 示例：
+
+```json
+["facts.md", "business_blueprint.md", "experience_blueprint.md"]
+```
+
 ## 判断单校验
 
 写完判断单后，先做判断单校验，再继续后续生成阶段。
@@ -98,6 +111,10 @@ python -m packages run <project-id> --domain "<domain>" --task-name "<task-name>
 不要跳过这一步。
 
 ## 后续生成阶段
+
+`full` 路径下，`gap_list.md` 会在执行过程中生成，用于记录待确认问题。
+
+Agent 不需要手动创建 `gap_list.md`，但应在最终检查时消费其内容。
 
 判断单校验通过后，不再手动决定下一步。
 

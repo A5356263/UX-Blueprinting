@@ -2,9 +2,9 @@
   "project_id": "self-permission-apply",
   "generation_mode": "generated",
   "producer": "uxb_run",
-  "source_hash": "23baae80774a49be9bcb56384deffcc6ba618a7f9b4b7fd3bfbc5d1d27c6754f",
-  "task_card_hash": "680104c22e566dded42159fac6495c407cf283ae1deded11d135f290150f49f3",
-  "generated_at": "2026-06-14T13:51:19+00:00",
+  "source_hash": "ec0f1f9ad7c07e9c9be9101fc0e3fd5f2f2f44dd47a23bf4aff2bcbca1f78305",
+  "task_card_hash": "ecd756fe229af283436246c539b2f1bcf0ccd0f04c14dc45bd3b2388f347b421",
+  "generated_at": "2026-06-15T14:54:23+00:00",
   "parent_project_id": "",
   "copied_from_project_id": "",
   "manual_patch_reason": "",
@@ -18,6 +18,6 @@
     "validate",
     "repair-plan",
     "coverage",
-    "assemble"
+    "preview"
   ]
 }

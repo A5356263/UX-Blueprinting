@@ -426,3 +426,4 @@ python -m packages run <project-id> --domain "<domain>" --task-name "<task-name>
 - 不让用户先理解内部状态名才能继续
 - 不让工程护栏接管语义判断
 - 不因为这次重建打乱 `facts / business / experience` 已经正确的边界
+- 项目目录只建 `source/`、`workspace/`、`runtime/`，不建 `exports/`

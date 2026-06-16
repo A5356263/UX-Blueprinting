@@ -39,6 +39,30 @@ Step 2
 
 不默认再单列“影响”，避免重复 `Step 2` 的风险分析。
 
+## task_card.md 段落格式
+
+正式写入 `task_card.md` 时，使用以下段落结构：
+
+- `## Protocol`
+- `## Required Inputs`
+- `## Required Outputs`
+- `## Constraints`
+- `## Templates`
+- `## Checks`
+
+不要使用自然语言标题（如“任务目标”“执行步骤”等）。
+不要用“第一步”“第二步”这种叙述式结构。
+
+`## Protocol` 段落内，至少写全以下字段：
+
+- `Protocol Name`
+- `Protocol Version`
+- `Task ID`
+- `Task Name`
+- `Domain`
+
+缺少这些字段时，即使段落标题写对，`task_card.md` 仍会被当前任务卡契约判定为无效，正式执行入口也无法稳定识别。
+
 ## 用户侧表达
 
 任务摘要必须用用户看得懂的话。

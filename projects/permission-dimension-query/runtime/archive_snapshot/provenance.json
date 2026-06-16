@@ -1,0 +1,23 @@
+{
+  "project_id": "permission-dimension-query",
+  "generation_mode": "generated",
+  "producer": "uxb_run",
+  "source_hash": "4f5538bbbe96554b5666f90dccb073e4dbf63d415503564945d095be4b6ff685",
+  "task_card_hash": "ab0ebbb74d499ce6deb5ad4b4edd0b67e110c1eb93b11cc18504af0d1f6b9a0b",
+  "generated_at": "2026-06-15T15:24:51+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "repair-plan",
+    "coverage",
+    "preview"
+  ]
+}

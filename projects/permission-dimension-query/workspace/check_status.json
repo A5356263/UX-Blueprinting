@@ -1,0 +1,1519 @@
+{
+  "task_id": "permission-dimension-query",
+  "status": "warning",
+  "has_blocker": false,
+  "blocker_count": 0,
+  "warning_count": 9,
+  "info_count": 7,
+  "completed_outputs": [
+    "projects/permission-dimension-query/workspace/business_blueprint.md",
+    "projects/permission-dimension-query/workspace/check_report.md",
+    "projects/permission-dimension-query/workspace/check_status.json",
+    "projects/permission-dimension-query/workspace/experience_blueprint.md",
+    "projects/permission-dimension-query/workspace/facts.md",
+    "projects/permission-dimension-query/workspace/gap_list.md"
+  ],
+  "missing_outputs": [],
+  "generated_by": "packages.validate",
+  "updated_at": "2026-06-15T15:24:51.768168+00:00",
+  "checked_files": [
+    "projects/permission-dimension-query/runtime/context_manifest.json",
+    "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+    "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+    "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+    "projects/permission-dimension-query/workspace/business_blueprint.md",
+    "projects/permission-dimension-query/workspace/check_report.md",
+    "projects/permission-dimension-query/workspace/check_status.json",
+    "projects/permission-dimension-query/workspace/experience_blueprint.md",
+    "projects/permission-dimension-query/workspace/facts.md",
+    "projects/permission-dimension-query/workspace/gap_list.md"
+  ],
+  "issues": {
+    "blockers": [],
+    "warnings": [
+      "business gate 状态为 warning",
+      "business_blueprint.md 规则与边界描述偏少",
+      "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱",
+      "business_blueprint.md 风险与保护策略内容偏少",
+      "experience gate 状态为 warning",
+      "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达",
+      "承接检查：business_blueprint.md 已把“数据加载失败：系统异常时提供重试入口”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
+      "承接检查：business_blueprint.md 已把“查询范围的二次校验：即使入口可见，查询特定对象时...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "承接检查：business_blueprint.md 要求解释“如果是通过角色获得的，标注来源角色名称”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
+    ],
+    "infos": [
+      "facts gate 状态：passed",
+      "自然语言承接检查：主流程闭环覆盖：1/1",
+      "自然语言承接检查：异常与阻断覆盖：3/4",
+      "自然语言承接检查：状态与反馈覆盖：2/3",
+      "自然语言承接检查：角色路径覆盖：3/3",
+      "自然语言承接检查：设计指南装配：4 条",
+      "自然语言承接检查：风险保护承接：2/3"
+    ]
+  },
+  "issue_details_version": "1.0",
+  "issue_details": [
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business gate 状态为 warning",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business gate 状态为 warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 规则与边界描述偏少",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 规则与边界描述偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "depth_insufficient",
+      "message": "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "business_blueprint.md 风险与保护策略内容偏少",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/09_business_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 风险与保护策略内容偏少"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "quality_gap",
+      "message": "experience gate 状态为 warning",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience gate 状态为 warning"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_exception_handling_gap",
+      "message": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_state_feedback_gap",
+      "message": "承接检查：business_blueprint.md 已把“数据加载失败：系统异常时提供重试入口”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“数据加载失败：系统异常时提供重试入口”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_business_consumption_gap",
+      "message": "承接检查：business_blueprint.md 已把“查询范围的二次校验：即使入口可见，查询特定对象时...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 已把“查询范围的二次校验：即使入口可见，查询特定对象时...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "experience",
+      "severity": "warning",
+      "category": "experience_state_feedback_gap",
+      "message": "承接检查：business_blueprint.md 要求解释“如果是通过角色获得的，标注来源角色名称”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/10_experience_blueprint_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "承接检查：business_blueprint.md 要求解释“如果是通过角色获得的，标注来源角色名称”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "validate",
+      "stage": "facts",
+      "severity": "info",
+      "category": "quality_gap",
+      "message": "facts gate 状态：passed",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/facts.md"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md",
+        "specs/08_fact_extraction_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "facts gate 状态：passed"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_business_consumption_gap",
+      "message": "自然语言承接检查：主流程闭环覆盖：1/1",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：主流程闭环覆盖：1/1"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_exception_handling_gap",
+      "message": "自然语言承接检查：异常与阻断覆盖：3/4",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：异常与阻断覆盖：3/4"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_state_feedback_gap",
+      "message": "自然语言承接检查：状态与反馈覆盖：2/3",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：状态与反馈覆盖：2/3"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_role_path_gap",
+      "message": "自然语言承接检查：角色路径覆盖：3/3",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：角色路径覆盖：3/3"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_guideline_consumption_gap",
+      "message": "自然语言承接检查：设计指南装配：4 条",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：设计指南装配：4 条"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source": "coverage",
+      "stage": "final",
+      "severity": "info",
+      "category": "experience_business_consumption_gap",
+      "message": "自然语言承接检查：风险保护承接：2/3",
+      "target_artifacts": [
+        "projects/permission-dimension-query/workspace/check_status.json"
+      ],
+      "violated_contract_refs": [
+        "specs/06_check_contract.md"
+      ],
+      "checked_files": [
+        "projects/permission-dimension-query/runtime/context_manifest.json",
+        "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+        "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+        "projects/permission-dimension-query/workspace/business_blueprint.md",
+        "projects/permission-dimension-query/workspace/check_report.md",
+        "projects/permission-dimension-query/workspace/check_status.json",
+        "projects/permission-dimension-query/workspace/experience_blueprint.md",
+        "projects/permission-dimension-query/workspace/facts.md",
+        "projects/permission-dimension-query/workspace/gap_list.md"
+      ],
+      "evidence": [
+        {
+          "type": "message",
+          "value": "自然语言承接检查：风险保护承接：2/3"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/permission-dimension-query/runtime/context_manifest.json",
+            "projects/permission-dimension-query/runtime/gates/business_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/experience_gate_status.json",
+            "projects/permission-dimension-query/runtime/gates/facts_gate_status.json",
+            "projects/permission-dimension-query/workspace/business_blueprint.md",
+            "projects/permission-dimension-query/workspace/check_report.md",
+            "projects/permission-dimension-query/workspace/check_status.json",
+            "projects/permission-dimension-query/workspace/experience_blueprint.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "required_output_count": 6,
+            "completed_output_count": 6,
+            "missing_output_count": 0,
+            "business_depth": {
+              "option_compare_count": 8,
+              "value_assessment_item_count": 10,
+              "risk_item_count": 0,
+              "unresolved_gap_count": 0,
+              "has_appendix": true,
+              "appendix_item_count": 7,
+              "referenced_fact_section_count": 0,
+              "handover_item_count": 18,
+              "handover_keyword_count": 5,
+              "has_handover_empty_talk": false
+            },
+            "experience_depth": {
+              "journey_item_count": 3,
+              "flow_count": 36,
+              "page_inventory_item_count": 38,
+              "state_feedback_pair_count": 15,
+              "appendix_item_count": 20,
+              "exception_coverage": true,
+              "core_table_count": 29,
+              "summary_node_count": 12,
+              "main_flow_heading_count": 4
+            },
+            "coverage": {
+              "required_role_count": 3,
+              "covered_role_count": 3,
+              "required_flow_step_count": 1,
+              "covered_flow_step_count": 1,
+              "required_exception_count": 4,
+              "covered_exception_count": 3,
+              "required_state_count": 3,
+              "covered_state_count": 2,
+              "required_risk_count": 3,
+              "covered_risk_count": 2,
+              "guideline_refs_used_count": 4
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "required_output_count": 6,
+    "completed_output_count": 6,
+    "missing_output_count": 0,
+    "business_depth": {
+      "option_compare_count": 8,
+      "value_assessment_item_count": 10,
+      "risk_item_count": 0,
+      "unresolved_gap_count": 0,
+      "has_appendix": true,
+      "appendix_item_count": 7,
+      "referenced_fact_section_count": 0,
+      "handover_item_count": 18,
+      "handover_keyword_count": 5,
+      "has_handover_empty_talk": false
+    },
+    "experience_depth": {
+      "journey_item_count": 3,
+      "flow_count": 36,
+      "page_inventory_item_count": 38,
+      "state_feedback_pair_count": 15,
+      "appendix_item_count": 20,
+      "exception_coverage": true,
+      "core_table_count": 29,
+      "summary_node_count": 12,
+      "main_flow_heading_count": 4
+    },
+    "coverage": {
+      "required_role_count": 3,
+      "covered_role_count": 3,
+      "required_flow_step_count": 1,
+      "covered_flow_step_count": 1,
+      "required_exception_count": 4,
+      "covered_exception_count": 3,
+      "required_state_count": 3,
+      "covered_state_count": 2,
+      "required_risk_count": 3,
+      "covered_risk_count": 2,
+      "guideline_refs_used_count": 4
+    }
+  }
+}

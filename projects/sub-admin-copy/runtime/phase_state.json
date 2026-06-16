@@ -1,0 +1,22 @@
+{
+  "schema_version": "uxb_phase_state@2.0",
+  "project_id": "sub-admin-copy",
+  "phase": "final",
+  "execution_mode": "standard",
+  "status": "passed_with_warnings",
+  "target_artifact": "",
+  "target_artifacts": [],
+  "required_inputs": [],
+  "template_refs": [],
+  "rule_refs": [],
+  "preflight_errors": [],
+  "repair_mode": false,
+  "repair_refs": [],
+  "gate_status_refs": [],
+  "warnings": [
+    "coverage-lite: experience 未明显承接轻量业务产物中的维度：边界",
+    "experience_lite gate 状态为 warning"
+  ],
+  "created_at": "2026-06-15T15:06:30+00:00",
+  "updated_at": "2026-06-15T15:06:30+00:00"
+}

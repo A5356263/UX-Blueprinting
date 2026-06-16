@@ -1,0 +1,29 @@
+{
+  "schema_version": "uxb_phase_state@2.0",
+  "project_id": "permission-dimension-query",
+  "phase": "final",
+  "execution_mode": "full",
+  "status": "passed_with_warnings",
+  "target_artifact": "",
+  "target_artifacts": [],
+  "required_inputs": [],
+  "template_refs": [],
+  "rule_refs": [],
+  "preflight_errors": [],
+  "repair_mode": false,
+  "repair_refs": [],
+  "gate_status_refs": [],
+  "warnings": [
+    "business gate 状态为 warning",
+    "business_blueprint.md 规则与边界描述偏少",
+    "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱",
+    "business_blueprint.md 风险与保护策略内容偏少",
+    "experience gate 状态为 warning",
+    "experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达",
+    "承接检查：business_blueprint.md 已把“数据加载失败：系统异常时提供重试入口”列为必须处理的异常，但 experience_blueprint.md 还没有写清触发时机、反馈文案或用户下一步。",
+    "承接检查：business_blueprint.md 已把“查询范围的二次校验：即使入口可见，查询特定对象时...”列为需要保护的风险，但 experience_blueprint.md 还没有把它转成用户可见规则、提示或保护动作。",
+    "承接检查：business_blueprint.md 要求解释“如果是通过角色获得的，标注来源角色名称”，但 experience_blueprint.md 的状态与反馈文案还没有把状态含义、用户动作和页面反馈写完整。"
+  ],
+  "created_at": "2026-06-15T15:24:51+00:00",
+  "updated_at": "2026-06-15T15:24:51+00:00"
+}

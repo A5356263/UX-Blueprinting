@@ -12,40 +12,58 @@
 ## 当前状态
 
 - repair_loop_status: blocked
-- open issues: 6
-- blocker: 1
-- warning: 5
+- open issues: 7
+- blocker: 3
+- warning: 4
 - info: 0
 
 ## 问题统计
 
-- issue_count: 6
-- open_issue_count: 6
-- blocker_count: 1
-- warning_count: 5
+- issue_count: 7
+- open_issue_count: 7
+- blocker_count: 3
+- warning_count: 4
 - info_count: 0
 
 ## 本轮修复单元
 
 ### repair-unit-001
 - target: projects/self-permission-apply/workspace/business_blueprint.md
-- goal: 修复 business_blueprint.md 中的 experience_business_consumption_gap, experience_role_path_gap 问题
+- goal: 修复 business_blueprint.md 中的 depth_insufficient 问题
 - mode: patch_current_artifact
-- issue_ids: BIZ-54F58B51, BIZ-66583972
+- issue_ids: BIZ-DF47DF30
 
 ### repair-unit-002
 - target: projects/self-permission-apply/workspace/experience_blueprint.md
-- goal: 修复 experience_blueprint.md 中的 depth_insufficient, experience_guideline_consumption_gap 问题
+- goal: 修复 experience_blueprint.md 中的 experience_exception_handling_gap 问题
 - mode: patch_current_artifact
-- issue_ids: EXP-CC2158D9, EXP-6D585AEF
+- issue_ids: EXP-F366C9E2
 
 ### repair-unit-003
+- target: projects/self-permission-apply/workspace/check_report.md
+- goal: 修复 check_report.md 中的 structure_missing 问题
+- mode: rerun_checks_only
+- issue_ids: CHK-ECDAC940
+
+### repair-unit-004
+- target: projects/self-permission-apply/workspace/check_status.json
+- goal: 修复 check_status.json 中的 structure_missing 问题
+- mode: rerun_checks_only
+- issue_ids: CHK-B59BC6FA
+
+### repair-unit-005
+- target: projects/self-permission-apply/workspace/gap_list.md
+- goal: 修复 gap_list.md 中的 structure_missing 问题
+- mode: rerun_checks_only
+- issue_ids: CHK-0A8D2325
+
+### repair-unit-006
 - target: projects/self-permission-apply/runtime/gate_metrics.json
 - goal: 修复 gate_metrics.json 中的 structure_missing 问题
 - mode: rerun_checks_only
 - issue_ids: RUN-FCB57B57
 
-### repair-unit-004
+### repair-unit-007
 - target: projects/self-permission-apply/runtime/trace_index.json
 - goal: 修复 trace_index.json 中的 structure_missing 问题
 - mode: rerun_checks_only
@@ -62,10 +80,11 @@ python -m packages coverage self-permission-apply
 
 ## 未关闭问题
 
-- EXP-CC2158D9 | blocker | experience | experience_guideline_consumption_gap | sources=coverage | experience 阶段发现 experience_guideline_consumption_gap 问题：设计指南消费检查：experience_blueprint.md 声称已消费设计指南，但 context_manifest.json 没有对应记录。
-- BIZ-54F58B51 | warning | business | experience_business_consumption_gap | sources=business_gate, validate | business 阶段发现 experience_business_consumption_gap 问题：business_blueprint.md `## 9. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构
-- BIZ-66583972 | warning | business | experience_role_path_gap | sources=business_gate, validate | business 阶段发现 experience_role_path_gap 问题：business_blueprint.md 方案承接要求覆盖不足，建议至少覆盖角色/流程/状态/异常/风险中的 3 类
-- EXP-6D585AEF | warning | experience | depth_insufficient | sources=experience_gate, validate | experience 阶段发现 depth_insufficient 问题：experience_blueprint.md `## 8. 待确认问题` 建议使用“问题标题 + 影响 + 建议确认方”的分块结构
+- CHK-0A8D2325 | blocker | final | structure_missing | sources=validate | final 阶段发现 structure_missing 问题：必需输出缺失：projects/self-permission-apply/workspace/gap_list.md
+- CHK-B59BC6FA | blocker | final | structure_missing | sources=validate | final 阶段发现 structure_missing 问题：必需输出缺失：projects/self-permission-apply/workspace/check_status.json
+- CHK-ECDAC940 | blocker | final | structure_missing | sources=validate | final 阶段发现 structure_missing 问题：必需输出缺失：projects/self-permission-apply/workspace/check_report.md
+- BIZ-DF47DF30 | warning | business | depth_insufficient | sources=business_gate, validate | business 阶段发现 depth_insufficient 问题：business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节，判断依据承接仍偏弱
+- EXP-F366C9E2 | warning | experience | experience_exception_handling_gap | sources=experience_gate, validate | experience 阶段发现 experience_exception_handling_gap 问题：experience_blueprint.md 主流程、异常或页面设计核心区包含表格，建议优先使用节点化 Markdown 层级表达
 - RUN-A3AFE22C | warning | runtime | structure_missing | sources=runtime | 缺少正式产物文件：projects/self-permission-apply/runtime/trace_index.json
 - RUN-FCB57B57 | warning | runtime | structure_missing | sources=runtime | 缺少正式产物文件：projects/self-permission-apply/runtime/gate_metrics.json
 

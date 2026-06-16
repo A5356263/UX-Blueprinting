@@ -1,12 +1,14 @@
-# Task Card：员工自助申请权限
+# 任务卡片
+
+> 说明：以下 `## Protocol`、`## Required Inputs` 等 section 名，以及 `Protocol Name`、`Task ID` 等字段名，当前仍作为执行器稳定解析结构保留，不建议随意改名。
 
 ## Protocol
 
-- Protocol Name: uxb_task_card
-- Protocol Version: 1.0
+- Protocol Name: Cross-AI Task Card
+- Protocol Version: v0.3
 - Task ID: self-permission-apply
 - Task Name: 员工自助申请权限
-- Domain: 权限管理
+- Domain: 管理后台
 
 ## Required Inputs
 
@@ -18,19 +20,33 @@
 - projects/self-permission-apply/workspace/facts.md
 - projects/self-permission-apply/workspace/business_blueprint.md
 - projects/self-permission-apply/workspace/experience_blueprint.md
+- projects/self-permission-apply/workspace/gap_list.md
+- projects/self-permission-apply/workspace/check_report.md
+- projects/self-permission-apply/workspace/check_status.json
 
 ## Constraints
 
-- 不改变现有权限判断决策链（VisibilityGate → FunctionGrant → DataScope → GovernanceState）
-- 可申请范围必须是管理员预配置的有限集合
-- 员工侧必须做权限概念翻译，不暴露内部来源模型
-- 不改变现有权限来源体系（直授、角色、应用可见性、协作可见性）
-- 不单独设计审批后台底层能力扩展，仅做业务承接判断
+- 不得臆造业务事实
+- 信息不足处保留 `[GAP]`
+- 正式产出必须写入 `workspace/`
+- 不得用聊天回复替代正式文档产物
+- facts 阶段不得把引用知识提升为当前任务已确认事实
+- business 阶段不得输出 UI 方案或实现方案
+- experience 阶段不得输出高保真视觉稿或研发实现细节
+- `runtime/uxb_route_decision.json` 是执行判断与知识选择唯一来源
+- `task_card.md` 不能替代 UXB 做复杂度判断、知识选择或执行深度判断
 
 ## Templates
 
-此任务不引用模板。
+- templates/facts.template.md
+- templates/business_blueprint.template.md
+- templates/experience_blueprint.template.md
+- templates/gap_list.template.md
+- templates/check_report.template.md
 
 ## Checks
 
-self-permission-apply
+- specs/06_check_contract.md
+- specs/08_fact_extraction_contract.md
+- specs/09_business_blueprint_contract.md
+- specs/10_experience_blueprint_contract.md
