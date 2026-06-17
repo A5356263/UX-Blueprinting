@@ -1,0 +1,23 @@
+{
+  "project_id": "emp-permission-apply",
+  "generation_mode": "generated",
+  "producer": "uxb_ai",
+  "source_hash": "bb0f0b020f8977278c4e9fe6733419927b8bb63ad586dbfe108c33c41dd7ccf1",
+  "task_card_hash": "9fffa43afb42f868cbdefb44aa8a5164fae7725e9ea89721160bb4b8e45ea64b",
+  "generated_at": "2026-06-16T13:33:13+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "run-routed-main",
+    "gate-facts",
+    "generate-facts",
+    "gate-business-lite",
+    "generate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite",
+    "preview"
+  ]
+}

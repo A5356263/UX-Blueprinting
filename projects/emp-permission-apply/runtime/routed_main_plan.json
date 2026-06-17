@@ -1,0 +1,29 @@
+{
+  "project_id": "emp-permission-apply",
+  "generated_at": "2026-06-16T13:32:17+00:00",
+  "decision_source": "uxb_route_decision.json",
+  "requested_route": "auto",
+  "execution_mode": "standard",
+  "mainline_entry": "user_confirmed_formal_blueprint_task",
+  "planned_steps": [
+    "project-structure-check",
+    "route-decision",
+    "assemble",
+    "generate-facts",
+    "gate-facts",
+    "generate-business-lite",
+    "gate-business-lite",
+    "generate-experience",
+    "gate-experience-lite",
+    "validate-lite",
+    "coverage-lite"
+  ],
+  "required_outputs": [
+    "facts.md",
+    "business_blueprint_lite.md",
+    "experience_blueprint.md",
+    "gap_list.md",
+    "check_report.md",
+    "check_status.json"
+  ]
+}

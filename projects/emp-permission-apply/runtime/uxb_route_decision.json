@@ -1,0 +1,45 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "emp-permission-apply",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint_lite",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/权限管理/31_体验翻译需求.md",
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/可用性.md",
+      "knowledge/raw/设计准则/认知.md",
+      "knowledge/raw/设计准则/信息架构.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/raw/设计准则/治理.md"
+    ],
+    "reasoning": "本次任务是在现有权限管理体系上新增员工自助申请通道，属于既有能力扩展。以上权限管理知识覆盖了领域边界、能力地图、任务场景、治理状态模型、体验风险与翻译需求，是后续 facts、business、experience 各阶段判断的核心依据。设计准则知识用于支撑三端（管理员、员工、审批人）的交互与反馈设计。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint_lite.md",
+      "experience_blueprint.md",
+      "gap_list.md",
+      "check_report.md",
+      "check_status.json"
+    ],
+    "notes": [
+      "可申请范围的配置方式（按角色/按功能权限/按模板）是 core 设计前置决策，建议在 business 阶段明确",
+      "审批中台是否已就绪需在 business 阶段标记为 GAP",
+      "自助申请来源在现有来源模型中的定位（直授变体还是独立类型）需在 business 阶段收敛",
+      "关闭自助申请后的存量策略（保留/回收）需在 business 阶段明确",
+      "与已有治理模式（子管理员、双管理员）的互斥关系待确认"
+    ]
+  }
+}

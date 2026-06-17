@@ -1,0 +1,32 @@
+{
+  "project_id": "emp-permission-apply",
+  "status": "failed",
+  "generated_at": "2026-06-16T13:32:17+00:00",
+  "requested_route": "auto",
+  "execution_mode": "standard",
+  "mainline_entry": "user_confirmed_formal_blueprint_task",
+  "stopped_at": "generate-facts",
+  "steps": [
+    {
+      "command": "project-structure-check",
+      "exit_code": 0
+    },
+    {
+      "command": "route-decision",
+      "exit_code": 0
+    },
+    {
+      "command": "assemble",
+      "exit_code": 0
+    },
+    {
+      "command": "generate-facts",
+      "exit_code": 1
+    }
+  ],
+  "actual_outputs": [
+    "E:/AI设计/体验蓝图构建思路/projects/emp-permission-apply/runtime/routed_main_plan.json"
+  ],
+  "recommend_enable_routed_execution": false,
+  "recommendation_reason": "当前执行判断已收敛到 UXB 已确认结果；是否默认启用，仍应基于样例和真实任务继续验证。"
+}

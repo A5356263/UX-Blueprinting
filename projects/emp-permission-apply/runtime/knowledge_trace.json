@@ -1,0 +1,18 @@
+{
+  "files": [
+    "knowledge/raw/业务/权限管理/00_领域概述.md",
+    "knowledge/raw/业务/权限管理/01_范围与边界.md",
+    "knowledge/raw/业务/权限管理/10_能力地图.md",
+    "knowledge/raw/业务/权限管理/11_任务场景.md",
+    "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/权限管理/31_体验翻译需求.md",
+    "knowledge/raw/设计准则/流程模式.md",
+    "knowledge/raw/设计准则/可用性.md",
+    "knowledge/raw/设计准则/认知.md",
+    "knowledge/raw/设计准则/信息架构.md",
+    "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+    "knowledge/raw/设计准则/治理.md"
+  ],
+  "reasoning": "本次任务是在现有权限管理体系上新增员工自助申请通道,属于既有能力扩展。以上权限管理知识覆盖了领域边界、能力地图、任务场景、治理状态模型、体验风险与翻译需求,是后续 facts、business、experience 各阶段判断的核心依据。设计准则知识用于支撑三端（管理员、员工、审批人）的交互与反馈设计。"
+}
