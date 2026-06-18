@@ -1,0 +1,43 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "emp-self-permission-apply",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/01_范围与边界.md",
+      "knowledge/raw/业务/权限管理/10_能力地图.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/20_决策链契约.md",
+      "knowledge/raw/业务/权限管理/21_来源模型.md",
+      "knowledge/raw/业务/权限管理/24_治理状态模型.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/设计准则/治理.md",
+      "knowledge/raw/设计准则/流程模式.md",
+      "knowledge/raw/设计准则/认知.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md"
+    ],
+    "reasoning": "本次任务是在已有权限体系中新增员工自助申请能力，涉及权限来源模型扩张、申请单状态机、审批回写链路和治理模式互斥判断。选择权限域9份业务知识覆盖领域定义、范围边界、能力地图、任务场景、角色边界、决策链、来源模型、治理状态和体验风险模式。选择4份设计知识覆盖治理信任可解释性、流程模式选择、认知决策和反馈报错。以上文件均在Step1/Step2分析阶段已消费，且后续business_blueprint和experience_blueprint产出仍需参考。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint.md",
+      "experience_blueprint.md",
+      "gap_list.md",
+      "check_report.md"
+    ],
+    "notes": [
+      "自助申请与已有权限治理模式（权限变更审批、子管理员、双管理员互审）的关系为阻断型GAP，当前产品侧未明确，business_blueprint中需标注[GAP]并给出两种假设路径的分别处理",
+      "员工端规则和审批端规则文档空白，设计阶段需基于权限域已有规则体系补全",
+      "可申请范围按角色还是按功能权限配置暂未定，管理端配置信息结构需保留两种可能性",
+      "审批流程引擎实现不在本次范围内，但权限域与审批域的交接面（触发时机、回写兜底）需在business_blueprint中明确"
+    ]
+  }
+}

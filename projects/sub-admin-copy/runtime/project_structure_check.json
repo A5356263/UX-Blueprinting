@@ -1,0 +1,16 @@
+{
+  "project_id": "sub-admin-copy",
+  "status": "passed",
+  "checked_at": "2026-06-18T12:04:19+00:00",
+  "project_dir": "E:/AI设计/体验蓝图构建思路/projects/sub-admin-copy",
+  "required_entries": [
+    "source/",
+    "workspace/",
+    "runtime/",
+    "meta.json"
+  ],
+  "missing_entries": [],
+  "issues": [],
+  "blocker_count": 0,
+  "warning_count": 0
+}

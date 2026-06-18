@@ -1,0 +1,19 @@
+{
+  "project_id": "emp-self-permission-apply",
+  "scope_version": "1.0",
+  "recommended_commands": [
+    "python -m packages gate-business emp-self-permission-apply",
+    "python -m packages gate-experience emp-self-permission-apply",
+    "python -m packages validate emp-self-permission-apply",
+    "python -m packages coverage emp-self-permission-apply"
+  ],
+  "backtrack_required": false,
+  "highest_required_stage": "business",
+  "rationale": [
+    "BIZ-805341F0 需要从 business 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "RUN-36CBADC5 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-C791EFEB 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "BIZ-7B6CBB22 需要从 business 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "RUN-E0D70618 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。"
+  ]
+}

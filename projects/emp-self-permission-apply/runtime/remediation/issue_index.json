@@ -1,0 +1,379 @@
+{
+  "project_id": "emp-self-permission-apply",
+  "generated_at": "2026-06-17T15:49:11.241698+00:00",
+  "issue_count": 5,
+  "open_issue_count": 5,
+  "blocker_count": 3,
+  "warning_count": 2,
+  "info_count": 0,
+  "repair_loop_status": "blocked",
+  "source_artifacts": [
+    {
+      "source": "facts_gate",
+      "stage": "facts",
+      "status_path": "projects/emp-self-permission-apply/runtime/gates/facts_gate_status.json",
+      "report_path": "projects/emp-self-permission-apply/runtime/gates/facts_gate_report.md",
+      "status_exists": true,
+      "report_exists": false
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "status_path": "projects/emp-self-permission-apply/runtime/gates/business_gate_status.json",
+      "report_path": "projects/emp-self-permission-apply/runtime/gates/business_gate_report.md",
+      "status_exists": true,
+      "report_exists": true
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "status_path": "projects/emp-self-permission-apply/runtime/gates/experience_gate_status.json",
+      "report_path": "projects/emp-self-permission-apply/runtime/gates/experience_gate_report.md",
+      "status_exists": false,
+      "report_exists": false
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "status_path": "projects/emp-self-permission-apply/workspace/check_status.json",
+      "report_path": "projects/emp-self-permission-apply/workspace/check_report.md",
+      "status_exists": false,
+      "report_exists": false
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "BIZ-805341F0",
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "blocker",
+      "category": "skeleton_content",
+      "title": "business 阶段存在 skeleton_content 问题",
+      "description": "business 阶段发现 skeleton_content 问题：business_blueprint.md 仍包含模板提示语,请先替换为真实内容",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 仍包含模板提示语,请先替换为真实内容"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/business_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/emp-self-permission-apply/workspace/facts.md",
+            "projects/emp-self-permission-apply/workspace/business_blueprint.md",
+            "projects/emp-self-permission-apply/runtime/provenance.json",
+            "projects/emp-self-permission-apply/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "option_compare_count": 24,
+            "value_assessment_item_count": 11,
+            "risk_item_count": 10,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "appendix_item_count": 15,
+            "referenced_fact_section_count": 0,
+            "handover_item_count": 19,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "business_blueprint.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/emp-self-permission-apply/workspace/facts.md",
+            "projects/emp-self-permission-apply/workspace/business_blueprint.md",
+            "projects/emp-self-permission-apply/runtime/provenance.json",
+            "projects/emp-self-permission-apply/runtime/gates/facts_gate_status.json"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/emp-self-permission-apply/workspace/business_blueprint.md"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 business_blueprint.md 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-business",
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "business_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-36CBADC5",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/emp-self-permission-apply/runtime/gate_metrics.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/emp-self-permission-apply/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/experience_gate_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/emp-self-permission-apply/runtime/gate_metrics.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/runtime/gate_metrics.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/runtime/gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/emp-self-permission-apply/runtime/gate_metrics.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-C791EFEB",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/emp-self-permission-apply/workspace/check_status.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing machine check status: projects/emp-self-permission-apply/workspace/check_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/workspace/check_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/workspace/check_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/emp-self-permission-apply/workspace/check_status.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/emp-self-permission-apply/workspace/check_status.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 check_status.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "BIZ-7B6CBB22",
+      "source": "business_gate",
+      "stage": "business",
+      "severity": "warning",
+      "category": "depth_insufficient",
+      "title": "business 阶段存在 depth_insufficient 问题",
+      "description": "business 阶段发现 depth_insufficient 问题：business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节,判断依据承接仍偏弱",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "business_blueprint.md 附录没有自然说明主要依据来自 facts 的哪些章节,判断依据承接仍偏弱"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/runtime/gates/business_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/emp-self-permission-apply/workspace/facts.md",
+            "projects/emp-self-permission-apply/workspace/business_blueprint.md",
+            "projects/emp-self-permission-apply/runtime/provenance.json",
+            "projects/emp-self-permission-apply/runtime/gates/facts_gate_status.json"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "option_compare_count": 24,
+            "value_assessment_item_count": 11,
+            "risk_item_count": 10,
+            "unresolved_gap_count": 0,
+            "has_appendix": true,
+            "appendix_item_count": 15,
+            "referenced_fact_section_count": 0,
+            "handover_item_count": 19,
+            "handover_keyword_count": 5,
+            "has_handover_empty_talk": false
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "business_blueprint.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/emp-self-permission-apply/workspace/facts.md",
+            "projects/emp-self-permission-apply/workspace/business_blueprint.md",
+            "projects/emp-self-permission-apply/runtime/provenance.json",
+            "projects/emp-self-permission-apply/runtime/gates/facts_gate_status.json"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/09_business_blueprint_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/emp-self-permission-apply/workspace/business_blueprint.md"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 business_blueprint.md 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-business",
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "business_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-E0D70618",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "warning",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/emp-self-permission-apply/runtime/trace_index.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/emp-self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/emp-self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/emp-self-permission-apply/runtime/trace_index.json"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/emp-self-permission-apply/runtime/trace_index.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    }
+  ]
+}

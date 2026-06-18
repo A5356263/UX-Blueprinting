@@ -1,0 +1,452 @@
+{
+  "project_id": "sub-admin-copy",
+  "generated_at": "2026-06-18T12:07:04.254195+00:00",
+  "issue_count": 6,
+  "open_issue_count": 6,
+  "blocker_count": 4,
+  "warning_count": 2,
+  "info_count": 0,
+  "repair_loop_status": "blocked",
+  "source_artifacts": [
+    {
+      "source": "facts_gate",
+      "stage": "facts",
+      "status_path": "projects/sub-admin-copy/runtime/gates/facts_gate_status.json",
+      "report_path": "projects/sub-admin-copy/runtime/gates/facts_gate_report.md",
+      "status_exists": true,
+      "report_exists": true
+    },
+    {
+      "source": "business_gate",
+      "stage": "business",
+      "status_path": "projects/sub-admin-copy/runtime/gates/business_gate_status.json",
+      "report_path": "projects/sub-admin-copy/runtime/gates/business_gate_report.md",
+      "status_exists": false,
+      "report_exists": false
+    },
+    {
+      "source": "experience_gate",
+      "stage": "experience",
+      "status_path": "projects/sub-admin-copy/runtime/gates/experience_gate_status.json",
+      "report_path": "projects/sub-admin-copy/runtime/gates/experience_gate_report.md",
+      "status_exists": false,
+      "report_exists": false
+    },
+    {
+      "source": "validate",
+      "stage": "final",
+      "status_path": "projects/sub-admin-copy/workspace/check_status.json",
+      "report_path": "projects/sub-admin-copy/workspace/check_report.md",
+      "status_exists": false,
+      "report_exists": false
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "FACT-1E9339D1",
+      "source": "facts_gate",
+      "stage": "facts",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "facts 阶段存在 structure_missing 问题",
+      "description": "facts 阶段发现 structure_missing 问题：provenance: 缺少 runtime/provenance.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "provenance: 缺少 runtime/provenance.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/gates/facts_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/gates/facts_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/source/task_card.md",
+            "projects/sub-admin-copy/source/requirement.md",
+            "projects/sub-admin-copy/source/background.md",
+            "projects/sub-admin-copy/runtime/context_manifest.json",
+            "projects/sub-admin-copy/runtime/provenance.json",
+            "projects/sub-admin-copy/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "dimension_coverage": {
+              "overview": 1,
+              "features": 1,
+              "rules": 1,
+              "states": 1,
+              "exceptions": 1,
+              "dependencies": 1,
+              "gaps": 1
+            },
+            "gap_count": 15,
+            "knowledge_derived_fact_count": 0
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "facts.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/source/task_card.md",
+            "projects/sub-admin-copy/source/requirement.md",
+            "projects/sub-admin-copy/source/background.md",
+            "projects/sub-admin-copy/runtime/context_manifest.json",
+            "projects/sub-admin-copy/runtime/provenance.json",
+            "projects/sub-admin-copy/workspace/facts.md"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/runtime/gate_metrics.json"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-facts",
+        "gate-business",
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "facts_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "FACT-2B7CC743",
+      "source": "facts_gate",
+      "stage": "facts",
+      "severity": "blocker",
+      "category": "copy_contract_gap",
+      "title": "facts 阶段存在 copy_contract_gap 问题",
+      "description": "facts 阶段发现 copy_contract_gap 问题：缺少文件:projects/sub-admin-copy/runtime/context_manifest.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "缺少文件:projects/sub-admin-copy/runtime/context_manifest.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/gates/facts_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/gates/facts_gate_report.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/source/task_card.md",
+            "projects/sub-admin-copy/source/requirement.md",
+            "projects/sub-admin-copy/source/background.md",
+            "projects/sub-admin-copy/runtime/context_manifest.json",
+            "projects/sub-admin-copy/runtime/provenance.json",
+            "projects/sub-admin-copy/workspace/facts.md"
+          ]
+        },
+        {
+          "type": "metrics",
+          "value": {
+            "dimension_coverage": {
+              "overview": 1,
+              "features": 1,
+              "rules": 1,
+              "states": 1,
+              "exceptions": 1,
+              "dependencies": 1,
+              "gaps": 1
+            },
+            "gap_count": 15,
+            "knowledge_derived_fact_count": 0
+          }
+        },
+        {
+          "type": "artifact_name",
+          "value": "facts.md"
+        },
+        {
+          "type": "checked_files",
+          "value": [
+            "projects/sub-admin-copy/source/task_card.md",
+            "projects/sub-admin-copy/source/requirement.md",
+            "projects/sub-admin-copy/source/background.md",
+            "projects/sub-admin-copy/runtime/context_manifest.json",
+            "projects/sub-admin-copy/runtime/provenance.json",
+            "projects/sub-admin-copy/workspace/facts.md"
+          ]
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/08_fact_extraction_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/runtime/context_manifest.json"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "补齐 context_manifest.json 的状态与反馈文案"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "gate-facts",
+        "gate-business",
+        "gate-experience",
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "facts_gate"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-5CF0E79F",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/sub-admin-copy/runtime/gate_metrics.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/sub-admin-copy/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/gates/business_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/gates/business_gate_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/sub-admin-copy/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/gates/experience_gate_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/gates/experience_gate_report.md"
+        },
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/sub-admin-copy/runtime/gate_metrics.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/gate_metrics.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/runtime/gate_metrics.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-9D7FEAC5",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "blocker",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/sub-admin-copy/workspace/check_status.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing machine check status: projects/sub-admin-copy/workspace/check_status.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/workspace/check_status.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/workspace/check_report.md"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        },
+        {
+          "type": "message",
+          "value": "missing status artifact: projects/sub-admin-copy/workspace/check_status.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/workspace/check_status.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 check_status.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-9B36895F",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "warning",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/sub-admin-copy/runtime/trace_index.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/sub-admin-copy/runtime/trace_index.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/trace_index.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/trace_index.json"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/runtime/trace_index.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    },
+    {
+      "issue_id": "RUN-FF0894F4",
+      "source": "runtime",
+      "stage": "runtime",
+      "severity": "warning",
+      "category": "structure_missing",
+      "title": "runtime 阶段存在 structure_missing 问题",
+      "description": "缺少正式产物文件：projects/sub-admin-copy/runtime/context_manifest.json",
+      "evidence": [
+        {
+          "type": "message",
+          "value": "missing runtime support artifact: projects/sub-admin-copy/runtime/context_manifest.json"
+        },
+        {
+          "type": "status_path",
+          "value": "projects/sub-admin-copy/runtime/context_manifest.json"
+        },
+        {
+          "type": "report_path",
+          "value": "projects/sub-admin-copy/runtime/context_manifest.json"
+        },
+        {
+          "type": "artifact_name",
+          "value": "gate_metrics.json"
+        }
+      ],
+      "violated_contract_refs": [
+        "specs/11_repair_loop_contract.md",
+        "specs/06_check_contract.md"
+      ],
+      "target_artifacts": [
+        "projects/sub-admin-copy/runtime/context_manifest.json"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "suggested_actions": [
+        "不要整稿重写，优先做局部补修",
+        "修复 context_manifest.json 中当前阶段未达标的内容"
+      ],
+      "upstream_backtrack_required": false,
+      "upstream_backtrack_stage": null,
+      "retry_scope_hint": [
+        "validate",
+        "coverage"
+      ],
+      "related_sources": [
+        "runtime"
+      ],
+      "status": "open"
+    }
+  ]
+}

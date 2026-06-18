@@ -1,0 +1,35 @@
+{
+  "schema_version": "uxb_route_decision@5.0",
+  "project_id": "sub-admin-copy",
+  "created_by": "uxb_ai",
+  "confirmed_by_user": true,
+  "can_execute_mainline": true,
+  "business_depth": "business_blueprint_lite",
+  "experience_output": "experience_blueprint",
+  "experience_pressure": [],
+  "knowledge_selection": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/安全管理/11_操作记录.md",
+      "knowledge/raw/业务/成员管理/00_领域概述.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/raw/设计准则/认知.md"
+    ],
+    "reasoning": "权限管理领域知识覆盖子管理员核心对象、任务场景、角色边界和体验风险模式，是理解复制操作在权限体系中定位的基础。安全管理操作记录知识支撑审计追溯设计。成员管理领域概述支撑加入状态和认证状态的校验逻辑。设计准则中的反馈与报错指南和认知原则支撑批量校验反馈形式和复制语义的认知负担设计。"
+  },
+  "execution": {
+    "required_outputs": [
+      "facts.md",
+      "business_blueprint_lite.md",
+      "experience_blueprint.md"
+    ],
+    "notes": [
+      "批量校验策略（全量预检 vs 逐个拦截）作为 GAP 标注，需产品确认",
+      "双管理员互审驳回后回滚策略作为 GAP 标注，需产品确认",
+      "复制作为新权限来源需纳入权限查询页面的来源解释模型"
+    ]
+  }
+}

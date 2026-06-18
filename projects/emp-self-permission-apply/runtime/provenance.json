@@ -1,0 +1,25 @@
+{
+  "project_id": "emp-self-permission-apply",
+  "generation_mode": "generated",
+  "producer": "packages.generation",
+  "source_hash": "b73307fa34e88780fd9870d08c2594b6f9fdd6243709ef8ed7d39ab2a42eaed9",
+  "task_card_hash": "b48fe92351c46539edd55e855279f019de8d5afb420d06b88876e36f81a2c417",
+  "generated_at": "2026-06-17T15:52:52+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "run-routed-main",
+    "route-decision",
+    "assemble",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "coverage",
+    "preview"
+  ]
+}

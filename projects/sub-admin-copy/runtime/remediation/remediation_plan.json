@@ -1,0 +1,142 @@
+{
+  "project_id": "sub-admin-copy",
+  "plan_version": "1.0",
+  "generated_at": "2026-06-18T12:07:04.254195+00:00",
+  "open_issue_count": 6,
+  "blocker_count": 4,
+  "warning_count": 2,
+  "repair_units": [
+    {
+      "unit_id": "repair-unit-001",
+      "stage": "facts",
+      "target_artifact": "projects/sub-admin-copy/runtime/context_manifest.json",
+      "issue_ids": [
+        "FACT-2B7CC743"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 context_manifest.json 中的 copy_contract_gap 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "runtime/context_manifest.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "补齐 context_manifest.json 的状态与反馈文案"
+      ],
+      "completion_signal": [
+        "facts gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-002",
+      "stage": "facts",
+      "target_artifact": "projects/sub-admin-copy/runtime/gate_metrics.json",
+      "issue_ids": [
+        "FACT-1E9339D1"
+      ],
+      "repair_mode": "patch_current_artifact",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "workspace/facts.md",
+        "runtime/context_manifest.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "facts gate 无相关 blocker",
+        "validate / coverage 不再报告同类问题"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-003",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/runtime/context_manifest.json",
+      "issue_ids": [
+        "RUN-FF0894F4"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 context_manifest.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 context_manifest.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-004",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/runtime/gate_metrics.json",
+      "issue_ids": [
+        "RUN-5CF0E79F"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 gate_metrics.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 gate_metrics.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-005",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/runtime/trace_index.json",
+      "issue_ids": [
+        "RUN-9B36895F"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 trace_index.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 trace_index.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    },
+    {
+      "unit_id": "repair-unit-006",
+      "stage": "runtime",
+      "target_artifact": "projects/sub-admin-copy/workspace/check_status.json",
+      "issue_ids": [
+        "RUN-9D7FEAC5"
+      ],
+      "repair_mode": "rerun_checks_only",
+      "repair_goal": "修复 check_status.json 中的 structure_missing 问题",
+      "required_inputs": [
+        "runtime/context_manifest.json",
+        "runtime/gate_metrics.json"
+      ],
+      "operator_guidance": [
+        "不要整稿重写，优先做局部补修",
+        "修复 check_status.json 中当前阶段未达标的内容"
+      ],
+      "completion_signal": [
+        "runtime 支撑产物补齐",
+        "validate / coverage 可稳定完成"
+      ]
+    }
+  ]
+}

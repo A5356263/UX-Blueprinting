@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体验策略 — sub-admin-copy</title>
+<style>
+
+:root {
+  --bg: #f5f4ed;
+  --panel: #faf9f5;
+  --panel-strong: #faf9f5;
+  --panel-subtle: #f2f0e8;
+  --line: #e8e6dc;
+  --line-strong: #d8d1c2;
+  --text: #2b2b28;
+  --text-muted: #6b6a64;
+  --text-soft: #75746e;
+  --accent: #1f6b5b;
+  --accent-soft: #e2f1eb;
+  --accent-strong: #155245;
+  --warn: #8a5a14;
+  --warn-soft: #f6ead5;
+  --danger: #8b3a3a;
+  --danger-soft: #f8e4e1;
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.hidden { display: none !important; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 14px 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 0 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sidebar-header h2 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  color: var(--accent-strong);
+}
+
+.project-badge {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--panel-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  padding: 10px 12px 0;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.tab-btn.active {
+  background: var(--panel-strong);
+  color: var(--accent-strong);
+  border-bottom-color: var(--panel-strong);
+  font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0 8px;
+}
+
+.nav-section { padding: 0 16px; }
+
+.nav-item {
+  display: block;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 1px 0;
+  transition: all 0.12s;
+  cursor: pointer;
+}
+
+.nav-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
+.nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+.nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+
+.content {
+  flex: 1;
+  padding: 32px 40px 80px;
+  max-width: 1080px;
+}
+
+.content-panel { display: block; }
+.content-panel.hidden { display: none; }
+
+.section-block {
+  margin-bottom: 36px;
+  scroll-margin-top: 24px;
+}
+
+.section-heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-heading.level-2 {
+  font-size: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading.level-3 {
+  font-size: 15px;
+  color: var(--text-muted);
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.section-body { font-size: 15px; }
+.section-body p { margin: 0 0 10px; }
+.section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
+.section-body ul li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  margin: 2px 0;
+}
+.section-body ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+.section-body strong { color: var(--accent-strong); font-weight: 600; }
+.section-body code {
+  background: var(--panel-subtle);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+}
+.section-body pre {
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.section-body h3,
+.section-body h4,
+.section-body h5,
+.section-body h6 {
+  margin: 18px 0 10px;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 18px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+}
+.section-body th,
+.section-body td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.section-body th {
+  background: var(--panel-subtle);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+.section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+.section-body ol li { padding: 4px 0; }
+
+.summary-visual,
+.journey-visual {
+  margin: 0 0 18px;
+  padding: 12px;
+  background: var(--panel-subtle);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.summary-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  min-width: max-content;
+}
+
+.summary-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
+}
+
+.summary-row:last-child { margin-bottom: 0; }
+
+.summary-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  flex: 0 0 auto;
+}
+
+.flow-arrow,
+.summary-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.summary-step {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.summary-step strong {
+  color: var(--accent-strong);
+  margin-right: 4px;
+}
+
+.journey-path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  margin-bottom: 10px;
+}
+
+.journey-path-row:last-child { margin-bottom: 0; }
+
+.journey-path-role {
+  min-width: 96px;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.journey-path-nodes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.journey-path-node {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.journey-path-arrow {
+  color: var(--text-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.preview-footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.component-intro:empty,
+.component-visuals:empty,
+.component-cards:empty,
+.component-notes:empty {
+  display: none;
+}
+
+.component-intro {
+  margin-bottom: 12px;
+}
+
+.component-intro:last-child {
+  margin-bottom: 0;
+}
+
+.component-visuals {
+  margin-bottom: 12px;
+}
+
+.component-visuals:last-child {
+  margin-bottom: 0;
+}
+
+.component-cards {
+  display: block;
+}
+
+.component-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.component-card:last-child {
+  margin-bottom: 0;
+}
+
+.component-card + .component-card {
+  margin-top: 6px;
+}
+
+.component-card-title {
+  margin: 18px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3,
+.experience-component[data-section-key="secondary-flow"] .section-body h3,
+.experience-component[data-section-key="exception-flow"] .section-body h3 {
+  margin: 32px 0 10px;
+}
+
+.experience-component[data-section-key="main-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="secondary-flow"] .section-body h3:first-child,
+.experience-component[data-section-key="exception-flow"] .section-body h3:first-child {
+  margin-top: 0;
+}
+
+.experience-component .section-body .flow-field-label {
+  margin-top: 20px;
+}
+
+.experience-component .section-body .flow-field-label + * {
+  margin-top: 0;
+}
+
+.component-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.component-note-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.component-note-item {
+  padding: 8px 0 8px 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  position: relative;
+}
+
+.component-note-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.component-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.component-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.state-feedback-table-wrap {
+  overflow-x: auto;
+}
+
+.state-feedback-table-wrap table {
+  min-width: 680px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 20px 16px 60px; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>体验策略</h2>
+    <span class="project-badge">sub-admin-copy</span>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" data-panel="business">业务蓝图</button>
+    <button class="tab-btn" data-panel="experience">体验蓝图</button>
+  </div>
+  <div class="sidebar-nav" id="nav-business">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键业务判断">0. 本次关键业务判断</a>
+<a class="nav-item " data-target="1-一句话结论">1. 一句话结论</a>
+<a class="nav-item " data-target="2-关键业务规则">2. 关键业务规则</a>
+<a class="nav-item " data-target="3-边界与风险">3. 边界与风险</a>
+<a class="nav-item " data-target="4-体验承接要求">4. 体验承接要求</a>
+<a class="nav-item " data-target="5-升级信号">5. 升级信号</a>
+<a class="nav-item " data-target="6-待确认问题">6. 待确认问题</a></div>
+  </div>
+  <div class="sidebar-nav hidden" id="nav-experience">
+    <div class="nav-section"><a class="nav-item " data-target="0-本次关键设计判断">0. 本次关键设计判断</a>
+<a class="nav-item " data-target="1-旅程图">1. 旅程图</a>
+<a class="nav-item " data-target="2-交互流程总览">2. 交互流程总览</a>
+<a class="nav-item " data-target="3-主交互流程">3. 主交互流程</a>
+<a class="nav-item " data-target="4-次交互流程">4. 次交互流程</a>
+<a class="nav-item " data-target="5-异常与阻断流程">5. 异常与阻断流程</a>
+<a class="nav-item " data-target="6-页面-弹窗-抽屉设计">6. 页面 / 弹窗 / 抽屉设计</a>
+<a class="nav-item " data-target="7-状态与反馈文案">7. 状态与反馈文案</a>
+<a class="nav-item " data-target="8-待确认问题">8. 待确认问题</a>
+<a class="nav-item " data-target="附录-设计指南消费说明">附录：设计指南消费说明</a></div>
+  </div>
+</nav>
+<main class="content">
+  <div class="content-panel" id="content-business"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">轻量业务蓝图</h1><div class="section-block" id="0-本次关键业务判断">
+<h2 class="section-heading ">0. 本次关键业务判断</h2>
+<div class="section-body"><p><strong>判断：</strong></p>
+<p>本次是既有能力扩展——在子管理员管理能力上新增批量复制操作，不改变底层权限对象、状态机和生效机制，适合按轻量业务蓝图承接。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>复制引入新的权限来源路径（复制来源），权限查询页面的来源解释模型需要扩展</li><li>「叠加」语义是复制能力对已有子管理员的默认行为，需要明确与「覆盖」「去重」的边界</li><li>批量操作（最多 200 人）的校验和结果反馈模式，会直接影响体验主方案的结构</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>复制对已有子管理员采用「叠加不覆盖」策略：新增的归新增，已有的保持不变，重复功能跳过不重复记录</li><li>批量校验采用全量预检：一次性校验所有复制对象的加入状态和认证状态，不合格的统一列出，不逐个拦截</li><li>操作记录以批次 ID 关联同一次复制的多条记录</li></ul>
+<p><strong>本阶段先定清：</strong></p>
+<ul><li>「叠加」的准确定义：对已有子管理员，复制来的功能/组织如在原有配置中已存在，跳过不重复记录；不存在的直接新增</li><li>批量校验的执行模式：全量预检，所有不合格对象一次性返回，修正后重新提交</li><li>操作记录的批次关联方式：同一复制操作生成的操作记录共享一个批次 ID</li></ul>
+<p><strong>需要重新判断的信号：</strong></p>
+<ol><li>复制需求从「叠加」变成可选的「覆盖 / 叠加」双模式</li><li>复制来源从「单个子管理员」扩展为「多个子管理员」</li><li>复制对象从「用户」扩展为「角色」或「部门」</li><li>双管理员互审模式从「整次操作一条审批」变成「按人审批」</li></ol></div>
+</div>
+<div class="section-block" id="1-一句话结论">
+<h2 class="section-heading ">1. 一句话结论</h2>
+<div class="section-body"><p>可以做。建议以「叠加不覆盖、全量预检、批次关联」三项策略作为本次复制能力的业务基线。当前最关键判断是：复制不应该改变权限系统已有的来源透明性和审计可追溯性，新增路径的同时必须补齐解释和留痕。</p></div>
+</div>
+<div class="section-block" id="2-关键业务规则">
+<h2 class="section-heading ">2. 关键业务规则</h2>
+<div class="section-body"><p><strong>前提条件：</strong></p>
+<ul><li>子管理员模式已启用</li><li>复制来源子管理员存在且未被删除</li><li>复制对象已存在于企业中</li></ul>
+<p><strong>不适用场景：</strong></p>
+<ul><li>复制来源子管理员已被删除或禁用</li><li>企业未开启子管理员模式</li><li>所有复制对象均不满足加入状态或认证状态</li></ul>
+<p><strong>核心规则：</strong></p>
+<ol><li>复制信息（可授权组织 / 可授权功能）至少选一项，默认全选</li><li>复制对象 1~200 名，通过员工选择器指定</li><li>校验顺序：复制信息勾选 → 复制对象选择 → 加入状态 → 认证状态</li><li>加入状态口径定为「已加入」（产品需统一当前材料中「已加入」与「已启用」的表述差异）</li><li>普通用户：复制后成为子管理员，按复制信息设置可授权功能和组织</li><li>已有子管理员：复制后不覆盖原有配置，新增功能/组织直接叠加，已有功能/组织跳过不重复记录</li><li>双管理员互审开启时：复制完成后生成一条整次操作审批</li><li>复制成功：生成操作记录，可授权组织和可授权功能各一条，共享同一批次 ID</li><li>全量预检失败：一次性返回所有不合格对象及原因，用户修正后重新提交</li></ol></div>
+</div>
+<div class="section-block" id="3-边界与风险">
+<h2 class="section-heading ">3. 边界与风险</h2>
+<div class="section-body"><p><strong>不能放开的限制：</strong></p>
+<ul><li>复制入口仅出现在子管理员模式列表，不扩展到其他权限管理页面</li><li>复制对象必须满足加入状态和认证状态，不允许跳过校验</li><li>最多 200 名复制对象，不允许突破上限</li><li>复制来源只能是单个已有子管理员，不支持多来源合并</li></ul>
+<p><strong>最关键的风险与保护策略：</strong></p>
+<table><thead><tr><th>风险</th><th>保护策略</th></tr></thead><tbody><tr><td>复制操作未覆盖并发场景（来源子管理员被并发删除）</td><td>确认时对来源子管理员做存在性校验，不存在则阻断并提示</td></tr><tr><td>双管理员互审驳回后权限悬空</td><td>驳回后整体回滚，已复制的权限自动收回，操作记录中增加回滚标记</td></tr><tr><td>批量操作中部分人因系统故障未执行成功</td><td>全量预检通过后，执行阶段采用事务化处理：全部成功或全部失败，不出现部分成功</td></tr><tr><td>复制对象超限导致选择器体验崩坏</td><td>选择器在达到 200 人上限时置灰不可继续添加，并在选择器底部显示「已选 N/200 人」</td></tr></tbody></table></div>
+</div>
+<div class="section-block" id="4-体验承接要求">
+<h2 class="section-heading ">4. 体验承接要求</h2>
+<div class="section-body"><p><strong>角色：</strong></p>
+<ul><li>权限管理员 / 超级管理员（操作方）</li><li>子管理员（复制来源，只读展示）</li><li>复制对象用户（目标，接收权限）</li></ul>
+<p><strong>流程：</strong></p>
+<ul><li>子管理员列表 → 点击「复制」→ 打开复制弹窗 → 确认复制信息（默认全选）→ 选择复制对象 → 点击确认 → 全量预检 → 通过则执行复制 → 展示结果 → 关闭弹窗</li><li>预检不通过：一次性展示不合格对象清单 → 用户可移除不合格对象或取消 → 修正后重新提交</li></ul>
+<p><strong>进度与结果状态：</strong></p>
+<ul><li>弹窗待配置态：复制信息默认全选，复制对象为空，确认按钮可用</li><li>预检中态：点击确认后校验阶段，按钮 loading</li><li>预检失败态：不合格对象清单展示，确认按钮恢复可用</li><li>执行成功态：结果反馈区域展示成功概况（共复制 N 人，其中 M 人成为子管理员，K 人叠加权限）</li><li>双管理员互审等待态：结果反馈区域提示「已生成审批，审批通过后生效」</li></ul>
+<p><strong>异常：</strong></p>
+<ul><li>复制来源子管理员不存在：弹窗内顶部 banner 提示，确认按钮置灰</li><li>复制对象全部不合格：结果反馈区域展示完整不合格清单</li><li>复制对象部分不合格：仅展示不合格清单，合格的正常执行</li><li>双管理员互审驳回：原复制的权限自动收回，操作记录中可查回滚记录</li><li>系统执行失败：toast 提示「复制失败，请重试」，弹窗保持打开、已选内容保留</li></ul>
+<p><strong>反馈：</strong></p>
+<ul><li>预检失败用弹窗内结果区域展示，不做额外弹窗叠加</li><li>执行成功用弹窗内结果区域展示概况 + toast「复制成功」作为辅助通知</li><li>双管理员互审模式下，弹窗内明确告知「已生成审批，审批通过后权限生效」</li><li>操作记录中每条记录均携带批次 ID</li></ul>
+<p><strong>文案：</strong></p>
+<ul><li>复制信息区域标题：「选择复制内容」</li><li>复制对象区域标题：「选择复制对象」</li><li>已有子管理员提示文案：「复制对象中已有子管理员，复制后将在其原有权限基础上增加所选内容，不会覆盖已有配置」</li><li>预检失败汇总：「以下 N 名成员不满足条件，请处理后重新提交」</li><li>执行成功汇总：「已成功复制给 N 名成员（其中 M 人新成为子管理员，K 人已叠加权限）」</li></ul></div>
+</div>
+<div class="section-block" id="5-升级信号">
+<h2 class="section-heading ">5. 升级信号</h2>
+<div class="section-body"><ul><li>出现以下变化时，应停止当前轻量执行并请求 UXB 重新判断：</li><li>复制需要支持「覆盖模式」（替换原有权限而非叠加）</li><li>复制对象类型从「用户」扩展到「角色」或「组织节点」</li><li>双管理员互审从操作级审批变为按人审批</li><li>需要支持复制后的「撤销」或「回滚」独立操作（超出审批驳回回滚范围）</li><li>复制能力需要与角色模板、自动授权规则产生联动</li></ul></div>
+</div>
+<div class="section-block" id="6-待确认问题">
+<h2 class="section-heading ">6. 待确认问题</h2>
+<div class="section-body"><ul><li>「加入状态」口径是「已加入」还是「已启用」，需产品统一并确认校验文案</li><li>双管理员互审驳回后回滚策略——建议整体回滚，需产品确认</li><li>操作记录的「详情」字段当前标注为「无」，是否需要在详情中展开复制对象完整名单</li><li>员工选择器复用「添加子管理员」弹窗的选择器，需确认该组件是否已支持 200 人上限和数量展示</li></ul></div>
+</div></div>
+  <div class="content-panel hidden" id="content-experience"><h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">体验蓝图</h1><div class="section-block experience-component" id="0-本次关键设计判断" data-section-key="judgment"><h2 class="section-heading">0. 本次关键设计判断</h2><div class="section-body"><p><strong>判断：</strong></p>
+<p>本次体验方案的核心是把「批量操作的不可见性」和「复制语义的认知偏差」这两个风险消化在一个弹窗内——通过全量预检结果区、叠加行为前置说明、以及结构化的执行结果反馈，让权限管理员在提交前就清楚后果、提交后能核对结果。</p>
+<p><strong>主要影响：</strong></p>
+<ol><li>复制弹窗需要承载比普通配置弹窗更多的信息层级——配置区、预检结果区、执行结果区三者要在同一个弹窗内自然流转</li><li>「叠加不覆盖」的语义必须在确认前明示，不能让用户带着「复制就是一模一样」的心智提交后才发现问题</li><li>操作记录需要在追溯体验上可还原「谁从谁那里复制了什么给哪些人」，不能只是两条孤立记录</li></ol>
+<p><strong>建议方案：</strong></p>
+<ul><li>复制弹窗采用单页三段式：配置区（复制信息 + 复制对象）→ 结果区（预检失败清单 或 执行成功汇总）→ 底部确认/关闭按钮。结果区根据当前阶段动态展现</li><li>已有子管理员在被选为复制对象时，在对象列表中以标签「已有管理范围」标记，并在确认按钮上方固定展示叠加行为说明</li><li>执行成功后结果区展示汇总数据（共 N 人，新成为子管理员 M 人，叠加权限 K 人），同时 toast 轻提示「复制成功」</li></ul>
+<p><strong>不建议方案：</strong></p>
+<ul><li>不做分步向导——复制配置项少、步骤短，分步反而增加操作成本</li><li>不把预检失败做成 toast 逐个弹——会激怒批量操作用户</li></ul>
+<p><strong>关键待确认：</strong></p>
+<ol><li>复制弹窗是新建弹窗还是复用「添加子管理员」弹窗的容器样式——影响开发成本评估</li><li>员工选择器当前是否已支持 200 人选人上限和已选数量展示——若不支持，需要选择器能力先行补齐</li></ol>
+<p>&gt; 更多待确认问题详见 <code>## 8. 待确认问题</code>。</p></div></div>
+<div class="section-block experience-component" id="1-旅程图" data-section-key="journey"><h2 class="section-heading">1. 旅程图</h2><div class="section-body"><div class="journey-visual"><div class="journey-path-row"><div class="journey-path-role">权限管理员</div><div class="journey-path-nodes"><span class="journey-path-node">识别需复制的子管理员</span><span class="journey-path-arrow">→</span><span class="journey-path-node">打开复制弹窗</span><span class="journey-path-arrow">→</span><span class="journey-path-node">确认复制内容</span><span class="journey-path-arrow">→</span><span class="journey-path-node">选择复制对象</span><span class="journey-path-arrow">→</span><span class="journey-path-node">提交并等待预检</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看预检结果（失败则修正后重试）</span><span class="journey-path-arrow">→</span><span class="journey-path-node">确认执行复制</span><span class="journey-path-arrow">→</span><span class="journey-path-node">查看执行结果</span><span class="journey-path-arrow">→</span><span class="journey-path-node">关闭弹窗</span><span class="journey-path-arrow">→</span><span class="journey-path-node">在操作记录中可追溯</span></div></div><div class="journey-path-row"><div class="journey-path-role">复制对象用户（普通用户）</div><div class="journey-path-nodes"><span class="journey-path-node">收到子管理员身份</span><span class="journey-path-arrow">→</span><span class="journey-path-node">确认新权限生效</span></div></div><div class="journey-path-row"><div class="journey-path-role">复制对象用户（已有子管理员）</div><div class="journey-path-nodes"><span class="journey-path-node">原有权限不变</span><span class="journey-path-arrow">→</span><span class="journey-path-node">新增权限叠加生效</span></div></div><div class="journey-path-row"><div class="journey-path-role">审批人（双管理员互审模式下）</div><div class="journey-path-nodes"><span class="journey-path-node">收到审批</span><span class="journey-path-arrow">→</span><span class="journey-path-node">判断是否通过</span><span class="journey-path-arrow">→</span><span class="journey-path-node">驳回时权限整体回滚</span></div></div></div><h3>旅程缺口</h3><ul class="component-note-list"><li class="component-note-item">复制对象用户端缺少权限变更通知机制——当前未定义是否需要通知、通知形式和内容</li><li class="component-note-item">审批驳回后是否通知发起人——当前未定义</li></ul></div></div>
+<div class="section-block experience-component" id="2-交互流程总览" data-section-key="flow-overview"><h2 class="section-heading">2. 交互流程总览</h2><div class="section-body"><div class="summary-visual main-node-map"><div class="summary-row"><div class="summary-role">权限管理员</div><div class="summary-path"><span class="summary-step">子管理员列表页</span><span class="summary-arrow">→</span><span class="summary-step">点击某子管理员操作列的「复制」</span><span class="summary-arrow">→</span><span class="summary-step">复制弹窗（配置态）</span><span class="summary-arrow">→</span><span class="summary-step">勾选复制内容</span><span class="summary-arrow">→</span><span class="summary-step">选择复制对象</span><span class="summary-arrow">→</span><span class="summary-step">点击「确认」</span><span class="summary-arrow">→</span><span class="summary-step">系统全量预检</span><span class="summary-arrow">→</span><span class="summary-step">预检失败：弹窗内结果区展示不合格清单</span><span class="summary-arrow">→</span><span class="summary-step">修正对象后重新提交</span><span class="summary-arrow">→</span><span class="summary-step">预检通过：弹窗内结果区展示执行成功汇总</span><span class="summary-arrow">→</span><span class="summary-step">关闭弹窗回到列表</span></div></div><div class="summary-row"><div class="summary-role">系统</div><div class="summary-path"><span class="summary-step">接收复制请求</span><span class="summary-arrow">→</span><span class="summary-step">按顺序全量预检（复制信息</span><span class="summary-arrow">→</span><span class="summary-step">对象选择</span><span class="summary-arrow">→</span><span class="summary-step">加入状态</span><span class="summary-arrow">→</span><span class="summary-step">认证状态）</span><span class="summary-arrow">→</span><span class="summary-step">全部通过后执行复制</span><span class="summary-arrow">→</span><span class="summary-step">生成操作记录（带批次 ID）</span><span class="summary-arrow">→</span><span class="summary-step">如开启双管理员互审则生成审批</span></div></div></div><p><strong>异常流程重点：</strong></p>
+<ul><li>复制来源子管理员在弹窗打开期间被删除：弹窗顶部 banner 提示，确认按钮置灰</li><li>所有复制对象均不满足加入/认证条件：结果区展示完整不合格清单</li><li>双管理员互审审批驳回：已复制权限整体回滚，操作记录中可查回滚标记</li><li>执行过程中系统异常：toast 提示失败，弹窗保持打开、已选内容保留</li></ul></div></div>
+<div class="section-block experience-component" id="3-主交互流程" data-section-key="main-flow"><h2 class="section-heading">3. 主交互流程</h2><div class="section-body"><p><strong>节点 3.1：进入复制弹窗</strong></p>
+<p>用户动作：<br>在子管理员列表页，点击某子管理员操作列最左侧的「复制」按钮。</p>
+<p>系统反馈：<br>打开「复制」弹窗，弹窗标题为「复制子管理员权限」。复制信息区默认全选「可授权组织」和「可授权功能」。复制来源子管理员的姓名/手机号在弹窗顶部信息区固定展示。</p>
+<p>需要前置解释的信息：<br>复制来源子管理员的姓名和手机号，放在弹窗顶部，让用户随时知道自己从谁那里复制。</p>
+<p>建议文案：</p>
+<ul><li>弹窗标题：「复制子管理员权限」</li><li>来源信息：「复制来源：XXX / 138XXXX8888」</li></ul>
+<p>下一步：<br>用户配置复制内容和选择复制对象。</p>
+<p>---</p>
+<p><strong>节点 3.2：选择复制内容</strong></p>
+<p>用户动作：<br>在复制信息区勾选或取消勾选「可授权组织」「可授权功能」。两项默认全选，至少保留一项。</p>
+<p>系统反馈：<br>取消勾选到仅剩一项时，该项 checkbox 置灰不可取消（保证至少选一项）。两项全选时为正常可操作态。</p>
+<p>需要前置解释的信息：<br>两项的含义：可授权组织 = 该子管理员能管理哪些组织范围；可授权功能 = 该子管理员能操作哪些功能。</p>
+<p>建议文案：</p>
+<ul><li>区域标题：「选择复制内容」</li><li>选项文案：「可授权组织」「可授权功能」</li><li>底部提示：「至少选择一项」</li></ul>
+<p>下一步：<br>用户点击「选择复制对象」入口，打开员工选择器。</p>
+<p>---</p>
+<p><strong>节点 3.3：选择复制对象</strong></p>
+<p>用户动作：<br>点击「选择复制对象」按钮，打开员工选择器弹窗（复用「添加子管理员」的选择员工组件）。搜索/筛选后勾选目标用户，确认后返回复制弹窗，已选用户以列表形式展示在复制对象区。</p>
+<p>系统反馈：<br>选择器内已选计数器展示「已选 N/200 人」。达到 200 人时选择器内 checkbox 全部置灰不可继续添加。返回复制弹窗后，复制对象区列表展示已选用户。</p>
+<p>已有子管理员在列表中以标签「已有管理范围」标记，并在列表下方固定展示说明文案。</p>
+<p>需要前置解释的信息：</p>
+<ul><li>最多可选 200 人</li><li>已有子管理员的用户会被标记，复制后不覆盖其原有权限</li></ul>
+<p>建议文案：</p>
+<ul><li>区域标题：「选择复制对象」</li><li>选择入口按钮：「选择员工」</li><li>空态提示：「请选择至少一名复制对象」</li><li>已有子管理员标记：「已有管理范围」</li><li>叠加说明（列表下方常驻）：「复制对象中标记为「已有管理范围」的用户，复制后将在其原有权限基础上增加所选内容，不会覆盖已有配置」</li></ul>
+<p>下一步：<br>用户点击「确认」按钮，触发全量预检。</p>
+<p>---</p>
+<p><strong>节点 3.4：全量预检与结果反馈</strong></p>
+<p>用户动作：<br>点击弹窗底部「确认」按钮。</p>
+<p>系统反馈：<br>按钮进入 loading 态。系统按顺序全量校验：</p>
+<ol><li>复制信息是否至少勾选一项</li><li>复制对象是否至少选择一人</li><li>逐个检查复制对象的加入状态</li><li>逐个检查复制对象的认证状态</li></ol>
+<p>校验结果分两种：</p>
+<p><strong>预检失败</strong>：弹窗内容区切换为结果区，展示不合格清单。清单按失败原因分组——「以下成员加入状态不符合」「以下成员未完成实名认证」。每组列出成员姓名和手机号。确认按钮恢复可用。用户可点击成员旁的「移除」将其从复制对象中移除，或关闭弹窗放弃。</p>
+<p><strong>预检通过</strong>：弹窗内容区切换为执行中 loading 态，执行完成后展示成功汇总。</p>
+<p>需要前置解释的信息：</p>
+<ul><li>预检为什么失败——每个失败成员旁边标注具体原因</li></ul>
+<p>建议文案：</p>
+<ul><li>确认按钮 loading：「校验中…」</li><li>预检失败区标题：「以下 N 名成员不满足条件，请处理后重新提交」</li><li>加入状态分组标题：「加入状态不符合（未加入/未启用）」</li><li>认证状态分组标题：「未完成实名认证」</li><li>成员行操作：「移除」</li><li>汇总行：「移除全部不合格成员」</li><li>全部合格通过后 loading：「复制中…」</li><li>执行成功汇总：</li></ul>
+<p>复制完成<br>  共复制给 N 名成员<br>  其中 M 人新成为子管理员<br>  K 人已叠加权限</p>
+<p>（若有双管理员互审）附加：「已生成审批，审批通过后权限生效」</p>
+<p>下一步：<br>预检失败：用户移除不合格成员后重新点击确认。<br>预检通过 + 执行成功：用户查看汇总后点击「关闭」返回列表。</p></div></div>
+<div class="section-block experience-component" id="4-次交互流程" data-section-key="secondary-flow"><h2 class="section-heading">4. 次交互流程</h2><div class="section-body"><h3>节点 4.1：查看操作记录</h3><p>用户动作：<br>在管理后台「安全管理 &gt; 操作记录」中，按操作模块筛选「子管理员模式」，找到复制操作对应的记录。</p>
+<p>系统反馈：<br>操作记录列表展示复制操作。一次复制操作对应两条记录（复制-可授权组织、复制-可授权功能），两条记录共享同一批次 ID。点击查看详情可看到完整复制来源和复制对象名单。</p>
+<p>建议文案：</p>
+<ul><li>操作类型：「复制-可授权组织」「复制-可授权功能」</li><li>操作内容：「将子管理员【XXX/手机号】可授权组织复制给【YYY/手机号】【ZZZ/手机号】…」</li><li>批次关联：详情中展示「批次 ID：XXXXX」</li></ul>
+<p>下一步：<br>用户可继续查看详情或返回列表。</p><h3>节点 4.2：双管理员互审审批跟进</h3><p>用户动作：<br>权限管理员在审批管理中查看复制操作触发的审批单状态。</p>
+<p>系统反馈：<br>审批单展示：发起人、复制来源、复制对象列表、复制内容、提交时间。审批通过后复制权限正式生效。审批驳回后已复制权限自动回滚，操作记录中对应记录增加「已回滚」标记。</p>
+<p>建议文案：</p>
+<ul><li>审批通过后：「审批已通过，权限已生效」</li><li>审批驳回后：「审批已驳回，权限已收回」</li></ul>
+<p>下一步：<br>审批通过：权限生效，无需额外操作。<br>审批驳回：发起人可重新发起复制。</p></div></div>
+<div class="section-block experience-component" id="5-异常与阻断流程" data-section-key="exception-flow"><h2 class="section-heading">5. 异常与阻断流程</h2><div class="section-body"><p><strong>异常 5.1：复制来源子管理员在弹窗期间被删除</strong></p>
+<p>发生时机：复制弹窗打开期间。<br>触发条件：其他管理员并发删除了复制来源子管理员。<br>判断依据：business_blueprint_lite 边界与风险中的并发保护策略。<br>反馈形式：弹窗顶部 banner。<br>系统反馈：「复制来源子管理员已被删除，无法继续复制。请关闭弹窗后重新选择。」<br>用户下一步：关闭弹窗，返回列表重新选择来源。</p>
+<p><strong>异常 5.2：复制信息未勾选</strong></p>
+<p>发生时机：点击确认按钮时。<br>触发条件：用户取消勾选了所有复制信息项。<br>判断依据：facts 规则 3.1，校验顺序第一位。<br>反馈形式：inline 提示。<br>系统反馈：复制信息区域下方红色文字：「请至少选择一项复制内容」。<br>用户下一步：勾选后重新提交。</p>
+<p><strong>异常 5.3：复制对象未选择</strong></p>
+<p>发生时机：点击确认按钮时。<br>触发条件：复制对象区为空。<br>判断依据：facts 规则 3.2，校验顺序第二位。<br>反馈形式：inline 提示。<br>系统反馈：复制对象区域下方红色文字：「请选择至少一名复制对象」。<br>用户下一步：点击选择员工并选择后重新提交。</p>
+<p><strong>异常 5.4：部分复制对象不满足加入状态</strong></p>
+<p>发生时机：点击确认后预检阶段。<br>触发条件：复制对象中有用户的加入状态不为「已加入」。<br>判断依据：facts 规则 3.3，校验顺序第三位。<br>反馈形式：弹窗结果区（替换配置区）。<br>系统反馈：在结果区「加入状态不符合」分组下展示不合格成员名单，格式：「XXX / 138XXXX8888 — 未加入」。<br>用户下一步：点击不合格成员旁的「移除」将其移出复制对象，或点击「移除全部不合格成员」批量移除，修正后重新提交。</p>
+<p><strong>异常 5.5：部分复制对象不满足认证状态</strong></p>
+<p>发生时机：点击确认后预检阶段。<br>触发条件：复制对象中有用户未完成实名认证。<br>判断依据：facts 规则 3.4，校验顺序第四位。<br>反馈形式：弹窗结果区（替换配置区）。<br>系统反馈：在结果区「未完成实名认证」分组下展示不合格成员名单，格式：「XXX / 138XXXX8888 — 未认证」。<br>用户下一步：同上，移除不合格成员后重新提交。</p>
+<p><strong>异常 5.6：全部复制对象均不合格</strong></p>
+<p>发生时机：点击确认后预检阶段。<br>触发条件：所有复制对象都不满足加入状态或认证状态。<br>判断依据：business_blueprint_lite 边界与风险。<br>反馈形式：弹窗结果区。<br>系统反馈：结果区展示完整不合格清单，底部提示「所有复制对象均不满足条件，请重新选择」。<br>用户下一步：移除全部不合格成员，重新选择复制对象，或关闭弹窗。</p>
+<p><strong>异常 5.7：复制对象超过 200 人</strong></p>
+<p>发生时机：在员工选择器中选择时。<br>触发条件：已选人数达到 200 人上限后继续尝试勾选。<br>判断依据：facts 约束，上限 200 名。<br>反馈形式：选择器内反馈。<br>系统反馈：达到 200 人时选择器内 checkbox 全部置灰，选择器底部提示「已达到 200 人上限」。<br>用户下一步：确认当前选择或移除部分成员后重新选择。</p>
+<p><strong>异常 5.8：系统执行失败</strong></p>
+<p>发生时机：预检通过后执行复制时。<br>触发条件：系统异常导致复制无法完成。<br>判断依据：business_blueprint_lite 边界与风险中的事务化处理策略。<br>反馈形式：toast。<br>系统反馈：toast 提示「复制失败，请重试」。弹窗保持打开，配置内容不丢失。<br>用户下一步：重试或关闭弹窗稍后再试。</p>
+<p><strong>异常 5.9：双管理员互审审批驳回</strong></p>
+<p>发生时机：复制完成后审批人被驳回时。<br>触发条件：审批人驳回审批单。<br>判断依据：business_blueprint_lite 边界与风险策略——驳回后整体回滚。<br>反馈形式：操作记录状态变更 + 发起人通知（如有通知机制）。<br>系统反馈：操作记录中对应记录标记「已回滚」。被复制的权限自动收回。<br>用户下一步：发起人可查看驳回原因后重新发起复制。</p></div></div>
+<div class="section-block experience-component" id="6-页面-弹窗-抽屉设计" data-section-key="page-structure"><h2 class="section-heading">6. 页面 / 弹窗 / 抽屉设计</h2><div class="section-body"><h3>复制弹窗</h3><p>页面目标：让权限管理员快速将一个已有子管理员的权限信息批量复制给一个或多个用户。</p>
+<p>进入条件：在子管理员列表页操作列点击某子管理员的「复制」按钮。</p>
+<p>页面结构：</p>
+<p>+--------------------------------------------------+<br>| 顶部信息区                                       |<br>| 「复制来源：XXX / 138XXXX8888」                  |<br>+--------------------------------------------------+<br>| 复制信息区                                       |<br>| ☑ 可授权组织  ☑ 可授权功能                       |<br>| 提示：至少选择一项                                |<br>+--------------------------------------------------+<br>| 复制对象区                                       |<br>| [选择员工]      已选 N/200 人                     |<br>|                                                   |<br>| 已选用户列表：                                    |<br>| · YYY / 139XXXX9999                              |<br>| · ZZZ / 137XXXX8888  [已有管理范围]               |<br>|                                                   |<br>| 提示：标记为「已有管理范围」的用户，复制后将      |<br>| 在其原有权限基础上增加所选内容，不会覆盖已有配置   |<br>+--------------------------------------------------+<br>| 结果区（按需展示，替换上方内容区）                |<br>| 预检失败：不合格清单 + 移除操作                   |<br>| 执行成功：汇总数据                                |<br>+--------------------------------------------------+<br>| 底部区                                           |<br>| [取消]                              [确认]       |<br>+--------------------------------------------------+</p>
+<p>状态反馈区：结果区在预检失败或执行成功时动态展示，替换配置区。预检失败时展示分组的不合格清单。执行成功时展示汇总数据和下一步提示。</p>
+<p>异常状态下的结构变化：</p>
+<ul><li>来源子管理员被删除：顶部信息区变为红色 banner「复制来源子管理员已被删除，无法继续复制」，确认按钮置灰，内容区不变但所有操作不可用</li><li>复制信息仅剩一项：该项 checkbox 置灰不可取消，底部提示不变</li><li>复制对象为空：复制对象区展示空态「请选择至少一名复制对象」</li></ul>
+<p>具体文案：</p>
+<ul><li>弹窗标题：「复制子管理员权限」</li><li>取消按钮：「取消」</li><li>确认按钮：「确认」</li></ul>
+<p>成功反馈：</p>
+<ul><li>结果区汇总 + toast「复制成功」</li></ul>
+<p>失败反馈：</p>
+<ul><li>预检失败：结果区展示不合格清单</li><li>系统失败：toast「复制失败，请重试」</li></ul></div></div>
+<div class="section-block experience-component" id="7-状态与反馈文案" data-section-key="state-feedback"><h2 class="section-heading">7. 状态与反馈文案</h2><div class="section-body"><div class="state-feedback-table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>配置中</td><td>弹窗已打开，等待用户配置</td><td>权限管理员</td><td>勾选复制内容、选择复制对象</td><td>弹窗正常展示</td></tr><tr><td>校验中</td><td>点击确认后正在全量预检</td><td>权限管理员</td><td>等待（按钮 loading）</td><td>确认按钮显示「校验中…」</td></tr><tr><td>预检未通过</td><td>部分复制对象不满足加入或认证条件</td><td>权限管理员</td><td>移除不合格成员后重新提交，或取消</td><td>「以下 N 名成员不满足条件，请处理后重新提交」</td></tr><tr><td>执行中</td><td>预检通过，正在执行复制</td><td>权限管理员</td><td>等待</td><td>「复制中…」</td></tr><tr><td>复制成功</td><td>复制已完成，权限已生效（或待审批通过后生效）</td><td>权限管理员</td><td>关闭弹窗</td><td>toast「复制成功」；结果区展示汇总</td></tr><tr><td>互审待审批</td><td>复制完成但需审批通过后权限才生效</td><td>权限管理员 + 审批人</td><td>关闭弹窗，等待审批</td><td>「已生成审批，审批通过后权限生效」</td></tr><tr><td>审批已驳回</td><td>审批被驳回，权限已收回</td><td>权限管理员</td><td>重新发起复制</td><td>操作记录中标记「已回滚」</td></tr><tr><td>来源已失效</td><td>复制来源子管理员在弹窗打开期间被删除</td><td>权限管理员</td><td>关闭弹窗</td><td>「复制来源子管理员已被删除，无法继续复制」</td></tr></tbody></table></div></div></div>
+<div class="section-block experience-component" id="8-待确认问题" data-section-key="open-questions"><h2 class="section-heading">8. 待确认问题</h2><div class="section-body"><ol><li><strong>加入状态统一口径</strong></li></ol>
+<p>影响：校验失败时的提示文案（「未加入」还是「未启用」），以及操作记录中引用该状态时的表述。<br>建议确认方：产品。</p>
+<ol><li><strong>双管理员互审驳回后是否需要通知发起人</strong></li></ol>
+<p>影响：是否需要「权限被收回」的主动通知机制、通知渠道和文案。<br>建议确认方：产品。</p>
+<ol><li><strong>操作记录「详情」字段是否需要展开复制对象完整名单</strong></li></ol>
+<p>影响：详情页的信息结构设计。当前标注为「无」，但批量操作场景下展开名单对审计追溯有意义。<br>建议确认方：产品 / 安全合规。</p>
+<ol><li><strong>员工选择器当前是否支持 200 人上限和已选数量展示</strong></li></ol>
+<p>影响：如需选择器能力先行补齐，会影响复制弹窗的开发排期。<br>建议确认方：技术 / 产品。</p>
+<ol><li><strong>复制内容（可授权组织 / 可授权功能）独立勾选时是否允许只复制其中一项</strong></li></ol>
+<p>影响：如果只复制组织不复制功能，子管理员有管理范围但无操作权限，实际不可用——是否需要在 UI 上提示这种组合的风险。<br>建议确认方：产品。</p>
+<ol><li><strong>复制对象是否包含复制来源本人</strong></li></ol>
+<p>影响：选择器是否需要过滤掉来源子管理员自己。<br>建议确认方：产品。</p></div></div>
+<div class="section-block experience-component" id="附录-设计指南消费说明" data-section-key="appendix"><h2 class="section-heading">附录：设计指南消费说明</h2><div class="section-body"><h3>1. 设计指南消费</h3>
+<table><thead><tr><th>使用依据</th><th>转换结果</th><th>落点</th></tr></thead><tbody><tr><td>认知 C-05 默认效应：默认必须安全、可解释、可逆</td><td>复制信息默认全选，因为这是最高频场景；叠加不覆盖是可逆的（不破坏原有配置）</td><td>节点 3.2 复制内容默认全选</td></tr><tr><td>认知 C-06 损失厌恶：强调影响范围与恢复方式</td><td>已有子管理员的叠加行为在确认前以标签和固定文案明示，不让用户「不确定后果下被迫确认」</td><td>节点 3.3 已有子管理员标记和叠加说明</td></tr><tr><td>认知 C-07 峰终定律：结尾给明确结果与下一步</td><td>执行成功后结果区展示汇总数据 + toast，不是模糊的「操作成功」</td><td>节点 3.4 执行成功汇总</td></tr><tr><td>反馈与报错 1.2 能在操作前说明就不等失败后再解释</td><td>叠加行为说明放在确认按钮上方常驻展示，不等到提交后才发现</td><td>节点 3.3 叠加说明</td></tr><tr><td>反馈与报错 1.5 不把所有异常做成弹窗</td><td>预检失败用弹窗内结果区展示，不额外弹出错误弹窗</td><td>异常 5.4/5.5/5.6</td></tr><tr><td>反馈与报错 1.3 反馈必须说明原因和下一步</td><td>每个异常都写了触发条件、系统反馈文案和用户下一步</td><td>所有异常流程</td></tr></tbody></table>
+<h3>2. 业务知识消费</h3>
+<table><thead><tr><th>业务知识</th><th>关键规则 / 事实</th><th>转换成的体验策略</th><th>落点</th></tr></thead><tbody><tr><td>权限管理 14_角色边界</td><td>子管理员的核心约束是组织范围与应用范围的交叉边界</td><td>复制弹窗中明确区分「可授权组织」和「可授权功能」两项，让管理员清楚复制的是哪类边界</td><td>节点 3.2</td></tr><tr><td>权限管理 30_体验风险模式 RISK-007</td><td>批量操作属于高风险治理动作，需同步考虑审计与可回溯性</td><td>操作记录增加批次 ID 关联，执行成功展现汇总数据</td><td>节点 4.1、节点 3.4</td></tr><tr><td>权限管理 30_体验风险模式 RISK-002</td><td>权限来源不透明导致排错成本高</td><td>复制来源子管理员信息在弹窗顶部固定展示，操作记录中保留复制来源</td><td>节点 3.1、节点 4.1</td></tr><tr><td>安全管理 11_操作记录</td><td>操作记录覆盖管理后台的新增、修改、删除行为</td><td>复制操作落两条记录（组织+功能），共享批次 ID</td><td>节点 4.1</td></tr><tr><td>成员管理 00_领域概述</td><td>成员是权限主体的核心载体，成员通过挂载关系接入企业</td><td>加入状态校验复用成员域的口径，校验失败时区分「未加入」</td><td>异常 5.4</td></tr></tbody></table>
+<h3>3. 知识缺口</h3>
+<table><thead><tr><th>缺失信息</th><th>影响模块</th><th>建议补充方向</th></tr></thead><tbody><tr><td>权限查询页面的来源解释模型（复制来源是否已在现有来源模型中定义）</td><td>节点 4.1 操作记录追溯</td><td>查阅权限管理 21_来源模型.md，确认复制来源是否需要新增来源类型</td></tr><tr><td>双管理员互审的审批单模板和通知机制</td><td>节点 4.2、异常 5.9</td><td>查阅审批管理域知识，确认审批驳回后的通知路径</td></tr></tbody></table></div></div></div>
+  <footer class="preview-footer">
+    来源：E:\AI设计\体验蓝图构建思路\projects\sub-admin-copy\workspace\experience_blueprint.md &nbsp;|&nbsp; 版本 v3
+  </footer>
+</main>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-btn');
+  var navBusiness = document.getElementById('nav-business');
+  var navExperience = document.getElementById('nav-experience');
+  var contentBusiness = document.getElementById('content-business');
+  var contentExperience = document.getElementById('content-experience');
+  var current = 'business';
+
+  function switchPanel(name) {
+    current = name;
+    tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === name); });
+    navBusiness.classList.toggle('hidden', name !== 'business');
+    navExperience.classList.toggle('hidden', name !== 'experience');
+    contentBusiness.classList.toggle('hidden', name !== 'business');
+    contentExperience.classList.toggle('hidden', name !== 'experience');
+  }
+
+  tabs.forEach(function(t) {
+    t.addEventListener('click', function() { switchPanel(t.dataset.panel); });
+  });
+
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
+      if (panel !== current) switchPanel(panel);
+      var target = document.getElementById(item.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "project_id": "sub-admin-copy",
+  "scope_version": "1.0",
+  "recommended_commands": [
+    "python -m packages gate-facts sub-admin-copy",
+    "python -m packages gate-business sub-admin-copy",
+    "python -m packages gate-experience sub-admin-copy",
+    "python -m packages validate sub-admin-copy",
+    "python -m packages coverage sub-admin-copy"
+  ],
+  "backtrack_required": false,
+  "highest_required_stage": "facts",
+  "rationale": [
+    "FACT-1E9339D1 需要从 facts 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "FACT-2B7CC743 需要从 facts 阶段开始重跑，修复模式为 patch_current_artifact。",
+    "RUN-5CF0E79F 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-9D7FEAC5 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。",
+    "RUN-9B36895F 需要从 final 阶段开始重跑，修复模式为 rerun_checks_only。"
+  ]
+}

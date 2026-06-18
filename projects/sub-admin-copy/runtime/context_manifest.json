@@ -1,0 +1,169 @@
+{
+  "task_id": "sub-admin-copy",
+  "task_card_source": "projects/sub-admin-copy/source/task_card.md",
+  "selection_source": "projects/sub-admin-copy/runtime/uxb_route_decision.json",
+  "knowledge_trace": {
+    "files": [
+      "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "knowledge/raw/业务/安全管理/11_操作记录.md",
+      "knowledge/raw/业务/成员管理/00_领域概述.md",
+      "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "knowledge/raw/设计准则/认知.md"
+    ],
+    "reasoning": "权限管理领域知识覆盖子管理员核心对象、任务场景、角色边界和体验风险模式，是理解复制操作在权限体系中定位的基础。安全管理操作记录知识支撑审计追溯设计。成员管理领域概述支撑加入状态和认证状态的校验逻辑。设计准则中的反馈与报错指南和认知原则支撑批量校验反馈形式和复制语义的认知负担设计。"
+  },
+  "assembled_refs": [
+    "templates/facts.template.md",
+    "templates/business_blueprint_lite.template.md",
+    "templates/experience_blueprint.template.md",
+    "specs/06_check_contract.md",
+    "specs/08_fact_extraction_contract.md",
+    "specs/09_business_blueprint_contract.md",
+    "specs/10_experience_blueprint_contract.md",
+    "projects/sub-admin-copy/source/requirement.md",
+    "projects/sub-admin-copy/source/background.md",
+    "knowledge/raw/业务/权限管理/00_领域概述.md",
+    "knowledge/raw/业务/权限管理/11_任务场景.md",
+    "knowledge/raw/业务/权限管理/14_角色边界.md",
+    "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+    "knowledge/raw/业务/安全管理/11_操作记录.md",
+    "knowledge/raw/业务/成员管理/00_领域概述.md",
+    "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+    "knowledge/raw/设计准则/认知.md"
+  ],
+  "missing_refs": [
+    "templates/business_blueprint_lite.template.md"
+  ],
+  "excluded_refs": [],
+  "reference_count": 17,
+  "task_contract": {
+    "execution_constraints": [
+      "不得臆造业务事实",
+      "信息不足处保留 [GAP]",
+      "正式产出必须写入 workspace/",
+      "不得用聊天回复替代正式文档产物",
+      "facts 阶段不得把引用知识提升为当前任务已确认事实",
+      "business 阶段不得输出 UI 方案或实现方案",
+      "experience 阶段不得输出高保真视觉稿或研发实现细节",
+      "runtime/uxb_route_decision.json 是执行判断与知识选择唯一来源",
+      "task_card.md 不能替代 UXB 做复杂度判断、知识选择或执行深度判断"
+    ],
+    "required_inputs": [
+      "projects/sub-admin-copy/source/requirement.md",
+      "projects/sub-admin-copy/source/background.md"
+    ],
+    "required_outputs": [
+      "projects/sub-admin-copy/workspace/facts.md",
+      "projects/sub-admin-copy/workspace/business_blueprint_lite.md",
+      "projects/sub-admin-copy/workspace/experience_blueprint.md"
+    ],
+    "domain": "权限管理"
+  },
+  "references": [
+    {
+      "reference": "templates/facts.template.md",
+      "role": "output_template",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "templates/business_blueprint_lite.template.md",
+      "role": "output_template",
+      "required": true,
+      "stage": "business"
+    },
+    {
+      "reference": "templates/experience_blueprint.template.md",
+      "role": "output_template",
+      "required": true,
+      "stage": "experience"
+    },
+    {
+      "reference": "specs/06_check_contract.md",
+      "role": "gate_contract",
+      "required": true,
+      "stage": "runtime"
+    },
+    {
+      "reference": "specs/08_fact_extraction_contract.md",
+      "role": "stage_contract",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "specs/09_business_blueprint_contract.md",
+      "role": "stage_contract",
+      "required": true,
+      "stage": "business"
+    },
+    {
+      "reference": "specs/10_experience_blueprint_contract.md",
+      "role": "stage_contract",
+      "required": true,
+      "stage": "experience"
+    },
+    {
+      "reference": "projects/sub-admin-copy/source/requirement.md",
+      "role": "project_source",
+      "required": true,
+      "stage": "source"
+    },
+    {
+      "reference": "projects/sub-admin-copy/source/background.md",
+      "role": "project_source",
+      "required": true,
+      "stage": "source"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/00_领域概述.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/11_任务场景.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/14_角色边界.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "knowledge/raw/业务/权限管理/30_体验风险模式.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "experience"
+    },
+    {
+      "reference": "knowledge/raw/业务/安全管理/11_操作记录.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "knowledge/raw/业务/成员管理/00_领域概述.md",
+      "role": "domain_knowledge",
+      "required": true,
+      "stage": "facts"
+    },
+    {
+      "reference": "knowledge/raw/设计准则/反馈与报错/00_反馈与报错体验设计指南.md",
+      "role": "design_knowledge",
+      "required": true,
+      "stage": "experience"
+    },
+    {
+      "reference": "knowledge/raw/设计准则/认知.md",
+      "role": "design_knowledge",
+      "required": true,
+      "stage": "experience"
+    }
+  ]
+}
