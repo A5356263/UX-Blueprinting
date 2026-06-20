@@ -1,80 +1,50 @@
-# 业务蓝图 / 体验蓝图项目 v1
+# 体验蓝图构建思路
 
-这是一个轻量的文档驱动型项目工作台。
+一个轻量的 prompt 驱动型体验设计工作站。
 
-它的目标不是搭建重型后端或 App，而是用稳定的本地目录、规则法典和执行中枢，支持三段主链路：
+目标是用两个 Skill 完成从需求文档到体验蓝图的全链路：分析需求事实、构建业务判断、输出体验设计方案。不依赖 CLI 工程管道，由 AI 直接读取 Skill 定义并执行。
 
-- 需求事实提炼
-- 业务蓝图构建
-- 体验蓝图构建
+## 架构
 
-## 当前主结构
-
-- `specs/`：唯一正式规则真源
-- `packages/`：执行中枢（内含 Capability Registry 与 Memory Layer 入口）
-- `projects/`：项目真相
-- `memory/`：长期质量经验沉淀层
-- `knowledge/`：业务真源、原则真源、Wiki 编译层
-- `templates/`：固定模板
-- `docs/`：解释、讨论、runbook
-
-## 跨平台启动建议
-
-- 标准入口始终是 `python -m packages`
-- Windows 优先使用 `python -m packages`，如果本机没有 `python`，再使用 `py -3 -m packages`
-- macOS / Linux 优先使用 `python3 -m packages`
-- 也可以使用仓库根目录的薄转发脚本：
-  - `bash run_packages.sh <command> ...`
-  - `powershell -ExecutionPolicy Bypass -File .\\run_packages.ps1 <command> ...`
-- `run_packages.sh` 和 `run_packages.ps1` 只是便捷入口，不替代正式主链路
-
-## 最小使用方式
-
-```bash
-python -m packages bootstrap demo-task --domain 权限管理
-python -m packages project-structure-check demo-task
-python -m packages assemble demo-task
-python -m packages generate-facts demo-task
-python -m packages generate-business demo-task
-python -m packages generate-experience demo-task
-python -m packages gate-facts demo-task
-python -m packages gate-business demo-task
-python -m packages gate-experience demo-task
-python -m packages validate demo-task
-python -m packages coverage demo-task
-python -m packages preview demo-task --host 127.0.0.1 --port 0
-python -m packages run-main demo-task
+```
+input/                      ← 用户输入（需求文档、背景材料）
+knowledge/                  ← 业务知识 + 设计准则（两个 Skill 共享）
+.claude/skills/
+  ├── uxb/                  ← 需求定案 Skill（分析 + 统一文档输出）
+  └── experience-blueprint/ ← 体验蓝图 Skill（交互设计方案输出）
+_shared/                    ← 跨 Skill 协调（流转关系、JSON 规范、交接模板）
+spark-output/               ← 输出层
+  ├── context/              ← 结构化 JSON（uxb.json、experience_blueprint.json）
+  └── ...                   ← 文档产出（uxb_output.md、experience_blueprint.md）
 ```
 
-如需查看当前正式能力面，可运行：
+## 两个 Skill
 
-```bash
-python -m packages capabilities-list
-python -m packages capability-show <capability-id>
-```
+**UXB（需求定案）**：读取需求文档 + 业务知识，经过分析对话后输出统一的需求定案文档（`uxb_output.md`，10 章结构）和结构化数据（`uxb.json`）。负责事实提炼、价值论证、角色功能定义、规则状态梳理、体验风险预判和 GAP 管理。
 
-如需提取与沉淀质量经验，可运行：
+**体验蓝图**：读取 UXB 产出，输出完整的体验设计方案（`experience_blueprint.md`），包含旅程图、交互流程（主/次/异常）、页面设计、状态文案和待确认问题。
 
-```bash
-python -m packages memory-extract <project-id>
-python -m packages memory-accept <project-id>
-python -m packages memory-summary <project-id>
-python -m packages preview <project-id> --host 127.0.0.1 --port 0
-python -m packages sample-check
-```
+Skill 之间通过 `_shared/` 定义的协议交接，不直接调用。
 
-## 阅读顺序
+## 使用方式
 
-1. `docs/runbook/external_ai_quickstart.md`
-2. `docs/sdd/README.md`
-3. `specs/README.md`
-4. `projects/<project-id>/source/task_card.md`
+1. 将需求文档放入 `input/` 目录
+2. 触发 UXB Skill，完成分析对话，获得需求定案
+3. 触发体验蓝图 Skill，读取 UXB 产出，生成体验蓝图
+4. 如需 HTML 预览，可在体验蓝图 Skill 中直接生成
+
+## 目录说明
+
+| 目录 | 职责 |
+|------|------|
+| `input/` | 用户输入层，存放需求文档等原始材料 |
+| `knowledge/` | 业务知识 + 设计准则，两个 Skill 共享读取 |
+| `.claude/skills/` | Skill 定义文件（SKILL.md + references/） |
+| `_shared/` | 跨 Skill 协调文件（skill-graph.json、context-schema.md、handoff.md） |
+| `spark-output/` | 输出层，包含结构化 JSON 和文档产出 |
 
 ## 说明
 
-- `docs/sdd/` 只负责帮助理解
-- `specs/` 才是正式规则
-- `packages/` 是唯一固定执行入口
-- `packages/capability_registry/` 负责正式能力声明，不替代真实执行逻辑
-- `memory/` 是独立顶层长期 memory 子系统，不写进 wiki
-- 正式产物统一位于 `projects/<project-id>/`
+- 本项目不再有 CLI 命令、工程管道或 gate/validate/coverage 硬规则
+- 所有分析判断和质量自检由 Skill prompt 内置的自检清单驱动
+- `knowledge/` 中的业务知识和设计准则是数据层，Skill 按需读取但不修改
