@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{project_name}} - 体验蓝图预览</title>
+  <style>
+    :root {
+      --bg: #f5f4ed;
+      --panel: #faf9f5;
+      --panel-subtle: #f2f0e8;
+      --line: #e8e6dc;
+      --text: #2b2b28;
+      --text-muted: #6b6a64;
+      --accent: #1f6b5b;
+      --accent-strong: #155245;
+      --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 72px;
+    }
+
+    .header {
+      margin-bottom: 28px;
+      padding: 20px 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      color: var(--accent-strong);
+    }
+
+    .section {
+      margin-bottom: 22px;
+      padding: 18px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--accent-strong);
+    }
+
+    .subtle {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .journey-row,
+    .overview-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .role {
+      min-width: 92px;
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .path {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .node {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-subtle);
+      font-size: 13px;
+    }
+
+    .arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .card-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-subtle);
+      padding: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: var(--accent-strong);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 18px 12px 56px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="header">
+      <h1>{{project_name}}</h1>
+      <div class="subtle">体验蓝图预览</div>
+    </section>
+
+    <section class="section">
+      <h2>旅程图</h2>
+      {{journey_data}}
+    </section>
+
+    <section class="section">
+      <h2>交互流程总览</h2>
+      {{flow_overview_data}}
+    </section>
+
+    <section class="section">
+      <h2>主交互流程</h2>
+      {{main_flow_data}}
+    </section>
+
+    <section class="section">
+      <h2>次交互流程</h2>
+      {{sub_flow_data}}
+    </section>
+
+    <section class="section">
+      <h2>异常与阻断</h2>
+      {{exception_data}}
+    </section>
+
+    <section class="section">
+      <h2>页面设计</h2>
+      {{page_data}}
+    </section>
+
+    <section class="section">
+      <h2>状态与反馈文案</h2>
+      {{state_table_data}}
+    </section>
+
+    <section class="section">
+      <h2>待确认问题</h2>
+      {{pending_data}}
+    </section>
+  </main>
+</body>
+</html>

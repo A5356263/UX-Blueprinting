@@ -1,0 +1,23 @@
+{
+  "project_id": "self-permission-apply",
+  "generation_mode": "generated",
+  "producer": "uxb_run",
+  "source_hash": "ec0f1f9ad7c07e9c9be9101fc0e3fd5f2f2f44dd47a23bf4aff2bcbca1f78305",
+  "task_card_hash": "ecd756fe229af283436246c539b2f1bcf0ccd0f04c14dc45bd3b2388f347b421",
+  "generated_at": "2026-06-15T14:54:23+00:00",
+  "parent_project_id": "",
+  "copied_from_project_id": "",
+  "manual_patch_reason": "",
+  "command_chain": [
+    "generate-facts",
+    "gate-facts",
+    "generate-business",
+    "gate-business",
+    "generate-experience",
+    "gate-experience",
+    "validate",
+    "repair-plan",
+    "coverage",
+    "preview"
+  ]
+}

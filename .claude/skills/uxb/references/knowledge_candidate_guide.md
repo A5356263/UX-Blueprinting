@@ -14,9 +14,9 @@
 它不是：
 
 - 正式 knowledge
-- UXB 主链路产物
-- `packages/` 的输入
-- `projects/<project-id>/` 的正式交付件
+- UXB 正式需求定案产物
+- 双 Skill 正式主链路的输入
+- `spark-output/` 下的正式交付件
 - 审批系统
 - 人工流程单
 
@@ -270,5 +270,5 @@ python knowledge/scripts/update_wiki.py --apply --only <raw-file-path>
 - 把聊天原文整段写进候选文件
 - 把候选当正式知识直接引用
 - 因为“看起来有价值”就批量造候选
-- 把候选区接进 `packages/` 主链路
+- 把候选区接进双 Skill 正式主链路
 - 把候选文件写成状态流转单或审批单

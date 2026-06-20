@@ -1,0 +1,1 @@
+{"ts": "2026-06-15T14:52:29.226588+00:00", "cycle_id": "2026-06-15T14:52:29.226603+00:00", "event": "plan_generated", "actor": "packages.repair_loop", "issue_ids": ["CHK-0A8D2325", "CHK-B59BC6FA", "CHK-ECDAC940", "BIZ-DF47DF30", "EXP-F366C9E2", "RUN-A3AFE22C", "RUN-FCB57B57"], "result": {"repair_loop_status": "blocked", "open_issue_count": 7}}

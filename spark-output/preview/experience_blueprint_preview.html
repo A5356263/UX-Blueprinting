@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>员工自助申请权限 - 体验蓝图预览</title>
+  <style>
+    :root {
+      --bg: #f5f4ed;
+      --panel: #faf9f5;
+      --panel-subtle: #f2f0e8;
+      --line: #e8e6dc;
+      --text: #2b2b28;
+      --text-muted: #6b6a64;
+      --accent: #1f6b5b;
+      --accent-strong: #155245;
+      --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 72px;
+    }
+
+    .header {
+      margin-bottom: 28px;
+      padding: 20px 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      color: var(--accent-strong);
+    }
+
+    .section {
+      margin-bottom: 22px;
+      padding: 18px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--accent-strong);
+    }
+
+    .subtle {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .journey-row,
+    .overview-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .role {
+      min-width: 92px;
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .path {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .node {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-subtle);
+      font-size: 13px;
+    }
+
+    .arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .card-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-subtle);
+      padding: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: var(--accent-strong);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      overflow-x: auto;
+    }
+
+    .path-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 18px 12px 56px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="header">
+      <h1>员工自助申请权限</h1>
+      <div class="subtle">体验蓝图预览</div>
+    </section>
+
+    <section class="section">
+      <h2>旅程图</h2>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3>👤 员工旅程</h3>
+        <table>
+          <tr><th>阶段</th><th>发现权限不足</th><th>了解可以申请</th><th>选择权限并申请</th><th>等待审批</th><th>获得权限并使用</th></tr>
+          <tr><td>用户目标</td><td>知道自己缺什么、为什么被拦</td><td>找到申请入口，确认可以自己申请</td><td>找到想要的权限，说明原因并提交</td><td>知道申请到哪了，大概要等多久</td><td>确定权限已到手，知道从哪里开始用</td></tr>
+          <tr><td>关键触点</td><td>操作被拦截提示页；同事告知</td><td>工作台或个人信息区的申请入口</td><td>申请页的可申请项列表和搜索</td><td>申请记录页状态标签；通知消息</td><td>权限生效通知；我的权限页</td></tr>
+          <tr><td>用户信心</td><td>低——不知道能不能申请</td><td>中——不知道能申请啥</td><td>上升——找到了想要的东西</td><td>反复——怎么还没好？</td><td>高——可以干活了</td></tr>
+          <tr><td>痛点</td><td>只知道"没权限"，不知道下一步</td><td>入口藏得深发现不了</td><td>管理术语看不懂</td><td>没有进度提示不知道要不要催</td><td>获批没通知不知道何时能用</td></tr>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3>👤 超级管理员旅程</h3>
+        <table>
+          <tr><th>阶段</th><th>评估是否开启</th><th>完成配置</th><th>开启并运行</th><th>监控与调整</th><th>关闭能力</th></tr>
+          <tr><td>用户目标</td><td>判断是否适合当前企业</td><td>定好范围和审批流程</td><td>让员工侧入口生效</td><td>查看运行数据，必要时调整</td><td>安全关闭，不造成业务中断</td></tr>
+          <tr><td>关键触点</td><td>权限管理模式页配置区</td><td>范围选择器和审批配置页</td><td>能力开关和员工入口状态</td><td>申请记录列表和统计数据</td><td>关闭确认页和影响范围展示</td></tr>
+          <tr><td>用户信心</td><td>中——不知道配置多复杂</td><td>上升——范围设好了</td><td>高——开起来了</td><td>中——不确定要不要调</td><td>不确定——关了有什么后果？</td></tr>
+          <tr><td>痛点</td><td>不理解与治理模式的关系</td><td>不知道配多大范围合适</td><td>不知道员工侧长什么样</td><td>不知道哪些申请有风险</td><td>担心会影响正在用的人</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>👤 审批人旅程</h3>
+        <table>
+          <tr><th>阶段</th><th>收到待审批通知</th><th>查看申请内容</th><th>做出审批决定</th><th>确认结果</th></tr>
+          <tr><td>用户目标</td><td>知道有人申请了权限需处理</td><td>理解员工要什么、为什么要</td><td>快速判断是否合理</td><td>确认操作生效</td></tr>
+          <tr><td>关键触点</td><td>审批待办列表或消息通知</td><td>申请详情页</td><td>通过/拒绝按钮及可选备注</td><td>审批完成后的结果确认</td></tr>
+          <tr><td>用户信心</td><td>中——先看看是什么</td><td>取决于信息是否够判断</td><td>取决于信息充分程度</td><td>高——处理完了</td></tr>
+          <tr><td>痛点</td><td>容易和其他审批混淆</td><td>原因太简略无法判断</td><td>不确定该不该给</td><td>授权有延迟员工来问</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>交互流程总览</h2>
+
+      <div class="card" style="margin-bottom:12px">
+        <h3>员工侧</h3>
+        <div class="path">
+          <span class="node">E-01 发现入口</span><span class="arrow">→</span>
+          <span class="node">E-02 查看我的权限</span><span class="arrow">→</span>
+          <span class="node">E-03 浏览可申请项</span><span class="arrow">→</span>
+          <span class="node">E-04 选择权限填原因</span><span class="arrow">→</span>
+          <span class="node">E-05 提交申请</span><span class="arrow">→</span>
+          <span class="node">E-06 追踪状态</span><span class="arrow">→</span>
+          <span class="node">E-07 收到结果</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <h3>超级管理员侧</h3>
+        <div class="path">
+          <span class="node">A-01 进入配置区</span><span class="arrow">→</span>
+          <span class="node">A-02 查看状态</span><span class="arrow">→</span>
+          <span class="node">A-03 配范围</span><span class="arrow">→</span>
+          <span class="node">A-04 配审批</span><span class="arrow">→</span>
+          <span class="node">A-05 开启</span><span class="arrow">→</span>
+          <span class="node">A-06 查看数据</span><span class="arrow">→</span>
+          <span class="node">A-07 调整</span><span class="arrow">→</span>
+          <span class="node">A-08 关闭</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <h3>审批人侧</h3>
+        <div class="path">
+          <span class="node">R-01 收到通知</span><span class="arrow">→</span>
+          <span class="node">R-02 查看详情</span><span class="arrow">→</span>
+          <span class="node">R-03 做出决定</span><span class="arrow">→</span>
+          <span class="node">R-05 确认结果</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>异常流程重点</h3>
+        <table>
+          <tr><th>编号</th><th>名称</th><th>触发角色</th></tr>
+          <tr><td>E1</td><td>能力未开启时访问入口</td><td>员工</td></tr>
+          <tr><td>E2</td><td>可申请范围为空</td><td>员工</td></tr>
+          <tr><td>E3</td><td>重复申请拦截</td><td>员工</td></tr>
+          <tr><td>E4</td><td>审批人不存在</td><td>系统/审批人</td></tr>
+          <tr><td>E5</td><td>审批超时催办</td><td>审批人</td></tr>
+          <tr><td>E6</td><td>关闭时存在审批中申请</td><td>超管</td></tr>
+          <tr><td>E7</td><td>审批中台未就绪</td><td>超管</td></tr>
+          <tr><td>E8</td><td>权限被回收通知(备选)</td><td>员工</td></tr>
+          <tr><td>E9</td><td>员工离职自动处理</td><td>系统</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>主交互流程</h2>
+      <div class="card-list">
+
+        <div class="card"><h3>E-01 发现入口</h3><p>员工在工作台或个人设置区域看到"权限申请"入口，或操作被拦截时看到引导入口。入口仅当能力已开启且可申请范围非空时才可见。文案：<em>"权限申请 — 查看我的权限，申请需要的功能权限"</em>。</p></div>
+
+        <div class="card"><h3>E-02 查看我的权限</h3><p>员工浏览当前权限列表，每条显示：名称(业务语言)、来源(管理员授予/默认权限/自助申请)、获得时间。支持按应用或业务场景筛选。空状态：<em>"暂未查询到权限记录"</em>。</p></div>
+
+        <div class="card"><h3>E-03 浏览可申请项</h3><p>按业务场景分组(审批与流程、数据与报表、人员与管理等)展示可申请权限项。每个项附带一句业务说明"获得后可以：……"。已拥有标记为"已拥有"不可选，申请中标记为"申请中"。搜索框占位：<em>"搜索你需要的权限"</em>。</p></div>
+
+        <div class="card"><h3>E-04 选择权限并填写原因</h3><p>展示所选权限的完整说明。申请原因输入框(必填)，占位：<em>"请说明你需要这项权限的业务原因，例如：需要审批部门员工的请假申请"</em>。提交前校验非空和最少数。</p></div>
+
+        <div class="card"><h3>E-05 提交申请</h3><p>提交前校验重复申请。通过后展示成功页：<em>"你的权限申请已提交，审批人会尽快处理。你可以在「我的申请」中查看进度。"</em>按钮：查看申请进度 / 继续申请。</p></div>
+
+        <div class="card"><h3>E-06 查看申请记录与追踪状态</h3><p>申请记录列表，每条显示权限名称、提交时间、状态(含预估时效说明)、审批人。支持按状态筛选。待审批可撤回，已拒绝/已撤回可重新申请(预填上次信息)。</p></div>
+
+        <div class="card"><h3>E-07 收到审批结果</h3><p>通过通知：<em>"你的「{权限名称}」申请已通过审批，权限已生效。"</em>拒绝通知：<em>"你的「{权限名称}」申请未通过审批。{审批人备注}"</em>附带重新申请入口。</p></div>
+
+        <div class="card" style="margin-top:10px;border-color:var(--accent)"><h3>A-01~A-08 超管配置与管控链路</h3><p>进入配置区→查看状态→配置可申请范围(按角色/功能权限勾选)→配置审批方式(从审批中台选择流程)→校验通过后开启→查看运行数据(累计申请/通过率/平均审批时长)→调整配置(仅影响后续新申请)→关闭能力(展示三组影响数据+两种策略+关闭后说明)。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>R-01~R-05 审批处理链路</h3><p>收到审批待办(标注"权限申请"来源)→查看详情(申请人信息+权限详情+申请原因)→做出决定(通过：二次确认后自动授权；拒绝：必填拒绝原因)→确认结果。</p></div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>次交互流程</h2>
+      <div class="card-list">
+
+        <div class="card"><h3>S-01 员工撤回申请</h3><p>对待审批的申请点击撤回→二次确认：<em>"撤回后该申请将关闭，如需该权限需重新申请"</em>→确认后状态变为已撤回，审批人侧待审批项自动清除。</p></div>
+
+        <div class="card"><h3>S-02 员工重新申请</h3><p>对已拒绝或已撤回的申请点击重新申请→跳转到确认页，预填上次权限和原因→员工可修改后重新提交，生成新申请单。</p></div>
+
+        <div class="card"><h3>S-03 超管按员工查看申请记录</h3><p>在申请记录列表中筛选某员工→展示该员工所有申请记录→点击某条查看完整详情(内容、原因、审批链路、最终结果)。</p></div>
+
+        <div class="card"><h3>S-04 审批人查看历史审批记录</h3><p>审批人在审批系统已处理列表中筛选"权限申请"类型→查看历史处理记录详情。</p></div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>异常与阻断</h2>
+      <table>
+        <tr><th>编号</th><th>名称</th><th>发生时机</th><th>系统反馈</th><th>用户下一步</th></tr>
+        <tr><td>E1</td><td>能力未开启时访问入口</td><td>员工通过链接访问时能力已关闭</td><td>"员工自助申请权限暂未开放。如有需要，请联系你的企业管理员。"</td><td>联系管理员或返回工作台</td></tr>
+        <tr><td>E2</td><td>可申请范围为空</td><td>管理员开启但未配置范围</td><td>"当前暂无可申请的权限。请联系你的企业管理员了解详情。"</td><td>联系管理员</td></tr>
+        <tr><td>E3</td><td>重复申请</td><td>已拥有或审批中有同类权限</td><td>已拥有："你已拥有该权限，无需重复申请"；申请中："已有审批中申请"</td><td>返回查看我的权限/我的申请</td></tr>
+        <tr><td>E4</td><td>审批人不存在</td><td>审批人离职、停用或配置错误</td><td>通知员工"审批流程遇到问题"；通知超管"审批人不存在，请检查配置"</td><td>员工等待；管理员修正配置</td></tr>
+        <tr><td>E5</td><td>审批超时</td><td>审批人长期未处理</td><td>催办通知审批人"已等待 X 天，请及时处理"；员工侧显示等待时长</td><td>审批人处理；员工可联系管理员</td></tr>
+        <tr><td>E6</td><td>关闭时存在审批中申请</td><td>超管确认关闭</td><td>弹窗展示受影响数量，提供策略：①等待完结后关闭 ②立即关闭并拒绝</td><td>超管选择处理方式后确认</td></tr>
+        <tr><td>E7</td><td>审批中台未就绪</td><td>开启或提交时回调链路不可用</td><td>"审批流程尚未就绪。请先在审批管理中创建并配置审批流程。"</td><td>超管完成审批中台配置</td></tr>
+        <tr><td>E8</td><td>权限被回收(备选)</td><td>关闭策略含回收时</td><td>"企业已关闭员工自助申请权限。你通过申请获得的权限已被收回。"</td><td>联系管理员</td></tr>
+        <tr><td>E9</td><td>员工离职或停用</td><td>员工状态变更</td><td>审批中申请自动关闭(原因：员工已离职)；已生效权限按现有规则回收</td><td>无需用户操作</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>页面设计</h2>
+      <div class="card-list">
+
+        <div class="card"><h3>P-01 我的权限页（员工侧）</h3><p><strong>目标：</strong>让员工一目了然地知道自己当前有哪些权限、来自哪里。</p><p><strong>结构：</strong>顶部筛选标签[全部|管理员授予|默认|自助申请]→搜索框→按业务场景分组的权限列表，每条显示名称(业务语言)、业务说明、来源标注、获得时间→右上角"申请新权限"按钮。</p><p><strong>空状态：</strong>"暂未查询到权限记录"</p></div>
+
+        <div class="card"><h3>P-02 我的申请页（员工侧）</h3><p><strong>目标：</strong>让员工追踪所有申请的状态。</p><p><strong>结构：</strong>状态筛选标签[全部|审批中|已通过|已拒绝|已撤回]→申请记录列表，每条显示权限名称、提交时间、状态(含时效说明)、审批人→操作按钮：撤回(待审批)/重新申请(已拒绝/已撤回)/查看详情。</p></div>
+
+        <div class="card"><h3>P-03 申请权限页（员工侧）</h3><p><strong>目标：</strong>让员工找到并选择需要申请的权限。</p><p><strong>结构：</strong>搜索框(业务关键词)→按业务场景分组(审批与流程/数据与报表/人员与管理)的可申请项列表→每个权限项显示名称(业务语言)+一句"获得后可以……"的业务说明+状态标记(已拥有灰色/申请中灰色/可申请可点击)。</p></div>
+
+        <div class="card"><h3>P-04 确认申请页（员工侧）</h3><p><strong>目标：</strong>确认权限、填写原因、提交。</p><p><strong>结构：</strong>权限详情摘要(名称、业务说明、所属应用)→申请原因输入框(必填，占位引导写业务原因)→提交说明"提交后申请将发送给审批人"→[取消][提交申请]。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>P-05 自助申请配置页（超管侧）</h3><p><strong>目标：</strong>集中管理开关、范围和审批配置。</p><p><strong>结构：</strong>能力开关+简介→运行概览数据卡(累计申请/本月申请/待审批/通过率)→可申请范围配置区(显示已选数量+[修改])→审批方式配置区(显示当前流程+[修改])→[查看全部申请记录]→[关闭自助申请能力]。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>P-06 关闭能力确认弹窗（超管侧）</h3><p><strong>目标：</strong>充分了解影响后做出关闭决定。</p><p><strong>结构：</strong>影响数据展示(审批中申请数/已获权员工数/涉及权限项数)→关闭策略选择(○等待审批完结后关闭 ○立即关闭)→关闭后影响说明(入口移除/权限保留/记录可查/可重新开启)→[取消][确认关闭]。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>P-07 审批申请详情页（审批人侧）</h3><p><strong>目标：</strong>充分了解申请信息，高效判断。</p><p><strong>结构：</strong>申请人信息(姓名、部门、提交时间)→申请内容(权限名称、业务说明、所属应用)→申请原因→[拒绝][通过]。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>P-08 审批拒绝弹窗（审批人侧）</h3><p><strong>目标：</strong>收集拒绝原因。</p><p><strong>结构：</strong>拒绝原因输入框(必填，占位"请填写拒绝原因，帮助员工理解")→提示"拒绝后员工将收到通知"→[取消][确认拒绝]。</p></div>
+
+        <div class="card" style="border-color:var(--accent)"><h3>P-09 申请记录管理页（超管侧）</h3><p><strong>目标：</strong>查看和管理所有自助申请记录。</p><p><strong>结构：</strong>状态筛选标签[全部|待审批|已通过|已拒绝|已撤回|异常]→搜索框(员工姓名)+时间筛选→申请记录表格(申请人/申请权限/提交时间/状态/审批人)，异常行高亮→分页器。</p></div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>状态与反馈文案</h2>
+      <table>
+        <tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr>
+        <tr><td>草稿</td><td>正在填写，尚未提交</td><td>员工</td><td>继续编辑、删除</td><td>申请尚未提交</td></tr>
+        <tr><td>待审批</td><td>已提交，等待审批人处理</td><td>员工、审批人</td><td>员工：撤回；审批人：通过/拒绝</td><td>已提交，等待审批人处理</td></tr>
+        <tr><td>已通过</td><td>审批人已通过，等待授权</td><td>员工、审批人、超管</td><td>仅查看</td><td>已通过，权限即将生效</td></tr>
+        <tr><td>已生效</td><td>权限已授予，可正常使用</td><td>员工、审批人、超管</td><td>仅查看</td><td>权限已生效，可以开始使用</td></tr>
+        <tr><td>已拒绝</td><td>审批人已拒绝</td><td>员工、审批人、超管</td><td>员工：重新申请</td><td>申请未通过</td></tr>
+        <tr><td>已撤回</td><td>员工在审批前主动撤回</td><td>员工、超管</td><td>员工：重新申请</td><td>申请已撤回</td></tr>
+        <tr><td>已回收</td><td>权限因关闭或其他原因被收回</td><td>员工、超管</td><td>仅查看</td><td>权限已被收回</td></tr>
+        <tr><td>异常</td><td>审批流程遇到问题</td><td>员工、超管</td><td>超管：修正审批配置</td><td>审批流程异常，管理员正在处理</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>待确认问题</h2>
+
+      <div class="card" style="margin-bottom:12px;border-color:var(--accent)">
+        <h3>基于推荐方案推进</h3>
+        <p><strong>1. 关闭能力后已获权限是否回收？</strong><br>推荐方案：不回收已获权限，仅关闭新申请入口。如最终确定回收，需补充P-06的"回收"选项和E8异常流程。<br><em>建议确认方：产品经理</em></p>
+        <p><strong>2. 自助申请与现有治理模式的共存规则？</strong><br>推荐方案：首版与子管理员模式共存，与双管理员模式互斥。如需双审，需修改审批配置和审批流程。<br><em>建议确认方：产品经理</em></p>
+      </div>
+
+      <div class="card">
+        <h3>因上游未闭合暂待确认</h3>
+        <p>3. 可申请范围的配置粒度（角色/功能权限/业务场景）<br>4. 员工侧是否需要移动端<br>5. 关闭能力后申请记录的保留和可查性<br>6. 申请频率或数量限制<br>7. 申请原因是必填还是选填（推荐方案：必填，已按此设计）</p>
+        <p class="subtle">以上均建议确认方：产品经理</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

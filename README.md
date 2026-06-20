@@ -1,80 +1,54 @@
-# 业务蓝图 / 体验蓝图项目 v1
+# 体验蓝图构建思路
 
-这是一个轻量的文档驱动型项目工作台。
+这是一个轻量的 prompt 驱动型体验设计工作站。
 
-它的目标不是搭建重型后端或 App，而是用稳定的本地目录、规则法典和执行中枢，支持三段主链路：
+项目的正式主链路收敛为两个 Skill：
 
-- 需求事实提炼
-- 业务蓝图构建
-- 体验蓝图构建
+- `uxb`：负责需求分析、两次硬停对齐、输出正式需求定案文档
+- `experience-blueprint`：负责读取 UXB 产出并展开为交互设计方案
 
-## 当前主结构
+## 当前架构
 
-- `specs/`：唯一正式规则真源
-- `packages/`：执行中枢（内含 Capability Registry 与 Memory Layer 入口）
-- `projects/`：项目真相
-- `memory/`：长期质量经验沉淀层
-- `knowledge/`：业务真源、原则真源、Wiki 编译层
-- `templates/`：固定模板
-- `docs/`：解释、讨论、runbook
+主链路由以下部分组成：
 
-## 跨平台启动建议
+- `.claude/skills/uxb/`
+- `.claude/skills/experience-blueprint/`
+- `_shared/`
+- `knowledge/`
+- `input/`
+- `spark-output/`
 
-- 标准入口始终是 `python -m packages`
-- Windows 优先使用 `python -m packages`，如果本机没有 `python`，再使用 `py -3 -m packages`
-- macOS / Linux 优先使用 `python3 -m packages`
-- 也可以使用仓库根目录的薄转发脚本：
-  - `bash run_packages.sh <command> ...`
-  - `powershell -ExecutionPolicy Bypass -File .\\run_packages.ps1 <command> ...`
-- `run_packages.sh` 和 `run_packages.ps1` 只是便捷入口，不替代正式主链路
+其中：
 
-## 最小使用方式
+- `_shared/skill-graph.json` 定义 Skill 流转关系
+- `_shared/context-schema.md` 定义上下文 JSON 字段
+- `_shared/handoff.md` 定义交接话术模板
 
-```bash
-python -m packages bootstrap demo-task --domain 权限管理
-python -m packages project-structure-check demo-task
-python -m packages assemble demo-task
-python -m packages generate-facts demo-task
-python -m packages generate-business demo-task
-python -m packages generate-experience demo-task
-python -m packages gate-facts demo-task
-python -m packages gate-business demo-task
-python -m packages gate-experience demo-task
-python -m packages validate demo-task
-python -m packages coverage demo-task
-python -m packages preview demo-task --host 127.0.0.1 --port 0
-python -m packages run-main demo-task
-```
+## 目录结构
 
-如需查看当前正式能力面，可运行：
+- `input/`：用户输入层
+- `knowledge/`：业务知识与设计准则
+- `.claude/skills/`：Skill 定义
+- `_shared/`：跨 Skill 协调层
+- `spark-output/`：正式输出层
+- `packages/experience_preview/`：HTML 预览参考实现
+- `docs/`：文档与讨论记录
 
-```bash
-python -m packages capabilities-list
-python -m packages capability-show <capability-id>
-```
+## 使用方式
 
-如需提取与沉淀质量经验，可运行：
+不再通过 CLI 命令、工程主线或 `python -m packages` 运行正式主链路。
 
-```bash
-python -m packages memory-extract <project-id>
-python -m packages memory-accept <project-id>
-python -m packages memory-summary <project-id>
-python -m packages preview <project-id> --host 127.0.0.1 --port 0
-python -m packages sample-check
-```
+正式使用方式是：
 
-## 阅读顺序
-
-1. `docs/runbook/external_ai_quickstart.md`
-2. `docs/sdd/README.md`
-3. `specs/README.md`
-4. `projects/<project-id>/source/task_card.md`
+1. 触发 `uxb`
+2. 完成 Step 1 与 Step 2 分析对齐
+3. 生成 `spark-output/uxb_output.md` 与 `spark-output/context/uxb.json`
+4. 触发 `experience-blueprint`
+5. 生成体验蓝图文档、context JSON 和 HTML 预览
 
 ## 说明
 
-- `docs/sdd/` 只负责帮助理解
-- `specs/` 才是正式规则
-- `packages/` 是唯一固定执行入口
-- `packages/capability_registry/` 负责正式能力声明，不替代真实执行逻辑
-- `memory/` 是独立顶层长期 memory 子系统，不写进 wiki
-- 正式产物统一位于 `projects/<project-id>/`
+- 正式主链路不再依赖 `specs/`
+- 正式主链路不再依赖 `templates/`
+- 正式主链路不再依赖 `gate / validate / coverage`
+- 仓库中保留的 `packages/experience_preview/` 仅作为预览实现参考

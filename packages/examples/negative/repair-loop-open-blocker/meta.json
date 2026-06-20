@@ -1,9 +1,0 @@
-{
-  "project_id": "repair-loop-open-blocker",
-  "task_name": "最小负向 Benchmark",
-  "domain": "benchmark",
-  "project_role": "benchmark_negative",
-  "status": "failed",
-  "read_only": true,
-  "excluded_from_default_scan": true
-}

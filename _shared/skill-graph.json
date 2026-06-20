@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "skills": [
+    {
+      "id": "uxb",
+      "name_zh": "需求定案",
+      "phase": 1,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "experience-blueprint"
+        ],
+        "reason": "需求定案完成后，进入体验蓝图生成交互设计方案",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "experience-blueprint",
+      "name_zh": "体验蓝图",
+      "phase": 2,
+      "reads": [
+        "uxb"
+      ],
+      "required": [
+        "uxb"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "当前链路终端，无下游 Skill",
+        "alternatives": []
+      }
+    }
+  ]
+}

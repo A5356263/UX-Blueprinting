@@ -1,9 +1,0 @@
-{
-  "project_id": "repair-loop-basic-pass",
-  "task_name": "最小正向 Benchmark",
-  "domain": "benchmark",
-  "project_role": "benchmark_positive",
-  "status": "passed",
-  "read_only": true,
-  "excluded_from_default_scan": true
-}
