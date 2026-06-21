@@ -1,0 +1,88 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.0.0",
+  "generated_at": "2026-06-21T13:00:00+08:00",
+  "project_name": "自助权限申请",
+  "uxb_mapping": [
+    { "uxb_judgment": "H-01: 自助申请是权限来源新增通道，不替代管理员授权", "experience_decision": "员工端统一入口为'我的权限'，聚合查看已有权限+申请新权限", "section": "§3(员工主线), §6(P2/P3)" },
+    { "uxb_judgment": "H-02: 可申请范围由管理员预设", "experience_decision": "按角色分组展示可申请项，每个角色附带功能权限摘要", "section": "§3(员工申请), §6(P3)" },
+    { "uxb_judgment": "H-03: 审批链路复用OA审批中台", "experience_decision": "审批详情增加权限信息卡片，展示角色及功能详情", "section": "§3(审批主线), §6(P4)" },
+    { "uxb_judgment": "H-04: 申请单独立状态机", "experience_decision": "五个状态全部设计对应的页面态和通知文案，含授权中过渡态", "section": "§7(状态文案表)" },
+    { "uxb_judgment": "H-05: 权限来源标记为自助申请", "experience_decision": "我的权限列表标注来源标签，自助申请可追溯到原始申请记录", "section": "§6(P2), §7" },
+    { "uxb_judgment": "H-06: 关闭时员工侧体验收口", "experience_decision": "关闭态下保留查看功能，隐藏申请入口，审批中继续走完", "section": "§5(EX-05), §6(P2-关闭态)" },
+    { "uxb_judgment": "H-07: 管理端配置有前置依赖", "experience_decision": "步骤引导：范围→审批→开启，每步检查前置条件", "section": "§3(管理员主线), §6(P1)" }
+  ],
+  "journey": [
+    {
+      "role": "超级管理员",
+      "nodes": ["发现与决策", "配置可申请范围", "设置审批流程", "开启并观察"]
+    },
+    {
+      "role": "员工",
+      "nodes": ["发现入口", "理解已有权限", "选择并申请", "等待与查看结果", "确认权限生效"]
+    },
+    {
+      "role": "审批人",
+      "nodes": ["收到审批通知", "理解申请内容", "完成审批"]
+    }
+  ],
+  "interaction_overview": {
+    "roles_flow": "管理员：进入权限管理模式→配置范围→设置审批→开启→观察。员工：发现入口→查看权限→浏览可申请项→提交→追踪→确认生效。审批人：收到待办→查看详情→决策→确认结果。",
+    "exception_highlights": ["未完成前置配置即开启", "审批人失效", "自动授权失败", "关闭能力时审批中申请", "员工已离职", "治理模式冲突"]
+  },
+  "main_flow": [
+    { "id": "M-01", "name": "进入权限管理模式", "role": "管理员", "user_action": "导航进入权限管理模式页", "system_feedback": "展示治理模式状态和自助申请能力卡片", "next": "M-02" },
+    { "id": "M-02", "name": "查看自助申请卡片", "role": "管理员", "user_action": "查看能力卡片信息", "system_feedback": "展示状态标签和快捷操作入口", "next": "M-03" },
+    { "id": "M-03", "name": "配置可申请范围", "role": "管理员", "user_action": "勾选允许员工申请的角色", "system_feedback": "右侧摘要实时更新已选范围", "next": "M-04" },
+    { "id": "M-04", "name": "设置审批流程", "role": "管理员", "user_action": "选择或新建审批流程", "system_feedback": "跳转OA审批中台或展示模板列表", "next": "M-05" },
+    { "id": "M-05", "name": "确认开启", "role": "管理员", "user_action": "查看配置摘要后确认开启", "system_feedback": "治理兼容检查+开启成功提示", "next": "M-06" },
+    { "id": "E-02", "name": "查看已有权限", "role": "员工", "user_action": "浏览按应用分组的权限列表", "system_feedback": "展示权限名称、来源标签", "next": "E-03" },
+    { "id": "E-04", "name": "浏览可申请项", "role": "员工", "user_action": "浏览角色卡片并展开查看详情", "system_feedback": "展示角色描述和包含功能", "next": "E-05" },
+    { "id": "E-05", "name": "提交权限申请", "role": "员工", "user_action": "填写申请原因并提交", "system_feedback": "展示申请摘要+审批流程预告", "next": "E-06" },
+    { "id": "A-02", "name": "进入审批详情", "role": "审批人", "user_action": "从待办列表进入审批详情", "system_feedback": "展示权限信息卡片+申请人信息", "next": "A-05" },
+    { "id": "A-05", "name": "做出审批决策", "role": "审批人", "user_action": "点击同意或拒绝", "system_feedback": "同意→触发自动授权；拒绝→通知员工", "next": "A-06" }
+  ],
+  "sub_flows": [
+    { "id": "S-01", "name": "调整可申请范围", "description": "管理员在运行中增删可申请角色范围" },
+    { "id": "S-02", "name": "调整审批流程", "description": "管理员切换绑定的审批流程" },
+    { "id": "S-03", "name": "撤销申请", "description": "员工在审批通过前撤销已提交申请" },
+    { "id": "S-04", "name": "重新申请", "description": "员工在被拒后修改并重新提交" },
+    { "id": "S-05", "name": "审批转派", "description": "审批人将审批任务转派给其他人" },
+    { "id": "S-06", "name": "管理员查看申请记录", "description": "管理员查看所有员工的申请记录和详情" }
+  ],
+  "exceptions": [
+    { "id": "EX-01", "name": "未完成前置配置即开启", "feedback_form": "页面内提示+按钮置灰", "user_next": "点击链接跳转到缺失配置项" },
+    { "id": "EX-02", "name": "申请权限超出范围", "feedback_form": "toast", "user_next": "返回重新选择" },
+    { "id": "EX-03", "name": "审批人不存在或已离职", "feedback_form": "管理员告警+审批异常标记", "user_next": "管理员在OA审批中转派" },
+    { "id": "EX-04", "name": "自动授权失败", "feedback_form": "员工侧状态提示+管理员告警", "user_next": "管理员手动授权" },
+    { "id": "EX-05", "name": "关闭能力时存在审批中申请", "feedback_form": "弹窗确认", "user_next": "确认关闭或取消" },
+    { "id": "EX-06", "name": "审批中员工账号变更", "feedback_form": "审批详情提示条", "user_next": "审批人关闭详情" },
+    { "id": "EX-07", "name": "员工已有相同权限", "feedback_form": "字段标记+按钮置灰", "user_next": "返回选择其他权限" },
+    { "id": "EX-08", "name": "治理模式冲突", "feedback_form": "页面内提示+按钮置灰", "user_next": "前往关闭冲突模式或放弃" }
+  ],
+  "pages": [
+    { "id": "P1", "name": "权限管理模式页", "target_user": "管理员", "key_sections": ["模式状态卡片区", "自助申请能力卡片", "前置配置检查区", "开启/关闭操作区"] },
+    { "id": "P2", "name": "我的权限页", "target_user": "员工", "key_sections": ["权限概览区", "按应用分组权限列表", "来源标签", "申请入口按钮", "申请记录标签页"] },
+    { "id": "P3", "name": "申请权限页", "target_user": "员工", "key_sections": ["可申请角色列表", "角色详情展开", "申请摘要确认", "申请原因输入", "提交按钮"] },
+    { "id": "P4", "name": "审批详情页", "target_user": "审批人", "key_sections": ["OA审批标准详情", "权限信息卡片", "申请人信息区", "审批操作区"] },
+    { "id": "P5", "name": "申请详情页", "target_user": "员工", "key_sections": ["申请状态条", "申请内容摘要", "审批进度时间轴", "操作按钮区"] }
+  ],
+  "states": [
+    { "state": "草稿", "meaning": "已创建未提交", "audience": "员工", "user_can": "编辑/提交/删除", "feedback": "申请尚未提交" },
+    { "state": "审批中", "meaning": "在审批流程中", "audience": "员工/审批人/管理员", "user_can": "员工撤销；审批人同意/拒绝/转派", "feedback": "员工：等待审批中；审批人：待你审批" },
+    { "state": "已通过", "meaning": "审批通过授权完成", "audience": "员工/审批人/管理员", "user_can": "仅查看", "feedback": "审批已通过，权限已生效" },
+    { "state": "已拒绝", "meaning": "审批被拒绝", "audience": "员工/审批人/管理员", "user_can": "员工重新申请", "feedback": "审批未通过（附拒绝原因）" },
+    { "state": "已撤销", "meaning": "员工主动撤销", "audience": "员工/审批人/管理员", "user_can": "仅查看", "feedback": "你已撤销此申请" },
+    { "state": "已作废", "meaning": "因员工离职/禁用自动作废", "audience": "审批人/管理员", "user_can": "仅查看", "feedback": "申请已自动作废" },
+    { "state": "授权失败", "meaning": "审批通过但授权未完成", "audience": "员工/管理员", "user_can": "管理员手动授权", "feedback": "员工：权限正在处理中；管理员：X项授权失败需手动处理" }
+  ],
+  "open_questions": [
+    { "tier": 1, "question": "自助申请与权限变更审批模式关系", "assumed": "独立并行，有自己的审批通道", "impact_if_wrong": "管理端配置流程需调整为依赖模式" },
+    { "tier": 1, "question": "可申请范围业务粒度", "assumed": "按角色定义", "impact_if_wrong": "员工端申请页需从角色卡片改为功能列表布局" },
+    { "tier": 1, "question": "治理模式共存矩阵", "assumed": "与双管理员互审互斥，其余兼容", "impact_if_wrong": "冲突检测逻辑和提示文案需调整" },
+    { "tier": 2, "question": "关闭时审批中申请策略", "assumed": "允许关闭，审批中的继续走完", "impact": "EX-05分支逻辑和关闭确认文案" },
+    { "tier": 2, "question": "审批人所需申请人信息", "assumed": "基本信息+角色功能详情，暂不展示已有权限", "impact": "P4权限信息卡片需调整" },
+    { "tier": 2, "question": "申请原因是否必填", "assumed": "必填", "impact": "P3表单校验规则" },
+    { "tier": 2, "question": "被拒后重新申请冷却期", "assumed": "无冷却期", "impact": "S-04重新申请流程" }
+  ]
+}
