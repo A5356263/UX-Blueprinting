@@ -28,7 +28,7 @@
 
 1. 正式主链路输出统一写入 `spark-output/`。
 2. 业务知识与设计准则统一从 `knowledge/` 读取。
-3. 用户输入统一从 `input/` 读取。
+3. 用户输入以当前可用上下文为准；`input/` 只是可选存档来源，不是唯一或默认入口。
 4. 跨 Skill 协调统一通过项目根目录下的 `_shared/` 完成。
 5. Skill 定义统一位于 `.claude/skills/`。
 
@@ -47,7 +47,6 @@
 4. `knowledge/` 是共享数据层，不应被写死进 Skill 执行逻辑。
 5. `input/` 是用户输入层，`spark-output/` 是输出层。
 6. Skill 之间通过 `_shared/` 定义的协议交接，不直接调用对方。
-7. `packages/experience_preview/` 仅作为 HTML 预览参考实现保留，不再承担正式主链路入口职责。
 
 ## 适用范围
 - 本文件用于约束 AI 编程助手在本项目中的执行方式与行为边界。
