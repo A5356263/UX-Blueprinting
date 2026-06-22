@@ -1,0 +1,109 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.0.0",
+  "generated_at": "2026-06-22T00:00:00+08:00",
+  "project_name": "员工自助权限申请",
+  "uxb_mapping": [
+    { "uxb_judgment": "自助申请是现有权限体系的叠加能力", "experience_impact": "员工侧需区分已有/可申请；管理侧需嵌入新配置", "design_decision": "员工端双标签区分；管理端新增自助申请配置子页", "landing": "§6 P1, P5" },
+    { "uxb_judgment": "权限信息需从技术语言转译为业务语言", "experience_impact": "三个端面都需要重新设计语义层", "design_decision": "权限清单用业务卡片；申请选项用业务分类+场景描述；管理员填写员工可见名称", "landing": "§6 P1, P2, P5" },
+    { "uxb_judgment": "审批通过后系统自动授权", "experience_impact": "申请表单需绑定可执行授权映射", "design_decision": "管理员配置时绑定映射；员工确认页展示授权预览；审批人确认弹窗展示授权摘要", "landing": "§3 M3-3, §6 P3, §6 弹窗 M2" },
+    { "uxb_judgment": "管理员全程可控", "experience_impact": "管理端需展示影响范围和操作保护", "design_decision": "关闭/移除前确认弹窗；开启前兼容性检查；配置未发布提示", "landing": "§4 S3/S4, §5 E7, §6 P5" },
+    { "uxb_judgment": "涉及四个角色，理解深度不同", "experience_impact": "每个角色需要差异化信息结构", "design_decision": "员工以场景为锚点；审批人以申请+风险为核心；管理员以权限结构为对象；超管以全局状态为视角", "landing": "§1, §6" },
+    { "uxb_judgment": "不能与已有治理模式冲突", "experience_impact": "开启时需做兼容性检查", "design_decision": "开启前自动校验兼容性矩阵；命中冲突弹窗阻断", "landing": "§5 E7, §3 M3-2" }
+  ],
+  "journey": [
+    {
+      "role": "普通员工",
+      "nodes": ["了解自己有什么权限", "发现权限缺口", "选择申请项并提交", "等待与追踪审批进度", "确认权限生效"]
+    },
+    {
+      "role": "审批人",
+      "nodes": ["收到申请待办", "理解申请内容与风险", "做出审批决定", "确认审批结果生效"]
+    },
+    {
+      "role": "权限管理员",
+      "nodes": ["评估是否开启", "配置可申请范围", "绑定审批流程", "发布配置并监控申请数据", "调整或关闭"]
+    },
+    {
+      "role": "超级管理员",
+      "nodes": ["了解自助申请能力", "查看兼容性与影响", "开启/关闭决策"]
+    }
+  ],
+  "interaction_overview": {
+    "roles_flow": "员工：查看权限 → 选择申请项 → 填写原因 → 确认提交 → 追踪进度 → 获得权限。审批人：收到待办 → 查看详情 → 审批决策 → 结果生效。管理员：开启能力 → 配置范围 → 绑定审批 → 发布 → 监控调整。",
+    "exception_highlights": [
+      "审批人不存在：申请无法路由，通知双方",
+      "自动授权失败：审批已通过但写入失败，管理员手动补授",
+      "可申请范围为空：员工端空状态引导",
+      "治理模式冲突：开启前阻断并引导处理",
+      "重复提交：提交前拦截",
+      "审批超时：复用审批管理4种超时策略"
+    ]
+  },
+  "main_flow": [
+    { "id": "M1-1", "name": "员工进入我的权限", "user_action": "从工作台或导航进入", "system_feedback": "根据能力开关状态展示权限清单页", "next": "M1-2" },
+    { "id": "M1-2", "name": "员工查看权限清单", "user_action": "浏览业务语言呈现的权限卡片", "system_feedback": "按业务场景分组的权限卡片（能力+范围+来源+状态）", "next": "M1-4" },
+    { "id": "M1-4", "name": "员工进入申请权限", "user_action": "点击申请权限标签", "system_feedback": "展示可申请范围列表（分组+描述）", "next": "M1-5" },
+    { "id": "M1-5", "name": "员工选择申请项", "user_action": "选择一个权限选项", "system_feedback": "展示申请详情页（权限说明+授权预览+表单）", "next": "M1-6" },
+    { "id": "M1-6", "name": "员工填写申请原因", "user_action": "填写申请原因（必填）", "system_feedback": "输入框校验+权限摘要常驻展示", "next": "M1-7" },
+    { "id": "M1-7", "name": "员工确认提交", "user_action": "点击提交并确认", "system_feedback": "确认弹窗（权限摘要+审批预览）→提交成功页", "next": "M1-8" },
+    { "id": "M1-8", "name": "员工查看申请进度", "user_action": "在申请列表中追踪", "system_feedback": "申请卡片（权限名+状态+审批人+等待时长）", "next": "M1-9" },
+    { "id": "M1-9", "name": "员工收到审批结果", "user_action": "查看通知", "system_feedback": "通过：告知权限+生效时间；拒绝：告知原因+下一步", "next": "返回我的权限" },
+    { "id": "M3-2", "name": "管理员开启能力", "user_action": "点击开关", "system_feedback": "兼容性检查→开启成功或阻断", "next": "M3-3" },
+    { "id": "M3-3", "name": "管理员配置可申请范围", "user_action": "选择权限并填写业务描述", "system_feedback": "抽屉添加→列表展示已配置项", "next": "M3-4" },
+    { "id": "M3-4", "name": "管理员绑定审批流程", "user_action": "为每个范围绑定审批", "system_feedback": "复用审批引擎配置", "next": "M3-5" },
+    { "id": "M3-5", "name": "管理员发布配置", "user_action": "确认发布", "system_feedback": "配置摘要确认→发布成功，员工端刷新", "next": "M3-6" },
+    { "id": "M2-3", "name": "审批人打开申请详情", "user_action": "从待办进入", "system_feedback": "展示申请详情+辅助判断信息+风险提示", "next": "M2-5" },
+    { "id": "M2-5", "name": "审批人做出审批决定", "user_action": "同意或拒绝", "system_feedback": "确认弹窗→系统执行授权/拒绝", "next": "M2-6" }
+  ],
+  "sub_flows": [
+    { "id": "S1", "name": "员工撤回待审批申请", "trigger": "待审批状态", "user_action": "撤回→确认", "system_feedback": "状态变更为已撤回", "next": "可重新编辑提交" },
+    { "id": "S2", "name": "员工重新申请", "trigger": "被拒后", "user_action": "基于原申请修改后重新提交", "system_feedback": "新申请单生成", "next": "进入审批" },
+    { "id": "S3", "name": "管理员调整已发布配置", "trigger": "新增/移除权限项或修改审批流程", "user_action": "修改→保存", "system_feedback": "新增立即生效；移除保护在途", "next": "配置更新" },
+    { "id": "S4", "name": "管理员关闭自助申请", "trigger": "点击关闭开关", "user_action": "确认关闭", "system_feedback": "入口消失；在途保护；配置保留", "next": "可重新开启" },
+    { "id": "S5", "name": "审批人委托审批", "trigger": "无法处理待办", "user_action": "设置委托", "system_feedback": "复用现有委托能力", "next": "被委托人处理" },
+    { "id": "S6", "name": "员工查看权限来源详情", "trigger": "点击来源标签", "user_action": "展开来源详情", "system_feedback": "展示授予人/角色/时间/方式", "next": "关闭详情" }
+  ],
+  "exceptions": [
+    { "id": "E1", "name": "审批人不存在", "trigger": "审批路由时审批人失效", "handling": "申请标记异常，通知申请人+管理员", "feedback": "系统消息通知" },
+    { "id": "E2", "name": "自动授权失败", "trigger": "审批通过后写入失败", "handling": "状态变更授权失败，通知双方+管理员手动补授", "feedback": "弹窗(审批人)+通知(申请人/管理员)" },
+    { "id": "E3", "name": "可申请范围为空", "trigger": "未配置或员工已全部拥有", "handling": "空状态页展示引导", "feedback": "页面空状态" },
+    { "id": "E4", "name": "重复提交", "trigger": "已有同权限在途/通过申请", "handling": "提交前阻断", "feedback": "阻断弹窗" },
+    { "id": "E5", "name": "申请已被他人处理", "trigger": "多人审批场景", "handling": "页面状态更新+操作禁用", "feedback": "Banner提示" },
+    { "id": "E6", "name": "关闭时存在大量在途申请", "trigger": "关闭能力时在途>阈值", "handling": "弹窗追加提示，不阻止关闭", "feedback": "确认弹窗追加文案" },
+    { "id": "E7", "name": "治理模式冲突", "trigger": "开启时兼容性检查命中", "handling": "阻断开启，引导处理", "feedback": "阻断弹窗" },
+    { "id": "E8", "name": "审批超时", "trigger": "审批节点超时", "handling": "执行超时策略（提醒/转派/通过/拒绝）", "feedback": "系统自动执行+通知" }
+  ],
+  "pages": [
+    { "id": "P1", "name": "员工端-我的权限", "type": "页面", "goal": "让员工清晰了解自己当前拥有的所有权限及其状态", "enter_condition": "员工已登录，从工作台或导航进入" },
+    { "id": "P2", "name": "员工端-申请权限", "type": "页面", "goal": "让员工从可申请范围中选择需要的权限", "enter_condition": "能力已开启，从我的权限页进入" },
+    { "id": "P3", "name": "员工端-申请详情与提交", "type": "页面", "goal": "让员工确认申请详情、填写原因并提交", "enter_condition": "在申请权限页选中权限后点击下一步" },
+    { "id": "P4", "name": "员工端-我的申请", "type": "页面", "goal": "让员工追踪所有申请的状态和历史", "enter_condition": "员工已登录，从我的权限或导航进入" },
+    { "id": "P5", "name": "管理端-自助申请配置页", "type": "页面", "goal": "让管理员一站式完成开启/关闭、范围配置和审批绑定", "enter_condition": "管理员或超管从权限管理模块进入" },
+    { "id": "D1", "name": "管理端-添加可申请项", "type": "抽屉", "goal": "从现有权限池中选择权限加入可申请范围", "enter_condition": "在配置页点击添加可申请项" },
+    { "id": "M1", "name": "管理员关闭能力确认", "type": "弹窗", "goal": "确认关闭操作并告知影响范围", "trigger": "管理员或超管点击关闭开关" },
+    { "id": "M2", "name": "审批人处理确认", "type": "弹窗", "goal": "确认审批决定并告知后续动作", "trigger": "审批人点击同意或拒绝" }
+  ],
+  "states": [
+    { "state": "已开启", "meaning": "自助申请能力启用中", "audience": "管理员", "action": "配置范围、关闭", "feedback": "自助申请能力已开启" },
+    { "state": "已关闭", "meaning": "自助申请能力已停用", "audience": "管理员、员工", "action": "管理员可开启", "feedback": "暂未开放，请联系管理员" },
+    { "state": "草稿", "meaning": "申请尚未提交", "audience": "申请人", "action": "编辑、提交、删除", "feedback": "申请尚未提交" },
+    { "state": "待审批", "meaning": "申请等待审批人处理", "audience": "申请人、审批人、管理员", "action": "审批人可处理；申请人可撤回", "feedback": "审批中，当前审批人：[姓名]" },
+    { "state": "已通过", "meaning": "审批已通过，系统正在或已完成授权", "audience": "申请人、审批人、管理员", "action": "无", "feedback": "审批已通过，权限已生效" },
+    { "state": "已生效", "meaning": "权限已授予且可正常使用", "audience": "申请人、管理员", "action": "管理员可收回", "feedback": "权限已生效" },
+    { "state": "授权失败", "meaning": "审批已通过但授权写入失败", "audience": "申请人、管理员", "action": "管理员手动补授", "feedback": "授权遇到问题，管理员正在处理" },
+    { "state": "已拒绝", "meaning": "审批人拒绝了申请", "audience": "申请人、管理员", "action": "申请人可重新申请", "feedback": "申请未通过，可修改后重新申请" },
+    { "state": "已撤回", "meaning": "申请人主动撤回", "audience": "申请人、管理员", "action": "可重新编辑提交", "feedback": "申请已撤回" },
+    { "state": "已撤销", "meaning": "管理员收回已生效权限", "audience": "申请人、管理员", "action": "可重新申请", "feedback": "权限已被收回" },
+    { "state": "审批异常", "meaning": "审批流程配置问题", "audience": "申请人、管理员", "action": "管理员修复配置", "feedback": "审批流程配置异常，管理员正在处理" }
+  ],
+  "open_questions": [
+    { "title": "自助申请与双管理员叠加行为", "tier": 1, "note": "基于推荐方案推进：不强制双重审批，会签模式可选" },
+    { "title": "自助申请与子管理员隔离叠加行为", "tier": 1, "note": "基于推荐方案推进：范围受管辖约束" },
+    { "title": "授权写入具体方式", "tier": 1, "note": "基于推荐方案推进：角色分配为主，直授为辅" },
+    { "title": "权限业务语言命名规范", "tier": 2, "note": "管理员自定义 vs 平台预置模板" },
+    { "title": "审批通知渠道覆盖", "tier": 2, "note": "邮件/短信是否需要" },
+    { "title": "移动端适配范围", "tier": 2, "note": "员工申请/查看的移动端覆盖范围" },
+    { "title": "可申请范围数量上限", "tier": 2, "note": "是否需要限制最大申请项数量" }
+  ]
+}
