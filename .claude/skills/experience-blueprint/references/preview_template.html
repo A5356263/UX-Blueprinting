@@ -74,41 +74,26 @@
       margin-top: 2px;
     }
 
-    .sidebar-tabs {
-      display: flex;
-      padding: 10px 12px 0;
-      gap: 4px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 8px 4px;
-      border: 1px solid var(--line);
-      background: var(--panel-subtle);
-      color: var(--text-muted);
-      font-size: 13px;
-      cursor: pointer;
-      border-radius: 6px 6px 0 0;
-      transition: all 0.15s;
-      text-align: center;
-    }
-
-    .tab-btn.active {
-      background: var(--panel-strong);
-      color: var(--accent-strong);
-      border-bottom-color: var(--panel-strong);
-      font-weight: 600;
-    }
-
-    .tab-btn:hover:not(.active) { color: var(--text); }
-
     .sidebar-nav {
       flex: 1;
       overflow-y: auto;
-      padding: 6px 0 8px;
+      padding: 10px 0 8px;
     }
 
     .nav-section { padding: 0 16px; }
+    .nav-section + .nav-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .nav-group-title {
+      margin: 0 0 8px;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--accent-strong);
+    }
 
     .nav-item {
       display: block;
@@ -133,7 +118,11 @@
     }
 
     .content-panel { display: block; }
-    .content-panel.hidden { display: none; }
+    .content-panel + .content-panel {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
 
     .section-block {
       margin-bottom: 36px;
@@ -400,6 +389,21 @@
 
     .journey-transition-text {
       color: var(--text-muted);
+    }
+
+    .journey-bridge-note {
+      margin: 12px 0 16px;
+      padding: 10px 12px;
+      background: var(--warn-soft);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .journey-bridge-note strong {
+      color: var(--warn);
     }
 
     .exception-focus-list {
@@ -763,17 +767,13 @@
         <h2>体验策略</h2>
         <span class="project-badge">PROJECT_NAME_HERE</span>
       </div>
-      <div class="sidebar-tabs">
-        <button class="tab-btn active" data-panel="business">业务蓝图</button>
-        <button class="tab-btn" data-panel="experience">体验蓝图</button>
-      </div>
-      <div class="sidebar-nav" id="nav-business">
+      <div class="sidebar-nav">
         <div class="nav-section">
+          <p class="nav-group-title">业务蓝图</p>
           <!-- BUSINESS_NAV_ITEMS -->
         </div>
-      </div>
-      <div class="sidebar-nav hidden" id="nav-experience">
         <div class="nav-section">
+          <p class="nav-group-title">体验蓝图</p>
           <!-- EXPERIENCE_NAV_ITEMS -->
         </div>
       </div>
@@ -785,7 +785,7 @@
         <!-- BUSINESS_SECTIONS -->
       </div>
 
-      <div class="content-panel hidden" id="content-experience">
+      <div class="content-panel" id="content-experience">
         <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">体验蓝图</h1>
         <!-- EXPERIENCE_SECTIONS -->
       </div>
@@ -798,31 +798,9 @@
 
   <script>
     (function() {
-      var tabs = document.querySelectorAll('.tab-btn');
-      var navBusiness = document.getElementById('nav-business');
-      var navExperience = document.getElementById('nav-experience');
-      var contentBusiness = document.getElementById('content-business');
-      var contentExperience = document.getElementById('content-experience');
-      var current = 'business';
-
-      function switchPanel(name) {
-        current = name;
-        tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === name); });
-        navBusiness.classList.toggle('hidden', name !== 'business');
-        navExperience.classList.toggle('hidden', name !== 'experience');
-        contentBusiness.classList.toggle('hidden', name !== 'business');
-        contentExperience.classList.toggle('hidden', name !== 'experience');
-      }
-
-      tabs.forEach(function(t) {
-        t.addEventListener('click', function() { switchPanel(t.dataset.panel); });
-      });
-
       document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
           e.preventDefault();
-          var panel = item.closest('.sidebar-nav').id === 'nav-business' ? 'business' : 'experience';
-          if (panel !== current) switchPanel(panel);
           var target = document.getElementById(item.dataset.target);
           if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
