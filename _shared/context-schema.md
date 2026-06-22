@@ -30,7 +30,7 @@
 |------|------|------|
 | `journey[]` | array | 旅程图，每项含 `role`、`nodes[]`（节点名称数组） |
 | `interaction_overview` | object | 交互总览：`{ roles_flow: string, exception_highlights: string[] }` |
-| `main_flow[]` | array | 主流程节点列表，每项含 `id`、`name`、`user_action`、`system_feedback`、`next` |
+| `main_flow[]` | array | 主流程节点列表，每项含 `name`、`role`、`user_action`、`system_feedback`、`next`；如需技术标识，由 renderer 后处理生成不可见 `technical_id` |
 | `sub_flows[]` | array | 次流程列表 |
 | `exceptions[]` | array | 异常流程列表 |
 | `pages[]` | array | 页面设计列表 |

@@ -58,6 +58,31 @@
       border-bottom: 1px solid var(--line);
     }
 
+    .sidebar-tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .sidebar-tab {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .sidebar-tab.is-active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
     .sidebar-header h2 {
       margin: 0 0 3px;
       font-size: 16px;
@@ -86,6 +111,7 @@
       padding-top: 14px;
       border-top: 1px solid var(--line);
     }
+    .nav-section.hidden { display: none; }
     .nav-group-title {
       margin: 0 0 8px;
       padding: 0 10px;
@@ -118,6 +144,7 @@
     }
 
     .content-panel { display: block; }
+    .content-panel.hidden { display: none; }
     .content-panel + .content-panel {
       margin-top: 48px;
       padding-top: 32px;
@@ -338,11 +365,37 @@
       margin-bottom: 4px;
     }
 
+    .journey-phase-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .journey-phase-title {
       font-size: 14px;
       font-weight: 600;
       color: var(--accent-strong);
       margin-bottom: 10px;
+    }
+
+    .journey-phase-toggle {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .journey-phase-card.is-collapsed .journey-phase-fields {
+      display: none;
+    }
+
+    .journey-phase-card.is-collapsed .journey-phase-title {
+      margin-bottom: 0;
     }
 
     .journey-phase-fields {
@@ -448,17 +501,6 @@
       padding: 10px 16px;
       background: var(--panel-subtle);
       border-bottom: 1px solid var(--line);
-    }
-
-    .flow-node-id {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-family: "SF Mono", "Consolas", monospace;
-      flex-shrink: 0;
     }
 
     .flow-node-name {
@@ -766,13 +808,17 @@
       <div class="sidebar-header">
         <h2>体验策略</h2>
         <span class="project-badge">PROJECT_NAME_HERE</span>
+        <div class="sidebar-tabs">
+          <button class="sidebar-tab is-active" data-panel="business" type="button">业务蓝图</button>
+          <button class="sidebar-tab" data-panel="experience" type="button">体验蓝图</button>
+        </div>
       </div>
       <div class="sidebar-nav">
-        <div class="nav-section">
+        <div class="nav-section" data-panel="business">
           <p class="nav-group-title">业务蓝图</p>
           <!-- BUSINESS_NAV_ITEMS -->
         </div>
-        <div class="nav-section">
+        <div class="nav-section hidden" data-panel="experience">
           <p class="nav-group-title">体验蓝图</p>
           <!-- EXPERIENCE_NAV_ITEMS -->
         </div>
@@ -785,7 +831,7 @@
         <!-- BUSINESS_SECTIONS -->
       </div>
 
-      <div class="content-panel" id="content-experience">
+      <div class="content-panel hidden" id="content-experience">
         <h1 style="font-size:24px;font-weight:700;color:var(--accent-strong);margin:0 0 28px;">体验蓝图</h1>
         <!-- EXPERIENCE_SECTIONS -->
       </div>
@@ -798,11 +844,40 @@
 
   <script>
     (function() {
+      function switchPanel(panel) {
+        document.querySelectorAll('.sidebar-tab').forEach(function(button) {
+          button.classList.toggle('is-active', button.dataset.panel === panel);
+        });
+        document.querySelectorAll('.nav-section[data-panel]').forEach(function(section) {
+          section.classList.toggle('hidden', section.dataset.panel !== panel);
+        });
+        document.querySelectorAll('.content-panel').forEach(function(content) {
+          content.classList.toggle('hidden', content.id !== 'content-' + panel);
+        });
+      }
+
+      document.querySelectorAll('.sidebar-tab').forEach(function(button) {
+        button.addEventListener('click', function() {
+          switchPanel(button.dataset.panel);
+        });
+      });
+
       document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
           e.preventDefault();
+          var navSection = item.closest('.nav-section[data-panel]');
+          if (navSection) switchPanel(navSection.dataset.panel);
           var target = document.getElementById(item.dataset.target);
           if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      document.querySelectorAll('.journey-phase-toggle').forEach(function(button) {
+        button.addEventListener('click', function() {
+          var card = button.closest('.journey-phase-card');
+          if (!card) return;
+          var collapsed = card.classList.toggle('is-collapsed');
+          button.textContent = collapsed ? '展开详情' : '收起详情';
         });
       });
     })();
