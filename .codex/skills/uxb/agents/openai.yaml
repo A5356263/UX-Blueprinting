@@ -1,4 +1,4 @@
 interface:
   display_name: "UXB"
   short_description: "先判断，再成型任务，确认后执行。"
-  default_prompt: "Use $uxb 先帮我判断这个业务或体验问题，再整理成任务摘要，只有我确认后再进入正式执行。"
+  default_prompt: "Use $uxb 先帮我判断这个业务或体验问题，再做分析结论收敛，只有我确认后再进入正式执行。"
