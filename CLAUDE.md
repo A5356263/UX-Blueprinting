@@ -49,7 +49,7 @@
 ## 路径与目录规则
 
 1. 正式主链路输出统一写入 `spark-output/`。
-2. 业务知识与设计准则统一从 `knowledge/` 读取。
+2. 业务知识与设计准则统一从 `.claude/skills/knowledge-wiki/knowledge/` 读取（项目根目录的 `knowledge/` 仅作备份保留，不再作为消费源）。
 3. 用户输入统一从 `input/` 读取。
 4. 跨 Skill 协调统一通过项目根目录下的 `_shared/` 完成。
 5. Skill 定义统一位于 `.claude/skills/`。
@@ -66,7 +66,7 @@
 1. `.claude/skills/uxb/` 负责需求分析定案。
 2. `.claude/skills/experience-blueprint/` 负责体验蓝图输出。
 3. `_shared/` 存放跨 Skill 协调文件，包括流转关系、context schema 和交接模板。
-4. `knowledge/` 是共享数据层，不应被写死进 Skill 执行逻辑。
+4. `.claude/skills/knowledge-wiki/` 是业务知识的正式维护方，内嵌的 `knowledge/` 是唯一消费源。项目根目录的 `knowledge/` 仅作备份保留。
 5. `input/` 是用户输入层，`spark-output/` 是输出层。
 6. Skill 之间通过 `_shared/` 定义的协议交接，不直接调用对方。
 7. `packages/experience_preview/` 仅作为 HTML 预览参考实现保留，不再承担正式主链路入口职责。

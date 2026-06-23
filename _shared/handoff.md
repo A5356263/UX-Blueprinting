@@ -35,12 +35,32 @@
 
 - `你可以说："进入体验蓝图"`
 
+### 冲突处理
+
+当就绪判定算法（见 `_shared/ready-determination.md`）算出的可启动 Skill 列表与 `skill-graph.json` 中的 `next_hint.preferred` 不一致时：
+
+- 第 2 层（推荐下一步）：以算法结果为准，只列出算法判定为就绪的 Skill。
+- 第 3 层（触发语）：跟随第 2 层变化。
+- 如果 `next_hint.preferred[0]` 未就绪，第 2 层改为列出算法结果中的前 3 个候选，并在原因中说明首选 Skill 的前置条件尚未满足。
+
+当用户强制执行一个不就绪的 Skill 并完成时，交接话术正常按 3 层结构输出，不因"该 Skill 在算法中未就绪"而省略或修改任何层。
+
 ## 终端节点处理
 
 当 Skill 是链路终端（`next_hint.preferred` 为空数组）时：
 
 - 第 2 层改为：`当前链路已完成，无下游 Skill。`
 - 第 3 层省略。
+
+## 基础设施型 Skill 交接
+
+`skill-graph.json` 中 `type` 为 `"infrastructure"` 的 Skill（如 knowledge-wiki）完成时，不使用管线交接模板。改为输出：
+
+```text
+✅ {Skill中文名} 已完成。如需继续使用管线，请回到之前的流程。
+```
+
+不输出第 2 层和第 3 层。
 
 ## 完整示例（UXB 完成时）
 

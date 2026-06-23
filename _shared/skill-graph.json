@@ -1,5 +1,6 @@
 {
   "version": "1.0.0",
+  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。详见 _shared/ready-determination.md 第 3 节。",
   "skills": [
     {
       "id": "uxb",
@@ -28,6 +29,18 @@
       "next_hint": {
         "preferred": [],
         "reason": "当前链路终端，无下游 Skill",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "knowledge-wiki",
+      "name_zh": "业务知识库",
+      "type": "infrastructure",
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "基础设施型 Skill，按需调用，不参与管线流转",
         "alternatives": []
       }
     }

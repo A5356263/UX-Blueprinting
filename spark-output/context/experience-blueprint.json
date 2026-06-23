@@ -1,0 +1,254 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.0.0",
+  "generated_at": "2026-06-22T00:00:00+08:00",
+  "project_name": "员工自助申请权限",
+  "uxb_mapping": [
+    {
+      "uxb_judgment": "自助申请是权限变更审批模式下的新发起方式，非独立模式",
+      "experience_impact": "状态流转、审批对接、来源标识全部复用现有框架",
+      "design_decision": "申请状态复用现有治理状态模型，审批对接复用审批中台待办容器",
+      "landing_sections": ["§3", "§7"]
+    },
+    {
+      "uxb_judgment": "员工查看已有权限和发起申请必须形成连续体验",
+      "experience_impact": "P1和P2不能是独立入口，必须在信息架构上自然衔接",
+      "design_decision": "P1→P2通过'申请更多权限'按钮连接，P2顶部展示'已拥有'摘要",
+      "landing_sections": ["§3节点1.1→1.2", "P1", "P2"]
+    },
+    {
+      "uxb_judgment": "可申请范围优先按角色配置",
+      "experience_impact": "员工侧以角色卡片为信息组织单位",
+      "design_decision": "P2按角色分组展示可申请权限；P5范围选择器默认按角色维度",
+      "landing_sections": ["§3节点1.2", "P2", "P5"]
+    },
+    {
+      "uxb_judgment": "管理员配置必须在一个流程内完成",
+      "experience_impact": "P5采用单页表单+锚点导航",
+      "design_decision": "P5单页承载可申请范围+审批方式+配置摘要，不用步骤条",
+      "landing_sections": ["§3节点2.2-2.4", "P5"]
+    },
+    {
+      "uxb_judgment": "能力关闭时存量申请的过渡策略",
+      "experience_impact": "关闭确认弹窗展示存量申请数",
+      "design_decision": "P5关闭弹窗展示审批中申请数+影响说明",
+      "landing_sections": ["§4次流程五", "§5异常五"]
+    },
+    {
+      "uxb_judgment": "审批拒绝时员工需要知道原因和下一步",
+      "experience_impact": "拒绝原因默认必填，拒绝后提供重提入口",
+      "design_decision": "P4拒绝状态展示原因区+'修改并重新申请'按钮",
+      "landing_sections": ["§3节点1.5", "P4", "§7"]
+    },
+    {
+      "uxb_judgment": "现有四种权限来源的解释模型不能破坏",
+      "experience_impact": "新增来源标签不能干扰现有来源解释",
+      "design_decision": "P1来源标签用颜色和文案区分，自助申请标签可点击追溯",
+      "landing_sections": ["P1"]
+    }
+  ],
+  "journey": [
+    {
+      "role": "员工（申请者）",
+      "nodes": [
+        {
+          "stage": "发现缺口",
+          "goal": "知道自己缺了什么权限，以及该权限能不能申请",
+          "touchpoint": "'我的权限'页面中的权限清单+'可申请'引导",
+          "confidence": "中",
+          "pain": "看不到'我缺的权限'和'能申请的权限'之间的对应关系"
+        },
+        {
+          "stage": "选择目标权限",
+          "goal": "快速找到目标权限并理解申请后能做什么",
+          "touchpoint": "可申请权限列表（按角色分组）",
+          "confidence": "中",
+          "pain": "角色名称可能不直观，不确定选了之后能干什么"
+        },
+        {
+          "stage": "提交申请",
+          "goal": "说明申请原因，确认审批人信息",
+          "touchpoint": "申请表单页",
+          "confidence": "较高",
+          "pain": "不知道审批人是谁、多久能批完"
+        },
+        {
+          "stage": "等待审批",
+          "goal": "知道申请没丢、当前走到哪一步",
+          "touchpoint": "申请记录列表+申请详情页",
+          "confidence": "低",
+          "pain": "只能看到'审批中'，看不到节点进度"
+        },
+        {
+          "stage": "获得权限/收到拒绝",
+          "goal": "明确知道结果和下一步",
+          "touchpoint": "申请结果通知+申请详情页",
+          "confidence": "通过时高；拒绝时急降",
+          "pain": "拒绝只说'已拒绝'无原因"
+        }
+      ]
+    },
+    {
+      "role": "管理员（配置者）",
+      "nodes": [
+        {
+          "stage": "了解能力",
+          "goal": "理解自助申请是什么、需要准备什么",
+          "touchpoint": "权限管理模块中的'自助申请'功能入口",
+          "confidence": "低",
+          "pain": "缺乏功能预览和影响说明"
+        },
+        {
+          "stage": "设定可申请范围",
+          "goal": "确定哪些权限可以让员工自己申请",
+          "touchpoint": "可申请范围选择器",
+          "confidence": "中",
+          "pain": "选择时需理解每个选项的含义和影响面"
+        },
+        {
+          "stage": "指定审批方式",
+          "goal": "确定谁来批、怎么批",
+          "touchpoint": "审批人选择+审批方式设置",
+          "confidence": "中",
+          "pain": "不确定审批人是否有效"
+        },
+        {
+          "stage": "开启能力",
+          "goal": "确认配置无误，正式对员工开放",
+          "touchpoint": "配置摘要确认+开启按钮",
+          "confidence": "较高",
+          "pain": "配置问题开启后才发现修正成本高"
+        },
+        {
+          "stage": "监控运行",
+          "goal": "看到申请量、审批进度",
+          "touchpoint": "申请记录列表（管理员视角）",
+          "confidence": "中",
+          "pain": "没有专门的监控面板"
+        },
+        {
+          "stage": "调整或关闭",
+          "goal": "修改范围或审批人，或关闭能力",
+          "touchpoint": "配置编辑页/关闭确认弹窗",
+          "confidence": "较高",
+          "pain": "关闭时不确认存量申请会怎样"
+        }
+      ]
+    },
+    {
+      "role": "审批人",
+      "nodes": [
+        {
+          "stage": "收到待办",
+          "goal": "知道有人申请了权限、需要我审批",
+          "touchpoint": "审批中台待办列表中的自助申请卡片",
+          "confidence": "中",
+          "pain": "待办卡片信息不够，需点进去才能判断"
+        },
+        {
+          "stage": "查看申请内容",
+          "goal": "了解谁申请了什么、为什么申请",
+          "touchpoint": "申请审批详情页",
+          "confidence": "较高",
+          "pain": "申请原因模糊时难以决策"
+        },
+        {
+          "stage": "审批决策",
+          "goal": "做出同意或拒绝的决定",
+          "touchpoint": "审批操作区",
+          "confidence": "同意时较高；拒绝时担心影响员工",
+          "pain": "拒绝时不确定要不要写原因"
+        }
+      ]
+    }
+  ],
+  "interaction_overview": {
+    "roles_flow": "员工侧主路径：我的权限→发现缺口→申请权限→提交→查看记录→等待→获得/拒绝。管理员侧主路径：进入配置→设定范围→指定审批→预览→开启→监控→调整/关闭。审批人侧主路径：待办识别→查看详情→同意/拒绝→完成。",
+    "exception_highlights": [
+      "可申请范围为空时员工侧空状态引导联系管理员",
+      "审批人不存在时申请阻塞+管理员侧告警",
+      "审批超时时系统自动催办+员工手动催办",
+      "能力关闭时存量申请继续走完+新申请入口隐藏",
+      "授权失败时管理员侧异常告警+手动处理",
+      "治理模式冲突时开启前校验阻止+弹窗说明"
+    ]
+  },
+  "main_flow": [
+    {
+      "name": "员工发起权限申请",
+      "role": "employee",
+      "nodes": [
+        { "name": "进入我的权限", "user_action": "查看已拥有的权限列表", "system_feedback": "展示权限清单，按角色和功能权限分组，每项标注来源标签", "next": "点击申请更多权限" },
+        { "name": "进入申请权限", "user_action": "浏览可申请的角色/权限列表", "system_feedback": "按角色分组展示，已拥有标记置灰", "next": "点击某个角色的申请按钮" },
+        { "name": "填写申请信息", "user_action": "确认目标权限，填写申请原因，查看预估审批信息", "system_feedback": "展示目标权限详情、审批人预览", "next": "点击提交申请" },
+        { "name": "查看申请详情（等待中）", "user_action": "查看申请状态和审批进度", "system_feedback": "展示申请全貌、审批进度、审批人信息", "next": "等待审批或撤回" },
+        { "name": "收到审批结果", "user_action": "查看审批结果", "system_feedback": "通过：权限已生效+通知；拒绝：展示拒绝原因+重新申请入口", "next": "通过→返回我的权限；拒绝→修改重提" }
+      ]
+    },
+    {
+      "name": "管理员配置并开启自助申请",
+      "role": "permission_admin",
+      "nodes": [
+        { "name": "进入自助申请配置页", "user_action": "进入权限管理>自助申请设置", "system_feedback": "未开启态展示配置表单；已开启态展示运行概览", "next": "设定可申请范围" },
+        { "name": "设定可申请范围", "user_action": "选择员工可申请的角色或功能权限", "system_feedback": "选择器+实时预览；敏感权限提示", "next": "指定审批方式" },
+        { "name": "指定审批方式", "user_action": "选择审批人来源和多人审批方式", "system_feedback": "审批人选择器+预览+无效提示", "next": "预览并开启" },
+        { "name": "预览并开启", "user_action": "查看配置摘要，确认后开启", "system_feedback": "配置摘要展示+前置校验；成功后状态切换为已开启", "next": "运行概览" }
+      ]
+    },
+    {
+      "name": "审批人处理申请",
+      "role": "approver",
+      "nodes": [
+        { "name": "从待办列表识别自助申请", "user_action": "在待办列表中看到权限申请", "system_feedback": "待办卡片带来源标签'权限申请'", "next": "点击进入审批详情" },
+        { "name": "查看申请详情并决策", "user_action": "查看申请内容和申请人已有权限", "system_feedback": "三区展示：申请信息+参考信息+操作区", "next": "同意或拒绝" },
+        { "name": "审批完成", "user_action": "确认审批操作", "system_feedback": "同意→自动授权+toast；拒绝→通知员工", "next": "返回待办列表" }
+      ]
+    }
+  ],
+  "sub_flows": [
+    { "name": "员工查看申请记录", "trigger": "从我的权限或工作台进入", "role": "employee" },
+    { "name": "员工撤回申请", "trigger": "在审批中的申请详情页点击撤回", "role": "employee" },
+    { "name": "员工重新申请（拒绝后）", "trigger": "在已拒绝的申请详情页点击重新申请", "role": "employee" },
+    { "name": "管理员调整可申请范围", "trigger": "在已开启状态下修改可申请范围", "role": "permission_admin" },
+    { "name": "管理员关闭能力", "trigger": "在已开启状态下点击关闭", "role": "permission_admin" },
+    { "name": "审批人委托审批", "trigger": "审批人设置委托审批", "role": "approver" }
+  ],
+  "exceptions": [
+    { "name": "申请范围内无可申请项", "trigger": "范围为空或员工已拥有全部可申请权限", "feedback_form": "页面空状态", "user_next": "联系管理员" },
+    { "name": "审批人不存在", "trigger": "审批人被删除或离职", "feedback_form": "管理端banner+员工端详情说明", "user_next": "管理员重新指定；员工等待" },
+    { "name": "审批超时", "trigger": "超过预设时长未审批", "feedback_form": "系统自动催办+员工手动催办", "user_next": "员工催办或联系管理员" },
+    { "name": "授权时权限已被修改", "trigger": "审批通过后目标权限配置变更", "feedback_form": "管理端弹窗告警+员工端状态说明", "user_next": "管理员手动处理" },
+    { "name": "能力关闭时有审批中的申请", "trigger": "管理员关闭能力", "feedback_form": "关闭确认弹窗+员工端入口隐藏", "user_next": "管理员查看存量；员工继续等待" },
+    { "name": "员工被停用或离职", "trigger": "员工账号状态变更", "feedback_form": "系统自动撤回", "user_next": "不适用" },
+    { "name": "与现有治理模式冲突", "trigger": "开启时检测到互斥模式", "feedback_form": "弹窗阻断", "user_next": "管理员关闭冲突模式" }
+  ],
+  "pages": [
+    { "id": "P1", "name": "我的权限", "role": "employee", "goal": "查看已有权限并触达申请入口" },
+    { "id": "P2", "name": "申请权限", "role": "employee", "goal": "浏览可申请范围并选择目标权限" },
+    { "id": "P2.1", "name": "申请表单", "role": "employee", "goal": "确认申请内容、填写原因并提交" },
+    { "id": "P3", "name": "申请记录列表", "role": "employee", "goal": "查看所有历史申请及状态" },
+    { "id": "P4", "name": "申请详情", "role": "employee", "goal": "查看单条申请的完整信息和审批进度" },
+    { "id": "P5", "name": "自助申请配置页", "role": "permission_admin", "goal": "统一完成开启、设范围、指定审批" },
+    { "id": "P6", "name": "申请审批详情", "role": "approver", "goal": "查看申请内容和已有权限并做出审批决策" }
+  ],
+  "states": [
+    { "state": "draft", "meaning": "已创建但未提交", "audience": "员工", "user_action": "编辑、提交、删除", "feedback": "草稿" },
+    { "state": "pending", "meaning": "已提交，等待审批", "audience": "员工、审批人、管理员", "user_action": "员工：撤回、催办；审批人：同意、拒绝", "feedback": "审批中" },
+    { "state": "approved", "meaning": "审批通过，授权中", "audience": "员工、审批人、管理员", "user_action": "等待自动授权", "feedback": "审批通过，授权处理中" },
+    { "state": "effective", "meaning": "权限已生效", "audience": "员工、审批人、管理员", "user_action": "员工：查看权限；管理员：可回收", "feedback": "已生效" },
+    { "state": "rejected", "meaning": "审批拒绝", "audience": "员工、审批人、管理员", "user_action": "员工：查看原因、重新申请", "feedback": "已拒绝" },
+    { "state": "revoked", "meaning": "已撤回或已回收", "audience": "员工、管理员", "user_action": "员工：查看、重新申请（若为撤回）", "feedback": "已撤回/已回收" },
+    { "state": "error", "meaning": "授权异常", "audience": "员工、管理员", "user_action": "员工：等待；管理员：手动处理", "feedback": "授权异常" }
+  ],
+  "open_questions": [
+    { "id": "G01", "question": "自助申请是否复用现有权限变更审批模式", "tier": 1, "assumption": "假设复用，状态复用现有治理状态模型", "affected_sections": "§3、§5异常四/七、§7、P4/P6" },
+    { "id": "G02", "question": "可申请范围按角色还是功能权限", "tier": 1, "assumption": "假设按角色，P2以角色卡片展示", "affected_sections": "§3节点1.2、P2、P5" },
+    { "id": "G03", "question": "审批流程是否在权限管理侧闭环", "tier": 1, "assumption": "假设在权限管理侧直接指定审批人", "affected_sections": "§3节点2.3、P5审批方式区" },
+    { "id": "D01", "question": "申请原因最少字数要求是否合理", "tier": 2, "affected_sections": "P2.1" },
+    { "id": "D02", "question": "搜索是否需要支持按功能名称搜索", "tier": 2, "affected_sections": "P2" },
+    { "id": "D03", "question": "申请人已有权限默认展开还是折叠", "tier": 2, "affected_sections": "P6" },
+    { "id": "D04", "question": "撤回是否有时间限制", "tier": 2, "affected_sections": "P4" },
+    { "id": "D05", "question": "是否展示近期申请趋势数据", "tier": 2, "affected_sections": "P5" },
+    { "id": "D06", "question": "自助申请入口的具体位置和可见性", "tier": 2, "affected_sections": "入口设计" }
+  ]
+}

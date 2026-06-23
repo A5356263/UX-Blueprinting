@@ -160,6 +160,8 @@ UXB 的正常顺序固定为：
 - Step 2 领域补读路由：`references/complexity/01_domain_router.md`
 - 生成需求定案前：`references/output_structure_guide.md`
 
+如果在分析过程中发现了可长期复用的知识变化，不直接生成候选文件，不直接写知识库，而是按最小交接协议提示用户进入 `knowledge-wiki`。
+
 ## 分析阶段必须显式
 
 用户提交需求、需求文档、功能说明、截图或流程问题时：
@@ -527,6 +529,9 @@ UXB 的正常顺序固定为：
 1. 读取 `_shared/handoff.md` 模板
 2. 读取 `_shared/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
 3. 按模板输出交接话术
+4. 如果分析过程中产生了可复用知识变化（按 `references/knowledge_candidate_guide.md` 判断），在交接话术末尾附加：
+   `📌 本次分析中有 {N} 条可复用知识变化，建议进入 knowledge-wiki 生成知识候选。`
+   如果没有产生知识候选，不附加此行。
 
 ## 复杂度资料
 
@@ -543,6 +548,9 @@ UXB 的正常顺序固定为：
 - 不把分析阶段做成问卷机
 - 不让用户先理解内部状态名才能继续
 - 不让工程护栏接管语义判断
+- 不直接写知识候选文件
+- 不直接写入知识库
+- 不负责候选模板套用、入库落点判断和 wiki 刷新
 - 不创建项目目录
 - 不写 formal inputs
 - 不生成 route decision

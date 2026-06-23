@@ -1,5 +1,7 @@
 # 知识使用说明
 
+> **知识基础路径**：本文档中所有 `knowledge/` 开头的路径，均指向 `.claude/skills/knowledge-wiki/knowledge/`（项目根目录相对路径）。
+
 这份说明只负责一件事：
 
 **明确 UXB 在分析阶段怎么读知识。**
