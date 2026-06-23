@@ -1,4 +1,4 @@
-﻿# 智能报表
+# 智能报表
 
 - source_path: knowledge/raw/业务/协同办公/智能报表/README.md
 - domain: 智能报表
@@ -20,4 +20,3 @@
 
 ## 已知缺口
 - 暂无
-

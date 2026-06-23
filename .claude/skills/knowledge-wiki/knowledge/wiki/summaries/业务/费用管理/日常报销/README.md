@@ -1,4 +1,4 @@
-﻿# 日常报销
+# 日常报销
 
 - source_path: knowledge/raw/业务/费用管理/日常报销/README.md
 - domain: 日常报销
@@ -16,4 +16,3 @@
 
 ## 已知缺口
 - 暂无
-

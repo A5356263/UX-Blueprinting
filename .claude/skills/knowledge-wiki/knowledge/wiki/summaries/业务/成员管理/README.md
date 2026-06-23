@@ -1,4 +1,4 @@
-﻿# 成员管理
+# 成员管理
 
 - source_path: knowledge/raw/业务/成员管理/README.md
 - domain: 成员管理
@@ -20,4 +20,3 @@
 
 ## 已知缺口
 - 暂无
-

@@ -1,4 +1,4 @@
-﻿# 设计准则
+# 设计准则
 
 - source_path: knowledge/raw/设计准则/README.md
 - domain: 设计准则
@@ -21,4 +21,3 @@
 
 ## 已知缺口
 - 暂无
-

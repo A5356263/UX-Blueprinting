@@ -1,4 +1,4 @@
-﻿# 员工管理
+# 员工管理
 
 - source_path: knowledge/raw/业务/人事服务/员工管理/README.md
 - domain: 员工管理
@@ -20,4 +20,3 @@
 
 ## 已知缺口
 - 暂无
-

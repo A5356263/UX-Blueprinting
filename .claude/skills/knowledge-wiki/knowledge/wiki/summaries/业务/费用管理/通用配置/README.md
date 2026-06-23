@@ -1,4 +1,4 @@
-﻿# 通用配置
+# 通用配置
 
 - source_path: knowledge/raw/业务/费用管理/通用配置/README.md
 - domain: 通用配置
@@ -18,4 +18,3 @@
 
 ## 已知缺口
 - 暂无
-

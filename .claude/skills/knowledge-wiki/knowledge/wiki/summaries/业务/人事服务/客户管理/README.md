@@ -1,4 +1,4 @@
-﻿# 客户管理
+# 客户管理
 
 - source_path: knowledge/raw/业务/人事服务/客户管理/README.md
 - domain: 客户管理
@@ -19,4 +19,3 @@
 
 ## 已知缺口
 - 暂无
-

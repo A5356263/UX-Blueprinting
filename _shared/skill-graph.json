@@ -43,6 +43,20 @@
         "reason": "基础设施型 Skill，按需调用，不参与管线流转",
         "alternatives": []
       }
+    },
+    {
+      "id": "product-analysis",
+      "name_zh": "产品分析",
+      "type": "infrastructure",
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "uxb"
+        ],
+        "reason": "产品分析完成后，回到需求定案继续分析",
+        "alternatives": []
+      }
     }
   ]
 }

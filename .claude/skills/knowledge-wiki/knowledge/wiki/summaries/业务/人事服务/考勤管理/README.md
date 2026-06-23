@@ -1,4 +1,4 @@
-﻿# 考勤管理
+# 考勤管理
 
 - source_path: knowledge/raw/业务/人事服务/考勤管理/README.md
 - domain: 考勤管理
@@ -21,4 +21,3 @@
 
 ## 已知缺口
 - 暂无
-

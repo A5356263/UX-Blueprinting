@@ -1,4 +1,4 @@
-﻿# 服务管理
+# 服务管理
 
 - source_path: knowledge/raw/业务/服务管理/README.md
 - domain: 服务管理
@@ -17,4 +17,3 @@
 
 ## 已知缺口
 - 暂无
-

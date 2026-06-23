@@ -1,4 +1,4 @@
-﻿# 企业设置
+# 企业设置
 
 - source_path: knowledge/raw/业务/企业设置/README.md
 - domain: 企业设置
@@ -17,4 +17,3 @@
 
 ## 已知缺口
 - 暂无
-

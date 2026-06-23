@@ -1,4 +1,4 @@
-﻿# 应用管理
+# 应用管理
 
 - source_path: knowledge/raw/业务/应用管理/README.md
 - domain: 应用管理
@@ -22,4 +22,3 @@
 
 ## 已知缺口
 - 暂无
-

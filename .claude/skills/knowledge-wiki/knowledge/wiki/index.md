@@ -5,6 +5,10 @@
 - [overview](overview.md)
 - [questions](questions.md)
 
+## inbox
+
+- [README](summaries/inbox/README.md)
+
 ## 业务
 
 - [README](summaries/业务/README.md)
@@ -17,9 +21,11 @@
 ### 人事服务/员工管理
 
 - [00_领域概述](summaries/业务/人事服务/员工管理/00_领域概述.md)
-- [14_员工花名册](summaries/业务/人事服务/员工管理/14_员工花名册.md)
-- [15_合同管理](summaries/业务/人事服务/员工管理/15_合同管理.md)
-- [16_入职生命周期](summaries/业务/人事服务/员工管理/16_入职生命周期.md)
+- [10_能力地图](summaries/业务/人事服务/员工管理/10_能力地图.md)
+- [12_入口与路径](summaries/业务/人事服务/员工管理/12_入口与路径.md)
+- [13_状态与流程](summaries/业务/人事服务/员工管理/13_状态与流程.md)
+- [14_页面与字段](summaries/业务/人事服务/员工管理/14_页面与字段.md)
+- [15_边界与限制](summaries/业务/人事服务/员工管理/15_边界与限制.md)
 - [50_常见问题](summaries/业务/人事服务/员工管理/50_常见问题.md)
 - [README](summaries/业务/人事服务/员工管理/README.md)
 

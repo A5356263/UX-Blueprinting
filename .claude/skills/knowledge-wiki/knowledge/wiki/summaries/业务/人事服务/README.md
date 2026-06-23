@@ -1,4 +1,4 @@
-﻿# 人事服务
+# 人事服务
 
 - source_path: knowledge/raw/业务/人事服务/README.md
 - domain: 人事服务
@@ -22,4 +22,3 @@
 
 ## 已知缺口
 - 暂无
-

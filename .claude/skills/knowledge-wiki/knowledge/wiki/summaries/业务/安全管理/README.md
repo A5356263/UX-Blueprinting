@@ -1,4 +1,4 @@
-﻿# 安全管理
+# 安全管理
 
 - source_path: knowledge/raw/业务/安全管理/README.md
 - domain: 安全管理
@@ -20,4 +20,3 @@
 
 ## 已知缺口
 - 暂无
-

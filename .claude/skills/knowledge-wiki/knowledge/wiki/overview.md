@@ -1,26 +1,26 @@
 # Knowledge Wiki Overview
 
-- updated_at: 2026-06-22
+- updated_at: 2026-06-23
 
 ## 当前概况
 
-- raw_total: 140
-- summary_total: 139
-- summary_coverage: 139/140
-- gap_count: 166
+- raw_total: 142
+- summary_total: 142
+- summary_coverage: 142/142
+- gap_count: 186
 - conflict_count: 2
-- question_marker_count: 62
-- raw_without_summary: 1
-- questions_total: 117
+- question_marker_count: 68
+- raw_without_summary: 0
+- questions_total: 132
 
 ## 最近更新的 Raw
 
-- raw/inbox/README.md
-- raw/业务/权限管理/31_体验翻译需求.md
-- raw/业务/权限管理/15_页面载体语义.md
-- raw/业务/项目背景/00_领域概述.md
-- raw/业务/项目背景/README.md
+- raw/业务/人事服务/员工管理/README.md
+- raw/业务/人事服务/员工管理/50_常见问题.md
+- raw/业务/人事服务/员工管理/15_边界与限制.md
+- raw/业务/人事服务/员工管理/14_页面与字段.md
+- raw/业务/人事服务/员工管理/13_状态与流程.md
 
 ## 无 Summary 的 Raw
 
-- knowledge/raw/inbox/README.md
+- none

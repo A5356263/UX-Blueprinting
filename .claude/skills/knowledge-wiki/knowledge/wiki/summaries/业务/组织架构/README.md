@@ -1,4 +1,4 @@
-﻿# 组织架构
+# 组织架构
 
 - source_path: knowledge/raw/业务/组织架构/README.md
 - domain: 组织架构
@@ -22,4 +22,3 @@
 
 ## 已知缺口
 - 暂无
-

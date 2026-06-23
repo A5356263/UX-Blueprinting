@@ -1,4 +1,4 @@
-﻿# 费用管理
+# 费用管理
 
 - source_path: knowledge/raw/业务/费用管理/README.md
 - domain: 费用管理
@@ -20,4 +20,3 @@
 
 ## 已知缺口
 - 暂无
-

@@ -1,4 +1,4 @@
-﻿# 业务知识库
+# 业务知识库
 
 - source_path: knowledge/raw/业务/README.md
 - domain: 业务总览
@@ -19,4 +19,3 @@
 
 ## 已知缺口
 - 暂无
-

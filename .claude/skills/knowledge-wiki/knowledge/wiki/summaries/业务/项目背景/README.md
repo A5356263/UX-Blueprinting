@@ -1,4 +1,4 @@
-﻿# 项目背景
+# 项目背景
 
 - source_path: knowledge/raw/业务/项目背景/README.md
 - domain: 项目背景
@@ -22,4 +22,3 @@
 
 ## 已知缺口
 - 暂无
-

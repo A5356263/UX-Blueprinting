@@ -1,4 +1,4 @@
-﻿# 审批管理
+# 审批管理
 
 - source_path: knowledge/raw/业务/审批管理/README.md
 - domain: 审批管理
@@ -22,4 +22,3 @@
 
 ## 已知缺口
 - 暂无
-

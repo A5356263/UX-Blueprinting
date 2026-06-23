@@ -1,4 +1,4 @@
-﻿# 企业支付
+# 企业支付
 
 - source_path: knowledge/raw/业务/费用管理/企业支付/README.md
 - domain: 企业支付
@@ -16,4 +16,3 @@
 
 ## 已知缺口
 - 暂无
-

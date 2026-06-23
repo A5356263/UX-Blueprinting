@@ -54,7 +54,11 @@
 
 ## 基础设施型 Skill 交接
 
-`skill-graph.json` 中 `type` 为 `"infrastructure"` 的 Skill（如 knowledge-wiki）完成时，不使用管线交接模板。改为输出：
+`skill-graph.json` 中 `type` 为 `"infrastructure"` 的 Skill 完成时，按 `next_hint.preferred` 是否为空区分交接方式：
+
+**有明确下游指向**（`next_hint.preferred` 非空，如 product-analysis）：使用标准 3 层结构，正常推荐下一步和触发语。
+
+**无明确下游指向**（`next_hint.preferred` 为空，如 knowledge-wiki）：不使用管线交接模板，改为输出：
 
 ```text
 ✅ {Skill中文名} 已完成。如需继续使用管线，请回到之前的流程。

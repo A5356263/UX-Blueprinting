@@ -1,4 +1,4 @@
-﻿# 反馈与报错
+# 反馈与报错
 
 - source_path: knowledge/raw/设计准则/反馈与报错/README.md
 - domain: 设计准则
@@ -19,4 +19,3 @@
 
 ## 已知缺口
 - 暂无
-
