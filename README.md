@@ -1,54 +1,67 @@
 # 体验蓝图构建思路
 
-这是一个轻量的 prompt 驱动型体验设计工作站。
+这是一个基于 Plugin / Skill 组装的轻工作流项目。
 
-项目的正式主链路收敛为两个 Skill：
+它的核心不是传统工程主线，而是一组按职责拆分的 Skill：先做需求判断，再做体验方案展开，其他能力按需插入。
 
-- `uxb`：负责需求分析、两次硬停对齐、输出正式需求定案文档
-- `experience-blueprint`：负责读取 UXB 产出并展开为交互设计方案
+## 当前主流程
 
-## 当前架构
+正式主流程只有两步：
 
-主链路由以下部分组成：
+1. `uxb`
+   负责理解需求、分析问题、收敛判断，输出正式需求定案。
+2. `experience-blueprint`
+   负责读取需求定案，展开为体验蓝图和交互方案。
 
-- `.claude/skills/uxb/`
-- `.claude/skills/experience-blueprint/`
+主链路如下：
+
+```text
+uxb -> experience-blueprint
+```
+
+除此之外，像 `knowledge-wiki`、`product-analysis` 等 Skill 属于支撑型能力，不强制进入主链路，按需调用。
+
+## 关键目录
+
+当前最关键的 3 个目录是：
+
+- `.claude/`
+  Skill 能力层，存放各个 Skill 的定义与规则。
 - `_shared/`
-- `knowledge/`
-- `input/`
+  协同规则层，定义 Skill 之间怎么衔接、什么时候衔接。
 - `spark-output/`
+  正式输出层，存放每一步的文档产物和结构化上下文数据。
 
-其中：
+## `_shared/` 的作用
 
-- `_shared/skill-graph.json` 定义 Skill 流转关系
-- `_shared/context-schema.md` 定义上下文 JSON 字段
-- `_shared/handoff.md` 定义交接话术模板
+`_shared/` 现在只保留 2 个文件：
 
-## 目录结构
+- `skill-graph.json`
+  Skill 关系与推荐流转的数据源，定义谁依赖谁、下一步推荐进入谁。
+- `next-skill.md`
+  统一承载“就绪判定规则 + 交接话术模板”。
+  前者决定一个 Skill 什么时候适合启动，后者决定一个 Skill 完成后怎样自然交给下一个 Skill。
 
-- `input/`：用户输入层
-- `knowledge/`：业务知识与设计准则
-- `.claude/skills/`：Skill 定义
-- `_shared/`：跨 Skill 协调层
-- `spark-output/`：正式输出层
-- `packages/experience_preview/`：HTML 预览参考实现
-- `docs/`：文档与讨论记录
+## `spark-output/` 的作用
 
-## 使用方式
+`spark-output/` 是正式产物出口，当前主要包括：
 
-不再通过 CLI 命令、工程主线或 `python -m packages` 运行正式主链路。
+- `uxb_output.md`：需求定案文档
+- `experience_blueprint.md`：体验蓝图文档
+- `context/`：结构化 JSON，上下游 Skill 用它来衔接
+- `preview/`：预览结果
 
-正式使用方式是：
+其中 `spark-output/context/*.json` 还承担流程状态作用：哪些 Skill 已完成，系统就按这里的 JSON 来判断。
 
-1. 触发 `uxb`
-2. 完成 Step 1 与 Step 2 分析对齐
-3. 生成 `spark-output/uxb_output.md` 与 `spark-output/context/uxb.json`
-4. 触发 `experience-blueprint`
-5. 生成体验蓝图文档、context JSON 和 HTML 预览
+## 其他目录说明
 
-## 说明
+- `knowledge/`
+  项目根目录下的历史知识库，目前仍保留，但主消费能力已收敛到 Skill 体系内。
+- `docs/`
+  讨论文档、执行文档和历史记录。
+- `input/`、`projects/`、`tools/`
+  作为补充材料、历史资产或辅助目录保留，不是当前主流程的核心协调层。
 
-- 正式主链路不再依赖 `specs/`
-- 正式主链路不再依赖 `templates/`
-- 正式主链路不再依赖 `gate / validate / coverage`
-- 仓库中保留的 `packages/experience_preview/` 仅作为预览实现参考
+## 一句话总结
+
+这个项目本质上是一套以 Skill 为核心、以 `_shared` 为协同规则、以 `spark-output` 为结果出口的轻量智能工作流。

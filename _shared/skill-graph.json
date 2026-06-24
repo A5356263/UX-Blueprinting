@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。详见 _shared/ready-determination.md 第 3 节。",
+  "version": "1.1.0",
+  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。就绪判定算法与交接话术模板见 _shared/next-skill.md。",
   "skills": [
     {
       "id": "uxb",
@@ -25,6 +25,63 @@
       ],
       "required": [
         "uxb"
+      ],
+      "next_hint": {
+        "preferred": [
+          "edge",
+          "board"
+        ],
+        "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向",
+        "alternatives": [
+          "check"
+        ]
+      }
+    },
+    {
+      "id": "edge",
+      "name_zh": "异常态",
+      "phase": 2.5,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [
+          "check"
+        ],
+        "reason": "异常态补充完成后，建议进入设计走查，检查整体完整性和一致性",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "check",
+      "name_zh": "设计走查",
+      "phase": 3,
+      "reads": [
+        "uxb",
+        "experience-blueprint",
+        "edge"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "当前链路终端，无下游 Skill",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "board",
+      "name_zh": "视觉情绪板",
+      "phase": 3,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
       ],
       "next_hint": {
         "preferred": [],

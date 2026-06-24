@@ -309,7 +309,7 @@ ASCII 框图只允许出现在这一章的“页面结构”部分。
 
 ## Context JSON 写入
 
-文档生成并自检通过后，按 `_shared/context-schema.md` 规范写入 `spark-output/context/experience-blueprint.json`。
+文档生成并自检通过后，按下方字段列表写入 `spark-output/context/experience-blueprint.json`。
 
 写入字段包括：
 
@@ -331,11 +331,11 @@ ASCII 框图只允许出现在这一章的“页面结构”部分。
 
 ## 交接
 
-体验蓝图是当前链路终端。完成后：
+当前是否为链路终端，以 `_shared/skill-graph.json` 为准。完成后：
 
-1. 读取 `_shared/handoff.md` 模板
+1. 读取 `_shared/next-skill.md` 交接话术模板
 2. 读取 `_shared/skill-graph.json` 中 id 为 `experience-blueprint` 的 `next_hint`
-3. 确认 `next_hint.preferred` 为空后，输出终端节点交接话术
+3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术
 
 ## HTML 预览
 

@@ -499,7 +499,7 @@ UXB 的正常顺序固定为：
 
 ## Context JSON 写入
 
-文档生成并自检通过后，按 `_shared/context-schema.md` 规范写入 `spark-output/context/uxb.json`。
+文档生成并自检通过后，按下方字段列表写入 `spark-output/context/uxb.json`。
 
 写入字段包括：
 
@@ -526,7 +526,7 @@ UXB 的正常顺序固定为：
 
 完成后：
 
-1. 读取 `_shared/handoff.md` 模板
+1. 读取 `_shared/next-skill.md` 交接话术模板
 2. 读取 `_shared/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
 3. 按模板输出交接话术
 4. 如果分析过程中产生了可复用知识变化（按 `references/knowledge_candidate_guide.md` 判断），在交接话术末尾附加：
