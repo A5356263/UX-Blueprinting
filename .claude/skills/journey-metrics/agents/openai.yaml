@@ -1,0 +1,7 @@
+interface:
+  display_name: "Journey Metrics"
+  short_description: "Build and validate journey tracking docs"
+  default_prompt: "Use $journey-metrics to generate journey metrics artifacts for this UXB project and validate the outputs."
+
+policy:
+  allow_implicit_invocation: true

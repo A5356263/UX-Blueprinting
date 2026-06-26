@@ -29,12 +29,29 @@
       "next_hint": {
         "preferred": [
           "edge",
-          "board"
+          "board",
+          "journey-metrics"
         ],
         "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向",
         "alternatives": [
           "check"
         ]
+      }
+    },
+    {
+      "id": "page-spec",
+      "name_zh": "页面规格提取",
+      "phase": 2.5,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "页面规格提取完成后，可进入页面设计 Skill 生成 HTML 原型。当前 design skill 尚未接入管线。",
+        "alternatives": []
       }
     },
     {
@@ -112,6 +129,22 @@
           "uxb"
         ],
         "reason": "产品分析完成后，回到需求定案继续分析",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "journey-metrics",
+      "name_zh": "旅程埋点与度量需求",
+      "phase": 2.5,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "journey-metrics 产出旅程节点、埋点需求和异常/中断追踪口径后，当前登记图谱未包含客观数据分析等下游 Skill。如需继续，可进入客观数据分析或主观反馈分析",
         "alternatives": []
       }
     }
