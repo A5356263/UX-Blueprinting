@@ -133,6 +133,19 @@
       }
     },
     {
+      "id": "design-strategy",
+      "name_zh": "设计策略生成",
+      "phase": null,
+      "_comment": "独立 Skill，不依赖也不被其他 Skill 依赖。默认从 spark-output/ 读取 HTML 原型作为材料入口，产出策略报告写入 spark-output/。上下游关系待后续 Skill 丰富后再定义。",
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "独立 Skill，当前无下游。后续可与 uxb / experience-blueprint 等建立关系",
+        "alternatives": []
+      }
+    },
+    {
       "id": "journey-metrics",
       "name_zh": "旅程埋点与度量需求",
       "phase": 2.5,
