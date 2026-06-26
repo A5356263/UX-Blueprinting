@@ -5,7 +5,7 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 
 # Experience Blueprint
 
-这个 skill 负责读取 UXB 的正式需求定案产出，并把它展开为完整的交互设计方案和 HTML 预览。
+这个 skill 负责读取 UXB 的正式需求定案产出，并把它展开为完整的交互设计方案。默认先输出 Markdown 与 context JSON；HTML 预览改为用户确认后再继续生成。
 
 ## 角色定义
 
@@ -106,6 +106,9 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 
 - `spark-output/experience_blueprint.md`
 - `spark-output/context/experience-blueprint.json`
+
+默认不自动输出：
+
 - `spark-output/preview/experience_blueprint_preview.html`
 
 必须包含以下 9 个正文章节和 1 个附录部分：
@@ -340,6 +343,14 @@ ASCII 框图只允许出现在这一章的“页面结构”部分。
 ## HTML 预览
 
 体验蓝图基于骨架模板生成自包含 HTML 预览文件。
+
+默认策略：
+
+- 先完成 `experience_blueprint.md`
+- 先完成 `spark-output/context/experience-blueprint.json`
+- 完成后停止，不自动继续输出 HTML 预览
+- 向用户提示：`体验蓝图 Markdown 已生成。如需继续生成 HTML 预览，请明确确认。`
+- 仅在用户明确确认后，才继续执行本节的 HTML 预览生成流程
 
 核心原则：AI 填数据，不搭结构。
 
