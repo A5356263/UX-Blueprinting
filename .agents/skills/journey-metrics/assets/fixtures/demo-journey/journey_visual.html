@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可视化用户旅程 - demo-journey</title>
+<style>
+:root { --bg: #fff; --text: #1a1a1a; --confirmed: #16a34a; --inferred: #94a3b8; }
+body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg); padding: 24px; }
+.role-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.role-tab { padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 8px; cursor: pointer; background: #f5f5f5; font-size: 14px; }
+.role-tab.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.node { display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 8px; margin: 4px; font-size: 13px; position: relative; cursor: pointer; }
+.node.confirmed { border: 2px solid var(--confirmed); background: #f0fdf4; }
+.node.inferred { border: 2px dashed var(--inferred); background: #f8fafc; }
+.arrow { margin: 0 8px; font-size: 18px; color: #666; }
+.path { display: flex; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+.tooltip { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 10; }
+.node:hover .tooltip { display: block; }
+.legend { margin-top: 32px; padding: 16px; background: #f9fafb; border-radius: 8px; font-size: 13px; }
+</style>
+</head>
+<body>
+<h2>可视化用户旅程</h2>
+<p style="color:#666;margin-bottom:16px;">输入优先级：第 2 层 | 补全策略：背景描述场景提取</p>
+
+<div class="role-tabs">
+  <button class="role-tab active" onclick="switchRole('employee')">员工</button>
+  <button class="role-tab" onclick="switchRole('admin')">管理员</button>
+</div>
+
+<div id="role-employee" class="role-content">
+  <h3>员工旅程</h3>
+  <div class="path">
+    <div class="node inferred">进入申请页<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node inferred">填写申请信息<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node inferred">提交申请<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node inferred">查看状态<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node confirmed">查看驳回原因<span class="tooltip">[confirmed] 需求文档明确</span></div>
+    <span class="arrow">→</span>
+    <div class="node confirmed">重新编辑<span class="tooltip">[confirmed] 需求文档明确</span></div>
+    <span class="arrow">→</span>
+    <div class="node inferred">再次提交<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+  </div>
+</div>
+
+<div id="role-admin" class="role-content" style="display:none;">
+  <h3>管理员旅程</h3>
+  <div class="path">
+    <div class="node inferred">进入审批列表<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node inferred">查看待审批<span class="tooltip">[inferred] 推断补全，待确认</span></div>
+    <span class="arrow">→</span>
+    <div class="node confirmed">选择驳回原因<span class="tooltip">[confirmed] 需求文档明确</span></div>
+    <span class="arrow">→</span>
+    <div class="node confirmed">填写补充说明<span class="tooltip">[confirmed] 需求文档明确</span></div>
+    <span class="arrow">→</span>
+    <div class="node confirmed">确认驳回<span class="tooltip">[confirmed] 需求文档明确</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <strong>图例：</strong>
+  <span style="display:inline-block;width:12px;height:12px;border:2px solid #16a34a;background:#f0fdf4;border-radius:2px;margin:0 4px 0 16px;"></span> confirmed（需求明确）
+  <span style="display:inline-block;width:12px;height:12px;border:2px dashed #94a3b8;background:#f8fafc;border-radius:2px;margin:0 4px 0 16px;"></span> inferred（推断补全）
+</div>
+
+<script>
+function switchRole(role) {
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.role-content').forEach(c => c.style.display = 'none');
+  document.querySelector('[onclick="switchRole(\''+role+'\')"]').classList.add('active');
+  document.getElementById('role-'+role).style.display = 'block';
+}
+</script>
+</body>
+</html>

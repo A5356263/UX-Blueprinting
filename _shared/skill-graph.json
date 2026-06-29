@@ -28,6 +28,7 @@
       ],
       "next_hint": {
         "preferred": [
+          "page-spec",
           "edge",
           "board",
           "journey-metrics"
