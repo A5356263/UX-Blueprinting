@@ -17,6 +17,32 @@
 
 `summary` 只负责路由，不负责承载深度信息。
 
+## 1.1 Summary 发现规则
+
+当前 `knowledge-wiki` 的 `summary` 层通过固定目录结构发现，不通过 `summary*.md` 这类命名猜测发现。
+
+固定规则：
+
+1. `summary` 层位于 `knowledge-wiki/knowledge/wiki/summaries/...`
+2. `wiki/summaries/.../README.md` 是 `summary` 层的路由说明
+3. `raw/.../README.md` 是 `raw` 层入口说明，不可替代 `summary`
+4. 读取编号知识时，优先按“同领域、同编号”的方式从 `summary` 对应到 `raw`
+
+例如：
+
+```text
+先命中 yewu/shenpi-guanli
+→ 先读 wiki/summaries/yewu/shenpi-guanli/README.md
+→ 再读 wiki/summaries/yewu/shenpi-guanli/10_shenpi-guanli.md
+→ 再读 raw/yewu/shenpi-guanli/10_shenpi-guanli.md
+```
+
+禁止：
+
+- 不得用 `summary*.md` 之类的猜测式搜索来判断 `summary` 是否存在
+- 不得因为没搜到 `summary*.md` 就回退成“直接广读 raw”
+- 不得把 `raw/.../README.md` 当作 `summary` 层替代品
+
 ### 1.1 Summary 的职责
 
 summary 只用来做三件事：
@@ -24,6 +50,11 @@ summary 只用来做三件事：
 - 帮助确认命中了哪个知识域
 - 帮助确认下一步该读哪份 raw
 - 帮助快速判断这份 raw 和当前体验设计的关系
+
+在当前知识结构下，`README.md` 也要分层理解：
+
+- `wiki/summaries/.../README.md`：帮助命中领域与编号段
+- `raw/.../README.md`：帮助理解 raw 层入口说明与边界
 
 不允许把 summary 当作可以停留的深度信息层。
 

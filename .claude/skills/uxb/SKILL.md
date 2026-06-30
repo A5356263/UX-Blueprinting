@@ -191,6 +191,8 @@ UXB 的正常顺序固定为：
 
 `summary` 是路由层，不是停留层。
 
+这里的 `summary` 不是文件名前缀规则，而是 `knowledge-wiki/knowledge/wiki/summaries/...` 下的正式路由层。不得用 `summary*.md` 之类的猜测式搜索来判断 `summary` 是否存在，也不得把 `raw/.../README.md` 当作 `summary` 层替代品。
+
 读取完成后，必须能说明这些知识支撑了什么判断；如果知识不足以支撑，不得把推断写成已确认结论。
 
 如果用户提供的是复杂需求、文档、截图或多段背景，进入 `Step 1` 前建议先给一段轻量知识消费回执：
@@ -211,6 +213,8 @@ UXB 的正常顺序固定为：
 → 再读对应设计 raw
 → 再进入 Step 2 收敛
 ```
+
+设计知识同样先从 `knowledge-wiki/knowledge/wiki/summaries/design-guidelines/...` 命中，再读对应 `raw`。
 
 ## Step 1
 

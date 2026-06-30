@@ -29,6 +29,37 @@
 
 `summary` 是路由层，不是停留层。
 
+## Summary 发现规则
+
+当前 `knowledge-wiki` 的 `summary` 层不是通过文件名前缀发现，而是通过固定结构发现：
+
+1. 业务知识的 `summary` 位于 `knowledge-wiki/knowledge/wiki/summaries/...`
+2. 设计知识的 `summary` 也位于 `knowledge-wiki/knowledge/wiki/summaries/...`
+3. `wiki/summaries/.../README.md` 属于 `summary` 层的域路由说明
+4. `raw/.../README.md` 属于 `raw` 层的入口说明，不可替代 `summary`
+
+编号对应规则固定为：
+
+1. 先命中领域
+2. 先读该领域的 `wiki/summaries/.../README.md`
+3. 再读命中的编号 `summary`
+4. 再读同编号 `raw`
+
+例如：
+
+```text
+先命中 yewu/quanxian-guanli
+→ 先读 wiki/summaries/yewu/quanxian-guanli/README.md
+→ 再读 wiki/summaries/yewu/quanxian-guanli/10_nengli-ditu.md
+→ 再读 raw/yewu/quanxian-guanli/10_nengli-ditu.md
+```
+
+禁止：
+
+1. 不得用 `summary*.md` 这类猜测式 glob 判断 `summary` 是否存在
+2. 不得因为没搜到 `summary*.md` 就认定 `knowledge-wiki` 没有 `summary`
+3. 不得把 `raw/.../README.md` 直接当作 `summary` 层替代品
+
 ## 什么时候触发
 
 只要进入下面任一场景，就按这条协议读知识：
@@ -77,7 +108,7 @@ Step 2 默认复用 Step 1 已读过的业务知识，不从零重读。
 默认顺序固定为：
 
 1. 先使用 `knowledge-wiki` 命中当前最相关的知识领域
-2. 找到最相关的 `summary`
+2. 先找到该领域在 `wiki/summaries/...` 下的路由 README 与最相关 `summary`
 3. 读这个 `summary`
 4. 继续读它对应的 `raw`
 5. 再进入 `Step 1` 或后续分析
