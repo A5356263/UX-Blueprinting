@@ -18,7 +18,7 @@
     },
     {
       "id": "experience-blueprint",
-      "name_zh": "体验蓝图",
+      "name_zh": "体验策略",
       "phase": 2,
       "reads": [
         "uxb"
@@ -41,7 +41,7 @@
     },
     {
       "id": "page-spec",
-      "name_zh": "页面规格提取",
+      "name_zh": "设计文档",
       "phase": 2.5,
       "reads": [
         "experience-blueprint"
@@ -93,7 +93,7 @@
     },
     {
       "id": "board",
-      "name_zh": "视觉情绪板",
+      "name_zh": "视觉风格",
       "phase": 3,
       "reads": [
         "experience-blueprint"
@@ -109,7 +109,7 @@
     },
     {
       "id": "knowledge-wiki",
-      "name_zh": "业务知识库",
+      "name_zh": "知识库",
       "type": "infrastructure",
       "reads": [],
       "required": [],

@@ -23,7 +23,7 @@
 
 固定规则：
 
-1. `summary` 层位于 `knowledge-wiki/knowledge/wiki/summaries/...`
+1. `summary` 层位于 `knowledge-wiki` skill 内的 `knowledge/wiki/summaries/...`
 2. `wiki/summaries/.../README.md` 是 `summary` 层的路由说明
 3. `raw/.../README.md` 是 `raw` 层入口说明，不可替代 `summary`
 4. 读取编号知识时，优先按“同领域、同编号”的方式从 `summary` 对应到 `raw`

@@ -1,6 +1,6 @@
 ---
 name: uxb
-description: UXB serves as a business-and-experience consulting skill, task-shaping entrypoint, and requirements-finalization skill. Use it when the user wants to discuss a product or workflow problem, review a requirement, assess UX direction, shape a UXB task, or generate the formal UXB requirements output for the experience-blueprint skill.
+description: 需求定案 Skill。读取用户提供的需求材料或问题背景，输出正式需求定案文档与结构化上下文，在需要做需求分析、体验诊断或生成上游定案产出时触发。
 ---
 
 # UXB
@@ -14,13 +14,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 在用户明确确认后，生成正式需求定案文档
 - 作为体验蓝图的上游交付者
 
-不要把它用成：
-
-- 仓库维护指南
-- `specs/` 规则代言人
-- `packages/` 执行实现说明书
-- 工程主线入口
-- 让用户自己选内部模式的路由器
+UXB 只负责需求定案与上游分析，不承担仓库维护、工程实现说明或内部模式路由。
 
 ## 总原则
 
@@ -146,8 +140,8 @@ UXB 的正常顺序固定为：
 → 跳过收敛
 → 直接任务摘要
 → 直接预设输出目录并跳过确认
-→ 直接写 formal inputs / route_decision
-→ 进入工程主线
+→ 直接写内部决策结果
+→ 进入工程实现主线
 ```
 
 ## 先读什么
@@ -191,7 +185,7 @@ UXB 的正常顺序固定为：
 
 `summary` 是路由层，不是停留层。
 
-这里的 `summary` 不是文件名前缀规则，而是 `knowledge-wiki/knowledge/wiki/summaries/...` 下的正式路由层。不得用 `summary*.md` 之类的猜测式搜索来判断 `summary` 是否存在，也不得把 `raw/.../README.md` 当作 `summary` 层替代品。
+这里的 `summary` 不是文件名前缀规则，而是 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/...` 下的正式路由层。不得用 `summary*.md` 之类的猜测式搜索来判断 `summary` 是否存在，也不得把 `raw/.../README.md` 当作 `summary` 层替代品。
 
 读取完成后，必须能说明这些知识支撑了什么判断；如果知识不足以支撑，不得把推断写成已确认结论。
 
@@ -214,7 +208,7 @@ UXB 的正常顺序固定为：
 → 再进入 Step 2 收敛
 ```
 
-设计知识同样先从 `knowledge-wiki/knowledge/wiki/summaries/design-guidelines/...` 命中，再读对应 `raw`。
+设计知识同样先从 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/design-guidelines/...` 命中，再读对应 `raw`。
 
 ## Step 1
 
@@ -559,8 +553,5 @@ UXB 的正常顺序固定为：
 - 不让工程护栏接管语义判断
 - 不直接写知识候选文件
 - 不直接写入知识库
-- 不负责候选模板套用、入库落点判断和 wiki 刷新
 - 不创建项目目录
-- 不写 formal inputs
-- 不生成 route decision
-- 不进入 `packages/` 主线
+- 不直接写知识候选或正式知识库

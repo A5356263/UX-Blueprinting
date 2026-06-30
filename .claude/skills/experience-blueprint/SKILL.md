@@ -1,6 +1,6 @@
 ---
 name: experience-blueprint
-description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整的体验设计方案（含旅程图、交互流程、页面设计、状态文案）。当 UXB 需求定案完成后，需要进入交互设计阶段时触发。
+description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整的体验设计方案（含旅程图、交互流程、页面设计、状态文案），在需求定案完成后需要进入交互设计阶段时触发。
 ---
 
 # Experience Blueprint
@@ -66,11 +66,11 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 
 `summary` 是路由层，不是停留层。
 
-这里的 `summary` 固定指 `knowledge-wiki/knowledge/wiki/summaries/...` 下的正式路由层，不按 `summary*.md` 命名猜测发现；`raw/.../README.md` 也不能替代 `summary` 层。
+这里的 `summary` 固定指 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/...` 下的正式路由层，不按 `summary*.md` 命名猜测发现；`raw/.../README.md` 也不能替代 `summary` 层。
 
 强制步骤：
 
-1. 扫描 `knowledge-wiki/knowledge/wiki/summaries/...` 中当前可用的 summary，并优先读取命中领域的 `README.md`
+1. 扫描 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/...` 中当前可用的 summary，并优先读取命中领域的 `README.md`
 2. 结合 UXB 产出，判断哪些知识与当前体验设计相关
 3. 对判断为“相关”的条目，先读 summary，再继续读该 summary 对应的 raw
 4. 将提取出的体验策略写入 `§9` 附录，并在正文中落到真实章节或节点

@@ -1,6 +1,6 @@
 ---
 name: journey-metrics
-description: "Generate, validate, and help migrate UXB journey-metrics artifacts: visual user journeys, journey tracking requirement docs, error/exception/interruption tracking docs, and preview integration contracts. Use when the user asks to create or update visual journey maps, tracking/analytics requirement documents, journey_metrics outputs, a journey-metrics capability package, or to port this capability into another UXB project."
+description: "旅程埋点与度量需求 Skill。读取体验策略或相关旅程材料，输出旅程图、埋点需求、异常追踪需求和预览集成约定，在需要生成或迁移旅程度量产物时触发。"
 ---
 
 # Journey Metrics

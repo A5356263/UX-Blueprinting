@@ -1,6 +1,6 @@
 ---
 name: knowledge-wiki
-description: Portable knowledge wiki skill. Use it for knowledge lookup, knowledge candidate creation, knowledge ingestion, and current-state maintenance. It answers only from the embedded knowledge base and does not perform requirement analysis, UX diagnosis, or solution judgment.
+description: 知识库 Skill。读取内嵌知识库，执行知识查询、知识候选生成、知识入库和现状维护，只回答知识内容本身，不负责需求分析、体验诊断或方案判断。
 ---
 
 # knowledge-wiki

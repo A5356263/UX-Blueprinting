@@ -1,6 +1,6 @@
 ---
 name: product-analysis
-description: Use when UXB has judged that the current requirement direction is not yet valid for blueprint analysis and the user needs product analysis, problem reframing, or controlled solution divergence before returning to UXB.
+description: 产品分析 Skill。读取当前需求材料，输出问题重构、产品判断或方案发散结论，在 UXB 判断当前需求方向暂不适合直接进入体验策略时触发。
 ---
 
 # Product Analysis

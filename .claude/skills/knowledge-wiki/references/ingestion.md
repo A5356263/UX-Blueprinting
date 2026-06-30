@@ -6,7 +6,7 @@
 
 - `.claude/skills/knowledge-ingestion` 继续保留
 - `knowledge-wiki` 只复刻其能力，不替换旧 skill
-- 本文件约束的是 `knowledge-wiki/knowledge/` 下的入库行为
+- 本文件约束的是当前 `knowledge-wiki` skill 内 `knowledge/` 下的入库行为
 
 ## 核心规则
 

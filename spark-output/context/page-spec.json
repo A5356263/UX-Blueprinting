@@ -1,0 +1,29 @@
+{
+  "skill": "page-spec",
+  "version": "1.0",
+  "generated_at": "2026-06-30T19:35:00+08:00",
+  "project_name": "子管理员权限复制",
+  "entities": [
+    {
+      "name": "子管理员列表页",
+      "type": "承载页面",
+      "role": "实体0-父页面"
+    },
+    {
+      "name": "复制弹窗",
+      "type": "弹窗",
+      "role": "实体1-主实体"
+    },
+    {
+      "name": "复制结果摘要",
+      "type": "全局提示区",
+      "role": "结果反馈"
+    }
+  ],
+  "extraction_summary": {
+    "entities_count": 3,
+    "states_count": 7,
+    "copy_count": 30,
+    "exceptions_count": 7
+  }
+}

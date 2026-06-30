@@ -33,8 +33,8 @@
 
 当前 `knowledge-wiki` 的 `summary` 层不是通过文件名前缀发现，而是通过固定结构发现：
 
-1. 业务知识的 `summary` 位于 `knowledge-wiki/knowledge/wiki/summaries/...`
-2. 设计知识的 `summary` 也位于 `knowledge-wiki/knowledge/wiki/summaries/...`
+1. 业务知识的 `summary` 位于 `knowledge-wiki` skill 内的 `knowledge/wiki/summaries/...`
+2. 设计知识的 `summary` 也位于 `knowledge-wiki` skill 内的 `knowledge/wiki/summaries/...`
 3. `wiki/summaries/.../README.md` 属于 `summary` 层的域路由说明
 4. `raw/.../README.md` 属于 `raw` 层的入口说明，不可替代 `summary`
 

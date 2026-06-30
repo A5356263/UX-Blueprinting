@@ -1,6 +1,6 @@
 ---
 name: page-spec
-description: 页面规格提取 Skill。读取体验蓝图产出，提取仅用于页面生成的结构化信息（页面结构、交互流程、状态、文案、异常处理），输出零叙事的干净页面规格 MD。
+description: 设计文档 Skill。读取体验策略产出，提取仅用于页面生成的结构化信息（页面结构、交互流程、状态、文案、异常处理），输出零叙事的页面规格文档。
 ---
 
 # Page Spec
@@ -56,7 +56,7 @@ Page Spec 不负责：
 
 `summary` 的发现规则固定为：
 
-1. 从 `knowledge-wiki/knowledge/wiki/summaries/...` 进入
+1. 从 `knowledge-wiki` skill 内的 `knowledge/wiki/summaries/...` 进入
 2. 先读命中领域的 `README.md`
 3. 再读对应编号 `summary`
 4. 再读同编号 `raw`
