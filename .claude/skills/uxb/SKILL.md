@@ -48,14 +48,14 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 
 - 只要当前上下文中已经有足够需求信息，就直接进入 UXB
 - 只有当当前上下文里尚未形成可分析输入时，才询问用户补充需求信息
-- `input/` 可以作为一种历史存档来源出现，但不享有任何默认优先级
+- 不得把任何用户私有临时目录当作默认来源
 
 禁止：
 
 - 不得假设某一种来源是标准来源
-- 不得假设需求文件一定在 `input/` 下
-- 不得在没有用户指向的情况下自行去 `input/` 目录找文件
-- 不得因为缺少 `input/` 目录而报错或停止
+- 不得假设需求文件一定在某个固定目录下
+- 不得在没有用户指向的情况下自行扫描工作区目录找文件
+- 不得因为缺少某个目录而报错或停止
 - 不得为了执行 UXB，先把对话内容落盘到某个目录再读回
 
 ## 项目名确定
@@ -91,6 +91,7 @@ description: UXB serves as a business-and-experience consulting skill, task-shap
 - 不扩写
 - 不追加流程说明
 - 不在这一步主动进入 `Step 1`
+- 用户只输入 `/uxb` 时，只做固定激活并等待用户继续提供信息，不根据工作区现有文件自行确定任务范围
 - 用户已经直接给出具体问题时，不先重复这段
 
 ## 固定状态顺序
@@ -144,7 +145,7 @@ UXB 的正常顺序固定为：
 看完需求直接分析
 → 跳过收敛
 → 直接任务摘要
-→ 直接创建项目目录
+→ 直接预设输出目录并跳过确认
 → 直接写 formal inputs / route_decision
 → 进入工程主线
 ```
@@ -369,6 +370,10 @@ UXB 的正常顺序固定为：
 
 - `spark-output/uxb_output.md`
 - `spark-output/context/uxb.json`
+
+输出规则补充：
+
+- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
 
 ### 统一文档结构（`uxb_output.md`）
 

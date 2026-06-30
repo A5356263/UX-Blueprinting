@@ -43,7 +43,7 @@ description: Portable knowledge wiki skill. Use it for knowledge lookup, knowled
 1. 知识问答
    先读 `knowledge/wiki/index.md`，优先命中 `summary`，必要时再回查 `raw`。
 2. 生成知识候选
-   在用户明确要求记录或同意沉淀时，写入 `knowledge/candidates/未入库/`。
+   在用户明确要求记录或同意沉淀时，写入 `knowledge/candidates/pending/`。
 3. 知识入库
    先更新 `raw`，再刷新 `wiki`，不把过程记录写成正式知识。
 4. 知识维护

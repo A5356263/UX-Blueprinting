@@ -1,0 +1,18 @@
+# 日常报销
+
+- source_path: knowledge/raw/yewu/feiyong-guanli/richang-baoxiao/README.md
+- domain: 日常报销
+- summary_role: light_route_card
+- updated_at: 2026-05-28
+
+## 定位
+这是一份日常报销子域的目录索引说明，用来回答"日常报销子域沉淀什么知识、对应帮助中心哪个模块"。
+
+## 触发信号
+- 当任务需要确认日常报销子域的模块归属时读取。
+
+## 稳定结论
+- 日常报销子域的知识范围严格对应帮助中心"费用管理 > 日常报销"模块。
+
+## 已知缺口
+- 暂无

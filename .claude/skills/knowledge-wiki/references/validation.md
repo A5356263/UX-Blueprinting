@@ -20,8 +20,8 @@ python knowledge/scripts/update_wiki.py --apply --only <raw-file-path>
 
 ### 落点
 
-- 业务事实是否在 `knowledge/raw/业务/`
-- 设计规则是否在 `knowledge/raw/设计准则/`
+- 业务事实是否在 `knowledge/raw/yewu/`
+- 设计规则是否在 `knowledge/raw/design-guidelines/`
 - 归属不清内容是否在 `knowledge/raw/inbox/`
 - FAQ 是否落在 `50_常见问题.md` 或明确关联的 FAQ 文件
 - 过程残留是否没有混进正式知识

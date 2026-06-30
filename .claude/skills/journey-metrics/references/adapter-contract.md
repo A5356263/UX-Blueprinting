@@ -11,7 +11,7 @@ The host project must expose or map:
 | Requirement source | `projects/<id>/source/requirement.md` | Locate or provide requirement text. |
 | Scenario background | `projects/<id>/source/background.md` | Optional; locate or provide background text. |
 | Experience blueprint | `projects/<id>/workspace/experience_blueprint.md` | Optional; locate or provide prior journey skeleton. |
-| Tracking method | `knowledge-root/raw/业务/埋点统一方法.md` | Provide equivalent API/parameter rules. |
+| Tracking method | `knowledge-wiki` 中与埋点方法相关的知识 | Provide equivalent API/parameter rules. |
 | Output directory | `projects/<id>/workspace/journey_metrics/` | Create and preserve generated files. |
 
 ## CLI Adapter

@@ -29,7 +29,7 @@ Prefer inputs in this order:
 2. `source/background.md`: derive a role/path skeleton from scenario background.
 3. `source/requirement.md`: derive a minimal journey and mark inferred context explicitly.
 
-Also read the host project's tracking method document when available. In this UXB repository, prefer `tracking_spec.md` when it exists because it contains the fuller local specification; otherwise fall back to `knowledge-root/raw/业务/埋点统一方法.md`. If a host project lacks both, ask for or infer a local tracking method document before finalizing parameter and API details.
+Also read the host project's tracking method document when available. In this UXB repository, prefer `tracking_spec.md` when it exists because it contains the fuller local specification; otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and read it in `summary -> raw` order. If a host project lacks both, ask for or infer a local tracking method document before finalizing parameter and API details.
 
 ## Outputs
 

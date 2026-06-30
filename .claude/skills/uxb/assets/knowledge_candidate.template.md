@@ -20,7 +20,7 @@
 - 已知命中文件：
   - {{已知可能受影响的 raw 或 summary 文件，可为空}}
 - 建议更新位置：
-  - {{knowledge/raw/** 或 knowledge/raw/inbox/**，可多项}}
+  - {{建议在 knowledge-wiki 中更新的领域 / 编号段 / 知识类型，可多项}}
 
 ## 4. 不确定点
 

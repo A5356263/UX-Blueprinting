@@ -34,6 +34,8 @@ Board 不负责：
 3. 读取 `spark-output/experience_blueprint.md`
 4. 如存在，读取知识库中与现有设计规范、品牌约束、视觉准则相关的内容
 
+这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
+
 降级规则：
 
 - 只要有体验蓝图产出，就可以按链式模式执行
@@ -99,6 +101,10 @@ Board 不依赖外部情绪映射文件，固定使用以下轻量映射：
 
 - `spark-output/board_output.md`
 - `spark-output/context/board.json`
+
+输出规则补充：
+
+- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
 
 `board.json` 至少包含：
 

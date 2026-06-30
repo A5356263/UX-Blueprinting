@@ -1,7 +1,7 @@
 # 旅程埋点需求文档
 
 > 本模板定义 `journey_tracking_spec.md` 的输出结构。
-> 埋点方法优先遵循项目根目录 `tracking_spec.md`；若不存在再参考 `knowledge-root/raw/业务/埋点统一方法.md`。
+> 埋点方法优先遵循项目根目录 `tracking_spec.md`；若不存在，再通过 `knowledge-wiki` 命中相关埋点方法知识，并按 `summary -> raw` 顺序消费。
 > 旅程节点使用 `x-track-taskname` 属性（Button）或 `tasknodeName` 手动埋点，taskName 建议格式 `{DOMAIN}_{MODULE}_{ACTION}`。
 > 每个事件标注"来源"属性：confirmed / inferred / conflict。参数取值来源必须明确，不得使用 `待定`、`TBD` 等占位符。
 > 基础信息（企业信息、页面信息、任务上下文）由系统自动携带，不在此文档中列出。
@@ -90,7 +90,7 @@
 | **来源** | `[confirmed]` / `[inferred]` / `[conflict]` |
 
 <!-- 当来源为 conflict 时，追加冲突说明：-->
-<!-- **冲突说明**：<冲突描述，引用 knowledge-root/raw/ 路径> -->
+<!-- **冲突说明**：<冲突描述，引用 knowledge-wiki 中命中的相关知识> -->
 
 **必传参数：**
 
@@ -220,7 +220,7 @@ window.UX.endUserTask();
 <!-- 仅当检测到需求与知识库冲突时填写，无冲突可删除此章节 -->
 
 1. **<冲突标题>**
-   - **知识库规则**：<规则内容>（来源：`knowledge-root/raw/业务/<path>.md`）
+   - **知识库规则**：<规则内容>（来源：`knowledge-wiki` 命中的相关知识）
    - **需求文档主张**：<主张内容>
    - **影响节点**：<Nx, Ny>
    - **影响 taskNodeName**：<taskNodeName_1, taskNodeName_2>

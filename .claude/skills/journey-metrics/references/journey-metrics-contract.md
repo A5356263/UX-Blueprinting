@@ -36,7 +36,7 @@ Keep conflict scope narrow. If only a field limit, parameter value, copy rule, o
 
 ## Tracking API Contract
 
-When a host project has `tracking_spec.md`, use it as the highest-priority local tracking specification. Otherwise use the host's tracking method document, such as `knowledge-root/raw/业务/埋点统一方法.md`.
+When a host project has `tracking_spec.md`, use it as the highest-priority local tracking specification. Otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and consume it in `summary -> raw` order.
 
 User journey rules:
 

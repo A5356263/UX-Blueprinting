@@ -34,6 +34,8 @@ Edge 不负责：
 3. 读取 `spark-output/experience_blueprint.md`
 4. 如有需要，补读 `knowledge-wiki` 中与反馈、报错、异常态相关的知识
 
+这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
+
 降级规则：
 
 - 如果存在 `experience-blueprint.json`，优先用 JSON 提取页面、流程、状态和异常线索
@@ -105,6 +107,10 @@ Edge 不负责：
 
 - `spark-output/edge_output.md`
 - `spark-output/context/edge.json`
+
+输出规则补充：
+
+- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
 
 `edge.json` 至少包含：
 

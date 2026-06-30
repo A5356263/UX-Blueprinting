@@ -37,6 +37,8 @@ Check 不负责：
 6. 如存在，再读取 `spark-output/context/edge.json`
 7. 如有需要，补读 `knowledge-wiki` 中相关设计准则
 
+这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
+
 降级规则：
 
 - 只要有 `experience-blueprint` 产出，就可以执行
@@ -118,6 +120,10 @@ Check 不负责：
 
 - `spark-output/check_output.md`
 - `spark-output/context/check.json`
+
+输出规则补充：
+
+- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
 
 `check.json` 至少包含：
 

@@ -35,13 +35,15 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 4. 优先读取 `§9` 待确认问题，判断上游定案稳定性
 5. 执行知识补充消费（必须执行，不可跳过）
 
+这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流，不视为历史残留。
+
 降级规则：
 
 - 如果 `uxb.json` 未找到，回退到只读 `uxb_output.md`
 - 如果 `uxb.json` 存在但 `uxb_output.md` 未找到，仅基于 JSON 结构化数据继续执行，在 `§0` 中标注"叙述性分析缺失，仅基于结构化数据推导"
 - 如果 `uxb_output.md` 也未找到（JSON 和 MD 均缺失），输出引导提示后继续执行：
   "未找到 UXB 需求定案产出物。建议先完成 UXB 需求定案，以获得更准确的体验策略。当前将基于可用信息输出体验方案。"
-- 如果 `knowledge-root/` 目录不存在或为空，在 `§9` 附录注明”知识库不可用”，继续后续设计，但不得伪造知识消费结果
+- 如果 `knowledge-wiki` 当前不可用，在 `§9` 附录注明”知识库不可用”，继续后续设计，但不得伪造知识消费结果
 
 双轨读取原因：
 
@@ -66,7 +68,7 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 
 强制步骤：
 
-1. 扫描 `knowledge-root/` 中可用的 summary
+1. 扫描 `knowledge-wiki` 中当前可用的 summary
 2. 结合 UXB 产出，判断哪些知识与当前体验设计相关
 3. 对判断为“相关”的条目，先读 summary，再继续读该 summary 对应的 raw
 4. 将提取出的体验策略写入 `§9` 附录，并在正文中落到真实章节或节点
@@ -110,6 +112,10 @@ description: 体验蓝图 Skill。读取 UXB 需求定案产出，生成完整�
 默认不自动输出：
 
 - `spark-output/preview/experience_blueprint_preview.html`
+
+输出规则补充：
+
+- 如果宿主支持文件系统，先检查并创建 `spark-output/`、`spark-output/context/` 与需要时的 `spark-output/preview/`，再写入产物
 
 必须包含以下 9 个正文章节和 1 个附录部分：
 

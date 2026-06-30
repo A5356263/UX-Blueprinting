@@ -1,6 +1,6 @@
 # 知识使用说明
 
-> **知识基础路径**：本文档中所有 `knowledge-root/` 开头的路径，均指向 `knowledge-wiki` skill 暴露出的知识根目录。
+> **知识消费入口**：本文档中的知识读取，统一指向 `knowledge-wiki` 这个知识 skill，而不是某个固定文件路径或目录别名。
 
 这份说明只负责一件事：
 
@@ -76,7 +76,7 @@ Step 2 默认复用 Step 1 已读过的业务知识，不从零重读。
 
 默认顺序固定为：
 
-1. 从 `knowledge-root/wiki/index.md` 命中领域
+1. 先使用 `knowledge-wiki` 命中当前最相关的知识领域
 2. 找到最相关的 `summary`
 3. 读这个 `summary`
 4. 继续读它对应的 `raw`
@@ -118,12 +118,11 @@ Step 2 默认复用 Step 1 已读过的业务知识，不从零重读。
 
 读取时先分清这些角色：
 
-1. `knowledge-root/wiki/index.md`
-2. `knowledge-root/wiki/summaries/**`
-3. `knowledge-root/raw/业务/<领域>/README.md`
-4. `knowledge-root/raw/业务/<领域>/00_领域概述.md`
-5. 其他具体 `knowledge-root/raw/**`
-6. `knowledge-root/templates/**`：不参与 UXB 正式知识消费
+1. `knowledge-wiki` 的领域路由信息
+2. `knowledge-wiki` 中命中的 `summary`
+3. 对应领域的入口说明、领域概述、规则边界等 `raw`
+4. 与当前判断直接相关的其他 `raw`
+5. `knowledge-wiki` 中的模板内容：不参与 UXB 正式知识消费
 
 ## 在回答里怎么使用知识
 
