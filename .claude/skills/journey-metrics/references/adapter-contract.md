@@ -1,27 +1,24 @@
 # Adapter Contract
 
-Journey-metrics should be portable across UXB versions by isolating host-specific adapters.
+Journey-metrics should be portable across hosts by isolating host-specific adapters.
 
 ## Core Inputs
 
 The host project must expose or map:
 
-| Capability Need | Default UXB Path | Adapter Responsibility |
+| Capability Need | Default Host Material | Adapter Responsibility |
 |---|---|---|
-| Requirement source | `projects/<id>/source/requirement.md` | Locate or provide requirement text. |
-| Scenario background | `projects/<id>/source/background.md` | Optional; locate or provide background text. |
-| Experience blueprint | `projects/<id>/workspace/experience_blueprint.md` | Optional; locate or provide prior journey skeleton. |
+| Requirement source | Requirement materials | Locate or provide requirement text. |
+| Scenario background | Background materials | Optional; locate or provide background text. |
+| Experience blueprint | Experience blueprint materials | Optional; locate or provide prior journey skeleton. |
 | Tracking method | `knowledge-wiki` 中与埋点方法相关的知识 | Provide equivalent API/parameter rules. |
-| Output directory | `projects/<id>/workspace/journey_metrics/` | Create and preserve generated files. |
+| Output directory | Host-agreed `journey_metrics/` output directory | Create and preserve generated files. |
 
 ## CLI Adapter
 
-If the host has a command runner, add commands only after the host registry is understood:
+If the host has a command runner, add host-specific generation commands only after the host registry is understood.
 
-- `generate-journey-metrics <project-id>`: generate only journey-metrics artifacts.
-- `run-journey-metrics <project-id>`: optional convenience command that runs prerequisite UXB stages first.
-
-Do not document these commands as available until the command runner exposes them and `--help` confirms them.
+Do not document any command as available until the host actually exposes it and help output confirms it.
 
 ## Preview Adapter
 
@@ -29,7 +26,7 @@ Preview integration is a consumer of generated files.
 
 Minimum responsibilities:
 
-- Detect `workspace/journey_metrics/`.
+- Detect the host `journey_metrics/` output directory.
 - Parse `journey_visual.md` appendix into journey nodes.
 - Parse `journey_tracking_spec.md` event blocks into tracking rows.
 - Parse `error_tracking_spec.md` error blocks into grouped error rows.

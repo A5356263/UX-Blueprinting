@@ -22,8 +22,8 @@
 统一使用：
 
 ```text
-knowledge/candidates/pending/
-knowledge/candidates/archived/
+knowledge/candidates/未入库/
+knowledge/candidates/已入库/
 ```
 
 按来源分目录：

@@ -208,7 +208,7 @@ UXB 的正常顺序固定为：
 → 再进入 Step 2 收敛
 ```
 
-设计知识同样先从 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/design-guidelines/...` 命中，再读对应 `raw`。
+设计知识同样先从 `knowledge-wiki` skill 内 `knowledge/wiki/summaries/设计准则/...` 命中，再读对应 `raw`。
 
 ## Step 1
 

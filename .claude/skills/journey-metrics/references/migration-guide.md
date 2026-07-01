@@ -1,17 +1,17 @@
 # Migration Guide
 
-Use this guide when moving journey-metrics from this UXB snapshot into a newer UXB project.
+Use this guide when moving journey-metrics from this snapshot into another host project.
 
 ## What To Move Directly
 
-- `.codex/skills/journey-metrics/SKILL.md`
-- `.codex/skills/journey-metrics/references/`
-- `.codex/skills/journey-metrics/assets/templates/`
-- `.codex/skills/journey-metrics/scripts/validate_journey_metrics.py`
+- `journey-metrics/SKILL.md`
+- `journey-metrics/references/`
+- `journey-metrics/assets/templates/`
+- `journey-metrics/scripts/validate_journey_metrics.py`
 
 ## What To Treat As Fixtures
 
-- `.codex/skills/journey-metrics/assets/fixtures/`
+- `journey-metrics/assets/fixtures/`
 
 Fixtures are regression examples. Do not use them as runtime inputs.
 
@@ -25,7 +25,7 @@ Fixtures are regression examples. Do not use them as runtime inputs.
 
 ## Current Snapshot Risks
 
-This UXB snapshot contains a documented `generate-journey-metrics` / `run-journey-metrics` contract, but the current packaged `uxb-core` did not expose those commands during inspection. Do not copy the README claim into a new host as an implementation fact.
+Some hosts may document dedicated journey-metrics commands, but that does not mean the current host actually exposes them. Do not copy command claims into a new host as implementation facts.
 
 The reliable assets in this snapshot are the contract, templates, sample outputs, and preview consumer logic. The executable generation command must be implemented or wired in the target host.
 

@@ -5,9 +5,9 @@ description: "旅程埋点与度量需求 Skill。读取体验策略或相关旅
 
 # Journey Metrics
 
-Use this skill as a sidecar UXB capability. It can run after `generate-experience` when an experience blueprint exists, or independently from `requirement.md` and optional `background.md` when time is tight. Keep generation, validation, and preview integration separate.
+Use this skill as a sidecar UXB capability. It can run after an experience blueprint exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
 
-Do not automatically read project inputs to decide the generation scope. When this skill is invoked, first ask the user which tasks or scenarios need visual journey and tracking requirement documents. Read project files only after the user confirms the scope.
+Do not automatically read existing project materials to decide the generation scope. When this skill is invoked, first ask the user which tasks or scenarios need visual journey and tracking requirement documents. Read files only after the user confirms the scope.
 
 ## Operating Model
 
@@ -17,26 +17,26 @@ Treat the capability as five layers:
 2. **Contract layer**: enforce input priority, source labels, output structure, and failure conditions.
 3. **Template layer**: use bundled Markdown templates from `assets/templates/`.
 4. **Validation layer**: run `scripts/validate_journey_metrics.py` before calling the output complete.
-5. **Preview adapter layer**: parse and render the generated files in the host UXB project; do not assume the host uses this repository's preview code unchanged.
+5. **Preview adapter layer**: parse and render the generated files in the host project; do not assume the host uses this repository's preview code unchanged.
 
-Do not present the preview renderer as the generator. The renderer only consumes files in `workspace/journey_metrics/`.
+Do not present the preview renderer as the generator. The renderer only consumes files in the host `journey_metrics/` output directory.
 
 ## Inputs
 
 Prefer inputs in this order:
 
-1. `workspace/experience_blueprint.md`: reuse the journey and interaction sections as the highest-confidence skeleton.
-2. `source/background.md`: derive a role/path skeleton from scenario background.
-3. `source/requirement.md`: derive a minimal journey and mark inferred context explicitly.
+1. Experience blueprint materials: reuse the journey and interaction sections as the highest-confidence skeleton.
+2. Background materials: derive a role/path skeleton from scenario background.
+3. Requirement materials: derive a minimal journey and mark inferred context explicitly.
 
-Also read the host project's tracking method document when available. In this UXB repository, prefer `tracking_spec.md` when it exists because it contains the fuller local specification; otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and read it in `summary -> raw` order. If a host project lacks both, ask for or infer a local tracking method document before finalizing parameter and API details.
+Also read the host project's tracking method document when available. Prefer a local tracking method document when it exists because it contains the fuller host specification; otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and read it in `summary -> raw` order. If the host lacks both, ask for or infer a local tracking method document before finalizing parameter and API details.
 
 ## Outputs
 
-Write all generated artifacts under:
+Write all generated artifacts under the host-agreed journey-metrics output directory, for example:
 
 ```text
-projects/<project-id>/workspace/journey_metrics/
+<output-root>/journey_metrics/
   journey_visual.md
   journey_visual.html
   journey_tracking_spec.md
@@ -48,16 +48,16 @@ Create `journey_visual.html` by default so the user can inspect the visual journ
 ## Workflow
 
 1. Ask the user which tasks or scenarios to generate. Do not infer the scope from files that happen to exist in the project.
-2. After scope confirmation, inspect the host UXB structure. Identify project id, source files, existing workspace outputs, knowledge path, templates, and preview code.
+2. After scope confirmation, inspect the host structure. Identify available input files, existing outputs, knowledge path, templates, and preview code.
 3. Determine the input priority level and record it in `journey_visual.md`.
 4. Generate the visual journey Markdown first. Every node must have a source label: `confirmed`, `inferred`, or `conflict`. Keep conflict scope narrow: field-level or parameter-level conflicts must not turn the whole journey node into `conflict` unless the node itself is contradicted.
 5. Immediately render `journey_visual.html` from `journey_visual.md`. Prefer the bundled deterministic renderer:
 
 ```bash
-python3 .codex/skills/journey-metrics/scripts/render_journey_visual_html.py projects/<project-id>/workspace/journey_metrics --project-name <project-name>
+python <skill-root>/scripts/render_journey_visual_html.py <journey_metrics_dir> --project-name <project-name>
 ```
 
-Do not wait for the user to ask for HTML rendering. This is a required generation step.
+Do not assume this exact command path already exists in every host. Reuse the bundled renderer or an equivalent host-exposed entrypoint. Do not wait for the user to ask for HTML rendering. This is a required generation step.
 
 6. Generate journey tracking from the node list. Every tracking event must trace back to a journey node.
 7. Generate error/exception/interruption tracking by journey first. Do not pre-exclude modal/dialog cases at identification time; record all user-visible interruption cases, then recommend `Info4` while noting that final form must follow the actual online/test-environment component.

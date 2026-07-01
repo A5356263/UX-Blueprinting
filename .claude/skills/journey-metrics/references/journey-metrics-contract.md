@@ -1,10 +1,10 @@
 # Journey Metrics Contract
 
-This is the portable contract for the journey-metrics sidecar capability. It intentionally avoids assuming a specific UXB command runner.
+This is the portable contract for the journey-metrics sidecar capability. It intentionally avoids assuming a specific command runner, project layout, or packaging path.
 
 ## Purpose
 
-Generate journey and tracking artifacts from UXB project inputs:
+Generate journey and tracking artifacts from host project inputs:
 
 - Visual user journey: roles, paths, node details, gaps, conflicts.
 - Journey tracking requirements: task lifecycle, taskNodeName events, parameters, node mapping.
@@ -12,13 +12,13 @@ Generate journey and tracking artifacts from UXB project inputs:
 
 ## Input Priority
 
-1. `workspace/experience_blueprint.md`
+1. Experience blueprint materials
    - Use as the journey skeleton.
    - Existing and requirement-added nodes can be `confirmed`.
-2. `source/background.md`
+2. Background materials
    - Use when no experience blueprint exists.
    - Mark inferred context explicitly.
-3. `source/requirement.md`
+3. Requirement materials
    - Use as the minimum input.
    - Mark most context completion as `inferred` and record gaps.
 
@@ -36,7 +36,7 @@ Keep conflict scope narrow. If only a field limit, parameter value, copy rule, o
 
 ## Tracking API Contract
 
-When a host project has `tracking_spec.md`, use it as the highest-priority local tracking specification. Otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and consume it in `summary -> raw` order.
+When a host project has a local tracking method document, use it as the highest-priority local tracking specification. Otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and consume it in `summary -> raw` order.
 
 User journey rules:
 
@@ -59,7 +59,7 @@ User journey rules:
 ## Output Directory
 
 ```text
-projects/<project-id>/workspace/journey_metrics/
+<output-root>/journey_metrics/
 ```
 
 Required files:

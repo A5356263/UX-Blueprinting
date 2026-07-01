@@ -48,10 +48,10 @@
 例如：
 
 ```text
-先命中 yewu/quanxian-guanli
-→ 先读 wiki/summaries/yewu/quanxian-guanli/README.md
-→ 再读 wiki/summaries/yewu/quanxian-guanli/10_nengli-ditu.md
-→ 再读 raw/yewu/quanxian-guanli/10_nengli-ditu.md
+先命中 业务/权限管理
+→ 先读 wiki/summaries/业务/权限管理/README.md
+→ 再读 wiki/summaries/业务/权限管理/10_能力地图.md
+→ 再读 raw/业务/权限管理/10_能力地图.md
 ```
 
 禁止：

@@ -31,10 +31,10 @@
 例如：
 
 ```text
-先命中 yewu/shenpi-guanli
-→ 先读 wiki/summaries/yewu/shenpi-guanli/README.md
-→ 再读 wiki/summaries/yewu/shenpi-guanli/10_shenpi-guanli.md
-→ 再读 raw/yewu/shenpi-guanli/10_shenpi-guanli.md
+先命中 业务/审批管理
+→ 先读 wiki/summaries/业务/审批管理/README.md
+→ 再读 wiki/summaries/业务/审批管理/10_审批管理.md
+→ 再读 raw/业务/审批管理/10_审批管理.md
 ```
 
 禁止：
