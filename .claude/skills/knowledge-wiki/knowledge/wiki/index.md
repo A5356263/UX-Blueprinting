@@ -211,20 +211,16 @@
 - [05_管理控制台能力概览](summaries/业务/项目背景/05_管理控制台能力概览.md)
 - [README](summaries/业务/项目背景/README.md)
 
+## 交互模式
+
+- [README](summaries/交互模式/README.md)
+- [反馈、报错与引导](summaries/交互模式/反馈、报错与引导.md)
+
 ## 设计准则
 
 - [README](summaries/设计准则/README.md)
 - [信息架构](summaries/设计准则/信息架构.md)
-
-### 反馈与报错
-
-- [00_反馈与报错体验设计指南](summaries/设计准则/反馈与报错/00_反馈与报错体验设计指南.md)
-- [01_反馈形式选择原则](summaries/设计准则/反馈与报错/01_反馈形式选择原则.md)
-- [02_报错与状态文案模板](summaries/设计准则/反馈与报错/02_报错与状态文案模板.md)
-- [03_通用报错场景案例](summaries/设计准则/反馈与报错/03_通用报错场景案例.md)
-- [04_人事与薪酬场景案例](summaries/设计准则/反馈与报错/04_人事与薪酬场景案例.md)
-- [05_财税场景案例](summaries/设计准则/反馈与报错/05_财税场景案例.md)
-- [README](summaries/设计准则/反馈与报错/README.md)
+- [反馈与引导](summaries/设计准则/反馈与引导.md)
 - [可用性](summaries/设计准则/可用性.md)
 - [可读性](summaries/设计准则/可读性.md)
 - [无障碍](summaries/设计准则/无障碍.md)
