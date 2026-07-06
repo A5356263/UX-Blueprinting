@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>旅程分析：员工自助申请权限</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f6f8;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #667085;
+      --line: #d8dee8;
+      --header: #eef2f7;
+      --accent: #2563eb;
+      --green: #16803c;
+      --amber: #b45309;
+      --red: #b42318;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+
+    h1, h2, p { margin: 0; }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .role {
+      margin-top: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .role-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 750;
+    }
+
+    .role-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+      max-width: 560px;
+    }
+
+    .matrix-wrap {
+      overflow-x: auto;
+      background: var(--panel);
+    }
+
+    .matrix {
+      display: grid;
+      min-width: 980px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cell {
+      min-height: 82px;
+      padding: 14px 16px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .stage-title {
+      min-height: 64px;
+      background: var(--header);
+      font-weight: 750;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row-label {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #f8fafc;
+      color: #344054;
+      font-weight: 750;
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+    }
+
+    .stage-title.row-label {
+      z-index: 3;
+      justify-content: flex-start;
+      background: #e8edf5;
+    }
+
+    .confidence {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 750;
+      border: 1px solid currentColor;
+    }
+
+    .confidence-high { color: var(--green); background: #ecfdf3; }
+    .confidence-medium { color: var(--amber); background: #fffaeb; }
+    .confidence-low { color: var(--red); background: #fef3f2; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin: 0 6px 6px 0;
+      color: var(--muted);
+      font-size: 12px;
+      background: #fff;
+    }
+
+    .opportunity {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin-top: 6px;
+    }
+
+    .transitions {
+      padding: 14px 20px 18px;
+      color: var(--muted);
+      font-size: 13px;
+      background: #fff;
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 20px; }
+      .hero, .role-head { display: block; }
+      .role-note {
+        margin-top: 8px;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <h1>旅程分析：员工自助申请权限</h1>
+        <p class="meta">2026-07-06 / 链式模式 / spark-output/uxb_output.md + spark-output/context/uxb.json</p>
+      </div>
+    </header>
+
+    <!-- 角色一：员工 -->
+    <section class="role">
+      <div class="role-head">
+        <h2>员工（权限申请人）</h2>
+        <p class="role-note">核心角色。经历从感知需求到验证授权的完整链路，旅程最长、触点最分散、断点最多。</p>
+      </div>
+      <div class="matrix-wrap">
+        <div class="matrix" style="grid-template-columns: 180px repeat(6, minmax(180px, 1fr));">
+          <div class="cell stage-title row-label">阶段</div>
+          <div class="cell stage-title">感知权限缺口</div>
+          <div class="cell stage-title">确认权限现状</div>
+          <div class="cell stage-title">发起权限申请</div>
+          <div class="cell stage-title">等待审批处理</div>
+          <div class="cell stage-title">获知审批结果</div>
+          <div class="cell stage-title">验证权限生效</div>
+
+          <div class="cell row-label">用户目标</div>
+          <div class="cell">意识到自己缺少某项权限，有了申请需求。</div>
+          <div class="cell">查看自己当前有什么权限，确认确实缺少某项权限。</div>
+          <div class="cell">选择所需权限、说明申请原因、提交申请。</div>
+          <div class="cell">了解申请进度，必要时催办。</div>
+          <div class="cell">知道申请通过还是被拒绝，以及下一步该怎么做。</div>
+          <div class="cell">确认申请的权限已生效并可正常使用。</div>
+
+          <div class="cell row-label">用户行动</div>
+          <div class="cell">工作中遇到无权限提示、功能不可用或同事告知需要某种权限。</div>
+          <div class="cell">进入我的权限页面，浏览已有权限，对比确认缺少的目标权限。</div>
+          <div class="cell">进入申请页面 → 浏览可申请范围 → 选择权限 → 填写原因 → 确认提交。</div>
+          <div class="cell">查看申请记录列表或详情，了解审批状态。长时间未处理时可能催办或线下联系审批人。</div>
+          <div class="cell">收到系统通知 → 查看审批结果。通过则等待授权生效；拒绝则查看拒绝原因。</div>
+          <div class="cell">回到之前权限不足的地方，尝试使用功能或查看数据，验证权限已生效。</div>
+
+          <div class="cell row-label">触点</div>
+          <div class="cell"><span class="tag">系统无权限反馈</span><span class="tag">功能灰态</span><span class="tag">同事或上级口头告知</span></div>
+          <div class="cell"><span class="tag">我的权限查看页面</span><span class="tag">权限列表展示结构</span></div>
+          <div class="cell"><span class="tag">权限申请入口</span><span class="tag">申请表单</span><span class="tag">权限选择器</span><span class="tag">可申请范围配置</span></div>
+          <div class="cell"><span class="tag">申请记录列表页</span><span class="tag">申请详情页</span><span class="tag">催办按钮或通知机制</span></div>
+          <div class="cell"><span class="tag">通知消息</span><span class="tag">申请详情页</span><span class="tag">审批意见</span><span class="tag">拒绝原因</span></div>
+          <div class="cell"><span class="tag">目标功能操作页面</span><span class="tag">我的权限页面</span></div>
+
+          <div class="cell row-label">用户心声</div>
+          <div class="cell">这个功能我怎么打不开？好像我没权限。</div>
+          <div class="cell">让我先看看我到底有没有……嗯，确实没有这个权限。</div>
+          <div class="cell">希望别太复杂，也别让我选那些看不懂的选项。</div>
+          <div class="cell">怎么还没批？要不要催一下……希望别卡在审批人那里。</div>
+          <div class="cell">通过了！这下我可以用了吧？<br>为什么拒绝？是因为理由不充分吗？</div>
+          <div class="cell">好，试试看能不能用了……嗯，可以了。</div>
+
+          <div class="cell row-label">信心度</div>
+          <div class="cell"><span class="confidence confidence-high">高</span><br>自己有切身需求，动机明确。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>取决于信息结构是否清晰。只显示应用级时无法确认功能级权限。</div>
+          <div class="cell"><span class="confidence confidence-low">低到中</span><br>复杂度取决于配置粒度；项太多且无分类时容易选错或不敢选。</div>
+          <div class="cell"><span class="confidence confidence-low">低</span><br>审批时长不确定；审批人失联时无有效升级手段。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>关键在于审批结果是否附带足够信息让用户理解为什么。</div>
+          <div class="cell"><span class="confidence confidence-high">高</span><br>生效反馈明确时用户很快能验证。</div>
+
+          <div class="cell row-label">痛点</div>
+          <div class="cell">系统没有明确的无权限反馈时不知道自己缺权限。当前只能通过非正式渠道找管理员。</div>
+          <div class="cell">查看粒度只到应用级时无法判断功能级权限。列表缺乏分组搜索时查找成本高。</div>
+          <div class="cell">可选列表太长选择困难。申请原因无参照标准。权限项缺乏说明可能选错。提交后不知道谁来处理、等多久。</div>
+          <div class="cell">审批中但不知道审批人是谁、有没有在看。超时无自动提醒或升级。无催办入口。</div>
+          <div class="cell">拒绝原因模糊不知道如何调整再申请。通过后权限未立即生效时困惑。</div>
+          <div class="cell">生效有延迟时反复尝试失败不知道原因。无法确认我的权限列表已更新。</div>
+
+          <div class="cell row-label">流失风险</div>
+          <div class="cell">不知道找谁处理或过程太麻烦时放弃，转向线下处理。</div>
+          <div class="cell">找不到查看入口或页面看不懂时放弃，回到找管理员的老路。</div>
+          <div class="cell">表单太复杂→放弃填写；不知道选什么→退出问同事；提交后无预期→仍去找管理员。</div>
+          <div class="cell">审批太久→线下找管理员，自助信任度降低。完全不知道状态→以为系统坏了。</div>
+          <div class="cell">拒绝后不知道怎么办→直接找管理员。通过后未及时生效→投诉或放弃。</div>
+          <div class="cell">权限未及时生效且无反馈→认为自助申请没用。部分生效无提示→体验断裂。</div>
+
+          <div class="cell row-label">设计机会</div>
+          <div class="cell">
+            <div class="opportunity">无权限时提供清晰的申请权限入口（下游：蓝图）</div>
+            <div class="opportunity">功能不可用时告知用户申请此权限需要多长时间、谁审批（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">提供结构化的权限展示——按应用分组、区分功能权限和数据范围（下游：蓝图）</div>
+            <div class="opportunity">权限列表与申请入口形成闭环（下游：蓝图）</div>
+            <div class="opportunity">搜索和筛选能力（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">权限选择器提供分类分组和搜索（下游：蓝图）</div>
+            <div class="opportunity">每个可选权限项附带简短说明（下游：故事）</div>
+            <div class="opportunity">提交后给出明确的下一步指引——谁来审批、预计时长、如何催办（下游：蓝图）</div>
+            <div class="opportunity">申请原因提供常用模板或选项（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">申请详情展示完整状态时间线（下游：蓝图）</div>
+            <div class="opportunity">提供催办功能（下游：故事）</div>
+            <div class="opportunity">状态变更推送通知（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">拒绝结果附带明确原因，必要时给出建议（下游：蓝图）</div>
+            <div class="opportunity">通过后给出已生效/正在生效中的明确状态（下游：蓝图）</div>
+            <div class="opportunity">提供重新申请入口（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">授权完成后推送通知并附带查看我的权限链接（下游：蓝图）</div>
+            <div class="opportunity">授权异常时明确告知哪些生效、哪些失败及原因（下游：蓝图）</div>
+          </div>
+        </div>
+      </div>
+      <div class="transitions">阶段转折：感知缺口 → 确认现状：用户决定查一下自己有什么权限。确认现状 → 发起申请：确认缺少后决定申请。发起申请 → 等待审批：提交后进入审批流程。等待审批 → 获知结果：审批人做出决策后通知用户。获知结果 → 验证生效（通过时）：用户去验证。获知结果 → 重新申请（拒绝时）：调整后再次提交。</div>
+    </section>
+
+    <!-- 角色二：审批人 -->
+    <section class="role">
+      <div class="role-head">
+        <h2>审批人</h2>
+        <p class="role-note">判断型角色。任务链路相对简短，但决策风险高，信息充分性是审批质量的关键制约。</p>
+      </div>
+      <div class="matrix-wrap">
+        <div class="matrix" style="grid-template-columns: 180px repeat(4, minmax(180px, 1fr));">
+          <div class="cell stage-title row-label">阶段</div>
+          <div class="cell stage-title">接收审批通知</div>
+          <div class="cell stage-title">审查申请内容</div>
+          <div class="cell stage-title">做出审批决定</div>
+          <div class="cell stage-title">确认授权完成</div>
+
+          <div class="cell row-label">用户目标</div>
+          <div class="cell">知道有新的权限申请需要处理。</div>
+          <div class="cell">理解谁申请了什么权限、申请原因是否合理。</div>
+          <div class="cell">决定同意或拒绝申请并给出相应的处理结果。</div>
+          <div class="cell">确认系统已按审批结果完成授权操作。</div>
+
+          <div class="cell row-label">用户行动</div>
+          <div class="cell">收到系统通知→查看待审批列表→了解待处理申请数量。</div>
+          <div class="cell">打开申请详情→查看申请人信息→查看权限内容→查看原因→核对现有权限。</div>
+          <div class="cell">选择同意或拒绝→填写拒绝原因（如拒绝）→确认授权范围→提交决定。</div>
+          <div class="cell">等待系统自动授权→查看授权结果通知→确认成功。失败时介入处理。</div>
+
+          <div class="cell row-label">触点</div>
+          <div class="cell"><span class="tag">审批中心/待办列表</span><span class="tag">通知消息</span></div>
+          <div class="cell"><span class="tag">审批申请详情页</span><span class="tag">申请人信息</span><span class="tag">申请人现有权限参考</span></div>
+          <div class="cell"><span class="tag">审批操作区</span><span class="tag">拒绝原因输入框</span><span class="tag">授权范围确认</span></div>
+          <div class="cell"><span class="tag">审批完成确认页</span><span class="tag">授权结果通知</span><span class="tag">异常处理入口</span></div>
+
+          <div class="cell row-label">用户心声</div>
+          <div class="cell">又有人申请权限了，让我看看是什么。</div>
+          <div class="cell">这个人为啥需要这个权限？我看看他现有权限有没有冲突。</div>
+          <div class="cell">这个申请合理，同意吧。/ 我说不清楚，先拒绝，把理由写清楚。</div>
+          <div class="cell">同意完了，系统应该会自动处理吧……好，授权成功了。</div>
+
+          <div class="cell row-label">信心度</div>
+          <div class="cell"><span class="confidence confidence-high">高</span><br>通知送达和待办列表是标准能力。</div>
+          <div class="cell"><span class="confidence confidence-low">低到中</span><br>判断充分性取决于申请信息完整程度；不了解业务场景时很难判断。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>取决于审批人对业务和自己判断的把握程度。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>期望系统自动完成授权，但不清楚授权失败时自己是否需要负责。</div>
+
+          <div class="cell row-label">痛点</div>
+          <div class="cell">通知信息量不足时需点进去才知道内容。申请多时待办缺乏优先级区分。</div>
+          <div class="cell">申请原因太简单无法判断合理性。缺乏申请人现有权限参考。缺乏历史申请记录。可能不是该领域负责人。</div>
+          <div class="cell">拒绝必须填原因——赶时间可能写模糊。操作不可逆，决策压力大。</div>
+          <div class="cell">授权结果反馈延迟时不知道是否异常。失败时缺少处理工具和指引。</div>
+
+          <div class="cell row-label">流失风险</div>
+          <div class="cell">通知太多→忽略或延迟。待办无分类→陌生申请积压。</div>
+          <div class="cell">信息不足→先同意再说，安全风险上升。不了解情况→推给超管，链路断裂。</div>
+          <div class="cell">操作复杂→暂时搁置积压。过度担忧→倾向拒绝而不解释。</div>
+          <div class="cell">授权失败无指引→认为手动更可靠。多次异常→建议员工线下找他。</div>
+
+          <div class="cell row-label">设计机会</div>
+          <div class="cell">
+            <div class="opportunity">通知中包含申请人和申请权限名称（下游：故事）</div>
+            <div class="opportunity">待办列表支持排序和筛选（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">申请详情展示完备信息——申请人背景、原因、权限说明、现有权限（下游：蓝图）</div>
+            <div class="opportunity">显示权限风险等级和审批建议（下游：待确认）</div>
+            <div class="opportunity">一键查看申请人现有权限（下游：蓝图）</div>
+            <div class="opportunity">转交审批能力（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">拒绝原因提供常用模板选项（下游：故事）</div>
+            <div class="opportunity">同意时默认使用申请范围，特殊情况才调整（下游：蓝图）</div>
+            <div class="opportunity">操作前给出决策结果影响预览（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">授权完成后即时反馈——成功或失败都通知（下游：蓝图）</div>
+            <div class="opportunity">失败时提供原因和解决步骤（下游：故事）</div>
+            <div class="opportunity">长期无法处理的异常升级给超管（下游：待确认）</div>
+          </div>
+        </div>
+      </div>
+      <div class="transitions">阶段转折：接收通知 → 审查内容：审批人点击待办进入详情。审查内容 → 做出决定：收集足够信息后判断。做出决定 → 确认授权（同意时）：系统自动执行。做出决定 → 结束（拒绝时）：流程结束。</div>
+    </section>
+
+    <!-- 角色三：系统管理员 -->
+    <section class="role">
+      <div class="role-head">
+        <h2>系统管理员 / 超管</h2>
+        <p class="role-note">配置决策型角色。旅程不长但决策权重高，首次配置质量和持续运营能力决定自助申请功能在企业内的实际效果。</p>
+      </div>
+      <div class="matrix-wrap">
+        <div class="matrix" style="grid-template-columns: 180px repeat(4, minmax(180px, 1fr));">
+          <div class="cell stage-title row-label">阶段</div>
+          <div class="cell stage-title">评估与决策</div>
+          <div class="cell stage-title">首次配置</div>
+          <div class="cell stage-title">日常运营维护</div>
+          <div class="cell stage-title">关闭能力（可选）</div>
+
+          <div class="cell row-label">用户目标</div>
+          <div class="cell">判断自助申请权限是否适合自己管理的企业。</div>
+          <div class="cell">完成初始配置——开启能力、设置可申请范围、配置审批流程。</div>
+          <div class="cell">监控使用情况，及时处理异常，调整配置。</div>
+          <div class="cell">在不影响现有授权和进行中申请的前提下关闭能力。</div>
+
+          <div class="cell row-label">用户行动</div>
+          <div class="cell">了解功能范围、对现有体系的影响、配置成本。对比当前授权模式和自助申请优劣。</div>
+          <div class="cell">进入配置入口→开启开关→设置可申请范围→配置审批流程→确认生效。</div>
+          <div class="cell">查看申请统计→查看异常记录→调整可申请范围和审批流程→处理配置问题。</div>
+          <div class="cell">进入配置入口→查看进行中申请→选择关闭策略→确认关闭。</div>
+
+          <div class="cell row-label">触点</div>
+          <div class="cell"><span class="tag">功能说明/引导页</span><span class="tag">与现有治理模式的关系说明</span></div>
+          <div class="cell"><span class="tag">配置入口</span><span class="tag">能力开关</span><span class="tag">可申请范围配置器</span><span class="tag">审批流程配置</span></div>
+          <div class="cell"><span class="tag">使用统计看板</span><span class="tag">异常记录列表</span><span class="tag">配置调整入口</span></div>
+          <div class="cell"><span class="tag">关闭操作区</span><span class="tag">关闭前确认信息</span><span class="tag">关闭策略选择</span></div>
+
+          <div class="cell row-label">用户心声</div>
+          <div class="cell">开启这个功能方便员工，但我得先搞清楚会不会影响现有的权限管理……</div>
+          <div class="cell">设太宽怕风险，设太窄员工还是得找我，那开这个功能意义就不大了。</div>
+          <div class="cell">最近申请量上来了。嗯？有几个审批人离职了，申请卡住了。</div>
+          <div class="cell">有几个还在审批中的申请，怎么处理好呢……</div>
+
+          <div class="cell row-label">信心度</div>
+          <div class="cell"><span class="confidence confidence-low">低</span><br>治理已有多套，新增成本不确定。不清楚能否关闭及代价。配置不当可能失控。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>熟悉权限配置，但不确定如何平衡安全性和有用性。</div>
+          <div class="cell"><span class="confidence confidence-medium">中高</span><br>熟悉运营模式，但异常处理可能超出预期。</div>
+          <div class="cell"><span class="confidence confidence-medium">中</span><br>关键在于关闭流程是否清晰、是否留下后遗症。</div>
+
+          <div class="cell row-label">痛点</div>
+          <div class="cell">缺乏开启能力会改变什么的清晰说明。不确定日常维护工作量。担心员工滥用。</div>
+          <div class="cell">配置粒度选择困难缺乏指导。配置路径较长涉及跨模块跳转。缺乏员工视角预览。</div>
+          <div class="cell">统计看板不细致时无法精细化调整。审批人离职未及时提醒。异常记录分散。</div>
+          <div class="cell">关闭策略不确定。已生效权限是否受影响不明确。历史记录保留方式不明确。</div>
+
+          <div class="cell row-label">流失风险</div>
+          <div class="cell">风险不确定→不开启。治理已经很复杂→不想再增加配置负担。</div>
+          <div class="cell">配置过程太复杂→搁置。不知道合理配置→设过严，自助申请形同虚设。</div>
+          <div class="cell">异常处理不及时→员工失去信心。缺关键指标→无法判断功能价值。</div>
+          <div class="cell">关闭流程不清晰→不敢关或留下未处理申请。已生效权限被误回收→运营事故。</div>
+
+          <div class="cell row-label">设计机会</div>
+          <div class="cell">
+            <div class="opportunity">首次开启前提供清晰的引导（下游：故事）</div>
+            <div class="opportunity">明确标注与现有治理模式的兼容关系（下游：待确认）</div>
+            <div class="opportunity">提供先小范围试用能力（下游：待确认）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">提供推荐配置模板（下游：故事）</div>
+            <div class="opportunity">配置完成后提供员工视角预览（下游：蓝图）</div>
+            <div class="opportunity">配置建议——先按角色配置后续按需细化（下游：故事）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">使用统计看板（下游：故事）</div>
+            <div class="opportunity">异常自动预警（下游：故事）</div>
+            <div class="opportunity">基于历史数据建议调整可申请范围（下游：待确认）</div>
+          </div>
+          <div class="cell">
+            <div class="opportunity">关闭前展示影响说明（下游：蓝图）</div>
+            <div class="opportunity">提供可选的关闭策略（下游：待确认）</div>
+            <div class="opportunity">保留历史申请记录查询入口（下游：故事）</div>
+          </div>
+        </div>
+      </div>
+      <div class="transitions">阶段转折：评估决策 → 首次配置：决定开启。首次配置 → 日常运营：配置生效后进入使用阶段。日常运营 → 关闭能力（可选）：决定关闭功能。</div>
+    </section>
+
+  </main>
+</body>
+</html>
