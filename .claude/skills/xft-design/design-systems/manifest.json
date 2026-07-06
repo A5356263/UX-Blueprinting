@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "xft",
+  "name": "XFT",
+  "category": "enterprise",
+  "description": "企业级后台业务设计系统，采用维度化 Token 命名。清晰克制，适用于管理后台、数据表格、表单工作流等信息密集型页面。",
+  "source": {
+    "type": "local",
+    "path": "design-systems/"
+  },
+  "files": {
+    "design": "DESIGN.md",
+    "tokens": "tokens.css",
+    "designTokens": "design-tokens.json"
+  },
+  "usage": "USAGE.md",
+  "craft": {
+    "applies": [],
+    "suggested": [
+      "color",
+      "typography",
+      "layout",
+      "components"
+    ],
+    "exemptions": []
+  },
+  "sourceFiles": {
+    "tokens": "tokens.css",
+    "report": "tokens.css"
+  }
+}

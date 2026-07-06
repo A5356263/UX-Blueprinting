@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>表格组件参考</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --table-row-height-compact: 40px;
+        --table-row-height-default: 48px;
+        --table-row-height-relaxed: 56px;
+        --table-cell-padding-inline: var(--spacing-4);
+        --table-cell-padding-block-compact: var(--spacing-2);
+        --table-cell-padding-block-default: var(--spacing-3);
+        --table-cell-padding-block-relaxed: var(--spacing-4);
+        --table-action-gap: var(--spacing-3);
+        --table-sticky-shadow: inset 12px 0 12px -12px rgba(19, 34, 64, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .table-demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .table-demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .table-demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .table-demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .table-demo-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+      }
+
+      .xft-table-wrap {
+        position: relative;
+        overflow-x: auto;
+        border: 1px solid var(--color-divider-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+      }
+
+      .xft-table {
+        width: 100%;
+        min-width: 720px;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: var(--font-size-regular);
+      }
+
+      .xft-table thead th {
+        height: var(--table-row-height-default);
+        padding: 0 var(--table-cell-padding-inline);
+        border-bottom: 1px solid var(--color-divider-neutral);
+        background: var(--color-container-bg-neutral-lightgray);
+        color: var(--color-text-neutral-gray40);
+        font-weight: var(--font-weight-bold);
+        text-align: left;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+
+      .xft-table tbody td {
+        height: var(--table-row-height-default);
+        padding: 0 var(--table-cell-padding-inline);
+        border-bottom: 1px solid var(--color-divider-neutral);
+        color: var(--color-text-neutral-gray50);
+        vertical-align: middle;
+        background: var(--color-container-bg-neutral-bright);
+      }
+
+      .xft-table tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .xft-table tbody tr:hover td {
+        background: var(--color-bg-accent-light);
+      }
+
+      .xft-table tbody tr.is-selected td {
+        background: var(--color-bg-accent-subtle);
+      }
+
+      .xft-table-compact thead th,
+      .xft-table-compact tbody td {
+        height: var(--table-row-height-compact);
+      }
+
+      .xft-table-default thead th,
+      .xft-table-default tbody td {
+        height: var(--table-row-height-default);
+      }
+
+      .xft-table-relaxed thead th,
+      .xft-table-relaxed tbody td {
+        height: var(--table-row-height-relaxed);
+      }
+
+      .xft-table-cell {
+        display: flex;
+        align-items: center;
+        min-height: inherit;
+        padding-block: var(--table-cell-padding-block-default);
+      }
+
+      .xft-table-compact .xft-table-cell {
+        padding-block: var(--table-cell-padding-block-compact);
+      }
+
+      .xft-table-relaxed .xft-table-cell {
+        padding-block: var(--table-cell-padding-block-relaxed);
+      }
+
+      .xft-table-check-col {
+        width: 48px;
+      }
+
+      .xft-table-number-col .xft-table-cell {
+        justify-content: flex-end;
+        text-align: right;
+      }
+
+      .xft-table-link {
+        color: var(--color-text-accent-regular);
+        text-decoration: none;
+      }
+
+      .xft-table-actions {
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--table-action-gap);
+      }
+
+      .xft-table-actions .xft-table-link {
+        white-space: nowrap;
+      }
+
+      .xft-table-text-ellipsis {
+        display: inline-block;
+        max-width: 18ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .xft-table-sticky-right {
+        position: sticky;
+        right: 0;
+        z-index: 2;
+        background: inherit;
+        box-shadow: var(--table-sticky-shadow);
+      }
+
+      .xft-table-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-2);
+        padding: var(--spacing-8) var(--spacing-6);
+        border: 1px dashed var(--color-divider-neutral);
+        border-radius: var(--border-radius-large);
+        color: var(--color-text-neutral-gray30);
+        text-align: center;
+      }
+
+      .xft-table-empty-title {
+        margin: 0;
+        color: var(--color-text-neutral-gray50);
+        font-size: var(--font-size-heading-5);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .xft-table-empty-note {
+        margin: 0;
+        font-size: var(--font-size-regular);
+      }
+
+      .xft-table-loading {
+        position: relative;
+      }
+
+      .xft-table-loading-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(1px);
+      }
+
+      .xft-table-loading-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-2);
+        padding: var(--spacing-3) var(--spacing-4);
+        border-radius: var(--border-radius-regular);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-small);
+      }
+
+      .xft-table-loading-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--color-bg-accent-regular);
+        box-shadow:
+          12px 0 0 var(--color-bg-accent-regular),
+          24px 0 0 var(--color-bg-accent-regular);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="table-demo-page">
+      <section class="table-demo-card">
+        <h1 class="table-demo-title">基础形态</h1>
+        <p class="table-demo-note">标准表格包含选择列、普通文本列、状态内容、数字列和操作列。页面级操作与分页不在本组件中重复实现。</p>
+        <div class="table-demo-stack">
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-default">
+              <thead>
+                <tr>
+                  <th class="xft-table-check-col"><div class="xft-table-cell"><input type="checkbox" /></div></th>
+                  <th><div class="xft-table-cell">姓名</div></th>
+                  <th><div class="xft-table-cell">部门</div></th>
+                  <th><div class="xft-table-cell">状态内容</div></th>
+                  <th class="xft-table-number-col"><div class="xft-table-cell">成交额</div></th>
+                  <th class="xft-table-sticky-right"><div class="xft-table-cell">操作</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="xft-table-check-col"><div class="xft-table-cell"><input type="checkbox" /></div></td>
+                  <td><div class="xft-table-cell">王琳</div></td>
+                  <td><div class="xft-table-cell">华东运营</div></td>
+                  <td><div class="xft-table-cell">已启用（tag）</div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">86,400</div></td>
+                  <td class="xft-table-sticky-right">
+                    <div class="xft-table-cell">
+                      <div class="xft-table-actions">
+                        <a class="xft-table-link" href="#">查看</a>
+                        <a class="xft-table-link" href="#">编辑</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="is-selected">
+                  <td class="xft-table-check-col"><div class="xft-table-cell"><input type="checkbox" checked /></div></td>
+                  <td><div class="xft-table-cell">赵敏</div></td>
+                  <td><div class="xft-table-cell">品牌中心</div></td>
+                  <td><div class="xft-table-cell">待确认（tag）</div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">42,100</div></td>
+                  <td class="xft-table-sticky-right">
+                    <div class="xft-table-cell">
+                      <div class="xft-table-actions">
+                        <a class="xft-table-link" href="#">查看</a>
+                        <a class="xft-table-link" href="#">编辑</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-demo-card">
+        <h2 class="table-demo-title">尺寸档位</h2>
+        <p class="table-demo-note">保留 compact、default、relaxed 三档密度，分别对应 40px、48px、56px 行高。</p>
+        <div class="table-demo-stack">
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-compact">
+              <thead>
+                <tr>
+                  <th><div class="xft-table-cell">成员</div></th>
+                  <th><div class="xft-table-cell">角色</div></th>
+                  <th><div class="xft-table-cell">状态</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">周浩</div></td>
+                  <td><div class="xft-table-cell">开发工程师</div></td>
+                  <td><div class="xft-table-cell">正常</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-default">
+              <thead>
+                <tr>
+                  <th><div class="xft-table-cell">成员</div></th>
+                  <th><div class="xft-table-cell">角色</div></th>
+                  <th><div class="xft-table-cell">状态</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">周浩</div></td>
+                  <td><div class="xft-table-cell">开发工程师</div></td>
+                  <td><div class="xft-table-cell">正常</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-relaxed">
+              <thead>
+                <tr>
+                  <th><div class="xft-table-cell">成员</div></th>
+                  <th><div class="xft-table-cell">角色</div></th>
+                  <th><div class="xft-table-cell">状态</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">周浩</div></td>
+                  <td><div class="xft-table-cell">开发工程师</div></td>
+                  <td><div class="xft-table-cell">正常</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-demo-card">
+        <h2 class="table-demo-title">状态</h2>
+        <p class="table-demo-note">这一组只表达 hover、selected、empty、loading 等表格自身状态，不混入页面级工具区。</p>
+        <div class="table-demo-stack">
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-default">
+              <thead>
+                <tr>
+                  <th><div class="xft-table-cell">名称</div></th>
+                  <th><div class="xft-table-cell">说明</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">默认</div></td>
+                  <td><div class="xft-table-cell">未选中状态</div></td>
+                </tr>
+                <tr class="is-selected">
+                  <td><div class="xft-table-cell">选中</div></td>
+                  <td><div class="xft-table-cell">使用稳定 class 承接 selected</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="xft-table-empty">
+            <h3 class="xft-table-empty-title">暂无数据</h3>
+            <p class="xft-table-empty-note">当前筛选条件下没有可展示的记录。</p>
+          </div>
+          <div class="xft-table-wrap xft-table-loading" aria-busy="true">
+            <table class="xft-table xft-table-default">
+              <thead>
+                <tr>
+                  <th><div class="xft-table-cell">任务</div></th>
+                  <th><div class="xft-table-cell">负责人</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">成员同步</div></td>
+                  <td><div class="xft-table-cell">系统任务</div></td>
+                </tr>
+                <tr>
+                  <td><div class="xft-table-cell">组织架构刷新</div></td>
+                  <td><div class="xft-table-cell">系统任务</div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="xft-table-loading-overlay">
+              <div class="xft-table-loading-indicator">
+                <span class="xft-table-loading-dot" aria-hidden="true"></span>
+                加载中
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-demo-card">
+        <h2 class="table-demo-title">高频变体</h2>
+        <p class="table-demo-note">高频变体只保留宽表横向滚动、固定操作列、多级表头和常见单元格内容承载。</p>
+        <div class="table-demo-stack">
+          <div class="xft-table-wrap">
+            <table class="xft-table xft-table-default" style="min-width: 1120px;">
+              <thead>
+                <tr>
+                  <th rowspan="2"><div class="xft-table-cell">成员</div></th>
+                  <th colspan="2"><div class="xft-table-cell">本月表现</div></th>
+                  <th colspan="2"><div class="xft-table-cell">季度表现</div></th>
+                  <th rowspan="2" class="xft-table-sticky-right"><div class="xft-table-cell">操作</div></th>
+                </tr>
+                <tr>
+                  <th><div class="xft-table-cell">线索数</div></th>
+                  <th class="xft-table-number-col"><div class="xft-table-cell">成交额</div></th>
+                  <th><div class="xft-table-cell">跟进数</div></th>
+                  <th class="xft-table-number-col"><div class="xft-table-cell">季度成交额</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="xft-table-cell">李青</div></td>
+                  <td><div class="xft-table-cell">120</div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">258,000</div></td>
+                  <td><div class="xft-table-cell">318</div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">744,000</div></td>
+                  <td class="xft-table-sticky-right">
+                    <div class="xft-table-cell">
+                      <div class="xft-table-actions">
+                        <a class="xft-table-link" href="#">查看</a>
+                        <a class="xft-table-link" href="#">编辑</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div class="xft-table-cell"><span class="xft-table-text-ellipsis">客户成功推进计划说明文本较长时截断</span></div></td>
+                  <td><div class="xft-table-cell">98</div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">146,000</div></td>
+                  <td><div class="xft-table-cell"><a class="xft-table-link" href="#">查看报告</a></div></td>
+                  <td class="xft-table-number-col"><div class="xft-table-cell">502,000</div></td>
+                  <td class="xft-table-sticky-right">
+                    <div class="xft-table-cell">
+                      <div class="xft-table-actions">
+                        <a class="xft-table-link" href="#">查看</a>
+                        <a class="xft-table-link" href="#">编辑</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

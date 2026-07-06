@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>分页组件参考</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --pagination-item-size: 32px;
+        --pagination-item-size-mini: 24px;
+        --pagination-item-gap: var(--spacing-2);
+        --pagination-item-radius: var(--border-radius-regular);
+        --pagination-total-gap: var(--spacing-4);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .demo-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-4);
+      }
+
+      /* ═══════════════════════ 分页本体 ═══════════════════════ */
+
+      .xft-pagination {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--pagination-total-gap);
+        flex-wrap: wrap;
+      }
+
+      .xft-pagination-total {
+        flex-shrink: 0;
+        font-size: var(--font-size-regular);
+        color: var(--color-text-neutral-gray30);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-pagination-items {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--pagination-item-gap);
+      }
+
+      /* ── 页码项 ── */
+      .xft-page-item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--pagination-item-size);
+        height: var(--pagination-item-size);
+        padding: 0 var(--spacing-2);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--pagination-item-radius);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        line-height: 1;
+        cursor: pointer;
+        white-space: nowrap;
+        text-decoration: none;
+        transition:
+          border-color var(--motion-fast) var(--ease-standard),
+          color var(--motion-fast) var(--ease-standard);
+      }
+
+      .xft-page-item:hover {
+        border-color: var(--color-border-accent-regular);
+        color: var(--color-text-accent-regular);
+      }
+
+      .xft-page-item.is-active {
+        border-color: var(--color-border-accent-regular);
+        background: var(--color-bg-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+        cursor: default;
+      }
+
+      .xft-page-item.is-active:hover {
+        border-color: var(--color-border-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-page-item.is-disabled {
+        color: var(--color-text-neutral-gray10);
+        cursor: not-allowed;
+      }
+
+      .xft-page-item.is-disabled:hover {
+        border-color: var(--color-border-neutral);
+        color: var(--color-text-neutral-gray10);
+      }
+
+      /* 省略号 */
+      .xft-page-item-ellipsis {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--pagination-item-size);
+        height: var(--pagination-item-size);
+        color: var(--color-text-neutral-gray20);
+        font-size: var(--font-size-regular);
+        letter-spacing: 2px;
+        cursor: default;
+      }
+
+      /* ── 简洁/迷你尺寸 ── */
+      .xft-pagination-mini .xft-page-item {
+        min-width: var(--pagination-item-size-mini);
+        height: var(--pagination-item-size-mini);
+        padding: 0 var(--spacing-1);
+        font-size: var(--font-size-small);
+        border-radius: var(--border-radius-small);
+      }
+
+      .xft-pagination-mini .xft-page-item-ellipsis {
+        width: var(--pagination-item-size-mini);
+        height: var(--pagination-item-size-mini);
+        font-size: var(--font-size-small);
+      }
+
+      .xft-pagination-mini .xft-pagination-total {
+        font-size: var(--font-size-small);
+      }
+
+      /* ── 简单模式（无总数，纯页码） ── */
+      .xft-pagination-simple {
+        gap: var(--spacing-2);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-page">
+
+      <!-- ═══════════ 基础形态 ═══════════ -->
+      <section class="demo-card">
+        <h1 class="demo-title">基础形态</h1>
+        <p class="demo-note">页码项 32×32px，间距 8px，当前页蓝色填充。总数信息在左侧，与页码区间距 16px。字重 400。</p>
+        <div class="demo-stage">
+          <nav class="xft-pagination" aria-label="分页">
+            <span class="xft-pagination-total">共 135 条</span>
+            <div class="xft-pagination-items">
+              <button class="xft-page-item is-disabled" type="button" disabled>上一页</button>
+              <button class="xft-page-item is-active" type="button">1</button>
+              <button class="xft-page-item" type="button">2</button>
+              <button class="xft-page-item" type="button">3</button>
+              <button class="xft-page-item" type="button">4</button>
+              <button class="xft-page-item" type="button">5</button>
+              <span class="xft-page-item-ellipsis">...</span>
+              <button class="xft-page-item" type="button">14</button>
+              <button class="xft-page-item" type="button">下一页</button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <!-- ═══════════ 状态：当前页 / 禁用 / 省略 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">页码状态</h2>
+        <p class="demo-note">首尾边界时的禁用态（上一页/第一页按钮灰色不可点）；中间页过多出现省略号；当前页高亮。</p>
+        <div class="demo-stage">
+          <nav class="xft-pagination" aria-label="分页">
+            <span class="xft-pagination-total">共 200 条</span>
+            <div class="xft-pagination-items">
+              <button class="xft-page-item is-disabled" type="button" disabled>上一页</button>
+              <button class="xft-page-item is-active" type="button">1</button>
+              <button class="xft-page-item" type="button">2</button>
+              <button class="xft-page-item" type="button">3</button>
+              <span class="xft-page-item-ellipsis">...</span>
+              <button class="xft-page-item" type="button">20</button>
+              <button class="xft-page-item" type="button">下一页</button>
+            </div>
+          </nav>
+
+          <nav class="xft-pagination" aria-label="分页">
+            <span class="xft-pagination-total">共 200 条</span>
+            <div class="xft-pagination-items">
+              <button class="xft-page-item" type="button">上一页</button>
+              <button class="xft-page-item" type="button">1</button>
+              <span class="xft-page-item-ellipsis">...</span>
+              <button class="xft-page-item" type="button">18</button>
+              <button class="xft-page-item" type="button">19</button>
+              <button class="xft-page-item is-active" type="button">20</button>
+              <button class="xft-page-item is-disabled" type="button" disabled>下一页</button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <!-- ═══════════ 尺寸档位 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">尺寸档位</h2>
+        <p class="demo-note">标准 32px 与迷你 24px。迷你版字号 12px、圆角 4px，适合空间受限的卡片或弹窗内分页。</p>
+        <div class="demo-stage">
+          <p class="demo-note">标准：32px 高度 / 14px 字号 / 6px 圆角</p>
+          <nav class="xft-pagination" aria-label="分页">
+            <span class="xft-pagination-total">共 86 条</span>
+            <div class="xft-pagination-items">
+              <button class="xft-page-item is-disabled" type="button" disabled>上一页</button>
+              <button class="xft-page-item is-active" type="button">1</button>
+              <button class="xft-page-item" type="button">2</button>
+              <button class="xft-page-item" type="button">3</button>
+              <button class="xft-page-item" type="button">下一页</button>
+            </div>
+          </nav>
+
+          <p class="demo-note" style="margin-top: var(--spacing-2);">迷你：24px 高度 / 12px 字号 / 4px 圆角</p>
+          <nav class="xft-pagination xft-pagination-mini" aria-label="分页">
+            <span class="xft-pagination-total">共 86 条</span>
+            <div class="xft-pagination-items">
+              <button class="xft-page-item is-disabled" type="button" disabled>上一页</button>
+              <button class="xft-page-item is-active" type="button">1</button>
+              <button class="xft-page-item" type="button">2</button>
+              <button class="xft-page-item" type="button">3</button>
+              <button class="xft-page-item" type="button">下一页</button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <!-- ═══════════ 简单模式 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">简单模式</h2>
+        <p class="demo-note">不展示总数和页码列表，仅保留上一页/下一页导航。适合空间极度受限的场景。</p>
+        <div class="demo-stage">
+          <nav class="xft-pagination xft-pagination-simple" aria-label="分页">
+            <div class="xft-pagination-items">
+              <button class="xft-page-item is-disabled" type="button" disabled>上一页</button>
+              <button class="xft-page-item" type="button">下一页</button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+    </main>
+  </body>
+</html>

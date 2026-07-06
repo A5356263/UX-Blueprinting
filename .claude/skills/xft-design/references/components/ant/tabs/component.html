@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>标签页组件参考</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --tabs-height-standard: 40px;
+        --tabs-height-small: 32px;
+        --tabs-item-gap: var(--spacing-7);
+        --tabs-indicator-height: 2px;
+        --tabs-content-gap: var(--spacing-4);
+        --tabs-card-padding: 0 var(--spacing-4);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .demo-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-4);
+      }
+
+      .demo-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-1);
+      }
+
+      .demo-meta {
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+      }
+
+      /* ═══════════════════════ 标签页本体 ═══════════════════════ */
+
+      .xft-tabs {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .xft-tabs-nav {
+        display: flex;
+        align-items: center;
+        gap: var(--tabs-item-gap);
+        border-bottom: 1px solid var(--color-divider-neutral);
+      }
+
+      .xft-tabs-nav-small {
+        gap: var(--spacing-5);
+      }
+
+      .xft-tabs-item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: var(--tabs-height-standard);
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color var(--motion-fast) var(--ease-standard);
+      }
+
+      .xft-tabs-item::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--tabs-indicator-height);
+        background: transparent;
+        transition: background-color var(--motion-fast) var(--ease-standard);
+      }
+
+      .xft-tabs-item:hover {
+        color: var(--color-text-accent-regular);
+      }
+
+      .xft-tabs-item.is-active {
+        color: var(--color-text-accent-regular);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .xft-tabs-item.is-active::after {
+        background: var(--color-bg-accent-regular);
+      }
+
+      .xft-tabs-item.is-disabled {
+        color: var(--color-text-neutral-gray10);
+        cursor: not-allowed;
+      }
+
+      .xft-tabs-nav-small .xft-tabs-item {
+        height: var(--tabs-height-small);
+        font-size: var(--font-size-small);
+      }
+
+      .xft-tabs-content {
+        padding-top: var(--tabs-content-gap);
+        font-size: var(--font-size-regular);
+        line-height: var(--font-height-regular);
+        color: var(--color-text-neutral-gray40);
+      }
+
+      /* card 型标签 */
+      .xft-tabs-card .xft-tabs-nav {
+        gap: 0;
+        border-bottom: 0;
+      }
+
+      .xft-tabs-card .xft-tabs-item {
+        height: var(--tabs-height-standard);
+        padding: var(--tabs-card-padding);
+        border: 1px solid var(--color-divider-neutral);
+        border-bottom: 0;
+        border-radius: var(--border-radius-regular) var(--border-radius-regular) 0 0;
+        background: var(--color-container-bg-neutral-gray);
+        margin-right: 2px;
+      }
+
+      .xft-tabs-card .xft-tabs-item::after {
+        display: none;
+      }
+
+      .xft-tabs-card .xft-tabs-item.is-active {
+        background: var(--color-container-bg-neutral-bright);
+      }
+
+      .xft-tabs-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        margin-left: var(--spacing-2);
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--color-text-neutral-gray20);
+        font-size: 10px;
+        cursor: pointer;
+      }
+
+      .xft-tabs-close:hover {
+        background: var(--color-container-bg-neutral-gray);
+        color: var(--color-text-neutral-gray40);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-page">
+
+      <section class="demo-card">
+        <h1 class="demo-title">基础形态（line 型）</h1>
+        <p class="demo-note">标签高度 40px，项间距 32px，激活项蓝色文字 + 2px 蓝色下划线。默认态灰色文字，hover 变蓝。</p>
+        <div class="demo-stage">
+          <div class="xft-tabs" style="width:100%;">
+            <nav class="xft-tabs-nav">
+              <button class="xft-tabs-item is-active" type="button">详情</button>
+              <button class="xft-tabs-item" type="button">日志</button>
+              <button class="xft-tabs-item" type="button">附件</button>
+              <button class="xft-tabs-item is-disabled" type="button" disabled>评论</button>
+            </nav>
+            <div class="xft-tabs-content">
+              <p>详情面板内容区域。激活标签对应内容在此展示。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">尺寸档位</h2>
+        <p class="demo-note">标准 40px（14px 字号）与小号 32px（12px 字号）。间距 32px / 20px 对应缩放。</p>
+        <div class="demo-stage">
+          <div class="demo-stack">
+            <nav class="xft-tabs-nav">
+              <button class="xft-tabs-item is-active" type="button">标准标签</button>
+              <button class="xft-tabs-item" type="button">标准标签</button>
+              <button class="xft-tabs-item" type="button">标准标签</button>
+            </nav>
+            <span class="demo-meta">标准：40px 高度 / 14px 字号 / 32px 间距</span>
+          </div>
+          <div class="demo-stack">
+            <nav class="xft-tabs-nav xft-tabs-nav-small">
+              <button class="xft-tabs-item is-active" type="button">小号标签</button>
+              <button class="xft-tabs-item" type="button">小号标签</button>
+              <button class="xft-tabs-item" type="button">小号标签</button>
+            </nav>
+            <span class="demo-meta">小号：32px 高度 / 12px 字号 / 20px 间距</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">状态</h2>
+        <p class="demo-note">激活态（蓝色文字 600 字重 + 下划线）、默认态（灰色 400）、hover 态（变蓝）、禁用态（浅灰不可点）。</p>
+        <div class="demo-stage">
+          <nav class="xft-tabs-nav">
+            <button class="xft-tabs-item is-active" type="button">激活态</button>
+            <button class="xft-tabs-item" type="button">默认态</button>
+            <button class="xft-tabs-item" type="button" style="color:var(--color-text-accent-regular);">hover 态</button>
+            <button class="xft-tabs-item is-disabled" type="button" disabled>禁用态</button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">高频变体</h2>
+        <p class="demo-note">card 型标签：激活项白色背景，其他灰色背景。适合需要明确边界的标签场景。可关闭标签带 × 按钮。</p>
+        <div class="demo-stage">
+          <div class="xft-tabs xft-tabs-card">
+            <nav class="xft-tabs-nav">
+              <button class="xft-tabs-item is-active" type="button">全部</button>
+              <button class="xft-tabs-item" type="button">待审核</button>
+              <button class="xft-tabs-item" type="button">已通过</button>
+              <button class="xft-tabs-item" type="button">已驳回 <span class="xft-tabs-close">&times;</span></button>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </body>
+</html>

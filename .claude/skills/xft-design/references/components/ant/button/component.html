@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>按钮组件参考</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --button-height-sm: 24px;
+        --button-height-md: 32px;
+        --button-height-lg: 40px;
+        --button-padding-inline-sm: var(--spacing-2);
+        --button-padding-inline-md: 14px;
+        --button-padding-inline-lg: var(--spacing-4);
+        --button-icon-gap: 6px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .button-demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+
+      .button-demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .button-demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .button-demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .button-demo-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--spacing-3);
+      }
+
+      .xft-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--button-icon-gap);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-regular);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+        font-weight: var(--font-weight-regular);
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          color var(--motion-fast) var(--ease-standard),
+          background-color var(--motion-fast) var(--ease-standard),
+          border-color var(--motion-fast) var(--ease-standard),
+          box-shadow var(--motion-fast) var(--ease-standard);
+      }
+
+      .xft-button:hover {
+        border-color: var(--color-border-accent-regular);
+        color: var(--color-text-accent-regular);
+      }
+
+      .xft-button:focus-visible {
+        outline: 2px solid var(--color-border-accent-regular);
+        outline-offset: 2px;
+      }
+
+      .xft-button[disabled] {
+        color: var(--color-text-neutral-gray10);
+        border-color: var(--color-border-neutral);
+        background: var(--color-container-bg-neutral-gray);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .xft-button.is-hover {
+        border-color: var(--color-border-accent-regular-hover);
+        color: var(--color-text-accent-regular-hover);
+      }
+
+      .xft-button-primary.is-hover {
+        border-color: var(--color-border-accent-regular-hover);
+        background: var(--color-bg-accent-regular-hover);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button.is-active {
+        border-color: var(--color-border-accent-regular-active);
+        color: var(--color-text-accent-regular-active);
+      }
+
+      .xft-button-primary.is-active {
+        border-color: var(--color-border-accent-regular-active);
+        background: var(--color-bg-accent-regular-active);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button-danger.is-hover {
+        border-color: var(--color-border-error-regular-hover);
+        background: var(--color-bg-error-regular-hover);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button.is-focus {
+        outline: 2px solid var(--color-border-accent-regular);
+        outline-offset: 2px;
+      }
+
+      .xft-button-sm {
+        height: var(--button-height-sm);
+        padding: 0 var(--button-padding-inline-sm);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-button-md {
+        height: var(--button-height-md);
+        padding: 0 var(--button-padding-inline-md);
+        font-size: var(--font-size-regular);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-button-lg {
+        height: var(--button-height-lg);
+        padding: 0 var(--button-padding-inline-lg);
+        font-size: var(--font-size-large);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-button-primary {
+        border-color: var(--color-border-accent-regular);
+        background: var(--color-bg-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button-primary:hover {
+        border-color: var(--color-border-accent-regular-hover);
+        background: var(--color-bg-accent-regular-hover);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button-secondary {
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+      }
+
+      .xft-button-danger {
+        border-color: var(--color-border-error-regular);
+        background: var(--color-bg-error-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button-danger:hover {
+        border-color: var(--color-border-error-regular-hover);
+        background: var(--color-bg-error-regular-hover);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-button-text {
+        height: auto;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--color-text-accent-regular);
+      }
+
+      .xft-button-text:hover {
+        color: var(--color-text-accent-regular-hover);
+        text-decoration: underline;
+      }
+
+      .xft-button-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+      }
+
+      .xft-button-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-2);
+      }
+
+      .xft-button-meta {
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="button-demo-page">
+      <section class="button-demo-card">
+        <h1 class="button-demo-title">基础形态</h1>
+        <p class="button-demo-note">这一组用于表达主按钮、默认按钮、次按钮、文字按钮、危险按钮、禁用按钮的基础层级。</p>
+        <div class="button-demo-row">
+          <button class="xft-button xft-button-md xft-button-primary" type="button">主按钮</button>
+          <button class="xft-button xft-button-md" type="button">默认按钮</button>
+          <button class="xft-button xft-button-md xft-button-secondary" type="button">次按钮</button>
+          <button class="xft-button xft-button-text" type="button">文字按钮</button>
+          <button class="xft-button xft-button-md xft-button-danger" type="button">危险按钮</button>
+          <button class="xft-button xft-button-md" type="button" disabled>禁用按钮</button>
+        </div>
+      </section>
+
+      <section class="button-demo-card">
+        <h2 class="button-demo-title">状态</h2>
+        <p class="button-demo-note">hover、active、focus、disabled 四种关键状态。hover 时边框与文字变蓝，active 时颜色加深，focus 时出现 2px 蓝色轮廓，disabled 时整体弱化。</p>
+        <div class="button-demo-row">
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md xft-button-primary" type="button">默认态</button>
+            <span class="xft-button-meta">默认</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md xft-button-primary is-hover" type="button">悬停态</button>
+            <span class="xft-button-meta">hover</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md xft-button-primary is-active" type="button">按下态</button>
+            <span class="xft-button-meta">active</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md xft-button-primary is-focus" type="button">聚焦态</button>
+            <span class="xft-button-meta">focus</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md" type="button" disabled>禁用态</button>
+            <span class="xft-button-meta">disabled</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="button-demo-card">
+        <h2 class="button-demo-title">尺寸档位</h2>
+        <p class="button-demo-note">小号、中号、大号按钮需要同时体现高度、字号和左右内边距差异。</p>
+        <div class="button-demo-row">
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-sm xft-button-primary" type="button">小号按钮</button>
+            <span class="xft-button-meta">24px 高度 / 12px 字号 / 8px 左右内边距</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-md xft-button-primary" type="button">中号按钮</button>
+            <span class="xft-button-meta">32px 高度 / 14px 字号 / 14px 左右内边距</span>
+          </div>
+          <div class="xft-button-stack">
+            <button class="xft-button xft-button-lg xft-button-primary" type="button">大号按钮</button>
+            <span class="xft-button-meta">40px 高度 / 16px 字号 / 16px 左右内边距</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="button-demo-card">
+        <h2 class="button-demo-title">图标与文字组合</h2>
+        <p class="button-demo-note">图标与文字之间保持 6px 间距，不要随按钮尺寸漂移。</p>
+        <div class="button-demo-row">
+          <button class="xft-button xft-button-md xft-button-primary" type="button">
+            <span class="xft-button-icon">+</span>
+            <span>新增</span>
+          </button>
+          <button class="xft-button xft-button-md" type="button">
+            <span class="xft-button-icon">↓</span>
+            <span>下载</span>
+          </button>
+          <button class="xft-button xft-button-md xft-button-danger" type="button">
+            <span class="xft-button-icon">!</span>
+            <span>删除</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="button-demo-card">
+        <h2 class="button-demo-title">高频变体</h2>
+        <p class="button-demo-note">这一组用于表达页面里最常见的按钮并排关系和工具栏用法。</p>
+        <div class="button-demo-row">
+          <button class="xft-button xft-button-md xft-button-primary" type="button">保存</button>
+          <button class="xft-button xft-button-md" type="button">取消</button>
+        </div>
+        <div class="button-demo-row">
+          <button class="xft-button xft-button-sm" type="button">筛选重置</button>
+          <button class="xft-button xft-button-sm xft-button-primary" type="button">查询</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

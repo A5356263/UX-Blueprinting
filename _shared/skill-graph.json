@@ -10,10 +10,32 @@
       "required": [],
       "next_hint": {
         "preferred": [
+          "journey-analysis"
+        ],
+        "reason": "需求定案已完成，进旅程图梳理角色的任务生命周期，为体验蓝图提供体验洞察；如需跳过旅程图，可直接进入体验蓝图。",
+        "alternatives": [
+          "experience-blueprint"
+        ]
+      }
+    },
+    {
+      "id": "journey-analysis",
+      "name_zh": "用户旅程",
+      "phase": 2,
+      "anchor": false,
+      "reads": [
+        "uxb"
+      ],
+      "required": [
+        "uxb"
+      ],
+      "next_hint": {
+        "preferred": [
           "experience-blueprint"
         ],
-        "reason": "需求定案完成后，进入体验蓝图生成交互设计方案",
-        "alternatives": []
+        "reason": "旅程图已就位，进体验蓝图把旅程洞察转化为具体的交互流程和页面设计。",
+        "alternatives": [],
+        "emoji": "🗺️"
       }
     },
     {
@@ -21,7 +43,8 @@
       "name_zh": "体验策略",
       "phase": 2,
       "reads": [
-        "uxb"
+        "uxb",
+        "journey-analysis"
       ],
       "required": [
         "uxb"

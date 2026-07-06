@@ -1,0 +1,158 @@
+<aside
+  class="xftv0-sidebar-menu"
+  data-menu-root
+  aria-label="左侧菜单"
+>
+  <style>
+    .xftv0-sidebar-menu {
+      --xftv0-sidebar-width: 188px;
+      --xftv0-sidebar-item-height: 40px;
+
+      width: var(--xftv0-sidebar-width);
+      flex: 0 0 var(--xftv0-sidebar-width);
+      background: var(--color-container-bg-neutral-bright);
+      border-right: 1px solid var(--color-divider-neutral);
+      padding: 8px 2px 0 8px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .xftv0-sidebar-menu *,
+    .xftv0-sidebar-menu *::before,
+    .xftv0-sidebar-menu *::after {
+      box-sizing: border-box;
+    }
+
+    .xftv0-sidebar-menu button {
+      font: inherit;
+    }
+
+    .xftv0-sidebar-item,
+    .xftv0-sidebar-group-title {
+      width: 100%;
+      min-width: 0;
+      height: var(--xftv0-sidebar-item-height);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px 8px 8px;
+      margin-bottom: 8px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--color-text-neutral-gray40, rgba(19, 34, 64, 0.85));
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 24px;
+      text-align: left;
+      transition: background 0.15s ease;
+    }
+
+    .xftv0-sidebar-item:hover,
+    .xftv0-sidebar-group-title:hover {
+      background: var(--color-container-bg-neutral-bright-hover, rgba(19, 34, 64, 0.05));
+      color: var(--color-text-neutral-gray50, rgba(19, 34, 64, 0.95));
+    }
+
+    .xftv0-sidebar-item.is-active {
+      color: var(--color-text-accent-regular, #1966ff);
+      background: var(--color-bg-accent-light, #ebf3ff);
+      font-weight: 500;
+    }
+
+    .xftv0-sidebar-group-title.is-selected {
+      color: var(--color-text-accent-regular, #1966ff);
+    }
+
+    .xftv0-sidebar-item.level-2 {
+      padding-left: 36px;
+    }
+
+    .xftv0-sidebar-icon {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      color: inherit;
+    }
+
+    .xftv0-sidebar-label {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .xftv0-sidebar-arrow {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      color: inherit;
+      transition: transform 0.2s ease;
+    }
+
+    .xftv0-sidebar-group-title[aria-expanded="false"] .xftv0-sidebar-arrow {
+      transform: rotate(-180deg);
+    }
+  </style>
+
+  <div data-slot="sidebar_menu_slot">
+    <button class="xftv0-sidebar-item" type="button" data-menu-item aria-current="false">
+      <svg class="xftv0-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <rect x="4" y="4" width="6" height="6" rx="1.5" />
+        <rect x="14" y="4" width="6" height="6" rx="1.5" />
+        <rect x="4" y="14" width="6" height="6" rx="1.5" />
+        <rect x="14" y="14" width="6" height="6" rx="1.5" />
+      </svg>
+      <span class="xftv0-sidebar-label">工作台</span>
+    </button>
+
+    <section data-menu-group>
+      <button class="xftv0-sidebar-group-title is-selected" type="button" data-menu-toggle aria-expanded="true">
+        <svg class="xftv0-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M8 6.5h11" />
+          <path d="M8 12h11" />
+          <path d="M8 17.5h11" />
+          <circle cx="4.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="12" r=".8" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="17.5" r=".8" fill="currentColor" stroke="none" />
+        </svg>
+        <span class="xftv0-sidebar-label">员工台账</span>
+        <svg class="xftv0-sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="m6 15 6-6 6 6" />
+        </svg>
+      </button>
+      <div data-menu-panel>
+        <button class="xftv0-sidebar-item level-2 is-active" type="button" data-menu-item aria-current="page">
+          <span class="xftv0-sidebar-label">员工台账列表</span>
+        </button>
+        <button class="xftv0-sidebar-item level-2" type="button" data-menu-item aria-current="false">
+          <span class="xftv0-sidebar-label">成员分组</span>
+        </button>
+      </div>
+    </section>
+
+    <section data-menu-group>
+      <button class="xftv0-sidebar-group-title" type="button" data-menu-toggle aria-expanded="false">
+        <svg class="xftv0-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M8 6.5h11" />
+          <path d="M8 12h11" />
+          <path d="M8 17.5h11" />
+          <circle cx="4.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="12" r=".8" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="17.5" r=".8" fill="currentColor" stroke="none" />
+        </svg>
+        <span class="xftv0-sidebar-label">系统设置</span>
+        <svg class="xftv0-sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="m6 15 6-6 6 6" />
+        </svg>
+      </button>
+      <div data-menu-panel hidden>
+        <button class="xftv0-sidebar-item level-2" type="button" data-menu-item aria-current="false">
+          <span class="xftv0-sidebar-label">字段配置</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+</aside>

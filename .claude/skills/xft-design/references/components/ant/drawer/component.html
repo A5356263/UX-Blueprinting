@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Drawer Component Reference</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --drawer-width-480: 480px;
+        --drawer-width-740: 740px;
+        --drawer-width-1060: 1060px;
+        --drawer-width-1200: 1200px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-3);
+      }
+
+      .xft-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        padding: 0 14px;
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-regular);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .xft-btn-primary {
+        border-color: var(--color-border-accent-regular);
+        background: var(--color-bg-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-drawer-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-end;
+        padding: 0;
+        background: rgba(19, 34, 64, 0.36);
+        z-index: 1000;
+      }
+
+      .xft-drawer-overlay[hidden] {
+        display: none;
+      }
+
+      .xft-drawer {
+        display: flex;
+        flex-direction: column;
+        width: min(100%, var(--drawer-width-740));
+        height: 100%;
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-large-left);
+        overflow: hidden;
+      }
+
+      .xft-drawer-480 {
+        width: min(100%, var(--drawer-width-480));
+      }
+
+      .xft-drawer-740 {
+        width: min(100%, var(--drawer-width-740));
+      }
+
+      .xft-drawer-1060 {
+        width: min(100%, var(--drawer-width-1060));
+      }
+
+      .xft-drawer-1200 {
+        width: min(100%, var(--drawer-width-1200));
+      }
+
+      .xft-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-3);
+        padding: var(--spacing-4) var(--spacing-5);
+        border-bottom: 1px solid var(--color-divider-neutral);
+        flex-shrink: 0;
+      }
+
+      .xft-drawer-title {
+        margin: 0;
+        font-size: var(--font-size-heading-5);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-neutral-gray50);
+      }
+
+      .xft-drawer-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--border-radius-small);
+        background: transparent;
+        color: var(--color-text-neutral-gray30);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .xft-drawer-close:hover {
+        background: var(--color-container-bg-neutral-gray);
+        color: var(--color-text-neutral-gray40);
+      }
+
+      .xft-drawer-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: var(--spacing-5);
+        overflow-y: auto;
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-drawer-body > :first-child {
+        margin-top: 0;
+      }
+
+      .xft-drawer-body > :last-child {
+        margin-bottom: 0;
+      }
+
+      .xft-drawer-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--spacing-2);
+        padding: 12px var(--spacing-5);
+        border-top: 1px solid var(--color-divider-neutral);
+        flex-shrink: 0;
+      }
+
+      .xft-drawer-detail {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-3);
+      }
+
+      .xft-drawer-detail-row {
+        display: flex;
+        gap: var(--spacing-2);
+      }
+
+      .xft-drawer-detail-label {
+        color: var(--color-text-neutral-gray30);
+      }
+
+      .xft-drawer-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-4);
+      }
+
+      .xft-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .xft-field label {
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        color: var(--color-text-neutral-gray40);
+      }
+
+      .xft-field input,
+      .xft-field select {
+        width: 100%;
+        height: 32px;
+        padding: 0 11px;
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-regular);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray50);
+        font: inherit;
+      }
+
+      .xft-field input::placeholder {
+        color: var(--color-text-neutral-gray20);
+      }
+
+      @media (max-width: 900px) {
+        .xft-drawer-form {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: var(--spacing-4);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-page">
+      <section class="demo-card">
+        <h1 class="demo-title">基础形态</h1>
+        <p class="demo-note">默认基线使用 740 宽度档位，抽屉从右侧贴边展开，保持 header、body、footer actions 三段结构，打开关闭交给 runtime overlay 契约。</p>
+        <div class="demo-actions">
+          <button class="xft-btn xft-btn-primary" type="button" data-overlay-open="drawer-demo-basic">打开基础抽屉</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">宽度档位</h2>
+        <p class="demo-note">740 是默认主档位，480 是高频轻任务档位；1060 / 1200 只在内容信息量确实增加时再使用。</p>
+        <div class="demo-actions">
+          <button class="xft-btn xft-btn-primary" type="button" data-overlay-open="drawer-demo-740">默认 740</button>
+          <button class="xft-btn" type="button" data-overlay-open="drawer-demo-480">高频 480</button>
+          <button class="xft-btn" type="button" data-overlay-open="drawer-demo-1060">1060</button>
+          <button class="xft-btn" type="button" data-overlay-open="drawer-demo-1200">1200</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">状态 / 内容承载</h2>
+        <p class="demo-note">详情查看适合承载更长的只读内容，结构不变，只变化 body 内容类型。</p>
+        <div class="demo-actions">
+          <button class="xft-btn" type="button" data-overlay-open="drawer-demo-detail">只读详情</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">高频变体</h2>
+        <p class="demo-note">表单承载是抽屉高频场景，适合在保留页面上下文时完成更长的录入或配置任务。</p>
+        <div class="demo-actions">
+          <button class="xft-btn" type="button" data-overlay-open="drawer-demo-form">表单承载</button>
+        </div>
+      </section>
+    </main>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-basic" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-740">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">基础抽屉</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <p>这里是默认抽屉正文，可承载详情、表单、配置项或较长说明内容。</p>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">保存</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-480" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-480">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">简单确认</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <p>480 适合轻量确认、较短说明或少量配置项。</p>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">确定</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-740" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-740">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">默认 740</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <p>740 适合标准后台配置、较完整表单与中等信息量任务。</p>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">保存</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-1060" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-1060">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">复杂配置</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <p>1060 适合需要更丰富横向空间的配置、对比或复合信息查看场景。</p>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">提交</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-1200" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-1200">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">宽内容查看</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <p>1200 只用于内容信息量明显增加时的查看或配置任务，不作为默认档位。</p>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>关闭</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-detail" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-740">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">成员详情</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <div class="xft-drawer-detail">
+            <div class="xft-drawer-detail-row">
+              <span class="xft-drawer-detail-label">姓名：</span>
+              <span>王琳</span>
+            </div>
+            <div class="xft-drawer-detail-row">
+              <span class="xft-drawer-detail-label">部门：</span>
+              <span>华东运营</span>
+            </div>
+            <div class="xft-drawer-detail-row">
+              <span class="xft-drawer-detail-label">角色：</span>
+              <span>运营主管</span>
+            </div>
+            <div class="xft-drawer-detail-row">
+              <span class="xft-drawer-detail-label">更新时间：</span>
+              <span>2026-07-05 16:20</span>
+            </div>
+          </div>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>关闭</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-drawer-overlay" id="drawer-demo-form" data-overlay aria-hidden="true" hidden>
+      <div class="xft-drawer xft-drawer-740">
+        <header class="xft-drawer-header">
+          <h2 class="xft-drawer-title">编辑成员</h2>
+          <button class="xft-drawer-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-drawer-body">
+          <div class="xft-drawer-form">
+            <div class="xft-field">
+              <label for="drawer-name">姓名</label>
+              <input id="drawer-name" type="text" value="王琳" />
+            </div>
+            <div class="xft-field">
+              <label for="drawer-mobile">手机号</label>
+              <input id="drawer-mobile" type="text" value="138****1024" />
+            </div>
+            <div class="xft-field">
+              <label for="drawer-dept">部门</label>
+              <select id="drawer-dept">
+                <option>华东运营</option>
+              </select>
+            </div>
+            <div class="xft-field">
+              <label for="drawer-role">角色</label>
+              <select id="drawer-role">
+                <option>运营主管</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <footer class="xft-drawer-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">保存</button>
+        </footer>
+      </div>
+    </section>
+
+    <script src="../../../../runtime/basic-interactions.js"></script>
+  </body>
+</html>

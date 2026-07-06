@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>表单组件参考</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --form-item-gap: var(--spacing-6);
+        --form-label-width: 100px;
+        --form-label-padding-inline: 0 var(--spacing-3);
+        --form-control-height: 32px;
+        --form-control-padding-inline: 11px;
+        --form-control-radius: var(--border-radius-regular);
+        --form-help-gap: var(--spacing-1);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      /* ── 演示舞台：限制最大宽度，避免表单横向无限拉长 ── */
+      .demo-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-4);
+        max-width: 600px;
+      }
+
+      .demo-stage-wide {
+        max-width: 800px;
+      }
+
+      /* ═══════════════════════ 表单本体 ═══════════════════════ */
+
+      /* ── 表单容器 ── */
+      .xft-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--form-item-gap);
+        width: 100%;
+      }
+
+      /* ── 表单字段项 ── */
+      .xft-form-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--form-help-gap);
+      }
+
+      /* 水平布局：label 在控件左侧 */
+      .xft-form-horizontal .xft-form-item {
+        flex-direction: row;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      /* ── label ── */
+      .xft-form-label {
+        display: flex;
+        align-items: center;
+        min-height: var(--form-control-height);
+        padding: var(--form-label-padding-inline);
+        font-size: var(--font-size-regular);
+        line-height: var(--font-height-regular);
+        color: var(--color-text-neutral-gray40);
+        flex-shrink: 0;
+      }
+
+      .xft-form-horizontal .xft-form-label {
+        width: var(--form-label-width);
+        justify-content: flex-end;
+      }
+
+      /* 必填星号 */
+      .xft-form-required::before {
+        content: "*";
+        margin-right: 2px;
+        color: var(--color-text-error-regular);
+        font-size: var(--font-size-regular);
+      }
+
+      /* ── 控件包裹层 ── */
+      .xft-form-control-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: var(--form-help-gap);
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* ── 基础输入控件 ── */
+      .xft-form-input {
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        height: var(--form-control-height);
+        padding: 0 var(--form-control-padding-inline);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--form-control-radius);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray50);
+        font-size: var(--font-size-regular);
+        font-family: var(--font-family-primary);
+        line-height: var(--font-height-regular);
+        outline: none;
+        transition: border-color var(--motion-fast) var(--ease-standard);
+      }
+
+      .xft-form-input::placeholder {
+        color: var(--color-text-neutral-gray10);
+      }
+
+      .xft-form-input:hover {
+        border-color: var(--color-border-accent-regular-hover);
+      }
+
+      .xft-form-input:focus {
+        border-color: var(--color-border-accent-regular);
+        box-shadow: 0 0 0 2px var(--color-bg-accent-light);
+      }
+
+      .xft-form-input[disabled] {
+        background: var(--color-container-bg-neutral-gray);
+        color: var(--color-text-neutral-gray20);
+        cursor: not-allowed;
+      }
+
+      .xft-form-input.is-error {
+        border-color: var(--color-border-error-regular);
+      }
+
+      .xft-form-input.is-error:focus {
+        box-shadow: 0 0 0 2px var(--color-bg-error-light);
+      }
+
+      /* select 近似 input */
+      .xft-form-select {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: var(--form-control-height);
+        padding: 0 var(--form-control-padding-inline);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--form-control-radius);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray50);
+        font-size: var(--font-size-regular);
+        font-family: var(--font-family-primary);
+        cursor: pointer;
+      }
+
+      .xft-form-select::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid var(--color-text-neutral-gray30);
+      }
+
+      /* textarea 变体 */
+      .xft-form-textarea {
+        display: inline-flex;
+        width: 100%;
+        min-height: 64px;
+        padding: var(--spacing-2) var(--form-control-padding-inline);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--form-control-radius);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray50);
+        font-size: var(--font-size-regular);
+        font-family: var(--font-family-primary);
+        line-height: var(--font-height-regular);
+        outline: none;
+        resize: vertical;
+      }
+
+      /* ── 帮助信息 ── */
+      .xft-form-help {
+        margin: 0;
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+        color: var(--color-text-neutral-gray20);
+      }
+
+      /* ── 错误信息 ── */
+      .xft-form-error {
+        margin: 0;
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+        color: var(--color-text-error-regular);
+      }
+
+      /* ── 表单动作区 ── */
+      .xft-form-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-2);
+      }
+
+      .xft-form-horizontal .xft-form-actions {
+        padding-left: calc(var(--form-label-width) + var(--spacing-3));
+      }
+
+      /* ── 按钮 ── */
+      .xft-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--form-control-height);
+        padding: 0 14px;
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--form-control-radius);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .xft-btn-primary {
+        border-color: var(--color-border-accent-regular);
+        background: var(--color-bg-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      /* ── 分区标题 ── */
+      .xft-form-section-title {
+        margin: var(--spacing-2) 0 0;
+        padding-bottom: var(--spacing-3);
+        border-bottom: 1px solid var(--color-divider-neutral);
+        font-size: var(--font-size-heading-5);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--font-height-tight);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-page">
+
+      <!-- ═══════════ 水平表单（B 端最常用） ═══════════ -->
+      <section class="demo-card">
+        <h1 class="demo-title">水平表单</h1>
+        <p class="demo-note">label 右对齐，固定宽度 100px，与控件间距 12px。字段项纵向间距 24px。必填项 label 前加红色星号。</p>
+        <div class="demo-stage demo-stage-wide">
+          <form class="xft-form xft-form-horizontal">
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">姓名</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入姓名" />
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">手机号</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入手机号" />
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">部门</label>
+              <div class="xft-form-control-wrap">
+                <span class="xft-form-select">请选择部门</span>
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">备注</label>
+              <div class="xft-form-control-wrap">
+                <textarea class="xft-form-textarea" placeholder="请输入备注"></textarea>
+                <p class="xft-form-help">最多输入 200 个字符</p>
+              </div>
+            </div>
+
+            <div class="xft-form-actions">
+              <button class="xft-btn xft-btn-primary" type="button">提交</button>
+              <button class="xft-btn" type="button">取消</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ═══════════ 尺寸档位 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">尺寸档位</h2>
+        <p class="demo-note">表单控件统一使用 32px 高度（与中号按钮一致），无大中小多档位。textarea 最小高度 64px。label / help / error 与控件的间距固定不变。</p>
+        <div class="demo-stage">
+          <form class="xft-form xft-form-horizontal">
+            <div class="xft-form-item">
+              <label class="xft-form-label">控件高度</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" value="统一 32px" readonly style="width:200px;" />
+                <p class="xft-form-help">所有输入控件高度统一为 32px</p>
+              </div>
+            </div>
+            <div class="xft-form-item">
+              <label class="xft-form-label">多行文本</label>
+              <div class="xft-form-control-wrap">
+                <textarea class="xft-form-textarea" style="width:200px;">最小高度 64px</textarea>
+                <p class="xft-form-help">textarea 最小高度 64px，可拖拽扩展</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ═══════════ 垂直表单 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">垂直表单</h2>
+        <p class="demo-note">label 在控件上方，适合弹窗内表单或 label 较长场景。字段间距同为 24px。</p>
+        <div class="demo-stage">
+          <form class="xft-form">
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">姓名</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入姓名" />
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">邮箱</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入邮箱" />
+                <p class="xft-form-help">用于接收通知邮件</p>
+              </div>
+            </div>
+
+            <div class="xft-form-actions">
+              <button class="xft-btn xft-btn-primary" type="button">保存</button>
+              <button class="xft-btn" type="button">取消</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ═══════════ 错误与帮助信息态 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">错误与帮助信息</h2>
+        <p class="demo-note">帮助信息灰色 12px 位于控件下方；错误信息红色 12px，控件边框变红。两者互斥，不叠加。</p>
+        <div class="demo-stage">
+          <form class="xft-form xft-form-horizontal">
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">用户名</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input is-error" type="text" value="ab" />
+                <p class="xft-form-error">用户名至少 3 个字符</p>
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">邮箱</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入邮箱" />
+                <p class="xft-form-help">用于接收通知邮件</p>
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">状态</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" value="不可修改" disabled />
+                <p class="xft-form-help">该字段由系统自动维护</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ═══════════ 字段分组 ═══════════ -->
+      <section class="demo-card">
+        <h2 class="demo-title">字段分组</h2>
+        <p class="demo-note">字段较多时，可在同一表单任务内分为多个分组，但仍保持一个明确的提交主线。</p>
+        <div class="demo-stage demo-stage-wide">
+          <form class="xft-form xft-form-horizontal">
+            <h3 class="xft-form-section-title">基础信息</h3>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">姓名</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入姓名" />
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">部门</label>
+              <div class="xft-form-control-wrap">
+                <span class="xft-form-select">请选择部门</span>
+              </div>
+            </div>
+
+            <h3 class="xft-form-section-title">联系信息</h3>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label xft-form-required">手机号</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入手机号" />
+              </div>
+            </div>
+
+            <div class="xft-form-item">
+              <label class="xft-form-label">邮箱</label>
+              <div class="xft-form-control-wrap">
+                <input class="xft-form-input" type="text" placeholder="请输入邮箱" />
+                <p class="xft-form-help">用于接收通知邮件</p>
+              </div>
+            </div>
+
+            <div class="xft-form-actions">
+              <button class="xft-btn xft-btn-primary" type="button">保存</button>
+              <button class="xft-btn" type="button">取消</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </body>
+</html>

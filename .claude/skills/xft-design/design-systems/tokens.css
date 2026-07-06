@@ -1,0 +1,162 @@
+/* design-systems/xft/tokens.css
+ * XFT 设计系统 Token 绑定。
+ * 企业级后台业务设计系统，采用维度化 Token 命名。
+ */
+
+:root {
+  /* ── 强调色 Accent ── */
+  --color-bg-accent-light: #EBF3FF;
+  --color-bg-accent-light-hover: #D4E5FF;
+  --color-bg-accent-light-active: #99C2FF;
+  --color-bg-accent-regular: #1966ff;
+  --color-bg-accent-regular-hover: #4086ff;
+  --color-bg-accent-regular-active: #0b50d9;
+  --color-bg-accent-subtle: #F5F8FF;
+  --color-border-accent-regular: #1966ff;
+  --color-border-accent-regular-hover: #4086ff;
+  --color-border-accent-regular-active: #0b50d9;
+  --color-text-accent-regular: #1966ff;
+  --color-text-accent-regular-hover: #4086ff;
+  --color-text-accent-regular-active: #0b50d9;
+
+  /* ── 错误 Error ── */
+  --color-bg-error-light: #fff3f2;
+  --color-bg-error-light-hover: #ffdcd9;
+  --color-bg-error-light-active: #ffb9b2;
+  --color-bg-error-regular: #fa4332;
+  --color-bg-error-regular-hover: #ff6052;
+  --color-bg-error-regular-active: #d93021;
+  --color-border-error-light: #ffb9b2;
+  --color-border-error-regular: #fa4332;
+  --color-border-error-regular-hover: #ff6052;
+  --color-border-error-regular-active: #d93021;
+  --color-text-error-regular: #fa4332;
+  --color-text-error-regular-hover: #ff6052;
+  --color-text-error-regular-active: #d93021;
+
+  /* ── 警告 Warning ── */
+  --color-bg-warning-light: #fff7e8;
+  --color-bg-warning-light-hover: #ffe8bf;
+  --color-bg-warning-light-active: #ffdba6;
+  --color-bg-warning-regular: #ff9326;
+  --color-bg-warning-regular-hover: #ffac4d;
+  --color-bg-warning-regular-active: #e57717;
+  --color-border-warning-light: #ffdba6;
+  --color-text-warning-regular: #e57717;
+  --color-text-warning-regular-hover: #ff9326;
+  --color-text-warning-regular-active: #a64d08;
+
+  /* ── 成功 Success ── */
+  --color-bg-success-light: #edfaf4;
+  --color-bg-success-light-hover: #c2f2da;
+  --color-bg-success-light-active: #8eedbe;
+  --color-bg-success-regular: #0ac767;
+  --color-bg-success-regular-hover: #31de88;
+  --color-bg-success-regular-active: #00a653;
+  --color-border-success-light: #8eedbe;
+  --color-text-success-regular: #0ac767;
+  --color-text-success-regular-hover: #31de88;
+  --color-text-success-regular-active: #00a653;
+
+  /* ── 信息 Info ── */
+  --color-bg-info-light: #ebf3ff;
+  --color-bg-info-light-hover: #d4e5ff;
+  --color-bg-info-light-active: #99c2ff;
+  --color-bg-info-regular: #1966ff;
+  --color-bg-info-regular-hover: #4086ff;
+  --color-bg-info-regular-active: #0b50d9;
+  --color-border-info-light: #99c2ff;
+  --color-text-info-regular: #1966ff;
+  --color-text-info-regular-hover: #4086ff;
+  --color-text-info-regular-active: #0b50d9;
+
+  /* ── 中性色 / 布局与容器 ── */
+  --color-container-bg-neutral-bright: #ffffff;
+  --color-container-bg-neutral-bright-hover: rgba(19, 34, 64, 0.05);
+  --color-container-bg-neutral-bright-active: rgba(19, 34, 64, 0.1);
+  --color-container-bg-neutral-gray: rgba(19, 34, 64, 0.05);
+  --color-container-bg-neutral-gray-hover: rgba(19, 34, 64, 0.1);
+  --color-container-bg-neutral-gray-active: rgba(19, 34, 64, 0.15);
+  --color-container-bg-neutral-lightgray: rgba(19, 34, 64, 0.02);
+  --color-container-bg-neutral-inverse: rgba(19, 34, 64, 0.95);
+  --color-layout-bg-neutral-bright: #ffffff;
+  --color-layout-bg-neutral-gray: #f3f4f6;
+  --color-layout-bg-neutral-inverse: #132240;
+  --color-border-neutral: rgba(19, 34, 64, 0.15);
+  --color-divider-neutral: rgba(19, 34, 64, 0.1);
+  --color-text-neutral-gray10: rgba(19, 34, 64, 0.25);
+  --color-text-neutral-gray20: rgba(19, 34, 64, 0.45);
+  --color-text-neutral-gray30: rgba(19, 34, 64, 0.65);
+  --color-text-neutral-gray40: rgba(19, 34, 64, 0.85);
+  --color-text-neutral-gray50: rgba(19, 34, 64, 0.95);
+  --color-text-neutral-inverse20: rgba(255, 255, 255, 0.5);
+  --color-text-neutral-inverse30: rgba(255, 255, 255, 0.7);
+  --color-text-neutral-inverse40: rgba(255, 255, 255, 0.9);
+  --color-text-neutral-inverse50: #ffffff;
+
+  /* ── 字号 ── */
+  --font-size-small: 12px;
+  --font-size-regular: 14px;
+  --font-size-large: 16px;
+  --font-size-heading-6: 14px;
+  --font-size-heading-5: 16px;
+  --font-size-heading-4: 18px;
+  --font-size-heading-3: 20px;
+  --font-size-heading-2: 24px;
+  --font-size-heading-1: 32px;
+
+  /* ── 字重 ── */
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+
+  /* ── 行高 ── */
+  --font-height-tight: 1.37;
+  --font-height-regular: 1.6;
+  --font-height-loose: 1.75;
+
+  /* ── 字体族 ── */
+  --font-family-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  --font-family-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* ── 圆角 ── */
+  --border-radius-small: 4px;
+  --border-radius-regular: 6px;
+  --border-radius-large: 12px;
+
+  /* ── 间距 ── */
+  --spacing-0: 0;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 32px;
+  --spacing-8: 40px;
+  --spacing-9: 48px;
+  --spacing-10: 64px;
+  --spacing-11: 80px;
+  --spacing-12: 160px;
+
+  /* ── 阴影 ── */
+  --shadow-small-left: -4px 0 12px 0 rgba(19, 34, 64, 0.08);
+  --shadow-small-right: 4px 0 12px 0 rgba(19, 34, 64, 0.08);
+  --shadow-small-top: 0px -4px 12px 0 rgba(19, 34, 64, 0.08);
+  --shadow-small-bottom: 0px 4px 12px 0 rgba(19, 34, 64, 0.08);
+  --shadow-regular-left: -8px 0 20px 0 rgba(19, 34, 64, 0.16);
+  --shadow-regular-right: 8px 0 20px 0 rgba(19, 34, 64, 0.16);
+  --shadow-regular-top: 0 -8px 20px 0 rgba(19, 34, 64, 0.16);
+  --shadow-regular-bottom: 0 8px 20px 0 rgba(19, 34, 64, 0.16);
+  --shadow-large-left: -12px 0 32px 0 rgba(19, 34, 64, 0.2);
+  --shadow-large-right: 12px 0 32px 0 rgba(19, 34, 64, 0.2);
+  --shadow-large-top: 0 -12px 32px 0 rgba(19, 34, 64, 0.2);
+  --shadow-large-bottom: 0 12px 32px 0 rgba(19, 34, 64, 0.2);
+  --shadow-special1-bottom: 0 4px 16px 0 rgba(25, 102, 255, 0.3);
+  --shadow-special2-bottom: 0 -4px 12px 0 rgba(19, 34, 64, 0.05);
+  --shadow-special3-bottom: 0 2px 8px 0 rgba(19, 34, 64, 0.04);
+
+  /* ── 动效 ── */
+  --motion-fast: 150ms;
+  --motion-base: 220ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}

@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modal Component Reference</title>
+    <link rel="stylesheet" href="../../../../design-systems/tokens.css" />
+    <style>
+      :root {
+        --modal-width-480: 480px;
+        --modal-width-740: 740px;
+        --modal-width-1060: 1060px;
+        --modal-width-1200: 1200px;
+        --modal-max-height: calc(100vh - 64px);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: var(--spacing-8);
+        background: var(--color-layout-bg-neutral-gray);
+        color: var(--color-text-neutral-gray50);
+        font-family: var(--font-family-primary);
+      }
+
+      .demo-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-6);
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6);
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-large);
+        background: var(--color-container-bg-neutral-bright);
+        box-shadow: var(--shadow-small-bottom);
+      }
+
+      .demo-title {
+        margin: 0;
+        font-size: var(--font-size-heading-4);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+      }
+
+      .demo-note {
+        margin: 0;
+        color: var(--color-text-neutral-gray30);
+        font-size: var(--font-size-small);
+        line-height: var(--font-height-regular);
+      }
+
+      .demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-3);
+      }
+
+      .xft-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        padding: 0 14px;
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-regular);
+        background: var(--color-container-bg-neutral-bright);
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        font-weight: var(--font-weight-regular);
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .xft-btn-primary {
+        border-color: var(--color-border-accent-regular);
+        background: var(--color-bg-accent-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-btn-danger {
+        border-color: var(--color-border-error-regular);
+        background: var(--color-bg-error-regular);
+        color: var(--color-text-neutral-inverse50);
+      }
+
+      .xft-modal-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        background: rgba(19, 34, 64, 0.36);
+        z-index: 1000;
+      }
+
+      .xft-modal-overlay[hidden] {
+        display: none;
+      }
+
+      .xft-modal {
+        display: flex;
+        flex-direction: column;
+        width: min(100%, var(--modal-width-740));
+        max-height: var(--modal-max-height);
+        background: var(--color-container-bg-neutral-bright);
+        border-radius: var(--border-radius-large);
+        box-shadow: var(--shadow-regular-bottom);
+        overflow: hidden;
+      }
+
+      .xft-modal-480 {
+        width: min(100%, var(--modal-width-480));
+      }
+
+      .xft-modal-740 {
+        width: min(100%, var(--modal-width-740));
+      }
+
+      .xft-modal-1060 {
+        width: min(100%, var(--modal-width-1060));
+      }
+
+      .xft-modal-1200 {
+        width: min(100%, var(--modal-width-1200));
+      }
+
+      .xft-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-3);
+        padding: var(--spacing-4) var(--spacing-5);
+        border-bottom: 1px solid var(--color-divider-neutral);
+        flex-shrink: 0;
+      }
+
+      .xft-modal-title {
+        margin: 0;
+        font-size: var(--font-size-heading-5);
+        line-height: var(--font-height-tight);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-neutral-gray50);
+      }
+
+      .xft-modal-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--border-radius-small);
+        background: transparent;
+        color: var(--color-text-neutral-gray30);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .xft-modal-close:hover {
+        background: var(--color-container-bg-neutral-gray);
+        color: var(--color-text-neutral-gray40);
+      }
+
+      .xft-modal-body {
+        flex: 1 1 auto;
+        padding: var(--spacing-5);
+        overflow-y: auto;
+        color: var(--color-text-neutral-gray40);
+        font-size: var(--font-size-regular);
+        line-height: var(--font-height-regular);
+      }
+
+      .xft-modal-body > :first-child {
+        margin-top: 0;
+      }
+
+      .xft-modal-body > :last-child {
+        margin-bottom: 0;
+      }
+
+      .xft-modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--spacing-2);
+        padding: 12px var(--spacing-5);
+        border-top: 1px solid var(--color-divider-neutral);
+        flex-shrink: 0;
+      }
+
+      .xft-modal-confirm-body {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-4);
+      }
+
+      .xft-modal-confirm-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        font-size: 24px;
+        font-weight: var(--font-weight-bold);
+        flex-shrink: 0;
+      }
+
+      .xft-modal-confirm-icon-warning {
+        background: var(--color-bg-warning-light);
+        color: var(--color-text-warning-regular);
+      }
+
+      .xft-modal-confirm-icon-danger {
+        background: var(--color-bg-error-light);
+        color: var(--color-text-error-regular);
+      }
+
+      .xft-modal-confirm-copy {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2);
+      }
+
+      .xft-modal-confirm-copy strong {
+        font-size: var(--font-size-heading-5);
+        line-height: var(--font-height-tight);
+        color: var(--color-text-neutral-gray50);
+      }
+
+      .xft-modal-confirm-copy span {
+        color: var(--color-text-neutral-gray30);
+      }
+
+      .xft-modal-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-3);
+      }
+
+      .xft-modal-list-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-3);
+      }
+
+      .xft-modal-list-toolbar strong {
+        font-size: var(--font-size-regular);
+        color: var(--color-text-neutral-gray50);
+      }
+
+      .xft-modal-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--color-border-neutral);
+        border-radius: var(--border-radius-regular);
+        overflow: hidden;
+      }
+
+      .xft-modal-table th,
+      .xft-modal-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--color-divider-neutral);
+        text-align: left;
+        font-size: var(--font-size-regular);
+      }
+
+      .xft-modal-table th {
+        background: var(--color-container-bg-neutral-lightgray);
+        color: var(--color-text-neutral-gray40);
+        font-weight: var(--font-weight-medium);
+      }
+
+      .xft-modal-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: var(--spacing-4);
+        }
+
+        .xft-modal-overlay {
+          padding: 16px;
+        }
+      }
+
+      @media (max-height: 560px) {
+        .xft-modal-overlay {
+          align-items: flex-start;
+          padding: 16px;
+        }
+
+        .xft-modal {
+          height: min(100%, var(--modal-max-height));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-page">
+      <section class="demo-card">
+        <h1 class="demo-title">基础形态</h1>
+        <p class="demo-note">默认基线使用 740 宽度档位，只提供 header、空 body 容器和 footer actions 三段结构，打开关闭交给 runtime overlay 契约。</p>
+        <div class="demo-actions">
+          <button class="xft-btn xft-btn-primary" type="button" data-overlay-open="modal-demo-basic">打开基础弹窗</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">宽度档位</h2>
+        <p class="demo-note">740 是默认主档位，480 是高频轻任务档位；1060 / 1200 只在内容信息量确实增加时再使用，不随正文内容自由膨胀。</p>
+        <div class="demo-actions">
+          <button class="xft-btn xft-btn-primary" type="button" data-overlay-open="modal-demo-740">默认 740</button>
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-480">高频 480</button>
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-1060">1060</button>
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-1200">1200</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">状态</h2>
+        <p class="demo-note">警告确认与危险确认只改正文状态表达和主动作样式，不改 modal 基础关系。</p>
+        <div class="demo-actions">
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-warning">警告确认</button>
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-danger">危险确认</button>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">承载示例</h2>
+        <p class="demo-note">表单、列表这类内容属于 body 承载示例，不属于 modal 基线本身；这里只保留一个列表型示例说明更大信息量时如何挂载内容。</p>
+        <div class="demo-actions">
+          <button class="xft-btn" type="button" data-overlay-open="modal-demo-list">列表型示例</button>
+        </div>
+      </section>
+    </main>
+
+    <section class="xft-modal-overlay" id="modal-demo-basic" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-740">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">基础弹窗</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <div></div>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">确定</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-480" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-480">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">简单确认</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <p>480 适合单步确认、轻说明或极少字段的临时任务。</p>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">继续</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-740" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-740">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">默认 740</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <div></div>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">保存</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-1060" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-1060">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">复杂选择</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <p>1060 适合需要短列表、筛选或更丰富上下文，但仍然属于覆盖层内完成的任务。</p>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">确认选择</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-1200" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-1200">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">宽内容查看</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <p>1200 只用于确实需要更宽信息承载的查看或选择任务，不作为默认档位。</p>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>关闭</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-warning" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-480">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">确认操作</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <div class="xft-modal-confirm-body">
+            <span class="xft-modal-confirm-icon xft-modal-confirm-icon-warning">!</span>
+            <div class="xft-modal-confirm-copy">
+              <strong>确定要提交当前配置吗？</strong>
+              <span>提交后配置将立即生效，请确认信息无误。</span>
+            </div>
+          </div>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">确定</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-danger" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-480">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">删除确认</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <div class="xft-modal-confirm-body">
+            <span class="xft-modal-confirm-icon xft-modal-confirm-icon-danger">!</span>
+            <div class="xft-modal-confirm-copy">
+              <strong>确定要删除该成员吗？</strong>
+              <span>删除后不可恢复，请确认当前操作符合预期。</span>
+            </div>
+          </div>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-danger" type="button">删除</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="xft-modal-overlay" id="modal-demo-list" data-overlay aria-hidden="true" hidden>
+      <div class="xft-modal xft-modal-1060">
+        <header class="xft-modal-header">
+          <h2 class="xft-modal-title">选择复制对象</h2>
+          <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+        </header>
+        <div class="xft-modal-body">
+          <div class="xft-modal-list">
+            <div class="xft-modal-list-toolbar">
+              <strong>候选对象</strong>
+              <span>共 3 条</span>
+            </div>
+            <table class="xft-modal-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th>类型</th>
+                  <th>负责人</th>
+                  <th>更新时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>华东大区模板</td>
+                  <td>组织模板</td>
+                  <td>刘晨</td>
+                  <td>2026-07-05 10:30</td>
+                </tr>
+                <tr>
+                  <td>客服权限基线</td>
+                  <td>权限模板</td>
+                  <td>王宁</td>
+                  <td>2026-07-03 18:12</td>
+                </tr>
+                <tr>
+                  <td>审批流标准包</td>
+                  <td>流程模板</td>
+                  <td>周冉</td>
+                  <td>2026-07-01 09:08</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <footer class="xft-modal-footer">
+          <button class="xft-btn" type="button" data-overlay-close>取消</button>
+          <button class="xft-btn xft-btn-primary" type="button">确认选择</button>
+        </footer>
+      </div>
+    </section>
+
+    <script src="../../../../runtime/basic-interactions.js"></script>
+  </body>
+</html>
