@@ -220,12 +220,57 @@ HTML 预览只消费 `spark-output/context/journey-analysis.json`，不从 MD �
   - `opportunities[]` 每个元素：`direction` / `downstream_hint`
   - `key_transitions[]` 每个元素：`from` / `to` / `trigger`
 
+完整 schema：
+
+```json
+{
+  "project_name": "",
+  "generated_at": "",
+  "mode": "chain | standalone",
+  "source": "",
+  "journeys": [
+    {
+      "role": "",
+      "summary": "",
+      "stages": [
+        {
+          "name": "",
+          "goal": "",
+          "actions": [],
+          "touchpoints": [],
+          "user_voice": "",
+          "confidence": "高 | 中 | 低",
+          "confidence_reason": "",
+          "pain_points": [],
+          "dropout_risk": "",
+          "opportunities": [
+            {
+              "direction": "",
+              "downstream_hint": "蓝图 | 故事 | 待确认"
+            }
+          ]
+        }
+      ],
+      "key_transitions": [
+        {
+          "from": "",
+          "to": "",
+          "trigger": ""
+        }
+      ]
+    }
+  ]
+}
+```
+
 字段契约：
 
 - `actions`、`touchpoints`、`pain_points` 必须为数组
 - `role.summary` 必须存在；没有明确来源时，用一句任务职责概述，不新增业务事实
 - `confidence` 只允许写 `高` / `中` / `低`
 - `downstream_hint` 只允许写 `蓝图` / `故事` / `待确认`
+
+HTML 预览只消费该 JSON，不从 MD 二次解析。生成 HTML 前不得临时补字段；如果字段缺失，先修正 context JSON。
 
 ## 交接
 
