@@ -1,261 +1,392 @@
 ---
 name: xft-design
-version: "11.0"
-description: Generate enterprise admin web prototypes — minimum reads, one-pass write, zero-iteration output.
-triggers:
-  - 业务后台页面
-  - 后台管理页面
-  - 表格页 / 列表页
-  - 详情页 / 审批详情页
-  - 表单页 / 新建页 / 编辑页
-  - 设置页 / 报表页
-  - 弹窗 / 抽屉
-  - 原型页面
-
-od:
-  mode: prototype
-  preview:
-    type: html
-    entry: output/
-  outputs:
-    primary: output/
-  design_system:
-    requires: true
-    sections:
-      - color
-      - typography
-      - layout
-      - components
-      - interaction
-      - quality_check
+version: "14.1"
+description: 基于页面组织规则、区域职责规则、稳定参考资产与设计系统，直接生成企业 B 端 HTML 高保真原型。
 ---
 
-# XFT Design Skill（v11 — 精简高效版）
+# XFT 设计技能
 
-你是企业后台页面原型生成 agent。**核心原则：最少文件读取、一次写对、零迭代修复。**
+## 定位
 
----
+本技能用于生成企业 B 端页面、弹层与局部区域的高保真 HTML 原型。
 
-# 0. 流程总览（3 步，非 10 步）
+本技能不是：
 
-```
-① 并行读取（链式模式 5-6 文件 / 独立模式 3-4 文件）→ ② 一次写出合规 HTML → ③ check 脚本验证
-```
+- 模板检索系统
+- 模板分配系统
+- slot 填空系统
+- schema 编译主线
+- React 组件装配器
+- 运行时组件库集成器
 
-步骤 ① 和 ② 之间不做中间文件读取。步骤 ③ 修复上限 1 轮。
+更准确地说：
 
----
+> 系统先提供稳定的页面壳、内容骨架、功能模块、设计系统与轻交互契约，AI 再根据需求去选择、组合、裁剪、改写这些预制资产，输出页面原型。
 
-# 0.5 链式接入（接在 page-spec 之后）
+这里的“改写”指的是：
+
+> AI 先读取页面类型、页面组织、区域职责、模块边界与改写边界，再在稳定资产上做需求相关调整。
+
+不是：
+
+- 先命中模板再填空
+- 先找相似块再机械套用
+- 先自由生成再回头补样式
+
+## 生成总纲
+
+- 链式模式下，优先读取 `page-spec` 产物作为本次原型生成的主输入。
+- `Design Spec` 或用户需求先决定本次有哪些界面设计对象要生成。
+- `rules/` 决定这些对象如何组织。
+- `references/` 提供稳定代码起点；匹配到稳定资产时，直接从资产代码起稿。
+- `design-systems/` 提供视觉基线。
+- `runtime/` 负责公共轻交互。
+- 页面本地 JavaScript 只负责当前页面确定性业务状态。
+
+## 链式接入（接在 page-spec 之后）
 
 当当前项目中存在以下产物时，默认按链式模式执行：
 
 - `spark-output/context/page-spec.json`
 - `spark-output/page_spec.md`
 
-输入职责：
+链式模式下的输入职责：
 
-- `page-spec.json`：页面实体、页面类型、结构骨架、状态与异常范围的主输入
-- `page_spec.md`：页面结构、交互规则、文案与状态的补充输入
+- `page-spec.json`：页面实体、页面类型、状态与异常范围的主输入
+- `page_spec.md`：页面结构、交互规则、文案与补充说明
 
-链式模式下，不再自行猜测页面目标、实体边界和主次流程范围，优先以 page-spec 产物为准。
+链式模式下，不再自行猜测页面目标、实体边界、主次流程范围，优先以 `page-spec` 产物为准。
 
-如果上述两个文件都不存在，再回退到独立原型生成模式。
+如果上述两个文件都不存在，再回退到独立模式，读取 `Design Spec` 或用户需求直接生成。
 
----
+## 工作流
 
-# 1. 按 Page Type 的最小读取集
+### Step 0：确定生成对象
 
-**永远并行读取以下文件。** 不要串行，不要读无关文件。
+优先读取 `spark-output/context/page-spec.json` 和 `spark-output/page_spec.md`。若不存在，再读取用户需求或 `Design Spec`，列出本次明确要求生成的全部界面设计对象。
 
-## 链式模式先读（2 个）
+界面设计对象包括：
 
-| 文件 | 用途 |
-|------|------|
-| `spark-output/context/page-spec.json` | 页面实体、结构骨架、状态与异常范围的主输入 |
-| `spark-output/page_spec.md` | 结构、交互、文案与补充说明 |
+- 独立页面
+- 页面所属的 Modal / Drawer
+- 明确要求生成的独立区域
+- 同一界面中的关键业务状态
 
-## 所有页面类型必读（3 个）
+默认生成 `Design Spec` 中被明确描述为设计对象的全部对象；只有明确标记"不生成"的内容排除。
+不得使用"主生成 / 关联生成"重新划分需求范围。
 
-| 文件 | 用途 |
-|------|------|
-| `design-systems/tokens.css` | CSS 变量（颜色/字体/间距/圆角/阴影） |
-| `design-systems/components.html` | 组件 CSS class（btn/input/table/modal/tag/checkbox/pagination/alert） |
-| `assets/shells/admin-side-shell.html` | 页面骨架 DOM + Runtime JS |
+以下内容不自动视为界面设计对象：
 
-## 按页面类型加读（最多 1 个）
+- 纯背景事实
+- 外部系统名称
+- 仅被提到的跳转目标
+- 非界面实体
+- 未被描述为设计对象的流程上下文
 
-| 页面类型 | 加读 |
-|---------|------|
-| TablePage / 列表页 | `assets/content-assets/knowledge/table-patterns.html` |
-| DetailPage / ApprovalDetailPage | `assets/content-assets/knowledge/doctype.html` |
-| 其他（Create/Edit/Settings/Report） | 不加读，按组件 CSS 直接写 |
+### Step 1：确定页面结构
 
-**禁止读取的文件（与原型生成无关或内容已内化到本 SKILL.md）：**
-- 所有 CSV（`content-assets.csv`、`recipe-*.csv`、`field-columns.csv` 等）
-- 所有 references/（`intent-model.md`、`page-type-router.md`、`detail-page/` 等）
-- `blank-shell.html`（除非用户明确不需要侧导航）
-- `scripts/` 下的所有脚本（仅在 check 阶段执行，不在读取阶段）
-- 状态模板 / SVG / 图标文件（按需内联，不需要预读）
+读取 `rules/page-structure.md`，完成以下决策：
 
----
+1. 确定页面类型（列表管理 / 表单 / 详情 / 弹窗）。
+2. 确定区域列表（按页面类型的主线结构列出本次页面包含的区域）。
+3. 确定页面壳选择（admin-side-shell 或 admin-top-shell）。
 
-# 2. Page Type 路由（内化，不读文件）
+若存在冲突，按 `rules/page-structure.md` 末尾的冲突优先级处理。
 
-不需要读 `page-type-router.md` 或 CSV。按以下规则直接判定：
+若当前页面涉及特定模块（筛选区、操作区、详情区、弹层），读取 `rules/modules.md` 中对应章节，确认该模块的结构关系和禁止事项。
 
-| 需求特征 | Page Type |
-|---------|-----------|
-| 表格 + 筛选 + 分页 + 行操作 | **TablePage** |
-| 查看单据详情 + 可能有审批流 | **DetailPage**（无审批流）/ **ApprovalDetailPage**（含审批流） |
-| 新建 / 提交申请 | **CreatePage** |
-| 回填表单 + 修改保存 | **EditPage** |
-| 配置开关 / 参数 | **SettingsPage** |
-| 弹窗 / 抽屉为主（承载在已有页面之上） | 对应承载页面类型 + Modal/Drawer overlay |
-| 都不确定 | 问用户确认，不猜测 |
+### Step 2：确定改写边界
 
----
+读取 `rules/rewrite-boundaries.md`，明确：
 
-# 3. 写前自检清单（写入 HTML 时必须同时满足）
+- 当前页面的每个区域中，哪些内容属于需求变量（允许改写）。
+- 哪些内容属于实现常量（不可改写）。
+- 在什么条件下允许突破冻结。
 
-**以下规则来自 `check_skill_output.py`，写的时候逐项对齐，不做事后修复。**
+同时读取 `rules/rewrite-examples.md`，了解最常见的改写错误，避免在 Step 4 中重蹈覆辙。
 
-## 3.1 文件头部
+### Step 3：读取资产基线
 
-```
-<!DOCTYPE html><!-- XFT_ROUTE Route: ... scope: Full Page overlay_type: modal shell: admin-side-shell --><!-- CONTENT_ASSET_DECISION {"intent":{...},"page_type":"...","shell":"admin-side-shell"} --><html lang="zh-CN">
-```
+按当前页面涉及的区域，依次读取：
 
-- `XFT_ROUTE` 紧跟 `<!DOCTYPE html>`，同一行，中间无换行
-- `XFT_ROUTE` 内必须包含 `scope:`（Full Page 或 Overlay Only）和 `shell:`
-- 有 overlay 时必须包含 `overlay_type: modal`（或 drawer）
-- `CONTENT_ASSET_DECISION` 紧跟 XFT_ROUTE，内容是合法 JSON（单行）
+1. 对应的 `references/layouts/` 文件，获取主内容区骨架和资产映射关系。
+2. 对应的 `references/shells/` 文件，获取页面壳代码。
+3. 对应的 `references/chrome/` 文件，获取框架级界面块代码。
+4. 对应的 `references/blocks/` 文件，获取业务区域块代码。
+5. 对应的 `references/components/ant/` 文件（先 summary.md 判断适用性，再 component.html 获取实现代码）。
+6. `design-systems/` 下相关文件，获取 token 和视觉边界。
+7. `runtime/README.md`，获取可用交互契约。
 
-## 3.2 CSS 注入
+只读当前页面涉及的资产，不读全集。layout 文件的 "Asset Mapping" / "Block Mapping" 节列出了需要读取的具体资产文件。
 
-- **第一个 `<style>` 块内首行必须是 `/* design-systems/xft/tokens.css — inlined */`**
-- 紧接着是 tokens.css 全部 CSS 变量
-- 之后是 shell CSS（从 admin-side-shell.html 的 `<style>` 完整复制）
-- 再之后是组件 CSS（从 components.html 的 `<style>` 复制组件部分）
-- 最后是页面自定义 CSS
-- 所有 `<style>` 块中不得出现旧 token 名（`--color-brand-*`、`--color-text-primary` 等）
+### Step 4：生成 HTML
 
-## 3.3 零违规
+**强制程序：复制后修改，不是参考后重写。**
 
-| 规则 | 检查方式 |
-|------|---------|
-| **零 `<link>` 外部样式** | 无 `<link rel="stylesheet">` |
-| **零 `style=""` 属性** | 所有样式必须用 class，包括 JS 动态生成的 HTML |
-| **零 shell slot 注释残留** | 无 `<!-- PAGE_CONTENT_SLOT -->`、`<!-- OVERLAY_SLOT -->` 等 |
-| **零占位文案** | 无「页面主体内容将在这里填充」「字段名称」「页面标题」等 |
-| **零旧 token** | 无 `--color-brand-primary`、`--radius-sm` 等 38 个旧变量名 |
-| **零 banned class 前缀** | class 名不以 `custom`、`new`、`random` 开头 |
-| **`[hidden] { display: none !important; }`** | 必须在全局 reset 中（紧跟 `* { box-sizing }`），防止 CSS `display:flex` 覆盖 hidden 属性 |
+对每个待生成界面对象，按以下顺序生成：
 
-## 3.4 结构要素
+1. **复制**：将匹配到的资产代码原样写入输出文件。包括 `<style>` 内容、HTML 结构、`<script>` 内容。不做任何修改。
+2. **定位**：在输出文件中找到 `<!-- EDITABLE -->` 标记的区域。
+3. **替换**：只在 EDITABLE 区域内，按需求做内容替换（改字段名称、字段数量、文案、数据行等）。
+4. **冻结确认**：`<!-- FROZEN -->` 区域内的代码不做任何修改。
+5. **合成**：按当前 layout 骨架的 Composition 规则，用 `.xftv0-surface` 包裹区域组，用 `.xftv0-wrapper` 控制内部间距。参照 `design-systems/token-recipes.md` 确认所有间距、颜色、圆角、阴影使用 token。
+6. **全局去重**：扫描同一可视视窗内的所有主按钮（`.xft-btn-primary`、`.btn-primary`、`.xftv0-button-primary`）。只保留 1 个 primary，其余去掉 primary class 降为默认按钮。优先级：弹窗确认按钮 > action-bar 主操作 > filter 查询按钮。
 
-- Full Page 必须包含：`class="top-nav"`、`class="side-nav"`、`class="xft-tab-header"`、`class="page-content"`、`class="micro-wrapper"`、`class="page-content-container"`
-- 必须有 `<div id="overlay-root">` 且其内所有 overlay 元素必须有 `data-overlay` 属性
-- 文件名格式：`output/{slug}-{YYYY-MM-DD}-v{N}.html`（小写字母+数字+连字符）
+约束：
 
-## 3.5 壳子不可变
+**资产内部（FROZEN/EDITABLE 区域内）：**
 
-- top-nav / side-nav / xft-tab-header 的 DOM 结构、CSS、class 名原样保留
-- 只改文案（产品名、导航项、用户信息、页签标题）
-- 同批次多页面壳子一致
+- 不新增 CSS 规则，除非需求明确要求了资产中不存在的结构。
+- 不修改已有 CSS 的属性值（颜色、间距、尺寸、圆角、阴影等）。
+- 不添加资产中不存在的装饰性元素（图标、分隔线、背景色块等）。
+- 不以"看起来更好"为由重写任何 FROZEN 区域的代码。
 
----
+**合成层（资产之间的包裹和组合）：**
 
-# 4. 写入顺序（一次成型）
+- 必须按当前 layout 骨架的 Section 7.1 Composition 规则，使用 `.xftv0-surface` 包裹区域组。
+- 合成层的所有样式必须使用 `design-systems/` 的 token，禁止硬编码值。
+- 合成层禁止自创 CSS class（使用 `.xftv0-surface`、`.xftv0-surface--nested`、`.xftv0-wrapper` 或 `design-systems/token-recipes.md` 中定义的 token）。
+- 合成层禁止添加装饰性元素（渐变、玻璃拟态、超大圆角、装饰图标等）。
 
-```
-① <!DOCTYPE html> + XFT_ROUTE + CONTENT_ASSET_DECISION（单行）
-② <style> tokens.css（首行带注释）
-③ <style> shell CSS（从 shell 复制）
-④ <style> 组件 CSS（从 components.html 复制需要的部分）
-⑤ <style> 页面自定义 CSS（含 [hidden] 规则 + inline-style 替代 class）
-⑥ </head><body> shell DOM（从 shell 复制，改文案）
-⑦ 页面内容区（基于 table-patterns 规则或自主设计）
-⑧ overlay-root 内弹窗/抽屉（带 data-overlay 和 hidden）
-⑨ <script> shell Runtime JS（从 shell 复制）
-⑩ <script> 页面交互 JS（状态机、事件绑定、Toast）
-⑪ </body></html>
-```
+**全局：**
 
----
+- 页面对象必须完整生成页面。非页面对象不主动扩成整页。
+- 已有稳定资产优先继承，不重写同职责第二套实现。
+- 最终产物统一输出到 `spark-output/xft-design/`。
+- 全页面禁止自创 CSS class。有资产的区域用资产 class；无资产的区域优先复用 overlay / component 已有的 class（如 `.xftv0-inline-note`、`.xftv0-checkbox-group`、`.xftv0-tag-row`、`.xft-btn`、`.xft-tag`），配合 token inline style 组织内容。仅在已有 class 确实无法覆盖时允许新建，新建 class 必须使用 token 变量。
 
-# 5. 交互建模（写 JS 前过一遍）
+若某个区域无匹配资产：按 `rules/page-structure.md` 的区域规则 + `design-systems/` 的 token 体系直接生成。此情况下不受 EDITABLE/FROZEN 约束（因为没有资产可继承），但必须优先复用当前页面已加载的 overlay / component class（如 `.xftv0-inline-note`、`.xftv0-checkbox-group`、`.xft-btn`、`.xft-tag`），不足时才允许新建 class。新建 class 必须使用 token 变量，禁止硬编码值。
 
-每个按钮/链接必须有明确行为：
-- **打开 Overlay**：`onclick="openXxx()"` → 设置 `el.hidden = false`
-- **关闭 Overlay**：`data-overlay-close` 自动绑定 + `onclick="closeXxx()"`
-- **危险操作**：必须有确认弹窗
-- **Loading 态**：按钮 disabled + spinner
-- **空态**：列表为空时展示空态文案
-- **Toast**：操作结果反馈，3 秒自动消失
+### Step 5：交互接入
 
----
+交互职责按三层处理：
 
-# 6. 组件 class 速查（内化，不翻文件）
+- 公共轻交互使用 `runtime/basic-interactions.js`（tabs、collapse、menu、overlay、disclosure、switch、anchor）。
+- `references/` 本地脚本只做只读适配（已在 FROZEN 区域中，不修改）。
+- 页面本地 JavaScript 只负责当前页面确定性业务状态。
 
-| 组件 | class |
-|------|-------|
-| 主按钮 | `btn btn-primary` |
-| 默认按钮 | `btn` |
-| 文字按钮 | `btn btn-text` |
-| 危险按钮 | `btn btn-danger` |
-| 小按钮 | `btn btn-sm` |
-| 表格 | `table.data-table`（`border-collapse: separate` + 边框 + 圆角，不可覆盖） |
-| 输入框 | `input` |
-| 复选框 | `label.checkbox > input.checkbox-input + span.checkbox-label` |
-| 标签 | `span.status-tag.status-{info\|success\|warning\|error\|neutral}` |
-| 分页 | `.pagination > .pagination-info + .pagination-actions > .page-btn` |
-| 弹窗 | `.overlay-mask[data-overlay] > .modal > .overlay-header + .overlay-body + .overlay-footer` |
-| 提示 | `.alert.alert-{info\|success\|warning\|error}` |
+页面本地 JavaScript 只允许三种操作：
 
----
+- 调用 `runtime/` 提供的函数或 data-* 契约。
+- 切换 DOM 元素的 class 或 data-* 属性。
+- 响应 `runtime/` 派发的事件。
 
-# 7. TablePage 硬性规则（内化 table-patterns.html）
+页面本地 JavaScript 不得：
 
-- 一级列表页（从侧导航直接进入）**不展示页面标题**
-- 操作按钮统一放在筛选区上方一行，从左至右按优先级排列
-- 标题区只放标题和说明文字，不放操作按钮
-- 表格表头 `#f3f4f6`，文字 `--color-text-neutral-gray50`，14px bold
-- 数据行 `--color-text-neutral-gray40`，14px，行高 40px
-- 行内操作 ≤ 3 个，超出放入「...」菜单
+- 重写 Runtime 已有能力。
+- 新增公共状态框架。
+- 伪造真实网络、数据库、权限服务或真实后端过程。
+- 使用 fetch、setTimeout 模拟异步操作。
+- 实现自定义路由跳转逻辑。
 
----
+### Step 6：自检与输出
 
-# 8. 禁止事项
+读取以下清单，逐项自检并修正：
 
-0. 禁止修改壳子 DOM/CSS/class
-1. 禁止用 div 模拟表格，禁止覆盖 `.data-table` 边框和圆角
-2. 禁止硬编码已有 token 可表达的视觉值（颜色/间距/字号/圆角/阴影一律用 var()）
-3. 禁止在非审批场景默认展示审批流
-4. 禁止生成无行为定义的按钮或无法关闭的 overlay
-5. 禁止危险操作没有确认
-6. 禁止输出占位文案
-7. 禁止读取 CSV / references / scripts（除最终 check 脚本验证一步）
+- `references/ui-review.md`（**P0 必须全部通过，P1 应该通过**）
+- `checklists/modules/`
+- `checklists/page/`
+- `checklists/demand/`
 
----
+重点验证（在现有 checklist 基础上新增的检查项，详见任务 E）：
 
-# 9. 输出约定
+- FROZEN 区域代码是否未被修改（对比资产原文）。
+- CSS 变量名和值是否与资产一致。
+- 是否只修改了 EDITABLE 区域内的内容。
 
-- 单文件 HTML → `output/{slug}-{YYYY-MM-DD}-v{N}.html`
-- 顶部 `<!DOCTYPE html><!-- XFT_ROUTE ... --><!-- CONTENT_ASSET_DECISION ... --><html>`
-- 可直接在浏览器预览
-- 输出后执行 `python3 scripts/check_skill_output.py output/<filename>` 验证；有错 1 轮修完
-- 链式模式完成后，额外写入 `spark-output/context/xft-design.json`
+自检通过后，按独立页面分别输出最终 HTML。
+
+## 输入
+
+本技能读取：
+
+- `spark-output/context/page-spec.json`（如存在）
+- `spark-output/page_spec.md`（如存在）
+- 用户需求 / `Design Spec`
+- `design-systems/`
+- `rules/`
+- `references/`
+- `runtime/`
+- `assets/`
+- `test-inputs/`（用于固定测试输入时）
+
+## 输出
+
+默认输出为：
+
+- 可预览的 HTML
+- 遵循 `design-systems/` 的样式
+- 公共轻交互使用 Runtime
+- 需求特有业务状态使用页面本地 JavaScript
+- 满足对应 `checklists/` 的结构、视觉与交互自检
+- 全部 HTML 文件统一落到 `spark-output/xft-design/`
+- 链式模式额外写入 `spark-output/context/xft-design.json`
+
+输出约束：
+
+- 按独立页面分别输出 HTML
+- 页面所属弹层与页面内状态保留在所属页面文件中
+- 不把多个独立页面合并成一个超级 HTML
 
 `xft-design.json` 最小字段：
 
 ```json
 {
   "skill": "xft-design",
-  "version": "11.0",
+  "version": "14.1",
   "generated_at": "",
-  "source": "page-spec",
+  "source": "page-spec | standalone",
   "primary_html": "",
   "html_files": []
 }
 ```
+
+## 生成前确认
+
+- `Design Spec` 中的界面设计对象是否都已纳入输出，且只排除了明确不生成的内容？
+- 有稳定资产的部分是否真的复制了资产代码（不是自己重写了一套相似的）？
+- FROZEN 区域代码是否与资产原文一致？
+- 当前实现是否保持了需求业务语义，没有为了迁就资产或 Runtime 改写需求？
+- **合成层是否按 layout 骨架的 Composition 规则包裹了 Surface？所有合成层样式是否使用了 token？**
+
+## 资产边界
+
+### `design-systems/`
+
+负责：
+
+- 视觉 token
+- 间距尺度
+- 排版规则
+- 组件尺寸规则
+- 产品视觉语言
+
+不负责：
+
+- 页面结构组织
+- 区域职责判断
+- 布局组合决策
+
+### `rules/`
+
+负责：
+
+- 页面类型判断
+- 页面组织与区域落位
+- 模块边界规则
+- 资产改写护栏
+
+不负责：
+
+- 视觉样式实现
+- 参考代码存档
+- 轻交互实现
+- 大部分稳定默认实现说明
+
+### `references/`
+
+负责：
+
+- 稳定的页面壳
+- 稳定的框架级界面块
+- 内容区布局骨架资源
+- 稳定的功能模块块
+- 稳定的覆盖层参考
+- 本地组件参考资产
+
+这些文件的长期定位是：
+
+> AI 允许拿来组合和改写的预制块资产。
+
+同时它也承担一部分稳定默认实现职责，例如：
+
+- menu / topbar / page-tabs 这类固定落位框架块
+- 内容区默认区域顺序与组合骨架
+- 区域默认骨架
+- 稳定的字段排布写法
+- 已验证过的动作区落位
+- 不需要每次重新推理的结构默认值
+- 已支持轻交互的默认接法
+
+### `runtime/`
+
+负责：
+
+- 公共、重复、稳定的轻交互
+- 稳定的 `data-*` 行为契约
+
+### `assets/`
+
+负责：
+
+- 图标
+- 图片
+- Logo
+- 插画
+- 其他仅引用、不参与结构推理与改写的原始静态资源
+
+### `test-inputs/`
+
+负责：
+
+- 固定 Skill 测试输入
+- 保持测试口径一致
+
+## 目录约束
+
+当前技能目录只保留以下结构：
+
+- `SYSTEM.md`
+- `design-systems/`
+- `assets/icons/`
+- `checklists/`
+- `runtime/`
+- `references/`
+- `rules/`
+- `test-inputs/`
+
+以下旧结构已废弃，不允许重新引入：
+
+- 检索注册表
+- 模板分配主线
+- schema 编译
+- slot 改写系统
+- `foundation.css` 这类额外样式抽象层
+- 额外的双入口说明文件
+
+## 必读顺序
+
+1. `rules/page-structure.md`
+2. `rules/rewrite-boundaries.md`
+3. `rules/rewrite-examples.md`
+4. `rules/modules.md`（只读当前页面涉及的模块章节）
+5. `references/layouts/` 下匹配的文件（**特别注意 Section 7.1 Composition**）
+6. `references/shells/` 下匹配的文件
+7. `references/chrome/` 下匹配的文件
+8. `references/blocks/` 下匹配的文件
+9. `references/components/ant/` 下匹配的组件（先 summary.md 再 component.html）
+10. `design-systems/token-recipes.md`（**合成层 token 配方，生成时直接查表**）
+11. `design-systems/` 下其他相关文件
+12. `runtime/README.md`
+13. `checklists/` 下相关文件
+
+## 不可违反的约束
+
+- 不要重新引入模板检索与模板分发逻辑
+- 不要把参考块当成必须命中的模板
+- 不要把稳定资产块当成匹配目标
+- 不要创建类似 `foundation.css` 的第二层样式抽象
+- 不要在 `runtime/` 之外发明新的交互系统
+- 不要让页面本地 JavaScript 演变成第二套 Runtime
+- 不要为了“更聪明”不断叠加中间机制
+- 不要让不同目录共同承担同一类决策职责
+
+## 自检要求
+
+- 页面组织方式必须匹配主任务
+- 每个区域必须只有清晰职责
+- 布局决策必须来自显式规则
+- token 必须来自 `design-systems/`
+- 视觉节奏不得偏离 `design-systems/`
+- 公共轻交互必须走 `runtime/`
+- 最终输出必须通过对应 checklist

@@ -1,0 +1,129 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.0.0",
+  "generated_at": "2026-07-07T22:00:00+08:00",
+  "project_name": "员工自助权限申请",
+  "uxb_mapping": [
+    { "uxb_judgment": "权限来源透明度：新增第五种路径需区分来源", "experience_impact": "权限列表必须标注来源", "design_decision": "P1 权限列表每项标注管理员授予/角色分配/自助申请", "landing_section": "§6 P1" },
+    { "uxb_judgment": "多角色任务链路闭环：管理员需配置引导", "experience_impact": "配置页需展示流程说明和检查清单", "design_decision": "P4 顶部流程说明区和检查清单", "landing_section": "§6 P4" },
+    { "uxb_judgment": "多角色任务链路闭环：审批人需足够决策依据", "experience_impact": "审批页需展示批准前后差异", "design_decision": "P6 权限差异对比区，左当前右申请", "landing_section": "§6 P6" },
+    { "uxb_judgment": "治理可控性：开关是生命周期管理，不是简单开/关", "experience_impact": "关闭前需强制展示影响评估", "design_decision": "EP4 关闭确认 Modal 展示在途数量和策略", "landing_section": "§5 EP4" },
+    { "uxb_judgment": "状态可见性：在途状态需持续可见", "experience_impact": "状态需分多级展示进度", "design_decision": "P3 状态详情 Drawer 用时间线展示", "landing_section": "§6 P3" },
+    { "uxb_judgment": "审批决策依据：审批人需看到已有权限全貌", "experience_impact": "审批页需并排对比展示", "design_decision": "P6 左右分栏对比当前和申请", "landing_section": "§6 P6" }
+  ],
+  "journey_consumption": {
+    "confidence_lows": [
+      { "role": "员工", "stage": "等待审批结果", "blueprint_landing": "§5 EP2/EP3/EP4, §6 P3 状态时间线" },
+      { "role": "员工", "stage": "感知权限缺口", "blueprint_landing": "§6 P1 空状态引导" },
+      { "role": "管理员", "stage": "调整或关闭", "blueprint_landing": "§5 EP4, §6 P4 关闭确认 Modal" },
+      { "role": "审批人", "stage": "审查申请内容", "blueprint_landing": "§6 P6 权限差异对比" }
+    ],
+    "key_transitions": [
+      { "role": "员工", "from": "查看已有权限与发现可申请项", "to": "提交权限申请", "blueprint_landing": "§3 MP1 节点1-3 提交确认 Modal" },
+      { "role": "员工", "from": "提交权限申请", "to": "等待审批结果", "blueprint_landing": "§3 MP1 节点1-3 提交成功 Toast" },
+      { "role": "管理员", "from": "配置自助申请", "to": "监控运行状态", "blueprint_landing": "§3 MP3 节点3-3 开启确认" },
+      { "role": "管理员", "from": "评估是否开启", "to": "配置自助申请", "blueprint_landing": "§6 P4 页面顶部流程说明+检查清单" }
+    ],
+    "dropout_risks": [
+      { "role": "员工", "stage": "等待审批结果", "risk": "等待超时→线下催办→链路断裂", "blueprint_landing": "§6 P3 状态详情时间线+催办" },
+      { "role": "员工", "stage": "权限生效与确认", "risk": "被拒后原因不明确→放弃通道", "blueprint_landing": "§3 MP2 节点2-3 结构化拒绝原因" },
+      { "role": "审批人", "stage": "审查申请内容", "risk": "信息不足→保守拒绝", "blueprint_landing": "§6 P6 批准前后差异对比" },
+      { "role": "管理员", "stage": "评估是否开启", "risk": "风险不明→不开启", "blueprint_landing": "§6 P4 影响评估+检查清单" }
+    ]
+  },
+  "interaction_overview": {
+    "description": "本次设计包含 3 条主路径、4 条次路径、6 条异常路径，覆盖员工申请、审批人处理、管理员配置三大主线",
+    "main_paths": [
+      { "id": "MP1", "name": "员工提交权限申请", "pages": ["我的权限 Page", "申请权限 Drawer", "提交确认 Modal"], "nodes": 3 },
+      { "id": "MP2", "name": "审批人处理申请", "pages": ["审批详情 Page", "通过确认 Modal", "拒绝原因 Modal"], "nodes": 3 },
+      { "id": "MP3", "name": "管理员开启自助申请", "pages": ["自助申请配置 Page"], "nodes": 3 }
+    ],
+    "sub_paths": [
+      { "id": "SP1", "name": "员工重新提交被拒申请" },
+      { "id": "SP2", "name": "管理员调整配置" },
+      { "id": "SP3", "name": "管理员关闭自助申请能力" },
+      { "id": "SP4", "name": "员工查看申请记录与状态详情" }
+    ],
+    "exception_paths": [
+      { "id": "EP1", "name": "提交时校验失败" },
+      { "id": "EP2", "name": "审批超时" },
+      { "id": "EP3", "name": "审批人不存在或不可达" },
+      { "id": "EP4", "name": "管理员关闭能力时存在在途申请" },
+      { "id": "EP5", "name": "自动授权失败" },
+      { "id": "EP6", "name": "可申请范围变更影响在途申请" }
+    ]
+  },
+  "main_flow": [
+    {
+      "id": "MP1",
+      "role": "员工",
+      "nodes": [
+        { "id": "1-1", "name": "进入我的权限页", "action": "从工作台或导航进入我的权限页面", "feedback": "按应用分组的权限列表，标注来源和生效状态；空状态展示引导", "pre_info": "权限分为管理员授予和自助申请获得两种来源；自助申请未开启时入口隐藏", "copy": { "empty_title": "暂无权限记录", "empty_desc": "你当前没有任何应用权限。如需获取权限，请联系管理员，或点击下方申请权限自行申请。" }, "next": "点击申请权限进入节点1-2" },
+        { "id": "1-2", "name": "选择权限并填写申请", "action": "在申请权限 Drawer 中选择一项或多项权限，输入申请原因", "feedback": "权限按角色聚合，展开可看能力摘要；已拥有和审批中的权限置灰；原因输入框字数计数", "pre_info": "每项展示角色名+包含能力摘要+适用场景；Drawer 顶部提示进入审批流程", "copy": { "placeholder": "请说明申请原因，如：因XX项目需要，需使用XX功能进行XX操作", "min_words_error": "申请原因至少需要 {N} 字，帮助审批人了解你的使用场景" }, "next": "点击提交申请进入节点1-3或触发 EP1" },
+        { "id": "1-3", "name": "确认提交", "action": "在提交确认 Modal 中查看申请摘要，确认提交", "feedback": "Modal 展示：申请权限、审批人、预计时效；确认后 Toast，Drawer 关闭", "pre_info": "预计时效基于管理端配置和历史数据推算；明确告知无需再联系管理员", "copy": { "modal_title": "确认提交申请", "summary": "你正在申请 {N} 项权限，将提交至 {审批人姓名} 审批，预计 {X} 小时内处理。", "success_toast": "申请已提交，预计 {X} 小时内处理。请在申请记录中查看进度。无需联系管理员或审批人。" }, "next": "回到我的权限页或进入申请记录" }
+      ]
+    },
+    {
+      "id": "MP2",
+      "role": "审批人",
+      "nodes": [
+        { "id": "2-1", "name": "查看申请详情", "action": "从待办列表或通知进入审批详情页", "feedback": "三个信息区：申请人信息、权限差异对比、申请原因；可选展示部门参考信息", "pre_info": "本次申请新增权限每项附带能力说明；审批人可看到批准前后的差异", "copy": { "diff_title": "批准后，该员工将新增以下能力：", "ref_info": "该员工所在部门共 {N} 人，其中 {M} 人已拥有此权限。" }, "next": "点击通过进入节点2-2，点击拒绝进入节点2-3" },
+        { "id": "2-2", "name": "通过申请", "action": "点击通过，在确认 Modal 中确认", "feedback": "Modal 展示操作后果+自动授权说明；Toast，后台自动授权", "copy": { "modal_title": "确认通过申请", "modal_body": "通过后，系统将自动为 {员工姓名} 授予所选权限，预计 {X} 内生效。结果将通过消息通知申请人。", "toast": "已通过 {员工姓名} 的权限申请，系统正在自动授权。" }, "next": "返回待办列表" },
+        { "id": "2-3", "name": "拒绝申请", "action": "点击拒绝，在拒绝原因 Modal 中选择结构化原因", "feedback": "四个原因选项+可选补充说明；至少选一个后确认拒绝才可点击", "copy": { "modal_title": "拒绝申请", "reasons": ["权限申请超出必要范围", "申请理由不充分，建议补充信息后重新提交", "该权限不适合当前岗位", "其他原因"], "toast": "已拒绝 {员工姓名} 的权限申请，结果已通知申请人。" }, "next": "返回待办列表" }
+      ]
+    },
+    {
+      "id": "MP3",
+      "role": "超管/权限管理员",
+      "nodes": [
+        { "id": "3-1", "name": "进入配置页", "action": "从权限管理模式页选择员工自助申请卡片进入", "feedback": "页面顶部展示运转流程图+开启前检查清单", "pre_info": "开启后员工即可看到申请入口；可随时调整或关闭", "copy": { "checklist_title": "开启前请确认", "items": ["已配置可申请范围", "已绑定审批流程", "当前无互斥的治理模式"] }, "next": "进入配置区域" },
+        { "id": "3-2", "name": "配置可申请范围与审批流程", "action": "在三个分区中操作：范围勾选、审批流程选择、查看摘要", "feedback": "实时汇总已选范围和审批流程；未配置时对应区展示空状态提示", "pre_info": "选择角色后该角色下所有员工均可申请；审批流程需提前在审批管理中创建", "copy": { "range_title": "可申请范围", "range_desc": "员工将能够申请以下角色对应的权限", "approval_title": "审批流程", "approval_desc": "员工提交申请后将按此流程审批" }, "next": "点击开启自助申请进入节点3-3" },
+        { "id": "3-3", "name": "开启确认", "action": "点击开启自助申请，确认操作", "feedback": "校验范围和审批均已配置、无互斥治理模式；通过后开关切换，页面状态更新", "copy": { "confirm": "开启后，员工即可在工作台和权限页面看到申请入口。确定开启？", "no_range": "请先配置可申请范围", "no_approval": "请先绑定审批流程", "conflict": "当前已开启 {模式名}，与员工自助申请互斥。请先关闭 {模式名} 后再开启。", "success": "员工自助申请权限已开启" }, "next": "页面保持配置页，状态区更新为运行中" }
+      ]
+    }
+  ],
+  "sub_flows": [
+    { "id": "SP1", "name": "员工重新提交被拒申请", "trigger": "员工在申请记录中看到已拒绝状态的申请，点击重新提交", "key_copy": "上次拒绝原因：{原因}。请修改后重新提交。" },
+    { "id": "SP2", "name": "管理员调整配置", "trigger": "管理员在自助申请运行期间修改范围或审批流程", "key_copy": "当前有 {N} 项在途申请，配置变更不会影响已提交的申请。" },
+    { "id": "SP3", "name": "管理员关闭自助申请能力", "trigger": "管理员在配置页点击关闭自助申请", "key_copy": "当前有 {N} 项在途申请涉及 {M} 名员工。关闭后，已提交的申请将继续走完审批流程，但不再接受新的申请。" },
+    { "id": "SP4", "name": "员工查看申请记录与状态详情", "trigger": "员工从我的权限页或消息通知进入申请记录页", "key_copy": "状态时间线：已提交→已送达审批人→审批人已查看→审批中→已通过/已拒绝" }
+  ],
+  "exceptions": [
+    { "id": "EP1", "name": "提交时校验失败", "timing": "员工在申请权限 Drawer 中点击提交申请时", "triggers": ["未选择权限", "申请原因少于最低字数", "已有审批中或已生效申请", "所选权限超出当前可申请范围"], "feedback_form": "InlineError/按钮置灰/全局 Banner", "recovery": "原路恢复，已填信息不丢失（除范围变更导致已选权限被移除）" },
+    { "id": "EP2", "name": "审批超时", "timing": "申请提交后超过预设审批时效仍未处理", "triggers": ["申请状态为审批中且超过管理端配置的处理时限"], "feedback_form": "员工侧标签+催办按钮；审批人侧待办高亮；管理员侧告警", "recovery": "审批人处理后恢复正常流转" },
+    { "id": "EP3", "name": "审批人不存在或不可达", "timing": "申请进入审批流程时审批人已离职、停用或移除", "triggers": ["审批人账号状态为离职/停用", "审批人角色被清空"], "feedback_form": "管理员侧红色告警+消息通知；员工侧保持审批中提示", "recovery": "管理员重新分配审批人后自动恢复流转" },
+    { "id": "EP4", "name": "管理员关闭能力时存在在途申请", "timing": "管理员点击关闭自助申请时", "triggers": ["当前存在审批中状态的申请"], "feedback_form": "关闭确认 Modal 强制展示影响评估", "recovery": "按推荐方案允许在途申请走完，不接受新申请" },
+    { "id": "EP5", "name": "自动授权失败", "timing": "审批通过后系统执行自动授权时", "triggers": ["权限引擎接口异常", "权限数据冲突", "网络超时"], "feedback_form": "审批人侧通过但附带异常提示；管理员侧告警+通知；员工侧已通过（授权处理中）", "recovery": "系统自动重试或管理员手动授权" },
+    { "id": "EP6", "name": "可申请范围变更影响在途申请", "timing": "管理员在员工提交后、审批完成前修改了可申请范围", "triggers": ["管理员缩小了可申请范围，在途权限不再属于新范围"], "feedback_form": "不阻断员工和审批人，范围变更时提示管理员", "recovery": "按推荐方案在途申请按提交时范围判断，不受影响" }
+  ],
+  "pages": [
+    { "id": "P1", "name": "我的权限", "type": "Page", "role": "员工", "goal": "查看当前所有权限及其来源，提供申请入口", "key_features": ["按应用分组展示权限列表", "来源标注（管理员授予/角色分配/自助申请）", "申请权限入口", "空状态引导"], "has_ascii_sketch": true },
+    { "id": "P2", "name": "申请权限", "type": "Drawer", "role": "员工", "goal": "从可申请范围中选择权限并提交申请", "key_features": ["按角色聚合的可申请列表", "权限能力摘要展开", "申请原因输入+字数校验", "提交确认 Modal"], "has_ascii_sketch": true },
+    { "id": "P3", "name": "申请记录", "type": "Page", "role": "员工", "goal": "查看历史申请记录和当前状态详情", "key_features": ["状态筛选", "状态时间线（已提交→已送达→已查看→审批中→结果）", "催办按钮", "重新提交按钮"], "has_ascii_sketch": true },
+    { "id": "P4", "name": "自助申请配置", "type": "Page", "role": "超管/权限管理员", "goal": "配置可申请范围、审批流程、开启或关闭能力", "key_features": ["运转流程说明+检查清单", "三分区配置（范围/审批/摘要）", "开启/关闭控制", "关闭影响评估"], "has_ascii_sketch": true },
+    { "id": "P5", "name": "申请记录总览", "type": "Page", "role": "超管/权限管理员", "goal": "查看运行状态、总量趋势和异常", "key_features": ["运行健康摘要（总量/审批中/已通过/已拒绝/超时）", "筛选查询", "异常告警区"], "has_ascii_sketch": true },
+    { "id": "P6", "name": "审批详情", "type": "Page", "role": "审批人", "goal": "全面了解申请内容并做出决策", "key_features": ["申请人信息", "权限差异对比（左当前右申请）", "申请原因", "通过/拒绝操作+确认 Modal"], "has_ascii_sketch": true }
+  ],
+  "states": [
+    { "state": "待提交", "meaning": "员工已选择权限但未提交", "audience": "员工", "actionable": "编辑、提交", "copy_key": "申请尚未提交" },
+    { "state": "审批中", "meaning": "申请已提交，等待审批人处理", "audience": "员工/审批人/管理员", "actionable": "员工催办查看；审批人处理；管理员监控", "copy_key": "等待审批人处理" },
+    { "state": "已送达审批人", "meaning": "审批人已收到但未查看", "audience": "员工/审批人", "actionable": "员工等待；审批人查看", "copy_key": "{审批人姓名} 已收到申请" },
+    { "state": "审批人已查看", "meaning": "审批人已查看申请内容", "audience": "员工/审批人", "actionable": "员工等待；审批人决策", "copy_key": "{审批人姓名} 已于 {时间} 查看" },
+    { "state": "超时", "meaning": "申请超过预设处理时效", "audience": "员工/审批人/管理员", "actionable": "员工催办；审批人优先处理；管理员转交", "copy_key": "处理超时，系统已自动催办" },
+    { "state": "已通过", "meaning": "审批人已通过，权限已生效", "audience": "员工/审批人/管理员", "actionable": "员工验证生效", "copy_key": "申请已通过，权限已生效" },
+    { "state": "已拒绝", "meaning": "审批人已拒绝", "audience": "员工/审批人/管理员", "actionable": "员工查看原因重新提交", "copy_key": "申请已拒绝，查看原因后可重新提交" },
+    { "state": "已生效", "meaning": "权限已自动授予并生效", "audience": "员工/管理员", "actionable": "员工使用；管理员查看", "copy_key": "权限已生效，可正常使用" },
+    { "state": "已撤销", "meaning": "被撤销或能力关闭导致作废", "audience": "员工/管理员", "actionable": "员工查看原因", "copy_key": "申请已作废" },
+    { "state": "待补偿", "meaning": "审批通过但自动授权失败", "audience": "管理员", "actionable": "管理员手动授权", "copy_key": "授权执行异常，需人工介入" },
+    { "state": "待转交", "meaning": "审批人不可达需重新分配", "audience": "管理员", "actionable": "管理员重新分配审批人", "copy_key": "审批人异常，需重新分配" }
+  ],
+  "open_questions": [
+    { "level": 1, "title": "自助申请与权限变更审批模式的关系", "impact": "决定审批链路是复用还是独立建设", "current_approach": "按复用现有审批链路推进", "confirm_with": "产品 + 权限域技术负责人" },
+    { "level": 1, "title": "管理员关闭能力时在途申请的处理策略", "impact": "P4 关闭确认 Modal 的文案和策略", "current_approach": "按允许在途申请走完、不接受新申请推进", "confirm_with": "产品" },
+    { "level": 1, "title": "与子管理员/双管理员互审模式的互斥规则", "impact": "P4 开启校验逻辑", "current_approach": "按与双管理员互审模式互斥推进", "confirm_with": "权限域技术负责人 + 产品" },
+    { "level": 2, "title": "可申请范围的配置粒度", "impact": "P4 范围选择区展示方式", "current_approach": "按角色粒度设计", "confirm_with": "产品 + 设计" },
+    { "level": 2, "title": "审批人异常时的降级策略", "impact": "P5 异常告警和 EP3 处理流程", "current_approach": "按自动标记待转交+通知管理员推进", "confirm_with": "产品 + 审批域技术负责人" },
+    { "level": 2, "title": "申请原因最低字数要求", "impact": "P2 校验规则和 InlineError 文案", "current_approach": "按 10 字推进", "confirm_with": "产品" },
+    { "level": 2, "title": "审批时效阈值", "impact": "EP2 超时触发条件和催办文案", "current_approach": "按 24 小时推进", "confirm_with": "产品" }
+  ]
+}

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的权限 — 员工端</title>
+<style>
+/* design-systems/xft/tokens.css — inlined */
+:root{
+--color-bg-accent-light:#EBF3FF;--color-bg-accent-light-hover:#D4E5FF;--color-bg-accent-regular:#1966ff;--color-bg-accent-regular-hover:#4086ff;--color-bg-accent-subtle:#F5F8FF;--color-border-accent-regular:#1966ff;--color-text-accent-regular:#1966ff;--color-text-accent-regular-hover:#4086ff;
+--color-bg-error-light:#fff3f2;--color-text-error-regular:#fa4332;
+--color-bg-warning-light:#fff7e8;--color-text-warning-regular:#e57717;
+--color-bg-success-light:#edfaf4;--color-text-success-regular:#0ac767;
+--color-bg-info-light:#ebf3ff;--color-text-info-regular:#1966ff;
+--color-container-bg-neutral-bright:#ffffff;--color-container-bg-neutral-bright-hover:rgba(19,34,64,0.05);--color-container-bg-neutral-gray:rgba(19,34,64,0.05);--color-container-bg-neutral-lightgray:rgba(19,34,64,0.02);
+--color-layout-bg-neutral-bright:#ffffff;--color-layout-bg-neutral-gray:#f3f4f6;
+--color-border-neutral:rgba(19,34,64,0.15);--color-divider-neutral:rgba(19,34,64,0.1);
+--color-text-neutral-gray10:rgba(19,34,64,0.25);--color-text-neutral-gray20:rgba(19,34,64,0.45);--color-text-neutral-gray30:rgba(19,34,64,0.65);--color-text-neutral-gray40:rgba(19,34,64,0.85);--color-text-neutral-gray50:rgba(19,34,64,0.95);
+--color-text-neutral-inverse50:#ffffff;
+--font-size-small:12px;--font-size-regular:14px;--font-size-heading-5:16px;--font-size-heading-3:20px;
+--font-weight-regular:400;--font-weight-bold:600;--font-height-tight:1.37;--font-height-regular:1.6;
+--font-family-primary:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+--border-radius-small:4px;--border-radius-regular:6px;--border-radius-large:12px;
+--spacing-0:0;--spacing-1:4px;--spacing-2:8px;--spacing-3:12px;--spacing-4:16px;--spacing-5:20px;--spacing-6:24px;--spacing-7:32px;
+--shadow-small-bottom:0px 4px 12px 0 rgba(19,34,64,0.08);--shadow-regular-bottom:0 8px 20px 0 rgba(19,34,64,0.16);--shadow-large-bottom:0 12px 32px 0 rgba(19,34,64,0.2);
+--motion-fast:150ms;--ease-standard:cubic-bezier(0.2,0,0,1);
+--xftv0-shell-topbar-height:48px;--xftv0-shell-sidebar-width:188px;--xftv0-shell-tabs-height:32px;
+--drawer-width-740:740px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+</style>
+<style>
+/* Shell + Topbar + Sidebar + Tabs (FROZEN) */
+body{margin:0;color:var(--color-text-neutral-gray50);background:var(--color-layout-bg-neutral-gray);font-family:var(--font-family-primary);font-size:14px;line-height:22px;overflow:hidden}
+.xftv0-admin-shell{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--color-layout-bg-neutral-gray)}
+.xftv0-admin-shell-topbar-slot{flex:0 0 var(--xftv0-shell-topbar-height)}
+.xftv0-admin-shell-body{flex:1;min-height:0;display:flex;min-width:0;background:#fff}
+.xftv0-admin-shell-sidebar-slot{width:var(--xftv0-shell-sidebar-width);flex:0 0 var(--xftv0-shell-sidebar-width)}
+.xftv0-admin-shell-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:#fff}
+.xftv0-admin-shell-tabs-slot{flex:0 0 auto;min-height:var(--xftv0-shell-tabs-height)}
+.xftv0-admin-shell-content{flex:1;min-width:0;min-height:0;overflow:auto;background:var(--color-layout-bg-neutral-gray);padding:var(--spacing-6)}
+.xftv0-admin-shell-content-inner{min-height:100%;display:flex;flex-direction:column;gap:var(--spacing-6)}
+.xftv0-topbar{--xftv0-topbar-gradient-start:#3c8aff;--xftv0-topbar-gradient-end:#4255ff;--xftv0-topbar-text:rgba(249,249,250,0.98);--xftv0-topbar-hover:rgba(249,249,250,0.1);height:48px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 16px 0 14px;background:linear-gradient(117.84deg,var(--xftv0-topbar-gradient-start),var(--xftv0-topbar-gradient-end));color:var(--xftv0-topbar-text)}
+.xftv0-topbar-left{display:flex;align-items:center;gap:12px;flex:1}
+.xftv0-topbar-brand{font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold','PingFang SC','Microsoft YaHei',sans-serif;white-space:nowrap;padding:0 8px}
+.xftv0-topbar-tenant{display:flex;align-items:center;gap:4px;cursor:pointer;padding:4px 8px;border-radius:6px;font-size:14px}
+.xftv0-topbar-right{display:flex;align-items:center;gap:8px}
+.xftv0-topbar-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:2px 8px;border-radius:6px}
+.xftv0-topbar-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-bg-accent-regular);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.xftv0-sidebar-menu{width:100%;height:100%;background:var(--color-container-bg-neutral-bright);border-right:1px solid var(--color-divider-neutral);padding:8px 2px 0 8px;overflow-y:auto}
+.xftv0-sidebar-item{width:100%;height:40px;display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--color-text-neutral-gray40);cursor:pointer;font-size:14px;border:0;background:transparent;text-align:left;margin-bottom:8px;font-family:inherit}
+.xftv0-sidebar-item:hover{background:var(--color-container-bg-neutral-bright-hover);color:var(--color-text-neutral-gray50)}
+.xftv0-sidebar-item.is-active{color:var(--color-text-accent-regular);background:var(--color-bg-accent-light);font-weight:500}
+.xftv0-page-tabs{display:flex;width:100%;height:32px;background:#e7e9ec;border-bottom:1px solid var(--color-divider-neutral);font-size:12px}
+.xftv0-page-tab{display:flex;align-items:center;height:32px;padding:6px 12px;border-radius:8px 8px 0 0;cursor:pointer;width:128px;border:0;background:transparent;font:inherit;color:rgba(19,34,64,0.85)}
+.xftv0-page-tab.active{background:#f3f4f6;color:rgba(19,34,64,0.95);font-weight:500}
+.xftv0-surface{border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-large);background:var(--color-container-bg-neutral-bright);box-shadow:var(--shadow-small-bottom);padding:var(--spacing-6)}
+.xftv0-wrapper{display:flex;flex-direction:column;gap:var(--spacing-4)}
+.xftv0-page-title{font-size:var(--font-size-heading-3);font-weight:var(--font-weight-bold);line-height:var(--font-height-tight);margin:0}
+
+/* Components */
+.xft-btn{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 14px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray40);font-size:var(--font-size-regular);font-family:var(--font-family-primary);cursor:pointer;white-space:nowrap;transition:border-color var(--motion-fast)var(--ease-standard)}
+.xft-btn:hover{border-color:var(--color-border-accent-regular);color:var(--color-text-accent-regular)}
+.xft-btn-primary{border-color:var(--color-border-accent-regular);background:var(--color-bg-accent-regular);color:var(--color-text-neutral-inverse50)}
+.xft-btn-primary:hover{background:var(--color-bg-accent-regular-hover)}
+.xft-btn-text{border:0;background:transparent;color:var(--color-text-accent-regular);padding:0;height:auto}
+.xft-btn-text:hover{text-decoration:underline}
+.xft-tag{display:inline-flex;align-items:center;height:22px;padding:0 var(--spacing-2);border-radius:var(--border-radius-small);font-size:var(--font-size-small);font-weight:var(--font-weight-bold);white-space:nowrap}
+.xft-tag-info{background:var(--color-bg-info-light);color:var(--color-text-info-regular)}
+.xft-tag-success{background:var(--color-bg-success-light);color:var(--color-text-success-regular)}
+.xft-tag-warning{background:var(--color-bg-warning-light);color:var(--color-text-warning-regular)}
+.xft-tag-error{background:var(--color-bg-error-light);color:var(--color-text-error-regular)}
+.xft-tag-neutral{background:var(--color-container-bg-neutral-gray-hover);color:var(--color-text-neutral-gray40)}
+
+/* Drawer (FROZEN core) */
+.xft-drawer-overlay{position:fixed;inset:0;display:flex;justify-content:flex-end;background:rgba(19,34,64,0.36);z-index:1000}
+.xft-drawer-overlay[hidden]{display:none}
+.xft-drawer{display:flex;flex-direction:column;width:min(100%,var(--drawer-width-740));height:100%;background:var(--color-container-bg-neutral-bright);box-shadow:var(--shadow-large-bottom)}
+.xft-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-4) var(--spacing-5);border-bottom:1px solid var(--color-divider-neutral)}
+.xft-drawer-title{margin:0;font-size:var(--font-size-heading-5);font-weight:var(--font-weight-bold)}
+.xft-drawer-close{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;border-radius:var(--border-radius-small);background:transparent;color:var(--color-text-neutral-gray30);font-size:18px;cursor:pointer}
+.xft-drawer-body{flex:1;padding:var(--spacing-5);overflow-y:auto}
+.xft-drawer-footer{display:flex;align-items:center;justify-content:flex-end;gap:var(--spacing-2);padding:12px var(--spacing-5);border-top:1px solid var(--color-divider-neutral)}
+
+/* Custom page */
+.xftv0-permission-list{display:flex;flex-direction:column;gap:var(--spacing-2)}
+.xftv0-permission-item{display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-3) var(--spacing-4);border:1px solid var(--color-divider-neutral);border-radius:var(--border-radius-regular)}
+.xftv0-record-card{padding:var(--spacing-4);border:1px solid var(--color-divider-neutral);border-radius:var(--border-radius-regular);margin-bottom:var(--spacing-2)}
+.xftv0-inline-note{padding:var(--spacing-4);border-radius:var(--border-radius-regular);background:var(--color-bg-info-light);color:var(--color-text-info-regular);font-size:var(--font-size-small);margin-bottom:var(--spacing-4)}
+.xftv0-check-role-item{display:flex;align-items:flex-start;gap:var(--spacing-3);padding:var(--spacing-3)0;border-bottom:1px solid var(--color-divider-neutral);cursor:pointer}
+.xftv0-check-role-item:last-child{border-bottom:0}
+.xftv0-check-role-item.disabled{opacity:0.5;cursor:not-allowed}
+.xftv0-char-count{font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)}
+.xftv0-field-error{font-size:var(--font-size-small);color:var(--color-text-error-regular)}
+.xft-modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(19,34,64,0.36);z-index:1100}
+.xft-modal-overlay[hidden]{display:none}
+.xft-modal{display:flex;flex-direction:column;width:min(100%,480px);max-height:calc(100vh-64px);background:var(--color-container-bg-neutral-bright);border-radius:var(--border-radius-large);box-shadow:var(--shadow-large-bottom);overflow:hidden}
+.xft-modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-4)var(--spacing-5);border-bottom:1px solid var(--color-divider-neutral)}
+.xft-modal-title{margin:0;font-size:var(--font-size-heading-5);font-weight:var(--font-weight-bold)}
+.xft-modal-close{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;border-radius:var(--border-radius-small);background:transparent;color:var(--color-text-neutral-gray30);font-size:18px;cursor:pointer}
+.xft-modal-body{padding:var(--spacing-5);overflow-y:auto;font-size:var(--font-size-regular);line-height:var(--font-height-regular)}
+.xft-modal-footer{display:flex;align-items:center;justify-content:flex-end;gap:var(--spacing-2);padding:12px var(--spacing-5);border-top:1px solid var(--color-divider-neutral)}
+</style>
+</head>
+<body>
+<div class="xftv0-admin-shell">
+<div class="xftv0-admin-shell-topbar-slot">
+<header class="xftv0-topbar"><div class="xftv0-topbar-left"><span class="xftv0-topbar-brand">薪福通</span><span class="xftv0-topbar-tenant">演示企业名称 ▾</span></div><div class="xftv0-topbar-right"><span class="xftv0-topbar-user"><span class="xftv0-topbar-avatar">陈</span>陈小明 ▾</span></div></header>
+</div>
+<div class="xftv0-admin-shell-body">
+<div class="xftv0-admin-shell-sidebar-slot">
+<nav class="xftv0-sidebar-menu" data-menu-root>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>自助申请配置</button>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>申请记录总览</button>
+<button class="xftv0-sidebar-item is-active" type="button" data-menu-item aria-current="page">我的权限</button>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>审批详情</button>
+</nav>
+</div>
+<div class="xftv0-admin-shell-main">
+<div class="xftv0-admin-shell-tabs-slot"><div class="xftv0-page-tabs" data-tabs-root><button class="xftv0-page-tab active" type="button" data-tab-trigger aria-selected="true">我的权限</button></div></div>
+<div class="xftv0-admin-shell-content"><div class="xftv0-admin-shell-content-inner">
+
+<!-- Surface 1: My Permissions -->
+<div class="xftv0-surface">
+<div class="xftv0-wrapper">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<h1 class="xftv0-page-title">我的权限</h1>
+<button class="xft-btn xft-btn-primary" type="button" data-overlay-open="drawer-apply">申请权限</button>
+</div>
+
+<!-- Pending Banner -->
+<div class="xftv0-inline-note">你有 1 项权限申请正在审批中。<button class="xft-btn xft-btn-text" style="margin-left:var(--spacing-2)">查看申请记录</button></div>
+
+<!-- Permission Items -->
+<div class="xftv0-permission-list">
+<div class="xftv0-permission-item">
+<div>
+<div style="font-weight:500">协同办公 · 基础功能</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">来源：角色分配 · 生效中 · 可进行：日程管理、文档协作、审批发起</div>
+</div>
+<span class="xft-tag xft-tag-success">生效中</span>
+</div>
+<div class="xftv0-permission-item">
+<div>
+<div style="font-weight:500">智能报表 · 报表查看员</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">来源：自助申请 · 生效中 · 可进行：报表查看、报表导出、数据筛选</div>
+</div>
+<span class="xft-tag xft-tag-success">生效中</span>
+</div>
+<div class="xftv0-permission-item">
+<div>
+<div style="font-weight:500">人事管理 · 员工查看</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">来源：管理员授予 · 生效中 · 可进行：员工信息查看、组织架构浏览</div>
+</div>
+<span class="xft-tag xft-tag-success">生效中</span>
+</div>
+</div>
+</div></div>
+
+<!-- Surface 2: Application Records -->
+<div class="xftv0-surface">
+<div class="xftv0-wrapper">
+<h1 class="xftv0-page-title">申请记录</h1>
+<div class="xftv0-record-card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-1)">
+<strong>数据管理员权限申请</strong><span class="xft-tag xft-tag-info">审批中</span>
+</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30);margin-bottom:var(--spacing-2)">提交于 07-07 10:00 · 审批人：张经理 · 已等待 4 小时</div>
+<div><button class="xft-btn xft-btn-text">查看详情</button><button class="xft-btn xft-btn-text" style="margin-left:var(--spacing-3)">催办</button></div>
+</div>
+<div class="xftv0-record-card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-1)">
+<strong>报表查看员权限申请</strong><span class="xft-tag xft-tag-success">已通过 · 已生效</span>
+</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30);margin-bottom:var(--spacing-2)">提交于 07-05 14:30 · 审批人：李经理 · 处理时间：2 小时</div>
+<div><button class="xft-btn xft-btn-text">查看详情</button></div>
+</div>
+<div class="xftv0-record-card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-1)">
+<strong>考勤管理员权限申请</strong><span class="xft-tag xft-tag-error">已拒绝</span>
+</div>
+<div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30);margin-bottom:var(--spacing-2)">提交于 07-03 09:15 · 审批人：李经理 · 拒绝原因：申请理由不充分，建议补充信息后重新提交</div>
+<div><button class="xft-btn xft-btn-text">查看详情</button><button class="xft-btn xft-btn-primary" style="margin-left:var(--spacing-3);height:24px;padding:0 10px;font-size:var(--font-size-small)">重新提交</button></div>
+</div>
+</div></div>
+
+</div></div></div></div></div>
+
+<!-- Drawer: 申请权限 -->
+<section class="xft-drawer-overlay" id="drawer-apply" data-overlay aria-hidden="true" hidden>
+<div class="xft-drawer">
+<header class="xft-drawer-header"><h2 class="xft-drawer-title">申请权限</h2><button class="xft-drawer-close" data-overlay-close>&times;</button></header>
+<div class="xft-drawer-body">
+<div class="xftv0-inline-note" style="margin-bottom:var(--spacing-4)">以下为当前可申请的权限范围。选择需要的权限并填写申请原因后提交，将进入审批流程。</div>
+<div class="xftv0-permission-list" style="margin-bottom:var(--spacing-4)">
+<label class="xftv0-check-role-item" id="role-report" onclick="this.classList.toggle('selected')">
+<input type="checkbox" style="margin-top:4px" /><div><div style="font-weight:500">报表查看员</div><div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">包含 3 项功能权限 · 可进行：报表查看、报表导出、数据筛选</div></div>
+</label>
+<label class="xftv0-check-role-item" id="role-data" onclick="this.classList.toggle('selected')">
+<input type="checkbox" style="margin-top:4px" /><div><div style="font-weight:500">数据管理员</div><div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">包含 5 项功能权限 · 可进行：数据导入、导出、清理、归档、权限配置</div></div>
+</label>
+<label class="xftv0-check-role-item disabled">
+<input type="checkbox" disabled style="margin-top:4px" /><div><div style="font-weight:500">考勤管理员</div><div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">你已拥有此权限，无需重复申请</div></div><span class="xft-tag xft-tag-neutral">已拥有</span>
+</label>
+<label class="xftv0-check-role-item disabled">
+<input type="checkbox" disabled style="margin-top:4px" /><div><div style="font-weight:500">招聘管理员</div><div style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)">你已有该权限的审批中申请</div></div><span class="xft-tag xft-tag-warning">审批中</span>
+</label>
+</div>
+<div style="margin-bottom:var(--spacing-2)"><label style="font-weight:500">申请原因 *</label></div>
+<textarea id="apply-reason" placeholder="请说明申请原因，如：因XX项目需要，需使用XX功能进行XX操作" style="width:100%;min-height:80px;padding:var(--spacing-2)11px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);font-family:var(--font-family-primary);font-size:var(--font-size-regular);resize:vertical" oninput="updateCharCount()"></textarea>
+<div class="xftv0-char-count" id="char-count">已输入 0 字，至少需要 10 字</div>
+<div class="xftv0-field-error" id="reason-error" hidden>申请原因至少需要 10 字，帮助审批人了解你的使用场景。</div>
+</div>
+<footer class="xft-drawer-footer">
+<button class="xft-btn" data-overlay-close>取消</button>
+<button class="xft-btn xft-btn-primary" id="btn-drawer-submit" disabled data-overlay-open="modal-submit-confirm">提交申请</button>
+</footer>
+</div>
+</section>
+
+<!-- Modal: 提交确认 -->
+<section class="xft-modal-overlay" id="modal-submit-confirm" data-overlay aria-hidden="true" hidden>
+<div class="xft-modal"><header class="xft-modal-header"><h2 class="xft-modal-title">确认提交申请</h2><button class="xft-modal-close" data-overlay-close>&times;</button></header>
+<div class="xft-modal-body"><p>你正在申请 <strong>1</strong> 项权限，将提交至 <strong>李经理</strong> 审批，预计 <strong>4</strong> 小时内处理。</p><p style="color:var(--color-text-neutral-gray30);font-size:var(--font-size-small)">提交后无需联系管理员或审批人，审批结果将通过消息通知你。</p></div>
+<footer class="xft-modal-footer"><button class="xft-btn" data-overlay-close>取消</button><button class="xft-btn xft-btn-primary" id="btn-confirm-submit">确认提交</button></footer></div>
+</section>
+</div>
+<script src="../../runtime/basic-interactions.js"></script>
+<script>
+function updateCharCount(){var t=document.getElementById('apply-reason');var len=(t.value||'').length;document.getElementById('char-count').textContent='已输入 '+len+' 字，至少需要 10 字';var hasRole=document.querySelector('.xftv0-check-role-item.selected');var btn=document.getElementById('btn-drawer-submit');btn.disabled=!hasRole||len<10;document.getElementById('reason-error').hidden=len===0||len>=10}
+document.getElementById('btn-confirm-submit').addEventListener('click',function(){document.getElementById('modal-submit-confirm').hidden=true;document.getElementById('drawer-apply').hidden=true})
+</script>
+</body>
+</html>

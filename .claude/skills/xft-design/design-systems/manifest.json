@@ -11,11 +11,9 @@
   "files": {
     "design": "DESIGN.md",
     "tokens": "tokens.css",
-    "designTokens": "design-tokens.json",
-    "components": "components.html"
+    "designTokens": "design-tokens.json"
   },
   "usage": "USAGE.md",
-  "componentsManifest": "components.manifest.json",
   "craft": {
     "applies": [],
     "suggested": [

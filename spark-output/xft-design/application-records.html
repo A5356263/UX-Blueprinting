@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>申请记录总览 — 薪福通管理后台</title>
+<style>
+/* design-systems/xft/tokens.css — inlined */
+:root{
+--color-bg-accent-light:#EBF3FF;--color-bg-accent-light-hover:#D4E5FF;--color-bg-accent-light-active:#99C2FF;--color-bg-accent-regular:#1966ff;--color-bg-accent-regular-hover:#4086ff;--color-bg-accent-regular-active:#0b50d9;--color-bg-accent-subtle:#F5F8FF;--color-border-accent-regular:#1966ff;--color-border-accent-regular-hover:#4086ff;--color-border-accent-regular-active:#0b50d9;--color-text-accent-regular:#1966ff;--color-text-accent-regular-hover:#4086ff;--color-text-accent-regular-active:#0b50d9;
+--color-bg-error-light:#fff3f2;--color-bg-error-light-hover:#ffdcd9;--color-bg-error-light-active:#ffb9b2;--color-bg-error-regular:#fa4332;--color-bg-error-regular-hover:#ff6052;--color-bg-error-regular-active:#d93021;--color-border-error-light:#ffb9b2;--color-border-error-regular:#fa4332;--color-border-error-regular-hover:#ff6052;--color-border-error-regular-active:#d93021;--color-text-error-regular:#fa4332;--color-text-error-regular-hover:#ff6052;--color-text-error-regular-active:#d93021;
+--color-bg-warning-light:#fff7e8;--color-bg-warning-light-hover:#ffe8bf;--color-bg-warning-light-active:#ffdba6;--color-bg-warning-regular:#ff9326;--color-bg-warning-regular-hover:#ffac4d;--color-bg-warning-regular-active:#e57717;--color-border-warning-light:#ffdba6;--color-text-warning-regular:#e57717;--color-text-warning-regular-hover:#ff9326;--color-text-warning-regular-active:#a64d08;
+--color-bg-success-light:#edfaf4;--color-bg-success-light-hover:#c2f2da;--color-bg-success-light-active:#8eedbe;--color-bg-success-regular:#0ac767;--color-bg-success-regular-hover:#31de88;--color-bg-success-regular-active:#00a653;--color-border-success-light:#8eedbe;--color-text-success-regular:#0ac767;--color-text-success-regular-hover:#31de88;--color-text-success-regular-active:#00a653;
+--color-bg-info-light:#ebf3ff;--color-bg-info-light-hover:#d4e5ff;--color-bg-info-light-active:#99c2ff;--color-border-info-light:#99c2ff;--color-text-info-regular:#1966ff;
+--color-container-bg-neutral-bright:#ffffff;--color-container-bg-neutral-bright-hover:rgba(19,34,64,0.05);--color-container-bg-neutral-bright-active:rgba(19,34,64,0.1);--color-container-bg-neutral-gray:rgba(19,34,64,0.05);--color-container-bg-neutral-gray-hover:rgba(19,34,64,0.1);--color-container-bg-neutral-gray-active:rgba(19,34,64,0.15);--color-container-bg-neutral-lightgray:rgba(19,34,64,0.02);--color-container-bg-neutral-inverse:rgba(19,34,64,0.95);
+--color-layout-bg-neutral-bright:#ffffff;--color-layout-bg-neutral-gray:#f3f4f6;
+--color-border-neutral:rgba(19,34,64,0.15);--color-divider-neutral:rgba(19,34,64,0.1);
+--color-text-neutral-gray10:rgba(19,34,64,0.25);--color-text-neutral-gray20:rgba(19,34,64,0.45);--color-text-neutral-gray30:rgba(19,34,64,0.65);--color-text-neutral-gray40:rgba(19,34,64,0.85);--color-text-neutral-gray50:rgba(19,34,64,0.95);
+--color-text-neutral-inverse50:#ffffff;
+--font-size-small:12px;--font-size-regular:14px;--font-size-large:16px;--font-size-heading-5:16px;--font-size-heading-3:20px;
+--font-weight-regular:400;--font-weight-bold:600;--font-height-tight:1.37;--font-height-regular:1.6;
+--font-family-primary:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+--border-radius-small:4px;--border-radius-regular:6px;--border-radius-large:12px;
+--spacing-0:0;--spacing-1:4px;--spacing-2:8px;--spacing-3:12px;--spacing-4:16px;--spacing-5:20px;--spacing-6:24px;--spacing-7:32px;
+--shadow-small-bottom:0px 4px 12px 0 rgba(19,34,64,0.08);--shadow-regular-bottom:0 8px 20px 0 rgba(19,34,64,0.16);--shadow-large-bottom:0 12px 32px 0 rgba(19,34,64,0.2);
+--motion-fast:150ms;--motion-base:220ms;--ease-standard:cubic-bezier(0.2,0,0,1);
+--xftv0-shell-topbar-height:48px;--xftv0-shell-sidebar-width:188px;--xftv0-shell-tabs-height:32px;
+--xftv0-filter-label-width:72px;--xftv0-filter-control-min-width:180px;--xftv0-filter-control-max-width:400px;--xftv0-filter-control-width:240px;--xftv0-filter-control-height:32px;--xftv0-filter-control-padding-inline:11px;--xftv0-filter-field-inline-gap:8px;--xftv0-filter-field-row-gap:16px;--xftv0-filter-field-column-gap:24px;--xftv0-filter-action-gap:12px;--xftv0-filter-field-block-width:calc(72px + 8px + 240px);
+--xftv0-action-bar-height:32px;--xftv0-action-bar-gap:24px;--xftv0-action-bar-inner-gap:8px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+</style>
+<style>
+/* ── Shell ── */
+body{margin:0;color:var(--color-text-neutral-gray50);background:var(--color-layout-bg-neutral-gray);font-family:var(--font-family-primary);font-size:14px;line-height:22px;overflow:hidden}
+.xftv0-admin-shell{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--color-layout-bg-neutral-gray)}
+.xftv0-admin-shell-topbar-slot{flex:0 0 var(--xftv0-shell-topbar-height);min-height:var(--xftv0-shell-topbar-height)}
+.xftv0-admin-shell-body{flex:1;min-height:0;display:flex;min-width:0;background:#ffffff}
+.xftv0-admin-shell-sidebar-slot{width:var(--xftv0-shell-sidebar-width);flex:0 0 var(--xftv0-shell-sidebar-width);min-width:var(--xftv0-shell-sidebar-width);min-height:0}
+.xftv0-admin-shell-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:#ffffff}
+.xftv0-admin-shell-tabs-slot{flex:0 0 auto;min-height:var(--xftv0-shell-tabs-height)}
+.xftv0-admin-shell-content{flex:1;min-width:0;min-height:0;overflow:auto;background:var(--color-layout-bg-neutral-gray);padding:var(--spacing-6)}
+.xftv0-admin-shell-content-inner{min-height:100%;display:flex;flex-direction:column;gap:var(--spacing-6)}
+
+/* ── Topbar (FROZEN) ── */
+.xftv0-topbar{--xftv0-topbar-gradient-start:#3c8aff;--xftv0-topbar-gradient-end:#4255ff;--xftv0-topbar-text:rgba(249,249,250,0.98);--xftv0-topbar-hover:rgba(249,249,250,0.1);height:48px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 16px 0 14px;background:linear-gradient(117.84deg,var(--xftv0-topbar-gradient-start),var(--xftv0-topbar-gradient-end));color:var(--xftv0-topbar-text)}
+.xftv0-topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.xftv0-topbar-brand{font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold','PingFang SC','Microsoft YaHei',sans-serif;white-space:nowrap;flex-shrink:0;padding:0 8px}
+.xftv0-topbar-tenant{display:flex;align-items:center;gap:4px;cursor:pointer;padding:4px 8px;border-radius:6px;font-size:14px;white-space:nowrap}
+.xftv0-topbar-tenant:hover{background:var(--xftv0-topbar-hover)}
+.xftv0-topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.xftv0-topbar-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:2px 8px;border-radius:6px}
+.xftv0-topbar-user:hover{background:var(--xftv0-topbar-hover)}
+.xftv0-topbar-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-bg-accent-regular);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+
+/* ── Sidebar (FROZEN) ── */
+.xftv0-sidebar-menu{--xftv0-sidebar-item-height:40px;width:100%;height:100%;background:var(--color-container-bg-neutral-bright);border-right:1px solid var(--color-divider-neutral);padding:8px 2px 0 8px;overflow-y:auto}
+.xftv0-sidebar-item{width:100%;height:var(--xftv0-sidebar-item-height);display:flex;align-items:center;padding:8px 4px 8px 8px;border-radius:6px;color:var(--color-text-neutral-gray40);cursor:pointer;font-size:14px;border:0;background:transparent;text-align:left;margin-bottom:8px;font-family:inherit;line-height:24px}
+.xftv0-sidebar-item:hover{background:var(--color-container-bg-neutral-bright-hover);color:var(--color-text-neutral-gray50)}
+.xftv0-sidebar-item.is-active{color:var(--color-text-accent-regular);background:var(--color-bg-accent-light);font-weight:500}
+
+/* ── Tabs (FROZEN) ── */
+.xftv0-page-tabs{display:flex;width:100%;height:32px;background:#e7e9ec;border-bottom:1px solid var(--color-divider-neutral);font-size:12px}
+.xftv0-page-tab{align-items:center;border-radius:8px 8px 0 0;cursor:pointer;display:flex;height:32px;padding:6px 12px;position:relative;width:128px;flex:0 0 128px;border:0;background:transparent;font:inherit;color:rgba(19,34,64,0.85)}
+.xftv0-page-tab.active{background:#f3f4f6;color:rgba(19,34,64,0.95);font-weight:500}
+
+/* ── Surface & Wrapper ── */
+.xftv0-surface{border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-large);background:var(--color-container-bg-neutral-bright);box-shadow:var(--shadow-small-bottom);padding:var(--spacing-6)}
+.xftv0-wrapper{display:flex;flex-direction:column;gap:var(--spacing-4)}
+.xftv0-page-title{font-size:var(--font-size-heading-3);font-weight:var(--font-weight-bold);line-height:var(--font-height-tight);margin:0}
+
+/* ── Filter (FROZEN) ── */
+.xftv0-filter-region{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;column-gap:var(--spacing-6);row-gap:var(--spacing-6)}
+.xftv0-filter-region-fields{display:flex;flex-wrap:wrap;align-items:start;column-gap:var(--xftv0-filter-field-column-gap);row-gap:var(--xftv0-filter-field-row-gap);min-width:0}
+.xftv0-filter-field-item{display:grid;grid-template-columns:var(--xftv0-filter-label-width) var(--xftv0-filter-control-width);align-items:center;column-gap:var(--xftv0-filter-field-inline-gap);width:var(--xftv0-filter-field-block-width);flex:0 0 var(--xftv0-filter-field-block-width)}
+.xftv0-filter-field-label{width:var(--xftv0-filter-label-width);color:var(--color-text-neutral-gray50);font-size:var(--font-size-large);line-height:24px;text-align:right;white-space:nowrap}
+.xftv0-filter-field-control{min-width:0}
+.xftv0-filter-field-control input,.xftv0-filter-field-control select{width:100%;height:var(--xftv0-filter-control-height);padding:0 var(--xftv0-filter-control-padding-inline);border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray50);font-size:var(--font-size-regular);font-family:var(--font-family-primary);outline:none}
+.xftv0-filter-field-control select{appearance:none;padding-right:31px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='rgba(19,34,64,0.45)' d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;cursor:pointer}
+.xftv0-filter-region-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--xftv0-filter-action-gap);white-space:nowrap;align-self:start}
+
+/* ── Table (FROZEN) ── */
+.xft-table-wrap{overflow-x:auto;border:1px solid var(--color-divider-neutral);border-radius:var(--border-radius-large);background:var(--color-container-bg-neutral-bright)}
+.xft-table{width:100%;min-width:700px;border-collapse:separate;border-spacing:0;font-size:var(--font-size-regular)}
+.xft-table thead th{height:48px;padding:0 var(--spacing-4);border-bottom:1px solid var(--color-divider-neutral);background:var(--color-container-bg-neutral-lightgray);color:var(--color-text-neutral-gray40);font-weight:var(--font-weight-bold);text-align:left;vertical-align:middle;white-space:nowrap}
+.xft-table tbody td{height:48px;padding:0 var(--spacing-4);border-bottom:1px solid var(--color-divider-neutral);color:var(--color-text-neutral-gray50);vertical-align:middle;background:var(--color-container-bg-neutral-bright)}
+.xft-table tbody tr:last-child td{border-bottom:0}
+.xft-table tbody tr:hover td{background:var(--color-bg-accent-light)}
+.xft-table-link{color:var(--color-text-accent-regular);text-decoration:none;cursor:pointer}
+
+/* ── Button, Tag, Pagination (FROZEN) ── */
+.xft-btn{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 14px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray40);font-size:var(--font-size-regular);font-family:var(--font-family-primary);cursor:pointer;white-space:nowrap;transition:border-color var(--motion-fast)var(--ease-standard),color var(--motion-fast)var(--ease-standard)}
+.xft-btn:hover{border-color:var(--color-border-accent-regular);color:var(--color-text-accent-regular)}
+.xft-btn-primary{border-color:var(--color-border-accent-regular);background:var(--color-bg-accent-regular);color:var(--color-text-neutral-inverse50)}
+.xft-btn-primary:hover{border-color:var(--color-border-accent-regular-hover);background:var(--color-bg-accent-regular-hover);color:var(--color-text-neutral-inverse50)}
+.xft-tag{display:inline-flex;align-items:center;height:22px;padding:0 var(--spacing-2);border-radius:var(--border-radius-small);font-size:var(--font-size-small);font-weight:var(--font-weight-bold);white-space:nowrap}
+.xft-tag-info{background:var(--color-bg-info-light);color:var(--color-text-info-regular)}
+.xft-tag-success{background:var(--color-bg-success-light);color:var(--color-text-success-regular)}
+.xft-tag-warning{background:var(--color-bg-warning-light);color:var(--color-text-warning-regular)}
+.xft-tag-error{background:var(--color-bg-error-light);color:var(--color-text-error-regular)}
+.xft-tag-neutral{background:var(--color-container-bg-neutral-gray-hover);color:var(--color-text-neutral-gray40)}
+.pagination{display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-3);padding:var(--spacing-3)0}
+.pagination-info{color:var(--color-text-neutral-gray30);font-size:var(--font-size-small)}
+.pagination-actions{display:inline-flex;align-items:center;gap:4px}
+.page-btn{min-width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0 var(--spacing-2);border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray40);cursor:pointer;font-size:var(--font-size-small)}
+.page-btn.is-active{border-color:var(--color-border-accent-regular);background:var(--color-bg-accent-regular);color:var(--color-text-neutral-inverse50)}
+
+/* ── 页面自定义 ── */
+.xftv0-summary-bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--spacing-3);margin-bottom:var(--spacing-4)}
+.xftv0-summary-item{padding:var(--spacing-4);border:1px solid var(--color-divider-neutral);border-radius:var(--border-radius-large);background:var(--color-container-bg-neutral-lightgray);text-align:center}
+.xftv0-summary-num{font-size:28px;font-weight:700;color:var(--color-text-neutral-gray50);line-height:1.2}
+.xftv0-summary-lbl{font-size:var(--font-size-small);color:var(--color-text-neutral-gray30);margin-top:var(--spacing-1)}
+.xftv0-inline-note-warning{padding:var(--spacing-4);border-radius:var(--border-radius-regular);background:var(--color-bg-warning-light);color:var(--color-text-warning-regular);font-size:var(--font-size-small);line-height:var(--font-height-regular);margin-bottom:var(--spacing-4)}
+</style>
+</head>
+<body>
+<div class="xftv0-admin-shell">
+<div class="xftv0-admin-shell-topbar-slot">
+<header class="xftv0-topbar" aria-label="顶部导航">
+<div class="xftv0-topbar-left"><span class="xftv0-topbar-brand">薪福通</span><span class="xftv0-topbar-tenant">演示企业名称 ▾</span></div>
+<div class="xftv0-topbar-right"><span class="xftv0-topbar-user"><span class="xftv0-topbar-avatar">管</span>管理员 ▾</span></div>
+</header>
+</div>
+<div class="xftv0-admin-shell-body">
+<div class="xftv0-admin-shell-sidebar-slot">
+<nav class="xftv0-sidebar-menu" data-menu-root>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>自助申请配置</button>
+<button class="xftv0-sidebar-item is-active" type="button" data-menu-item aria-current="page">申请记录总览</button>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>我的权限（员工端）</button>
+<button class="xftv0-sidebar-item" type="button" data-menu-item>审批详情</button>
+</nav>
+</div>
+<div class="xftv0-admin-shell-main">
+<div class="xftv0-admin-shell-tabs-slot">
+<div class="xftv0-page-tabs" data-tabs-root><button class="xftv0-page-tab active" type="button" data-tab-trigger aria-selected="true">申请记录总览</button></div>
+</div>
+<div class="xftv0-admin-shell-content"><div class="xftv0-admin-shell-content-inner">
+<div class="xftv0-layout xftv0-layout-list-management">
+
+<!-- Surface 1: Stats + Filter -->
+<div class="xftv0-surface">
+<div class="xftv0-wrapper">
+
+<!-- Header -->
+<section data-region="header"><h1 class="xftv0-page-title">申请记录总览</h1></section>
+
+<!-- Summary Stats -->
+<div class="xftv0-summary-bar">
+<div class="xftv0-summary-item"><div class="xftv0-summary-num">128</div><div class="xftv0-summary-lbl">总申请</div></div>
+<div class="xftv0-summary-item"><div class="xftv0-summary-num">12</div><div class="xftv0-summary-lbl">审批中</div></div>
+<div class="xftv0-summary-item"><div class="xftv0-summary-num">103</div><div class="xftv0-summary-lbl">已通过</div></div>
+<div class="xftv0-summary-item"><div class="xftv0-summary-num">11</div><div class="xftv0-summary-lbl">已拒绝</div></div>
+<div class="xftv0-summary-item"><div class="xftv0-summary-num" style="color:var(--color-text-warning-regular)">2.4h</div><div class="xftv0-summary-lbl">平均处理</div></div>
+</div>
+
+<!-- Alert -->
+<div class="xftv0-inline-note-warning">
+超时积压：3 项 | 审批人 张经理 已离职，2 项申请无法流转。<button class="xft-btn" type="button" style="margin-left:var(--spacing-2);height:24px;padding:0 8px;font-size:var(--font-size-small)">处理</button>
+</div>
+
+<!-- Filter -->
+<section data-region="filter">
+<div class="xftv0-filter-region">
+<div class="xftv0-filter-region-fields">
+<div class="xftv0-filter-field-item"><span class="xftv0-filter-field-label">状态</span><div class="xftv0-filter-field-control"><select><option value="">全部状态</option><option>审批中</option><option>已通过</option><option>已拒绝</option></select></div></div>
+<div class="xftv0-filter-field-item"><span class="xftv0-filter-field-label">申请人</span><div class="xftv0-filter-field-control"><input type="text" placeholder="请输入" /></div></div>
+<div class="xftv0-filter-field-item"><span class="xftv0-filter-field-label">时间</span><div class="xftv0-filter-field-control"><input type="text" placeholder="选择日期" /></div></div>
+</div>
+<nav class="xftv0-filter-region-actions">
+<button class="xft-btn" type="button">重置</button>
+<button class="xft-btn" type="button">查询</button>
+</nav>
+</div>
+</section>
+</div></div>
+
+<!-- Surface 2: Table -->
+<div class="xftv0-surface">
+<section data-region="primary-data-area">
+<div class="xft-table-wrap">
+<table class="xft-table">
+<thead><tr><th>申请人</th><th>申请权限</th><th>提交时间</th><th>当前状态</th><th>审批人</th><th>处理时间</th><th>操作</th></tr></thead>
+<tbody>
+<tr><td>陈小明</td><td>报表查看员</td><td>07-07 14:30</td><td><span class="xft-tag xft-tag-success">已生效</span></td><td>李经理</td><td>2h</td><td><a class="xft-table-link">详情</a></td></tr>
+<tr><td>王丽华</td><td>数据管理员</td><td>07-07 10:00</td><td><span class="xft-tag xft-tag-info">审批中</span></td><td>张经理</td><td>4h</td><td><a class="xft-table-link">详情</a></td></tr>
+<tr><td>赵伟</td><td>考勤管理员</td><td>07-06 09:15</td><td><span class="xft-tag xft-tag-error">已拒绝</span></td><td>李经理</td><td>1h</td><td><a class="xft-table-link">详情</a></td></tr>
+<tr><td>刘芳</td><td>招聘管理员</td><td>07-05 16:45</td><td><span class="xft-tag xft-tag-warning">超时</span></td><td>张经理</td><td>28h</td><td><a class="xft-table-link">详情</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="pagination"><span class="pagination-info">共 128 条</span><div class="pagination-actions"><button class="page-btn">‹</button><button class="page-btn is-active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">›</button></div></div>
+</section>
+</div>
+
+</div></div></div>
+</div></div></div>
+</div>
+<script src="../../runtime/basic-interactions.js"></script>
+</body>
+</html>

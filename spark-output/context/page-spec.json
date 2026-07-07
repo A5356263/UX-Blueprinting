@@ -1,0 +1,25 @@
+{
+  "skill": "page-spec",
+  "version": "1.0.0",
+  "generated_at": "2026-07-07T22:20:00+08:00",
+  "project_name": "员工自助权限申请",
+  "entities": [
+    { "name": "我的权限", "type": "Page", "scope": "generate" },
+    { "name": "申请权限", "type": "Drawer", "scope": "generate" },
+    { "name": "申请记录", "type": "Page", "scope": "generate" },
+    { "name": "自助申请配置", "type": "Page", "scope": "generate" },
+    { "name": "申请记录总览", "type": "Page", "scope": "generate" },
+    { "name": "审批详情", "type": "Page", "scope": "generate" },
+    { "name": "权限管理模式", "type": "Page", "scope": "reference_only" },
+    { "name": "待办列表", "type": "Page", "scope": "skip" },
+    { "name": "审批管理/通用审批", "type": "Page", "scope": "skip" }
+  ],
+  "extraction_summary": {
+    "entities_count": 6,
+    "modal_count": 4,
+    "states_count": 11,
+    "copy_count": 58,
+    "exceptions_count": 6,
+    "validation_rules_count": 9
+  }
+}
