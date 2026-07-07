@@ -1,0 +1,77 @@
+/* XFT content layout support CSS */
+
+.xft-layout-settings-anchor {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--spacing-4);
+  align-items: start;
+}
+
+.settings-anchor-panel,
+.settings-content-panel,
+.master-panel,
+.detail-panel {
+  min-width: 0;
+}
+
+.settings-anchor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.settings-anchor-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 0;
+  border-radius: var(--border-radius-regular);
+  background: transparent;
+  color: var(--color-text-neutral-gray40);
+  cursor: pointer;
+  transition: all var(--motion-fast) var(--ease-standard);
+}
+
+.settings-anchor-item:hover {
+  background: var(--color-container-bg-neutral-bright-hover);
+  color: var(--color-text-neutral-gray50);
+}
+
+.settings-anchor-item.is-active {
+  background: var(--color-bg-accent-light);
+  color: var(--color-text-accent-regular);
+  font-weight: var(--font-weight-bold);
+}
+
+.xft-layout-detail-side {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--spacing-4);
+  align-items: start;
+}
+
+.detail-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.xft-layout-tabs {
+  width: 100%;
+}
+
+.tabs-panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+.xft-layout-master-detail {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: var(--spacing-4);
+  align-items: start;
+}

@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XFT - reference components</title>
+    <meta name="description" content="企业级后台业务设计系统组件参考。" />
+    <style>
+      /* ══ 1. Design Tokens ═════════════════════════════════════════════════ */
+:root {
+        --color-bg-accent-light: #EBF3FF;
+        --color-bg-accent-light-hover: #D4E5FF;
+        --color-bg-accent-light-active: #99C2FF;
+        --color-bg-accent-regular: #1966ff;
+        --color-bg-accent-regular-hover: #4086ff;
+        --color-bg-accent-regular-active: #0b50d9;
+        --color-bg-accent-subtle: #F5F8FF;
+        --color-border-accent-regular: #1966ff;
+        --color-border-accent-regular-hover: #4086ff;
+        --color-border-accent-regular-active: #0b50d9;
+        --color-text-accent-regular: #1966ff;
+        --color-text-accent-regular-hover: #4086ff;
+        --color-text-accent-regular-active: #0b50d9;
+        --color-bg-error-light: #fff3f2;
+        --color-bg-error-light-hover: #ffdcd9;
+        --color-bg-error-light-active: #ffb9b2;
+        --color-bg-error-regular: #fa4332;
+        --color-bg-error-regular-hover: #ff6052;
+        --color-bg-error-regular-active: #d93021;
+        --color-border-error-light: #ffb9b2;
+        --color-border-error-regular: #fa4332;
+        --color-border-error-regular-hover: #ff6052;
+        --color-border-error-regular-active: #d93021;
+        --color-text-error-regular: #fa4332;
+        --color-text-error-regular-hover: #ff6052;
+        --color-text-error-regular-active: #d93021;
+        --color-bg-warning-light: #fff7e8;
+        --color-bg-warning-light-hover: #ffe8bf;
+        --color-bg-warning-light-active: #ffdba6;
+        --color-bg-warning-regular: #ff9326;
+        --color-bg-warning-regular-hover: #ffac4d;
+        --color-bg-warning-regular-active: #e57717;
+        --color-border-warning-light: #ffdba6;
+        --color-text-warning-regular: #e57717;
+        --color-text-warning-regular-hover: #ff9326;
+        --color-text-warning-regular-active: #a64d08;
+        --color-bg-success-light: #edfaf4;
+        --color-bg-success-light-hover: #c2f2da;
+        --color-bg-success-light-active: #8eedbe;
+        --color-bg-success-regular: #0ac767;
+        --color-bg-success-regular-hover: #31de88;
+        --color-bg-success-regular-active: #00a653;
+        --color-border-success-light: #8eedbe;
+        --color-text-success-regular: #0ac767;
+        --color-text-success-regular-hover: #31de88;
+        --color-text-success-regular-active: #00a653;
+        --color-bg-info-light: #ebf3ff;
+        --color-bg-info-light-hover: #d4e5ff;
+        --color-bg-info-light-active: #99c2ff;
+        --color-bg-info-regular: #1966ff;
+        --color-bg-info-regular-hover: #4086ff;
+        --color-bg-info-regular-active: #0b50d9;
+        --color-border-info-light: #99c2ff;
+        --color-text-info-regular: #1966ff;
+        --color-text-info-regular-hover: #4086ff;
+        --color-text-info-regular-active: #0b50d9;
+        --color-container-bg-neutral-bright: #ffffff;
+        --color-container-bg-neutral-bright-hover: rgba(19, 34, 64, 0.05);
+        --color-container-bg-neutral-bright-active: rgba(19, 34, 64, 0.1);
+        --color-container-bg-neutral-gray: rgba(19, 34, 64, 0.05);
+        --color-container-bg-neutral-gray-hover: rgba(19, 34, 64, 0.1);
+        --color-container-bg-neutral-gray-active: rgba(19, 34, 64, 0.15);
+        --color-container-bg-neutral-lightgray: rgba(19, 34, 64, 0.02);
+        --color-container-bg-neutral-inverse: rgba(19, 34, 64, 0.95);
+        --color-layout-bg-neutral-bright: #ffffff;
+        --color-layout-bg-neutral-gray: #f3f4f6;
+        --color-layout-bg-neutral-inverse: #132240;
+        --color-border-neutral: rgba(19, 34, 64, 0.15);
+        --color-divider-neutral: rgba(19, 34, 64, 0.1);
+        --color-text-neutral-gray10: rgba(19, 34, 64, 0.25);
+        --color-text-neutral-gray20: rgba(19, 34, 64, 0.45);
+        --color-text-neutral-gray30: rgba(19, 34, 64, 0.65);
+        --color-text-neutral-gray40: rgba(19, 34, 64, 0.85);
+        --color-text-neutral-gray50: rgba(19, 34, 64, 0.95);
+        --color-text-neutral-inverse20: rgba(255, 255, 255, 0.5);
+        --color-text-neutral-inverse30: rgba(255, 255, 255, 0.7);
+        --color-text-neutral-inverse40: rgba(255, 255, 255, 0.9);
+        --color-text-neutral-inverse50: #ffffff;
+        --font-family-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+        --font-family-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+        --font-weight-regular: 400;
+        --font-weight-bold: 600;
+        --font-height-tight: 1.37;
+        --font-height-regular: 1.6;
+        --font-height-loose: 1.75;
+        --font-size-small: 12px;
+        --font-size-regular: 14px;
+        --font-size-large: 16px;
+        --font-size-heading-6: 14px;
+        --font-size-heading-5: 16px;
+        --font-size-heading-4: 18px;
+        --font-size-heading-3: 20px;
+        --font-size-heading-2: 24px;
+        --font-size-heading-1: 32px;
+        --border-radius-small: 4px;
+        --border-radius-regular: 6px;
+        --border-radius-large: 12px;
+        --spacing-0: 0;
+        --spacing-1: 4px;
+        --spacing-2: 8px;
+        --spacing-3: 12px;
+        --spacing-4: 16px;
+        --spacing-5: 20px;
+        --spacing-6: 24px;
+        --spacing-7: 32px;
+        --spacing-8: 40px;
+        --spacing-9: 48px;
+        --spacing-10: 64px;
+        --spacing-11: 80px;
+        --spacing-12: 160px;
+        --shadow-small-bottom: 0px 4px 12px 0 rgba(19, 34, 64, 0.08);
+        --shadow-regular-bottom: 0 8px 20px 0 rgba(19, 34, 64, 0.16);
+        --shadow-large-bottom: 0 12px 32px 0 rgba(19, 34, 64, 0.2);
+        --shadow-special1-bottom: 0 4px 16px 0 rgba(25, 102, 255, 0.3);
+        --motion-fast: 150ms;
+        --motion-base: 220ms;
+        --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+      /* ── Reference sizing (this file only, not synced to dev) ── */
+      --ref-ctrl-xs: 16px;
+      --ref-ctrl-sm: 24px;
+      --ref-ctrl-md: 32px;
+      --ref-ctrl-lg: 40px;
+      --ref-modal-w: 520px;
+      --ref-drawer-w: 372px;
+      --ref-card-header-h: 56px;
+      --ref-notification-w: 384px;
+      --ref-tooltip-max-w: 250px;
+      }
+
+      /* ══ 2. Reset & Page Layout ══════════════════════════════════════════ */
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; padding: 0; background: var(--color-layout-bg-neutral-gray); color: var(--color-text-neutral-gray50); font-family: var(--font-family-primary); font-size: var(--font-size-regular); line-height: var(--font-height-regular); -webkit-font-smoothing: antialiased; }
+      .ref-page { max-width: 1000px; margin: 0 auto; padding: var(--spacing-8) var(--spacing-6); }
+      .ref-header { margin-bottom: var(--spacing-8); }
+      .ref-header h1 { margin: 0 0 var(--spacing-2); font-size: var(--font-size-heading-1); line-height: var(--font-height-tight); font-weight: var(--font-weight-bold); }
+      .ref-header p { margin: 0; color: var(--color-text-neutral-gray30); font-size: var(--font-size-large); }
+      .ref-category { margin-bottom: var(--spacing-8); }
+      .ref-category h2 { margin: 0 0 var(--spacing-4); padding-bottom: var(--spacing-2); border-bottom: 2px solid var(--color-divider-neutral); font-size: var(--font-size-heading-2); line-height: var(--font-height-tight); font-weight: var(--font-weight-bold); }
+      .ref-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-3); padding: var(--spacing-4); background: var(--color-container-bg-neutral-bright); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-large); margin-bottom: var(--spacing-3); }
+      .ref-label { width: 100%; color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+
+      /* ══ 3. Component CSS ════════════════════════════════════════════════ */
+
+      /* ── Button ── */
+      .btn { height: var(--ref-ctrl-md); display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 14px; border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray40); cursor: pointer; white-space: nowrap; font-size: var(--font-size-regular); transition: all var(--motion-fast) var(--ease-standard); text-decoration: none; }
+      .btn:hover { border-color: var(--color-border-accent-regular); color: var(--color-text-accent-regular); }
+      .btn:focus-visible { outline: 2px solid var(--color-border-accent-regular); outline-offset: 2px; }
+      .btn:disabled { color: var(--color-text-neutral-gray10); cursor: not-allowed; opacity: 0.6; }
+      .btn-primary { border-color: var(--color-border-accent-regular); background: var(--color-bg-accent-regular); color: var(--color-text-neutral-inverse50); }
+      .btn-primary:hover { border-color: var(--color-border-accent-regular-hover); background: var(--color-bg-accent-regular-hover); color: var(--color-text-neutral-inverse50); }
+      .btn-secondary { background: var(--color-container-bg-neutral-bright); }
+      .btn-text { padding: 0; border: 0; background: transparent; height: auto; color: var(--color-text-accent-regular); }
+      .btn-text:hover { text-decoration: underline; }
+      .btn-danger { border-color: var(--color-border-error-regular); background: var(--color-bg-error-regular); color: var(--color-text-neutral-inverse50); }
+      .btn-danger:hover { border-color: var(--color-border-error-regular-hover); background: var(--color-bg-error-regular-hover); }
+
+      /* ── Typography ── */
+      .typo-h1 { font-size: var(--font-size-heading-1); line-height: var(--font-height-tight); font-weight: var(--font-weight-bold); margin: 0; }
+      .typo-h2 { font-size: var(--font-size-heading-2); line-height: var(--font-height-tight); font-weight: var(--font-weight-bold); margin: 0; }
+      .typo-h3 { font-size: var(--font-size-heading-3); line-height: var(--font-height-tight); font-weight: var(--font-weight-bold); margin: 0; }
+      .typo-body { font-size: var(--font-size-regular); line-height: var(--font-height-regular); margin: 0; }
+      .typo-small { font-size: var(--font-size-small); line-height: var(--font-height-regular); color: var(--color-text-neutral-gray30); margin: 0; }
+      .typo-mono { font-family: var(--font-family-mono); font-size: var(--font-size-small); }
+
+      /* ── Icon ── */
+      .icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .icon-sm { width: 12px; height: 12px; }
+      .icon-md { width: 14px; height: 14px; }
+      .icon-lg { width: var(--ref-ctrl-xs); height: var(--ref-ctrl-xs); }
+      .icon-muted { color: var(--color-text-neutral-gray20); }
+
+      /* ── Layout ── */
+      .layout { display: flex; flex-direction: column; min-height: 100vh; }
+      .layout-has-sider { flex-direction: row; }
+      .layout-header { height: 48px; display: flex; align-items: center; padding: 0 var(--spacing-6); background: var(--color-container-bg-neutral-bright); border-bottom: 1px solid var(--color-border-neutral); }
+      .layout-sider { width: 188px; background: var(--color-container-bg-neutral-bright); border-right: 1px solid var(--color-border-neutral); }
+      .layout-content { flex: 1; background: var(--color-layout-bg-neutral-gray); padding: var(--spacing-6); }
+
+      /* ── Card ── */
+      .page-card { border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-large); background: var(--color-container-bg-neutral-bright); overflow: hidden; }
+      .card-header { display: flex; align-items: center; justify-content: space-between; height: var(--ref-card-header-h); padding: 0 var(--spacing-6); border-bottom: 1px solid var(--color-divider-neutral); }
+      .card-header-title { font-size: var(--font-size-regular); font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); }
+      .card-body { padding: var(--spacing-6); }
+
+      /* ── Breadcrumb ── */
+      .breadcrumb { display: flex; align-items: center; gap: var(--spacing-1); list-style: none; padding: 0; margin: 0; font-size: var(--font-size-small); }
+      .breadcrumb-item { color: var(--color-text-neutral-gray30); cursor: pointer; }
+      .breadcrumb-item:hover { color: var(--color-text-accent-regular-hover); }
+      .breadcrumb-item:last-child { color: var(--color-text-neutral-gray50); cursor: default; font-weight: var(--font-weight-bold); }
+      .breadcrumb-sep { color: var(--color-text-neutral-gray20); margin: 0 var(--spacing-1); }
+
+      /* ── Menu ── */
+      .menu { list-style: none; padding: var(--spacing-1) 0; margin: 0; background: var(--color-container-bg-neutral-bright); }
+      .menu-item { display: flex; align-items: center; height: var(--ref-ctrl-lg); padding: 0 var(--spacing-5); color: var(--color-text-neutral-gray40); font-size: var(--font-size-regular); cursor: pointer; transition: all var(--motion-fast) var(--ease-standard); gap: var(--spacing-3); }
+      .menu-item:hover { background: var(--color-container-bg-neutral-bright-hover); color: var(--color-text-neutral-gray50); }
+      .menu-item.is-active { background: var(--color-bg-accent-light); color: var(--color-text-accent-regular); }
+      .menu-divider { height: 1px; margin: var(--spacing-1) 0; background: var(--color-divider-neutral); }
+
+      /* ── Tabs ── */
+      .content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--color-divider-neutral); }
+      .content-tab { position: relative; height: var(--ref-ctrl-lg); display: inline-flex; align-items: center; padding: 0 var(--spacing-5); margin-bottom: -2px; border-bottom: 2px solid transparent; color: var(--color-text-neutral-gray30); cursor: pointer; transition: all var(--motion-fast) var(--ease-standard); font-size: var(--font-size-regular); }
+      .content-tab:hover { color: var(--color-text-accent-regular); }
+      .content-tab.is-active { color: var(--color-text-accent-regular); border-bottom-color: var(--color-border-accent-regular); font-weight: var(--font-weight-bold); }
+
+      /* ── Pagination ── */
+      .pagination { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-3); padding: var(--spacing-3) 0; }
+      .pagination-info { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+      .pagination-actions { display: inline-flex; align-items: center; gap: var(--spacing-1); }
+      .page-btn { min-width: var(--ref-ctrl-md); height: var(--ref-ctrl-md); display: inline-flex; align-items: center; justify-content: center; padding: 0 var(--spacing-2); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray40); cursor: pointer; font-size: var(--font-size-small); transition: all var(--motion-fast) var(--ease-standard); }
+      .page-btn:hover { border-color: var(--color-border-accent-regular); color: var(--color-text-accent-regular); }
+      .page-btn.is-active { border-color: var(--color-border-accent-regular); background: var(--color-bg-accent-regular); color: var(--color-text-neutral-inverse50); }
+      .page-btn:disabled { color: var(--color-text-neutral-gray10); cursor: not-allowed; }
+
+      /* ── Input ── */
+      .input { width: 100%; height: var(--ref-ctrl-md); padding: 0 var(--spacing-3); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray50); font-size: var(--font-size-regular); outline: none; transition: border-color var(--motion-fast) var(--ease-standard); }
+      .input:hover { border-color: var(--color-border-accent-regular); }
+      .input:focus { border-color: var(--color-border-accent-regular); box-shadow: 0 0 0 2px rgba(25, 102, 255, 0.15); }
+      .input:disabled { background: var(--color-container-bg-neutral-gray); color: var(--color-text-neutral-gray30); cursor: not-allowed; }
+      .input::placeholder { color: var(--color-text-neutral-gray20); }
+
+      /* ── Select ── */
+      .select { position: relative; display: inline-block; }
+      .select-trigger { height: var(--ref-ctrl-md); display: inline-flex; align-items: center; padding: 0 var(--spacing-3); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray50); font-size: var(--font-size-regular); cursor: pointer; min-width: 160px; justify-content: space-between; gap: var(--spacing-2); transition: border-color var(--motion-fast) var(--ease-standard); }
+      .select-trigger:hover { border-color: var(--color-border-accent-regular); }
+      .select-panel { position: absolute; top: 100%; left: 0; z-index: 100; width: 100%; margin-top: var(--spacing-1); background: var(--color-container-bg-neutral-bright); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); box-shadow: var(--shadow-regular-bottom); padding: var(--spacing-1) 0; }
+      .select-option { height: var(--ref-ctrl-md); display: flex; align-items: center; padding: 0 var(--spacing-3); font-size: var(--font-size-regular); color: var(--color-text-neutral-gray40); cursor: pointer; }
+      .select-option:hover { background: var(--color-container-bg-neutral-bright-hover); }
+      .select-option.is-active { background: var(--color-bg-accent-light); color: var(--color-text-accent-regular); }
+
+      /* ── Checkbox ── */
+      .checkbox { display: inline-flex; align-items: center; gap: var(--spacing-2); cursor: pointer; }
+      .checkbox-input { appearance: none; width: var(--ref-ctrl-xs); height: var(--ref-ctrl-xs); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-small); background: var(--color-container-bg-neutral-bright); cursor: pointer; flex-shrink: 0; margin: 0; transition: all var(--motion-fast) var(--ease-standard); position: relative; }
+      .checkbox:hover .checkbox-input { border-color: var(--color-border-accent-regular); }
+      .checkbox-input:checked { background: var(--color-bg-accent-regular); border-color: var(--color-border-accent-regular); }
+      .checkbox-input:checked::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid var(--color-text-neutral-inverse50); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+      .checkbox-input:disabled { opacity: 0.5; cursor: not-allowed; }
+      .checkbox-label { font-size: var(--font-size-regular); color: var(--color-text-neutral-gray40); user-select: none; }
+
+      /* ── Radio ── */
+      .radio { display: inline-flex; align-items: center; gap: var(--spacing-2); cursor: pointer; }
+      .radio-input { appearance: none; width: var(--ref-ctrl-xs); height: var(--ref-ctrl-xs); border: 1px solid var(--color-border-neutral); border-radius: 50%; background: var(--color-container-bg-neutral-bright); cursor: pointer; flex-shrink: 0; margin: 0; transition: border-color var(--motion-fast) var(--ease-standard); position: relative; }
+      .radio:hover .radio-input { border-color: var(--color-border-accent-regular); }
+      .radio-input:checked { border-color: var(--color-border-accent-regular); }
+      .radio-input:checked::after { content: ""; position: absolute; left: 3px; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--color-bg-accent-regular); }
+      .radio-input:disabled { opacity: 0.5; cursor: not-allowed; }
+      .radio-label { font-size: var(--font-size-regular); color: var(--color-text-neutral-gray40); user-select: none; }
+
+      /* ── Switch ── */
+      .switch { position: relative; display: inline-flex; width: 44px; height: 22px; border-radius: 9999px; background: var(--color-container-bg-neutral-gray); cursor: pointer; transition: background var(--motion-fast) var(--ease-standard); border: 0; padding: 0; }
+      .switch.is-checked { background: var(--color-bg-accent-regular); }
+      .switch.is-disabled { opacity: 0.5; cursor: not-allowed; }
+      .switch-handle { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-small-bottom); transition: left var(--motion-fast) var(--ease-standard); }
+      .switch.is-checked .switch-handle { left: 24px; }
+
+      /* ── Form ── */
+      .form-field { display: flex; flex-direction: column; gap: var(--spacing-2); }
+      .field-label { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+      .field-help { color: var(--color-text-neutral-gray20); font-size: var(--font-size-small); }
+      .field-error { color: var(--color-text-error-regular); font-size: var(--font-size-small); }
+
+      /* ── DatePicker ── */
+      .date-picker { position: relative; display: inline-block; }
+      .date-picker-input { height: var(--ref-ctrl-md); display: inline-flex; align-items: center; padding: 0 var(--spacing-3); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray50); font-size: var(--font-size-regular); cursor: pointer; }
+      .date-picker-input:hover { border-color: var(--color-border-accent-regular); }
+      .date-picker-panel { padding: var(--spacing-3); background: var(--color-container-bg-neutral-bright); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); box-shadow: var(--shadow-regular-bottom); }
+      .date-picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-2); font-weight: var(--font-weight-bold); font-size: var(--font-size-regular); }
+      .date-picker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+      .date-picker-cell { width: var(--ref-ctrl-md); height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--border-radius-small); font-size: var(--font-size-small); cursor: pointer; color: var(--color-text-neutral-gray40); }
+      .date-picker-cell:hover { background: var(--color-container-bg-neutral-bright-hover); }
+      .date-picker-cell.is-today { border: 1px solid var(--color-border-accent-regular); color: var(--color-text-accent-regular); }
+      .date-picker-cell.is-selected { background: var(--color-bg-accent-regular); color: var(--color-text-neutral-inverse50); }
+      .date-picker-cell.is-disabled { color: var(--color-text-neutral-gray10); cursor: not-allowed; }
+      .date-picker-weekday { color: var(--color-text-neutral-gray20); font-size: var(--font-size-small); cursor: default; }
+
+      /* ── Table ── */
+      .data-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); overflow: hidden; background: var(--color-container-bg-neutral-bright); }
+      .data-table th, .data-table td { height: 40px; padding: 0 var(--spacing-4); border-bottom: 1px solid var(--color-divider-neutral); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--font-size-regular); color: var(--color-text-neutral-gray40); }
+      .data-table th { background: #f3f4f6; color: var(--color-text-neutral-gray50); font-weight: var(--font-weight-bold); font-size: var(--font-size-regular); }
+      .data-table tbody tr:hover { background: var(--color-container-bg-neutral-gray-hover); }
+      .table-action { color: var(--color-text-accent-regular); cursor: pointer; }
+
+      /* ── Tag ── */
+      .status-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 var(--spacing-2); border-radius: var(--border-radius-small); font-size: var(--font-size-small); font-weight: var(--font-weight-bold); white-space: nowrap; }
+      .status-info { background: var(--color-bg-info-light); color: var(--color-text-info-regular); }
+      .status-success { background: var(--color-bg-success-light); color: var(--color-text-success-regular); }
+      .status-warning { background: var(--color-bg-warning-light); color: var(--color-text-warning-regular); }
+      .status-error { background: var(--color-bg-error-light); color: var(--color-text-error-regular); }
+      .status-neutral { background: var(--color-container-bg-neutral-gray-hover); color: var(--color-text-neutral-gray40); }
+
+      /* ── Tooltip ── */
+      .tooltip { display: inline-block; padding: var(--spacing-2) var(--spacing-3); background: var(--color-container-bg-neutral-inverse); color: var(--color-text-neutral-inverse50); border-radius: var(--border-radius-small); font-size: var(--font-size-small); box-shadow: var(--shadow-regular-bottom); max-width: var(--ref-tooltip-max-w); }
+      .popover { display: inline-block; padding: var(--spacing-4); background: var(--color-container-bg-neutral-bright); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); box-shadow: var(--shadow-regular-bottom); }
+      .popover-title { font-size: var(--font-size-regular); font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); margin-bottom: var(--spacing-2); }
+      .popover-content { font-size: var(--font-size-small); color: var(--color-text-neutral-gray30); }
+
+      /* ── Statistic ── */
+      .statistic { display: inline-flex; flex-direction: column; gap: var(--spacing-1); }
+      .statistic-title { font-size: var(--font-size-small); color: var(--color-text-neutral-gray30); }
+      .statistic-value { display: inline-flex; align-items: baseline; gap: var(--spacing-2); }
+      .statistic-value-number { font-size: var(--font-size-heading-1); font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); line-height: var(--font-height-tight); }
+      .statistic-trend-up { color: var(--color-text-success-regular); font-size: var(--font-size-small); }
+      .statistic-trend-down { color: var(--color-text-error-regular); font-size: var(--font-size-small); }
+
+      /* ── Modal ── */
+      .overlay-mask { background: var(--color-container-bg-neutral-inverse); padding: var(--spacing-6); }
+      .modal { width: min(var(--ref-modal-w), 100%); border-radius: var(--border-radius-large); background: var(--color-container-bg-neutral-bright); box-shadow: var(--shadow-large-bottom); overflow: hidden; }
+      .overlay-header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); padding: var(--spacing-5) var(--spacing-6) 0; }
+      .overlay-body { padding: var(--spacing-4) var(--spacing-6); }
+      .overlay-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-2); padding: 0 var(--spacing-6) var(--spacing-6); }
+      .overlay-title { margin: 0; color: var(--color-text-neutral-gray50); font-size: var(--font-size-heading-4); font-weight: var(--font-weight-bold); }
+
+      /* ── Drawer ── */
+      .drawer { width: min(var(--ref-drawer-w), 100%); border-radius: var(--border-radius-large) 0 0 var(--border-radius-large); background: var(--color-container-bg-neutral-bright); box-shadow: var(--shadow-large-bottom); }
+
+      /* ── Alert ── */
+      .alert { display: flex; gap: var(--spacing-3); padding: var(--spacing-3) var(--spacing-4); border-radius: var(--border-radius-regular); font-size: var(--font-size-regular); }
+      .alert-info { background: var(--color-bg-info-light); border: 1px solid var(--color-border-info-light); color: var(--color-text-info-regular); }
+      .alert-success { background: var(--color-bg-success-light); border: 1px solid var(--color-border-success-light); color: var(--color-text-success-regular); }
+      .alert-warning { background: var(--color-bg-warning-light); border: 1px solid var(--color-border-warning-light); color: var(--color-text-warning-regular); }
+      .alert-error { background: var(--color-bg-error-light); border: 1px solid var(--color-border-error-light); color: var(--color-text-error-regular); }
+      .alert-message { font-weight: var(--font-weight-bold); }
+
+      /* ── Message ── */
+      .message { position: relative; z-index: 2000; display: inline-flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); box-shadow: var(--shadow-large-bottom); font-size: var(--font-size-regular); color: var(--color-text-neutral-gray50); }
+      .message-success .message-icon { color: var(--color-bg-success-regular); }
+      .message-error .message-icon { color: var(--color-bg-error-regular); }
+
+      /* ── Progress ── */
+      .progress { display: flex; align-items: center; gap: var(--spacing-3); }
+      .progress-bar { flex: 1; height: 8px; border-radius: 9999px; background: var(--color-container-bg-neutral-gray); overflow: hidden; }
+      .progress-bar-inner { height: 100%; border-radius: 9999px; background: var(--color-bg-accent-regular); transition: width var(--motion-base) var(--ease-standard); }
+      .progress-bar-inner.is-success { background: var(--color-bg-success-regular); }
+      .progress-bar-inner.is-error { background: var(--color-bg-error-regular); }
+      .progress-text { font-size: var(--font-size-small); color: var(--color-text-neutral-gray40); white-space: nowrap; min-width: 36px; text-align: right; }
+    </style>
+  </head>
+  <body>
+    <div class="ref-page">
+      <header class="ref-header">
+        <h1>XFT Components</h1>
+        <p>企业级后台设计系统 — 25 个核心组件参考</p>
+      </header>
+
+      <!-- 1. 通用 -->
+      <section class="ref-category">
+        <h2>1. 通用 General</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Button 按钮</h3>
+        <div class="ref-row">
+          <button class="btn btn-primary" type="button">主操作</button>
+          <button class="btn" type="button">默认</button>
+          <button class="btn btn-secondary" type="button">次要</button>
+          <button class="btn btn-text" type="button">文字</button>
+          <button class="btn btn-danger" type="button">危险</button>
+          <button class="btn" type="button" disabled>禁用</button>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Typography 排版</h3>
+        <div class="ref-row" style="flex-direction:column;gap:var(--spacing-2)">
+          <p class="typo-h1">页面主标题 H1 (32px)</p>
+          <p class="typo-h2">模块标题 H2 (24px)</p>
+          <p class="typo-h3">卡片标题 H3 (20px)</p>
+          <p class="typo-body">正文 body (14px) — 行高 1.6 保证阅读舒适度</p>
+          <p class="typo-small">辅助文字 small (12px) — 标签、描述</p>
+          <p class="typo-mono">Monospace — 代码、编号</p>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Icon 图标</h3>
+        <div class="ref-row">
+          <span class="icon icon-sm" style="color:var(--color-text-neutral-gray40)">★</span>
+          <span class="icon icon-md" style="color:var(--color-text-neutral-gray40)">★</span>
+          <span class="icon icon-lg" style="color:var(--color-text-accent-regular)">★</span>
+          <span class="icon icon-md icon-muted">★</span>
+        </div>
+      </section>
+
+      <!-- 2. 布局 -->
+      <section class="ref-category">
+        <h2>2. 布局 Layout</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Layout 页面骨架</h3>
+        <div class="ref-row" style="padding:0;overflow:hidden">
+          <div style="width:100%;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-large);overflow:hidden">
+            <div style="height:40px;display:flex;align-items:center;padding:0 var(--spacing-4);background:var(--color-container-bg-neutral-bright);border-bottom:1px solid var(--color-border-neutral);font-size:var(--font-size-small);font-weight:var(--font-weight-bold)">Header</div>
+            <div style="display:flex">
+              <div style="width:100px;padding:var(--spacing-3);background:var(--color-container-bg-neutral-lightgray);border-right:1px solid var(--color-border-neutral);font-size:var(--font-size-small)">Sider</div>
+              <div style="flex:1;padding:var(--spacing-4);background:var(--color-layout-bg-neutral-gray);font-size:var(--font-size-small)">Content</div>
+            </div>
+          </div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Card 卡片</h3>
+        <div class="ref-row">
+          <div class="page-card" style="width:320px">
+            <div class="card-header"><span class="card-header-title">卡片标题</span><button class="btn btn-text" type="button">更多</button></div>
+            <div class="card-body"><p class="typo-body">卡片内容区域，padding: spacing-6 (24px)</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 导航 -->
+      <section class="ref-category">
+        <h2>3. 导航 Navigation</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Breadcrumb 面包屑</h3>
+        <div class="ref-row">
+          <nav class="breadcrumb"><span class="breadcrumb-item">首页</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">业务管理</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-item">订单详情</span></nav>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Menu 导航菜单</h3>
+        <div class="ref-row">
+          <ul class="menu" style="width:200px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular)">
+            <li class="menu-item is-active">选中菜单项</li>
+            <li class="menu-item">菜单项二</li>
+            <li class="menu-item">菜单项三</li>
+            <li class="menu-divider"></li>
+            <li class="menu-item" style="color:var(--color-text-error-regular)">删除操作</li>
+          </ul>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Tabs 标签页</h3>
+        <div class="ref-row" style="flex-direction:column">
+          <div class="content-tabs"><div class="content-tab is-active">标签页一</div><div class="content-tab">标签页二</div><div class="content-tab">标签页三</div></div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Pagination 分页</h3>
+        <div class="ref-row">
+          <div class="pagination" style="width:100%"><span class="pagination-info">共 128 条</span><div class="pagination-actions"><button class="page-btn" type="button">‹</button><button class="page-btn is-active" type="button">1</button><button class="page-btn" type="button">2</button><button class="page-btn" type="button">3</button><button class="page-btn" type="button">›</button></div></div>
+        </div>
+      </section>
+
+      <!-- 4. 数据录入 -->
+      <section class="ref-category">
+        <h2>4. 数据录入 Data Entry</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Input 输入框</h3>
+        <div class="ref-row" style="flex-direction:column;max-width:320px">
+          <input class="input" placeholder="默认状态 placeholder" />
+          <input class="input" value="聚焦/已填写状态" />
+          <input class="input" value="禁用状态" disabled />
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Select 选择器</h3>
+        <div class="ref-row">
+          <div class="select" style="width:200px">
+            <div class="select-trigger">请选择 <span>▾</span></div>
+            <div class="select-panel" style="position:relative;top:0;box-shadow:var(--shadow-regular-bottom)">
+              <div class="select-option">选项一</div><div class="select-option is-active">选中项</div><div class="select-option">选项三</div>
+            </div>
+          </div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Checkbox 多选框</h3>
+        <div class="ref-row">
+          <label class="checkbox"><input class="checkbox-input" type="checkbox" /><span class="checkbox-label">未选中</span></label>
+          <label class="checkbox"><input class="checkbox-input" type="checkbox" checked /><span class="checkbox-label">已选中</span></label>
+          <label class="checkbox"><input class="checkbox-input" type="checkbox" disabled /><span class="checkbox-label">禁用</span></label>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Radio 单选框</h3>
+        <div class="ref-row">
+          <label class="radio"><input class="radio-input" type="radio" name="ref-radio" /><span class="radio-label">选项 A</span></label>
+          <label class="radio"><input class="radio-input" type="radio" name="ref-radio" checked /><span class="radio-label">选项 B</span></label>
+          <label class="radio"><input class="radio-input" type="radio" name="ref-radio" disabled /><span class="radio-label">禁用</span></label>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Switch 开关</h3>
+        <div class="ref-row">
+          <button class="switch" type="button"><span class="switch-handle"></span></button>
+          <button class="switch is-checked" type="button"><span class="switch-handle"></span></button>
+          <button class="switch is-disabled" type="button"><span class="switch-handle"></span></button>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Form 表单组合</h3>
+        <div class="ref-row" style="flex-direction:column;max-width:320px;gap:var(--spacing-4)">
+          <div class="form-field"><label class="field-label">用户名</label><input class="input" placeholder="请输入用户名" /><span class="field-help">4-20 个字符</span></div>
+          <div class="form-field"><label class="field-label">邮箱</label><input class="input" value="invalid-email" /><span class="field-error">请输入有效的邮箱地址</span></div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">DatePicker 日期选择器</h3>
+        <div class="ref-row">
+          <div class="date-picker-input">2026-06-15 ▾</div>
+          <div class="date-picker-panel" style="margin-left:var(--spacing-3)">
+            <div class="date-picker-header">◀ 2026年6月 ▶</div>
+            <div class="date-picker-grid">
+              <span class="date-picker-cell date-picker-weekday">一</span><span class="date-picker-cell date-picker-weekday">二</span><span class="date-picker-cell date-picker-weekday">三</span><span class="date-picker-cell date-picker-weekday">四</span><span class="date-picker-cell date-picker-weekday">五</span><span class="date-picker-cell date-picker-weekday">六</span><span class="date-picker-cell date-picker-weekday">日</span>
+              <span class="date-picker-cell">9</span><span class="date-picker-cell">10</span><span class="date-picker-cell">11</span><span class="date-picker-cell">12</span><span class="date-picker-cell">13</span><span class="date-picker-cell is-today">14</span><span class="date-picker-cell is-selected">15</span>
+              <span class="date-picker-cell">16</span><span class="date-picker-cell">17</span><span class="date-picker-cell">18</span><span class="date-picker-cell">19</span><span class="date-picker-cell">20</span><span class="date-picker-cell">21</span><span class="date-picker-cell">22</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. 数据展示 -->
+      <section class="ref-category">
+        <h2>5. 数据展示 Data Display</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Table 表格</h3>
+        <div class="ref-row" style="padding:0;overflow:hidden">
+          <table class="data-table">
+            <thead><tr><th>订单号</th><th>客户</th><th>金额</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>ORD-20260601</td><td>张三</td><td>¥12,800</td><td><span class="status-tag status-success">已完成</span></td><td><span class="table-action">查看</span></td></tr>
+              <tr><td>ORD-20260602</td><td>李四</td><td>¥5,200</td><td><span class="status-tag status-warning">待确认</span></td><td><span class="table-action">编辑</span></td></tr>
+              <tr><td>ORD-20260603</td><td>王五</td><td>¥8,600</td><td><span class="status-tag status-error">已取消</span></td><td><span class="table-action">查看</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Tag 标签</h3>
+        <div class="ref-row">
+          <span class="status-tag status-info">信息</span>
+          <span class="status-tag status-success">成功</span>
+          <span class="status-tag status-warning">警告</span>
+          <span class="status-tag status-error">错误</span>
+          <span class="status-tag status-neutral">默认</span>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Tooltip 文字提示</h3>
+        <div class="ref-row">
+          <span class="tooltip">深色 Tooltip 提示文字</span>
+          <div class="popover" style="margin-left:var(--spacing-3)"><div class="popover-title">Popover 标题</div><div class="popover-content">浅色 Popover 内容区域</div></div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Statistic 统计数值</h3>
+        <div class="ref-row" style="gap:var(--spacing-8)">
+          <div class="statistic"><span class="statistic-title">今日订单</span><div class="statistic-value"><span class="statistic-value-number">1,284</span><span class="statistic-trend-up">↑ 12%</span></div></div>
+          <div class="statistic"><span class="statistic-title">退款率</span><div class="statistic-value"><span class="statistic-value-number">2.3%</span><span class="statistic-trend-down">↑ 0.5%</span></div></div>
+        </div>
+      </section>
+
+      <!-- 6. 反馈 -->
+      <section class="ref-category">
+        <h2>6. 反馈 Feedback</h2>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Modal 对话框</h3>
+        <div class="ref-row" style="padding:0;overflow:hidden">
+          <div class="overlay-mask" style="display:flex;justify-content:center">
+            <div class="modal">
+              <div class="overlay-header"><h3 class="overlay-title">确认操作</h3><button class="btn btn-text" type="button">✕</button></div>
+              <div class="overlay-body"><p class="typo-body">确定要删除这条记录吗？此操作不可恢复。</p></div>
+              <div class="overlay-footer"><button class="btn" type="button">取消</button><button class="btn btn-danger" type="button">确认删除</button></div>
+            </div>
+          </div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Drawer 抽屉</h3>
+        <div class="ref-row" style="padding:0;overflow:hidden">
+          <div class="overlay-mask" style="display:flex;justify-content:flex-end">
+            <div class="drawer">
+              <div class="overlay-header"><h3 class="overlay-title">详情面板</h3><button class="btn btn-text" type="button">✕</button></div>
+              <div class="overlay-body"><p class="typo-body">Drawer 从右侧滑出，默认宽度 372px。</p></div>
+            </div>
+          </div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Alert 警告提示</h3>
+        <div class="ref-row" style="flex-direction:column;gap:var(--spacing-2)">
+          <div class="alert alert-info"><span class="alert-message">信息提示：系统将于今晚 22:00 维护。</span></div>
+          <div class="alert alert-success"><span class="alert-message">操作成功：订单已提交。</span></div>
+          <div class="alert alert-warning"><span class="alert-message">警告：库存不足，请及时补货。</span></div>
+          <div class="alert alert-error"><span class="alert-message">错误：网络连接失败，请重试。</span></div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Message 全局提示</h3>
+        <div class="ref-row" style="justify-content:center">
+          <div class="message message-success"><span class="message-icon">✓</span> 保存成功</div>
+          <div class="message message-error" style="margin-left:var(--spacing-3)"><span class="message-icon">✕</span> 操作失败</div>
+        </div>
+        <h3 class="ref-label" style="margin-bottom:var(--spacing-2)">Progress 进度条</h3>
+        <div class="ref-row" style="flex-direction:column;gap:var(--spacing-3);max-width:360px">
+          <div class="progress"><div class="progress-bar"><div class="progress-bar-inner" style="width:65%"></div></div><span class="progress-text">65%</span></div>
+          <div class="progress"><div class="progress-bar"><div class="progress-bar-inner is-success" style="width:100%"></div></div><span class="progress-text">100%</span></div>
+          <div class="progress"><div class="progress-bar"><div class="progress-bar-inner is-error" style="width:30%"></div></div><span class="progress-text">30%</span></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

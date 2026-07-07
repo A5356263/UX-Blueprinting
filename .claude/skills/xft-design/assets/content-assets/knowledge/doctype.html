@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>XFT Detail Page Patterns Knowledge</title>
+  <meta name="description" content="XFT B端系统详情页 HTML 格式知识库，包含左右布局基础样式详情、上下布局基础样式详情、左右布局表格样式详情、上下布局表格样式详情。" />
+</head>
+
+<body data-knowledge-type="detail-page-patterns" data-system="xft-design-6.0">
+
+  <header class="knowledge-header">
+    <h1>XFT Detail Page Patterns Knowledge</h1>
+    <p>
+      本文档用于描述 B 端系统详情页的四类核心页面模式：
+      左右布局基础样式详情、上下布局基础样式详情、左右布局表格样式详情、上下布局表格样式详情。
+    </p>
+    <p>
+      详情页由布局维度、内容表达维度、字段密度维度和公共增强模块组合生成。
+      其中，左右/上下属于布局维度，基础/表格属于内容表达维度，单列/双列/多列属于字段密度维度。
+    </p>
+  </header>
+
+  <main class="knowledge-main">
+
+    <section class="knowledge-section" data-section="core-dimensions">
+      <h2>详情页核心维度</h2>
+
+      <article class="knowledge-card" data-dimension="layout">
+        <h3>布局维度</h3>
+        <p>
+          布局维度决定详情页的空间组织方式。当前支持左右布局和上下布局。
+        </p>
+        <ul>
+          <li>
+            <strong>左右布局：</strong>
+            左侧承载主要详情内容，右侧承载审批流、状态流、操作记录、风险提示等辅助信息。
+          </li>
+          <li>
+            <strong>上下布局：</strong>
+            内容从上到下顺序排列，适合需要完整横向空间展示字段网格、明细表格或多分组内容的详情页。
+          </li>
+        </ul>
+      </article>
+
+      <article class="knowledge-card" data-dimension="content-style">
+        <h3>内容表达维度</h3>
+        <p>
+          内容表达维度决定详情信息的展示形式。当前支持基础样式和表格样式。
+        </p>
+        <ul>
+          <li>
+            <strong>基础样式：</strong>
+            使用描述列表组件展示 label-value 信息，通过间距、字号、颜色和对齐关系建立阅读层级。
+          </li>
+          <li>
+            <strong>表格样式：</strong>
+            使用表格化详情网格展示 label-value 信息，label 和详情内容被分割线分隔，适合字段较多、边界需要强区分的详情页。
+          </li>
+        </ul>
+      </article>
+
+      <article class="knowledge-card" data-dimension="field-density">
+        <h3>字段密度维度</h3>
+        <p>
+          字段密度维度决定一行中展示几组 label-value 信息。当前支持单列、双列和多列。
+        </p>
+        <ul>
+          <li>
+            <strong>单列：</strong>
+            适合抽屉详情、窄容器、长文本较多或需要顺序阅读的页面。
+          </li>
+          <li>
+            <strong>双列：</strong>
+            页面详情默认推荐方案，兼顾可读性和信息密度。
+          </li>
+          <li>
+            <strong>多列：</strong>
+            适合上下布局、宽屏页面、字段很多且字段值较短的场景。通常最多 3 列。
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="knowledge-section" data-section="page-patterns">
+      <h2>详情页页面模式</h2>
+
+      <article
+        class="detail-page-pattern"
+        data-pattern-name="Split Basic Detail Pattern"
+        data-chinese-name="左右布局基础样式详情"
+        data-layout-type="split"
+        data-content-style="basic"
+        data-container-type="page"
+        data-default-columns="two"
+      >
+        <h3>左右布局基础样式详情</h3>
+
+        <p class="pattern-summary">
+          左右布局基础样式详情适用于以描述列表为主体，同时右侧需要展示审批流、状态流、操作记录或辅助信息的详情页。
+        </p>
+
+        <section class="pattern-section" data-field="applicable-scenario">
+          <h4>适用场景</h4>
+          <p>
+            适用于申请详情、审批详情、报账详情、对账详情、采购付款详情、基础单据详情等。
+            页面主体以字段描述为主，右侧辅助区域用于展示流程、状态或操作记录。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="structure-order">
+          <h4>结构顺序</h4>
+          <ol>
+            <li>Breadcrumb 面包屑</li>
+            <li>Detail Hero Header 详情头，可选</li>
+            <li>Horizontal Anchor 或 Vertical Anchor 锚点，可选</li>
+            <li>Left Description Sections 左侧描述列表区域</li>
+            <li>Right Approval or Status Aside 右侧审批流或状态辅助区</li>
+            <li>Footer Summary or Footer Action 底部汇总或操作区，可选</li>
+          </ol>
+        </section>
+
+        <section class="pattern-section" data-field="required-modules">
+          <h4>必需模块</h4>
+          <ul>
+            <li>Description List Module 描述列表模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="optional-modules">
+          <h4>可选模块</h4>
+          <ul>
+            <li>Detail Hero Header Module 详情头模块</li>
+            <li>Horizontal Anchor Module 横向锚点模块</li>
+            <li>Vertical Anchor Module 纵向锚点模块</li>
+            <li>Approval Flow Module 审批流模块</li>
+            <li>Detail Section Title Module 分组标题模块</li>
+            <li>Footer Summary Module 底部汇总模块</li>
+            <li>Footer Action Module 底部操作按钮模块</li>
+            <li>Footer Summary Action Module 底部汇总与操作组合模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="layout-rules">
+          <h4>布局规则</h4>
+          <p>
+            左侧为主详情内容区，使用描述列表承载基础字段。右侧为辅助区，适合展示审批流、状态流、操作记录、风险提示等。
+            右侧区域不应承载复杂表格、复杂字段网格或主内容模块。
+          </p>
+          <p>
+            左右布局下，主内容区默认使用双列描述列表。当字段值较长、字段说明较多、字段类型为备注、地址、审批意见、原因说明时，应跨整行展示。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="column-rules">
+          <h4>列数规则</h4>
+          <ul>
+            <li>默认使用双列。</li>
+            <li>窄容器或字段值较长时使用单列。</li>
+            <li>左右布局中不建议默认使用多列。</li>
+            <li>长文本、附件、明细表格必须跨整行。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="validation-rules">
+          <h4>校验规则</h4>
+          <ul>
+            <li>必须包含描述列表。</li>
+            <li>必须展示业务对象名称或业务编号。</li>
+            <li>如果出现审批流，必须包含节点、处理人、状态和时间。</li>
+            <li>右侧辅助区不能替代主详情区。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="common-mistakes">
+          <h4>常见错误</h4>
+          <ul>
+            <li>不要把右侧栏做成复杂表格。</li>
+            <li>不要缺少基础字段。</li>
+            <li>不要所有字段无分组堆叠。</li>
+            <li>不要把长文本强行塞进双列窄区域。</li>
+          </ul>
+        </section>
+      </article>
+
+      <article
+        class="detail-page-pattern"
+        data-pattern-name="Stacked Basic Detail Pattern"
+        data-chinese-name="上下布局基础样式详情"
+        data-layout-type="stacked"
+        data-content-style="basic"
+        data-container-type="page"
+        data-default-columns="two"
+      >
+        <h3>上下布局基础样式详情</h3>
+
+        <p class="pattern-summary">
+          上下布局基础样式详情适用于按顺序阅读多个信息分组的详情页，主体以描述列表为主。
+        </p>
+
+        <section class="pattern-section" data-field="applicable-scenario">
+          <h4>适用场景</h4>
+          <p>
+            适用于合同详情、客户详情、员工详情、供应商详情、设备详情、项目详情、档案详情等。
+            页面重点是对业务对象字段进行有序展示。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="structure-order">
+          <h4>结构顺序</h4>
+          <ol>
+            <li>Breadcrumb 面包屑</li>
+            <li>Detail Hero Header 详情头，可选</li>
+            <li>Horizontal Anchor 或 Vertical Anchor 锚点，可选</li>
+            <li>Description Sections 描述信息分组</li>
+            <li>Related Records 关联记录，可选</li>
+            <li>Footer Summary or Footer Action 底部汇总或操作区，可选</li>
+          </ol>
+        </section>
+
+        <section class="pattern-section" data-field="required-modules">
+          <h4>必需模块</h4>
+          <ul>
+            <li>Description List Module 描述列表模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="optional-modules">
+          <h4>可选模块</h4>
+          <ul>
+            <li>Detail Hero Header Module 详情头模块</li>
+            <li>Horizontal Anchor Module 横向锚点模块</li>
+            <li>Vertical Anchor Module 纵向锚点模块</li>
+            <li>Detail Section Title Module 分组标题模块</li>
+            <li>Related Detail Table Module 关联明细表格模块</li>
+            <li>Footer Summary Module 底部汇总模块</li>
+            <li>Footer Action Module 底部操作按钮模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="layout-rules">
+          <h4>布局规则</h4>
+          <p>
+            页面内容从上到下排列，每个信息分组可以独立选择单列、双列或多列。
+            上下布局拥有完整横向空间，适合承载更多字段和更宽的明细表格。
+          </p>
+          <p>
+            当页面包含多个分组时，建议使用分组标题。当页面较长时，可以启用横向锚点或纵向锚点进行页内定位。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="column-rules">
+          <h4>列数规则</h4>
+          <ul>
+            <li>默认使用双列。</li>
+            <li>字段数量少或字段值较长时使用单列。</li>
+            <li>字段值短、页面宽度充足、字段数量较多时可使用多列。</li>
+            <li>多列最多 3 列。</li>
+            <li>不同分组可以使用不同列数。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="validation-rules">
+          <h4>校验规则</h4>
+          <ul>
+            <li>必须包含描述列表。</li>
+            <li>必须有清晰分组或明确的字段阅读顺序。</li>
+            <li>长文本、附件、明细表格必须跨整行。</li>
+            <li>多个分组时建议展示分组标题。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="common-mistakes">
+          <h4>常见错误</h4>
+          <ul>
+            <li>不要大量字段无标题堆叠。</li>
+            <li>不要所有分组机械使用同一列数。</li>
+            <li>不要将长文本压缩到多列窄区域。</li>
+            <li>不要缺少页面对象名称或业务编号。</li>
+          </ul>
+        </section>
+      </article>
+
+      <article
+        class="detail-page-pattern"
+        data-pattern-name="Split Table-like Detail Pattern"
+        data-chinese-name="左右布局表格样式详情"
+        data-layout-type="split"
+        data-content-style="table-like"
+        data-container-type="page"
+        data-default-columns="two"
+      >
+        <h3>左右布局表格样式详情</h3>
+
+        <p class="pattern-summary">
+          左右布局表格样式详情适用于字段较多、字段边界需要强区分，并且右侧存在审批流、状态流或操作记录的单据型详情页。
+        </p>
+
+        <section class="pattern-section" data-field="applicable-scenario">
+          <h4>适用场景</h4>
+          <p>
+            适用于报账单详情、对账单详情、付款单详情、采购单详情、审批单详情、合同付款详情等。
+            页面主体信息使用表格化详情网格展示，右侧展示流程或辅助状态。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="structure-order">
+          <h4>结构顺序</h4>
+          <ol>
+            <li>Breadcrumb 面包屑</li>
+            <li>Detail Hero Header 详情头，可选</li>
+            <li>Horizontal Anchor 横向锚点，可选</li>
+            <li>Left Table-like Detail Grid 左侧表格化详情网格</li>
+            <li>Related Detail Tables 关联明细表格，可选</li>
+            <li>Right Approval Flow 右侧审批流，可选</li>
+            <li>Footer Summary or Footer Action 底部汇总或操作区，可选</li>
+          </ol>
+        </section>
+
+        <section class="pattern-section" data-field="required-modules">
+          <h4>必需模块</h4>
+          <ul>
+            <li>Table-like Detail Grid Module 表格化详情网格模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="optional-modules">
+          <h4>可选模块</h4>
+          <ul>
+            <li>Detail Hero Header Module 详情头模块</li>
+            <li>Horizontal Anchor Module 横向锚点模块</li>
+            <li>Approval Flow Module 审批流模块</li>
+            <li>Related Detail Table Module 关联明细表格模块</li>
+            <li>Footer Summary Module 底部汇总模块</li>
+            <li>Footer Action Module 底部操作按钮模块</li>
+            <li>Footer Summary Action Module 底部汇总与操作组合模块</li>
+            <li>Detail Section Title Module 分组标题模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="layout-rules">
+          <h4>布局规则</h4>
+          <p>
+            左侧承载表格化详情网格和关联明细表格。右侧承载审批流、状态流、操作记录或风险提示。
+            右侧辅助区域不应承载复杂表格或主详情字段网格。
+          </p>
+          <p>
+            左右布局中，表格化详情网格默认不超过双列。长文本、附件、明细表格必须跨整行。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="visual-rules">
+          <h4>视觉规则</h4>
+          <ul>
+            <li>label 和详情信息通过分割线分隔显示。</li>
+            <li>label 单元格使用浅灰背景。</li>
+            <li>value 单元格使用白色背景。</li>
+            <li>单元格 padding 为上下 8px、左右 12px。</li>
+            <li>label 背景可使用 #f3f4f6 或 --color-layout-bg-neutral-gray。</li>
+            <li>value 背景使用 --color-container-bg-neutral-bright。</li>
+            <li>分割线使用 --color-divider-neutral。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="column-rules">
+          <h4>列数规则</h4>
+          <ul>
+            <li>默认使用双列。</li>
+            <li>字段值较长时使用单列或跨整行。</li>
+            <li>左右布局中不建议使用多列。</li>
+            <li>右侧存在审批流时，左侧主内容最多双列。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="validation-rules">
+          <h4>校验规则</h4>
+          <ul>
+            <li>label 和 value 必须清晰分隔。</li>
+            <li>长文本、附件、明细表格必须跨整行。</li>
+            <li>右侧栏不得放复杂详情网格或大型数据表格。</li>
+            <li>必须展示业务对象名称或编号。</li>
+            <li>如果包含审批流，审批流必须包含节点、处理人、状态和时间。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="common-mistakes">
+          <h4>常见错误</h4>
+          <ul>
+            <li>不要在左右布局中强行三列。</li>
+            <li>不要把明细表格塞入 value 单元格。</li>
+            <li>不要让 label 背景和 value 背景没有区分。</li>
+            <li>不要把右侧审批栏做成主内容区。</li>
+          </ul>
+        </section>
+      </article>
+
+      <article
+        class="detail-page-pattern"
+        data-pattern-name="Stacked Table-like Detail Pattern"
+        data-chinese-name="上下布局表格样式详情"
+        data-layout-type="stacked"
+        data-content-style="table-like"
+        data-container-type="page"
+        data-default-columns="two-or-three"
+      >
+        <h3>上下布局表格样式详情</h3>
+
+        <p class="pattern-summary">
+          上下布局表格样式详情适用于页面宽度充足、字段较多、需要规整展示的单据型或审批型详情页。
+        </p>
+
+        <section class="pattern-section" data-field="applicable-scenario">
+          <h4>适用场景</h4>
+          <p>
+            适用于合同付款信息、付款条款、对账明细、费用明细、采购明细、申请单详情、审批单详情等。
+            页面使用完整横向空间承载表格化详情网格和关联明细表格。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="structure-order">
+          <h4>结构顺序</h4>
+          <ol>
+            <li>Breadcrumb 面包屑</li>
+            <li>Detail Hero Header 详情头，可选</li>
+            <li>Horizontal Anchor 或 Vertical Anchor 锚点，可选</li>
+            <li>Table-like Detail Sections 表格化详情分组</li>
+            <li>Related Detail Tables 关联明细表格，可选</li>
+            <li>Footer Summary or Footer Action 底部汇总或操作区，可选</li>
+          </ol>
+        </section>
+
+        <section class="pattern-section" data-field="required-modules">
+          <h4>必需模块</h4>
+          <ul>
+            <li>Table-like Detail Grid Module 表格化详情网格模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="optional-modules">
+          <h4>可选模块</h4>
+          <ul>
+            <li>Detail Hero Header Module 详情头模块</li>
+            <li>Horizontal Anchor Module 横向锚点模块</li>
+            <li>Vertical Anchor Module 纵向锚点模块</li>
+            <li>Detail Section Title Module 分组标题模块</li>
+            <li>Related Detail Table Module 关联明细表格模块</li>
+            <li>Footer Summary Module 底部汇总模块</li>
+            <li>Footer Action Module 底部操作按钮模块</li>
+            <li>Footer Summary Action Module 底部汇总与操作组合模块</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="layout-rules">
+          <h4>布局规则</h4>
+          <p>
+            上下布局拥有完整横向空间，适合展示双列或三列表格化详情网格。
+            每个分组可以根据字段数量和字段长度单独决定列数。
+          </p>
+          <p>
+            关联明细表格必须独占整行。附件、长文本、备注、说明、审批意见等内容必须跨整行。
+          </p>
+        </section>
+
+        <section class="pattern-section" data-field="visual-rules">
+          <h4>视觉规则</h4>
+          <ul>
+            <li>label 和详情信息通过分割线分隔显示。</li>
+            <li>label 单元格使用浅灰背景。</li>
+            <li>value 单元格使用白色背景。</li>
+            <li>单元格 padding 为上下 8px、左右 12px。</li>
+            <li>label 背景可使用 #f3f4f6 或 --color-layout-bg-neutral-gray。</li>
+            <li>value 背景使用 --color-container-bg-neutral-bright。</li>
+            <li>分割线使用 --color-divider-neutral。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="column-rules">
+          <h4>列数规则</h4>
+          <ul>
+            <li>默认使用双列。</li>
+            <li>字段较多且字段值短时可使用三列。</li>
+            <li>多列最多 3 列。</li>
+            <li>不同分组可以采用不同列数。</li>
+            <li>长文本、附件、明细表格必须跨整行。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="validation-rules">
+          <h4>校验规则</h4>
+          <ul>
+            <li>多列最多 3 列。</li>
+            <li>不同字段类型应决定是否跨列。</li>
+            <li>多个分组必须有分组标题。</li>
+            <li>明细表格必须独占整行。</li>
+            <li>label 和 value 必须视觉区分明确。</li>
+          </ul>
+        </section>
+
+        <section class="pattern-section" data-field="common-mistakes">
+          <h4>常见错误</h4>
+          <ul>
+            <li>不要所有分组机械使用三列。</li>
+            <li>不要让长文本在三列中被压缩。</li>
+            <li>不要缺少分组结构。</li>
+            <li>不要将数据表格误做成 label-value 字段网格。</li>
+          </ul>
+        </section>
+      </article>
+    </section>
+
+    <section class="knowledge-section" data-section="shared-modules">
+      <h2>四类详情页共享模块</h2>
+
+      <article class="detail-module" data-module-name="Description List Module" data-required="true">
+        <h3>Description List Module 描述列表模块</h3>
+        <p>
+          描述列表模块是基础样式详情的核心模块，用于展示业务对象的核心字段。
+          页面承载默认双列，抽屉承载默认单列。长文本、附件、明细表格必须跨整行。
+        </p>
+        <p>
+          组件 Token 规范（定义于 <code>design-systems/components.html</code> 和 <code>detail-support.css</code>）：
+        </p>
+        <ul>
+          <li>字段分组间距：详情页中各分组模块（fieldset、descriptions-grid、data-table-wrap、op-log-table 等）上下间距统一 20px（--spacing-5），定义于 detail-support.css。最后一个模块无下边距。</li>
+          <li>描述字段值（.description-value）：font-size 14px（--font-size-regular），color 85% #132240（--color-text-neutral-gray40），font-weight regular。</li>
+          <li>描述字段标签（.description-label）：color 65% #132240（--color-text-neutral-gray30），font-size 12px（--font-size-small）。</li>
+          <li>详情主标题（.approval-title）：font-size 16px（--font-size-large），font-weight bold。</li>
+          <li>元信息项（.meta-item）：font-size 14px（--font-size-regular），font-weight regular。</li>
+          <li>标签（.status-tag / .tag）：border-radius 4px（--border-radius-small）。</li>
+          <li>表格表头（.data-table th）：color 95% #132240（--color-text-neutral-gray50），font-size 14px，font-weight bold。</li>
+          <li>表格数据行（.data-table td）：color 85% #132240（--color-text-neutral-gray40），font-size 14px，font-weight regular。</li>
+          <li>分组标题（fieldset.form-block legend / .section-title）：font-size 16px（--font-size-large），font-weight bold，带 3px×14px 主题色竖条。</li>
+        </ul>
+      </article>
+
+      <article class="detail-module" data-module-name="Table-like Detail Grid Module" data-required="false">
+        <h3>Table-like Detail Grid Module 表格化详情网格模块</h3>
+        <p>
+          表格化详情网格用于字段较多、字段边界需要强区分的详情页。
+          label 和 value 通过分割线分隔，label 使用浅灰背景，value 使用白底。
+        </p>
+        <ul>
+          <li>cell padding：上下 8px，左右 12px。</li>
+          <li>label 背景：#f3f4f6 或 --color-layout-bg-neutral-gray。</li>
+          <li>value 背景：--color-container-bg-neutral-bright。</li>
+          <li>分割线：--color-divider-neutral。</li>
+        </ul>
+      </article>
+
+      <article class="detail-module" data-module-name="Related Detail Table Module">
+        <h3>Related Detail Table Module 关联明细表格模块</h3>
+        <p>
+          关联明细表格用于展示关联借款、付款条款、对账明细、对账记录、商品明细、费用明细等多行数据。
+          它是真正的数据表格，不是表格化详情网格。
+        </p>
+        <p>
+          Table 组件统一规范（定义于 <code>design-systems/components.html</code>，所有场景通用，不得覆盖）：
+        </p>
+        <ul>
+          <li>表头（th）：color 95% #132240（--color-text-neutral-gray50），font-size 14px（--font-size-regular），font-weight bold。</li>
+          <li>数据行（td）：color 85% #132240（--color-text-neutral-gray40），font-size 14px（--font-size-regular），font-weight regular。</li>
+          <li>行高：固定 40px（height: 40px），padding 左右 16px（--spacing-4），垂直居中。</li>
+          <li>溢出：white-space: nowrap + overflow: hidden + text-overflow: ellipsis，单行省略不换行。</li>
+          <li>表格容器：.data-table-wrap 提供 overflow-x: auto 横向滚动。</li>
+          <li>表格边框：.data-table / .op-log-table 及所有 table 类模块整体四边 1px 实线边框 + 圆角 6px。必须使用 border-collapse: separate + border-spacing: 0（而非 collapse），否则 border-radius 不生效。边框是表格的固定样式，引用即带边框，不得在任何页面中去掉或覆盖。</li>
+        </ul>
+        <p>
+          关联明细表格必须独占整行。左右布局中应放在左侧主内容区，不放在右侧审批流区域。
+        </p>
+      </article>
+
+      <article class="detail-module" data-module-name="Approval Flow Module">
+        <h3>Approval Flow Module 审批流模块</h3>
+        <p>
+          审批流用于展示审批节点、审批人、审批状态、审批时间、审批意见和评论。
+          左右布局中优先放在右侧辅助区。上下布局中可以放在详情信息之后。
+        </p>
+      </article>
+
+      <article class="detail-module" data-module-name="Horizontal Anchor Module">
+        <h3>Horizontal Anchor Module 横向锚点模块</h3>
+        <p>
+          横向锚点样式可以接近 Tabs，但交互行为是页内定位，不是内容切换。
+          点击后应滚动到对应分组，而不是隐藏其他分组内容。
+        </p>
+      </article>
+
+      <article class="detail-module" data-module-name="Vertical Anchor Module">
+        <h3>Vertical Anchor Module 纵向锚点模块</h3>
+        <p>
+          纵向锚点用于分组较多、页面较长、左侧有足够空间的详情页。
+          点击后滚动定位到对应分组，滚动时可同步激活当前锚点。
+        </p>
+      </article>
+
+      <article class="detail-module" data-module-name="Footer Summary Action Module">
+        <h3>Footer Summary Action Module 底部汇总与操作组合模块</h3>
+        <p>
+          底部操作栏固定悬浮于页面底部（<code>position: sticky; bottom: 0</code>），始终可见，不随内容滚动消失。
+        </p>
+        <p>
+          使用轻量投影（<code>box-shadow: 0 -2px 8px rgba(19,34,64,.06)</code>）与内容区分离，投影不宜过重。
+        </p>
+        <p>
+          按钮从左到右按优先级排列（主操作→次要操作→导出/打印），不做左右分开布局。所有按钮在同一行展示，不换行。
+        </p>
+        <p>
+          固定内边距：上下 <code>12px</code>（<code>--spacing-3</code>），左侧 <code>16px</code>（<code>--spacing-4</code>）。
+        </p>
+        <p>
+          按钮按查看者角色和单据状态动态展示，非固定组合。危险操作（驳回、删除、作废）必须使用二次确认弹窗。
+        </p>
+        <p>
+          详细 CSS 规范见 <code>assets/content-assets/_support/detail-support.css</code> 中 <code>.detail-action-bar</code> 定义。
+        </p>
+      </article>
+    </section>
+
+    <section class="knowledge-section" data-section="column-rules">
+      <h2>单列、双列、多列适配规则</h2>
+
+      <article class="column-rule" data-column-type="single">
+        <h3>单列规则</h3>
+        <p>
+          单列适用于抽屉详情、窄容器、字段值较长、备注说明较多、移动端适配或需要顺序阅读的详情页。
+        </p>
+        <ul>
+          <li>抽屉详情默认单列。</li>
+          <li>长文本字段必须单列或跨整行展示。</li>
+          <li>附件、图片、凭证、明细表格必须跨整行或独立分组。</li>
+        </ul>
+      </article>
+
+      <article class="column-rule" data-column-type="double">
+        <h3>双列规则</h3>
+        <p>
+          双列是页面详情的默认推荐方案，适用于字段数量中等、字段值较短、需要兼顾信息密度和可读性的 B 端详情页。
+        </p>
+        <ul>
+          <li>页面承载的基础详情默认双列。</li>
+          <li>页面承载的表格详情默认双列。</li>
+          <li>左右布局中主内容区默认最多双列。</li>
+        </ul>
+      </article>
+
+      <article class="column-rule" data-column-type="multi">
+        <h3>多列规则</h3>
+        <p>
+          多列适用于上下布局、宽屏页面、字段很多且字段值较短的场景。多列通常最多 3 列。
+        </p>
+        <ul>
+          <li>上下布局可使用多列。</li>
+          <li>左右布局不默认使用多列。</li>
+          <li>多列最多 3 列。</li>
+          <li>长文本、附件、明细表格不得放入多列窄格。</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="knowledge-section" data-section="validation-rules">
+      <h2>通用校验规则</h2>
+
+      <ul>
+        <li>详情页必须包含 Description List Module 或 Table-like Detail Grid Module。</li>
+        <li>详情页必须展示业务对象名称或业务编号。</li>
+        <li>表格样式详情中，label 和 value 必须通过视觉边界清晰分隔。</li>
+        <li>表格化详情网格不是数据表格，不得用于承载多行明细数据。</li>
+        <li>关联明细表格必须独占整行。</li>
+        <li>左右布局中，右侧辅助区不得承载复杂表格或复杂字段网格。</li>
+        <li>上下布局中，不同分组可以根据字段内容选择不同列数。</li>
+        <li>横向锚点和纵向锚点都是页内定位，不是 Tab 内容切换。</li>
+        <li>底部操作栏固定悬浮，轻投影，按钮左到右按优先级排列，始终单行。</li>
+        <li>操作按钮按角色和单据状态动态展示，非固定组合。</li>
+        <li>撤回、取消、删除、驳回、重置等危险操作必须二次确认。</li>
+      </ul>
+    </section>
+
+
+    <section class="knowledge-section" data-section="header-flexibility">
+      <h2>Detail Header Modules 详情头部模块</h2>
+      <p>头部由两个独立模块组成，可单独使用也可组合使用：</p>
+      <ul>
+        <li><strong>back-bar（返回导航条）</strong>：<code>regions/back-bar/basic.html</code> — 仅返回按钮。任何需要返回上级的页面均可使用。</li>
+        <li><strong>info-banner（信息横幅）</strong>：<code>regions/info-banner/basic.html</code> — 蓝色背景框 + title(16px bold) + meta(14px) ≤4项。独立用于页面顶部突出核心信息。</li>
+        <li><strong>detail-header.rich（组合）</strong>：<code>regions/detail-region/header-rich.html</code> — back-bar + info-banner 上下组合，为推荐参考模板，非强制形态。</li>
+      </ul>
+      <p>使用场景：</p>
+      <ul>
+        <li>详情页 → back-bar + info-banner 上下组合</li>
+        <li>新建/编辑页 → back-bar 单独使用（标题由 section-title 承载）</li>
+        <li>审批详情页 → back-bar + info-banner 上下组合</li>
+        <li>一级列表页 → 两者都不用</li>
+      </ul>
+      <p>硬性底线：返回区在上、信息区蓝色背景(4% #1966ff)、≤4 项 meta、16px bold title + 14px meta、不悬浮。</p>
+    </section>
+
+    <section class="knowledge-section" data-section="page-type-constraints">
+      <h2>Page Type Generation Constraints 页面类型生成约束</h2>
+
+      <article class="detail-module" data-module-name="TablePage Constraints">
+        <h3>TablePage</h3>
+        <p>核心约束：表格样式不可覆盖（见 components.html）、行内操作 ≤3 个、批量操作依赖多选复选框、危险操作必须确认弹窗。</p>
+        <p>全部布局规则见上方「Table List Page Layout」章节。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="DetailPage Constraints">
+        <h3>DetailPage（普通详情）</h3>
+        <p>无审批流。核心约束：头部信息精简（≤4 项 meta）、不悬浮、减少分割线。</p>
+        <p>全部布局、字段、间距、组件规则见上方「四类详情页共享模块」和 <code>detail-support.css</code>。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="ApprovalDetailPage Constraints">
+        <h3>ApprovalDetailPage（审批详情）</h3>
+        <p>核心约束：双栏 375px、审批流 sticky、底部操作栏悬浮、按钮按角色动态展示。</p>
+        <p>全部布局和审批流规则见上方「Approval Flow Module」和「Footer Summary Action Module」。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="CreatePage/EditPage Constraints">
+        <h3>CreatePage / EditPage / SettingsPage / ReportPage</h3>
+        <p>约束见 <code>data/content-assets/recipe-rules.csv</code> 对应配方条目。核心原则同 DetailPage：信息区精简、组件合规、操作有反馈。</p>
+      </article>
+    </section>
+
+
+  </main>
+</body>
+</html>

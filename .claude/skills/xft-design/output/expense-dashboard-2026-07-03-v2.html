@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE scope:Full Page page_type:HomePage shell:admin-side-shell
+  design_reasoning:
+    user_task: 财务周一早上查看费用概览 → 核心诉求"有没有要立刻处理的+花了多少"
+    visual_focus: 待审批16笔+3项预算预警 → 顶部警示条，F型扫描第一眼
+    priority: 行动项(审批+预警) > 认知项(总额+核销) > 操作项 > 详情项
+    structure: 不对称布局，警示条全宽→指标3列→快捷入口→详情双列
+    diff_anchor: 预算预警用"已用92%·剩余¥40k"进度语义，不是泛化数字
+    competitive: SAP Concur预警条 + 飞书快捷入口 + 钉钉待审批列表
+-->
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>费用管理 · 工作台</title>
+<style>
+:root{--accent:#1966ff;--accent-hover:#4086ff;--accent-light:#EBF3FF;--accent-subtle:#F5F8FF;--err:#fa4332;--err-light:#fff3f2;--warn-text:#e57717;--warn-light:#fff7e8;--ok:#0ac767;--ok-light:#edfaf4;--white:#fff;--gray-bg:#f3f4f6;--gray-hover:rgba(19,34,64,.05);--border:rgba(19,34,64,.15);--divider:rgba(19,34,64,.1);--t50:rgba(19,34,64,.95);--t40:rgba(19,34,64,.85);--t30:rgba(19,34,64,.65);--t20:rgba(19,34,64,.45);--fs-xs:12px;--fs-sm:14px;--fs-base:16px;--fs-xl:20px;--fs-2xl:24px;--fw-bold:600;--fw-medium:500;--font:-apple-system,BlinkMacSystemFont,sans-serif;--r-sm:4px;--r-md:6px;--r-lg:12px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--nav-h:48px;--side-w:188px}
+*{box-sizing:border-box}body{margin:0;color:var(--t50);background:var(--gray-bg);font-family:var(--font);font-size:14px;line-height:22px;overflow:hidden}button{font:inherit;cursor:pointer}
+.app-shell{width:100%;height:100vh;padding-top:var(--nav-h)}.top-nav{height:var(--nav-h);display:flex;align-items:center;background:linear-gradient(117.84deg,#3C8AFF,#4255FF);position:fixed;top:0;left:0;right:0;z-index:20;padding:0 12px}.top-nav .brand{padding:0 14px 0 6px;color:rgba(249,249,250,.98);font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold',var(--font);white-space:nowrap;flex-shrink:0}.top-nav .nav-row{display:flex;align-items:center;flex:1;height:100%;gap:2px;overflow:hidden}.top-nav .nav-item{height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:6px;color:rgba(255,255,255,.9);font-size:14px;border:0;background:transparent;white-space:nowrap;transition:background .15s}.top-nav .nav-item:hover{background:rgba(255,255,255,.12)}.top-nav .nav-item.active{font-weight:600}.top-nav .nav-item.active::after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:#fff;border-radius:1px}.top-nav .user{display:flex;align-items:center;gap:8px;padding:2px 8px;border-radius:6px;color:#fff;font-size:14px;flex-shrink:0}.top-nav .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.main-frame{display:flex;height:calc(100vh - var(--nav-h));overflow:hidden}.side-nav{width:var(--side-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--divider);padding:8px 2px 0 8px;overflow-y:auto;height:100%}.side-btn{width:100%;height:40px;display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--t40);border:0;background:transparent;font-size:14px;text-align:left;margin-bottom:4px;transition:background .15s}.side-btn:hover{background:var(--gray-hover);color:var(--t50)}.side-btn.sel{color:var(--accent)}.side-btn.act{color:var(--accent);background:var(--accent-light);font-weight:500}.side-btn.l2{padding-left:36px}.ico{width:24px;height:24px;flex-shrink:0;margin-right:4px;opacity:.65}.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.arr{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:transform .2s}.arr.up{transform:rotate(-180deg)}
+.work-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}.tab-bar{height:32px;background:#e7e9ec;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid var(--divider)}.tab-it{height:32px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;width:128px;flex-shrink:0;color:var(--t40);border:0;background:transparent}.tab-it.act{background:var(--gray-bg);color:var(--t50)}.tab-it .cls{display:none;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;background:#e7e9ec;margin-left:auto;border:0;cursor:pointer}.tab-it.act .cls{display:inline-flex}
+.page-content{flex:1;overflow:auto;background:var(--gray-bg);padding:var(--s4)}.content-card{background:var(--white);border-radius:var(--r-lg);padding:var(--s5);min-height:100%}
+</style>
+<style>
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;white-space:nowrap;font-size:var(--fs-sm);transition:all .15s;text-decoration:none}.btn:hover{border-color:var(--accent);color:var(--accent)}.btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}.btn-text{padding:0;border:0;background:transparent;height:auto;color:var(--accent)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--white)}.data-table th,.data-table td{height:40px;padding:0 var(--s4);border-bottom:1px solid var(--divider);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-sm);color:var(--t40)}.data-table th{background:#f3f4f6;color:var(--t50);font-weight:var(--fw-bold)}.data-table tbody tr:hover{background:var(--gray-hover)}.data-table tbody tr:last-child td{border-bottom:0}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:var(--fw-bold)}.tag-ok{background:var(--ok-light);color:var(--ok)}.tag-warn{background:var(--warn-light);color:var(--warn-text)}.tag-err{background:var(--err-light);color:var(--err)}
+</style>
+<style>
+/* 顶部行动警示条 — 视觉重心 */
+.action-alert{display:flex;align-items:center;gap:var(--s6);padding:var(--s3) var(--s5);margin-bottom:var(--s5);background:linear-gradient(90deg,var(--err-light) 0%,var(--white) 60%);border:1px solid rgba(250,67,50,.12);border-radius:var(--r-lg)}.action-alert .alert-main{display:flex;align-items:center;gap:var(--s3)}.action-alert .alert-num{font-size:32px;font-weight:var(--fw-bold);color:var(--err);line-height:1}.action-alert .alert-text{font-size:var(--fs-sm);color:var(--t50)}.action-alert .alert-text strong{color:var(--err)}.action-alert .alert-items{display:flex;gap:var(--s6);flex:1}.action-alert .alert-item{display:flex;align-items:center;gap:var(--s2);font-size:var(--fs-xs)}.action-alert .alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.action-alert .alert-dot.err{background:var(--err)}.action-alert .alert-dot.warn{background:var(--warn-text)}.action-alert .alert-btn{flex-shrink:0}
+
+/* 三列指标 */
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);margin-bottom:var(--s5)}.metric-card{padding:var(--s5);border-radius:var(--r-lg);border:1px solid var(--divider);background:var(--white);text-align:center}.metric-card .m-val{font-size:var(--fs-2xl);font-weight:var(--fw-bold);color:var(--t50);line-height:1.2}.metric-card .m-lbl{font-size:var(--fs-xs);color:var(--t30);margin-top:var(--s1)}.metric-card .m-sub{font-size:var(--fs-xs);color:var(--t30);margin-top:var(--s1)}.metric-card .m-sub.up{color:var(--err)}.metric-card .m-sub.down{color:var(--ok)}
+
+/* 快捷入口 */
+.quick-row{display:flex;gap:var(--s4);margin-bottom:var(--s5)}.q-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:var(--s2);height:48px;border:1px solid var(--divider);border-radius:var(--r-md);background:var(--white);cursor:pointer;text-decoration:none;font-size:var(--fs-sm);color:var(--t50);transition:all .15s}.q-btn:hover{border-color:var(--accent);background:var(--accent-subtle)}.q-btn .q-icon{font-size:18px}
+
+/* 双列详情 */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}.detail-card{border:1px solid var(--divider);border-radius:var(--r-lg);overflow:hidden;background:var(--white)}.detail-card .card-head{display:flex;align-items:center;justify-content:space-between;padding:var(--s4);border-bottom:1px solid var(--divider);font-size:var(--fs-base);font-weight:var(--fw-bold);color:var(--t50)}.detail-card .card-body{padding:var(--s4)}
+
+/* 预算条 */
+.budget-item{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0}.budget-item+.budget-item{border-top:1px solid var(--divider)}.budget-item .b-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.budget-item .b-info{flex:1;min-width:0}.budget-item .b-name{font-size:var(--fs-sm);color:var(--t50)}.budget-item .b-bar{height:6px;border-radius:3px;background:var(--gray-bg);margin-top:var(--s1);overflow:hidden}.budget-item .b-fill{height:100%;border-radius:3px}.budget-item .b-fill.err{background:var(--err)}.budget-item .b-fill.warn{background:var(--warn-text)}.budget-item .b-meta{font-size:var(--fs-xs);color:var(--t30);margin-top:2px}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-nav"><span class="brand">企业财务平台</span><div class="nav-row"><button class="nav-item active">费用管理</button><button class="nav-item">报销管理</button><button class="nav-item">结算管理</button><button class="nav-item">审批中心</button><button class="nav-item">系统设置</button></div><div class="user"><span class="avatar">张</span>张财务</div></header>
+  <div class="main-frame">
+    <aside class="side-nav"><div data-menu-root>
+      <button class="side-btn act"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="lbl">工作台</span></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">费用管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2"><span class="lbl">费用概览</span></button>
+      <button class="side-btn l2"><span class="lbl">预算管理</span></button>
+      <button class="side-btn l2"><span class="lbl">费用分析</span></button>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">报销管理</span><svg class="arr up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+    </div></aside>
+    <main class="work-area">
+      <div class="tab-bar"><button class="tab-it act">费用概览<span class="cls"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M3.7 3.7a1 1 0 011.4 0L8 6.6l2.9-2.9a1 1 0 111.4 1.4L9.4 8l2.9 2.9a1 1 0 01-1.4 1.4L8 9.4l-2.9 2.9a1 1 0 01-1.4-1.4L6.6 8 3.7 5.1a1 1 0 010-1.4z"/></svg></span></button></div>
+      <section class="page-content"><div class="content-card">
+
+        <!-- 行动警示条 — F型扫描第一眼命中 -->
+        <div class="action-alert">
+          <div class="alert-main"><span class="alert-num">16</span><div class="alert-text">笔费用待审批<br><strong>含 3 笔加急</strong></div></div>
+          <div class="alert-items">
+            <div class="alert-item"><span class="alert-dot err"></span>差旅费已用 <strong>92%</strong> · 剩 ¥40,000</div>
+            <div class="alert-item"><span class="alert-dot err"></span>招待费超预算 <strong>15%</strong></div>
+            <div class="alert-item"><span class="alert-dot warn"></span>办公费已用 <strong>78%</strong></div>
+          </div>
+          <a href="#" class="btn btn-primary alert-btn">去审批</a>
+        </div>
+
+        <!-- 三列指标 — 认知项 -->
+        <div class="metric-row">
+          <div class="metric-card"><div class="m-val">¥8,562,300</div><div class="m-lbl">本月费用总额</div><div class="m-sub up">↑ 12.5% 较上月</div></div>
+          <div class="metric-card"><div class="m-val" style="color:var(--ok)">¥6,120,500</div><div class="m-lbl">已核销费用</div><div class="m-sub down">核销率 71.5%</div></div>
+          <div class="metric-card"><div class="m-val" style="color:var(--accent)">¥486,200</div><div class="m-lbl">本月预算剩余</div><div class="m-sub">可支配额度</div></div>
+        </div>
+
+        <!-- 快捷入口 — 操作项 -->
+        <div class="quick-row">
+          <a href="#" class="q-btn"><span class="q-icon">📝</span>新建报销单</a>
+          <a href="#" class="q-btn"><span class="q-icon">🔍</span>费用审批</a>
+          <a href="#" class="q-btn"><span class="q-icon">📊</span>费用分析</a>
+          <a href="#" class="q-btn"><span class="q-icon">📥</span>导出报表</a>
+        </div>
+
+        <!-- 双列详情 -->
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="card-head">待审批费用<a href="#" class="btn btn-text">全部 →</a></div>
+            <div class="card-body"><table class="data-table">
+              <thead><tr><th>单据号</th><th>申请人</th><th>类型</th><th style="text-align:right">金额</th></tr></thead>
+              <tbody>
+                <tr><td style="font-size:var(--fs-xs)">BX-0712</td><td>陈语安</td><td>差旅费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥3,280</td></tr>
+                <tr><td style="font-size:var(--fs-xs)">BX-0715</td><td>王明辉</td><td>招待费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥6,800</td></tr>
+                <tr><td style="font-size:var(--fs-xs)">BX-0718</td><td>赵丽萍</td><td>办公费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥1,520</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div class="detail-card">
+            <div class="card-head">预算预警<a href="#" class="btn btn-text">预算管理 →</a></div>
+            <div class="card-body">
+              <div class="budget-item"><span class="b-dot" style="background:var(--err)"></span><div class="b-info"><div class="b-name">差旅费</div><div class="b-bar"><div class="b-fill err" style="width:92%"></div></div><div class="b-meta">已用 ¥460,000 / 预算 ¥500,000 · 剩余 ¥40,000</div></div></div>
+              <div class="budget-item"><span class="b-dot" style="background:var(--err)"></span><div class="b-info"><div class="b-name">招待费</div><div class="b-bar"><div class="b-fill err" style="width:100%"></div></div><div class="b-meta">已用 ¥345,000 / 预算 ¥300,000 · <span style="color:var(--err)">超出 ¥45,000</span></div></div></div>
+              <div class="budget-item"><span class="b-dot" style="background:var(--warn-text)"></span><div class="b-info"><div class="b-name">办公费</div><div class="b-bar"><div class="b-fill warn" style="width:78%"></div></div><div class="b-meta">已用 ¥156,000 / 预算 ¥200,000 · 剩余 ¥44,000</div></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div></section>
+    </main>
+  </div>
+</div>
+<script>
+(function(){
+  document.querySelector(".tab-bar").addEventListener("click",function(e){var c=e.target.closest(".cls");if(c){e.stopPropagation();return}var t=e.target.closest(".tab-it");if(!t)return;this.querySelectorAll(".tab-it").forEach(function(i){i.classList.toggle("act",i===t)})});
+  document.querySelector("[data-menu-root]").addEventListener("click",function(e){var i=e.target.closest(".side-btn");if(i&&i.classList.contains("l2")){this.querySelectorAll(".side-btn.l2").forEach(function(c){c.classList.toggle("act",c===i)})}var t=e.target.closest(".side-btn.sel")||e.target.closest(".side-btn:not(.l2)");if(!t)return;var a=t.querySelector(".arr");if(a)a.classList.toggle("up");var n=t.nextElementSibling;while(n&&n.classList.contains("l2")){n.hidden=!n.hidden;n=n.nextElementSibling}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+{
+  "schemaVersion": 1,
+  "brandId": "xft",
+  "source": {
+    "componentsHtml": "components.html",
+    "tokensCss": "tokens.css"
+  },
+  "fixture": {
+    "title": "XFT - reference components",
+    "description": "企业级后台业务设计系统组件参考。采用维度化 Token 命名，覆盖 通用/布局/导航/数据录入/数据展示/反馈 六大分类。",
+    "totalComponents": 69
+  },
+  "tokens": {
+    "source": "tokens.css",
+    "count": 128
+  },
+  "groups": [
+    {
+      "id": "button",
+      "label": "按钮 Button",
+      "category": "通用",
+      "present": true,
+      "classes": ["btn", "button", "btn-primary", "btn-secondary", "btn-text", "btn-danger", "page-btn"],
+      "elements": ["button", "a"]
+    },
+    {
+      "id": "typography",
+      "label": "排版 Typography",
+      "category": "通用",
+      "present": true,
+      "classes": [
+        "page-title",
+        "page-description",
+        "section-title",
+        "overlay-title",
+        "overlay-description",
+        "field-label",
+        "field-help",
+        "setting-title",
+        "setting-description",
+        "summary-value",
+        "detail-field-value",
+        "table-toolbar-title",
+        "toolbar-info",
+        "pagination-info"
+      ],
+      "elements": ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span", "label", "div"]
+    },
+    {
+      "id": "divider",
+      "label": "分割线 Divider",
+      "category": "布局",
+      "present": false,
+      "classes": ["divider", "divider-horizontal", "divider-vertical", "divider-with-text"],
+      "elements": ["div", "hr"]
+    },
+    {
+      "id": "space",
+      "label": "间距 Space",
+      "category": "布局",
+      "present": false,
+      "classes": ["space", "space-horizontal", "space-vertical"],
+      "elements": ["div"]
+    },
+    {
+      "id": "breadcrumb",
+      "label": "面包屑 Breadcrumb",
+      "category": "导航",
+      "present": false,
+      "classes": ["breadcrumb", "breadcrumb-item", "breadcrumb-separator"],
+      "elements": ["nav", "ol", "li", "a", "span"]
+    },
+    {
+      "id": "dropdown",
+      "label": "下拉菜单 Dropdown",
+      "category": "导航",
+      "present": false,
+      "classes": ["dropdown", "dropdown-menu", "dropdown-item", "dropdown-divider"],
+      "elements": ["div", "ul", "li", "button", "span"]
+    },
+    {
+      "id": "pagination",
+      "label": "分页 Pagination",
+      "category": "导航",
+      "present": true,
+      "classes": ["pagination", "pagination-info", "pagination-actions", "page-btn", "is-active"],
+      "elements": ["div", "span", "button"]
+    },
+    {
+      "id": "steps",
+      "label": "步骤条 Steps",
+      "category": "导航",
+      "present": false,
+      "classes": [
+        "steps",
+        "steps-horizontal",
+        "steps-vertical",
+        "step-item",
+        "step-icon",
+        "step-title",
+        "step-description",
+        "step-connector"
+      ],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "tabs",
+      "label": "标签页 Tabs",
+      "category": "导航",
+      "present": true,
+      "classes": ["content-tabs", "content-tab", "is-active", "tab-count"],
+      "elements": ["div", "nav"]
+    },
+    {
+      "id": "checkbox",
+      "label": "多选框 Checkbox",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["checkbox", "checkbox-input", "checkbox-label"],
+      "elements": ["label", "input[type=checkbox]", "span"]
+    },
+    {
+      "id": "radio",
+      "label": "单选框 Radio",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["radio", "radio-input", "radio-label"],
+      "elements": ["label", "input[type=radio]", "span"]
+    },
+    {
+      "id": "datepicker",
+      "label": "日期选择器 DatePicker",
+      "category": "数据录入",
+      "present": false,
+      "classes": [
+        "date-picker",
+        "date-picker-input",
+        "date-picker-panel",
+        "date-picker-header",
+        "date-picker-cell",
+        "is-selected",
+        "is-today",
+        "is-disabled"
+      ],
+      "elements": ["div", "input", "button", "table", "td", "span"]
+    },
+    {
+      "id": "form",
+      "label": "表单 Form",
+      "category": "数据录入",
+      "present": true,
+      "classes": [
+        "form-card",
+        "form-section",
+        "section-title",
+        "form-grid",
+        "form-footer-actions",
+        "form-field",
+        "field",
+        "field-label",
+        "field-help",
+        "form-control",
+        "select-control",
+        "textarea-control",
+        "field-control"
+      ],
+      "elements": ["form", "div", "section", "label", "input", "select", "textarea"]
+    },
+    {
+      "id": "input",
+      "label": "输入框 Input",
+      "category": "数据录入",
+      "present": true,
+      "classes": ["form-control", "select-control", "textarea-control", "field-control"],
+      "elements": ["input", "textarea", "select"]
+    },
+    {
+      "id": "select",
+      "label": "选择器 Select",
+      "category": "数据录入",
+      "present": true,
+      "classes": ["select-control"],
+      "elements": ["div", "select", "input"]
+    },
+    {
+      "id": "switch",
+      "label": "开关 Switch",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["switch", "switch-handle", "is-checked", "is-disabled"],
+      "elements": ["button", "span"]
+    },
+    {
+      "id": "table",
+      "label": "表格 Table",
+      "category": "数据展示",
+      "present": true,
+      "classes": [
+        "data-table",
+        "data-table-wrap",
+        "text-right",
+        "text-center",
+        "checkbox-col",
+        "table-action",
+        "table-toolbar",
+        "table-toolbar-left",
+        "table-toolbar-right",
+        "table-toolbar-title",
+        "toolbar-info"
+      ],
+      "elements": ["table", "thead", "tbody", "tr", "th", "td"]
+    },
+    {
+      "id": "tag",
+      "label": "标签 Tag",
+      "category": "数据展示",
+      "present": true,
+      "classes": ["status-tag", "status-badge", "status-info", "status-success", "status-warning", "status-error", "status-neutral"],
+      "elements": ["span", "div"]
+    },
+    {
+      "id": "tooltip",
+      "label": "文字提示 Tooltip / Popover",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["tooltip", "popover", "popover-title", "popover-content", "popover-arrow"],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "alert",
+      "label": "警告提示 Alert",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "alert",
+        "alert-info",
+        "alert-success",
+        "alert-warning",
+        "alert-error",
+        "alert-icon",
+        "alert-message",
+        "alert-description",
+        "alert-close"
+      ],
+      "elements": ["div", "span", "button"]
+    },
+    {
+      "id": "drawer",
+      "label": "抽屉 Drawer",
+      "category": "反馈",
+      "present": true,
+      "classes": [
+        "drawer",
+        "overlay-header",
+        "overlay-body",
+        "overlay-body-scroll",
+        "overlay-footer",
+        "overlay-title",
+        "overlay-description"
+      ],
+      "elements": ["aside", "div", "header", "footer"]
+    },
+    {
+      "id": "modal",
+      "label": "对话框 Modal",
+      "category": "反馈",
+      "present": true,
+      "classes": [
+        "modal",
+        "confirm-dialog",
+        "overlay-panel",
+        "overlay-mask",
+        "overlay-mask-right",
+        "overlay-header",
+        "overlay-footer",
+        "overlay-panel-header",
+        "overlay-panel-footer",
+        "overlay-body",
+        "overlay-panel-body",
+        "overlay-title",
+        "overlay-description",
+        "overlay-body-scroll"
+      ],
+      "elements": ["div", "header", "footer", "section"]
+    },
+    {
+      "id": "spin",
+      "label": "加载中 Spin",
+      "category": "反馈",
+      "present": false,
+      "classes": ["spin", "spin-container", "spin-dot", "spin-text"],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "empty",
+      "label": "空状态 Empty",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["empty", "empty-image", "empty-description", "empty-footer"],
+      "elements": ["div", "img", "p", "span"]
+    },
+    {
+      "id": "card",
+      "label": "卡片 Card",
+      "category": "数据展示",
+      "present": true,
+      "classes": ["page-card", "form-card", "summary-card", "summary-item"],
+      "elements": ["div", "article", "section"]
+    },
+    {
+      "id": "pageheader",
+      "label": "页头 PageHeader",
+      "category": "导航",
+      "present": true,
+      "classes": ["page-header", "page-header-main", "page-title-row", "page-title", "page-description", "page-header-actions"],
+      "elements": ["header", "div", "h1", "p"]
+    },
+    {
+      "id": "filterbar",
+      "label": "筛选区 FilterBar",
+      "category": "数据录入",
+      "present": true,
+      "classes": ["filter-bar", "filter-row", "filter-actions"],
+      "elements": ["div", "section"]
+    },
+    {
+      "id": "icon",
+      "label": "图标 Icon",
+      "category": "通用",
+      "present": false,
+      "classes": ["icon", "icon-sm", "icon-md", "icon-lg", "icon-accent", "icon-muted"],
+      "elements": ["span", "i", "svg"]
+    },
+    {
+      "id": "floatbutton",
+      "label": "浮动按钮 FloatButton",
+      "category": "通用",
+      "present": false,
+      "classes": ["float-btn", "float-btn-group"],
+      "elements": ["button", "div"]
+    },
+    {
+      "id": "grid",
+      "label": "栅格 Grid",
+      "category": "布局",
+      "present": false,
+      "classes": ["row", "col"],
+      "elements": ["div"]
+    },
+    {
+      "id": "layout",
+      "label": "布局 Layout (Header/Sider/Content/Footer)",
+      "category": "布局",
+      "present": false,
+      "classes": ["layout", "layout-header", "layout-sider", "layout-content", "layout-footer", "layout-has-sider"],
+      "elements": ["header", "aside", "main", "footer", "section"]
+    },
+    {
+      "id": "flex",
+      "label": "弹性布局 Flex",
+      "category": "布局",
+      "present": false,
+      "classes": ["flex", "flex-inline", "flex-col", "flex-wrap", "flex-1"],
+      "elements": ["div"]
+    },
+    {
+      "id": "splitter",
+      "label": "分隔面板 Splitter",
+      "category": "布局",
+      "present": false,
+      "classes": ["splitter", "splitter-pane", "splitter-bar"],
+      "elements": ["div"]
+    },
+    {
+      "id": "anchor",
+      "label": "锚点 Anchor",
+      "category": "导航",
+      "present": false,
+      "classes": ["anchor", "anchor-item", "is-active", "anchor-ink"],
+      "elements": ["nav", "a", "div"]
+    },
+    {
+      "id": "menu",
+      "label": "导航菜单 Menu",
+      "category": "导航",
+      "present": false,
+      "classes": [
+        "menu",
+        "menu-item",
+        "is-active",
+        "menu-submenu",
+        "menu-submenu-title",
+        "menu-item-group",
+        "menu-divider",
+        "menu-inline",
+        "menu-horizontal",
+        "menu-vertical"
+      ],
+      "elements": ["ul", "li", "div", "span"]
+    },
+    {
+      "id": "affix",
+      "label": "固钉 Affix",
+      "category": "导航",
+      "present": false,
+      "classes": ["affix", "is-fixed"],
+      "elements": ["div"]
+    },
+    {
+      "id": "backtop",
+      "label": "回到顶部 BackTop",
+      "category": "导航",
+      "present": false,
+      "classes": ["back-top"],
+      "elements": ["button", "div"]
+    },
+    {
+      "id": "autocomplete",
+      "label": "自动完成 AutoComplete",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["autocomplete", "autocomplete-input", "autocomplete-panel", "autocomplete-option", "is-active"],
+      "elements": ["div", "input", "ul", "li"]
+    },
+    {
+      "id": "cascader",
+      "label": "级联选择 Cascader",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["cascader", "cascader-input", "cascader-panel", "cascader-menu", "cascader-item", "is-active", "is-expanded"],
+      "elements": ["div", "input", "ul", "li", "span"]
+    },
+    {
+      "id": "colorpicker",
+      "label": "颜色选择器 ColorPicker",
+      "category": "数据录入",
+      "present": false,
+      "classes": [
+        "color-picker",
+        "color-picker-trigger",
+        "color-picker-panel",
+        "color-picker-palette",
+        "color-picker-slider",
+        "color-picker-input"
+      ],
+      "elements": ["div", "input", "button"]
+    },
+    {
+      "id": "inputnumber",
+      "label": "数字输入框 InputNumber",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["input-number", "input-number-input", "input-number-handler"],
+      "elements": ["div", "input", "button"]
+    },
+    {
+      "id": "mentions",
+      "label": "提及 Mentions",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["mentions", "mentions-input", "mentions-panel", "mentions-option", "is-active"],
+      "elements": ["div", "textarea", "ul", "li"]
+    },
+    {
+      "id": "rate",
+      "label": "评分 Rate",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["rate", "rate-star", "is-active", "is-half"],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "slider",
+      "label": "滑动输入条 Slider",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["slider", "slider-rail", "slider-track", "slider-handle", "slider-mark", "slider-dot"],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "timepicker",
+      "label": "时间选择框 TimePicker",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["time-picker", "time-picker-input", "time-picker-panel", "time-picker-column", "time-picker-cell", "is-selected"],
+      "elements": ["div", "input", "ul", "li"]
+    },
+    {
+      "id": "transfer",
+      "label": "穿梭框 Transfer",
+      "category": "数据录入",
+      "present": false,
+      "classes": [
+        "transfer",
+        "transfer-list",
+        "transfer-list-header",
+        "transfer-list-body",
+        "transfer-item",
+        "is-selected",
+        "transfer-operations"
+      ],
+      "elements": ["div", "ul", "li", "button", "span", "input"]
+    },
+    {
+      "id": "treeselect",
+      "label": "树选择 TreeSelect",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["tree-select", "tree-select-input", "tree-select-panel", "tree-select-node", "is-selected", "tree-select-switcher"],
+      "elements": ["div", "input", "span"]
+    },
+    {
+      "id": "upload",
+      "label": "上传 Upload",
+      "category": "数据录入",
+      "present": false,
+      "classes": ["upload", "upload-dragger", "upload-list", "upload-list-item", "is-done", "is-error", "is-uploading", "upload-btn"],
+      "elements": ["div", "button", "input[type=file]", "span"]
+    },
+    {
+      "id": "avatar",
+      "label": "头像 Avatar",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["avatar", "avatar-sm", "avatar-lg", "avatar-square", "avatar-group", "avatar-text", "avatar-icon"],
+      "elements": ["span", "div", "img"]
+    },
+    {
+      "id": "badge",
+      "label": "徽标数 Badge",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["badge", "badge-dot", "badge-count", "badge-standalone"],
+      "elements": ["span", "sup"]
+    },
+    {
+      "id": "calendar",
+      "label": "日历 Calendar",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["calendar", "calendar-header", "calendar-body", "calendar-cell", "is-today", "is-selected"],
+      "elements": ["div", "table", "td"]
+    },
+    {
+      "id": "carousel",
+      "label": "走马灯 Carousel",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["carousel", "carousel-track", "carousel-slide", "carousel-dots", "carousel-dot", "is-active", "carousel-arrow"],
+      "elements": ["div", "ul", "li", "button"]
+    },
+    {
+      "id": "collapse",
+      "label": "折叠面板 Collapse",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["collapse", "collapse-panel", "is-expanded", "collapse-header", "collapse-body", "collapse-arrow"],
+      "elements": ["div", "section"]
+    },
+    {
+      "id": "descriptions",
+      "label": "描述列表 Descriptions",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["descriptions", "descriptions-item", "descriptions-item-label", "descriptions-item-content", "descriptions-bordered"],
+      "elements": ["div", "dl", "dt", "dd", "table", "tr", "th", "td"]
+    },
+    {
+      "id": "image",
+      "label": "图片 Image",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["image", "image-preview-mask", "image-preview-img", "image-placeholder"],
+      "elements": ["img", "div"]
+    },
+    {
+      "id": "list",
+      "label": "列表 List",
+      "category": "数据展示",
+      "present": false,
+      "classes": [
+        "list",
+        "list-item",
+        "list-item-meta",
+        "list-item-title",
+        "list-item-description",
+        "list-item-action",
+        "list-header",
+        "list-footer",
+        "list-pagination"
+      ],
+      "elements": ["ul", "li", "div", "span"]
+    },
+    {
+      "id": "qrcode",
+      "label": "二维码 QRCode",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["qrcode", "qrcode-canvas", "qrcode-border"],
+      "elements": ["div", "canvas", "img"]
+    },
+    {
+      "id": "segmented",
+      "label": "分段控制器 Segmented",
+      "category": "数据展示",
+      "present": false,
+      "classes": ["segmented", "segmented-item", "is-selected"],
+      "elements": ["div", "button", "span"]
+    },
+    {
+      "id": "statistic",
+      "label": "统计数值 Statistic",
+      "category": "数据展示",
+      "present": false,
+      "classes": [
+        "statistic",
+        "statistic-value",
+        "statistic-title",
+        "statistic-prefix",
+        "statistic-suffix",
+        "statistic-trend-up",
+        "statistic-trend-down"
+      ],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "timeline",
+      "label": "时间轴 Timeline",
+      "category": "数据展示",
+      "present": false,
+      "classes": [
+        "timeline",
+        "timeline-item",
+        "timeline-dot",
+        "timeline-dot-accent",
+        "timeline-dot-success",
+        "timeline-dot-error",
+        "timeline-dot-warning",
+        "timeline-dot-pending",
+        "timeline-content",
+        "timeline-label"
+      ],
+      "elements": ["ul", "li", "div", "span"]
+    },
+    {
+      "id": "tour",
+      "label": "漫游式引导 Tour",
+      "category": "数据展示",
+      "present": false,
+      "classes": [
+        "tour-mask",
+        "tour-card",
+        "tour-card-title",
+        "tour-card-description",
+        "tour-card-footer",
+        "tour-card-close",
+        "tour-card-arrow",
+        "tour-card-progress"
+      ],
+      "elements": ["div", "button", "span"]
+    },
+    {
+      "id": "tree",
+      "label": "树形控件 Tree",
+      "category": "数据展示",
+      "present": false,
+      "classes": [
+        "tree",
+        "tree-node",
+        "is-selected",
+        "is-dragging",
+        "tree-switcher",
+        "tree-node-title",
+        "tree-node-checkbox",
+        "tree-indent"
+      ],
+      "elements": ["ul", "li", "div", "span"]
+    },
+    {
+      "id": "message",
+      "label": "全局提示 Message",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "message",
+        "message-info",
+        "message-success",
+        "message-warning",
+        "message-error",
+        "message-loading",
+        "message-icon",
+        "message-content"
+      ],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "notification",
+      "label": "通知提醒框 Notification",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "notification",
+        "notification-notice",
+        "notification-title",
+        "notification-description",
+        "notification-close",
+        "notification-icon",
+        "notification-info",
+        "notification-success",
+        "notification-warning",
+        "notification-error"
+      ],
+      "elements": ["div", "span", "button"]
+    },
+    {
+      "id": "popconfirm",
+      "label": "气泡确认框 Popconfirm",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "popconfirm",
+        "popconfirm-content",
+        "popconfirm-message",
+        "popconfirm-description",
+        "popconfirm-actions",
+        "popconfirm-arrow"
+      ],
+      "elements": ["div", "span", "button"]
+    },
+    {
+      "id": "progress",
+      "label": "进度条 Progress",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "progress",
+        "progress-line",
+        "progress-circle",
+        "progress-bar",
+        "is-success",
+        "is-exception",
+        "progress-text",
+        "progress-steps"
+      ],
+      "elements": ["div", "span", "svg"]
+    },
+    {
+      "id": "result",
+      "label": "结果 Result",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "result",
+        "result-success",
+        "result-error",
+        "result-info",
+        "result-warning",
+        "result-icon",
+        "result-title",
+        "result-subtitle",
+        "result-extra",
+        "result-actions"
+      ],
+      "elements": ["div", "span", "img"]
+    },
+    {
+      "id": "skeleton",
+      "label": "骨架屏 Skeleton",
+      "category": "反馈",
+      "present": false,
+      "classes": [
+        "skeleton",
+        "skeleton-paragraph",
+        "skeleton-title",
+        "skeleton-avatar",
+        "skeleton-image",
+        "skeleton-button",
+        "skeleton-input",
+        "skeleton-active"
+      ],
+      "elements": ["div", "span"]
+    },
+    {
+      "id": "watermark",
+      "label": "水印 Watermark",
+      "category": "反馈",
+      "present": false,
+      "classes": ["watermark", "watermark-content"],
+      "elements": ["div"]
+    }
+  ]
+}

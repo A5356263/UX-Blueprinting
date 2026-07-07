@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>XFT Hard Rules & Competitive Reference</title></head>
+<body data-knowledge-type="hard-rules">
+<header class="knowledge-header"><h1>Hard Rules & Competitive Reference</h1><p>硬性规则索引、竞品模式速查。</p></header>
+<main class="knowledge-main">
+<section class="knowledge-section" data-section="hard-rule-index">
+      <h2>Hard Rule Index 硬性规则索引</h2>
+      <p>以下规则的具体数值已写入对应知识库文件。生成页面时从对应文件取用，不得凭记忆硬编码。</p>
+      <table class="knowledge-sample-table">
+        <thead><tr><th>规则</th><th>归属文件</th></tr></thead>
+        <tbody>
+          <tr><td>内容区 padding、fieldset 间距、模块间距、标题装饰条</td><td><code>detail-support.css</code></td></tr>
+          <tr><td>详情页四种模式（布局×样式×列数）</td><td><code>field-columns.csv</code> + <code>doctype.html</code></td></tr>
+          <tr><td>表格样式列数 2-4 列</td><td><code>column-selection.csv</code></td></tr>
+          <tr><td>审批流节点大小、对齐、宽度 375px</td><td><code>doctype.html</code>（Approval Flow Module）</td></tr>
+          <tr><td>底部操作栏悬浮、投影、按钮排列</td><td><code>detail-support.css</code> + <code>doctype.html</code>（Footer Action Module）</td></tr>
+          <tr><td>操作记录三列单行省略 hover</td><td><code>module-support.css</code> + <code>operation record Module.html</code></td></tr>
+          <tr><td>表格边框 1px + 圆角 6px（separate + sp0）</td><td><code>components.html</code></td></tr>
+          <tr><td>表格表头 #f3f4f6 / gray50 14px bold / 行高 40px</td><td><code>components.html</code></td></tr>
+          <tr><td>标签圆角 4px（--border-radius-small）</td><td><code>components.html</code></td></tr>
+          <tr><td>描述列表双列 16px gap / label 12px gray30 / value 14px gray40</td><td><code>detail-support.css</code></td></tr>
+          <tr><td>详情主标题 16px bold / 元信息 14px regular</td><td><code>detail-support.css</code></td></tr>
+          <tr><td>侧导航图标 24×24px（.ico + viewBox 0 0 24 24）</td><td>壳子 CSS</td></tr>
+          <tr><td>空状态模板 + SVG 语义匹配</td><td><code>states/empty/basic.html</code> + <code>assets/empty/</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+<section class="knowledge-section" data-section="competitive-reference">
+      <h2>Competitive Reference 竞品模式速查</h2>
+      <table class="knowledge-sample-table">
+        <thead><tr><th>场景</th><th>参考产品</th><th>核心模式</th></tr></thead>
+        <tbody>
+          <tr><td>审批详情</td><td>飞书</td><td>左右布局+右侧审批流 sticky+底部操作栏按角色变化</td></tr>
+          <tr><td>费用明细</td><td>SAP Concur</td><td>表格+合计行高亮+票据缩略图</td></tr>
+          <tr><td>列表查询</td><td>钉钉 OA</td><td>筛选紧凑单行+批量操作+分页右侧</td></tr>
+          <tr><td>表单提交</td><td>企业微信</td><td>分组字段+必填标识+底部 sticky 提交/草稿</td></tr>
+          <tr><td>结果反馈</td><td>飞书</td><td>成功有下一步引导+失败有原因和重试</td></tr>
+          <tr><td>操作记录</td><td>Oracle</td><td>三列单行+超长省略 hover</td></tr>
+        </tbody>
+      </table>
+    </section>
+</main>
+</body>
+</html>

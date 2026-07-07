@@ -1,0 +1,144 @@
+﻿rule_id,rule_type,asset_id,page_type,rule_name,rule,recommended_position,keywords,priority,priority_rank,source_materials,source_step,source_file
+module-descriptions-basic,module_composition,module-descriptions-basic,DetailPage,module-descriptions-basic,只读字段信息优先用描述列表，避免改造成表单。,after:detail-summary,,P0,100,,step5,data/module-composition-rules.csv
+module-approval-flow-basic,module_composition,module-approval-flow-basic,DetailPage,module-approval-flow-basic,审批详情必须展示审批节点状态和当前节点。,after:basic-info or side-panel,,P0,100,,step5,data/module-composition-rules.csv
+module-related-table-basic,module_composition,module-related-table-basic,DetailPage,module-related-table-basic,关联对象多于 3 条时使用关联表。,after:approval-flow or after:basic-info,,P1,80,,step5,data/module-composition-rules.csv
+module-operation-log-basic,module_composition,module-operation-log-basic,DetailPage,module-operation-log-basic,操作记录放页面靠后，避免打断主信息阅读。,last-section,,P1,80,,step5,data/module-composition-rules.csv
+module-upload-file-basic,module_composition,module-upload-file-basic,CreatePage,module-upload-file-basic,附件是提交条件时放表单内；仅补充材料时放表单后。,inside:form-section or after:business-info,,P0,100,,step5,data/module-composition-rules.csv
+module-table-header-settings-panel,module_composition,module-table-header-settings-panel,TablePage,module-table-header-settings-panel,表头设置不直接铺在表格主体内，优先作为配置面板。,overlay:drawer or popover,,P0,100,,step5,data/module-composition-rules.csv
+module-async-processing-status-panel,module_composition,module-async-processing-status-panel,TablePage,module-async-processing-status-panel,导入导出等异步任务需要给出状态反馈入口。,after:toolbar or overlay:drawer,,P1,80,,step5,data/module-composition-rules.csv
+module.batch-action-footer,module_composition,module.batch-action-footer,TablePage,module.batch-action-footer,列表页出现批量操作语义且已选择多行时，优先使用独立底栏承载批量动作。,after:data-table or sticky-footer,"批量,批量导出,批量启用,批量停用,选择",P0,100,,step13,step13/manual-fix
+module-filter-config-panel,module_composition,module-filter-config-panel,SettingsPage,module-filter-config-panel,筛选项配置属于设置项详情，不要放进普通筛选区。,inside:settings-section,,P0,100,,step5,data/module-composition-rules.csv
+overlay.detail-drawer,module_composition,overlay.detail-drawer,TablePage,overlay.detail-drawer,列表页存在查看详情语义且需要保留上下文时，优先用抽屉承载详情而不是跳完整详情页。,overlay:drawer,"查看详情,详情抽屉,右侧详情,成员详情",P0,100,,step13,step13/manual-fix
+module-formula-editor-basic,module_composition,module-formula-editor-basic,SettingsPage,module-formula-editor-basic,公式编辑复杂度高，应提供独立编辑区域和说明。,inside:settings-section or drawer,,P0,100,,step5,data/module-composition-rules.csv
+module-drag-sort-list,module_composition,module-drag-sort-list,SettingsPage,module-drag-sort-list,字段顺序、菜单顺序、节点顺序可用拖拽排序。,inside:settings-section,,P1,80,,step5,data/module-composition-rules.csv
+module-file-preview-basic,module_composition,module-file-preview-basic,Drawer,module-file-preview-basic,文件预览可使用抽屉保留列表上下文。,drawer-body,,P1,80,,step5,data/module-composition-rules.csv
+module-image-crop-panel,module_composition,module-image-crop-panel,Modal,module-image-crop-panel,图片裁剪适合使用功能型弹窗。,modal-body,,P1,80,,step5,data/module-composition-rules.csv
+feedback_vs_state,feedback_state_overlay,,,反馈与状态,Message/Notification/Alert 是反馈；Empty/Loading/Result 是状态。不要混用。,,,,50,,step6,data/feedback-composition-rules.csv
+overlay_mount,feedback_state_overlay,,,覆盖层挂载,Modal/Drawer/Confirm 必须挂到 OVERLAY_SLOT，不得插进 page-content-container。,,,,50,,step6,data/feedback-composition-rules.csv
+modal_vs_drawer,feedback_state_overlay,,,弹窗和抽屉选择,短流程用 Modal；长表单、右侧详情、复杂配置用 Drawer；行内轻量危险操作用 Popconfirm。,,,,50,,step6,data/feedback-composition-rules.csv
+blocking_level,feedback_state_overlay,,,阻断级别,Message 不阻断；Alert 弱阻断；Confirm Modal 强阻断；Drawer 保留上下文。,,,,50,,step6,data/feedback-composition-rules.csv
+empty_action,feedback_state_overlay,,,空状态动作,空状态必须给出原因或下一步，不允许只有图。,,,,50,,step6,data/feedback-composition-rules.csv
+loading_choice,feedback_state_overlay,,,加载选择,首屏/卡片加载用 Skeleton；短时局部等待用 Spin；可量化任务用 Progress。,,,,50,,step6,data/feedback-composition-rules.csv
+rule-button-principles,component_combo,,All,button 按钮 使用原则,主按钮只保留一个；按钮文案使用动作动词；同一组按钮按风险/主次排序,,"button,action,primary,secondary",P0,100,M060,step7,data/component-combo-rules.csv
+rule-button-basic,component_combo,,All,button 按钮 类型,主按钮用于最高优先级动作；次按钮用于辅助动作；文本按钮用于低干扰操作,,"button,type,link,danger",P0,100,M055,step7,data/component-combo-rules.csv
+rule-disabled-button,component_combo,,All,禁用按钮规则,禁用按钮必须保留可解释路径；关键操作不建议只用禁用表达失败原因,,"disabled,button,reason",P0,100,M062,step7,data/component-combo-rules.csv
+rule-disabled-state-exploration,component_combo,,All,禁用态探索,禁用态用于不可操作状态，不用于隐藏权限边界；必要时配合提示说明原因,,"disabled,state,permission",P0,100,M061,step7,data/component-combo-rules.csv
+rule-link-button,component_combo,,All,链接按钮规则,链接按钮用于轻量跳转或表格行内操作；不要承载高风险提交,,"link,table action,navigation",P0,100,M063,step7,data/component-combo-rules.csv
+rule-checkbox-switch,component_combo,,All,勾选和开关使用规则,Checkbox 表示选择项；Switch 表示即时启停状态；需要提交确认时不要用 Switch,,"checkbox,switch,toggle",P0,100,M059,step7,data/component-combo-rules.csv
+rule-form-control-field,component_combo,,FormPage | Overlay | FilterBar,表单控件组合规则,所有控件必须在字段组内出现：label + control + optional help/error；不要裸放控件,,"form,input,field,label",P1,80,M064-M076,step7,data/component-combo-rules.csv
+rule-display-combo,component_combo,,All,展示组件组合规则,展示组件只承担信息表达；复杂操作要升级到模块或覆盖层,,"display,tag,badge,popover,tour",P2,60,M077 | M080-M083 | M087-M088 | M091,step7,data/component-combo-rules.csv
+validation.region.data-table.basic,asset_validation,region.data-table.basic,TablePage,基础表格区 校验规则,必须有表头;操作列在最后;状态用 status-tag,,"表格,数据展示,列表,行操作",100,100,M006;M089;M090,step4,data/region-assets.csv
+validation.region.detail-info-section.basic,asset_validation,region.detail-info-section.basic,DetailPage,详情信息区 校验规则,字段按双列展示;只读字段不用表单控件,,"基础信息,描述列表,详情字段",100,100,M012;M013;M086,step4,data/region-assets.csv
+validation.region.detail-summary.basic,asset_validation,region.detail-summary.basic,DetailPage,详情摘要区 校验规则,摘要项 3-4 个优先;状态必须可扫读,,"摘要,状态,负责人,编号,关键字段",100,100,M012;M013;M014;M086,step4,data/region-assets.csv
+validation.region.filter-bar.basic,asset_validation,region.filter-bar.basic,TablePage,基础筛选区 校验规则,必须包含查询和重置;操作区在右侧或末尾,,"查询,筛选,搜索,状态,列表筛选",100,100,M006;M041;M058;M064;M067;M072,step4,data/region-assets.csv
+validation.region.form-footer-actions.sticky,asset_validation,region.form-footer-actions.sticky,CreatePage|EditPage,表单底部操作区 校验规则,主按钮在右;取消在左;底部固定不遮挡内容,,"提交,取消,底部按钮,footer",100,100,M056;M060;M002;M003,step4,data/region-assets.csv
+validation.region.form-section.basic,asset_validation,region.form-section.basic,CreatePage|EditPage,基础表单区域 校验规则,字段按双列栅格;长文本单独使用 textarea,,"表单,基础信息,字段,录入",100,100,M002;M003;M076;M064;M067,step4,data/region-assets.csv
+validation.region.page-header.basic,asset_validation,region.page-header.basic,All,基础页面头部 校验规则,必须位于内容区最上方;不得放入卡片内部,,"页面标题,页面说明,头部,header",100,100,M006;M012;M015;M016;M057,step4,data/region-assets.csv
+validation.region.pagination.basic,asset_validation,region.pagination.basic,TablePage|CardListPage,分页区 校验规则,分页在列表下方;不得放到表格上方,,"分页,上一页,下一页,总数",100,100,M047;M006,step4,data/region-assets.csv
+validation.region.setting-section.basic,asset_validation,region.setting-section.basic,SettingsPage,设置分组区域 校验规则,设置项左文案右状态/操作;不要改成表格,,"设置项,开关,配置,状态",100,100,M015;M054;M060;M071,step4,data/region-assets.csv
+validation.layout.settings-anchor.basic,asset_validation,layout.settings-anchor.basic,SettingsPage,设置页锚点布局 校验规则,左侧只做导航;右侧承载配置项,,"设置页,锚点,分组导航,配置",100,100,M015;M052;M068,semantic-refactor,data/manual
+validation.region.table-toolbar.basic,asset_validation,region.table-toolbar.basic,TablePage,基础表格工具栏 校验规则,工具栏与筛选区分离;新建为主按钮,,"表格工具栏,新建,导出,列表标题,toolbar",100,100,M006;M058;M060;M063,step4,data/region-assets.csv
+validation.region.page-header.with-actions,asset_validation,region.page-header.with-actions,TablePage|DetailPage|SettingsPage|HomePage,带操作页面头部 校验规则,主按钮最多 1 个;次要操作在主操作左侧,,"主操作,新建,导出,头部操作,header action",98,98,M006;M054;M057;M060,step4,data/region-assets.csv
+validation.region.form-section.multi-section,asset_validation,region.form-section.multi-section,CreatePage|EditPage,多分组表单区域 校验规则,分组间用标题和分隔;不要连续堆卡片,,"高级表单,分组表单,业务信息,多段表单",95,95,M001;M002;M003;M011;M076,step4,data/region-assets.csv
+validation.region.page-header.with-back,asset_validation,region.page-header.with-back,DetailPage|EditPage|CreatePage,带返回页面头部 校验规则,返回入口在标题上方;提交操作右侧固定,,"返回,详情,编辑,提交,取消",95,95,M011;M012;M051;M057,step4,data/region-assets.csv
+validation.region.metric-grid.basic,asset_validation,region.metric-grid.basic,HomePage|ReportPage,指标卡片区 校验规则,指标数量 3-4 个优先;不要堆过多视觉装饰,,"首页,指标,概览,汇总,数据看板",92,92,M016;M017;M008;M009,step4,data/region-assets.csv
+validation.region.table-toolbar.with-column-settings,asset_validation,region.table-toolbar.with-column-settings,TablePage,带列设置工具栏 校验规则,列设置为次要操作;新建仍为主操作,,"列设置,表头设置,批量操作,表格工具栏",92,92,M006;M042;M058;M089;M090,step4,data/region-assets.csv
+validation.region.data-table.with-selection-summary,asset_validation,region.data-table.with-selection-summary,TablePage,带选择汇总表格区 校验规则,批量操作不得塞进行内;选择后显示汇总区,,"多选,批量操作,选择,表格",90,90,M006;M058;M089;M090,step4,data/region-assets.csv
+validation.region.filter-bar.advanced-expand,asset_validation,region.filter-bar.advanced-expand,TablePage|ReportPage,高级展开筛选区 校验规则,展开/收起入口必须和操作区同组;默认仍保留查询重置,,"高级筛选,多条件,展开,收起,筛选项配置",90,90,M006;M041;M058;M064;M067;M072;M074;M075,step4,data/region-assets.csv
+validation.region.report-summary-bar.basic,asset_validation,region.report-summary-bar.basic,ReportPage|TablePage,报表汇总区 校验规则,汇总区在筛选区之后或表格前;数量不宜过多,,"报表,汇总,统计,总览",88,88,M008;M009,step4,data/region-assets.csv
+validation.region.step-indicator.basic,asset_validation,region.step-indicator.basic,CreatePage|EditPage,步骤条区域 校验规则,步骤条位于表单内容上方;当前步骤明确,,"分步表单,步骤,流程,提交",88,88,M001;M049,step4,data/region-assets.csv
+validation.region.dashboard-grid.basic,asset_validation,region.dashboard-grid.basic,HomePage,首页内容网格 校验规则,卡片区域有标题;图表和待办分区展示,,"工作台,趋势,待办,快捷入口,首页",86,86,M016;M017;M008,step4,data/region-assets.csv
+validation.layout.detail-side.basic,asset_validation,layout.detail-side.basic,DetailPage,详情左右布局区 校验规则,主内容在左;辅助导航/状态在右,,"左右布局,锚点,详情,侧栏",85,85,M013;M014;M052;M086,semantic-refactor,data/manual
+validation.layout.tabs.basic,asset_validation,layout.tabs.basic,DetailPage|TablePage|SettingsPage,标签页布局区 校验规则,只做内容分组切换;不要承担流程步骤,,"tabs,标签页,状态切换,分组切换",84,84,M048;M050;M081,semantic-refactor,data/manual
+validation.region.anchor.basic,asset_validation,region.anchor.basic,DetailPage|SettingsPage,页内锚点区域 校验规则,锚点不承载业务操作;只做定位,,"锚点,分栏目录,页内导航",82,82,M052;M068;M015,step4,data/region-assets.csv
+validation.region.card-grid.basic,asset_validation,region.card-grid.basic,TablePage|HomePage,卡片网格区 校验规则,卡片必须有主标题/说明/状态/操作,,"卡片表格,卡片列表,对象卡片",82,82,M004;M091;M080;M082,step4,data/region-assets.csv
+validation.region.filter-bar.compact-inline,asset_validation,region.filter-bar.compact-inline,TablePage,紧凑搜索筛选区 校验规则,不能伪装成高级筛选;不得超过 2 个字段,,"搜索,关键词,简单查询,单条件",80,80,M006;M058;M064;M067,step4,data/region-assets.csv
+validation.layout.master-detail.basic,asset_validation,layout.master-detail.basic,TablePage|DetailPage|SettingsPage,主从分栏区域 校验规则,左侧为选择/导航;右侧为数据承载区,,"父子表格,主从结构,左树右表,分栏",80,80,M010;M013;M014;M084,semantic-refactor,data/manual
+validation.region.result.exception,asset_validation,region.result.exception,ErrorPage,异常结果区 校验规则,必须给恢复路径,,"异常,403,404,500,错误页",75,75,M027,step4,data/region-assets.csv
+validation.region.result.success,asset_validation,region.result.success,ResultPage,成功结果区 校验规则,必须有结果状态、说明、下一步操作,,"成功,结果页,提交成功,下一步",75,75,M027,step4,data/region-assets.csv
+validation.module-approval-flow-basic,asset_validation,module-approval-flow-basic,DetailPage|ApprovalPage|CreatePage,审批流程模块 校验规则,必须包含节点状态、处理人、时间或待处理说明,,"审批,审批流,流程,流转,节点,处理人",100,100,M037|M038|M043,step5,data/module-assets.csv
+validation.module-formula-editor-basic,asset_validation,module-formula-editor-basic,SettingsPage|CreatePage|EditPage,公式编辑器基础模块 校验规则,必须包含函数/字段区、编辑区和说明引导,,"公式,公式编辑器,函数,表达式,字段映射",100,100,M032|M033|M035,step5,data/module-assets.csv
+validation.module-async-processing-status-panel,asset_validation,module-async-processing-status-panel,TablePage|DetailPage|Modal|Drawer,异步处理进度模块 校验规则,必须包含状态、进度、日志或结果入口,,"异步,处理中,进度,任务,导入结果",98,98,M039|M021,step5,data/module-assets.csv
+validation.module-table-header-settings-panel,asset_validation,module-table-header-settings-panel,TablePage|Drawer|Modal,表头设置模块 校验规则,必须包含显示列、固定列或列排序,,"表头设置,列设置,显示列,固定列,列排序",98,98,M042|M090,step5,data/module-assets.csv
+validation.module-upload-download-basic,asset_validation,module-upload-download-basic,TablePage|CreatePage|SettingsPage,上传下载模块 校验规则,必须包含下载模板、上传、结果反馈,,"上传下载,导入,导出,模板,批量导入",98,98,M029,step5,data/module-assets.csv
+validation.module-upload-file-basic,asset_validation,module-upload-file-basic,CreatePage|EditPage|DetailPage,上传文件模块 校验规则,必须包含上传入口和文件列表,,"上传,附件,文件上传,拖拽上传",98,98,M030|M069,step5,data/module-assets.csv
+validation.module.batch-action-footer,asset_validation,module.batch-action-footer,TablePage,批量操作底栏 校验规则,必须在选择数据后出现;动作必须作用于当前选择集;不得替代表格工具栏,,"批量操作,批量导出,批量启用,批量停用,选择成员",96,96,M058|M089|M090,step13,step13/manual-fix
+validation.module-approval-flow-mode-selector,asset_validation,module-approval-flow-mode-selector,SettingsPage|ApprovalPage|CreatePage,审批模式选择模块 校验规则,至少提供 2 种模式且标明适用场景,,"审批模式,逐级审批,指定审批人,条件分支",96,96,M037|M038,step5,data/module-assets.csv
+validation.module-filter-config-panel,asset_validation,module-filter-config-panel,SettingsPage|Drawer|Modal,筛选项配置模块 校验规则,必须包含字段选择、显示状态和保存操作,,"筛选项配置,高级筛选,默认筛选,字段配置",96,96,M041,step5,data/module-assets.csv
+validation.module-descriptions-basic,asset_validation,module-descriptions-basic,DetailPage|Drawer,描述列表模块 校验规则,必须使用标签和值成对展示,,"描述列表,详情字段,只读信息,基础信息",94,94,M086,step5,data/module-assets.csv
+validation.module-drag-sort-list,asset_validation,module-drag-sort-list,SettingsPage|Modal|Drawer,拖拽排序模块 校验规则,必须包含拖拽柄、排序项和保存操作,,"拖拽,排序,字段排序,节点排序",92,92,M040,step5,data/module-assets.csv
+validation.module-related-table-basic,asset_validation,module-related-table-basic,DetailPage|ApprovalPage,关联表模块 校验规则,必须放在详情主体或详情抽屉内,,"关联表,关联数据,关联单据,明细表",90,90,M012|M015|M089,step5,data/module-assets.csv
+validation.module-formula-editor-with-assistant,asset_validation,module-formula-editor-with-assistant,SettingsPage|CreatePage|EditPage,智能公式助手模块 校验规则,必须作为公式编辑器的辅助模块，不单独成页,,"智能助手,公式模板,模板推荐,自然语言公式",88,88,M034|M035,step5,data/module-assets.csv
+validation.module-table-header-filter-dropdown,asset_validation,module-table-header-filter-dropdown,TablePage,表头筛选模块 校验规则,必须包含筛选项和确认/清空操作,,"表头筛选,列筛选,表格筛选",88,88,M090,step5,data/module-assets.csv
+validation.module-file-preview-basic,asset_validation,module-file-preview-basic,DetailPage|Drawer|Modal,文件预览模块 校验规则,必须包含文件列表和预览区域,,"文件预览,预览,附件,PDF,图片,Excel",86,86,M079,step5,data/module-assets.csv
+validation.module-image-crop-panel,asset_validation,module-image-crop-panel,Modal|Drawer|CreatePage|EditPage,图片裁剪模块 校验规则,必须包含裁剪画布、预览和确认操作,,"图片裁剪,头像,图片处理,裁切",86,86,M036,step5,data/module-assets.csv
+validation.module-operation-log-basic,asset_validation,module-operation-log-basic,DetailPage|ApprovalPage|Drawer,操作记录模块 校验规则,必须包含时间、操作者、动作,,"操作记录,流转记录,日志,历史记录",86,86,M015|M043,step5,data/module-assets.csv
+validation.module-tree-basic,asset_validation,module-tree-basic,SettingsPage|TablePage|Drawer,树形结构模块 校验规则,必须体现层级和当前选中项,,"树,树形控件,组织树,目录树",84,84,M084|M074,step5,data/module-assets.csv
+validation.module-collapse-basic,asset_validation,module-collapse-basic,DetailPage|SettingsPage|CreatePage,折叠面板模块 校验规则,必须包含展开态和收起态,,"折叠面板,收起,展开,分组信息",82,82,M085,step5,data/module-assets.csv
+validation.module-fullscreen-entry,asset_validation,module-fullscreen-entry,TablePage|SettingsPage|ReportPage,全屏工作区模块 校验规则,必须包含退出全屏操作,,"全屏,沉浸,大屏,全屏编辑",82,82,M031,step5,data/module-assets.csv
+validation.FB_MESSAGE_ERROR,asset_validation,FB_MESSAGE_ERROR,All,FB_MESSAGE_ERROR 校验规则,短文案；需给出重试或原因时改用 alert/notification,,"失败,错误,操作失败",3,3,,step6,data/feedback-state-overlay-assets.csv
+validation.FB_MESSAGE_SUCCESS,asset_validation,FB_MESSAGE_SUCCESS,All,FB_MESSAGE_SUCCESS 校验规则,短文案；自动消失；不阻断用户流程,,"成功,保存成功,提交成功,删除成功",3,3,,step6,data/feedback-state-overlay-assets.csv
+validation.FB_NOTIFICATION_BASIC,asset_validation,FB_NOTIFICATION_BASIC,All,FB_NOTIFICATION_BASIC 校验规则,允许携带次级操作；不得遮挡主任务,,"通知,提醒,异步完成,后台任务",3,3,,step6,data/feedback-state-overlay-assets.csv
+validation.FB_ALERT_BASIC,asset_validation,FB_ALERT_BASIC,All,FB_ALERT_BASIC 校验规则,必须包含标题或说明；不得替代 Modal 确认,,"提示,警告,说明,状态说明,限制说明",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.FB_ALERT_WARNING,asset_validation,FB_ALERT_WARNING,All,FB_ALERT_WARNING 校验规则,风险不高于确认框；高风险改用 confirm modal,,"风险提示,配置影响,注意,警告",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_LOADING_SPIN,asset_validation,ST_LOADING_SPIN,All,ST_LOADING_SPIN 校验规则,用于短时等待；长加载优先 skeleton,,"加载中,等待,处理中",3,3,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_EMPTY_BASIC,asset_validation,ST_EMPTY_BASIC,TablePage | DetailPage | FormPage | SettingsPage,ST_EMPTY_BASIC 校验规则,必须有标题；可选主操作；不得只显示图形,,"空状态,暂无数据,没有结果",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_LOADING_SKELETON,asset_validation,ST_LOADING_SKELETON,TablePage | DetailPage | FormPage,ST_LOADING_SKELETON 校验规则,结构应贴近最终内容；不得与 spin 同时出现,,"骨架屏,加载占位,首屏加载",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_PROGRESS_BASIC,asset_validation,ST_PROGRESS_BASIC,All,ST_PROGRESS_BASIC 校验规则,必须显示当前进度语义；未知进度用 spin,,"进度,上传进度,处理进度,任务进度",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_RESULT_ERROR,asset_validation,ST_RESULT_ERROR,ResultPage | FullPage | Overlay,ST_RESULT_ERROR 校验规则,必须说明失败原因或下一步处理路径,,"失败结果,提交失败,错误页",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.ST_RESULT_SUCCESS,asset_validation,ST_RESULT_SUCCESS,ResultPage | FullPage | Overlay,ST_RESULT_SUCCESS 校验规则,必须提供返回或查看后续动作,,"成功结果,提交成功,完成",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.OV_POPCONFIRM_BASIC,asset_validation,OV_POPCONFIRM_BASIC,All,OV_POPCONFIRM_BASIC 校验规则,必须靠近触发项；不得替代复杂 confirm modal,,"气泡确认,轻量确认,行内删除",2,2,,step6,data/feedback-state-overlay-assets.csv
+validation.OV_DRAWER_BASIC,asset_validation,OV_DRAWER_BASIC,Page Overlay | Full Page,OV_DRAWER_BASIC 校验规则,必须从页面右侧进入；内容较长可滚动,,"抽屉,右侧详情,复杂配置,保留上下文",1,1,,step6,data/feedback-state-overlay-assets.csv
+validation.overlay.detail-drawer,asset_validation,overlay.detail-drawer,TablePage|DetailPage|Page Overlay,详情抽屉 校验规则,必须挂载到 OVERLAY_SLOT;需要保留上下文;不得渲染为完整页面跳转,,"详情抽屉,查看详情,右侧详情,成员详情",95,95,M012|M015|M086,step13,step13/manual-fix
+validation.OV_MODAL_CONFIRM,asset_validation,OV_MODAL_CONFIRM,Page Overlay | Full Page,OV_MODAL_CONFIRM 校验规则,必须有明确风险文案和取消/确认两个动作,,"确认,删除,撤销,作废,高风险",1,1,,step6,data/feedback-state-overlay-assets.csv
+validation.OV_MODAL_FUNCTIONAL,asset_validation,OV_MODAL_FUNCTIONAL,Page Overlay | Full Page,OV_MODAL_FUNCTIONAL 校验规则,必须挂载到 overlay-root；不得插入 page-content 内,,"弹窗,短流程,编辑,新增,信息补充",1,1,,step6,data/feedback-state-overlay-assets.csv
+validation.combo-body-action-panel,asset_validation,combo-body-action-panel,All,内容区局部操作面板 校验规则,必须有影响范围说明；操作靠右；不要脱离所属区块,,内容区 body 局部操作 保存 配置 操作面板,P0,100,M054,step7,data/component-combo-assets.csv
+validation.combo-footer-actions,asset_validation,combo-footer-actions,CreatePage | EditPage | SettingsPage,页面底部提交按钮组 校验规则,主提交按钮唯一且最右；取消在左；底部吸附时不得遮挡内容,,底部 footer 提交 保存 取消 表单操作,P0,100,M056,step7,data/component-combo-assets.csv
+validation.combo-header-actions,asset_validation,combo-header-actions,All,页面头部操作按钮组 校验规则,最多一个主按钮；主按钮靠右；次要按钮在主按钮左侧,,头部操作 header action 主操作 新建 导出 返回,P0,100,M057,step7,data/component-combo-assets.csv
+validation.combo-switch-setting,asset_validation,combo-switch-setting,SettingsPage,开关设置项 校验规则,必须说明开启/关闭影响；不可用 switch 替代表单提交,,开关 switch 启用 禁用 设置项,P0,100,M071 | M059,step7,data/component-combo-assets.csv
+validation.combo-toolbar-actions,asset_validation,combo-toolbar-actions,TablePage,表格工具栏操作按钮组 校验规则,左侧放业务动作；右侧放视图/设置动作；同组按钮间距8px,,工具栏 toolbar 批量操作 新建 列设置 刷新,P0,100,M058,step7,data/component-combo-assets.csv
+validation.combo-cascader-field,asset_validation,combo-cascader-field,FormPage | FilterBar | Overlay,Cascader 级联选择 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,地区 层级 级联 多级,P1,80,M075,step7,data/component-combo-assets.csv
+validation.combo-checkbox-group,asset_validation,combo-checkbox-group,FormPage | Overlay | SettingsPage,多选项组合 校验规则,多选语义必须清楚；禁用项需要原因说明,,多选 checkbox 勾选 复选,P1,80,M070,step7,data/component-combo-assets.csv
+validation.combo-date-picker-field,asset_validation,combo-date-picker-field,FormPage | FilterBar | Overlay,DatePicker 日期选择 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,日期 时间 开始时间 结束时间,P1,80,M072,step7,data/component-combo-assets.csv
+validation.combo-input-field,asset_validation,combo-input-field,FormPage | FilterBar | Overlay,Input 输入框 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,文本输入 关键字 搜索 名称 编号,P1,80,M064,step7,data/component-combo-assets.csv
+validation.combo-input-number-field,asset_validation,combo-input-number-field,FormPage | FilterBar | Overlay,InputNumber 数字输入框 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,数字 金额 次数 数量 比例,P1,80,M065,step7,data/component-combo-assets.csv
+validation.combo-radio-group,asset_validation,combo-radio-group,FormPage | Overlay | SettingsPage,单选项组合 校验规则,选项互斥；超过5项改用下拉选择,,单选 radio 二选一 选项,P1,80,M066,step7,data/component-combo-assets.csv
+validation.combo-select-field,asset_validation,combo-select-field,FormPage | FilterBar | Overlay,Select 选择器 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,选择 状态 类型 下拉 单选,P1,80,M067,step7,data/component-combo-assets.csv
+validation.combo-sidebar-contents,asset_validation,combo-sidebar-contents,SettingsPage | FormPage | DetailPage,分栏目录内容组合 校验规则,左侧目录必须对应右侧分组；不要只放装饰性目录,,分栏目录 sidebar contents 左侧目录 锚点 分组,P1,80,M068,step7,data/component-combo-assets.csv
+validation.combo-time-picker-field,asset_validation,combo-time-picker-field,FormPage | FilterBar | Overlay,TimePicker 时间选择 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,时间 时分 秒 时间点,P1,80,M073,step7,data/component-combo-assets.csv
+validation.combo-tree-select-field,asset_validation,combo-tree-select-field,FormPage | FilterBar | Overlay,TreeSelect 树选择 校验规则,必须包含 label；帮助文案可删；不要裸放控件,,组织 部门 树选择 层级,P1,80,M074,step7,data/component-combo-assets.csv
+validation.combo-upload-field,asset_validation,combo-upload-field,FormPage | DetailPage | Overlay,上传字段组合 校验规则,必须有文件格式/大小说明；复杂列表型附件用模块资产,,上传 upload 附件 文件 拖拽,P1,80,M069,step7,data/component-combo-assets.csv
+validation.combo-badge,asset_validation,combo-badge,All,徽标提示组合 校验规则,数量必须有来源；红点必须可消除或可解释,,徽标 badge 未读 数量 红点 待办,P2,60,M077,step7,data/component-combo-assets.csv
+validation.combo-carousel,asset_validation,combo-carousel,HomePage | DashboardPage,走马灯内容组合 校验规则,关键操作不要放轮播；必须保留静态可见入口,,carousel 走马灯 轮播 公告 活动,P2,60,M091,step7,data/component-combo-assets.csv
+validation.combo-image-list,asset_validation,combo-image-list,DetailPage | FormPage | Overlay,图片缩略图组合 校验规则,图片必须有尺寸边界；不要撑破容器,,图片 image 缩略图 预览 列表,P2,60,M080,step7,data/component-combo-assets.csv
+validation.combo-popover-card,asset_validation,combo-popover-card,All,气泡卡片组合 校验规则,内容不可过长；复杂配置必须升级为 Drawer,,popover 气泡卡片 轻量浮层 补充信息,P2,60,M088,step7,data/component-combo-assets.csv
+validation.combo-segmented,asset_validation,combo-segmented,TablePage | DashboardPage,分段控制器组合 校验规则,通常不超过4项；语义是视图切换而不是提交操作,,分段 segmented 切换 视图 状态筛选,P2,60,M081,step7,data/component-combo-assets.csv
+validation.combo-tag-status,asset_validation,combo-tag-status,All,状态标签组合 校验规则,状态色必须有语义；不要把标签当按钮,,标签 tag 状态 结果 标识,P2,60,M082,step7,data/component-combo-assets.csv
+validation.combo-tooltip,asset_validation,combo-tooltip,All,文字提示组合 校验规则,只放短文本；不可承载关键操作,,tooltip 文字提示 说明 解释,P2,60,M087,step7,data/component-combo-assets.csv
+validation.combo-tour-card,asset_validation,combo-tour-card,All,漫游引导卡片 校验规则,必须有跳过路径；每步只说明一个目标,,tour 引导 新手引导 功能介绍,P2,60,M083,step7,data/component-combo-assets.csv
+composition.form-summary-card,asset_composition,region.form-summary-card.basic,CreatePage | EditPage | SettingsPage,表单摘要卡 组合规则,用于表单顶部说明、生效范围和提交前提示，适合高级表单和复杂设置页,,摘要 说明 生效范围 提交校验,P1,88,recipe-gap,data/manual
+validation.form-summary-card,asset_validation,region.form-summary-card.basic,CreatePage | EditPage | SettingsPage,表单摘要卡 校验规则,必须包含至少两类信息：范围/角色/校验；不得只放一句空泛说明,,摘要 说明 生效范围 校验,P1,88,recipe-gap,data/manual
+composition.dynamic-form-list,asset_composition,module-dynamic-form-list-basic,CreatePage | EditPage | Modal,动态表单明细模块 组合规则,用于可重复条目录入，支持新增、删除和行内编辑,,动态字段 动态明细 批量录入 增减行,P1,90,recipe-gap,data/manual
+validation.dynamic-form-list,asset_validation,module-dynamic-form-list-basic,CreatePage | EditPage | Modal,动态表单明细模块 校验规则,必须包含新增入口和行级删除动作；至少保留一行示例数据,,动态字段 动态明细 增减行 明细录入,P1,90,recipe-gap,data/manual
+composition.tab-panel-basic,asset_composition,module-tab-panel-basic,DetailPage | SettingsPage,基础标签面板 组合规则,用于标签页中的概览内容区，承载核心字段和当前状态,,标签面板 tab 概览 基础信息,P1,86,recipe-gap,data/manual
+validation.tab-panel-basic,asset_validation,module-tab-panel-basic,DetailPage | SettingsPage,基础标签面板 校验规则,必须作为 tabs 的内容区域之一；不得脱离 tabs 独立使用,,标签面板 tab 概览,P1,86,recipe-gap,data/manual
+composition.tab-panel-detail,asset_composition,module-tab-panel-detail,DetailPage,详情标签面板 组合规则,用于标签页中的详细说明、影响范围和补充信息,,详情标签 详细说明 补充信息,P1,86,recipe-gap,data/manual
+validation.tab-panel-detail,asset_validation,module-tab-panel-detail,DetailPage,详情标签面板 校验规则,必须包含至少一个详情分组；不要退化成纯文本长段落,,详情标签 详细说明,P1,86,recipe-gap,data/manual
+composition.tab-panel-log,asset_composition,module-tab-panel-log,DetailPage | ApprovalPage,日志标签面板 组合规则,用于标签页中的操作记录或流转轨迹,,日志标签 操作记录 流转记录,P1,86,recipe-gap,data/manual
+validation.tab-panel-log,asset_validation,module-tab-panel-log,DetailPage | ApprovalPage,日志标签面板 校验规则,必须体现时间、操作者和动作；不要只有结果状态,,日志标签 操作记录 流转记录,P1,86,recipe-gap,data/manual
+composition.tab-panel-table,asset_composition,module-tab-panel-table,DetailPage | TablePage,表格标签面板 组合规则,用于标签页中的关联表或子表明细,,表格标签 关联表 明细表,P1,88,recipe-gap,data/manual
+validation.tab-panel-table,asset_validation,module-tab-panel-table,DetailPage | TablePage,表格标签面板 校验规则,必须包含表头和至少一行数据；表格标题要明确,,表格标签 关联表 明细表,P1,88,recipe-gap,data/manual
+composition.editable-table,asset_composition,region.editable-table.basic,TablePage | EditPage,可编辑表格区 组合规则,用于表格内直接录入和修改字段，适合轻量明细编辑和行级保存场景,,可编辑表格 编辑表格 行内编辑 表格录入,P1,92,semantic-refactor,data/manual
+validation.editable-table,asset_validation,region.editable-table.basic,TablePage | EditPage,可编辑表格区 校验规则,必须包含可编辑控件和行级保存/删除动作；不得退化成纯只读表格,,可编辑表格 编辑表格 行内编辑 保存表格,P1,92,semantic-refactor,data/manual
+composition.horizontal-form,asset_composition,region.form-section.horizontal,CreatePage | EditPage,左右对齐表单区域 组合规则,用于字段数量适中且强调标签对齐和信息扫描效率的录入页面,,横向表单 左右表单 标签对齐 基础录入,P1,91,semantic-refactor,data/manual
+validation.horizontal-form,asset_validation,region.form-section.horizontal,CreatePage | EditPage,左右对齐表单区域 校验规则,必须保持稳定标签列宽和控件对齐；不得退化成多分组卡片堆叠,,横向表单 左右表单 标签对齐 编辑资料,P1,91,semantic-refactor,data/manual
+composition.config-editor-panel,asset_composition,module.config-editor-panel,SettingsPage | EditPage | Drawer,配置编辑器面板 组合规则,用于集中编辑复杂配置，同时承载预览、影响说明或保存操作,,配置编辑 配置面板 规则配置 字段配置,P1,90,semantic-refactor,data/manual
+validation.config-editor-panel,asset_validation,module.config-editor-panel,SettingsPage | EditPage | Drawer,配置编辑器面板 校验规则,必须包含编辑区和预览或说明区；保存动作明确且不与普通设置项混淆,,配置编辑 配置面板 预览保存 字段配置,P1,90,semantic-refactor,data/manual
+composition.home-task-panel,asset_composition,region.home-task-panel.basic,HomePage | BusinessHomePage,首页待办面板 组合规则,用于首页承载待处理任务和快速处理入口，优先呈现最近需要关注的事项,,待办 任务 待处理 首页任务,P1,89,semantic-refactor,data/manual
+validation.home-task-panel,asset_validation,region.home-task-panel.basic,HomePage | BusinessHomePage,首页待办面板 校验规则,必须包含任务标题和状态；至少保留一条带时间信息的任务,,待办 任务 待处理 首页任务,P1,89,semantic-refactor,data/manual
+composition.quick-entry-grid,asset_composition,region.quick-entry-grid.basic,HomePage | BusinessHomePage,快捷入口网格 组合规则,用于首页集中展示高频动作入口，适合新建、导出、配置等立即执行操作,,快捷入口 快速操作 常用入口 首页入口,P1,88,semantic-refactor,data/manual
+validation.quick-entry-grid,asset_validation,region.quick-entry-grid.basic,HomePage | BusinessHomePage,快捷入口网格 校验规则,入口数量控制在 4-6 个；文案必须可执行；不得退化成纯说明卡片,,快捷入口 快速操作 常用入口 首页入口,P1,88,semantic-refactor,data/manual
+composition.business-section-grid,asset_composition,region.business-section-grid.basic,BusinessHomePage,业务栏目网格 组合规则,用于业务首页按栏目聚合核心模块入口和说明，不应退化成普通按钮堆叠,,业务栏目 业务模块 门户栏目 业务导航,P1,88,semantic-refactor,data/manual
+validation.business-section-grid,asset_validation,region.business-section-grid.basic,BusinessHomePage,业务栏目网格 校验规则,每个栏目必须包含标题和说明；栏目数量建议 3-6 个,,业务栏目 业务模块 门户栏目 业务导航,P1,88,semantic-refactor,data/manual
+composition.report-table,asset_composition,region.report-table.basic,ReportPage | TablePage,报表明细表格区 组合规则,用于承载统计结果明细和按维度展开的数据表，不与普通主列表混用,,报表表格 统计明细 报表明细 汇总表格,P1,87,semantic-refactor,data/manual
+validation.report-table,asset_validation,region.report-table.basic,ReportPage | TablePage,报表明细表格区 校验规则,必须包含统计维度和指标列；表头语义明确；不得退化成纯基础表格,,报表表格 统计明细 报表明细 汇总表格,P1,87,semantic-refactor,data/manual

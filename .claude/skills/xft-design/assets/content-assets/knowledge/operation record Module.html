@@ -1,0 +1,327 @@
+<article
+  class="detail-module"
+  data-module-name="Operation Record Module"
+  data-chinese-name="操作记录模块"
+  data-module-type="detail-public-module"
+  data-required="false"
+  data-applies-to="split-basic,stacked-basic,split-table-like,stacked-table-like"
+>
+  <h3>Operation Record Module 操作记录模块</h3>
+
+  <p>
+    操作记录模块用于展示详情对象的修改历史、操作日志、变更记录或审计记录。
+    它是详情页的可选公共模块，适用于基础详情、表格详情、左右布局和上下布局。
+  </p>
+
+  <section class="module-section" data-field="when-to-use">
+    <h4>适用场景</h4>
+    <p>
+      当业务对象存在修改历史、操作审计、字段变更、状态变更、审批操作、系统操作或人工操作记录时使用。
+      常见于合同详情、商品详情、报账详情、付款详情、审批详情、配置详情、主数据详情等页面。
+    </p>
+  </section>
+
+  <section class="module-section" data-field="display-variants">
+    <h4>展示变体</h4>
+
+    <article
+      class="operation-record-variant"
+      data-variant-name="Operation Record Summary Table"
+      data-chinese-name="操作记录摘要表格"
+      data-use-when="operation-info-many"
+    >
+      <h5>操作记录摘要表格</h5>
+      <p>
+        当操作信息较多、每条记录存在较多变更字段，或变更详情不适合直接全部展示时，
+        使用摘要表格展示操作人、操作时间和详情入口。
+      </p>
+
+      <section class="variant-section" data-field="structure-order">
+        <h6>结构顺序</h6>
+        <ol>
+          <li>操作人或修改人</li>
+          <li>操作时间或修改时间</li>
+          <li>操作详情入口</li>
+        </ol>
+      </section>
+
+      <section class="variant-section" data-field="table-columns">
+        <h6>推荐列</h6>
+        <ul>
+          <li>修改人</li>
+          <li>修改时间</li>
+          <li>修改详情</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="interaction-rules">
+        <h6>交互规则</h6>
+        <ul>
+          <li>当单条操作记录包含较多字段变更时，修改详情列展示“详情”链接。</li>
+          <li>点击“详情”后，可打开弹窗、抽屉或展开区域展示本次修改的详细内容。</li>
+          <li>详情入口应使用弱操作样式，避免与页面主操作混淆。</li>
+          <li>如果详情页已有右侧抽屉体系，优先使用 Drawer 展示操作详情。</li>
+          <li>如果详情内容较少，也可以使用 Modal 展示。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="sample-structure">
+        <h6>结构示例</h6>
+        <table class="knowledge-sample-table" data-sample-type="operation-record-summary">
+          <thead>
+            <tr>
+              <th>修改人</th>
+              <th>修改时间</th>
+              <th>修改详情</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>张三</td>
+              <td>2024-12-22 22:22:00</td>
+              <td>
+                <a href="#" data-action="open-operation-detail">详情</a>
+              </td>
+            </tr>
+            <tr>
+              <td>张三三</td>
+              <td>2024-12-10 10:00:02</td>
+              <td>
+                <a href="#" data-action="open-operation-detail">详情</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="variant-section" data-field="validation-rules">
+        <h6>校验规则</h6>
+        <ul>
+          <li>摘要表格必须包含操作人或修改人。</li>
+          <li>摘要表格必须包含操作时间或修改时间。</li>
+          <li>当存在多字段变更时，必须提供详情入口。</li>
+          <li>详情入口文案建议使用“详情”，不建议使用过长操作文案。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="common-mistakes">
+        <h6>常见错误</h6>
+        <ul>
+          <li>不要把大量字段变更直接堆在摘要表格中，导致行高过大。</li>
+          <li>不要只有“详情”入口，却没有可展示的明细内容。</li>
+          <li>不要把“详情”做成主按钮样式。</li>
+          <li>不要缺少修改时间，导致记录无法排序和追溯。</li>
+        </ul>
+      </section>
+    </article>
+
+    <article
+      class="operation-record-variant"
+      data-variant-name="Operation Record Detail Table"
+      data-chinese-name="操作记录详情表格"
+      data-use-when="operation-detail-expanded"
+    >
+      <h5>操作记录详情表格</h5>
+      <p>
+        操作记录详情表格用于展示一次操作中的具体变更内容。
+        它通常由摘要表格中的“详情”入口触发，也可以在操作记录分组中直接展开展示。
+      </p>
+
+      <section class="variant-section" data-field="structure-order">
+        <h6>结构顺序</h6>
+        <ol>
+          <li>修改模块</li>
+          <li>原信息</li>
+          <li>修改后信息</li>
+          <li>修改人</li>
+          <li>修改时间</li>
+        </ol>
+      </section>
+
+      <section class="variant-section" data-field="table-columns">
+        <h6>推荐列</h6>
+        <ul>
+          <li>修改模块</li>
+          <li>原信息</li>
+          <li>修改后信息</li>
+          <li>修改人</li>
+          <li>修改时间</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="layout-rules">
+        <h6>布局规则</h6>
+        <ul>
+          <li>操作记录详情表格应独占整行，不应压缩在描述列表的 value 单元格中。</li>
+          <li>如果放在左右布局详情中，应位于左侧主内容区，不放入右侧审批流区域。</li>
+          <li>如果字段变更内容较长，原信息和修改后信息列应允许换行展示。</li>
+          <li>如果修改记录较多，可支持分页或按时间倒序展示。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="sample-structure">
+        <h6>结构示例</h6>
+        <table class="knowledge-sample-table" data-sample-type="operation-record-detail">
+          <thead>
+            <tr>
+              <th>修改模块</th>
+              <th>原信息</th>
+              <th>修改后信息</th>
+              <th>修改人</th>
+              <th>修改时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>基础信息</td>
+              <td>药品种类：中药</td>
+              <td>药品种类：西药</td>
+              <td>张西西</td>
+              <td>2023-12-12 22:22</td>
+            </tr>
+            <tr>
+              <td>基础信息</td>
+              <td>单价是否含税：是</td>
+              <td>单价是否含税：否</td>
+              <td>张西西</td>
+              <td>2023-12-12 22:22</td>
+            </tr>
+            <tr>
+              <td>商品明细-行号1</td>
+              <td>单价：¥293.23</td>
+              <td>单价：¥293.23</td>
+              <td>张西西</td>
+              <td>2023-12-12 22:22</td>
+            </tr>
+            <tr>
+              <td>关联发票</td>
+              <td>发票号码：200047843323</td>
+              <td>发票号码：200047840909</td>
+              <td>王大大</td>
+              <td>2023-12-12 22:22</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="variant-section" data-field="validation-rules">
+        <h6>校验规则</h6>
+        <ul>
+          <li>必须展示修改模块，便于定位变更发生在哪个业务区域。</li>
+          <li>必须展示原信息和修改后信息，便于对比。</li>
+          <li>必须展示修改人和修改时间，便于审计追溯。</li>
+          <li>原信息和修改后信息应保持同一字段语义，不应出现前后字段不对应。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="common-mistakes">
+        <h6>常见错误</h6>
+        <ul>
+          <li>不要只展示修改后信息而缺少原信息。</li>
+          <li>不要只展示修改内容而缺少修改人和修改时间。</li>
+          <li>不要把多个字段变更合并成一段难以比较的长文本。</li>
+          <li>不要让原信息和修改后信息列语义不一致。</li>
+        </ul>
+      </section>
+    </article>
+
+    <article
+      class="operation-record-variant"
+      data-variant-name="Single Operation Record Row"
+      data-chinese-name="单点操作记录行"
+      data-use-when="single-operation"
+    >
+      <h5>单点操作记录行</h5>
+      <p>
+        当一次操作信息较少，只有单点操作、单字段变更或简单状态变更时，
+        可以直接在表格中单行展示，不必再提供“详情”入口。
+      </p>
+
+      <section class="variant-section" data-field="structure-order">
+        <h6>结构顺序</h6>
+        <ol>
+          <li>操作模块或操作类型</li>
+          <li>操作内容</li>
+          <li>操作人</li>
+          <li>操作时间</li>
+        </ol>
+      </section>
+
+      <section class="variant-section" data-field="interaction-rules">
+        <h6>交互规则</h6>
+        <ul>
+          <li>单点操作记录可以直接单行展示。</li>
+          <li>如果操作内容已经完整表达，不需要提供“详情”链接。</li>
+          <li>如果后续扩展为多字段变更，应切换为“操作记录摘要表格 + 详情入口”模式。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="validation-rules">
+        <h6>校验规则</h6>
+        <ul>
+          <li>单行记录必须能完整表达本次操作的对象、内容、操作人和操作时间。</li>
+          <li>如果单行内容过长，应考虑进入详情展示模式。</li>
+          <li>单点操作不应强行生成空的详情入口。</li>
+        </ul>
+      </section>
+
+      <section class="variant-section" data-field="common-mistakes">
+        <h6>常见错误</h6>
+        <ul>
+          <li>不要每一条单点操作都强制生成“详情”链接。</li>
+          <li>不要把复杂多字段变更压缩成单行展示。</li>
+          <li>不要缺少操作人或操作时间。</li>
+        </ul>
+      </section>
+    </article>
+  </section>
+
+  <section class="module-section" data-field="placement-rules">
+    <h4>放置规则</h4>
+    <ul>
+      <li>操作记录可以作为详情页的独立分组展示。</li>
+      <li>上下布局中，操作记录通常放在基础信息、业务信息、关联明细之后。</li>
+      <li>左右布局中，操作记录可以放在左侧主内容区底部，也可以作为右侧辅助信息，但不应与审批流混淆。</li>
+      <li>如果操作记录是审计性质，建议放在页面后部。</li>
+      <li>如果操作记录与审批流强相关，可以靠近审批流展示，但仍需保持模块边界。</li>
+    </ul>
+  </section>
+
+  <section class="module-section" data-field="component-combination">
+    <h4>组件组合</h4>
+    <ul>
+      <li>Table 表格</li>
+      <li>Typography 排版</li>
+      <li>Button 或 Text Button 文本按钮</li>
+      <li>Drawer 抽屉，可用于展示操作详情</li>
+      <li>Modal 弹窗，可用于展示轻量操作详情</li>
+      <li>Pagination 分页，可用于大量操作记录</li>
+      <li>Tag 标签，可用于标识操作类型或操作状态</li>
+    </ul>
+  </section>
+
+  <section class="module-section" data-field="token-strategy">
+    <h4>Token 规则（继承 data-table 标准）</h4>
+    <p>操作记录表格（.op-log-table）继承 data-table 组件全部规范：</p>
+    <ul>
+      <li>表头文字：color 95% #132240（--color-text-neutral-gray50），font-size 14px（--font-size-regular），font-weight bold。</li>
+      <li>表格正文：color 85% #132240（--color-text-neutral-gray40），font-size 14px（--font-size-regular）。</li>
+      <li>行高：固定 40px（height: 40px），padding 左右 16px（--spacing-4）。</li>
+      <li>边框：四边 1px 实线 + 圆角 6px（border-collapse: separate + border-spacing: 0 + border-radius: --border-radius-regular）。</li>
+      <li>溢出：white-space: nowrap + overflow: hidden + text-overflow: ellipsis。</li>
+      <li>操作内容列额外限制 max-width: 360px 并用 .op-log-content 承载省略。</li>
+    </ul>
+  </section>
+
+  <section class="module-section" data-field="global-validation-rules">
+    <h4>全局校验规则</h4>
+    <ul>
+      <li>操作记录模块不是详情页必需模块，应根据业务需求展示。</li>
+      <li>当存在操作记录时，必须至少展示操作人和操作时间。</li>
+      <li>当一条操作记录包含多项变更时，应提供详情入口。</li>
+      <li>当一条操作记录只是单点操作时，可以单行展示，不需要详情入口。</li>
+      <li>操作详情中必须能体现原信息与修改后信息的对比。</li>
+      <li>操作记录应按时间倒序或业务指定顺序排列。</li>
+    </ul>
+  </section>
+</article>

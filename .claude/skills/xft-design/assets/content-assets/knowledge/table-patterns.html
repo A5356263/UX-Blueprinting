@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>XFT Table Page Patterns Knowledge</title></head>
+<body data-knowledge-type="table-page-patterns">
+<header class="knowledge-header"><h1>Table List Page Patterns</h1><p>表格列表页布局规则、按钮放置、标题规范、表格组件约束。</p></header>
+<main class="knowledge-main">
+<section class="knowledge-section" data-section="table-page-layout">
+      <h2>Table List Page Layout 表格列表页布局规则</h2>
+      <p>以下规则定义所有 TablePage 的布局结构和按钮放置规范。优先级高于具体业务内容。</p>
+
+      <article class="detail-module" data-module-name="TablePage Layout">
+        <h3>必需区域</h3>
+        <p>标题区、操作按钮区、筛选区、表格区、分页区。</p>
+        <h3>可选模块</h3>
+        <p>批量操作、汇总卡片、导入导出、空状态。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="TablePage Button Placement">
+        <h3>按钮放置规则</h3>
+        <p>操作按钮（新增/导入/导出/批量操作等）统一放置在筛选区上方一行，所有按钮在同一侧从左至右按优先级排列（主操作→次要操作），不得用 <code>flex: 1</code> spacer 拆分成左右两侧。</p>
+        <p>标题区只展示标题和辅助说明文字，不放操作按钮。批量按钮未选中时 disabled 置灰。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="TablePage Title Rule">
+        <h3>页面标题规则</h3>
+        <p>一级列表页（从侧边导航直接进入）不展示页面标题——侧边导航高亮项和上下文页签已标识当前页面。</p>
+        <p>下钻二级/三级页面（从列表点击进入详情/编辑等）标题在返回按钮后方展示。</p>
+      </article>
+
+      <article class="detail-module" data-module-name="TablePage Table Spec">
+        <h3>表格规范</h3>
+        <p>表格必须使用 <code>table.data-table</code> + <code>.data-table-wrap</code> 标准结构，样式统一由 <code>design-systems/components.html</code> 定义：</p>
+        <ul>
+          <li>边框：四边 1px 实线 + 圆角 6px（<code>border-collapse: separate; border-spacing: 0; border-radius: var(--border-radius-regular); overflow: hidden</code>）</li>
+          <li>表头：背景 <code>#f3f4f6</code>，颜色 95% #132240（<code>--color-text-neutral-gray50</code>），14px bold</li>
+          <li>数据行：颜色 85% #132240（<code>--color-text-neutral-gray40</code>），14px，行高 40px，溢出省略</li>
+          <li>不得在任何页面中覆盖表头颜色、数据行颜色、字体大小、行高。</li>
+        </ul>
+        <p>行内操作 ≤3 个。批量操作依赖多选复选框。危险操作（删除/作废）必须使用确认弹窗。</p>
+      </article>
+    </section>
+</main>
+</body>
+</html>

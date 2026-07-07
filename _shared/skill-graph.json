@@ -73,8 +73,26 @@
         "experience-blueprint"
       ],
       "next_hint": {
+        "preferred": [
+          "xft-design"
+        ],
+        "reason": "页面规格提取完成后，进入页面原型生成，把页面结构、交互和文案规格落成 HTML 原型。",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "xft-design",
+      "name_zh": "页面原型",
+      "phase": 3,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [
+        "page-spec"
+      ],
+      "next_hint": {
         "preferred": [],
-        "reason": "页面规格提取完成后，可进入页面设计 Skill 生成 HTML 原型。当前 design skill 尚未接入管线。",
+        "reason": "当前链路终端，无下游 Skill",
         "alternatives": []
       }
     },

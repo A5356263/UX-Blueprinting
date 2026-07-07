@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE scope:Full Page page_type:TablePage shell:admin-side-shell -->
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>我的报销单 · 企业财务平台</title>
+<style>
+:root{--accent:#1966ff;--accent-hover:#4086ff;--accent-light:#EBF3FF;--accent-subtle:#F5F8FF;--err:#fa4332;--err-light:#fff3f2;--warn-text:#e57717;--warn-light:#fff7e8;--ok:#0ac767;--ok-light:#edfaf4;--white:#fff;--gray-bg:#f3f4f6;--gray-hover:rgba(19,34,64,.05);--border:rgba(19,34,64,.15);--divider:rgba(19,34,64,.1);--t50:rgba(19,34,64,.95);--t40:rgba(19,34,64,.85);--t30:rgba(19,34,64,.65);--t20:rgba(19,34,64,.45);--fs-xs:12px;--fs-sm:14px;--fs-base:16px;--fs-xl:20px;--fw-bold:600;--fw-medium:500;--font:-apple-system,BlinkMacSystemFont,sans-serif;--r-sm:4px;--r-md:6px;--r-lg:12px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--nav-h:48px;--side-w:188px}
+*{box-sizing:border-box}body{margin:0;color:var(--t50);background:var(--gray-bg);font-family:var(--font);font-size:14px;line-height:22px;overflow:hidden}button{font:inherit;cursor:pointer}
+.app-shell{width:100%;height:100vh;padding-top:var(--nav-h)}.top-nav{height:var(--nav-h);display:flex;align-items:center;background:linear-gradient(117.84deg,#3C8AFF,#4255FF);position:fixed;top:0;left:0;right:0;z-index:20;padding:0 12px}.top-nav .brand{padding:0 14px 0 6px;color:rgba(249,249,250,.98);font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold',var(--font);white-space:nowrap;flex-shrink:0}.top-nav .nav-row{display:flex;align-items:center;flex:1;height:100%;gap:2px;overflow:hidden}.top-nav .nav-item{height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:6px;color:rgba(255,255,255,.9);font-size:14px;border:0;background:transparent;white-space:nowrap;transition:background .15s}.top-nav .nav-item:hover{background:rgba(255,255,255,.12)}.top-nav .nav-item.active{font-weight:600}.top-nav .nav-item.active::after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:#fff;border-radius:1px}.top-nav .user{display:flex;align-items:center;gap:8px;padding:2px 8px;border-radius:6px;color:#fff;font-size:14px;flex-shrink:0}.top-nav .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.main-frame{display:flex;height:calc(100vh - var(--nav-h));overflow:hidden}.side-nav{width:var(--side-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--divider);padding:8px 2px 0 8px;overflow-y:auto;height:100%}.side-btn{width:100%;height:40px;display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--t40);border:0;background:transparent;font-size:14px;text-align:left;margin-bottom:4px;transition:background .15s}.side-btn:hover{background:var(--gray-hover);color:var(--t50)}.side-btn.sel{color:var(--accent)}.side-btn.act{color:var(--accent);background:var(--accent-light);font-weight:500}.side-btn.l2{padding-left:36px}.ico{width:24px;height:24px;flex-shrink:0;margin-right:4px;opacity:.65}.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.arr{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:transform .2s}.arr.up{transform:rotate(-180deg)}
+.work-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}.tab-bar{height:32px;background:#e7e9ec;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid var(--divider)}.tab-it{height:32px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;width:128px;flex-shrink:0;color:var(--t40);border:0;background:transparent}.tab-it.act{background:var(--gray-bg);color:var(--t50)}.tab-it .cls{display:none;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;background:#e7e9ec;margin-left:auto;border:0;cursor:pointer}.tab-it.act .cls{display:inline-flex}
+.page-content{flex:1;overflow:auto;background:var(--gray-bg);padding:var(--s4)}.content-card{background:var(--white);border-radius:var(--r-lg);padding:var(--s5);min-height:100%}
+</style>
+<style>
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;white-space:nowrap;font-size:var(--fs-sm);transition:all .15s;text-decoration:none}.btn:hover{border-color:var(--accent);color:var(--accent)}.btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}.btn-text{padding:0;border:0;background:transparent;height:auto;color:var(--accent)}.btn-danger{border-color:var(--err);background:var(--err);color:#fff}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--white)}.data-table th,.data-table td{height:40px;padding:0 var(--s4);border-bottom:1px solid var(--divider);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-sm);color:var(--t40)}.data-table th{background:#f3f4f6;color:var(--t50);font-weight:var(--fw-bold)}.data-table tbody tr:hover{background:var(--gray-hover)}.data-table tbody tr:last-child td{border-bottom:0}.data-table-wrap{width:100%;overflow-x:auto;margin-bottom:var(--s5)}.data-table-wrap:last-child{margin-bottom:0}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:var(--fw-bold)}.tag-ok{background:var(--ok-light);color:var(--ok)}.tag-warn{background:var(--warn-light);color:var(--warn-text)}.tag-err{background:var(--err-light);color:var(--err)}
+.tbl-action{color:var(--accent);cursor:pointer;font-size:var(--fs-xs)}.tbl-action:hover{text-decoration:underline}.tbl-action+.tbl-action{margin-left:var(--s3)}
+.action-row{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s4);flex-wrap:nowrap}
+.filter-row{display:flex;align-items:flex-end;gap:var(--s3);margin-bottom:var(--s4);flex-wrap:wrap}.fld{display:flex;flex-direction:column;gap:var(--s1)}.fld label{color:var(--t30);font-size:var(--fs-xs)}.fld .inp{height:32px;display:flex;align-items:center;padding:0 var(--s3);border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t20);font-size:var(--fs-sm);min-width:140px}.fld .inp.short{min-width:110px}
+.pagination{display:flex;justify-content:space-between;align-items:center;padding:var(--s3) 0}.pg-info{color:var(--t30);font-size:var(--fs-xs)}.pg-btn{min-width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;font-size:var(--fs-xs)}.pg-btn:hover{border-color:var(--accent);color:var(--accent)}.pg-btn.active{border-color:var(--accent);background:var(--accent);color:#fff}.pg-btn:disabled{opacity:.5}
+.xft-overlay-root{position:fixed;inset:0;z-index:1000;display:none}.xft-overlay-root.is-open{display:block}.xft-overlay-mask{position:absolute;inset:0;background:rgba(15,23,42,.38)}.xft-overlay-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:var(--s6)}.xft-confirm-panel{width:min(560px,100%);border-radius:var(--r-lg);background:var(--white);box-shadow:0 12px 32px rgba(19,34,64,.2);overflow:hidden}.xft-modal-body{padding:24px}.xft-modal-footer{display:flex;justify-content:flex-end;gap:var(--s2);padding:0 24px 24px}.xft-overlay-title{margin:0;font-size:var(--fs-base);font-weight:var(--fw-bold)}.xft-overlay-description{margin-top:var(--s2);color:var(--t30);font-size:var(--fs-xs)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-nav"><span class="brand">企业财务平台</span><div class="nav-row"><button class="nav-item">工作台</button><button class="nav-item active">报销管理</button><button class="nav-item">审批中心</button><button class="nav-item">系统设置</button></div><div class="user"><span class="avatar">陈</span>陈语安</div></header>
+  <div class="main-frame">
+    <aside class="side-nav"><div data-menu-root>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="lbl">工作台</span></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">报销管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2 act"><span class="lbl">我的报销单</span></button>
+    </div></aside>
+    <main class="work-area">
+      <div class="tab-bar"><button class="tab-it">首页</button><button class="tab-it act">我的报销单<span class="cls"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M3.7 3.7a1 1 0 011.4 0L8 6.6l2.9-2.9a1 1 0 111.4 1.4L9.4 8l2.9 2.9a1 1 0 01-1.4 1.4L8 9.4l-2.9 2.9a1 1 0 01-1.4-1.4L6.6 8 3.7 5.1a1 1 0 010-1.4z"/></svg></span></button></div>
+      <section class="page-content"><div class="content-card">
+
+        <div class="action-row">
+          <a href="reimbursement-workflow-create-2026-07-03-v1.html" class="btn btn-primary">+ 新建报销单</a>
+          <button class="btn">导入</button>
+          <button class="btn">导出</button>
+          <span style="font-size:var(--fs-xs);color:var(--t30);margin-left:var(--s4)">共 12 条，本月 ¥15,860 · 待提交 2 条 · 审批中 1 条</span>
+        </div>
+
+        <div class="filter-row">
+          <div class="fld"><label>报销单号</label><div class="inp" style="min-width:180px">请输入</div></div>
+          <div class="fld"><label>状态</label><div class="inp short">全部 ▾</div></div>
+          <div class="fld"><label>提交日期</label><div class="inp short">选择日期</div></div>
+          <button class="btn btn-primary">查询</button><button class="btn">重置</button>
+        </div>
+
+        <div class="data-table-wrap"><table class="data-table">
+          <thead><tr><th>报销单号</th><th>费用类型</th><th style="text-align:right">金额</th><th>提交日期</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent);font-size:var(--fs-xs)">BX-20260701-0012</td><td>差旅费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥3,280</td><td>2026-07-01</td><td><span class="tag tag-warn">审批中</span></td><td><a href="reimbursement-workflow-detail-2026-07-03-v1.html" class="tbl-action">查看</a></td></tr>
+            <tr><td style="color:var(--accent);font-size:var(--fs-xs)">BX-20260702-0015</td><td>差旅费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥12,860</td><td>2026-07-02</td><td><span class="tag tag-warn">待提交</span></td><td><a href="reimbursement-workflow-edit-2026-07-03-v1.html" class="tbl-action">编辑</a><span class="tbl-action" style="color:var(--err)" data-overlay-open="overlay-delete">删除</span></td></tr>
+            <tr><td style="color:var(--accent);font-size:var(--fs-xs)">BX-20260628-0047</td><td>交通费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥860</td><td>2026-06-28</td><td><span class="tag tag-ok">已通过</span></td><td><a href="reimbursement-workflow-detail-2026-07-03-v1.html" class="tbl-action">查看</a></td></tr>
+            <tr><td style="color:var(--accent);font-size:var(--fs-xs)">BX-20260620-0028</td><td>招待费</td><td style="text-align:right;font-weight:var(--fw-bold)">¥2,800</td><td>2026-06-20</td><td><span class="tag tag-err">已驳回</span></td><td><a href="reimbursement-workflow-edit-2026-07-03-v1.html" class="tbl-action">重新编辑</a><span class="tbl-action">查看</span></td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="pagination"><span class="pg-info">共 12 条，每页 10 条</span><div><button class="pg-btn" disabled>上一页</button><button class="pg-btn active">1</button><button class="pg-btn">2</button><button class="pg-btn">下一页</button></div></div>
+
+      </div></section>
+    </main>
+  </div>
+  <div id="overlay-root">
+    <div class="xft-overlay-root" id="overlay-delete"><div class="xft-overlay-mask" data-overlay-close></div><div class="xft-overlay-center"><section class="xft-confirm-panel"><div class="xft-modal-body"><h2 class="xft-overlay-title">确认删除</h2><p class="xft-overlay-description">删除后不可恢复，确定要删除该报销单吗？</p></div><footer class="xft-modal-footer"><button class="btn" data-overlay-close>取消</button><button class="btn btn-danger">确认删除</button></footer></section></div></div>
+  </div>
+</div>
+<script>
+(function(){
+  document.querySelector(".tab-bar").addEventListener("click",function(e){var c=e.target.closest(".cls");if(c){e.stopPropagation();return}var t=e.target.closest(".tab-it");if(!t)return;this.querySelectorAll(".tab-it").forEach(function(i){i.classList.toggle("act",i===t)})});
+  document.querySelector("[data-menu-root]").addEventListener("click",function(e){var i=e.target.closest(".side-btn");if(i&&i.classList.contains("l2")){this.querySelectorAll(".side-btn.l2").forEach(function(c){c.classList.toggle("act",c===i)})}var t=e.target.closest(".side-btn.sel")||e.target.closest(".side-btn:not(.l2)");if(!t)return;var a=t.querySelector(".arr");if(a)a.classList.toggle("up");var n=t.nextElementSibling;while(n&&n.classList.contains("l2")){n.hidden=!n.hidden;n=n.nextElementSibling}});
+  document.addEventListener("click",function(e){var c=e.target.closest("[data-overlay-close]");if(c){var ov=c.closest(".xft-overlay-root");if(ov)ov.classList.remove("is-open");return}var o=e.target.closest("[data-overlay-open]");if(o){var id=o.getAttribute("data-overlay-open");var el=document.getElementById(id);if(el)el.classList.add("is-open")}});
+})();
+</script>
+</body>
+</html>

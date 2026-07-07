@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blank Shell</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-layout-bg-neutral-gray);
+      color: var(--color-text-neutral-gray50);
+      font-family: var(--font-family-primary);
+      font-size: var(--font-size-regular);
+      line-height: calc(var(--font-size-regular) * var(--font-height-regular));
+    }
+
+    .blank-canvas {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-8);
+    }
+
+    .content-canvas {
+      width: min(960px, 100%);
+      padding: var(--spacing-8);
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-large);
+      background: var(--color-container-bg-neutral-bright);
+      box-shadow: var(--shadow-regular-bottom);
+    }
+  </style>
+</head>
+<body>
+  <main class="blank-canvas">
+    <section class="content-canvas">
+      <!-- CONTENT_SLOT -->
+    </section>
+  </main>
+
+  <div id="overlay-root">
+    <!-- OVERLAY_SLOT -->
+  </div>
+</body>
+</html>

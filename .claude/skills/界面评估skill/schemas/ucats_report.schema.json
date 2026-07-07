@@ -1,0 +1,436 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/ucats_report.schema.json",
+  "title": "UCATS 界面证据评估报告",
+  "type": "object",
+  "required": ["report_version", "input", "dsl", "ucats", "issues", "recommendations"],
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {"properties": {"input": {"properties": {"type": {"const": "browser"}}}}},
+      "then": {
+        "properties": {
+          "dsl": {
+            "properties": {
+              "pages": {
+                "items": {
+                  "properties": {
+                    "generation": {"properties": {"method": {"const": "auto_from_browser_and_prompt"}}},
+                    "source": {"properties": {"mode": {"const": "browser"}}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"input": {"properties": {"type": {"const": "screenshot"}}}}},
+      "then": {
+        "properties": {
+          "dsl": {
+            "properties": {
+              "pages": {
+                "items": {
+                  "properties": {
+                    "generation": {"properties": {"method": {"const": "auto_from_screenshot_and_prompt"}}},
+                    "source": {"properties": {"mode": {"const": "screenshot"}}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"input": {"properties": {"type": {"const": "mixed"}}}}},
+      "then": {
+        "properties": {
+          "dsl": {
+            "properties": {
+              "pages": {
+                "items": {
+                  "properties": {
+                    "generation": {"properties": {"method": {"const": "auto_from_mixed_and_prompt"}}},
+                    "source": {"properties": {"mode": {"const": "mixed"}}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "report_version": {
+      "type": "string"
+    },
+    "input": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["browser", "screenshot", "mixed"]
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": {"type": "string", "minLength": 1},
+              "role": {"type": "string"},
+              "order": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "dom_snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": {"type": "string", "minLength": 1},
+              "url": {"type": "string"},
+              "order": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "accessibility_snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": {"type": "string", "minLength": 1},
+              "order": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "runtime_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": {"type": "string", "minLength": 1},
+              "type": {"type": "string"},
+              "order": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "behavior_metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ref"],
+            "properties": {
+              "ref": {"type": "string", "minLength": 1},
+              "metric": {"type": "string"},
+              "scope": {"type": "string"},
+              "period": {"type": "string"},
+              "baseline": {},
+              "value": {},
+              "sample_size": {"type": "integer", "minimum": 0},
+              "order": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "scenario": {"type": ["string", "null"]},
+        "task_goal": {"type": ["string", "null"]},
+        "task_context": {
+          "type": "object",
+          "properties": {
+            "user": {"type": ["string", "null"]},
+            "task": {"type": ["string", "null"]},
+            "interface_capabilities": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "expected_result": {"type": ["string", "null"]}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "dsl": {
+      "type": "object",
+      "required": ["pages", "uncertain"],
+      "properties": {
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/page"}
+        },
+        "flow": {"type": ["object", "null"]},
+        "interactions": {"type": "array"},
+        "uncertain": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "ucats": {
+      "type": "object",
+      "required": ["walkthrough", "dimensions"],
+      "properties": {
+        "clarity_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "overall_score": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+        "gate": {"enum": ["pass", "review", "fail"]},
+        "walkthrough": {"$ref": "#/$defs/walkthrough"},
+        "dimensions": {
+          "type": "object",
+          "required": ["clarity"],
+          "properties": {
+            "usability": {"$ref": "#/$defs/dimension"},
+            "clarity": {"$ref": "#/$defs/dimension"},
+            "task_completion": {"$ref": "#/$defs/dimension"},
+            "acceptance": {"$ref": "#/$defs/dimension"},
+            "stability": {"$ref": "#/$defs/dimension"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "issues": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/issue"}
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/recommendation"}
+    },
+    "mui_genui": {
+      "type": "object"
+    },
+    "automation": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "walkthrough": {
+      "type": "object",
+      "required": ["information_presentation", "operation_experience", "overall_score"],
+      "properties": {
+        "information_presentation": {"$ref": "#/$defs/walkthrough_primary_dimension"},
+        "operation_experience": {"$ref": "#/$defs/walkthrough_primary_dimension"},
+        "overall_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "rationale": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "walkthrough_primary_dimension": {
+      "type": "object",
+      "required": ["weight", "score", "involved_elements", "evidence", "elements"],
+      "properties": {
+        "weight": {"type": "number", "minimum": 0, "maximum": 1},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "status": {"enum": ["applicable", "not_applicable", "evidence_insufficient"]},
+        "involved_elements": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "elements": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/walkthrough_element"}
+        },
+        "adjustment": {"type": "number"},
+        "adjustment_reason": {"type": "string", "minLength": 1},
+        "adjustment_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": true
+    },
+    "walkthrough_element": {
+      "type": "object",
+      "required": ["id", "status", "weight", "score", "evidence", "deductions"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["applicable", "not_applicable", "evidence_insufficient"]},
+        "weight": {"type": "number", "minimum": 0, "maximum": 1},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "deductions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/walkthrough_deduction"}
+        },
+        "adjustment": {"type": "number"},
+        "adjustment_reason": {"type": "string", "minLength": 1},
+        "adjustment_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": true
+    },
+    "walkthrough_deduction": {
+      "type": "object",
+      "required": ["issue_id", "points", "reason"],
+      "properties": {
+        "issue_id": {"type": "string", "minLength": 1},
+        "criterion_id": {
+          "enum": [
+            "E1-01", "E1-02", "E1-03", "E1-04",
+            "E2-01", "E2-02",
+            "E3-01", "E3-02", "E3-03",
+            "E4-01", "E4-02", "E4-03",
+            "E5-01", "E5-02", "E5-03",
+            "E6-01", "E6-02", "E6-03",
+            "E7-01", "E7-02",
+            "E8-01", "E8-02", "E8-03",
+            "E9-01", "E9-02", "E9-03",
+            "E10-01", "E10-02", "E10-03", "E10-04",
+            "E11-01", "E11-02", "E11-03"
+          ]
+        },
+        "unit_scope": {"type": "string", "minLength": 1},
+        "state_scope": {"type": "string", "minLength": 1},
+        "expected": {"type": "string", "minLength": 1},
+        "actual": {"type": "string", "minLength": 1},
+        "evidence_test": {"type": "string", "minLength": 1},
+        "problem_count": {"type": "integer", "minimum": 0},
+        "scale_level": {"type": "integer", "minimum": 1, "maximum": 6},
+        "points_per_problem": {"type": "number", "minimum": 0},
+        "scale_rationale": {"type": "string", "minLength": 1},
+        "points": {"type": "number", "minimum": 0, "maximum": 100},
+        "reason": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": true
+    },
+    "dimension": {
+      "type": "object",
+      "required": ["score", "confidence", "evidence", "rationale"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "issue": {
+      "type": "object",
+      "required": ["id", "severity", "dimension", "title", "observation", "impact", "evidence", "source_refs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["Critical", "High", "Medium", "Low"]},
+        "dimension": {"enum": ["usability", "clarity", "task_completion", "acceptance", "stability"]},
+        "title": {"type": "string", "minLength": 1},
+        "observation": {"type": "string", "minLength": 1},
+        "impact": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "screenshot_ref": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "page": {
+      "type": "object",
+      "required": ["page_id", "generation", "source"],
+      "properties": {
+        "page_id": {"type": "string", "minLength": 1},
+        "generation": {
+          "type": "object",
+          "required": ["method", "evidence_sources", "context_fields_used", "context_only_claims", "conflicts"],
+          "properties": {
+            "method": {
+              "enum": ["auto_from_browser_and_prompt", "auto_from_screenshot_and_prompt", "auto_from_mixed_and_prompt"]
+            },
+            "evidence_sources": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1}
+            },
+            "context_fields_used": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1}
+            },
+            "context_only_claims": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "conflicts": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          },
+          "additionalProperties": true
+        },
+        "source": {
+          "type": "object",
+          "required": ["mode"],
+          "properties": {
+            "mode": {"enum": ["browser", "screenshot", "mixed"]},
+            "dom_ref": {"type": ["string", "null"]},
+            "accessibility_ref": {"type": ["string", "null"]},
+            "runtime_ref": {"type": ["string", "null"]},
+            "screenshot_ref": {"type": ["string", "null"]},
+            "device_class": {"type": "string"},
+            "viewport": {"type": "object"},
+            "quality": {"type": "array"},
+            "order": {"type": "integer", "minimum": 1}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["id", "priority", "title", "target_issue_ids", "expected_impact", "effort", "steps"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "priority": {"enum": ["P0", "P1", "P2", "P3"]},
+        "title": {"type": "string", "minLength": 1},
+        "target_issue_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "expected_impact": {"type": "string", "minLength": 1},
+        "effort": {"enum": ["small", "medium", "large", "unknown"]},
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -147,6 +147,18 @@ description: >
 - 除必要短列表外，减少表格。
 - 不用术语堆砌，不啰嗦。
 
+承载规则补充：
+
+- 每个角色独立成节，不把多个角色并排塞进一张表
+- 每个阶段独立成块，不把“目标 / 行动 / 触点 / 心声 / 痛点 / 风险 / 机会”压成横向阶段总表
+- `阶段转折` 继续使用正文行表达，不改写成总表
+- 未明确允许的部分，不用 Markdown 表格承载主体内容
+
+允许短表格的范围仅限：
+
+- 极短的补充对照
+- 非主体的字段枚举说明
+
 ## MD 文档输出
 
 生成 `spark-output/journey_analysis.md`，供体验蓝图和其他下游 Skill 消费。
@@ -269,6 +281,22 @@ HTML 预览只消费 `spark-output/context/journey-analysis.json`，不从 MD �
 - `role.summary` 必须存在；没有明确来源时，用一句任务职责概述，不新增业务事实
 - `confidence` 只允许写 `高` / `中` / `低`
 - `downstream_hint` 只允许写 `蓝图` / `故事` / `待确认`
+
+## Context JSON 校验
+
+写入 context JSON 后、生成 HTML 前，必须运行：
+
+```bash
+node {skill_dir}/scripts/validate_context.js {context_json_path}
+```
+
+`{context_json_path}` 由当前执行环境传入实际产物路径。
+
+如果校验失败：
+
+- 先修正 `journey-analysis.json`
+- 重新运行校验
+- 校验通过后才允许生成 HTML
 
 HTML 预览只消费该 JSON，不从 MD 二次解析。生成 HTML 前不得临时补字段；如果字段缺失，先修正 context JSON。
 

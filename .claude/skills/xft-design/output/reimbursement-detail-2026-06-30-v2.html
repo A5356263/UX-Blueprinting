@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE scope:Full Page page_type:DetailPage shell:admin-side-shell -->
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>报销单详情 · BX-20260628-0047</title>
+<style>
+:root{--accent-light:#EBF3FF;--accent:#1966ff;--accent-hover:#4086ff;--accent-subtle:#F5F8FF;--err-light:#fff3f2;--err:#fa4332;--warn-light:#fff7e8;--warn-text:#e57717;--ok-light:#edfaf4;--ok:#0ac767;--white:#fff;--gray-bg:#f3f4f6;--gray-hover:rgba(19,34,64,.05);--gray-light:rgba(19,34,64,.02);--border:rgba(19,34,64,.15);--divider:rgba(19,34,64,.1);--t30:rgba(19,34,64,.65);--t40:rgba(19,34,64,.85);--t50:rgba(19,34,64,.95);--t20:rgba(19,34,64,.45);--fs-xs:12px;--fs-sm:14px;--fs-base:16px;--fs-lg:18px;--fs-xl:20px;--fs-2xl:24px;--fw-bold:600;--fw-medium:500;--font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;--r-sm:4px;--r-md:6px;--r-lg:12px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--nav-h:48px;--side-w:188px}
+*{box-sizing:border-box}body{margin:0;color:var(--t50);background:var(--gray-bg);font-family:var(--font);font-size:14px;line-height:22px;overflow:hidden}button{font:inherit;cursor:pointer}
+.app-shell{width:100%;height:100vh;padding-top:var(--nav-h)}.top-nav{height:var(--nav-h);display:flex;align-items:center;background:linear-gradient(117.84deg,#3C8AFF,#4255FF);position:fixed;top:0;left:0;right:0;z-index:20;padding:0 12px}.top-nav .brand{padding:0 14px 0 6px;color:rgba(249,249,250,.98);font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold',var(--font);white-space:nowrap;flex-shrink:0}.top-nav .nav-row{display:flex;align-items:center;flex:1;height:100%;gap:2px;overflow:hidden}.top-nav .nav-item{height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:6px;color:rgba(255,255,255,.9);font-size:14px;border:0;background:transparent;position:relative;white-space:nowrap;transition:background .15s}.top-nav .nav-item:hover{background:rgba(255,255,255,.12)}.top-nav .nav-item.active{font-weight:600}.top-nav .nav-item.active::after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:#fff;border-radius:1px}.top-nav .user{display:flex;align-items:center;gap:8px;padding:2px 8px;border-radius:6px;color:#fff;font-size:14px;flex-shrink:0}.top-nav .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.main-frame{display:flex;height:calc(100vh - var(--nav-h));overflow:hidden}.side-nav{width:var(--side-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--divider);padding:8px 2px 0 8px;overflow-y:auto;height:100%}.side-btn{width:100%;height:40px;display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--t40);border:0;background:transparent;font-size:14px;text-align:left;margin-bottom:4px;transition:background .15s}.side-btn:hover{background:var(--gray-hover);color:var(--t50)}.side-btn.sel{color:var(--accent)}.side-btn.act{color:var(--accent);background:var(--accent-light);font-weight:500}.side-btn.l2{padding-left:36px}.ico{width:24px;height:24px;flex-shrink:0;margin-right:4px;opacity:.65}.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.arr{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:transform .2s}.arr.up{transform:rotate(-180deg)}
+.work-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}.tab-bar{height:32px;background:#e7e9ec;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid var(--divider)}.tab-it{height:32px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;position:relative;width:128px;flex-shrink:0;color:var(--t40);border:0;background:transparent}.tab-it.act{background:var(--gray-bg);color:var(--t50)}.tab-it .cls{display:none;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;background:#e7e9ec;margin-left:auto;border:0;cursor:pointer}.tab-it.act .cls,.tab-it:hover .cls{display:inline-flex}
+.page-content{flex:1;overflow:auto;background:var(--gray-bg);padding:var(--s4)}.content-card{background:var(--white);border-radius:var(--r-lg);padding:var(--s5);min-height:100%}
+</style>
+<style>
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;white-space:nowrap;font-size:var(--fs-sm);transition:all .15s}.btn:hover{border-color:var(--accent);color:var(--accent)}.btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}.btn-text{padding:0;border:0;background:transparent;height:auto;color:var(--accent)}.btn-text:hover{text-decoration:underline}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;background:var(--white)}.data-table th,.data-table td{padding:var(--s3) var(--s4);border-bottom:1px solid var(--divider);text-align:left;font-size:var(--fs-sm)}.data-table th{background:#f3f4f6;color:var(--t40);font-weight:var(--fw-bold);font-size:var(--fs-xs)}.data-table tbody tr:hover{background:var(--gray-hover)}.data-table tbody tr:last-child td{border-bottom:0}.data-table-wrap{width:100%;overflow-x:auto;margin-bottom:var(--s5)}.data-table-wrap:last-child{margin-bottom:0}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:var(--fs-xs);font-weight:var(--fw-bold)}.tag-ok{background:var(--ok-light);color:var(--ok)}.tag-warn{background:var(--warn-light);color:var(--warn-text)}.tag-err{background:var(--err-light);color:var(--err)}.tag-info{background:var(--accent-light);color:var(--accent)}
+.tbl-action{color:var(--accent);cursor:pointer;font-size:var(--fs-xs)}.tbl-action:hover{text-decoration:underline}
+</style>
+<style>
+.page-content{overflow:auto!important}
+.approval-header{margin:calc(-1 * var(--s5)) calc(-1 * var(--s5)) var(--s4)}.approval-back{padding:var(--s3) var(--s5) 0}.approval-back .btn-text{color:var(--accent);font-size:var(--fs-xs)}.approval-info{margin:var(--s3) var(--s5) 0;padding:var(--s4);background:rgba(25,102,255,.04);border-radius:var(--r-lg)}.approval-title{margin:0 0 var(--s3);font-size:var(--fs-xl);font-weight:var(--fw-bold);color:var(--t50)}.meta-list{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s6);list-style:none;margin:0;padding:0}.meta-item{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--fs-xs)}.meta-item .label{color:var(--t30)}.meta-item .value{color:var(--t50);font-weight:var(--fw-medium)}
+fieldset.form-block{border:0;padding:0;margin:0 0 var(--s5);background:transparent}fieldset.form-block:last-child{margin-bottom:0}fieldset.form-block legend{position:relative;padding-left:calc(3px + var(--s2));margin-bottom:var(--s4);font-size:var(--fs-base);font-weight:var(--fw-bold);color:var(--t50);line-height:22px}fieldset.form-block legend::before{content:"";position:absolute;left:0;top:4px;width:3px;height:14px;border-radius:2px;background:var(--accent)}
+.descriptions-grid{display:grid;grid-template-columns:repeat(2,minmax(200px,1fr));gap:var(--s4)}.description-cell{min-width:0}.description-cell.full{grid-column:1/-1}.description-label{color:var(--t30);font-size:var(--fs-xs);margin-bottom:var(--s1)}.description-value{color:var(--t50);font-size:var(--fs-sm)}
+.op-log-list{display:flex;flex-direction:column}.op-log-item{display:flex;align-items:flex-start;gap:var(--s4);padding:var(--s3) 0}.op-log-item+.op-log-item{border-top:1px solid var(--divider)}.op-log-time{color:var(--t20);font-size:var(--fs-xs);white-space:nowrap;width:140px;flex-shrink:0}.op-log-action{color:var(--t50);font-size:var(--fs-sm);min-width:0}.op-log-actor{color:var(--t30);font-size:var(--fs-xs)}
+.detail-action-bar{margin:var(--s4) 0 0;padding:var(--s3) 0;border-top:1px solid var(--divider)}.action-buttons{display:flex;align-items:center;gap:var(--s2);flex-wrap:nowrap}.action-buttons button{height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;font-size:var(--fs-sm);white-space:nowrap}.action-buttons .btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.action-buttons .btn-danger{border-color:var(--err);background:var(--err);color:#fff}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-nav"><span class="brand">企业财务平台</span><div class="nav-row"><button class="nav-item">工作台</button><button class="nav-item active">报销管理</button><button class="nav-item">财务支付</button><button class="nav-item">审批中心</button><button class="nav-item">系统设置</button></div><div class="user"><span class="avatar">陈</span>陈语安</div></header>
+  <div class="main-frame">
+    <aside class="side-nav"><div data-menu-root>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="lbl">工作台</span></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">报销管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2"><span class="lbl">报销单列表</span></button>
+      <button class="side-btn l2 act"><span class="lbl">BX-20260628-0047</span></button>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg><span class="lbl">审批中心</span><svg class="arr up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+    </div></aside>
+    <main class="work-area">
+      <div class="tab-bar"><button class="tab-it">首页</button><button class="tab-it">报销单列表</button><button class="tab-it act">BX-20260628-0047<span class="cls"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M3.7 3.7a1 1 0 011.4 0L8 6.6l2.9-2.9a1 1 0 111.4 1.4L9.4 8l2.9 2.9a1 1 0 01-1.4 1.4L8 9.4l-2.9 2.9a1 1 0 01-1.4-1.4L6.6 8 3.7 5.1a1 1 0 010-1.4z"/></svg></span></button></div>
+      <section class="page-content"><div class="content-card">
+
+        <header class="approval-header">
+          <div class="approval-back"><button class="btn btn-text">← 返回报销单列表</button></div>
+          <div class="approval-info">
+            <h1 class="approval-title">陈语安 · 差旅报销单</h1>
+            <ul class="meta-list">
+              <li class="meta-item"><span class="label">报销单号</span><span class="value">BX-20260628-0047</span></li>
+              <li class="meta-item"><span class="label">申请人</span><span class="value">陈语安 · 华东销售一部</span></li>
+              <li class="meta-item"><span class="label">报销金额</span><span class="value" style="font-weight:var(--fw-bold)">¥3,280.00</span></li>
+              <li class="meta-item"><span class="label">提交日期</span><span class="value">2026-06-28 14:30</span></li>
+            </ul>
+          </div>
+        </header>
+
+        <fieldset class="form-block">
+          <legend>基础信息</legend>
+          <div class="descriptions-grid">
+            <div class="description-cell"><div class="description-label">费用类型</div><div class="description-value">差旅费</div></div>
+            <div class="description-cell"><div class="description-label">所属部门</div><div class="description-value">华东销售一部</div></div>
+            <div class="description-cell"><div class="description-label">出差地点</div><div class="description-value">上海 — 北京</div></div>
+            <div class="description-cell"><div class="description-label">出差日期</div><div class="description-value">2026-06-24 至 2026-06-26</div></div>
+            <div class="description-cell"><div class="description-label">报销金额</div><div class="description-value" style="font-weight:var(--fw-bold);font-size:var(--fs-base)">¥3,280.00</div></div>
+            <div class="description-cell"><div class="description-label">审批状态</div><div class="description-value"><span class="tag tag-warn">部门审批中</span></div></div>
+            <div class="description-cell full"><div class="description-label">出差事由</div><div class="description-value">参加2026年度华北区域销售策略会议，拜访北京区域重点客户推进Q3合作。</div></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend>费用明细</legend>
+          <div class="data-table-wrap"><table class="data-table">
+            <thead><tr><th>费用日期</th><th>类别</th><th>明细</th><th style="text-align:right">金额</th><th>票据</th></tr></thead>
+            <tbody>
+              <tr><td>2026-06-24</td><td>交通费</td><td>上海→北京 往返高铁票</td><td style="text-align:right;font-weight:var(--fw-bold)">¥980.00</td><td><span class="tag tag-ok">已上传</span></td></tr>
+              <tr><td>2026-06-24</td><td>住宿费</td><td>北京望京凯悦酒店 ×1晚</td><td style="text-align:right;font-weight:var(--fw-bold)">¥1,500.00</td><td><span class="tag tag-ok">已上传</span></td></tr>
+              <tr><td>2026-06-25</td><td>餐饮费</td><td>客户商务宴请 ×2人</td><td style="text-align:right;font-weight:var(--fw-bold)">¥800.00</td><td><span class="tag tag-ok">已上传</span></td></tr>
+            </tbody>
+          </table></div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend>票据附件</legend>
+          <div class="descriptions-grid"><div class="description-cell full">
+            <div class="description-label">已上传票据（3个文件）</div>
+            <div class="description-value" style="display:flex;flex-direction:column;gap:var(--s2);margin-top:var(--s2)">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s2) var(--s3);background:#f3f4f6;border-radius:var(--r-md);font-size:var(--fs-xs)">电子客票行程单-往返.pdf <span><span class="tbl-action" style="margin-right:12px">预览</span><span class="tbl-action">下载</span></span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s2) var(--s3);background:#f3f4f6;border-radius:var(--r-md);font-size:var(--fs-xs)">酒店住宿发票.pdf <span><span class="tbl-action" style="margin-right:12px">预览</span><span class="tbl-action">下载</span></span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s2) var(--s3);background:#f3f4f6;border-radius:var(--r-md);font-size:var(--fs-xs)">餐饮发票-商务宴请.pdf <span><span class="tbl-action" style="margin-right:12px">预览</span><span class="tbl-action">下载</span></span></div>
+            </div>
+          </div></div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend>操作记录</legend>
+          <div class="op-log-list">
+            <div class="op-log-item"><span class="op-log-time">2026-06-28 14:30</span><div><div class="op-log-action">提交报销申请</div><div class="op-log-actor">陈语安</div></div></div>
+            <div class="op-log-item"><span class="op-log-time">2026-06-28 16:00</span><div><div class="op-log-action">部门负责人审批通过</div><div class="op-log-actor">李哲 · 审批意见：差旅合理，金额与票据一致</div></div></div>
+            <div class="op-log-item"><span class="op-log-time">2026-06-29 09:15</span><div><div class="op-log-action">财务初审接收</div><div class="op-log-actor">张财务 · 待核对票据完整性</div></div></div>
+          </div>
+        </fieldset>
+
+        <footer class="detail-action-bar"><div class="action-buttons">
+          <span style="flex:1"></span>
+          <button class="btn">编辑</button>
+          <button class="btn">导出</button>
+          <button class="btn">打印</button>
+        </div></footer>
+
+      </div></section>
+    </main>
+  </div>
+</div>
+<script>
+(function(){
+  document.querySelector(".tab-bar").addEventListener("click",function(e){var c=e.target.closest(".cls");if(c){e.stopPropagation();return}var t=e.target.closest(".tab-it");if(!t)return;this.querySelectorAll(".tab-it").forEach(function(i){i.classList.toggle("act",i===t)})});
+  document.querySelector("[data-menu-root]").addEventListener("click",function(e){var i=e.target.closest(".side-btn");if(i&&i.classList.contains("l2")){this.querySelectorAll(".side-btn.l2").forEach(function(c){c.classList.toggle("act",c===i)})}var t=e.target.closest(".side-btn.sel")||e.target.closest(".side-btn:not(.l2)");if(!t)return;var a=t.querySelector(".arr");if(a)a.classList.toggle("up");var n=t.nextElementSibling;while(n&&n.classList.contains("l2")){n.hidden=!n.hidden;n=n.nextElementSibling}});
+})();
+</script>
+</body>
+</html>

@@ -137,39 +137,31 @@ Color token 遵循固定的维度顺序：`type-object-attribute-intention-promi
 - 禁止添加装饰性效果（大面积渐变、厚重阴影、超大圆角、玻璃拟态）。本系统刻意保持克制。
 - 不要默认将每个功能模块包裹在可见 Surface（Card/Panel）中。如果模块不需要独立的视觉边界，使用 Wrapper 做纯布局分组即可。只有当内容需要与周围区域产生视觉区分时，才升级为 Surface。
 
-## 8.1 主按钮原则
-
-- 主按钮只用于当前窗口或当前页面的主任务确认。
-- 同一窗口内避免多个同层主按钮并列竞争视觉焦点。
-- 次级动作默认降为默认按钮、次按钮或文字按钮，不与主按钮争夺主线。
-- 危险按钮表达破坏性语义，不替代常规主按钮。
-
 ## 9. 组件尺寸规则
 
-组件尺寸不纳入正式 Token 体系（与开发侧打通），不再通过设计系统总样册文件承接。  
-Skill 内默认尺寸基线由 `references/components/`、`references/chrome/` 与对应参考 HTML 直接承接；本节只保留系统级尺寸结论。
+组件尺寸不纳入正式 Token 体系（与开发侧打通），以参考变量形式定义在 `components.html` 的 `:root` 中，前缀 `--ref-`。
 
 ### 控件高度档位
 
-| 档位 | 值 | 适用组件 |
-|------|-----|---------|
-| xs | 16px | Checkbox、Radio、Badge dot |
-| sm | 24px | Tag、小尺寸按钮、Pagination 紧凑 |
-| md | 32px | 默认控件高度：Button、Input、Select、DatePicker、Pagination |
-| lg | 40px | Menu item、Tab 卡片项、Table 标准行高 |
+| 档位 | 参考变量 | 值 | 适用组件 |
+|------|---------|-----|---------|
+| xs | `--ref-ctrl-xs` | 16px | Checkbox、Radio、Badge dot |
+| sm | `--ref-ctrl-sm` | 24px | Tag、小尺寸按钮、Pagination 紧凑 |
+| md | `--ref-ctrl-md` | 32px | 默认控件高度：Button、Input、Select、DatePicker、Pagination |
+| lg | `--ref-ctrl-lg` | 40px | Menu item、Tab 卡片项、Table 标准行高 |
 
 ### 弹层 / 浮层宽度
 
-| 组件 | 默认宽度 |
-|------|---------|
-| Modal | 默认 740px（高频轻任务 480px；高信息量任务 1060px / 1200px） |
-| Drawer | 默认 740px（高频轻任务 480px；高信息量任务 1060px / 1200px） |
-| Notification | 384px |
-| Tooltip / Popover | 最大 250px |
+| 组件 | 参考变量 | 默认宽度 |
+|------|---------|---------|
+| Modal | `--ref-modal-w` | 520px（宽屏 720px） |
+| Drawer | `--ref-drawer-w` | 372px |
+| Notification | `--ref-notification-w` | 384px |
+| Tooltip / Popover | `--ref-tooltip-max-w` | 最大 250px |
 
 ### 特殊组件
 
 - **Switch**：高度 22px / 小尺寸 16px，不遵循控件高度体系
-- **Card header**：56px / 紧凑 38px
+- **Card header**：56px / 紧凑 38px（`--ref-card-header-h`）
 - **Table 行高**：紧凑 40px / 标准 48px / 宽松 56px
 - **Avatar**：小 24px / 标准 32px / 大 40px（与控件高度档位对齐）

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE
+scope: Full Page
+page_type: TablePage
+recipe_id: recipe.table.standard
+shell: admin-side-shell
+overlay_type: None
+-->
+<!-- CONTENT_ASSET_DECISION
+{
+  "decision_type": "CONTENT_ASSET_DECISION",
+  "page_type": "TablePage",
+  "recipe_id": "recipe.table.standard",
+  "variant_selections": [
+    {"asset_family": "region.page-header", "selected_variant": "skip", "reason": "一级列表页不展示page-header"},
+    {"asset_family": "region.summary-banner", "selected_variant": "basic", "reason": "需求要求展示列表汇总数据"},
+    {"asset_family": "region.filter-bar", "selected_variant": "basic", "reason": "4个筛选字段，单行可容纳"},
+    {"asset_family": "region.table-toolbar", "selected_variant": "basic", "reason": "无需列设置"},
+    {"asset_family": "region.data-table", "selected_variant": "with-selection-summary", "reason": "批量支付需多选和汇总栏"},
+    {"asset_family": "region.pagination", "selected_variant": "basic", "reason": "sole variant"}
+  ],
+  "support_css": [
+    "assets/content-assets/_support/region-support.css",
+    "assets/content-assets/_support/feedback-support.css"
+  ],
+  "read_order": [
+    {"asset_id": "region.summary-banner.basic", "html_path": "assets/content-assets/regions/summary-banner/basic.html", "insert_slot": "page-content-slot", "order": 5, "required": false},
+    {"asset_id": "region.filter-bar.basic", "html_path": "assets/content-assets/regions/filter-bar/basic.html", "insert_slot": "page-content-slot", "order": 10, "required": true},
+    {"asset_id": "region.table-toolbar.basic", "html_path": "assets/content-assets/regions/table-toolbar/basic.html", "insert_slot": "page-content-slot", "order": 20, "required": true},
+    {"asset_id": "region.data-table.with-selection-summary", "html_path": "assets/content-assets/regions/table-region/with-selection-summary.html", "insert_slot": "page-content-slot", "order": 30, "required": true},
+    {"asset_id": "region.pagination.basic", "html_path": "assets/content-assets/regions/pagination/basic.html", "insert_slot": "page-content-slot", "order": 40, "required": true},
+    {"asset_id": "module.batch-action-footer", "html_path": "assets/content-assets/modules/batch-action-footer.html", "insert_slot": "page-content-slot", "order": 50, "required": false},
+    {"asset_id": "overlay.detail-drawer", "html_path": "assets/content-assets/overlays/detail-drawer.html", "insert_slot": "overlay-slot", "order": 60, "required": false},
+    {"asset_id": "OV_MODAL_CONFIRM", "html_path": "assets/content-assets/overlays/modal/confirm.html", "insert_slot": "overlay-slot", "order": 70, "required": false}
+  ],
+  "unsupported": []
+}
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>财务支付-待支付列表</title>
+
+  <style>
+    /* design-systems/xft/tokens.css */
+    :root {
+      --color-bg-accent-light: #EBF3FF;
+      --color-bg-accent-light-hover: #D4E5FF;
+      --color-bg-accent-light-active: #99C2FF;
+      --color-bg-accent-regular: #1966ff;
+      --color-bg-accent-regular-hover: #4086ff;
+      --color-bg-accent-regular-active: #0b50d9;
+      --color-bg-accent-subtle: #F5F8FF;
+      --color-border-accent-regular: #1966ff;
+      --color-border-accent-regular-hover: #4086ff;
+      --color-border-accent-regular-active: #0b50d9;
+      --color-text-accent-regular: #1966ff;
+      --color-text-accent-regular-hover: #4086ff;
+      --color-text-accent-regular-active: #0b50d9;
+      --color-bg-error-light: #fff3f2;
+      --color-bg-error-light-hover: #ffdcd9;
+      --color-bg-error-light-active: #ffb9b2;
+      --color-bg-error-regular: #fa4332;
+      --color-bg-error-regular-hover: #ff6052;
+      --color-bg-error-regular-active: #d93021;
+      --color-border-error-light: #ffb9b2;
+      --color-border-error-regular: #fa4332;
+      --color-border-error-regular-hover: #ff6052;
+      --color-border-error-regular-active: #d93021;
+      --color-text-error-regular: #fa4332;
+      --color-text-error-regular-hover: #ff6052;
+      --color-text-error-regular-active: #d93021;
+      --color-bg-warning-light: #fff7e8;
+      --color-bg-warning-light-hover: #ffe8bf;
+      --color-bg-warning-light-active: #ffdba6;
+      --color-bg-warning-regular: #ff9326;
+      --color-bg-warning-regular-hover: #ffac4d;
+      --color-bg-warning-regular-active: #e57717;
+      --color-border-warning-light: #ffdba6;
+      --color-text-warning-regular: #e57717;
+      --color-text-warning-regular-hover: #ff9326;
+      --color-text-warning-regular-active: #a64d08;
+      --color-bg-success-light: #edfaf4;
+      --color-bg-success-light-hover: #c2f2da;
+      --color-bg-success-light-active: #8eedbe;
+      --color-bg-success-regular: #0ac767;
+      --color-bg-success-regular-hover: #31de88;
+      --color-bg-success-regular-active: #00a653;
+      --color-border-success-light: #8eedbe;
+      --color-text-success-regular: #0ac767;
+      --color-text-success-regular-hover: #31de88;
+      --color-text-success-regular-active: #00a653;
+      --color-bg-info-light: #ebf3ff;
+      --color-bg-info-light-hover: #d4e5ff;
+      --color-bg-info-light-active: #99c2ff;
+      --color-bg-info-regular: #1966ff;
+      --color-bg-info-regular-hover: #4086ff;
+      --color-bg-info-regular-active: #0b50d9;
+      --color-border-info-light: #99c2ff;
+      --color-text-info-regular: #1966ff;
+      --color-text-info-regular-hover: #4086ff;
+      --color-text-info-regular-active: #0b50d9;
+      --color-container-bg-neutral-bright: #ffffff;
+      --color-container-bg-neutral-bright-hover: rgba(19, 34, 64, 0.05);
+      --color-container-bg-neutral-bright-active: rgba(19, 34, 64, 0.1);
+      --color-container-bg-neutral-gray: rgba(19, 34, 64, 0.05);
+      --color-container-bg-neutral-gray-hover: rgba(19, 34, 64, 0.1);
+      --color-container-bg-neutral-gray-active: rgba(19, 34, 64, 0.15);
+      --color-container-bg-neutral-lightgray: rgba(19, 34, 64, 0.02);
+      --color-container-bg-neutral-inverse: rgba(19, 34, 64, 0.95);
+      --color-layout-bg-neutral-bright: #ffffff;
+      --color-layout-bg-neutral-gray: #f3f4f6;
+      --color-layout-bg-neutral-inverse: #132240;
+      --color-border-neutral: rgba(19, 34, 64, 0.15);
+      --color-divider-neutral: rgba(19, 34, 64, 0.1);
+      --color-text-neutral-gray10: rgba(19, 34, 64, 0.25);
+      --color-text-neutral-gray20: rgba(19, 34, 64, 0.45);
+      --color-text-neutral-gray30: rgba(19, 34, 64, 0.65);
+      --color-text-neutral-gray40: rgba(19, 34, 64, 0.85);
+      --color-text-neutral-gray50: rgba(19, 34, 64, 0.95);
+      --color-text-neutral-inverse20: rgba(255, 255, 255, 0.5);
+      --color-text-neutral-inverse30: rgba(255, 255, 255, 0.7);
+      --color-text-neutral-inverse40: rgba(255, 255, 255, 0.9);
+      --color-text-neutral-inverse50: #ffffff;
+      --font-size-small: 12px;
+      --font-size-regular: 14px;
+      --font-size-large: 16px;
+      --font-size-heading-6: 14px;
+      --font-size-heading-5: 16px;
+      --font-size-heading-4: 18px;
+      --font-size-heading-3: 20px;
+      --font-size-heading-2: 24px;
+      --font-size-heading-1: 32px;
+      --font-weight-regular: 400;
+      --font-weight-bold: 600;
+      --font-height-tight: 1.37;
+      --font-height-regular: 1.6;
+      --font-height-loose: 1.75;
+      --font-family-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --font-family-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+      --border-radius-small: 4px;
+      --border-radius-regular: 6px;
+      --border-radius-large: 12px;
+      --spacing-0: 0;
+      --spacing-1: 4px;
+      --spacing-2: 8px;
+      --spacing-3: 12px;
+      --spacing-4: 16px;
+      --spacing-5: 20px;
+      --spacing-6: 24px;
+      --spacing-7: 32px;
+      --spacing-8: 40px;
+      --spacing-9: 48px;
+      --spacing-10: 64px;
+      --spacing-11: 80px;
+      --spacing-12: 160px;
+      --shadow-small-left: -4px 0 12px 0 rgba(19, 34, 64, 0.08);
+      --shadow-small-right: 4px 0 12px 0 rgba(19, 34, 64, 0.08);
+      --shadow-small-top: 0px -4px 12px 0 rgba(19, 34, 64, 0.08);
+      --shadow-small-bottom: 0px 4px 12px 0 rgba(19, 34, 64, 0.08);
+      --shadow-regular-left: -8px 0 20px 0 rgba(19, 34, 64, 0.16);
+      --shadow-regular-right: 8px 0 20px 0 rgba(19, 34, 64, 0.16);
+      --shadow-regular-top: 0 -8px 20px 0 rgba(19, 34, 64, 0.16);
+      --shadow-regular-bottom: 0 8px 20px 0 rgba(19, 34, 64, 0.16);
+      --shadow-large-left: -12px 0 32px 0 rgba(19, 34, 64, 0.2);
+      --shadow-large-right: 12px 0 32px 0 rgba(19, 34, 64, 0.2);
+      --shadow-large-top: 0 -12px 32px 0 rgba(19, 34, 64, 0.2);
+      --shadow-large-bottom: 0 12px 32px 0 rgba(19, 34, 64, 0.2);
+      --shadow-special1-bottom: 0 4px 16px 0 rgba(25, 102, 255, 0.3);
+      --shadow-special2-bottom: 0 -4px 12px 0 rgba(19, 34, 64, 0.05);
+      --shadow-special3-bottom: 0 2px 8px 0 rgba(19, 34, 64, 0.04);
+      --motion-fast: 150ms;
+      --motion-base: 220ms;
+      --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    }
+  </style>
+
+  <style>
+    :root {
+      --color-nav-gradient-start: #3C8AFF;
+      --color-nav-gradient-end: #4255FF;
+      --top-nav-height: 48px;
+      --side-nav-width: 188px;
+      --side-nav-item-height: 40px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--color-text-neutral-gray50); background: var(--color-layout-bg-neutral-gray); font-family: var(--font-family-primary); font-size: 14px; line-height: 22px; overflow: hidden; }
+    button, input, select, textarea { font: inherit; }
+    button.nav-app, button.nav-tool, button.user-avatar-wrap, button.global-search, button.side-nav-item, button.side-nav-group-title, button.xft-tab-item, button.prev-page, button.next-page, button.slice { border: 0; background: transparent; appearance: none; }
+    .app-shell { width: 100%; height: 100vh; background: var(--color-layout-bg-neutral-gray); position: relative; padding-top: var(--top-nav-height); }
+    .top-nav { height: var(--top-nav-height); display: flex; align-items: center; padding: 0; background: linear-gradient(117.84deg, var(--color-nav-gradient-start), var(--color-nav-gradient-end)); position: fixed; top: 0; left: 0; right: 0; z-index: 20; }
+    .nav-left { display: flex; align-items: center; flex: 1 1; padding-left: 14px; width: 0; min-width: 0; overflow: hidden; }
+    .nav-left-content { display: flex; align-items: center; flex: 0 0 auto; }
+    .nav-right { display: flex; align-items: center; flex-shrink: 0; height: 100%; padding-right: 12px; }
+    .nav-right-content { display: flex; align-items: center; }
+    .product-title { flex: 0 0 auto; padding: 0 16px 0 6px; color: rgba(249, 249, 250, 0.98); font-size: 22px; line-height: 26px; font-family: 'Alimama_ShuHeiTi_Bold', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-weight: 400; white-space: nowrap; }
+    .nav-item-wrap { cursor: pointer; padding: 4px; border-radius: 6px; }
+    .nav-item-wrap:hover { background: rgba(249, 249, 250, 0.1); }
+    .nav-item-wrap.with-padding { padding: 4px 8px 4px 6px; }
+    .enterprise-box { display: flex; align-items: center; }
+    .enterprise-icon { color: #fff; padding: 0 4px 0 2px; display: flex; align-items: center; }
+    .enterprise-name { color: rgba(249, 249, 250, 0.98); font-size: 14px; height: 22px; max-width: 222px; padding-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nav-caret { color: #fff; margin-left: 4px; display: flex; align-items: center; flex: 0 0 auto; }
+    .nav-app-wrap { display: flex; align-items: center; flex: 1 1; overflow: hidden; width: 0; }
+    .nav-divider-pseudo { background: rgba(255, 255, 255, 0.2); height: 18px; width: 1px; flex: 0 0 1px; margin-left: 8px; }
+    .xft-app-nav { display: flex; align-items: center; height: 48px; padding: 4px; }
+    .app-nav { display: flex; align-items: center; }
+    .nav-app { display: inline-flex; align-items: center; justify-content: center; flex-direction: column; color: rgba(255, 255, 255, 0.9); cursor: pointer; font-size: 14px; height: 40px; padding: 0 12px; position: relative; transition: all 0.15s ease; flex: 0 0 auto; white-space: nowrap; line-height: 22px; }
+    .nav-app-content { display: flex; align-items: center; justify-content: center; }
+    .nav-app-active { background: #fff; height: 0; left: 0; margin: 0 12px; position: absolute; top: 38px; width: calc(100% - 24px); }
+    .nav-app.is-active { font-weight: 600; }
+    .nav-app.is-active .nav-app-active { height: 2px; }
+    .main-frame { display: flex; width: 100%; height: calc(100vh - var(--top-nav-height)); background: #ffffff; overflow: hidden; }
+    .side-nav { width: var(--side-nav-width); flex: 0 0 var(--side-nav-width); background: var(--color-container-bg-neutral-bright); border-right: 1px solid var(--color-divider-neutral); padding: 8px 2px 0 8px; overflow-y: auto; overflow-x: hidden; height: 100%; align-self: stretch; }
+    .side-nav-group-title, .side-nav-item { width: 100%; height: var(--side-nav-item-height); display: flex; align-items: center; padding: 8px 4px 8px 8px; border-radius: 6px; color: var(--color-text-neutral-gray40); cursor: pointer; font-size: 14px; font-weight: 400; line-height: 24px; margin-bottom: 8px; transition: background 0.15s ease; text-align: left; }
+    .side-nav-group-title:hover, .side-nav-item:not(.is-active):hover { background: var(--color-container-bg-neutral-bright-hover); color: var(--color-text-neutral-gray50); }
+    .side-nav-group-title.is-selected { color: var(--color-text-accent-regular); }
+    .side-nav-group-title.is-selected .nav-icon, .side-nav-group-title.is-selected .nav-arrow { color: var(--color-text-accent-regular); }
+    .side-nav-item.is-active { color: var(--color-text-accent-regular); background: var(--color-bg-accent-light); font-weight: 500; }
+    .side-nav-item.is-active .nav-icon { color: var(--color-text-accent-regular); }
+    .side-nav-item.level-2 { padding: 0 4px 0 36px; line-height: var(--side-nav-item-height); }
+    .nav-icon { width: 24px; height: 24px; flex: 0 0 24px; color: var(--color-text-neutral-gray30); margin-right: 4px; }
+    .nav-label { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 4px; }
+    .nav-arrow { width: 16px; height: 16px; color: var(--color-text-neutral-gray30); flex: 0 0 16px; margin: 0 4px 0 0; transition: transform 0.2s ease; }
+    .nav-arrow.contract { transform: rotate(-180deg); }
+    .work-area { flex: 1; width: 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: #ffffff; height: 100%; overflow: hidden; }
+    .context-nav-shell { flex: 0 0 auto; padding: 0; background: var(--color-layout-bg-neutral-gray); border-bottom: 1px solid var(--color-divider-neutral); position: sticky; top: 0; z-index: 5; width: 100%; }
+    .xft-tab-header { background: #e7e9ec; color: rgba(19, 34, 64, 0.85); display: flex; font-size: 12px; font-weight: 400; height: 32px; flex: 0 0 32px; width: 100%; }
+    .xft-tab-slider { display: flex; flex: 1 1; overflow: hidden; }
+    .xft-tab-slide-content { display: flex; flex: 1 1; }
+    .xft-tab-item { align-items: center; border-radius: 8px 8px 0 0; cursor: pointer; display: flex; height: 32px; padding: 6px 12px; position: relative; width: 128px; flex: 0 0 128px; }
+    .xft-tab-item::before { background: rgba(19, 34, 64, 0.1); content: ""; display: block; height: 16px; left: 0; position: absolute; top: 8px; width: 1px; }
+    .xft-tab-item:first-child::before, .xft-tab-item.active::before, .xft-tab-item:hover::before, .xft-tab-item.active + .xft-tab-item::before, .xft-tab-item:hover + .xft-tab-item::before { width: 0 !important; }
+    .xft-tab-item .tab-name { display: inline-block; height: 20px; line-height: 20px; margin-right: 8px; width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .xft-tab-item:first-child .tab-name { width: 100%; margin-right: 0; }
+    .xft-tab-item .tab-close { background-color: #e7e9ec; border-radius: 50%; display: none; height: 16px; width: 16px; flex: 0 0 16px; align-items: center; justify-content: center; }
+    .xft-tab-item .left-corner, .xft-tab-item .right-corner { bottom: 0; height: 8px; position: absolute; width: 8px; pointer-events: none; }
+    .xft-tab-item .left-corner { background: transparent; left: -8px; }
+    .xft-tab-item .right-corner { background: radial-gradient(8px at 0 0, transparent 8px, #e7e9ec 0); right: -8px; transform: scaleX(-1); }
+    .xft-tab-item:hover { background: #dcdee2; }
+    .xft-tab-item:hover .left-corner, .xft-tab-item:hover .right-corner { background: radial-gradient(8px at 0 0, transparent 8px, #dcdee2 0); }
+    .xft-tab-item:hover .tab-close { background: #dcdee2; display: inline-flex; }
+    .xft-tab-item:hover .tab-close:hover { background-color: rgba(19, 34, 64, 0.1); }
+    .xft-tab-item.active { background: #f3f4f6; color: rgba(19, 34, 64, 0.95); }
+    .xft-tab-item.active .left-corner, .xft-tab-item.active .right-corner { background: radial-gradient(8px at 0 0, transparent 8px, #f3f4f6 0); }
+    .xft-tab-item.active .tab-close { background: #f3f4f6; display: inline-flex; }
+    .xft-tab-item.active .tab-close:hover { background-color: rgba(19, 34, 64, 0.1); }
+    .right-opr-area { background: #f3f4f6; box-shadow: -4px 0 12px 0 rgba(19, 34, 64, 0.08); display: flex; align-items: center; height: 32px; padding: 4px 16px 4px 8px; width: 112px; flex: 0 0 112px; gap: 8px; }
+    .right-opr-area .prev-page, .right-opr-area .next-page, .right-opr-area .slice { border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; height: 24px; width: 24px; flex: 0 0 24px; color: rgba(19, 34, 64, 0.65); }
+    .right-opr-area .prev-page:hover, .right-opr-area .next-page:hover, .right-opr-area .slice:hover { background: rgba(19, 34, 64, 0.05); }
+    .page-content { flex: 1; display: flex; flex-direction: column; width: 100%; min-height: 0; min-width: 0; overflow: auto; background: #f3f4f6; padding: 0; }
+    .micro-wrapper { flex: 1; display: flex; flex-direction: column; min-height: 100%; width: 100%; padding: 16px; background: #f3f4f6; }
+    .page-content-container { flex: 1; min-height: 0; width: 100%; margin: 0; padding: 16px; background: #ffffff; border-radius: 14px; }
+  </style>
+
+  <style>
+    .btn { height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 14px; border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray40); cursor: pointer; white-space: nowrap; font-size: var(--font-size-regular); transition: all var(--motion-fast) var(--ease-standard); text-decoration: none; }
+    .btn:hover { border-color: var(--color-border-accent-regular); color: var(--color-text-accent-regular); }
+    .btn:disabled { color: var(--color-text-neutral-gray10); cursor: not-allowed; opacity: 0.6; }
+    .btn-primary { border-color: var(--color-border-accent-regular); background: var(--color-bg-accent-regular); color: var(--color-text-neutral-inverse50); }
+    .btn-primary:hover { border-color: var(--color-border-accent-regular-hover); background: var(--color-bg-accent-regular-hover); color: var(--color-text-neutral-inverse50); }
+    .btn-secondary { background: var(--color-container-bg-neutral-bright); }
+    .btn-text { padding: 0; border: 0; background: transparent; height: auto; color: var(--color-text-accent-regular); }
+    .btn-text:hover { text-decoration: underline; }
+    .btn-danger { border-color: var(--color-border-error-regular); background: var(--color-bg-error-regular); color: var(--color-text-neutral-inverse50); }
+    .btn-danger:hover { border-color: var(--color-border-error-regular-hover); background: var(--color-bg-error-regular-hover); }
+    .checkbox { display: inline-flex; align-items: center; gap: var(--spacing-2); cursor: pointer; }
+    .checkbox-input { appearance: none; width: 16px; height: 16px; border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-small); background: var(--color-container-bg-neutral-bright); cursor: pointer; flex-shrink: 0; margin: 0; transition: all var(--motion-fast) var(--ease-standard); position: relative; }
+    .checkbox:hover .checkbox-input { border-color: var(--color-border-accent-regular); }
+    .checkbox-input:checked { background: var(--color-bg-accent-regular); border-color: var(--color-border-accent-regular); }
+    .checkbox-input:checked::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid var(--color-text-neutral-inverse50); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+    .data-table { width: 100%; border-collapse: collapse; border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-large); overflow: hidden; background: var(--color-container-bg-neutral-bright); }
+    .data-table th, .data-table td { padding: var(--spacing-3) var(--spacing-4); border-bottom: 1px solid var(--color-divider-neutral); text-align: left; white-space: nowrap; font-size: var(--font-size-regular); }
+    .data-table th { background: var(--color-container-bg-neutral-lightgray); color: var(--color-text-neutral-gray40); font-weight: var(--font-weight-bold); }
+    .data-table tbody tr:hover { background: var(--color-container-bg-neutral-gray-hover); }
+    .table-action { color: var(--color-text-accent-regular); cursor: pointer; }
+    .status-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 var(--spacing-2); border-radius: 9999px; font-size: var(--font-size-small); font-weight: var(--font-weight-bold); white-space: nowrap; }
+    .status-info { background: var(--color-bg-info-light); color: var(--color-text-info-regular); }
+    .status-success { background: var(--color-bg-success-light); color: var(--color-text-success-regular); }
+    .status-warning { background: var(--color-bg-warning-light); color: var(--color-text-warning-regular); }
+    .status-error { background: var(--color-bg-error-light); color: var(--color-text-error-regular); }
+    .status-neutral { background: var(--color-container-bg-neutral-gray-hover); color: var(--color-text-neutral-gray40); }
+    .form-field { display: flex; flex-direction: column; gap: var(--spacing-2); }
+    .field-label { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+    .form-control, .select-control { min-height: 32px; display: flex; align-items: center; padding: 0 var(--spacing-3); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray20); font-size: var(--font-size-regular); }
+    .pagination { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-3); padding: var(--spacing-3) 0; }
+    .pagination-info { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+    .pagination-actions { display: inline-flex; align-items: center; gap: var(--spacing-1); }
+    .page-btn { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 var(--spacing-2); border: 1px solid var(--color-border-neutral); border-radius: var(--border-radius-regular); background: var(--color-container-bg-neutral-bright); color: var(--color-text-neutral-gray40); cursor: pointer; font-size: var(--font-size-small); transition: all var(--motion-fast) var(--ease-standard); }
+    .page-btn:hover { border-color: var(--color-border-accent-regular); color: var(--color-text-accent-regular); }
+    .page-btn.is-active { border-color: var(--color-border-accent-regular); background: var(--color-bg-accent-regular); color: var(--color-text-neutral-inverse50); }
+    .page-btn:disabled { color: var(--color-text-neutral-gray10); cursor: not-allowed; }
+  </style>
+
+  <style>
+    .filter-bar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--spacing-4) var(--spacing-6); padding: var(--spacing-4); margin-bottom: var(--spacing-4); border: 1px solid var(--color-divider-neutral); border-radius: var(--border-radius-large); background: var(--color-container-bg-neutral-bright); }
+    .filter-bar .form-field { min-width: 180px; flex: 1 1 180px; }
+    .filter-bar .form-field.is-short { flex: 0 0 160px; }
+    .filter-actions { display: inline-flex; align-items: center; gap: var(--spacing-2); margin-left: auto; flex: 0 0 auto; }
+    .table-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); padding: var(--spacing-4) var(--spacing-6); border-bottom: 1px solid var(--color-divider-neutral); }
+    .table-toolbar-left, .table-toolbar-right { display: inline-flex; align-items: center; gap: var(--spacing-2); min-width: 0; }
+    .table-toolbar-right { justify-content: flex-end; flex: 0 0 auto; }
+    .table-toolbar-title { color: var(--color-text-neutral-gray50); font-weight: var(--font-weight-bold); }
+    .table-toolbar-meta { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+    .data-table-wrap { width: 100%; overflow-x: auto; }
+    .table-selection-summary { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); padding: var(--spacing-3) var(--spacing-6); border-bottom: 1px solid var(--color-divider-neutral); background: var(--color-bg-accent-subtle); }
+    .table-selection-actions { display: inline-flex; gap: var(--spacing-2); }
+    .summary-banner { padding: var(--spacing-4); margin-bottom: var(--spacing-4); background: rgba(25, 102, 255, 0.04); border: 1px solid var(--color-divider-neutral); border-radius: var(--border-radius-large); }
+    .summary-banner-row { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
+    .summary-banner-row + .summary-banner-row { margin-top: var(--spacing-2); }
+    .summary-banner-main { display: inline-flex; align-items: center; gap: var(--spacing-2); min-width: 0; }
+    .summary-banner-title { font-size: var(--font-size-large); font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); line-height: 24px; }
+    .summary-banner-actions { display: inline-flex; align-items: center; gap: var(--spacing-2); flex: 0 0 auto; margin-left: auto; }
+    .summary-banner-info { display: inline-flex; align-items: center; gap: var(--spacing-6); flex-wrap: wrap; }
+    .summary-banner-item { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); line-height: 20px; white-space: nowrap; }
+    .module-card { border: 1px solid var(--color-divider-neutral); border-radius: var(--border-radius-large); background: var(--color-container-bg-neutral-bright); margin-top: var(--spacing-4); }
+    .module-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-4); padding: var(--spacing-4) var(--spacing-6); border-bottom: 1px solid var(--color-divider-neutral); }
+    .module-title { font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); }
+    .module-meta { margin-top: var(--spacing-1); color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); }
+    .module-body { padding: var(--spacing-4) var(--spacing-6); }
+    .module-actions { display: inline-flex; align-items: center; gap: var(--spacing-2); flex: 0 0 auto; }
+    .descriptions-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); }
+    .description-cell { min-width: 0; }
+    .description-label { color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); margin-bottom: var(--spacing-1); }
+    .description-value { color: var(--color-text-neutral-gray50); }
+  </style>
+
+  <style>
+    .xft-overlay-root { position: fixed; inset: 0; z-index: 1000; display: none; }
+    .xft-overlay-root.is-open { display: block; }
+    .xft-overlay-mask { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.38); }
+    .xft-overlay-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--spacing-6); }
+    .xft-confirm-panel { width: min(560px, 100%); border-radius: var(--border-radius-large); background: var(--color-container-bg-neutral-bright); box-shadow: var(--shadow-large-bottom); overflow: hidden; }
+    .xft-modal-body { padding: 16px 24px 24px; }
+    .xft-modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-2); padding: 0 24px 24px; }
+    .xft-overlay-title { margin: 0; font-size: var(--font-size-heading-4); line-height: 26px; font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray50); }
+    .xft-overlay-description { margin-top: var(--spacing-2); color: var(--color-text-neutral-gray30); font-size: var(--font-size-small); line-height: 20px; }
+    .xft-drawer-panel { position: absolute; top: 0; right: 0; width: min(480px, 100vw); height: 100%; display: flex; flex-direction: column; background: var(--color-container-bg-neutral-bright); box-shadow: var(--shadow-large-bottom); }
+    .xft-drawer-header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); padding: 20px 24px 0; }
+    .xft-drawer-body { flex: 1; overflow: auto; padding: 16px 24px 24px; }
+    .xft-drawer-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-2); padding: 16px 24px; border-top: 1px solid var(--color-divider-neutral); }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-nav">
+      <div class="nav-left">
+        <div class="nav-left-content">
+          <div class="product-title">企业财务平台</div>
+          <div class="nav-item-wrap with-padding">
+            <div class="enterprise-box">
+              <span class="enterprise-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /><path d="M5 19.5c1.4-2.5 3.7-3.8 7-3.8s5.6 1.3 7 3.8" /></svg>
+              </span>
+              <span class="enterprise-name">演示企业名称</span>
+              <span class="nav-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="nav-app-wrap">
+          <div class="nav-divider-pseudo"></div>
+          <div class="xft-app-nav" data-tabs-root>
+            <nav class="app-nav" aria-label="一级业务导航">
+              <button class="nav-app" type="button" data-tab-trigger aria-selected="false"><span class="nav-app-content">工作台</span><span class="nav-app-active"></span></button>
+              <button class="nav-app" type="button" data-tab-trigger aria-selected="false"><span class="nav-app-content">组织管理</span><span class="nav-app-active"></span></button>
+              <button class="nav-app is-active" type="button" data-tab-trigger aria-selected="true"><span class="nav-app-content">财务支付</span><span class="nav-app-active"></span></button>
+              <button class="nav-app" type="button" data-tab-trigger aria-selected="false"><span class="nav-app-content">系统设置</span><span class="nav-app-active"></span></button>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-right-content">
+          <button class="nav-item-wrap nav-item-wrap-user user-avatar-wrap" type="button" aria-label="用户菜单">
+            <div class="user-logo-box"><div class="user-logo">陈</div></div>
+            <span class="user-name">陈语安</span>
+            <span class="nav-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-frame">
+      <aside class="side-nav" aria-label="左侧导航">
+        <div data-menu-root>
+          <button class="side-nav-item" type="button" data-menu-item aria-current="false">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.5" /><rect x="14" y="4" width="6" height="6" rx="1.5" /><rect x="4" y="14" width="6" height="6" rx="1.5" /><rect x="14" y="14" width="6" height="6" rx="1.5" /></svg>
+            <span class="nav-label">工作台</span>
+          </button>
+          <section data-menu-group>
+            <button class="side-nav-group-title is-selected" type="button" data-menu-toggle aria-expanded="true">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6.5h11" /><path d="M8 12h11" /><path d="M8 17.5h11" /><circle cx="4.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /><circle cx="4.5" cy="12" r=".8" fill="currentColor" stroke="none" /><circle cx="4.5" cy="17.5" r=".8" fill="currentColor" stroke="none" /></svg>
+              <span class="nav-label">支付管理</span>
+              <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6" /></svg>
+            </button>
+            <div data-menu-panel>
+              <button class="side-nav-item level-2 is-active" type="button" data-menu-item aria-current="page"><span class="nav-label">待支付列表</span></button>
+              <button class="side-nav-item level-2" type="button" data-menu-item aria-current="false"><span class="nav-label">已支付记录</span></button>
+              <button class="side-nav-item level-2" type="button" data-menu-item aria-current="false"><span class="nav-label">支付统计</span></button>
+            </div>
+          </section>
+          <section data-menu-group>
+            <button class="side-nav-group-title" type="button" data-menu-toggle aria-expanded="false">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6.5h11" /><path d="M8 12h11" /><path d="M8 17.5h11" /><circle cx="4.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /><circle cx="4.5" cy="12" r=".8" fill="currentColor" stroke="none" /><circle cx="4.5" cy="17.5" r=".8" fill="currentColor" stroke="none" /></svg>
+              <span class="nav-label">系统设置</span>
+              <svg class="nav-arrow contract" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6" /></svg>
+            </button>
+            <div data-menu-panel hidden>
+              <button class="side-nav-item level-2" type="button" data-menu-item aria-current="false"><span class="nav-label">支付规则</span></button>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <main class="work-area">
+        <div class="context-nav-shell">
+          <div class="xft-tab-header" data-tabs-root>
+            <div class="xft-tab-slider">
+              <div class="xft-tab-slide-content">
+                <button class="xft-tab-item" type="button" data-tab-trigger aria-selected="false"><span class="tab-name">首页</span><span class="left-corner"></span><span class="right-corner"></span></button>
+                <button class="xft-tab-item active" type="button" data-tab-trigger aria-selected="true"><span class="tab-name">待支付列表</span><span class="tab-close" data-tab-close aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.71 3.71a1 1 0 011.41 0L8 6.59l2.88-2.88a1 1 0 111.41 1.41L9.41 8l2.88 2.88a1 1 0 01-1.41 1.41L8 9.41l-2.88 2.88a1 1 0 01-1.41-1.41L6.59 8 3.71 5.12a1 1 0 010-1.41z"/></svg></span><span class="left-corner"></span><span class="right-corner"></span></button>
+              </div>
+            </div>
+            <div class="right-opr-area"><button class="prev-page" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg></button><button class="next-page" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg></button><button class="slice" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button></div>
+          </div>
+        </div>
+
+        <section class="page-content">
+          <div class="micro-wrapper">
+            <div class="page-content-container">
+
+              <!-- region.summary-banner.basic -->
+              <section class="summary-banner" data-xft-region="summary-banner" data-xft-variant="basic">
+                <div class="summary-banner-row">
+                  <div class="summary-banner-main">
+                    <span class="summary-banner-title">待支付列表</span>
+                    <span class="status-tag status-warning">共 48 笔待支付</span>
+                  </div>
+                  <div class="summary-banner-actions">
+                    <button class="btn btn-text" type="button">付款记录</button>
+                    <button class="btn btn-secondary" type="button">批量支付</button>
+                  </div>
+                </div>
+                <div class="summary-banner-row">
+                  <div class="summary-banner-info">
+                    <span class="summary-banner-item">待支付总额：¥1,286,540.00</span>
+                    <span class="summary-banner-item">今日到期：¥328,100.00</span>
+                    <span class="summary-banner-item">已逾期未付：¥156,200.00</span>
+                    <span class="summary-banner-item">近 7 日新增：48 笔</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- region.filter-bar.basic -->
+              <section class="filter-bar" data-xft-region="filter-bar" data-xft-variant="basic">
+                <div class="form-field">
+                  <label class="field-label">支付单号 / 收款方</label>
+                  <div class="form-control">请输入支付单号或收款方名称</div>
+                </div>
+                <div class="form-field is-short">
+                  <label class="field-label">支付状态</label>
+                  <div class="select-control">全部状态</div>
+                </div>
+                <div class="form-field is-short">
+                  <label class="field-label">到期日期</label>
+                  <div class="form-control">请选择日期范围</div>
+                </div>
+                <div class="form-field is-short">
+                  <label class="field-label">付款账户</label>
+                  <div class="select-control">全部账户</div>
+                </div>
+                <div class="filter-actions">
+                  <button class="btn btn-primary" type="button">查询</button>
+                  <button class="btn btn-secondary" type="button">重置</button>
+                </div>
+              </section>
+
+              <!-- region.table-toolbar.basic -->
+              <div class="table-toolbar" data-xft-region="table-toolbar" data-xft-variant="basic">
+                <div class="table-toolbar-left">
+                  <div class="table-toolbar-title">待支付列表</div>
+                  <span class="table-toolbar-meta">共 48 笔，今日到期 6 笔</span>
+                </div>
+                <div class="table-toolbar-right">
+                  <button class="btn btn-secondary" type="button">导出</button>
+                  <button class="btn btn-primary" type="button" data-overlay-open="overlay-new-payment">新建付款单</button>
+                </div>
+              </div>
+
+              <!-- region.data-table.with-selection-summary -->
+              <section data-xft-region="data-table" data-xft-variant="with-selection-summary">
+                <div class="table-selection-summary">
+                  <span>已选择 <strong>3</strong> 项</span>
+                  <div class="table-selection-actions">
+                    <button class="btn btn-secondary" type="button">导出明细</button>
+                    <button class="btn btn-primary" type="button" data-overlay-open="overlay-confirm-batch-pay">批量支付</button>
+                  </div>
+                </div>
+                <div class="data-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th><label class="checkbox"><input class="checkbox-input" type="checkbox" /><span class="checkbox-label"></span></label></th>
+                        <th>支付单号</th>
+                        <th>收款方</th>
+                        <th>支付金额</th>
+                        <th>付款账户</th>
+                        <th>到期日期</th>
+                        <th>支付状态</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><label class="checkbox"><input class="checkbox-input" type="checkbox" checked /><span class="checkbox-label"></span></label></td>
+                        <td>PAY-20260628-001</td>
+                        <td>上海恒达科技有限公司</td>
+                        <td>¥328,100.00</td>
+                        <td>招商银行-基本户</td>
+                        <td>2026-06-29</td>
+                        <td><span class="status-tag status-warning">待支付</span></td>
+                        <td><span class="table-action" data-overlay-open="overlay-detail-drawer">查看</span></td>
+                      </tr>
+                      <tr>
+                        <td><label class="checkbox"><input class="checkbox-input" type="checkbox" checked /><span class="checkbox-label"></span></label></td>
+                        <td>PAY-20260627-008</td>
+                        <td>北京中软国际有限公司</td>
+                        <td>¥512,000.00</td>
+                        <td>工商银行-一般户</td>
+                        <td>2026-06-28</td>
+                        <td><span class="status-tag status-warning">待支付</span></td>
+                        <td><span class="table-action" data-overlay-open="overlay-detail-drawer">查看</span></td>
+                      </tr>
+                      <tr>
+                        <td><label class="checkbox"><input class="checkbox-input" type="checkbox" checked /><span class="checkbox-label"></span></label></td>
+                        <td>PAY-20260626-015</td>
+                        <td>深圳华星光电有限公司</td>
+                        <td>¥156,200.00</td>
+                        <td>招商银行-基本户</td>
+                        <td>2026-06-26</td>
+                        <td><span class="status-tag status-error">已逾期</span></td>
+                        <td><span class="table-action" data-overlay-open="overlay-detail-drawer">查看</span></td>
+                      </tr>
+                      <tr>
+                        <td><label class="checkbox"><input class="checkbox-input" type="checkbox" /><span class="checkbox-label"></span></label></td>
+                        <td>PAY-20260625-022</td>
+                        <td>杭州阿里巴巴云计算有限公司</td>
+                        <td>¥89,500.00</td>
+                        <td>中国银行-专项户</td>
+                        <td>2026-07-02</td>
+                        <td><span class="status-tag status-warning">待支付</span></td>
+                        <td><span class="table-action" data-overlay-open="overlay-detail-drawer">查看</span></td>
+                      </tr>
+                      <tr>
+                        <td><label class="checkbox"><input class="checkbox-input" type="checkbox" /><span class="checkbox-label"></span></label></td>
+                        <td>PAY-20260624-031</td>
+                        <td>广州腾讯科技有限公司</td>
+                        <td>¥200,740.00</td>
+                        <td>建设银行-一般户</td>
+                        <td>2026-07-05</td>
+                        <td><span class="status-tag status-neutral">审批中</span></td>
+                        <td><span class="table-action" data-overlay-open="overlay-detail-drawer">查看</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <!-- region.pagination.basic -->
+              <div class="pagination" data-xft-region="pagination" data-xft-variant="basic">
+                <span class="pagination-info">共 48 条，每页 20 条</span>
+                <div class="pagination-actions">
+                  <button class="page-btn" type="button">上一页</button>
+                  <button class="page-btn is-active" type="button">1</button>
+                  <button class="page-btn" type="button">2</button>
+                  <button class="page-btn" type="button">3</button>
+                  <button class="page-btn" type="button">下一页</button>
+                </div>
+              </div>
+
+              <!-- module.batch-action-footer -->
+              <section class="module-card" data-module="batch-action-footer">
+                <div class="module-header">
+                  <div>
+                    <div class="module-title">批量支付操作</div>
+                    <div class="module-meta">已选择 3 笔待支付款项，可批量支付或导出明细。</div>
+                  </div>
+                  <div class="module-actions">
+                    <button class="btn btn-text" type="button">清空选择</button>
+                  </div>
+                </div>
+                <div class="module-body">
+                  <div class="table-selection-summary">
+                    <span>已选择 <strong>3</strong> 笔，合计 ¥996,300.00</span>
+                    <div class="table-selection-actions">
+                      <button class="btn btn-secondary" type="button">导出明细</button>
+                      <button class="btn btn-primary" type="button" data-overlay-open="overlay-confirm-batch-pay">批量支付</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="overlay-root">
+      <!-- detail-drawer -->
+      <div class="xft-overlay-root" id="overlay-detail-drawer" data-overlay="detail-drawer">
+        <div class="xft-overlay-mask" data-overlay-close></div>
+        <aside class="xft-drawer-panel" role="dialog" aria-modal="true" aria-label="支付详情抽屉">
+          <header class="xft-drawer-header">
+            <h2 class="xft-overlay-title">支付详情</h2>
+            <button class="btn btn-text" type="button" data-overlay-close>关闭</button>
+          </header>
+          <div class="xft-drawer-body">
+            <p class="xft-overlay-description">支付单 PAY-20260628-001 的详细信息。</p>
+            <section class="module-card">
+              <div class="module-header"><div class="module-title">基础信息</div><span class="status-tag status-warning">待支付</span></div>
+              <div class="module-body">
+                <div class="descriptions-grid">
+                  <div class="description-cell"><div class="description-label">支付单号</div><div class="description-value">PAY-20260628-001</div></div>
+                  <div class="description-cell"><div class="description-label">收款方</div><div class="description-value">上海恒达科技有限公司</div></div>
+                  <div class="description-cell"><div class="description-label">支付金额</div><div class="description-value">¥328,100.00</div></div>
+                  <div class="description-cell"><div class="description-label">付款账户</div><div class="description-value">招商银行-基本户</div></div>
+                  <div class="description-cell"><div class="description-label">到期日期</div><div class="description-value">2026-06-29</div></div>
+                  <div class="description-cell"><div class="description-label">付款事由</div><div class="description-value">Q2 技术服务费结算</div></div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <footer class="xft-drawer-footer">
+            <button class="btn btn-secondary" type="button" data-overlay-close>关闭</button>
+            <button class="btn btn-primary" type="button" data-overlay-open="overlay-confirm-single-pay">确认支付</button>
+          </footer>
+        </aside>
+      </div>
+
+      <!-- confirm batch pay -->
+      <div class="xft-overlay-root" id="overlay-confirm-batch-pay" data-overlay="confirm-batch-pay">
+        <div class="xft-overlay-mask" data-overlay-close></div>
+        <div class="xft-overlay-center">
+          <section class="xft-confirm-panel" role="alertdialog" aria-modal="true">
+            <div class="xft-modal-body">
+              <h2 class="xft-overlay-title">确认批量支付？</h2>
+              <p class="xft-overlay-description">将对已选择的 3 笔款项执行支付，合计 ¥996,300.00。请确认余额充足后再执行。</p>
+            </div>
+            <footer class="xft-modal-footer">
+              <button class="btn btn-secondary" type="button" data-overlay-close>取消</button>
+              <button class="btn btn-primary" type="button">确认支付</button>
+            </footer>
+          </section>
+        </div>
+      </div>
+
+      <!-- confirm single pay -->
+      <div class="xft-overlay-root" id="overlay-confirm-single-pay" data-overlay="confirm-single-pay">
+        <div class="xft-overlay-mask" data-overlay-close></div>
+        <div class="xft-overlay-center">
+          <section class="xft-confirm-panel" role="alertdialog" aria-modal="true">
+            <div class="xft-modal-body">
+              <h2 class="xft-overlay-title">确认支付该笔款项？</h2>
+              <p class="xft-overlay-description">支付单号 PAY-20260628-001，金额 ¥328,100.00。支付后将不可撤销。</p>
+            </div>
+            <footer class="xft-modal-footer">
+              <button class="btn btn-secondary" type="button" data-overlay-close>取消</button>
+              <button class="btn btn-primary" type="button">确认支付</button>
+            </footer>
+          </section>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      function bindTabs(root) {
+        root.addEventListener("click", function (e) {
+          var close = e.target.closest("[data-tab-close]");
+          if (close) { e.stopPropagation(); return; }
+          var trigger = e.target.closest("[data-tab-trigger]");
+          if (!trigger || !root.contains(trigger)) return;
+          root.querySelectorAll("[data-tab-trigger]").forEach(function (t) {
+            var active = t === trigger;
+            t.classList.toggle("active", active); t.classList.toggle("is-active", active);
+            t.setAttribute("aria-selected", active ? "true" : "false");
+          });
+        });
+      }
+      function bindMenu(root) {
+        root.addEventListener("click", function (e) {
+          var item = e.target.closest("[data-menu-item]");
+          if (item && root.contains(item)) {
+            root.querySelectorAll("[data-menu-item]").forEach(function (c) {
+              var active = c === item;
+              c.classList.toggle("is-active", active); c.setAttribute("aria-current", active ? "page" : "false");
+            });
+          }
+          var toggle = e.target.closest("[data-menu-toggle]");
+          if (!toggle || !root.contains(toggle)) return;
+          var group = toggle.closest("[data-menu-group]");
+          var panel = group ? group.querySelector("[data-menu-panel]") : null;
+          var expanded = toggle.getAttribute("aria-expanded") === "true";
+          toggle.setAttribute("aria-expanded", expanded ? "false" : "true");
+          toggle.classList.toggle("is-selected", !expanded);
+          var arrow = toggle.querySelector(".nav-arrow");
+          if (arrow) arrow.classList.toggle("contract", expanded);
+          if (panel) panel.hidden = expanded;
+        });
+      }
+      document.addEventListener("click", function (e) {
+        var close = e.target.closest("[data-overlay-close]");
+        if (close) { var ov = close.closest(".xft-overlay-root"); if (ov) ov.classList.remove("is-open"); }
+        var open = e.target.closest("[data-overlay-open]");
+        if (open) { var id = open.getAttribute("data-overlay-open"); var ov = document.getElementById(id); if (ov) ov.classList.add("is-open"); }
+      });
+      document.querySelectorAll("[data-tabs-root]").forEach(bindTabs);
+      document.querySelectorAll("[data-menu-root]").forEach(bindMenu);
+    })();
+  </script>
+</body>
+</html>

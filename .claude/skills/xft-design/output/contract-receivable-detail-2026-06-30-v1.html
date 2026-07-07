@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE
+scope: Full Page
+page_type: DetailPage
+shell: admin-side-shell
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>应收合同详情 · CT-20260620-0042</title>
+<style>
+:root{
+--color-bg-accent-light:#EBF3FF;--color-bg-accent-regular:#1966ff;--color-bg-accent-regular-hover:#4086ff;--color-bg-accent-subtle:#F5F8FF;--color-border-accent-regular:#1966ff;--color-text-accent-regular:#1966ff;--color-bg-error-light:#fff3f2;--color-bg-error-regular:#fa4332;--color-text-error-regular:#fa4332;--color-bg-warning-light:#fff7e8;--color-text-warning-regular:#e57717;--color-bg-success-light:#edfaf4;--color-bg-success-regular:#0ac767;--color-text-success-regular:#0ac767;--color-container-bg-neutral-bright:#fff;--color-container-bg-neutral-bright-hover:rgba(19,34,64,.05);--color-container-bg-neutral-gray:rgba(19,34,64,.05);--color-container-bg-neutral-lightgray:rgba(19,34,64,.02);--color-layout-bg-neutral-gray:#f3f4f6;--color-border-neutral:rgba(19,34,64,.15);--color-divider-neutral:rgba(19,34,64,.1);--color-text-neutral-gray20:rgba(19,34,64,.45);--color-text-neutral-gray30:rgba(19,34,64,.65);--color-text-neutral-gray40:rgba(19,34,64,.85);--color-text-neutral-gray50:rgba(19,34,64,.95);--color-text-neutral-inverse50:#fff;--font-size-small:12px;--font-size-regular:14px;--font-size-large:16px;--font-size-heading-3:20px;--font-size-heading-2:24px;--font-weight-regular:400;--font-weight-bold:600;--font-weight-medium:500;--font-family-primary:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;--border-radius-small:4px;--border-radius-regular:6px;--border-radius-large:12px;--spacing-1:4px;--spacing-2:8px;--spacing-3:12px;--spacing-4:16px;--spacing-5:20px;--spacing-6:24px;--shadow-large-bottom:0 12px 32px rgba(19,34,64,.2);--motion-fast:150ms;--ease-standard:cubic-bezier(.2,0,0,1)
+}
+</style>
+<style>
+:root{--color-nav-gradient-start:#3C8AFF;--color-nav-gradient-end:#4255FF;--top-nav-height:48px;--side-nav-width:188px;--side-nav-item-height:40px}
+*{box-sizing:border-box}body{margin:0;color:var(--color-text-neutral-gray50);background:var(--color-layout-bg-neutral-gray);font-family:var(--font-family-primary);font-size:14px;line-height:22px;overflow:hidden}button{font:inherit;cursor:pointer}
+button.nav-app,button.side-nav-item,button.side-nav-group-title,button.xft-tab-item,button.prev-page,button.next-page,button.slice{border:0;background:transparent;appearance:none}
+.app-shell{width:100%;height:100vh;position:relative;padding-top:var(--top-nav-height)}
+.top-nav{height:var(--top-nav-height);display:flex;align-items:center;background:linear-gradient(117.84deg,var(--color-nav-gradient-start),var(--color-nav-gradient-end));position:fixed;top:0;left:0;right:0;z-index:20;padding:0 12px}
+.top-nav .brand{padding:0 14px 0 6px;color:rgba(249,249,250,.98);font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold',var(--font-family-primary);white-space:nowrap;flex-shrink:0}.top-nav .nav-row{display:flex;align-items:center;flex:1;height:100%;gap:2px;overflow:hidden}.top-nav .nav-item{height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:6px;color:rgba(255,255,255,.9);font-size:14px;border:0;background:transparent;position:relative;white-space:nowrap;transition:background .15s}.top-nav .nav-item:hover{background:rgba(255,255,255,.12)}.top-nav .nav-item.active{font-weight:600}.top-nav .nav-item.active::after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:#fff;border-radius:1px}.top-nav .nav-right{display:flex;align-items:center;gap:4px;flex-shrink:0}.top-nav .user{display:flex;align-items:center;gap:8px;padding:2px 8px;border-radius:6px;color:#fff;font-size:14px}.top-nav .avatar{width:28px;height:28px;border-radius:50%;background:#1966ff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.main-frame{display:flex;height:calc(100vh - var(--top-nav-height));overflow:hidden}
+.side-nav{width:var(--side-nav-width);flex-shrink:0;background:var(--color-container-bg-neutral-bright);border-right:1px solid var(--color-divider-neutral);padding:8px 2px 0 8px;overflow-y:auto;height:100%}.side-btn{width:100%;height:var(--side-nav-item-height);display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--color-text-neutral-gray40);border:0;background:transparent;font-size:14px;text-align:left;margin-bottom:4px;transition:background .15s}.side-btn:hover{background:var(--color-container-bg-neutral-bright-hover);color:var(--color-text-neutral-gray50)}.side-btn.sel{color:var(--color-text-accent-regular)}.side-btn.sel .ico{color:var(--color-text-accent-regular)}.side-btn.act{color:var(--color-text-accent-regular);background:var(--color-bg-accent-light);font-weight:500}.side-btn.l2{padding-left:36px}.ico{width:24px;height:24px;flex-shrink:0;margin-right:4px;opacity:.65}.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.arr{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:transform .2s}.arr.up{transform:rotate(-180deg)}
+.work-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}
+.tab-bar{height:32px;background:#e7e9ec;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid var(--color-divider-neutral)}.tab-it{height:32px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;position:relative;width:128px;flex-shrink:0;color:var(--color-text-neutral-gray40);border:0;background:transparent}.tab-it.act{background:#f3f4f6;color:var(--color-text-neutral-gray50)}.tab-it .cls{display:none;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;background:#e7e9ec;margin-left:auto;border:0;cursor:pointer}.tab-it.act .cls,.tab-it:hover .cls{display:inline-flex}
+.page-content{flex:1;overflow:auto;background:var(--color-layout-bg-neutral-gray);padding:var(--spacing-4)}.content-card{background:var(--color-container-bg-neutral-bright);border-radius:var(--border-radius-large);padding:var(--spacing-5);min-height:100%;position:relative}
+</style>
+<style>
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray40);cursor:pointer;white-space:nowrap;font-size:var(--font-size-regular);transition:all var(--motion-fast) var(--ease-standard)}.btn:hover{border-color:var(--color-border-accent-regular);color:var(--color-text-accent-regular)}.btn-primary{border-color:var(--color-border-accent-regular);background:var(--color-bg-accent-regular);color:var(--color-text-neutral-inverse50)}.btn-primary:hover{background:var(--color-bg-accent-regular-hover)}.btn-text{padding:0;border:0;background:transparent;height:auto;color:var(--color-text-accent-regular)}.btn-text:hover{text-decoration:underline}
+.data-table{width:100%;border-collapse:collapse;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-large);overflow:hidden;background:var(--color-container-bg-neutral-bright)}.data-table th,.data-table td{padding:var(--spacing-3) var(--spacing-4);border-bottom:1px solid var(--color-divider-neutral);text-align:left;font-size:var(--font-size-regular)}.data-table th{background:var(--color-container-bg-neutral-lightgray);color:var(--color-text-neutral-gray40);font-weight:var(--font-weight-bold);font-size:var(--font-size-small)}.data-table tbody tr:hover{background:var(--color-container-bg-neutral-bright-hover)}.data-table tbody tr:last-child td{border-bottom:0}
+.status-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:var(--font-size-small);font-weight:var(--font-weight-bold)}.tag-ok{background:var(--color-bg-success-light);color:var(--color-text-success-regular)}.tag-warn{background:var(--color-bg-warning-light);color:var(--color-text-warning-regular)}.tag-err{background:var(--color-bg-error-light);color:var(--color-text-error-regular)}
+.table-action{color:var(--color-text-accent-regular);cursor:pointer;font-size:var(--font-size-small)}.table-action:hover{text-decoration:underline}
+.field-label{color:var(--color-text-neutral-gray30);font-size:var(--font-size-small)}
+.xft-overlay-root{position:fixed;inset:0;z-index:1000;display:none}.xft-overlay-root.is-open{display:block}.xft-overlay-mask{position:absolute;inset:0;background:rgba(15,23,42,.38)}.xft-overlay-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:var(--spacing-6)}.xft-confirm-panel{width:min(560px,100%);border-radius:var(--border-radius-large);background:var(--color-container-bg-neutral-bright);box-shadow:var(--shadow-large-bottom);overflow:hidden}.xft-modal-body{padding:24px}.xft-modal-footer{display:flex;justify-content:flex-end;gap:var(--spacing-2);padding:0 24px 24px}.xft-overlay-title{margin:0;font-size:18px;font-weight:var(--font-weight-bold)}.xft-overlay-description{margin-top:var(--spacing-2);color:var(--color-text-neutral-gray30);font-size:var(--font-size-small)}
+.xft-drawer-panel{position:absolute;top:0;right:0;width:min(480px,100vw);height:100%;display:flex;flex-direction:column;background:var(--color-container-bg-neutral-bright);box-shadow:var(--shadow-large-bottom)}.xft-drawer-header{display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-3);padding:20px 24px 0}.xft-drawer-body{flex:1;overflow:auto;padding:16px 24px 24px}.xft-drawer-footer{display:flex;justify-content:flex-end;gap:var(--spacing-2);padding:16px 24px;border-top:1px solid var(--color-divider-neutral)}
+</style>
+<style>
+.page-content{overflow:auto!important}
+.approval-header{margin:calc(-1 * var(--spacing-5)) calc(-1 * var(--spacing-5)) var(--spacing-4)}
+.approval-back{padding:var(--spacing-3) var(--spacing-5) 0}.approval-back .btn-text{color:var(--color-text-accent-regular);font-size:var(--font-size-small)}
+.approval-info{margin:var(--spacing-3) var(--spacing-5) 0;padding:var(--spacing-4);background:rgba(25,102,255,.04);border-radius:var(--border-radius-large)}
+.approval-title{margin:0 0 var(--spacing-3);font-size:var(--font-size-heading-3);font-weight:var(--font-weight-bold);line-height:1.37;color:var(--color-text-neutral-gray50)}
+.meta-list{display:flex;flex-wrap:wrap;gap:var(--spacing-1) var(--spacing-6);list-style:none;margin:0;padding:0}.meta-item{display:inline-flex;align-items:center;gap:var(--spacing-2);font-size:var(--font-size-small)}.meta-item .label{color:var(--color-text-neutral-gray30)}.meta-item .value{color:var(--color-text-neutral-gray50);font-weight:var(--font-weight-medium)}
+fieldset.form-block{border:0;padding:0;margin:0 0 var(--spacing-4);background:transparent}fieldset.form-block:last-child{margin-bottom:0}
+fieldset.form-block legend{position:relative;padding-left:calc(3px + var(--spacing-2));margin-bottom:var(--spacing-4);font-size:var(--font-size-large);font-weight:var(--font-weight-bold);color:var(--color-text-neutral-gray50);line-height:22px}fieldset.form-block legend::before{content:"";position:absolute;left:0;top:4px;width:3px;height:14px;border-radius:2px;background:var(--color-bg-accent-regular)}
+.descriptions-grid{display:grid;grid-template-columns:repeat(2,minmax(200px,1fr));gap:var(--spacing-4)}.description-cell{min-width:0}.description-label{color:var(--color-text-neutral-gray30);font-size:var(--font-size-small);margin-bottom:var(--spacing-1)}.description-value{color:var(--color-text-neutral-gray50);font-size:var(--font-size-regular)}
+.metric-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--spacing-4);margin-bottom:var(--spacing-4)}.metric-card{padding:var(--spacing-4);border-radius:var(--border-radius-large);border:1px solid var(--color-divider-neutral);background:var(--color-container-bg-neutral-bright)}.metric-card.high{background:rgba(25,102,255,.03);border-color:rgba(25,102,255,.12)}.metric-label{font-size:var(--font-size-small);color:var(--color-text-neutral-gray30)}.metric-value{font-size:var(--font-size-heading-2);font-weight:var(--font-weight-bold);color:var(--color-text-neutral-gray50);margin-top:var(--spacing-1);line-height:1.37}.metric-sub{font-size:var(--font-size-small);color:var(--color-text-neutral-gray30);margin-top:var(--spacing-1)}
+.log-item{display:flex;gap:var(--spacing-4);padding:var(--spacing-3) 0}.log-item+.log-item{border-top:1px solid var(--color-divider-neutral)}.log-time{color:var(--color-text-neutral-gray20);font-size:var(--font-size-small);width:140px;flex-shrink:0}.log-action{color:var(--color-text-neutral-gray50)}.log-actor{color:var(--color-text-neutral-gray30);font-size:var(--font-size-small)}
+.detail-action-bar{position:sticky;bottom:0;margin:var(--spacing-4) 0 0;padding:var(--spacing-3) 0;border-top:1px solid var(--color-divider-neutral);background:var(--white)}.action-buttons{display:flex;align-items:center;gap:var(--spacing-2);flex-wrap:nowrap}.action-buttons button{height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);background:var(--color-container-bg-neutral-bright);color:var(--color-text-neutral-gray40);cursor:pointer;font-size:var(--font-size-regular);white-space:nowrap;transition:all var(--motion-fast) var(--ease-standard)}.action-buttons .btn-primary{border-color:var(--color-border-accent-regular);background:var(--color-bg-accent-regular);color:var(--color-text-neutral-inverse50)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-nav">
+    <span class="brand">企业财务平台</span>
+    <div class="nav-row">
+      <button class="nav-item">工作台</button>
+      <button class="nav-item active">合同管理</button>
+      <button class="nav-item">财务支付</button>
+      <button class="nav-item">系统设置</button>
+    </div>
+    <div class="nav-right"><div class="user"><span class="avatar">陈</span>陈语安</div></div>
+  </header>
+
+  <div class="main-frame">
+    <aside class="side-nav"><div data-menu-root>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="lbl">工作台</span></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">合同管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2"><span class="lbl">应收合同列表</span></button>
+      <button class="side-btn l2 act"><span class="lbl">CT-20260620-0042</span></button>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg><span class="lbl">审批中心</span><svg class="arr up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+    </div></aside>
+
+    <main class="work-area">
+      <div class="tab-bar">
+        <button class="tab-it">首页</button>
+        <button class="tab-it">应收合同列表</button>
+        <button class="tab-it act">CT-20260620-0042<span class="cls"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M3.7 3.7a1 1 0 011.4 0L8 6.6l2.9-2.9a1 1 0 111.4 1.4L9.4 8l2.9 2.9a1 1 0 01-1.4 1.4L8 9.4l-2.9 2.9a1 1 0 01-1.4-1.4L6.6 8 3.7 5.1a1 1 0 010-1.4z"/></svg></span></button>
+      </div>
+
+      <section class="page-content"><div class="content-card">
+
+        <!-- header -->
+        <header class="approval-header">
+          <div class="approval-back"><button class="btn btn-text">← 返回应收合同列表</button></div>
+          <div class="approval-info">
+            <h1 class="approval-title">技术服务合同 · CT-20260620-0042</h1>
+            <ul class="meta-list">
+              <li class="meta-item"><span class="label">合同编号</span><span class="value">CT-20260620-0042</span></li>
+              <li class="meta-item"><span class="label">客户名称</span><span class="value">上海恒达科技有限公司</span></li>
+              <li class="meta-item"><span class="label">签订日期</span><span class="value">2026-06-20</span></li>
+              <li class="meta-item"><span class="label">负责人</span><span class="value">陈语安</span></li>
+            </ul>
+          </div>
+        </header>
+
+        <!-- metrics -->
+        <div class="metric-cards">
+          <div class="metric-card high"><div class="metric-label">合同总金额</div><div class="metric-value">¥1,280,000</div><div class="metric-sub">含税金额</div></div>
+          <div class="metric-card"><div class="metric-label">已回款金额</div><div class="metric-value" style="color:var(--color-text-success-regular)">¥512,000</div><div class="metric-sub">回款比例 40%</div></div>
+          <div class="metric-card"><div class="metric-label">待回款金额</div><div class="metric-value" style="color:var(--color-text-warning-regular)">¥768,000</div><div class="metric-sub">剩余 60% 未回款</div></div>
+          <div class="metric-card"><div class="metric-label">合同状态</div><div class="metric-value" style="font-size:var(--font-size-heading-3)"><span class="status-tag tag-ok">履行中</span></div><div class="metric-sub">2026-06-20 至 2027-06-20</div></div>
+        </div>
+
+        <!-- basic info -->
+        <fieldset class="form-block">
+          <legend>基础信息</legend>
+          <div class="descriptions-grid">
+            <div class="description-cell"><div class="description-label">合同编号</div><div class="description-value">CT-20260620-0042</div></div>
+            <div class="description-cell"><div class="description-label">合同名称</div><div class="description-value">2026年度技术运维服务合同</div></div>
+            <div class="description-cell"><div class="description-label">客户名称</div><div class="description-value">上海恒达科技有限公司</div></div>
+            <div class="description-cell"><div class="description-label">客户联系人</div><div class="description-value">张明远 · 138 0000 5678</div></div>
+            <div class="description-cell"><div class="description-label">签订日期</div><div class="description-value">2026-06-20</div></div>
+            <div class="description-cell"><div class="description-label">合同期限</div><div class="description-value">2026-06-20 至 2027-06-20（12个月）</div></div>
+            <div class="description-cell"><div class="description-label">合同金额</div><div class="description-value" style="font-weight:var(--font-weight-bold);font-size:var(--font-size-large)">¥1,280,000.00</div></div>
+            <div class="description-cell"><div class="description-label">付款方式</div><div class="description-value">按季度分期付款，每期 ¥320,000.00</div></div>
+            <div class="description-cell"><div class="description-label">我方主体</div><div class="description-value">北京中软国际有限公司</div></div>
+            <div class="description-cell"><div class="description-label">签约部门</div><div class="description-value">华东销售一部</div></div>
+            <div class="description-cell"><div class="description-label">负责人</div><div class="description-value">陈语安</div></div>
+            <div class="description-cell"><div class="description-label">备注说明</div><div class="description-value">年度框架合同，服务内容包括系统运维、技术支持和定期巡检。</div></div>
+          </div>
+        </fieldset>
+
+        <!-- payment schedule -->
+        <fieldset class="form-block">
+          <legend>回款计划</legend>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>期次</th><th>计划回款日期</th><th style="text-align:right">回款金额</th><th>回款状态</th><th>实际回款日期</th><th>备注</th></tr></thead>
+              <tbody>
+                <tr><td>第1期</td><td>2026-09-20</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥320,000.00</td><td><span class="status-tag tag-warn">待回款</span></td><td>—</td><td>Q3 季度款</td></tr>
+                <tr><td>第2期</td><td>2026-12-20</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥320,000.00</td><td><span class="status-tag tag-warn">待回款</span></td><td>—</td><td>Q4 季度款</td></tr>
+                <tr><td>第3期</td><td>2027-03-20</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥320,000.00</td><td><span class="status-tag tag-warn">待回款</span></td><td>—</td><td>Q1 季度款</td></tr>
+                <tr><td>第4期</td><td>2027-06-20</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥320,000.00</td><td><span class="status-tag tag-warn">待回款</span></td><td>—</td><td>Q2 季度款</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+
+        <!-- received payments -->
+        <fieldset class="form-block">
+          <legend>已回款记录</legend>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>回款单号</th><th>回款日期</th><th style="text-align:right">回款金额</th><th>付款方</th><th>收款账户</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>RCV-20260625-001</td><td>2026-06-25</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥320,000.00</td><td>上海恒达科技有限公司</td><td>招商银行-基本户</td><td><span class="table-action" data-overlay-open="overlay-payment-detail">查看</span></td></tr>
+                <tr><td>RCV-20260710-002</td><td>2026-07-10</td><td style="text-align:right;font-weight:var(--font-weight-bold)">¥192,000.00</td><td>上海恒达科技有限公司</td><td>招商银行-基本户</td><td><span class="table-action" data-overlay-open="overlay-payment-detail">查看</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+
+        <!-- attachments -->
+        <fieldset class="form-block">
+          <legend>合同附件</legend>
+          <div class="descriptions-grid">
+            <div class="description-cell" style="grid-column:1/-1">
+              <div class="description-label">附件列表</div>
+              <div class="description-value" style="display:flex;flex-direction:column;gap:var(--spacing-2);margin-top:var(--spacing-2)">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);background:var(--color-container-bg-neutral-lightgray);border-radius:var(--border-radius-regular);font-size:var(--font-size-small)">技术服务合同-盖章版.pdf <span><span class="table-action" style="margin-right:12px">预览</span><span class="table-action">下载</span></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);background:var(--color-container-bg-neutral-lightgray);border-radius:var(--border-radius-regular);font-size:var(--font-size-small)">合同附件A-服务范围说明.pdf <span><span class="table-action" style="margin-right:12px">预览</span><span class="table-action">下载</span></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);background:var(--color-container-bg-neutral-lightgray);border-radius:var(--border-radius-regular);font-size:var(--font-size-small)">合同附件B-报价清单.xlsx <span><span class="table-action" style="margin-right:12px">预览</span><span class="table-action">下载</span></span></div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- operation log -->
+        <fieldset class="form-block">
+          <legend>操作记录</legend>
+          <div class="log-item"><span class="log-time">2026-06-20 14:30</span><div><div class="log-action">创建合同</div><div class="log-actor">陈语安</div></div></div>
+          <div class="log-item"><span class="log-time">2026-06-20 15:10</span><div><div class="log-action">提交部门审批</div><div class="log-actor">陈语安</div></div></div>
+          <div class="log-item"><span class="log-time">2026-06-21 09:45</span><div><div class="log-action">部门负责人审批通过</div><div class="log-actor">李哲</div></div></div>
+          <div class="log-item"><span class="log-time">2026-06-25 10:00</span><div><div class="log-action">收到首期回款 ¥320,000.00</div><div class="log-actor">系统</div></div></div>
+        </fieldset>
+
+        <!-- action bar -->
+        <footer class="detail-action-bar">
+          <div class="action-buttons">
+            <button class="btn-primary">编辑合同</button>
+            <button class="btn">催款提醒</button>
+            <button class="btn">变更记录</button>
+            <span style="flex:1"></span>
+            <button class="btn">导出</button>
+            <button class="btn">打印</button>
+          </div>
+        </footer>
+
+      </div></section>
+    </main>
+  </div>
+
+  <div id="overlay-root">
+    <div class="xft-overlay-root" id="overlay-payment-detail" data-overlay="payment">
+      <div class="xft-overlay-mask" data-overlay-close></div>
+      <aside class="xft-drawer-panel" role="dialog" aria-modal="true">
+        <header class="xft-drawer-header"><h2 class="xft-overlay-title">回款详情</h2><button class="btn btn-text" data-overlay-close>关闭</button></header>
+        <div class="xft-drawer-body">
+          <div class="descriptions-grid">
+            <div class="description-cell"><div class="description-label">回款单号</div><div class="description-value">RCV-20260625-001</div></div>
+            <div class="description-cell"><div class="description-label">回款日期</div><div class="description-value">2026-06-25</div></div>
+            <div class="description-cell"><div class="description-label">回款金额</div><div class="description-value" style="font-weight:var(--font-weight-bold)">¥320,000.00</div></div>
+            <div class="description-cell"><div class="description-label">付款方</div><div class="description-value">上海恒达科技有限公司</div></div>
+            <div class="description-cell"><div class="description-label">收款账户</div><div class="description-value">招商银行-基本户</div></div>
+            <div class="description-cell"><div class="description-label">对应期次</div><div class="description-value">第1期 · Q3 季度款</div></div>
+          </div>
+        </div>
+        <footer class="xft-drawer-footer"><button class="btn" data-overlay-close>关闭</button></footer>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function bindTabs(r){r.addEventListener("click",function(e){var c=e.target.closest(".cls");if(c){e.stopPropagation();return}var t=e.target.closest(".tab-it");if(!t||!r.contains(t))return;r.querySelectorAll(".tab-it").forEach(function(i){var a=i===t;i.classList.toggle("act",a)})})}
+  function bindMenu(r){r.addEventListener("click",function(e){var i=e.target.closest(".side-btn");if(i&&r.contains(i)&&i.classList.contains("l2")){r.querySelectorAll(".side-btn.l2").forEach(function(c){c.classList.toggle("act",c===i)})}var t=e.target.closest(".side-btn.sel")||e.target.closest(".side-btn:not(.l2)");if(!t||!r.contains(t))return;var a=t.querySelector(".arr");if(a)a.classList.toggle("up");var n=t.nextElementSibling;while(n&&n.classList.contains("l2")){n.hidden=!n.hidden;n=n.nextElementSibling}})}
+  document.querySelectorAll(".tab-bar").forEach(bindTabs);
+  document.querySelectorAll("[data-menu-root]").forEach(bindMenu);
+  document.addEventListener("click",function(e){var c=e.target.closest("[data-overlay-close]");if(c){var ov=c.closest(".xft-overlay-root");if(ov)ov.classList.remove("is-open");return}var o=e.target.closest("[data-overlay-open]");if(o){var id=o.getAttribute("data-overlay-open");var el=document.getElementById(id);if(el)el.classList.add("is-open")}});
+})();
+</script>
+</body>
+</html>

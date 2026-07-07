@@ -1,0 +1,47 @@
+<section class="module-card" data-module="config-editor-panel">
+  <div class="module-header">
+    <div>
+      <div class="module-title">配置编辑面板</div>
+      <div class="module-meta">支持字段配置、公式说明和保存预览。</div>
+    </div>
+    <div class="module-actions">
+      <button class="btn btn-secondary" type="button">预览配置</button>
+      <button class="btn btn-primary" type="button">保存配置</button>
+    </div>
+  </div>
+  <div class="module-body">
+    <div class="config-editor-shell">
+      <section class="config-editor-section">
+        <div class="section-title">当前字段设置</div>
+        <div class="config-editor-grid">
+          <div class="form-field">
+            <label class="field-label">字段名称</label>
+            <div class="form-control">员工状态</div>
+          </div>
+          <div class="form-field">
+            <label class="field-label">展示方式</label>
+            <div class="select-control">单选</div>
+          </div>
+          <div class="form-field">
+            <label class="field-label">默认值</label>
+            <div class="form-control">在职</div>
+          </div>
+          <div class="form-field">
+            <label class="field-label">生效范围</label>
+            <div class="form-control">员工台账列表</div>
+          </div>
+        </div>
+      </section>
+      <section class="config-editor-section is-preview">
+        <div class="section-title">修改影响</div>
+        <div class="module-muted">本次修改会同步影响筛选项显示和详情页字段排序。</div>
+        <div class="config-preview-card">
+          <div class="config-preview-title">预览效果</div>
+          <div class="config-preview-line"></div>
+          <div class="config-preview-line is-short"></div>
+          <div class="config-preview-line"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

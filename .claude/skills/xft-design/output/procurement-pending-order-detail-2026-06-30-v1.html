@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!-- XFT_ROUTE scope:Full Page page_type:DetailPage shell:admin-side-shell -->
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>采购订单详情-待下单 · 医招智付</title>
+<style>
+:root{--accent-light:#EBF3FF;--accent:#1966ff;--accent-hover:#4086ff;--accent-subtle:#F5F8FF;--err-light:#fff3f2;--err:#fa4332;--warn-light:#fff7e8;--warn-text:#e57717;--ok-light:#edfaf4;--ok:#0ac767;--white:#fff;--gray-bg:#f3f4f6;--gray-hover:rgba(19,34,64,.05);--gray-light:rgba(19,34,64,.02);--border:rgba(19,34,64,.15);--divider:rgba(19,34,64,.1);--t30:rgba(19,34,64,.65);--t40:rgba(19,34,64,.85);--t50:rgba(19,34,64,.95);--t20:rgba(19,34,64,.45);--fs-xs:12px;--fs-sm:14px;--fs-base:16px;--fs-lg:18px;--fs-xl:20px;--fs-2xl:24px;--fw-bold:600;--fw-medium:500;--font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;--r-sm:4px;--r-md:6px;--r-lg:12px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--nav-h:48px;--side-w:188px}
+*{box-sizing:border-box}body{margin:0;color:var(--t50);background:var(--gray-bg);font-family:var(--font);font-size:14px;line-height:22px;overflow:hidden}button{font:inherit;cursor:pointer}
+.app-shell{width:100%;height:100vh;padding-top:var(--nav-h)}.top-nav{height:var(--nav-h);display:flex;align-items:center;background:linear-gradient(117.84deg,#3C8AFF,#4255FF);position:fixed;top:0;left:0;right:0;z-index:20;padding:0 12px}.top-nav .brand{padding:0 14px 0 6px;color:rgba(249,249,250,.98);font-size:22px;line-height:26px;font-family:'Alimama_ShuHeiTi_Bold',var(--font);white-space:nowrap;flex-shrink:0}.top-nav .nav-row{display:flex;align-items:center;flex:1;height:100%;gap:2px;overflow:hidden}.top-nav .nav-item{height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:6px;color:rgba(255,255,255,.9);font-size:14px;border:0;background:transparent;position:relative;white-space:nowrap;transition:background .15s}.top-nav .nav-item:hover{background:rgba(255,255,255,.12)}.top-nav .nav-item.active{font-weight:600}.top-nav .nav-item.active::after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:#fff;border-radius:1px}.top-nav .user{display:flex;align-items:center;gap:8px;padding:2px 8px;border-radius:6px;color:#fff;font-size:14px;flex-shrink:0}.top-nav .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.main-frame{display:flex;height:calc(100vh - var(--nav-h));overflow:hidden}.side-nav{width:var(--side-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--divider);padding:8px 2px 0 8px;overflow-y:auto;height:100%}.side-btn{width:100%;height:40px;display:flex;align-items:center;padding:8px;border-radius:6px;color:var(--t40);border:0;background:transparent;font-size:14px;text-align:left;margin-bottom:4px;transition:background .15s}.side-btn:hover{background:var(--gray-hover);color:var(--t50)}.side-btn.sel{color:var(--accent)}.side-btn.act{color:var(--accent);background:var(--accent-light);font-weight:500}.side-btn.l2{padding-left:36px}.ico{width:24px;height:24px;flex-shrink:0;margin-right:4px;opacity:.65}.lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.arr{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:transform .2s}.arr.up{transform:rotate(-180deg)}
+.work-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}.tab-bar{height:32px;background:#e7e9ec;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid var(--divider)}.tab-it{height:32px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:8px 8px 0 0;font-size:12px;cursor:pointer;position:relative;width:128px;flex-shrink:0;color:var(--t40);border:0;background:transparent}.tab-it.act{background:var(--gray-bg);color:var(--t50)}.tab-it .cls{display:none;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;background:#e7e9ec;margin-left:auto;border:0;cursor:pointer}.tab-it.act .cls,.tab-it:hover .cls{display:inline-flex}
+.page-content{flex:1;overflow:auto;background:var(--gray-bg);padding:var(--s4)}.content-card{background:var(--white);border-radius:var(--r-lg);padding:var(--s5);min-height:100%;position:relative}
+</style>
+<style>
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;white-space:nowrap;font-size:var(--fs-sm);transition:all .15s}.btn:hover{border-color:var(--accent);color:var(--accent)}.btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}.btn-text{padding:0;border:0;background:transparent;height:auto;color:var(--accent)}.btn-text:hover{text-decoration:underline}.btn-danger{border-color:var(--err);background:var(--err);color:#fff}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;background:var(--white)}.data-table th,.data-table td{padding:var(--s3) var(--s4);border-bottom:1px solid var(--divider);text-align:left;font-size:var(--fs-sm)}.data-table th{background:#f3f4f6;color:var(--t40);font-weight:var(--fw-bold);font-size:var(--fs-xs)}.data-table tbody tr:hover{background:var(--gray-hover)}.data-table tbody tr:last-child td{border-bottom:0}.data-table-wrap{width:100%;overflow-x:auto;margin-bottom:var(--s5)}.data-table-wrap:last-child{margin-bottom:0}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:var(--fs-xs);font-weight:var(--fw-bold)}.tag-ok{background:var(--ok-light);color:var(--ok)}.tag-warn{background:var(--warn-light);color:var(--warn-text)}.tag-err{background:var(--err-light);color:var(--err)}.tag-info{background:var(--accent-light);color:var(--accent)}
+.tbl-action{color:var(--accent);cursor:pointer;font-size:var(--fs-xs)}.tbl-action:hover{text-decoration:underline}.tbl-action+.tbl-action{margin-left:var(--s3)}
+.field-label{color:var(--t30);font-size:var(--fs-xs);margin-bottom:var(--s1)}.flabel{color:var(--t30);font-size:var(--fs-xs)}.fctrl{min-height:32px;display:flex;align-items:center;padding:0 var(--s3);border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t20);font-size:var(--fs-sm)}
+.descriptions-grid{display:grid;grid-template-columns:repeat(2,minmax(200px,1fr));gap:var(--s4)}.description-cell{min-width:0}.description-label{color:var(--t30);font-size:var(--fs-xs);margin-bottom:var(--s1)}.description-value{color:var(--t50);font-size:var(--fs-sm)}
+.metric-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4);margin-bottom:var(--s4)}.metric-card{padding:var(--s4);border-radius:var(--r-lg);border:1px solid var(--divider);background:var(--white)}.metric-label{font-size:var(--fs-xs);color:var(--t30)}.metric-value{font-size:var(--fs-2xl);font-weight:var(--fw-bold);color:var(--t50);margin-top:var(--s1);line-height:1.37}.metric-sub{font-size:var(--fs-xs);color:var(--t30);margin-top:var(--s1)}
+
+/* detail-support */
+.approval-header{margin:calc(-1 * var(--s5)) calc(-1 * var(--s5)) var(--s4)}.approval-back{padding:var(--s3) var(--s5) 0}.approval-back .btn-text{color:var(--accent);font-size:var(--fs-xs)}
+.approval-info{margin:var(--s3) var(--s5) 0;padding:var(--s4);background:rgba(25,102,255,.04);border-radius:var(--r-lg)}.approval-title{margin:0 0 var(--s3);font-size:var(--fs-2xl);font-weight:var(--fw-bold);line-height:1.37;color:var(--t50)}.meta-list{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s6);list-style:none;margin:0;padding:0}.meta-item{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--fs-xs)}.meta-item .label{color:var(--t30)}.meta-item .value{color:var(--t50);font-weight:var(--fw-medium)}
+fieldset.form-block{border:0;padding:0;margin:0 0 var(--s4);background:transparent}fieldset.form-block:last-child{margin-bottom:0}fieldset.form-block legend{font-size:var(--fs-base);font-weight:var(--fw-bold);color:var(--t50);padding:0;margin-bottom:var(--s4);position:relative;padding-left:var(--s3)}fieldset.form-block legend::before{content:"";position:absolute;left:0;top:4px;width:3px;height:14px;border-radius:2px;background:var(--accent)}
+.detail-action-bar{position:sticky;bottom:0;margin:var(--s4) calc(-1 * var(--s5)) calc(-1 * var(--s5));padding:var(--s3) var(--s5);border-top:1px solid var(--divider);background:var(--white);display:flex;align-items:center;gap:var(--s2)}.detail-action-bar button{height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--white);color:var(--t40);cursor:pointer;font-size:var(--fs-sm);white-space:nowrap;transition:all .15s}.detail-action-bar .btn-primary{border-color:var(--accent);background:var(--accent);color:#fff}.detail-action-bar .btn-danger{border-color:var(--err);background:var(--err);color:#fff}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-nav"><span class="brand">医招智付</span><div class="nav-row"><button class="nav-item">工作台</button><button class="nav-item active">采购管理</button><button class="nav-item">库存管理</button><button class="nav-item">财务结算</button><button class="nav-item">系统设置</button></div><div class="user"><span class="avatar">张</span>张院长</div></header>
+  <div class="main-frame">
+    <aside class="side-nav"><div data-menu-root>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="lbl">工作台</span></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">采购管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2"><a href="procurement-plan-list-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><span class="lbl">采购计划列表</span></a></button>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg><span class="lbl">订单管理</span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn l2 act"><a href="procurement-pending-order-list-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><span class="lbl">待下单</span></a></button>
+      <button class="side-btn l2"><a href="procurement-failed-order-list-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><span class="lbl">下单失败</span></a></button>
+      <button class="side-btn l2"><a href="procurement-completed-order-list-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><span class="lbl">已下单</span></a></button>
+      <a href="procurement-operation-log-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><button class="side-btn l2"><span class="lbl">操作记录</span></button></a>
+      <a href="procurement-order-import-flow-2026-06-30-v1.html" style="text-decoration:none;color:inherit"><button class="side-btn l2"><span class="lbl">订单导入</span></button></a>
+      <button class="side-btn sel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg><span class="lbl">库存管理</span><svg class="arr up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button class="side-btn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0-.3 1 2 2 0 0 0 2 2h.2a2 2 0 0 0 2-2 2 2 0 0 0-1.1-1.8"/></svg><span class="lbl">系统设置</span></button>
+    </div></aside>
+    <main class="work-area">
+      <div class="tab-bar"><button class="tab-it">首页</button><button class="tab-it act">待下单详情</button></div>
+      <section class="page-content"><div class="content-card">
+
+        <!-- detail-header -->
+        <section class="module">
+          <header class="approval-header">
+            <div class="approval-back"><button class="btn btn-text">&larr; "><a href="procurement-pending-order-list-2026-06-30-v1.html" style="text-decoration:none;color:inherit">返回待下单列表</a></button></div>
+            <div class="approval-info">
+              <h1 class="approval-title">采购订单详情 · ORD-20260628-001</h1>
+              <ul class="meta-list">
+                <li class="meta-item"><span class="label">订单编号</span><span class="value">ORD-20260628-001</span></li>
+                <li class="meta-item"><span class="label">药品名称</span><span class="value">阿莫西林胶囊</span></li>
+                <li class="meta-item"><span class="label">集采平台</span><span class="value">国家集采平台</span></li>
+                <li class="meta-item"><span class="label">创建时间</span><span class="value">2026-06-28 14:30:22</span></li>
+              </ul>
+            </div>
+          </header>
+        </section>
+
+        <!-- 基础信息 -->
+        <section class="module">
+          <fieldset class="form-block">
+            <legend>基础信息</legend>
+            <div class="descriptions-grid">
+              <div class="description-cell"><div class="description-label">订单编号</div><div class="description-value">ORD-20260628-001</div></div>
+              <div class="description-cell"><div class="description-label">药品名称</div><div class="description-value">阿莫西林胶囊</div></div>
+              <div class="description-cell"><div class="description-label">规格</div><div class="description-value">0.5g x 24粒/盒</div></div>
+              <div class="description-cell"><div class="description-label">采购数量</div><div class="description-value">500 盒</div></div>
+              <div class="description-cell"><div class="description-label">集采平台</div><div class="description-value">国家集采平台</div></div>
+              <div class="description-cell"><div class="description-label">预计金额</div><div class="description-value" style="font-weight:var(--fw-bold);font-size:var(--fs-base)">&yen;156,000.00</div></div>
+              <div class="description-cell"><div class="description-label">供应商</div><div class="description-value">华北制药股份有限公司</div></div>
+              <div class="description-cell"><div class="description-label">计划日期</div><div class="description-value">2026-07-05</div></div>
+              <div class="description-cell"><div class="description-label">紧急程度</div><div class="description-value"><span class="tag tag-warn">普通</span></div></div>
+              <div class="description-cell"><div class="description-label">状态</div><div class="description-value"><span class="tag tag-warn">待下单</span></div></div>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- 集采平台信息 -->
+        <section class="module">
+          <fieldset class="form-block">
+            <legend>集采平台信息</legend>
+            <div class="descriptions-grid">
+              <div class="description-cell"><div class="description-label">平台名称</div><div class="description-value">国家集采平台</div></div>
+              <div class="description-cell"><div class="description-label">平台商品编码</div><div class="description-value">GJJC-AMXL-0.5G-24</div></div>
+              <div class="description-cell"><div class="description-label">平台价格</div><div class="description-value" style="font-weight:var(--fw-bold)">&yen;298.00 / 盒</div></div>
+              <div class="description-cell"><div class="description-label">平台库存</div><div class="description-value">2,000 盒</div></div>
+              <div class="description-cell"><div class="description-label">最小起订量</div><div class="description-value">100 盒</div></div>
+              <div class="description-cell"><div class="description-label">交货周期</div><div class="description-value">7-10 个工作日</div></div>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- 历史下单记录 -->
+        <section class="module">
+          <fieldset class="form-block">
+            <legend>历史下单记录</legend>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>尝试时间</th><th>下单数量</th><th>结果</th><th>备注</th></tr></thead>
+                <tbody>
+                  <tr><td>2026-06-28 15:10:05</td><td>500 盒</td><td><span class="tag tag-warn">待处理</span></td><td>首次生成订单，等待操作员确认下单</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- bottom action bar -->
+        <div class="detail-action-bar">
+          <button class="btn">&larr; 返回</button>
+          <span style="flex:1"></span>
+          <button class="btn btn-primary" style="gap:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+            立即下单
+          </button>
+        </div>
+
+      </div></section>
+    </main>
+  </div>
+</div>
+<script>
+(function(){
+  document.querySelector(".tab-bar").addEventListener("click",function(e){var c=e.target.closest(".cls");if(c){e.stopPropagation();return}var t=e.target.closest(".tab-it");if(!t)return;this.querySelectorAll(".tab-it").forEach(function(i){i.classList.toggle("act",i===t)})});
+  document.querySelector("[data-menu-root]").addEventListener("click",function(e){var i=e.target.closest(".side-btn");if(i&&i.classList.contains("l2")){this.querySelectorAll(".side-btn.l2").forEach(function(c){c.classList.toggle("act",c===i)})}var t=e.target.closest(".side-btn.sel")||e.target.closest(".side-btn:not(.l2)");if(!t)return;var a=t.querySelector(".arr");if(a)a.classList.toggle("up");var n=t.nextElementSibling;while(n&&n.classList.contains("l2")){n.hidden=!n.hidden;n=n.nextElementSibling}});
+})();
+</script>
+</body>
+</html>
