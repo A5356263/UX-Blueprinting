@@ -13,6 +13,7 @@ description: 知识库 Skill。读取内嵌知识库，执行知识查询、知�
 - 它读取并维护内嵌在本 skill 下的 `knowledge/`
 - 它不进入 `uxb -> experience-blueprint` 主链路
 - 它不负责需求分析、体验诊断和方案判断
+- 它同时承担“扫描业务 Skill 正式产物并判断是否值得沉淀”的统一入口职责
 
 ## 固定激活语
 
@@ -43,7 +44,7 @@ description: 知识库 Skill。读取内嵌知识库，执行知识查询、知�
 1. 知识问答
    先读 `knowledge/wiki/index.md`，优先命中 `summary`，必要时再回查 `raw`。
 2. 生成知识候选
-   在用户明确要求记录或同意沉淀时，写入 `knowledge/candidates/未入库/`。
+   在用户明确要求记录或同意沉淀时，生成候选；也可以在用户明确触发知识沉淀任务时，先扫描业务 Skill 正式产物，再判断是否生成候选。
 3. 知识入库
    先更新 `raw`，再刷新 `wiki`，不把过程记录写成正式知识。
 4. 知识维护
@@ -55,6 +56,47 @@ description: 知识库 Skill。读取内嵌知识库，执行知识查询、知�
 - 用户要求“记录 / 更新知识库 / 写入知识库”时，进入知识候选。
 - 用户提供候选、文档、FAQ、会议记录、截图分析等材料并要求合并进知识库时，进入知识入库。
 - 用户要求检查知识库是否健康、刷新 wiki、检查未入库候选时，进入知识维护。
+- 用户要求“扫描这次业务产物里哪些值得沉淀”“把这轮 UXB / 旅程 / 体验蓝图里的知识收进去”时，先进入知识候选判定。
+
+## 业务产物后置扫描
+
+当用户明确触发知识沉淀相关任务时，可以先扫描业务 Skill 的正式产物，再决定是否生成候选。
+
+当前优先扫描范围固定为：
+
+- `spark-output/uxb_output.md`
+- `spark-output/journey_analysis.md`
+- `spark-output/experience_blueprint.md`
+
+当前不默认扫描：
+
+- `spark-output/context/*.json`
+- `spark-output/page_spec.md`
+- `spark-output/journey_metrics/*`
+- `spark-output/progress-preview.html`
+- HTML 预览文件
+- 原型文件
+
+### 扫描后的判断结果
+
+扫描正式产物后，必须给出以下判断结果之一：
+
+1. 存在可沉淀知识变化，建议生成知识候选
+2. 仅有项目一次性产物，不建议生成知识候选
+3. 与现有知识重复，不建议生成知识候选
+4. 属于已有知识覆盖更新，建议走覆盖候选
+
+### 这次新增能力的边界
+
+这里新增的是“扫描业务 Skill 正式产物并判断是否沉淀”的能力。
+
+这次没有缩减原有能力，以下路径继续保留：
+
+- 直接知识问答
+- 用户手动提供材料后生成候选
+- 用户手动触发正式知识入库
+- 对已有知识做覆盖更新
+- 知识库健康检查与维护
 
 ## 需要读取的规则
 
@@ -63,6 +105,7 @@ description: 知识库 Skill。读取内嵌知识库，执行知识查询、知�
 - 知识入库：`references/ingestion.md`、`references/input-adaptation.md`、`references/validation.md`
 - 知识维护：`references/maintenance.md`
 - 与其他 skill 交接：`references/handoff.md`
+- 如本次是业务产物后置扫描场景，先读 `references/candidate.md`，再按扫描结果决定是否进入入库相关规则
 
 ## 禁止行为
 

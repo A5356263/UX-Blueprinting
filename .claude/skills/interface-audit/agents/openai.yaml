@@ -1,7 +1,7 @@
 interface:
   display_name: "UCATS 界面清晰度评估"
   short_description: "基于 DOM/A11Y/runtime/截图评估界面清晰度，并输出得分优先的 UCATS 报告"
-  default_prompt: "使用 $ucats-interface-evaluator 评估这个界面，并按“UCATS 清晰度得分 -> 一句话结论 -> 主要问题 -> 怎么改 -> 评分推导与不确定项”的顺序返回报告。"
+  default_prompt: "使用 $interface-audit 评估这个界面，并按“UCATS 清晰度得分 -> 一句话结论 -> 主要问题 -> 怎么改 -> 评分推导与不确定项”的顺序返回报告。"
 
 policy:
   allow_implicit_invocation: true

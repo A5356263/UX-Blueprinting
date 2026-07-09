@@ -69,11 +69,36 @@ uxb -> journey-analysis -> experience-blueprint
 - 如果用户在 `UXB` 前强制调用它，允许由 `journey-analysis` 自身按降级规则执行
 - 此类执行结果不视为替代 `UXB` 的正式定案
 
-### 1.6 无文件系统时的降级
+### 1.6 UXB 后的旅程去重过滤
+
+当当前节点是 `uxb` 时，在输出下一步推荐前增加一次轻量过滤：
+
+- 检查 `spark-output/context/uxb.json` 是否存在
+- 检查 `spark-output/context/journey-analysis.json` 是否存在
+- 检查 `spark-output/journey_analysis.md` 是否存在
+- 读取两者的 `project_name`
+
+只有当以下条件同时满足时，才视为“同一需求已完成旅程分析”：
+
+1. `uxb.json.project_name` 存在且非空
+2. `journey-analysis.json.project_name` 存在且非空
+3. 两者 `project_name` 完全一致
+4. `spark-output/journey_analysis.md` 正式产物存在
+
+满足上述条件时：
+
+- `UXB` 完成后不再重复推荐 `journey-analysis`
+- 直接推荐 `experience-blueprint`
+
+任一条件不满足时：
+
+- 保持 `skill-graph.json` 中原有的主链推荐逻辑
+
+### 1.7 无文件系统时的降级
 
 当宿主没有文件系统能力时，无法扫描目录。此时各 Skill 依赖自身 `SKILL.md` 中的规则判断上游是否存在。
 
-### 1.7 优先级关系
+### 1.8 优先级关系
 
 ```text
 shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
