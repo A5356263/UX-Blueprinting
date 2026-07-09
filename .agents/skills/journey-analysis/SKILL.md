@@ -307,3 +307,5 @@ HTML 预览只消费该 JSON，不从 MD 二次解析。生成 HTML 前不得临
 1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
 2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `journey-analysis` 的 `next_hint`。
 3. 按模板输出交接话术。
+4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
+5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续

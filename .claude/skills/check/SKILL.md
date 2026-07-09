@@ -167,6 +167,8 @@ JSON 要求：
 2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `check` 的 `next_hint`
 3. 如果 `next_hint.preferred` 为空，按终端节点口径输出
 4. 如果 `next_hint.preferred` 非空，按标准三层结构输出
+5. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
+6. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
 
 ## 边界
 

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Preview</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --panel: #ffffff;
+    --border: #ece7e1;
+    --border-strong: #f6a55a;
+    --text: #231f1c;
+    --muted: #93897f;
+    --muted-soft: #c7beb6;
+    --line: #eee7df;
+    --card-idle-bg: #fcfbfa;
+    --card-idle-border: #efebe7;
+    --card-active-bg: #fff7ee;
+    --card-active-text: #f97316;
+    --card-done-bg: #f5fbf8;
+    --card-done-border: #b8e3cf;
+    --card-done-text: #198754;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  body {
+    padding: 24px 18px 40px;
+  }
+
+  .shell {
+    max-width: 1240px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px 20px 30px;
+  }
+
+  .phase + .phase {
+    margin-top: 34px;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 2px 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .phase-num {
+    color: #b6aaa0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .phase-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f1b18;
+  }
+
+  .phase-en {
+    color: #b0a49a;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .phase-count {
+    margin-left: auto;
+    color: #b0a49a;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    padding-top: 18px;
+  }
+
+  .card {
+    min-height: 126px;
+    border-radius: 16px;
+    border: 1px solid var(--card-idle-border);
+    background: var(--card-idle-bg);
+    padding: 18px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .card.is-current {
+    background: var(--card-active-bg);
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.08) inset;
+  }
+
+  .card.is-done {
+    background: var(--card-done-bg);
+    border-color: var(--card-done-border);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e5dfda;
+    flex: 0 0 auto;
+  }
+
+  .card.is-current .dot {
+    background: var(--card-active-text);
+  }
+
+  .card.is-done .dot {
+    background: var(--card-done-text);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #58504a;
+    line-height: 1.25;
+  }
+
+  .card.is-current .card-title,
+  .card.is-done .card-title {
+    color: #1f1b18;
+  }
+
+  .card-slash {
+    margin-top: 8px;
+    color: var(--muted-soft);
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .card-status {
+    margin-top: 16px;
+    color: #d0c7c0;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .card.is-current .card-status {
+    color: var(--card-active-text);
+  }
+
+  .card.is-done .card-status {
+    color: var(--card-done-text);
+  }
+
+  .footer {
+    margin-top: 22px;
+    color: #b0a49a;
+    font-size: 12px;
+    text-align: right;
+  }
+
+  @media (max-width: 720px) {
+    .shell {
+      padding: 20px 14px 24px;
+      border-radius: 16px;
+    }
+
+    .phase-num {
+      font-size: 18px;
+    }
+
+    .phase-name {
+      font-size: 17px;
+    }
+
+    .phase-count {
+      font-size: 13px;
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div id="app"></div>
+    <div class="footer" id="footer"></div>
+  </div>
+
+<!--__PREVIEW_STATE_INJECT__-->
+<script>
+const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
+  generated_at: "template",
+  phases: [
+    {
+      id: "explore",
+      number: "01",
+      name_zh: "探索",
+      name_en: "Explore",
+      skills: [
+        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null }
+      ]
+    },
+    {
+      id: "define",
+      number: "02",
+      name_zh: "定义",
+      name_en: "Define",
+      skills: [
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey", status: "idle", hint_dep: "/uxb" },
+        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/blueprint", status: "idle", hint_dep: "/uxb" },
+        { id: "page-spec", name_zh: "页面规格", slash: "/page-spec", status: "idle", hint_dep: "/blueprint" }
+      ]
+    },
+    {
+      id: "design",
+      number: "03",
+      name_zh: "设计",
+      name_en: "Design",
+      skills: [
+        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "/page-spec" },
+        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/blueprint" },
+        { id: "board", name_zh: "视觉情绪板", slash: "/board", status: "idle", hint_dep: "/blueprint" },
+        { id: "check", name_zh: "设计走查", slash: "/check", status: "idle", hint_dep: "/blueprint" }
+      ]
+    }
+  ]
+};
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function render() {
+  const app = document.getElementById("app");
+  const footer = document.getElementById("footer");
+  const phases = PREVIEW_STATE.phases || [];
+
+  app.innerHTML = phases.map((phase) => {
+    const doneCount = phase.skills.filter((skill) => skill.status === "done").length;
+    const totalCount = phase.skills.length;
+    const cards = phase.skills.map((skill) => {
+      const cardClass = skill.status === "done"
+        ? "card is-done"
+        : skill.status === "current"
+          ? "card is-current"
+          : "card";
+      const statusText = skill.status === "done"
+        ? "\u5df2\u4ea7\u51fa"
+        : skill.status === "current"
+          ? "\u73b0\u5728\u53ef\u4ee5\u505a"
+          : skill.hint_dep
+            ? `\u5148\u505a ${skill.hint_dep}`
+            : "\u6682\u672a\u4ea7\u51fa";
+
+      return `
+        <section class="${cardClass}">
+          <div class="card-top">
+            <span class="dot"></span>
+            <div class="card-title">${escapeHtml(skill.name_zh)}</div>
+          </div>
+          <div class="card-slash">${escapeHtml(skill.slash)}</div>
+          <div class="card-status">${escapeHtml(statusText)}</div>
+        </section>
+      `;
+    }).join("");
+
+    return `
+      <section class="phase">
+        <div class="phase-head">
+          <div class="phase-num">${escapeHtml(phase.number)}</div>
+          <div class="phase-name">${escapeHtml(phase.name_zh)}</div>
+          <div class="phase-en">${escapeHtml(phase.name_en)}</div>
+          <div class="phase-count">${doneCount} / ${totalCount}</div>
+        </div>
+        <div class="cards">${cards}</div>
+      </section>
+    `;
+  }).join("");
+
+  footer.textContent = `Updated at ${PREVIEW_STATE.generated_at}`;
+}
+
+render();
+</script>
+</body>
+</html>

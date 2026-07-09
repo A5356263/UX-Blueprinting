@@ -596,6 +596,8 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 1. 读取 `shared-workflow/next-skill.md` 交接话术模板
 2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
 3. 按模板输出交接话术
+4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
+5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
 4. 如果分析过程中产生了可复用知识变化（按 `references/knowledge_candidate_guide.md` 判断），在交接话术末尾附加：
    `📌 本次分析中有 {N} 条可复用知识变化，建议进入 knowledge-wiki 生成知识候选。`
    如果没有产生知识候选，不附加此行。
