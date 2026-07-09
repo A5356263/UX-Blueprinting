@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>子管理员列表 — 权限复制</title>
+  <!-- FROZEN: 样式引入 — 继承 design-systems token + 各资产内置样式 -->
+  <link rel="stylesheet" href="../../.claude/skills/xft-design/design-systems/tokens.css" />
+  <style>
+    /* FROZEN: 页面壳变量 + 层级结构 */
+    :root {
+      --xftv0-shell-topbar-height: 48px;
+      --xftv0-shell-sidebar-width: 188px;
+      --xftv0-shell-tabs-height: 32px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--color-text-neutral-gray50);
+      background: var(--color-layout-bg-neutral-gray);
+      font-family: var(--font-family-primary, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif);
+      font-size: 14px;
+      line-height: 22px;
+      overflow: hidden;
+    }
+    .xftv0-admin-shell {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-layout-bg-neutral-gray);
+    }
+    .xftv0-admin-shell-topbar-slot {
+      flex: 0 0 var(--xftv0-shell-topbar-height);
+      min-height: var(--xftv0-shell-topbar-height);
+    }
+    .xftv0-admin-shell-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      min-width: 0;
+      background: #ffffff;
+    }
+    .xftv0-admin-shell-sidebar-slot {
+      width: var(--xftv0-shell-sidebar-width);
+      flex: 0 0 var(--xftv0-shell-sidebar-width);
+      min-width: var(--xftv0-shell-sidebar-width);
+      min-height: 0;
+    }
+    .xftv0-admin-shell-main {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+    }
+    .xftv0-admin-shell-tabs-slot {
+      flex: 0 0 auto;
+      min-height: var(--xftv0-shell-tabs-height);
+    }
+    .xftv0-admin-shell-content {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      background: var(--color-layout-bg-neutral-gray);
+      padding: var(--spacing-6);
+    }
+    .xftv0-admin-shell-content-inner {
+      min-height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-6);
+    }
+    .xftv0-surface {
+      background: var(--color-container-bg-neutral-bright);
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-large);
+      padding: var(--spacing-6);
+      box-shadow: var(--shadow-regular-bottom);
+    }
+    .xftv0-surface--nested {
+      background: var(--color-container-bg-neutral-bright);
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-large);
+      padding: var(--spacing-5);
+    }
+    .xftv0-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 页面表头 */
+    .xftv0-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .xftv0-page-title {
+      margin: 0;
+      font-size: var(--font-size-heading-3);
+      line-height: 1.4;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-neutral-gray50);
+    }
+    .xftv0-page-desc {
+      margin: 4px 0 0;
+      color: var(--color-text-neutral-gray30);
+      font-size: var(--font-size-small);
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 筛选区样式 — 继承自 references/blocks/filter-bar.html */
+    .xftv0-filter-region-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .xftv0-filter-region {
+      --xftv0-filter-label-width: 72px;
+      --xftv0-filter-control-min-width: 180px;
+      --xftv0-filter-control-max-width: 400px;
+      --xftv0-filter-control-width: 240px;
+      --xftv0-filter-control-height: 32px;
+      --xftv0-filter-control-padding-inline: 11px;
+      --xftv0-filter-field-inline-gap: var(--spacing-2, 8px);
+      --xftv0-filter-field-row-gap: var(--spacing-4, 16px);
+      --xftv0-filter-field-column-gap: var(--spacing-6, 24px);
+      --xftv0-filter-action-gap: var(--spacing-3, 12px);
+      --xftv0-filter-field-block-width: calc(
+        var(--xftv0-filter-label-width) +
+        var(--xftv0-filter-field-inline-gap) +
+        var(--xftv0-filter-control-width)
+      );
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: var(--spacing-6, 24px);
+      row-gap: var(--spacing-6, 24px);
+    }
+    .xftv0-filter-region-fields {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      column-gap: var(--xftv0-filter-field-column-gap);
+      row-gap: var(--xftv0-filter-field-row-gap);
+      min-width: 0;
+    }
+    .xftv0-filter-region-field-item {
+      display: grid;
+      grid-template-columns: var(--xftv0-filter-label-width) var(--xftv0-filter-control-width);
+      align-items: center;
+      column-gap: var(--xftv0-filter-field-inline-gap);
+      width: var(--xftv0-filter-field-block-width);
+      flex: 0 0 var(--xftv0-filter-field-block-width);
+      min-width: 0;
+    }
+    .xftv0-filter-region-field-label {
+      width: var(--xftv0-filter-label-width);
+      color: var(--color-text-neutral-gray50);
+      font-size: var(--font-size-large, 16px);
+      line-height: 24px;
+      font-weight: var(--font-weight-regular, 400);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .xftv0-filter-region-field-control {
+      min-width: 0;
+    }
+    .xftv0-filter-region-field-control .input,
+    .xftv0-filter-region-field-control .xftv0-input,
+    .xftv0-filter-region-field-control .xftv0-select {
+      width: 100%;
+      height: var(--xftv0-filter-control-height);
+      padding: 0 var(--xftv0-filter-control-padding-inline);
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular, 6px);
+      background: var(--color-container-bg-neutral-bright, #fff);
+      color: var(--color-text-neutral-gray50);
+      font-size: var(--font-size-regular, 14px);
+      font-family: var(--font-family-primary);
+      outline: none;
+      transition: border-color var(--motion-fast, 150ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+                  box-shadow var(--motion-fast, 150ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+    }
+    .xftv0-filter-region-field-control .input::placeholder {
+      color: var(--color-text-neutral-gray10);
+    }
+    .xftv0-filter-region-field-control .input:hover,
+    .xftv0-filter-region-field-control .xftv0-input:hover,
+    .xftv0-filter-region-field-control .xftv0-select:hover {
+      border-color: var(--color-border-accent-regular-hover, #4086ff);
+    }
+    .xftv0-filter-region-field-control .input:focus,
+    .xftv0-filter-region-field-control .xftv0-input:focus,
+    .xftv0-filter-region-field-control .xftv0-select:focus {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      box-shadow: 0 0 0 2px var(--color-bg-accent-light, #ebf3ff);
+    }
+    .xftv0-filter-region-field-control select.input,
+    .xftv0-filter-region-field-control .xftv0-select {
+      appearance: none;
+      padding-right: calc(var(--xftv0-filter-control-padding-inline) + 20px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(19,34,64,0.45)' d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 11px center;
+      cursor: pointer;
+    }
+    .xftv0-filter-region-field-control select.input.is-placeholder {
+      color: var(--color-text-neutral-gray10);
+    }
+    .xftv0-filter-region-field-control select.input option {
+      color: var(--color-text-neutral-gray50);
+    }
+    .xftv0-filter-region-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--xftv0-filter-action-gap);
+      white-space: nowrap;
+      align-self: start;
+    }
+    .xftv0-filter-region-actions .btn,
+    .xftv0-filter-region-actions .xftv0-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: var(--xftv0-filter-control-height);
+      padding: 0 14px;
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular, 6px);
+      background: var(--color-container-bg-neutral-bright, #fff);
+      color: var(--color-text-neutral-gray40);
+      font-size: var(--font-size-regular, 14px);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .xftv0-filter-region-actions .btn:hover,
+    .xftv0-filter-region-actions .xftv0-button:hover {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      color: var(--color-text-accent-regular, #1966ff);
+    }
+    .xftv0-filter-region-actions .btn-primary,
+    .xftv0-filter-region-actions .xftv0-button-primary {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      background: var(--color-bg-accent-regular, #1966ff);
+      color: var(--color-text-neutral-inverse50, #fff);
+    }
+    .xftv0-filter-region-actions .btn-primary:hover {
+      border-color: var(--color-border-accent-regular-hover, #4086ff);
+      background: var(--color-bg-accent-regular-hover, #4086ff);
+      color: var(--color-text-neutral-inverse50, #fff);
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 操作区样式 — 继承自 references/blocks/action-bar.html */
+    .xftv0-action-bar {
+      --xftv0-action-bar-height: 32px;
+      --xftv0-action-bar-gap: var(--spacing-6, 24px);
+      --xftv0-action-bar-inner-gap: var(--spacing-2, 8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--xftv0-action-bar-gap);
+      width: 100%;
+      min-width: 0;
+    }
+    .xftv0-action-bar-business {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--xftv0-action-bar-inner-gap);
+      flex: 1 1 auto;
+    }
+    .xftv0-action-bar-utility {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--xftv0-action-bar-inner-gap);
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
+    .xftv0-action-bar .btn,
+    .xftv0-action-bar .xftv0-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: var(--xftv0-action-bar-height);
+      padding: 0 14px;
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular, 6px);
+      background: var(--color-container-bg-neutral-bright, #fff);
+      color: var(--color-text-neutral-gray40);
+      font-size: var(--font-size-regular, 14px);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .xftv0-action-bar .btn:hover,
+    .xftv0-action-bar .xftv0-button:hover {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      color: var(--color-text-accent-regular, #1966ff);
+    }
+    .xftv0-action-bar .btn-primary,
+    .xftv0-action-bar .xftv0-button-primary {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      background: var(--color-bg-accent-regular, #1966ff);
+      color: var(--color-text-neutral-inverse50, #fff);
+    }
+    .xftv0-action-bar .btn-primary:hover {
+      border-color: var(--color-border-accent-regular-hover, #4086ff);
+      background: var(--color-bg-accent-regular-hover, #4086ff);
+      color: var(--color-text-neutral-inverse50, #fff);
+    }
+    .xftv0-action-bar-icon-button {
+      width: var(--xftv0-action-bar-height);
+      min-width: var(--xftv0-action-bar-height);
+      padding: 0;
+    }
+    .xftv0-action-bar-icon {
+      width: 16px;
+      height: 16px;
+      display: block;
+      opacity: 0.72;
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 表格组件样式 */
+    .xftv0-table-wrapper {
+      overflow-x: auto;
+    }
+    .xftv0-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .xftv0-table th {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-divider-neutral);
+      background: var(--color-container-bg-neutral-lightgray);
+      color: var(--color-text-neutral-gray40);
+      font-weight: var(--font-weight-medium);
+      font-size: var(--font-size-regular, 14px);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .xftv0-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-divider-neutral);
+      color: var(--color-text-neutral-gray50);
+      font-size: var(--font-size-regular, 14px);
+    }
+    .xftv0-table tr:last-child td {
+      border-bottom: 0;
+    }
+    .xftv0-table tr:hover td {
+      background: var(--color-container-bg-neutral-lightgray);
+    }
+    .xft-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--border-radius-small);
+      font-size: var(--font-size-small, 12px);
+      font-weight: var(--font-weight-medium);
+      border: 1px solid var(--color-border-neutral);
+    }
+    .xft-tag-success {
+      color: #16803c;
+      background: #ecfdf3;
+      border-color: #abefc6;
+    }
+    .xft-tag-error {
+      color: #b42318;
+      background: #fef3f2;
+      border-color: #fecdca;
+    }
+    .xftv0-action-link {
+      color: var(--color-text-accent-regular, #1966ff);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: var(--font-size-regular, 14px);
+      font-family: var(--font-family-primary);
+    }
+    .xftv0-action-link:hover {
+      color: var(--color-text-accent-regular-hover, #4086ff);
+    }
+    .xftv0-action-link + .xftv0-action-link {
+      margin-left: 12px;
+    }
+    .xftv0-action-sep {
+      color: var(--color-divider-neutral);
+      margin: 0 6px;
+    }
+    .xftv0-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+      color: var(--color-text-neutral-gray30);
+    }
+    .xftv0-empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+    .xftv0-empty-state-text {
+      font-size: var(--font-size-regular, 14px);
+      margin: 0;
+    }
+    .xftv0-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--spacing-2, 8px);
+      padding: 12px 16px 0;
+      font-size: var(--font-size-regular, 14px);
+      color: var(--color-text-neutral-gray40);
+    }
+    .xftv0-pagination-total {
+      margin-right: auto;
+    }
+    .xftv0-pagination .xft-btn {
+      height: 28px;
+      min-width: 28px;
+      padding: 0 6px;
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular, 6px);
+      background: var(--color-container-bg-neutral-bright, #fff);
+      color: var(--color-text-neutral-gray40);
+      font-size: var(--font-size-regular, 14px);
+      cursor: pointer;
+    }
+    .xftv0-pagination .xft-btn:hover {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      color: var(--color-text-accent-regular, #1966ff);
+    }
+    .xftv0-pagination .xft-btn.is-active {
+      border-color: var(--color-border-accent-regular, #1966ff);
+      background: var(--color-bg-accent-regular, #1966ff);
+      color: var(--color-text-neutral-inverse50, #fff);
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 弹窗组件样式 — 继承自 references/components/ant/modal/component.html */
+    :root {
+      --modal-width-480: 480px;
+      --modal-width-740: 740px;
+      --modal-max-height: calc(100vh - 64px);
+    }
+    .xft-modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(19, 34, 64, 0.36);
+      z-index: 1000;
+    }
+    .xft-modal-overlay[hidden] {
+      display: none !important;
+    }
+    .xft-modal {
+      display: flex;
+      flex-direction: column;
+      width: min(100%, var(--modal-width-740));
+      max-height: var(--modal-max-height);
+      background: var(--color-container-bg-neutral-bright);
+      border-radius: var(--border-radius-large);
+      box-shadow: var(--shadow-regular-bottom);
+      overflow: hidden;
+    }
+    .xft-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      padding: var(--spacing-4) var(--spacing-5);
+      border-bottom: 1px solid var(--color-divider-neutral);
+      flex-shrink: 0;
+    }
+    .xft-modal-title {
+      margin: 0;
+      font-size: var(--font-size-heading-5);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-neutral-gray50);
+    }
+    .xft-modal-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: var(--border-radius-small);
+      background: transparent;
+      color: var(--color-text-neutral-gray30);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .xft-modal-close:hover {
+      background: var(--color-container-bg-neutral-gray);
+      color: var(--color-text-neutral-gray40);
+    }
+    .xft-modal-body {
+      flex: 1 1 auto;
+      padding: var(--spacing-5);
+      overflow-y: auto;
+      color: var(--color-text-neutral-gray40);
+      font-size: var(--font-size-regular);
+      line-height: var(--font-height-regular);
+    }
+    .xft-modal-body > :first-child { margin-top: 0; }
+    .xft-modal-body > :last-child { margin-bottom: 0; }
+    .xft-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--spacing-2);
+      padding: 12px var(--spacing-5);
+      border-top: 1px solid var(--color-divider-neutral);
+      flex-shrink: 0;
+    }
+    .xft-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 14px;
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular);
+      background: var(--color-container-bg-neutral-bright);
+      color: var(--color-text-neutral-gray40);
+      font-size: var(--font-size-regular);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .xft-btn:hover {
+      border-color: var(--color-border-accent-regular);
+      color: var(--color-text-accent-regular);
+    }
+    .xft-btn-primary {
+      border-color: var(--color-border-accent-regular);
+      background: var(--color-bg-accent-regular);
+      color: var(--color-text-neutral-inverse50);
+    }
+    .xft-btn-primary:hover {
+      border-color: var(--color-border-accent-regular-hover);
+      background: var(--color-bg-accent-regular-hover);
+      color: var(--color-text-neutral-inverse50);
+    }
+    /* /FROZEN */
+
+    /* FROZEN: 弹窗内容辅助样式 */
+    .xftv0-section-title {
+      font-size: var(--font-size-heading-5);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-neutral-gray50);
+      margin: 0 0 var(--spacing-3);
+    }
+    .xftv0-inline-note {
+      color: var(--color-text-neutral-gray30);
+      font-size: var(--font-size-small);
+      line-height: 1.6;
+    }
+    .xftv0-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3);
+    }
+    .xftv0-checkbox-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      cursor: pointer;
+      font-size: var(--font-size-regular);
+      color: var(--color-text-neutral-gray50);
+    }
+    .xftv0-checkbox-chip input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-bg-accent-regular);
+    }
+    .xftv0-target-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-2);
+      border: 1px solid var(--color-border-neutral);
+      border-radius: var(--border-radius-regular);
+      padding: var(--spacing-3);
+      min-height: 60px;
+      background: var(--color-container-bg-neutral-lightgray);
+    }
+    .xftv0-target-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      border-radius: var(--border-radius-small);
+      background: var(--color-container-bg-neutral-bright);
+    }
+    .xftv0-target-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+    .xftv0-badge-new {
+      color: #1966ff;
+      background: #ebf3ff;
+      border: 1px solid #adccff;
+    }
+    .xftv0-badge-overlay {
+      color: #667085;
+      background: #f5f6f8;
+      border: 1px solid #d8dee8;
+    }
+    .xftv0-preview-box {
+      background: var(--color-container-bg-neutral-lightgray);
+      border-radius: var(--border-radius-regular);
+      padding: var(--spacing-4);
+    }
+    .xftv0-preview-box p {
+      margin: 0 0 4px;
+      font-size: var(--font-size-regular);
+      color: var(--color-text-neutral-gray40);
+    }
+    .xftv0-preview-box p:last-child {
+      margin-bottom: 0;
+    }
+    .xftv0-preview-title {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-neutral-gray50);
+      margin-bottom: var(--spacing-2);
+    }
+    .xftv0-error-list {
+      background: #fef3f2;
+      border: 1px solid #fecdca;
+      border-radius: var(--border-radius-regular);
+      padding: var(--spacing-3);
+    }
+    .xftv0-error-list-title {
+      font-weight: var(--font-weight-bold);
+      color: #b42318;
+      margin-bottom: var(--spacing-2);
+    }
+    .xftv0-error-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: var(--font-size-regular);
+      color: #b42318;
+    }
+    .xftv0-inline-error {
+      color: #b42318;
+      font-size: var(--font-size-small);
+      margin-top: 4px;
+    }
+    .xftv0-empty-list {
+      color: var(--color-text-neutral-gray30);
+      text-align: center;
+      padding: 12px;
+      font-size: var(--font-size-small);
+    }
+    .xftv0-source-row {
+      padding: var(--spacing-3);
+      background: var(--color-container-bg-neutral-lightgray);
+      border-radius: var(--border-radius-regular);
+      margin-bottom: var(--spacing-4);
+    }
+    .xftv0-source-row p {
+      margin: 0;
+      color: var(--color-text-neutral-gray40);
+    }
+    /* /FROZEN */
+  </style>
+</head>
+<body>
+  <!-- FROZEN: 页面壳结构 -->
+  <div class="xftv0-admin-shell">
+    <div class="xftv0-admin-shell-topbar-slot">
+      <!-- EDITABLE: 顶部栏 — 简化占位 -->
+      <div style="display:flex;align-items:center;height:100%;padding:0 24px;background:var(--color-container-bg-neutral-inverse);color:var(--color-text-neutral-inverse50);font-weight:bold;">企业管理系统</div>
+      <!-- /EDITABLE -->
+    </div>
+
+    <div class="xftv0-admin-shell-body">
+      <div class="xftv0-admin-shell-sidebar-slot">
+        <!-- EDITABLE: 侧边栏 — 简化占位 -->
+        <nav style="padding:16px 0;background:#fff;height:100%;border-right:1px solid var(--color-border-neutral);">
+          <div style="padding:8px 16px;color:var(--color-text-neutral-gray30);font-size:12px;">通用权限管理</div>
+          <div style="padding:8px 16px;background:var(--color-bg-accent-light);color:var(--color-text-accent-regular);font-weight:bold;">子管理员模式</div>
+          <div style="padding:8px 16px;color:var(--color-text-neutral-gray30);">用户授权</div>
+          <div style="padding:8px 16px;color:var(--color-text-neutral-gray30);">权限查询</div>
+          <div style="padding:8px 16px;color:var(--color-text-neutral-gray30);">操作记录</div>
+        </nav>
+        <!-- /EDITABLE -->
+      </div>
+
+      <main class="xftv0-admin-shell-main">
+        <div class="xftv0-admin-shell-tabs-slot">
+          <!-- EDITABLE: 页面标签 — 继承自 reference/chrome/page-tabs 结构 -->
+          <div style="display:flex;align-items:center;gap:0;height:100%;padding:0 16px;border-bottom:1px solid var(--color-divider-neutral);">
+            <span style="padding:6px 12px;border-bottom:2px solid var(--color-border-accent-regular);color:var(--color-text-accent-regular);font-weight:bold;">子管理员模式</span>
+            <span style="padding:6px 12px;color:var(--color-text-neutral-gray30);">双管理员互审模式</span>
+            <span style="padding:6px 12px;color:var(--color-text-neutral-gray30);">权限变更审批模式</span>
+          </div>
+          <!-- /EDITABLE -->
+        </div>
+
+        <section class="xftv0-admin-shell-content">
+          <div class="xftv0-admin-shell-content-inner">
+            <!-- /FROZEN -->
+
+            <!-- EDITABLE: 页面主内容 — 按 list-management layout 骨架 -->
+            <!-- Surface 1：标题 + 筛选 + 操作区 -->
+            <div class="xftv0-surface">
+              <div class="xftv0-wrapper">
+                <!-- Header 区域 -->
+                <section data-region="header">
+                  <div class="xftv0-page-header">
+                    <div>
+                      <h1 class="xftv0-page-title">子管理员列表</h1>
+                      <p class="xftv0-page-desc">管理子管理员及其可授权范围，支持将已配置的权限信息复制给其他用户</p>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Filter 区域 -->
+                <section data-region="filter">
+                  <div class="xftv0-filter-region-wrapper">
+                    <div class="xftv0-filter-region" data-collapse-root data-collapse-expanded="false">
+                      <section class="xftv0-filter-region-fields">
+                        <div class="xftv0-filter-region-slot-group">
+                          <div class="xftv0-filter-region-field-item">
+                            <span class="xftv0-filter-region-field-label">姓名</span>
+                            <div class="xftv0-filter-region-field-control">
+                              <input class="xftv0-input input" type="text" placeholder="请输入姓名" />
+                            </div>
+                          </div>
+                          <div class="xftv0-filter-region-field-item">
+                            <span class="xftv0-filter-region-field-label">手机号</span>
+                            <div class="xftv0-filter-region-field-control">
+                              <input class="xftv0-input input" type="text" placeholder="请输入手机号" />
+                            </div>
+                          </div>
+                          <div class="xftv0-filter-region-field-item">
+                            <span class="xftv0-filter-region-field-label">组织范围</span>
+                            <div class="xftv0-filter-region-field-control">
+                              <select class="xftv0-select input">
+                                <option value="">请选择组织</option>
+                                <option>华东区</option>
+                                <option>华南区</option>
+                                <option>华北区</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="xftv0-filter-region-slot-group" id="filter-bar-advanced" hidden>
+                          <div class="xftv0-filter-region-field-item">
+                            <span class="xftv0-filter-region-field-label">可授权功能</span>
+                            <div class="xftv0-filter-region-field-control">
+                              <select class="xftv0-select input">
+                                <option value="">请选择功能</option>
+                                <option>考勤管理</option>
+                                <option>审批管理</option>
+                                <option>报表查看</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="xftv0-filter-region-field-item">
+                            <span class="xftv0-filter-region-field-label">状态</span>
+                            <div class="xftv0-filter-region-field-control">
+                              <select class="xftv0-select input">
+                                <option value="">请选择状态</option>
+                                <option>启用中</option>
+                                <option>已停用</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      <nav class="xftv0-filter-region-actions">
+                        <button class="xftv0-button btn" type="button">重置</button>
+                        <button class="xftv0-button btn" type="button">查询</button>
+                        <button class="xftv0-filter-region-toggle-button" type="button" data-collapse-toggle="filter-bar-advanced" aria-expanded="false">
+                          <span class="xftv0-filter-region-toggle-collapsed">更多筛选</span>
+                          <span class="xftv0-filter-region-toggle-expanded">收起筛选</span>
+                          <span class="xftv0-filter-region-toggle-arrow">▼</span>
+                        </button>
+                      </nav>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Action Bar 区域 -->
+                <section data-region="action-area">
+                  <div class="xftv0-action-bar">
+                    <div class="xftv0-action-bar-business">
+                      <div class="xftv0-action-bar-button-group">
+                        <button class="xftv0-button xftv0-button-primary btn btn-primary" type="button">+ 添加子管理员</button>
+                      </div>
+                    </div>
+                    <div class="xftv0-action-bar-utility">
+                      <div class="xftv0-action-bar-icon-actions">
+                        <button class="xftv0-button btn xftv0-action-bar-icon-button" type="button" aria-label="刷新">
+                          <img class="xftv0-action-bar-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='rgba(19,34,64,0.45)' d='M2 8a6 6 0 0 1 10.47-4.03L13.5 3v4h-4l1.26-1.26A4.5 4.5 0 1 0 12.5 8H14A6 6 0 1 1 2 8z'/%3E%3C/svg%3E" alt="" />
+                        </button>
+                        <button class="xftv0-button btn xftv0-action-bar-icon-button" type="button" aria-label="列设置">
+                          <img class="xftv0-action-bar-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='rgba(19,34,64,0.45)' d='M2 2h12v2H2V2zm0 5h12v2H2V7zm0 5h12v2H2v-2z'/%3E%3C/svg%3E" alt="" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+
+            <!-- Surface 2：数据主体 -->
+            <div class="xftv0-surface">
+              <section data-region="primary-data-area">
+                <div class="xftv0-table-wrapper">
+                  <table class="xftv0-table">
+                    <thead>
+                      <tr>
+                        <th>姓名</th>
+                        <th>手机号</th>
+                        <th>可授权组织范围</th>
+                        <th>可授权功能</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>张明</td>
+                        <td>138xxxx1234</td>
+                        <td>
+                          <span title="华东区、华南区">管辖 2 个组织</span>
+                        </td>
+                        <td>
+                          <span title="考勤管理、审批管理、报表查看">12 项功能</span>
+                        </td>
+                        <td><span class="xft-tag xft-tag-success">启用中</span></td>
+                        <td>
+                          <button class="xftv0-action-link" type="button" data-overlay-open="modal-copy">复制</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button">编辑</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button" style="color:var(--color-text-error-regular);">停用</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>李莉</td>
+                        <td>139xxxx5678</td>
+                        <td>
+                          <span title="华北区">管辖 1 个组织</span>
+                        </td>
+                        <td>
+                          <span title="考勤管理、审批管理">8 项功能</span>
+                        </td>
+                        <td><span class="xft-tag xft-tag-success">启用中</span></td>
+                        <td>
+                          <button class="xftv0-action-link" type="button" data-overlay-open="modal-copy">复制</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button">编辑</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button" style="color:var(--color-text-error-regular);">停用</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>王强</td>
+                        <td>137xxxx9012</td>
+                        <td>
+                          <span title="全国">全部组织</span>
+                        </td>
+                        <td>
+                          <span title="全部功能">全部功能</span>
+                        </td>
+                        <td><span class="xft-tag xft-tag-error">已停用</span></td>
+                        <td>
+                          <button class="xftv0-action-link" type="button" data-overlay-open="modal-copy">复制</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button">编辑</button>
+                          <span class="xftv0-action-sep">|</span>
+                          <button class="xftv0-action-link" type="button">启用</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="xftv0-pagination">
+                  <span class="xftv0-pagination-total">共 12 条</span>
+                  <span>&lt;</span>
+                  <button class="xft-btn is-active">1</button>
+                  <button class="xft-btn">2</button>
+                  <button class="xft-btn">3</button>
+                  <span>...</span>
+                  <button class="xft-btn">5</button>
+                  <span>&gt;</span>
+                  <select style="height:28px;font-size:12px;margin-left:8px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);">
+                    <option>10 条/页</option>
+                    <option>20 条/页</option>
+                    <option>50 条/页</option>
+                  </select>
+                </div>
+              </section>
+            </div>
+            <!-- /EDITABLE -->
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- EDITABLE: 弹层区 -->
+    <div id="overlay-root">
+      <!-- ======== Modal 1: 复制子管理员权限弹窗 ======== -->
+      <section class="xft-modal-overlay" id="modal-copy" data-overlay aria-hidden="true" hidden>
+        <div class="xft-modal">
+          <header class="xft-modal-header">
+            <h2 class="xft-modal-title">复制子管理员权限</h2>
+            <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+          </header>
+          <div class="xft-modal-body">
+            <!-- 复制来源 -->
+            <div class="xftv0-source-row" style="margin-bottom:var(--spacing-4);">
+              <p style="margin:0;">将 <strong>张明 / 138xxxx1234</strong> 的权限配置复制给其他用户</p>
+            </div>
+
+            <!-- 复制内容 -->
+            <h3 class="xftv0-section-title" style="margin-bottom:var(--spacing-3);">复制内容</h3>
+            <div class="xftv0-checkbox-group" style="margin-bottom:var(--spacing-4);">
+              <label class="xftv0-checkbox-chip">
+                <input type="checkbox" checked /> 可授权组织
+              </label>
+              <label class="xftv0-checkbox-chip">
+                <input type="checkbox" checked /> 可授权功能
+              </label>
+              <span class="xftv0-inline-note">* 至少选择一项</span>
+            </div>
+
+            <!-- 复制对象 -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-3);">
+              <h3 class="xftv0-section-title" style="margin:0;">复制对象</h3>
+              <span class="xftv0-inline-note">已选 3/200 人</span>
+            </div>
+            <div class="xftv0-target-list" style="margin-bottom:var(--spacing-3);">
+              <div class="xftv0-target-item">
+                <div class="xftv0-target-info">
+                  <span>赵六 - 136xxxx2468</span>
+                  <span class="xft-tag xftv0-badge-new">新增为子管理员</span>
+                </div>
+                <button class="xftv0-action-link" style="color:var(--color-text-error-regular);font-size:12px;">移除</button>
+              </div>
+              <div class="xftv0-target-item">
+                <div class="xftv0-target-info">
+                  <span>孙七 - 135xxxx1357</span>
+                  <span class="xft-tag xftv0-badge-overlay">叠加权限</span>
+                </div>
+                <button class="xftv0-action-link" style="color:var(--color-text-error-regular);font-size:12px;">移除</button>
+              </div>
+              <div class="xftv0-target-item">
+                <div class="xftv0-target-info">
+                  <span>周八 - 134xxxx3690</span>
+                  <span class="xft-tag xftv0-badge-new">新增为子管理员</span>
+                </div>
+                <button class="xftv0-action-link" style="color:var(--color-text-error-regular);font-size:12px;">移除</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:var(--spacing-2);margin-bottom:var(--spacing-4);">
+              <button class="xft-btn" type="button" data-overlay-open="modal-select-user">+ 选择复制对象</button>
+              <button class="xft-btn" type="button">清空全部</button>
+            </div>
+
+            <!-- 复制预览 -->
+            <div class="xftv0-preview-box" style="margin-bottom:var(--spacing-4);">
+              <p class="xftv0-preview-title">复制预览</p>
+              <p>复制后：</p>
+              <p>• 2 名用户将成为子管理员</p>
+              <p>• 1 名已有子管理员将叠加新权限</p>
+              <p>• 复制内容：可授权组织、可授权功能</p>
+              <p>• 叠加不覆盖，原有权限不受影响</p>
+            </div>
+
+            <!-- 校验失败错误列表（异常态示例，hidden） -->
+            <div class="xftv0-error-list" hidden>
+              <div class="xftv0-error-list-title">以下 1 名用户不满足条件</div>
+              <div class="xftv0-error-item">
+                <span>吴九 - 未完成实名认证</span>
+                <button class="xftv0-action-link" style="color:var(--color-text-error-regular);font-size:12px;">移除</button>
+              </div>
+              <button class="xft-btn" type="button" style="margin-top:8px;width:auto;">移除以上用户</button>
+            </div>
+          </div>
+          <footer class="xft-modal-footer">
+            <button class="xft-btn" type="button" data-overlay-close>取消</button>
+            <button class="xft-btn xft-btn-primary" type="button">确认复制</button>
+          </footer>
+        </div>
+      </section>
+
+      <!-- ======== Modal 2: 员工选择器弹窗 ======== -->
+      <section class="xft-modal-overlay" id="modal-select-user" data-overlay aria-hidden="true" hidden>
+        <div class="xft-modal" style="width:min(100%,var(--modal-width-740));">
+          <header class="xft-modal-header">
+            <h2 class="xft-modal-title">选择员工</h2>
+            <button class="xft-modal-close" type="button" aria-label="关闭" data-overlay-close>&times;</button>
+          </header>
+          <div class="xft-modal-body">
+            <!-- 搜索区 -->
+            <div style="display:flex;gap:var(--spacing-3);margin-bottom:var(--spacing-4);">
+              <input class="xftv0-input input" type="text" placeholder="搜索姓名或手机号" style="height:32px;padding:0 11px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);flex:1;max-width:320px;" />
+              <select class="xftv0-select input" style="height:32px;padding:0 11px;border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);">
+                <option value="">请选择部门</option>
+                <option>技术部</option>
+                <option>销售部</option>
+                <option>市场部</option>
+              </select>
+              <button class="xft-btn" type="button">搜索</button>
+            </div>
+
+            <!-- 选择状态提示 -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-3);">
+              <span style="font-size:var(--font-size-regular);color:var(--color-text-neutral-gray40);">已选 0/200 人</span>
+              <button class="xftv0-action-link" type="button" style="font-size:12px;">清空全部</button>
+            </div>
+
+            <!-- 员工列表 -->
+            <div style="border:1px solid var(--color-border-neutral);border-radius:var(--border-radius-regular);overflow:hidden;">
+              <table class="xftv0-table">
+                <thead>
+                  <tr>
+                    <th style="width:32px;"><input type="checkbox" style="accent-color:var(--color-bg-accent-regular);" /></th>
+                    <th>姓名</th>
+                    <th>手机号</th>
+                    <th>部门</th>
+                    <th>加入状态</th>
+                    <th>认证状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--color-bg-accent-regular);" /></td>
+                    <td>赵六</td>
+                    <td>136xxxx2468</td>
+                    <td>技术部</td>
+                    <td><span class="xft-tag xft-tag-success">已加入</span></td>
+                    <td><span class="xft-tag xft-tag-success">已认证</span></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--color-bg-accent-regular);" /></td>
+                    <td>孙七</td>
+                    <td>135xxxx1357</td>
+                    <td>销售部</td>
+                    <td><span class="xft-tag xft-tag-success">已加入</span></td>
+                    <td><span class="xft-tag xft-tag-success">已认证</span></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--color-bg-accent-regular);" /></td>
+                    <td>周八</td>
+                    <td>134xxxx3690</td>
+                    <td>技术部</td>
+                    <td><span class="xft-tag xft-tag-success">已加入</span></td>
+                    <td><span class="xft-tag xft-tag-success">已认证</span></td>
+                  </tr>
+                  <tr style="opacity:0.5;">
+                    <td><input type="checkbox" disabled style="accent-color:var(--color-bg-accent-regular);" /></td>
+                    <td>吴九</td>
+                    <td>133xxxx1470</td>
+                    <td>市场部</td>
+                    <td><span class="xft-tag xft-tag-error">未加入</span></td>
+                    <td><span class="xft-tag xft-tag-error">未认证</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="xftv0-inline-note" style="margin-top:var(--spacing-2);">不符合条件的用户不可选，理由见行内提示</p>
+          </div>
+          <footer class="xft-modal-footer">
+            <button class="xft-btn" type="button" data-overlay-close>取消</button>
+            <button class="xft-btn xft-btn-primary" type="button">确定</button>
+          </footer>
+        </div>
+      </section>
+    </div>
+    <!-- /EDITABLE -->
+  </div>
+  <!-- /FROZEN -->
+
+  <!-- FROZEN: Runtime 公共轻交互 + 筛选区字段计算脚本 -->
+  <script src="../../.claude/skills/xft-design/runtime/basic-interactions.js"></script>
+  <script>
+    /* FROZEN: 筛选区字段宽度自适应 */
+    (function () {
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+      function syncSelectPlaceholder(select) {
+        if (!select) return;
+        select.classList.toggle("is-placeholder", !select.value);
+      }
+      document.querySelectorAll(".xftv0-filter-region[data-collapse-root] select").forEach(function(select) {
+        syncSelectPlaceholder(select);
+        select.addEventListener("change", function() { syncSelectPlaceholder(select); });
+      });
+    })();
+    /* /FROZEN */
+  </script>
+</body>
+</html>

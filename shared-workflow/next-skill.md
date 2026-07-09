@@ -1,6 +1,6 @@
 # 就绪判定与交接话术
 
-> **单一来源**：`shared-workflow/skill-graph.json` 是依赖关系数据的权威源。本文件定义算法和模板，skill-graph.json 提供数据。
+> **单一来源**：`shared-workflow/skill-graph.json` 是依赖关系数据的权威源。本文档定义算法和模板，`skill-graph.json` 提供数据。
 
 ---
 
@@ -8,11 +8,12 @@
 
 ### 1.1 done 集合
 
-扫描 `spark-output/context/` 目录下所有 `.json` 文件，取文件名（去掉 `.json` 后缀）组成已完成集合。
+扫描 `spark-output/context/` 目录下的所有 `.json` 文件，取文件名（去掉 `.json` 后缀）组成已完成集合。
 
-示例：目录下有 `uxb.json`，则 done = { "uxb" }。
+示例：
 
-首次运行时，集合为空。
+- 若目录下存在 `uxb.json`，则 `done = { "uxb" }`
+- 首次运行时，`done` 为空集合
 
 ### 1.2 ready 判定
 
@@ -20,47 +21,65 @@
 
 ```text
 条件 1：该 Skill 不在 done 集合中（不重复执行）
-条件 2：该 Skill 的 required 数组中每一项都在 done 集合中
+条件 2：该 Skill 的 required 数组中的每一项都在 done 集合中
 ```
 
-两个条件同时满足 = 该 Skill 就绪。
+两个条件同时满足，则该 Skill `ready`。
 
 特殊情况：
 
-- `required` 为空数组（如 UXB）：条件 2 自动满足，任何时候都就绪。
+- `required` 为空数组（如 `uxb`）：条件 2 自动满足，任何时候都就绪。
 - `required` 有多项：所有项都必须完成。
 
 ### 1.3 语义说明
 
-"不就绪"表示不推荐启动，不表示禁止启动。
+“不就绪”表示“不推荐启动”，不表示“禁止启动”。
 
-- done 集合只以 `spark-output/context/` 下的 JSON 文件为依据。MD 文件存在与否不影响 ready 判定。
-- 如果用户在 Skill 不就绪时仍然强制执行，行为由各 Skill 的 SKILL.md 降级规则定义（如回退读取、柔和引导等）。
-- 本文件只负责"推荐什么"，不负责"拦截什么"。
+补充说明：
+
+- `done` 集合只以 `spark-output/context/` 下的 JSON 文件为依据，MD 文件存在与否不影响 `ready` 判定。
+- 如果用户在 Skill 不就绪时仍然强制执行，行为由该 Skill 的 `SKILL.md` 降级规则定义，例如回退读取、柔和引导或输出骨架版结果。
+- 本文件只负责“推荐什么”，不负责“拦截什么”。
 
 ### 1.4 基础设施型 Skill
 
-`skill-graph.json` 中 `type` 为 `"infrastructure"` 的 Skill（如 knowledge-wiki、product-analysis）不参与 ready 判定。它们没有管线阶段，不出现在交接推荐中，任何时候都按需可用。
+`skill-graph.json` 中 `type = "infrastructure"` 的 Skill，例如 `knowledge-wiki`、`product-analysis`：
+
+- 不参与 `ready` 判定
+- 不出现在主链就绪计算中
+- 任何时候都可按需调用
 
 就绪判定算法在扫描候选时应跳过 `type: "infrastructure"` 的条目。
 
-### 1.5 无文件系统时的降级
+### 1.5 journey-analysis 的特别说明
 
-当 agent 没有文件系统时，无法扫描目录。此时各 Skill 依赖自身 SKILL.md 中的硬编码来判断上游是否存在。具体降级逻辑由各 Skill 自行定义。
-
-### 1.6 优先级关系
+`journey-analysis` 在主链中的正式位置仍然是：
 
 ```text
-shared-workflow/skill-graph.json  >  各 Skill 的 SKILL.md 硬编码
+uxb -> journey-analysis -> experience-blueprint
+```
+
+但当前 `journey-analysis` 已支持在用户显式要求时直接读取 `PRD` 或原始需求运行 `standalone / guided-completion` 能力。
+
+这条能力扩展只属于 `journey-analysis/SKILL.md` 内部执行逻辑，不改变 shared-workflow 的主链 ready 判定规则。
+
+因此：
+
+- `journey-analysis` 在主链推荐中仍然要求 `uxb` 先完成
+- 如果用户在 `UXB` 前强制调用它，允许由 `journey-analysis` 自身按降级规则执行
+- 此类执行结果不视为替代 `UXB` 的正式定案
+
+### 1.6 无文件系统时的降级
+
+当宿主没有文件系统能力时，无法扫描目录。此时各 Skill 依赖自身 `SKILL.md` 中的规则判断上游是否存在。
+
+### 1.7 优先级关系
+
+```text
+shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
 ```
 
 当两者信息不一致时，以 `shared-workflow/` 文件为准。
-
-各 Skill 的 SKILL.md 中应保留硬编码副本作为降级方案，并标注：
-
-```text
-此规则与 shared-workflow/skill-graph.json 保持一致，若冲突以 shared-workflow/ 版本为准。
-```
 
 ---
 
@@ -70,36 +89,41 @@ shared-workflow/skill-graph.json  >  各 Skill 的 SKILL.md 硬编码
 
 每个 Skill 完成后，先输出完成句：
 
-> ✅ {name_zh} 完成，{产物简述}
+```text
+✅ {name_zh} 完成，{产物简述}
+```
 
-`{产物简述}` 由各 Skill 根据实际产出动态生成，1-2 句即可。
+`{产物简述}` 由各 Skill 根据实际产物动态生成，1-2 句即可。
 
 ### 2.2 下一步推荐
+
 推荐项、回复项和交接话术中的稳定中文名，统一使用 `skill-graph.json` 里的 `name_zh`。
-长解释只放在 `reason`、产物简述或补充说明里，不再让长句中文承担稳定触发名职责。
 
+读取当前 Skill 的：
 
-读取 `skill-graph.json` 中当前 Skill 的 `next_hint.preferred` 和 `next_hint.alternatives`。
-将二者按顺序合并为候选项列表，再按候选项数量决定格式：
+- `next_hint.preferred`
+- `next_hint.alternatives`
 
-**候选项为空（终端节点）**
+合并成候选项列表，再按候选项数量决定输出格式。
 
-不输出推荐和触发语。只保留完成句。
+#### 候选项为空
 
-**候选项有 1 项（单选项）**
+只保留完成句，不输出推荐。
 
+#### 候选项只有 1 项
+
+输出格式：
+
+```text
+你可以选择：{label} - {reason}
+你回复“{下游 name_zh}”即可
 ```
-你可以选择：{label} — {reason}
-你回复"{下游 name_zh}"即可
-```
 
-- `{label}` 取 `option.label`
-- `{reason}` 取 `option.reason`
-- `{下游 name_zh}` 取下游 Skill 的 `name_zh`
+#### 候选项有多项
 
-**候选项有多项（多选项）**
+输出格式：
 
-```
+```text
 你可以选择：
 - 1.{label_a}
 - 2.{label_b}
@@ -107,88 +131,60 @@ shared-workflow/skill-graph.json  >  各 Skill 的 SKILL.md 硬编码
 你回复对应数字编号即可
 ```
 
-各项 `{label}` 取对应 `option.label`，按数组顺序编号。
+### 2.3 基础设施型 Skill 的交接
 
-### 2.3 基础设施型 Skill
+`type = "infrastructure"` 的 Skill：
 
-`type` 为 `"infrastructure"` 的 Skill：
+- 若有下游推荐：按普通规则输出
+- 若无下游推荐：输出
 
-- 候选项非空：按 2.1 + 2.2 正常输出。
-- 候选项为空：输出 `✅ {name_zh} 完成。继续走管线的话，回到上一步就好。`
-
-### 2.4 完整示例
-
-**单选项（UXB / 需求定案完成时）：**
-
+```text
+✅ {name_zh} 完成。继续走管线的话，回到上一步就好。
 ```
+
+---
+
+## 三、示例
+
+### 3.1 UXB 完成后的单选项
+
+```text
 ✅ 需求定案完成，需求文档和结构化数据已就位。
-你可以选择：体验策略 — 进入体验策略生成与交互设计展开
-你回复"体验策略"即可
+你可以选择：用户旅程 - 进入用户旅程分析，梳理角色任务生命周期，为体验蓝图补充旅程视角。
+你回复“用户旅程”即可
 ```
 
-**多选项（体验策略完成时）：**
+### 3.2 体验策略完成后的多选项
 
-```
-✅ 体验方案完成，交互流程、页面结构、状态反馈、文案都有了。
+```text
+✅ 体验策略完成，交互流程、页面结构、状态反馈和文案都已有。
 你可以选择：
 - 1.设计文档
-- 2.深度分析方案异常情况
+- 2.异常态
 - 3.视觉风格
-- 4.流程埋点与度量需求
+- 4.旅程埋点与度量需求
 - 5.设计走查
 你回复对应数字编号即可
 ```
 
-**单选项（异常态完成时）：**
+### 3.3 异常态完成后的单选项
 
-```
-✅ 异常态分析完成，状态矩阵和异常设计补充已输出。
-你可以选择：设计走查 — 整体过一遍完整性和一致性
-你回复"设计走查"即可
-```
-
-**终端（视觉风格完成时）：**
-
-```
-✅ 视觉风格完成，视觉方向和设计变量已定。
+```text
+✅ 异常态完成，状态矩阵和异常设计补充已输出。
+你可以选择：设计走查 - 整体过一遍完整性和一致性。
+你回复“设计走查”即可
 ```
 
-**终端（设计走查完成时）：**
+### 3.4 终点节点
 
-```
-✅ 设计走查完成，发现清单已出。
-```
-
-**单选项（设计文档完成时）：**
-
-```
-✅ 设计文档完成，页面结构、交互和文案规格已出。
-你可以选择：页面原型 — 进入页面原型生成，把规格落成 HTML 原型
-你回复"页面原型"即可
+```text
+✅ 页面原型完成，正式链路已到终点。
 ```
 
-**终端（旅程埋点与度量需求完成时）：**
+### 3.5 基础设施型 Skill
 
-```
-✅ 旅程埋点与度量需求完成，埋点需求和异常追踪口径已出。
-```
-
-**基础设施无下游（knowledge-wiki 完成时）：**
-
-```
-✅ 知识库已更新。继续走管线的话，回到上一步就好。
-```
-
-**基础设施单选项（product-analysis 完成时）：**
-
-```
+```text
 ✅ 产品分析完成。
-你可以选择：需求定案 — 回到需求侧继续推进
-你回复"需求定案"即可
-```
-
-**基础设施终端（design-strategy 完成时）：**
-
-```
-✅ 设计策略报告已产出。
+你可以选择：需求定案 - 回到需求侧继续推进。
+你回复“需求定案”即可
 ```

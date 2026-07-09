@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。就绪判定算法与交接话术模板见 shared-workflow/next-skill.md。",
+  "_comment": "本文档是 Skill 依赖关系的权威数据源。与各 Skill 的 SKILL.md 内部规则冲突时，以本文档为准。就绪判定算法与交接话术模板见 shared-workflow/next-skill.md。",
   "skills": [
     {
       "id": "uxb",
@@ -12,7 +12,7 @@
         "preferred": [
           "journey-analysis"
         ],
-        "reason": "需求定案已完成，进旅程图梳理角色的任务生命周期，为体验蓝图提供体验洞察；如需跳过旅程图，可直接进入体验蓝图。",
+        "reason": "需求定案已完成，进入用户旅程分析可以梳理角色任务生命周期，为体验蓝图提供旅程视角的洞察；如需跳过旅程，也可直接进入体验蓝图。",
         "alternatives": [
           "experience-blueprint"
         ]
@@ -20,6 +20,7 @@
     },
     {
       "id": "journey-analysis",
+      "_comment": "正式主链仍要求先完成 uxb，再进入 journey-analysis。当前 Skill 已支持在用户显式调用时直接读取 PRD 或原始需求做 standalone / guided-completion，但这属于 Skill 内部能力扩展，不改变 shared-workflow 的 ready 判定与主链推荐顺序。",
       "name_zh": "用户旅程",
       "phase": 2,
       "anchor": false,
@@ -33,9 +34,8 @@
         "preferred": [
           "experience-blueprint"
         ],
-        "reason": "旅程图已就位，进体验蓝图把旅程洞察转化为具体的交互流程和页面设计。",
-        "alternatives": [],
-        "emoji": "🗺️"
+        "reason": "旅程分析已就位，进入体验蓝图可以把旅程洞察转化为具体的交互流程和页面设计。",
+        "alternatives": []
       }
     },
     {
@@ -56,7 +56,7 @@
           "board",
           "journey-metrics"
         ],
-        "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向",
+        "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向。",
         "alternatives": [
           "check"
         ]
@@ -92,7 +92,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "当前链路终端，无下游 Skill",
+        "reason": "当前链路终点，无下游 Skill。",
         "alternatives": []
       }
     },
@@ -110,7 +110,7 @@
         "preferred": [
           "check"
         ],
-        "reason": "异常态补充完成后，建议进入设计走查，检查整体完整性和一致性",
+        "reason": "异常态补充完成后，建议进入设计走查，检查整体完整性和一致性。",
         "alternatives": []
       }
     },
@@ -128,7 +128,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "当前链路终端，无下游 Skill",
+        "reason": "当前链路终点，无下游 Skill。",
         "alternatives": []
       }
     },
@@ -144,7 +144,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "当前链路终端，无下游 Skill",
+        "reason": "当前链路终点，无下游 Skill。",
         "alternatives": []
       }
     },
@@ -156,7 +156,7 @@
       "required": [],
       "next_hint": {
         "preferred": [],
-        "reason": "基础设施型 Skill，按需调用，不参与管线流转",
+        "reason": "基础设施型 Skill，按需调用，不参与主链流转。",
         "alternatives": []
       }
     },
@@ -170,7 +170,7 @@
         "preferred": [
           "uxb"
         ],
-        "reason": "产品分析完成后，回到需求定案继续分析",
+        "reason": "产品分析完成后，回到需求定案继续推进。",
         "alternatives": []
       }
     },
@@ -178,12 +178,12 @@
       "id": "design-strategy",
       "name_zh": "设计策略生成",
       "phase": null,
-      "_comment": "独立 Skill，不依赖也不被其他 Skill 依赖。默认从 spark-output/ 读取 HTML 原型作为材料入口，产出策略报告写入 spark-output/。上下游关系待后续 Skill 丰富后再定义。",
+      "_comment": "独立 Skill，不依赖也不被其他 Skill 依赖。默认从 spark-output/ 读取材料，产出策略报告写回 spark-output/。后续可再与 uxb / experience-blueprint 建立关系。",
       "reads": [],
       "required": [],
       "next_hint": {
         "preferred": [],
-        "reason": "独立 Skill，当前无下游。后续可与 uxb / experience-blueprint 等建立关系",
+        "reason": "独立 Skill，当前无下游。后续可再与其他 Skill 建立关系。",
         "alternatives": []
       }
     },
@@ -199,7 +199,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "journey-metrics 产出旅程节点、埋点需求和异常/中断追踪口径后，当前登记图谱未包含客观数据分析等下游 Skill。如需继续，可进入客观数据分析或主观反馈分析",
+        "reason": "journey-metrics 产出旅程节点、埋点需求和异常/中断追踪口径后，当前登记图谱未包含客观数据分析等下游 Skill。如需继续，可进入客观数据分析或主观反馈分析。",
         "alternatives": []
       }
     }

@@ -1,0 +1,304 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.1.0",
+  "generated_at": "2026-07-09T12:45:00+08:00",
+  "project_name": "子管理员权限复制",
+  "uxb_mapping": [
+    {
+      "uxb_ref": "ER1 批量校验双层策略",
+      "experience_meaning": "选人器中必须前置过滤，提交校验为兜底",
+      "design_decision": "选人器增加状态标签+灰显；提交错误列表区支持一键移除",
+      "landing": "§6.2、§5.1"
+    },
+    {
+      "uxb_ref": "ER2 操作后果确认前预览",
+      "experience_meaning": "确认前必须展示后果摘要",
+      "design_decision": "复制弹窗增加「复制预览」区，区分新增和叠加",
+      "landing": "§6.3、§3.3"
+    },
+    {
+      "uxb_ref": "ER3 复制操作可追溯性",
+      "experience_meaning": "两条操作记录需要聚合视角",
+      "design_decision": "操作记录通过批次 ID 关联；列表提供聚合查看入口",
+      "landing": "§7、§3.5"
+    },
+    {
+      "uxb_ref": "ER4 治理模式下状态一致性",
+      "experience_meaning": "直接生效和待审批必须区分反馈",
+      "design_decision": "两条 toast 路径；操作记录状态与审批联动",
+      "landing": "§7、§5.3、§5.4"
+    },
+    {
+      "uxb_ref": "ER5 组织范围匹配提示",
+      "experience_meaning": "如产品不做系统校验，体验侧需提示",
+      "design_decision": "基于「不做系统校验，预览区建议关注」推进",
+      "landing": "§6.3、§8"
+    },
+    {
+      "uxb_ref": "ER6 权限叠加去重语义",
+      "experience_meaning": "去重影响预览区计数准确性",
+      "design_decision": "基于「静默去重」推进",
+      "landing": "§6.3、§8"
+    }
+  ],
+  "journey_consumption": {
+    "confidence_lows": [
+      {
+        "role": "权限管理员",
+        "stage": "确认并提交",
+        "confidence": "低",
+        "reason": "缺少确认前后果预览，高风险盲操作",
+        "landing": "§5.1"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "处理操作结果",
+        "confidence": "低",
+        "reason": "双管理员互审下反馈模糊，toast与实际状态脱节",
+        "landing": "§5.3"
+      }
+    ],
+    "key_transitions": [
+      {
+        "role": "权限管理员",
+        "from": "定位来源",
+        "to": "配置复制",
+        "trigger": "点击子管理员列表「复制」按钮",
+        "landing": "§3.1"
+      },
+      {
+        "role": "权限管理员",
+        "from": "配置复制",
+        "to": "确认提交",
+        "trigger": "完成选择后点击确认",
+        "landing": "§3.3"
+      },
+      {
+        "role": "权限管理员",
+        "from": "确认提交",
+        "to": "处理结果",
+        "trigger": "系统校验完成",
+        "landing": "§3.4"
+      },
+      {
+        "role": "权限管理员",
+        "from": "处理结果",
+        "to": "验证追溯",
+        "trigger": "关闭弹窗回到列表",
+        "landing": "§3.5"
+      }
+    ],
+    "dropout_risks": [
+      {
+        "role": "权限管理员",
+        "stage": "识别需求与定位来源",
+        "risk": "找不到参照时放弃复制",
+        "landing": "§6.1"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "配置复制参数",
+        "risk": "盲选导致提交后大量失败",
+        "landing": "§6.2、§6.3"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "确认并提交",
+        "risk": "不确定后果放弃操作",
+        "landing": "§6.4"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "处理操作结果",
+        "risk": "反馈模糊导致重复操作",
+        "landing": "§7"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "验证与追溯",
+        "risk": "记录碎片化降低信任",
+        "landing": "§6.1"
+      }
+    ]
+  },
+  "interaction_overview": "1 条主路径、4 条校验分支、2 条结果分支、2 条异常阻断路径",
+  "main_flow": [
+    {
+      "node": "定位来源子管理员",
+      "action": "浏览或搜索子管理员列表，定位目标行",
+      "feedback": "列表展示姓名、手机号、组织范围摘要、功能数量摘要",
+      "pre_info": "复制是一次性动作，叠加不覆盖",
+      "copy": "操作列按钮：「复制」",
+      "next": "点击复制打开弹窗"
+    },
+    {
+      "node": "配置复制信息与选择目标用户",
+      "action": "确认复制信息勾选，打开员工选择器搜索勾选目标用户",
+      "feedback": "选人器展示状态标签，不符合条件者灰显",
+      "pre_info": "选人器中状态标签可辅助判断",
+      "copy": "选人按钮：「+ 选择复制对象」",
+      "next": "确认选择后查看后果摘要"
+    },
+    {
+      "node": "确认前查看后果摘要",
+      "action": "查看复制预览区，确认新增/叠加人数和复制内容",
+      "feedback": "预览区实时更新：新增N人/更新M人/叠加不覆盖",
+      "pre_info": "叠加不覆盖的含义已明确",
+      "copy": "确认按钮：「确认复制」",
+      "next": "点击确认提交校验"
+    },
+    {
+      "node": "系统校验与结果处理",
+      "action": "等待校验，查看结果",
+      "feedback": "校验通过→Toast；校验失败→错误列表区",
+      "pre_info": "双管理员互审下审批通过后才生效",
+      "copy": "直接生效Toast：「已成功复制给{N}名用户」；待审批Toast：「已提交复制审批，通过后生效」",
+      "next": "关闭弹窗回到列表"
+    },
+    {
+      "node": "验证操作结果",
+      "action": "在列表中检查目标用户权限状态，查看操作记录",
+      "feedback": "列表刷新，新子管理员出现，已有者权限更新",
+      "pre_info": "操作记录通过批次ID关联两条记录",
+      "copy": "聚合入口：「查看本次复制记录」",
+      "next": "确认生效，任务完成"
+    }
+  ],
+  "sub_flows": [
+    {
+      "name": "取消复制操作",
+      "trigger": "点击取消或点击弹窗外区域",
+      "action": "点击取消",
+      "feedback": "弹窗关闭，不保存内容",
+      "next": "回到列表"
+    },
+    {
+      "name": "复制信息全部取消勾选",
+      "trigger": "取消所有复制信息勾选",
+      "feedback": "确认按钮置灰，Inline提示「至少选择一项复制内容」",
+      "next": "至少勾选一项后恢复"
+    },
+    {
+      "name": "从已选列表移除单个用户",
+      "trigger": "点击用户名旁的移除图标",
+      "feedback": "用户从列表消失，预览区更新",
+      "next": "继续调整选择或提交"
+    },
+    {
+      "name": "清空全部已选用户",
+      "trigger": "点击清空按钮",
+      "feedback": "全部清空，预览区为空，确认按钮置灰",
+      "next": "重新选择"
+    }
+  ],
+  "exceptions": [
+    {
+      "name": "部分目标用户校验失败",
+      "timing": "确认复制后校验阶段",
+      "trigger": "目标用户中存在不符合加入/认证状态要求者",
+      "basis": "UXB §6 + U-09",
+      "feedback_form": "Modal内错误列表区",
+      "system_feedback": "列出不满足条件的用户名和原因",
+      "user_next": "逐人移除或一键移除不满足者后重试",
+      "recovery": "移除后重新提交，一步完成，不丢失已填内容"
+    },
+    {
+      "name": "复制来源状态已变更",
+      "timing": "确认复制提交时",
+      "trigger": "来源子管理员在操作期间被删除、停用或修改",
+      "basis": "UXB §6",
+      "feedback_form": "Toast",
+      "system_feedback": "「复制来源已变更，请关闭弹窗后重新选择」",
+      "user_next": "关闭弹窗，重新选择来源",
+      "recovery": "需重新选择来源"
+    },
+    {
+      "name": "双管理员互审下反馈不一致",
+      "timing": "提交复制成功后",
+      "trigger": "系统开启双管理员互审",
+      "basis": "UXB ER4 + RISK-006 + 知识库24",
+      "feedback_form": "Toast + 操作记录状态",
+      "system_feedback": "Toast区分直接生效和待审批",
+      "user_next": "等待审批完成",
+      "recovery": "审批通过自动恢复"
+    },
+    {
+      "name": "双管理员互审审批被拒绝",
+      "timing": "审批流程中",
+      "trigger": "另一位管理员拒绝审批",
+      "basis": "知识库24 + C-07",
+      "feedback_form": "通知 + 操作记录状态",
+      "system_feedback": "通知发起人审批被拒及原因",
+      "user_next": "查看原因，决定是否重新发起",
+      "recovery": "需重新发起，不可从拒绝状态恢复"
+    },
+    {
+      "name": "目标用户数量达上限",
+      "timing": "员工选择器中勾选时",
+      "trigger": "已选人数达200人",
+      "basis": "UXB §6 + I-02",
+      "feedback_form": "选择器内提示",
+      "system_feedback": "「最多选择200名复制对象」，第201人起不可勾选",
+      "user_next": "确认当前选择或移除部分后替换",
+      "recovery": "原路恢复，移除部分即可继续"
+    },
+    {
+      "name": "网络异常提交失败",
+      "timing": "确认复制提交时",
+      "trigger": "网络超时或服务端异常",
+      "basis": "U-01 + U-09",
+      "feedback_form": "Modal内Banner",
+      "system_feedback": "「提交失败，请检查网络后重试」+ 重试按钮",
+      "user_next": "点击重试或取消",
+      "recovery": "点击重试，一步完成，不丢失内容"
+    }
+  ],
+  "pages": [
+    {
+      "name": "子管理员列表",
+      "type": "Page",
+      "goal": "展示所有子管理员，支持搜索、筛选、管理操作，新增复制入口",
+      "entry": "权限管理员/超管，已开启子管理员模式",
+      "buttons": ["复制", "编辑", "停用/启用"],
+      "success": "列表刷新，新增子管理员出现",
+      "failure": "错误在复制弹窗内展示"
+    },
+    {
+      "name": "员工选择器弹窗",
+      "type": "Modal",
+      "goal": "从企业成员中选择复制目标用户，新增加入/认证状态标签",
+      "trigger": "复制弹窗中点击「选择复制对象」",
+      "buttons": ["确定", "取消"],
+      "success": "选择器关闭，复制弹窗已选列表更新",
+      "failure": "达上限提示"
+    },
+    {
+      "name": "复制子管理员权限弹窗",
+      "type": "Modal",
+      "goal": "确认复制内容和目标，预览后果，完成提交",
+      "trigger": "子管理员列表点击「复制」",
+      "buttons": ["确认复制", "取消"],
+      "success": "Toast区分直接生效/待审批",
+      "failure": "错误列表区 + Banner"
+    }
+  ],
+  "states": [
+    { "key": "操作中", "meaning": "管理员正在填写复制弹窗", "target": "复制弹窗", "actionable": "选择/取消/关闭" },
+    { "key": "校验中", "meaning": "系统正在校验", "target": "确认按钮点击后", "actionable": "等待", "feedback": "「正在验证...」" },
+    { "key": "校验拦截", "meaning": "校验未通过", "target": "弹窗错误列表区", "actionable": "移除不满足用户后重试" },
+    { "key": "复制成功-直接生效", "meaning": "权限即时生效", "target": "列表", "actionable": "查看结果", "feedback": "「已成功复制给{N}名用户」" },
+    { "key": "复制成功-待审批", "meaning": "进入互审", "target": "操作记录", "actionable": "跟踪审批", "feedback": "「已提交复制审批，通过后生效」" },
+    { "key": "审批中", "meaning": "互审进行中", "target": "操作记录", "actionable": "等待/联系审批人" },
+    { "key": "审批通过", "meaning": "互审通过，权限生效", "target": "操作记录→列表", "actionable": "查看结果", "feedback": "「复制审批已通过，权限已生效」" },
+    { "key": "审批拒绝", "meaning": "互审被拒", "target": "操作记录", "actionable": "查看原因/重新发起", "feedback": "「复制审批被拒绝」" },
+    { "key": "复制失败", "meaning": "系统异常", "target": "复制弹窗", "actionable": "重试/取消", "feedback": "「提交失败，请检查网络后重试」" }
+  ],
+  "open_questions": [
+    { "level": 1, "title": "组织管辖范围与可授权组织的匹配校验", "impact": "选人器过滤项、预览区提示", "current_approach": "不做系统校验，体验侧提示关注", "confirmer": "产品经理" },
+    { "level": 1, "title": "部分目标用户校验失败时的处理策略", "impact": "错误列表区功能保留", "current_approach": "支持一键移除不满足用户后继续", "confirmer": "产品经理" },
+    { "level": 1, "title": "权限叠加时的去重策略", "impact": "预览区计数准确性", "current_approach": "静默去重", "confirmer": "产品经理+后端" },
+    { "level": 2, "title": "加入/认证状态统一表述口径", "impact": "选人器标签、错误提示", "current_approach": "使用「已加入」「已认证」", "confirmer": "产品经理" },
+    { "level": 2, "title": "复制来源与目标为同一人时的处理", "impact": "选人器过滤规则", "current_approach": "允许复制给自己", "confirmer": "产品经理" },
+    { "level": 2, "title": "复制弹窗关闭后列表定位行为", "impact": "列表滚动行为", "current_approach": "刷新列表但不自动定位", "confirmer": "产品经理" }
+  ]
+}
