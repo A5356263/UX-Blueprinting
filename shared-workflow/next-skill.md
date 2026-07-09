@@ -69,6 +69,25 @@ uxb -> journey-analysis -> experience-blueprint
 - 如果用户在 `UXB` 前强制调用它，允许由 `journey-analysis` 自身按降级规则执行
 - 此类执行结果不视为替代 `UXB` 的正式定案
 
+### 1.5A journey-analysis 完成后的动态推荐说明
+
+`journey-analysis` 完成后的下一步推荐，不是单纯套用 `skill-graph.json` 里的静态 `next_hint` 文案。
+
+执行规则如下：
+
+1. 该动态判断由 `journey-analysis` 自身在收尾阶段执行
+2. `shared-workflow/next-skill.md` 只负责记录这条规则，不替代 Skill 自己做判断
+3. 判断顺序固定为：
+   - 先检查 `spark-output/context/uxb.json`
+   - 若不存在，再检查 `spark-output/uxb_output.md`
+4. 若任一存在，视为已有 `UXB`，允许推荐 `experience-blueprint`
+5. 若两者都不存在，视为无 `UXB`，必须推荐回 `uxb`
+
+硬规则：
+
+- 无 `UXB` 时不得推荐 `experience-blueprint`
+- 不允许把“最直接的下游消费方”等同于“当前一定可执行的下一步”
+
 ### 1.6 UXB 后的旅程去重过滤
 
 当当前节点是 `uxb` 时，在输出下一步推荐前增加一次轻量过滤：

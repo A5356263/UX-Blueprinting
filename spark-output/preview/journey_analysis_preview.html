@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>旅程分析预览</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f6f8;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #667085;
+      --line: #d8dee8;
+      --header: #eef2f7;
+      --accent: #2563eb;
+      --green: #16803c;
+      --amber: #b45309;
+      --red: #b42318;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+
+    h1, h2, p { margin: 0; }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .role {
+      margin-top: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .role-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 750;
+    }
+
+    .role-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+      max-width: 560px;
+    }
+
+    .matrix-wrap {
+      overflow-x: auto;
+      background: var(--panel);
+    }
+
+    .matrix {
+      display: grid;
+      min-width: 980px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cell {
+      min-height: 82px;
+      padding: 14px 16px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .stage-title {
+      min-height: 64px;
+      background: var(--header);
+      font-weight: 750;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row-label {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #f8fafc;
+      color: #344054;
+      font-weight: 750;
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+    }
+
+    .stage-title.row-label {
+      z-index: 3;
+      justify-content: flex-start;
+      background: #e8edf5;
+    }
+
+    .confidence {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 750;
+      border: 1px solid currentColor;
+    }
+
+    .confidence-high { color: var(--green); background: #ecfdf3; }
+    .confidence-medium { color: var(--amber); background: #fffaeb; }
+    .confidence-low { color: var(--red); background: #fef3f2; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin: 0 6px 6px 0;
+      color: var(--muted);
+      font-size: 12px;
+      background: #fff;
+    }
+
+    .opportunity {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin-top: 6px;
+    }
+
+    .transitions {
+      padding: 14px 20px 18px;
+      color: var(--muted);
+      font-size: 13px;
+      background: #fff;
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 20px; }
+      .hero, .role-head { display: block; }
+      .role-note {
+        margin-top: 8px;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <h1 id="project-title">旅程分析预览</h1>
+        <p class="meta" id="project-meta"></p>
+      </div>
+    </header>
+    <section id="roles"></section>
+  </main>
+
+  <script>
+    const JOURNEY_DATA = {
+  "project_name": "员工自助申请权限",
+  "generated_at": "2026-07-09",
+  "mode": "prd-standalone",
+  "source": "需求文档_员工自助申请权限.md",
+  "journeys": [
+    {
+      "role": "员工",
+      "summary": "员工是权限申请旅程的主要执行者，核心目标是以自助方式获得工作中所需的系统权限，减少对管理员或超级管理员的线下依赖。管理员配置和审批人审核是旅程的外部依赖条件，不属于员工可控制的环节。",
+      "stages": [
+        {
+          "name": "发现权限缺口",
+          "goal": "员工在执行工作任务时意识到自己缺少某项权限，并确认需要通过申请获取",
+          "actions": [
+            "在工作中遇到需要特定权限才能操作的功能或数据",
+            "尝试操作失败或被拦截",
+            "确认当前账号缺少该权限",
+            "决定走申请流程"
+          ],
+          "touchpoints": [
+            "业务功能页面（权限不足提示）",
+            "同事/主管（口头指引）",
+            "权限状态说明"
+          ],
+          "user_voice": "这个功能我点不了，是不是没给我开权限？",
+          "confidence": "中",
+          "confidence_reason": "通用场景推导，文档未展开具体触发场景和权限不足时的交互表现",
+          "pain_points": [
+            "权限不足提示可能不明确，员工不清楚具体缺什么权限",
+            "不确定该权限是否能通过自助方式申请",
+            "习惯性走线下找管理员的路径依赖"
+          ],
+          "dropout_risk": "员工可能直接放弃、转向线下找管理员，绕过自助申请通道",
+          "opportunities": [
+            {
+              "direction": "在权限不足时直接提供'申请权限'的快捷入口",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "在员工常访问的功能入口处提示当前权限状态",
+              "downstream_hint": "蓝图"
+            }
+          ]
+        },
+        {
+          "name": "探索可申请范围",
+          "goal": "员工找到自助申请入口，了解自己能申请哪些权限及申请规则",
+          "actions": [
+            "进入自助申请权限页面/模块",
+            "浏览可申请的权限目录（按角色或功能分类）",
+            "对照自己需要的权限进行匹配",
+            "了解申请条件和审批规则"
+          ],
+          "touchpoints": [
+            "自助权限申请页面",
+            "权限目录/列表",
+            "申请规则说明"
+          ],
+          "user_voice": "原来可以自己申请，看看哪些我能申请",
+          "confidence": "中",
+          "confidence_reason": "文档描述员工查看权限场景但未展开页面结构和信息展示方式",
+          "pain_points": [
+            "权限目录可能过于复杂，员工难以定位自己需要的权限",
+            "权限名称和描述偏技术化，非技术人员看不懂",
+            "可申请范围与员工实际需要的范围可能存在偏差"
+          ],
+          "dropout_risk": "目录太复杂或难以理解，员工放弃自助转线下",
+          "opportunities": [
+            {
+              "direction": "提供搜索和分类筛选",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "用业务场景语言描述权限而非纯技术名称",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "根据员工岗位推荐常用权限",
+              "downstream_hint": "待确认"
+            }
+          ]
+        },
+        {
+          "name": "发起权限申请",
+          "goal": "员工选定需要的权限，填写申请信息并成功提交申请",
+          "actions": [
+            "选择目标权限",
+            "填写申请原因/说明",
+            "确认申请信息",
+            "提交申请",
+            "收到提交成功反馈"
+          ],
+          "touchpoints": [
+            "申请表单",
+            "权限选择器",
+            "原因输入框",
+            "提交确认/反馈"
+          ],
+          "user_voice": "希望申请能快点批下来",
+          "confidence": "中",
+          "confidence_reason": "文档给出场景描述但缺少表单字段细节、校验规则、提交后反馈形式等具体说明",
+          "pain_points": [
+            "不确定申请原因要写多详细",
+            "选错权限范围导致被拒或授权不当",
+            "不清楚提交后多久会有结果",
+            "缺少草稿或暂存功能"
+          ],
+          "dropout_risk": "表单填写成本高导致放弃提交；担心选错带来后续麻烦导致犹豫不提交",
+          "opportunities": [
+            {
+              "direction": "提供申请原因模板/示例",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "提交后给出明确的时效预期",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "支持暂存草稿",
+              "downstream_hint": "待确认"
+            }
+          ]
+        },
+        {
+          "name": "等待审批处理",
+          "goal": "员工了解申请进度，等待审批人做出决定",
+          "actions": [
+            "收到申请已提交的确认",
+            "等待审批结果（查看申请记录/状态）",
+            "如长时间未处理，可能线下跟进审批人"
+          ],
+          "touchpoints": [
+            "申请记录/进度页",
+            "审批状态标签",
+            "系统通知（待审批、已审批）",
+            "审批人（线下沟通）"
+          ],
+          "user_voice": "怎么还没批？审批人是不是没看到？",
+          "confidence": "中",
+          "confidence_reason": "文档描述了查看审批状态的需求但未展开进度展示方式和通知策略",
+          "pain_points": [
+            "不知道审批进展到哪一步",
+            "审批人长时间不处理，员工没有催办方式",
+            "申请被拒时原因可能不充分"
+          ],
+          "dropout_risk": "审批等待过长，员工转线下绕过系统，自助申请可信度下降",
+          "opportunities": [
+            {
+              "direction": "提供审批进度可视化",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "支持审批超时自动提醒审批人",
+              "downstream_hint": "待确认"
+            },
+            {
+              "direction": "被拒时要求填写具体原因",
+              "downstream_hint": "蓝图"
+            }
+          ]
+        },
+        {
+          "name": "获取授权结果",
+          "goal": "员工收到审批结果，授权通过后能正常使用权限，或被拒后了解原因及后续行动",
+          "actions": [
+            "收到审批结果通知",
+            "（通过）查看已获得的权限",
+            "（通过）回到业务功能验证权限已生效",
+            "（被拒）查看拒绝原因",
+            "（被拒）决定是否重新申请或寻求其他途径"
+          ],
+          "touchpoints": [
+            "结果通知（系统）",
+            "权限状态展示",
+            "业务功能页面（权限验证）"
+          ],
+          "user_voice": "批下来了，现在可以用了",
+          "confidence": "中",
+          "confidence_reason": "文档描述了自动授权但未展开被拒后的引导和重试机制",
+          "pain_points": [
+            "被拒后不清楚还能不能再申请",
+            "被拒原因笼统，无法针对性改进",
+            "授权生效时间不确定"
+          ],
+          "dropout_risk": "被拒后无明确指引，员工放弃自助渠道，不再信任该能力",
+          "opportunities": [
+            {
+              "direction": "被拒后提供重新申请的快捷入口",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "给出被拒原因和改进建议",
+              "downstream_hint": "蓝图"
+            },
+            {
+              "direction": "明确授权生效时效",
+              "downstream_hint": "蓝图"
+            }
+          ]
+        }
+      ],
+      "key_transitions": [
+        {
+          "from": "发现权限缺口",
+          "to": "探索可申请范围",
+          "trigger": "员工确认自己缺少权限，决定通过自助渠道解决"
+        },
+        {
+          "from": "探索可申请范围",
+          "to": "发起权限申请",
+          "trigger": "员工在可申请目录中找到匹配的权限选项"
+        },
+        {
+          "from": "发起权限申请",
+          "to": "等待审批处理",
+          "trigger": "员工成功提交申请，系统确认受理"
+        },
+        {
+          "from": "等待审批处理",
+          "to": "获取授权结果",
+          "trigger": "审批人做出同意或拒绝的审批决定"
+        }
+      ]
+    }
+  ]
+}
+    const emptyText = "未提供";
+    const rows = [
+      ["goal", "用户目标"],
+      ["actions", "用户行动"],
+      ["touchpoints", "触点"],
+      ["user_voice", "用户心声"],
+      ["confidence", "信心度"],
+      ["pain_points", "痛点"],
+      ["dropout_risk", "流失风险"],
+      ["opportunities", "设计机会"]
+    ];
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function text(value) {
+      if (Array.isArray(value)) return value.length ? value.map(text).join("、") : emptyText;
+      if (value && typeof value === "object") return text(value.direction || value.label || emptyText);
+      return value || emptyText;
+    }
+
+    function confidenceClass(value) {
+      if (value === "高") return "confidence-high";
+      if (value === "低") return "confidence-low";
+      return "confidence-medium";
+    }
+
+    function renderTags(values) {
+      const list = Array.isArray(values) ? values : values ? [values] : [];
+      if (!list.length) return escapeHtml(emptyText);
+      return list.map((item) => `<span class="tag">${escapeHtml(text(item))}</span>`).join("");
+    }
+
+    function renderOpportunities(values) {
+      const list = Array.isArray(values) ? values : [];
+      if (!list.length) return escapeHtml(emptyText);
+      return list.map((item) => {
+        const direction = escapeHtml(text(item.direction));
+        const hint = item.downstream_hint ? `（下游：${escapeHtml(item.downstream_hint)}）` : "";
+        return `<div class="opportunity">${direction}${hint}</div>`;
+      }).join("");
+    }
+
+    function renderValue(stage, key) {
+      if (key === "touchpoints") return renderTags(stage.touchpoints);
+      if (key === "opportunities") return renderOpportunities(stage.opportunities);
+      if (key === "confidence") {
+        const confidence = text(stage.confidence);
+        const reason = text(stage.confidence_reason);
+        return `<span class="confidence ${confidenceClass(confidence)}">${escapeHtml(confidence)}</span><br>${escapeHtml(reason)}`;
+      }
+      return escapeHtml(text(stage[key]));
+    }
+
+    function transitionText(transitions) {
+      const list = Array.isArray(transitions) ? transitions : [];
+      if (!list.length) return emptyText;
+      return list.map((item) => `${text(item.from)} → ${text(item.to)}：${text(item.trigger)}`).join(" / ");
+    }
+
+    function renderRole(role) {
+      const stages = Array.isArray(role.stages) ? role.stages : [];
+      const columns = `180px repeat(${Math.max(stages.length, 1)}, minmax(180px, 1fr))`;
+      const stageHeads = stages.map((stage) => `<div class="cell stage-title">${escapeHtml(text(stage.name))}</div>`).join("");
+      const bodyRows = rows.map(([key, label]) => `
+        <div class="cell row-label">${label}</div>
+        ${stages.map((stage) => `<div class="cell">${renderValue(stage, key)}</div>`).join("")}
+      `).join("");
+
+      return `
+        <section class="role">
+          <div class="role-head">
+            <h2>${escapeHtml(text(role.role))}</h2>
+            <p class="role-note">${escapeHtml(text(role.summary))}</p>
+          </div>
+          <div class="matrix-wrap">
+            <div class="matrix" style="grid-template-columns: ${columns};">
+              <div class="cell stage-title row-label">阶段</div>
+              ${stageHeads || `<div class="cell stage-title">${emptyText}</div>`}
+              ${bodyRows}
+            </div>
+          </div>
+          <div class="transitions">阶段转折：${escapeHtml(transitionText(role.key_transitions))}</div>
+        </section>
+      `;
+    }
+
+    function render() {
+      document.getElementById("project-title").textContent = `旅程分析：${JOURNEY_DATA.project_name || emptyText}`;
+      document.getElementById("project-meta").textContent = `${JOURNEY_DATA.generated_at || emptyText} / ${JOURNEY_DATA.mode || emptyText} / ${JOURNEY_DATA.source || emptyText}`;
+      const roles = Array.isArray(JOURNEY_DATA.journeys) ? JOURNEY_DATA.journeys : [];
+      document.getElementById("roles").innerHTML = roles.map(renderRole).join("");
+    }
+
+    render();
+  </script>
+</body>
+</html>

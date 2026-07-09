@@ -639,6 +639,9 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 不允许从 Markdown 二次解析。
 - 不允许为了 HTML 临时补字段。
 - 如 JSON 字段缺失，必须先修复 JSON，再生成 HTML。
+- 预览生成只允许通过 `scripts/generate_preview.js` 完成；该脚本是当前 Skill 的唯一正式预览生成入口。
+- 不允许通过模糊文本替换去截断模板中的 JS 函数区。
+- 模板占位点只允许替换 `/* __JOURNEY_DATA_JSON__ */` 这一处。
 
 ## Context JSON 写入
 
@@ -752,12 +755,44 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 1. 读取 `shared-workflow/next-skill.md`。
 2. 读取 `shared-workflow/skill-graph.json` 中 `journey-analysis` 的 `next_hint`。
-3. 按 shared-workflow 模板输出完成语和下一步推荐。
-4. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
+3. 先判断 `UXB` 是否存在：
+   - 先检查 `spark-output/context/uxb.json`
+   - 若不存在，再检查 `spark-output/uxb_output.md`
+   - 任一存在，视为已有 `UXB`
+   - 两者都不存在，视为无 `UXB`
+4. 按以下硬规则输出完成语和下一步推荐：
+   - 已有 `UXB` 时：
+
+```text
+✅ 用户旅程完成，{产物简述}
+你可以选择：体验策略 - 当前已具备 UXB 产出，且旅程洞察已补齐，可以把旅程洞察转化为具体的交互流程和页面设计。
+你回复“体验策略”即可
+```
+
+   - 无 `UXB` 时：
+
+```text
+✅ 用户旅程完成，{产物简述}
+你可以选择：需求定案 - 体验策略正式依赖 UXB 产出，当前应先完成需求定案，再进入体验策略。
+你回复“需求定案”即可
+```
+
+5. 不允许在无 `UXB` 时仍然推荐 `experience-blueprint`。
+6. 不允许使用“旅程之后直接接体验策略”“下一步就是体验策略”这类绝对表述。
+7. 如宿主支持本地命令执行，则在正式产物写出并完成 JSON 校验后，优先执行以下预览生成脚本：
+
+```text
+node {skill_dir}/scripts/generate_preview.js {skill_dir}/assets/journey_preview_template.html spark-output/context/journey-analysis.json spark-output/preview/journey_analysis_preview.html
+```
+
+8. 预览生成失败时：
+   - 允许提示用户预览未生成
+   - 不得影响 Markdown 与 Context JSON 的完成判定
+9. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
 
 ```text
 shared-workflow/generate-progress-preview.ps1
 ```
 
-5. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
-6. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。
+10. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
+11. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。
