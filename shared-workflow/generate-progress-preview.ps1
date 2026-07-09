@@ -1,9 +1,201 @@
 param(
   [string]$TemplatePath = "shared-workflow/progress-preview.html",
+  [string]$GraphPath = "shared-workflow/skill-graph.json",
   [string]$OutputPath = "spark-output/progress-preview.html"
 )
 
 $ErrorActionPreference = "Stop"
+
+function Get-SlashAlias {
+  param([string]$SkillId)
+
+  $aliasMap = @{
+    "uxb" = "/uxb"
+    "journey-analysis" = "/journey-analysis"
+    "experience-blueprint" = "/experience-blueprint"
+    "page-spec" = "/page-spec"
+    "xft-design" = "/xft-design"
+    "edge" = "/edge"
+    "check" = "/check"
+    "board" = "/board"
+    "knowledge-wiki" = "/knowledge-wiki"
+    "product-analysis" = "/product-analysis"
+    "design-strategy" = "/design-strategy"
+    "journey-metrics" = "/journey-metrics"
+    "interface-audit" = "/interface-audit"
+  }
+
+  if ($aliasMap.ContainsKey($SkillId)) {
+    return $aliasMap[$SkillId]
+  }
+
+  return "/$SkillId"
+}
+
+function Get-ContextPath {
+  param([string]$SkillId)
+
+  $contextMap = @{
+    "uxb" = "spark-output/context/uxb.json"
+    "journey-analysis" = "spark-output/context/journey-analysis.json"
+    "experience-blueprint" = "spark-output/context/experience-blueprint.json"
+    "page-spec" = "spark-output/context/page-spec.json"
+    "xft-design" = "spark-output/context/xft-design.json"
+    "edge" = "spark-output/context/edge.json"
+    "check" = "spark-output/context/check.json"
+    "board" = "spark-output/context/board.json"
+    "knowledge-wiki" = "spark-output/context/knowledge-wiki.json"
+    "product-analysis" = "spark-output/context/product-analysis.json"
+    "design-strategy" = "spark-output/context/design-strategy.json"
+    "journey-metrics" = "spark-output/context/journey-metrics.json"
+    "interface-audit" = "spark-output/context/interface-audit.json"
+  }
+
+  if ($contextMap.ContainsKey($SkillId)) {
+    return $contextMap[$SkillId]
+  }
+
+  return $null
+}
+
+function Get-SectionMeta {
+  param([pscustomobject]$Skill)
+
+  $sectionBySkillId = @{
+    "product-analysis" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
+    "interface-audit" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
+    "design-strategy" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
+    "uxb" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
+    "journey-analysis" = [pscustomobject]@{
+      id = "define"
+      number = "02"
+      name_zh = "定义"
+      name_en = "Define"
+      note = "角色任务、旅程结构与需求补全"
+      order = 2
+    }
+    "experience-blueprint" = [pscustomobject]@{
+      id = "design"
+      number = "03"
+      name_zh = "设计"
+      name_en = "Design"
+      note = "方案生成、规格细化与页面落地"
+      order = 3
+    }
+    "board" = [pscustomobject]@{
+      id = "design"
+      number = "03"
+      name_zh = "设计"
+      name_en = "Design"
+      note = "方案生成、规格细化与页面落地"
+      order = 3
+    }
+    "page-spec" = [pscustomobject]@{
+      id = "design"
+      number = "03"
+      name_zh = "设计"
+      name_en = "Design"
+      note = "方案生成、规格细化与页面落地"
+      order = 3
+    }
+    "xft-design" = [pscustomobject]@{
+      id = "design"
+      number = "03"
+      name_zh = "设计"
+      name_en = "Design"
+      note = "方案生成、规格细化与页面落地"
+      order = 3
+    }
+    "edge" = [pscustomobject]@{
+      id = "validate"
+      number = "04"
+      name_zh = "验证"
+      name_en = "Validate"
+      note = "异常覆盖、质量校验与度量口径"
+      order = 4
+    }
+    "check" = [pscustomobject]@{
+      id = "validate"
+      number = "04"
+      name_zh = "验证"
+      name_en = "Validate"
+      note = "异常覆盖、质量校验与度量口径"
+      order = 4
+    }
+    "journey-metrics" = [pscustomobject]@{
+      id = "validate"
+      number = "04"
+      name_zh = "验证"
+      name_en = "Validate"
+      note = "异常覆盖、质量校验与度量口径"
+      order = 4
+    }
+    "knowledge-wiki" = [pscustomobject]@{
+      id = "deliver"
+      number = "05"
+      name_zh = "沉淀"
+      name_en = "Archive"
+      note = "产物归档、知识沉淀与后续复用"
+      order = 5
+    }
+  }
+
+  if ($sectionBySkillId.ContainsKey($Skill.id)) {
+    return $sectionBySkillId[$Skill.id]
+  }
+
+  return [pscustomobject]@{
+    id = "design"
+    number = "03"
+    name_zh = "设计"
+    name_en = "Design"
+    note = "方案生成、规格细化与页面落地"
+    order = 3
+  }
+}
+
+function Test-SkillReady {
+  param(
+    [pscustomobject]$Skill,
+    [hashtable]$DoneMap
+  )
+
+  foreach ($dep in @($Skill.required)) {
+    if (-not $DoneMap.ContainsKey($dep) -or -not $DoneMap[$dep]) {
+      return $false
+    }
+  }
+
+  return $true
+}
 
 function Get-PreviewHint {
   param(
@@ -30,117 +222,59 @@ function Get-PreviewHint {
 
 try {
   $templateRaw = Get-Content -Raw -Encoding UTF8 $TemplatePath
-  $configJson = @'
-{
-  "phases": [
-    {
-      "id": "explore",
-      "number": "01",
-      "name_zh": "\u63a2\u7d22",
-      "name_en": "Explore",
-      "skills": [
-        {
-          "id": "uxb",
-          "name_zh": "\u9700\u6c42\u5b9a\u6848",
-          "slash": "/uxb",
-          "context": "spark-output/context/uxb.json",
-          "depends_on": []
-        }
-      ]
-    },
-    {
-      "id": "define",
-      "number": "02",
-      "name_zh": "\u5b9a\u4e49",
-      "name_en": "Define",
-      "skills": [
-        {
-          "id": "journey-analysis",
-          "name_zh": "\u7528\u6237\u65c5\u7a0b",
-          "slash": "/journey",
-          "context": "spark-output/context/journey-analysis.json",
-          "depends_on": ["uxb"]
-        },
-        {
-          "id": "experience-blueprint",
-          "name_zh": "\u4f53\u9a8c\u84dd\u56fe",
-          "slash": "/blueprint",
-          "context": "spark-output/context/experience-blueprint.json",
-          "depends_on": ["uxb"]
-        },
-        {
-          "id": "page-spec",
-          "name_zh": "\u9875\u9762\u89c4\u683c",
-          "slash": "/page-spec",
-          "context": "spark-output/context/page-spec.json",
-          "depends_on": ["experience-blueprint"]
-        }
-      ]
-    },
-    {
-      "id": "design",
-      "number": "03",
-      "name_zh": "\u8bbe\u8ba1",
-      "name_en": "Design",
-      "skills": [
-        {
-          "id": "xft-design",
-          "name_zh": "\u9875\u9762\u539f\u578b",
-          "slash": "/xft-design",
-          "context": "spark-output/context/xft-design.json",
-          "depends_on": ["page-spec"]
-        },
-        {
-          "id": "edge",
-          "name_zh": "\u5f02\u5e38\u6001",
-          "slash": "/edge",
-          "context": "spark-output/context/edge.json",
-          "depends_on": ["experience-blueprint"]
-        },
-        {
-          "id": "board",
-          "name_zh": "\u89c6\u89c9\u60c5\u7eea\u677f",
-          "slash": "/board",
-          "context": "spark-output/context/board.json",
-          "depends_on": ["experience-blueprint"]
-        },
-        {
-          "id": "check",
-          "name_zh": "\u8bbe\u8ba1\u8d70\u67e5",
-          "slash": "/check",
-          "context": "spark-output/context/check.json",
-          "depends_on": ["experience-blueprint"]
-        }
-      ]
-    }
-  ]
-}
-'@
-  $config = $configJson | ConvertFrom-Json
+  $graph = Get-Content -Raw -Encoding UTF8 $GraphPath | ConvertFrom-Json
 
   $nameMap = @{}
   $doneMap = @{}
-  $orderedSkills = New-Object System.Collections.Generic.List[object]
+  $skillOrder = @{}
+  $mainChainSkills = New-Object System.Collections.Generic.List[object]
+  $sectionsMap = @{}
 
-  foreach ($phase in $config.phases) {
-    foreach ($skill in $phase.skills) {
-      $nameMap[$skill.id] = $skill.slash
-      $doneMap[$skill.id] = Test-Path $skill.context
-      $orderedSkills.Add([pscustomobject]@{
+  for ($i = 0; $i -lt $graph.skills.Count; $i++) {
+    $skill = $graph.skills[$i]
+    $skillOrder[$skill.id] = $i
+    $nameMap[$skill.id] = Get-SlashAlias -SkillId $skill.id
+
+    $contextPath = Get-ContextPath -SkillId $skill.id
+    $doneMap[$skill.id] = $false
+    if ($contextPath) {
+      $doneMap[$skill.id] = Test-Path $contextPath
+    }
+
+    if ($skill.type -ne "infrastructure" -and $null -ne $skill.phase) {
+      $mainChainSkills.Add([pscustomobject]@{
         id = $skill.id
-        depends_on = @($skill.depends_on)
+        phase = [double]$skill.phase
+        required = @($skill.required)
+        order = $i
       })
     }
+
+    $sectionMeta = Get-SectionMeta -Skill $skill
+    if (-not $sectionsMap.ContainsKey($sectionMeta.id)) {
+      $sectionsMap[$sectionMeta.id] = [pscustomobject]@{
+        id = $sectionMeta.id
+        number = $sectionMeta.number
+        name_zh = $sectionMeta.name_zh
+        name_en = $sectionMeta.name_en
+        note = $sectionMeta.note
+        order = $sectionMeta.order
+        skills = New-Object System.Collections.Generic.List[object]
+      }
+    }
+
+    $sectionsMap[$sectionMeta.id].skills.Add($skill)
   }
 
+  $sortedMainChain = $mainChainSkills | Sort-Object phase, order
   $currentSkillId = $null
-  foreach ($skill in $orderedSkills) {
+  foreach ($skill in $sortedMainChain) {
     if ($doneMap[$skill.id]) {
       continue
     }
 
     $ready = $true
-    foreach ($dep in @($skill.depends_on)) {
+    foreach ($dep in @($skill.required)) {
       if (-not $doneMap.ContainsKey($dep) -or -not $doneMap[$dep]) {
         $ready = $false
         break
@@ -153,41 +287,47 @@ try {
     }
   }
 
-  $phaseStates = @()
-  foreach ($phase in $config.phases) {
-    $skills = @()
-    foreach ($skill in $phase.skills) {
+  $sectionStates = @()
+  $sortedSections = $sectionsMap.Values | Sort-Object order
+  foreach ($section in $sortedSections) {
+    $skillStates = @()
+    foreach ($skill in $section.skills) {
       $status = "idle"
       if ($doneMap[$skill.id]) {
         $status = "done"
       } elseif ($currentSkillId -and $skill.id -eq $currentSkillId) {
         $status = "current"
+      } elseif (Test-SkillReady -Skill $skill -DoneMap $doneMap) {
+        $status = "ready"
       }
 
-      $skills += [pscustomobject]@{
+      $skillStates += [pscustomobject]@{
         id = $skill.id
         name_zh = $skill.name_zh
-        slash = $skill.slash
+        slash = $nameMap[$skill.id]
         status = $status
-        hint_dep = Get-PreviewHint -DependsOn @($skill.depends_on) -DoneMap $doneMap -NameMap $nameMap
+        hint_dep = Get-PreviewHint -DependsOn @($skill.required) -DoneMap $doneMap -NameMap $nameMap
+        standalone_usable = [bool]$skill.standalone_usable
+        standalone_note = $skill.standalone_note
       }
     }
 
-    $phaseStates += [pscustomobject]@{
-      id = $phase.id
-      number = $phase.number
-      name_zh = $phase.name_zh
-      name_en = $phase.name_en
-      skills = $skills
+    $sectionStates += [pscustomobject]@{
+      id = $section.id
+      number = $section.number
+      name_zh = $section.name_zh
+      name_en = $section.name_en
+      note = $section.note
+      skills = $skillStates
     }
   }
 
   $state = [pscustomobject]@{
     generated_at = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    phases = $phaseStates
+    sections = $sectionStates
   }
 
-  $stateJson = $state | ConvertTo-Json -Depth 8
+  $stateJson = $state | ConvertTo-Json -Depth 10
   $injectScript = "<script>window.__PREVIEW_STATE__ = $stateJson;</script>"
   $html = $templateRaw.Replace("<!--__PREVIEW_STATE_INJECT__-->", $injectScript)
 

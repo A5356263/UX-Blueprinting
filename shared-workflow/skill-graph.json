@@ -23,6 +23,8 @@
       "_comment": "正式主链仍要求先完成 uxb，再进入 journey-analysis。当前 Skill 已支持在用户显式调用时直接读取 PRD 或原始需求做 standalone / guided-completion，但这属于 Skill 内部能力扩展，不改变 shared-workflow 的 ready 判定与主链推荐顺序。",
       "name_zh": "用户旅程",
       "phase": 2,
+      "standalone_usable": true,
+      "standalone_note": "可独立使用；主链推荐先完成 uxb 再进入，以便复用需求定案结果。",
       "anchor": false,
       "reads": [
         "uxb"
@@ -184,6 +186,19 @@
       "next_hint": {
         "preferred": [],
         "reason": "独立 Skill，当前无下游。后续可再与其他 Skill 建立关系。",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "interface-audit",
+      "name_zh": "界面诊断",
+      "phase": null,
+      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、journey-analysis、product-analysis、check 消费的诊断结果。不参与主链 ready 计算，只在需要时按需调用。",
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "独立增强 Skill，重点是输出现状界面诊断结果并交给其他 Skill 消费，当前无固定单一下游。",
         "alternatives": []
       }
     },

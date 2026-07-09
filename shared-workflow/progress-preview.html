@@ -37,79 +37,92 @@
   }
 
   .shell {
-    max-width: 1240px;
+    max-width: 1280px;
     margin: 0 auto;
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 26px 20px 30px;
+    border-radius: 12px;
+    padding: 24px;
   }
 
   .phase + .phase {
-    margin-top: 34px;
+    margin-top: 24px;
   }
 
   .phase-head {
     display: flex;
     align-items: baseline;
-    gap: 10px;
-    padding: 0 2px 12px;
+    gap: 12px;
+    padding: 0 0 8px;
     border-bottom: 1px dashed var(--line);
   }
 
   .phase-num {
-    color: #b6aaa0;
-    font-size: 24px;
+    color: #a8a29e;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.1em;
   }
 
   .phase-name {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1f1b18;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c1917;
   }
 
   .phase-en {
-    color: #b0a49a;
+    color: #a8a29e;
     font-style: italic;
-    font-size: 13px;
+    font-size: 12px;
+  }
+
+  .phase-note {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   .phase-count {
     margin-left: auto;
-    color: #b0a49a;
-    font-size: 14px;
+    color: #a8a29e;
+    font-size: 12px;
     font-variant-numeric: tabular-nums;
   }
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 14px;
-    padding-top: 18px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    padding-top: 12px;
   }
 
   .card {
-    min-height: 126px;
-    border-radius: 16px;
+    min-height: 70px;
+    border-radius: 10px;
     border: 1px solid var(--card-idle-border);
     background: var(--card-idle-bg);
-    padding: 18px 16px 16px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    gap: 4px;
   }
 
   .card.is-current {
     background: var(--card-active-bg);
     border-color: var(--border-strong);
-    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.08) inset;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
   }
 
   .card.is-done {
     background: var(--card-done-bg);
     border-color: var(--card-done-border);
+  }
+
+  .card.is-ready {
+    background: #ffffff;
+    border-color: #d6d3d1;
   }
 
   .card-top {
@@ -134,9 +147,13 @@
     background: var(--card-done-text);
   }
 
+  .card.is-ready .dot {
+    background: #9f9489;
+  }
+
   .card-title {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     color: #58504a;
     line-height: 1.25;
   }
@@ -146,19 +163,29 @@
     color: #1f1b18;
   }
 
+  .card.is-ready .card-title {
+    color: #1c1917;
+  }
+
   .card-slash {
-    margin-top: 8px;
-    color: var(--muted-soft);
-    font-size: 12px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #a8a29e;
+    font-size: 11px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
 
   .card-status {
-    margin-top: 16px;
-    color: #d0c7c0;
-    font-size: 13px;
+    color: #a8a29e;
+    font-size: 11px;
     line-height: 1.4;
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  .card-scene {
+    margin-top: auto;
+    padding-top: 4px;
+    color: #b7afa8;
+    font-size: 10px;
+    line-height: 1.35;
   }
 
   .card.is-current .card-status {
@@ -169,6 +196,10 @@
     color: var(--card-done-text);
   }
 
+  .card.is-ready .card-status {
+    color: #57534e;
+  }
+
   .footer {
     margin-top: 22px;
     color: #b0a49a;
@@ -176,22 +207,28 @@
     text-align: right;
   }
 
+  @media (max-width: 1040px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 720px) {
     .shell {
       padding: 20px 14px 24px;
-      border-radius: 16px;
+      border-radius: 12px;
     }
 
     .phase-num {
-      font-size: 18px;
+      font-size: 11px;
     }
 
     .phase-name {
-      font-size: 17px;
+      font-size: 15px;
     }
 
     .phase-count {
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .cards {
@@ -210,14 +247,18 @@
 <script>
 const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
   generated_at: "template",
-  phases: [
+  sections: [
     {
       id: "explore",
       number: "01",
       name_zh: "探索",
       name_en: "Explore",
+      note: "需求读取、问题诊断与方向收敛",
       skills: [
-        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null }
+        { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "方向不稳时使用" },
+        { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "已有界面诊断" },
+        { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" },
+        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "收敛正式需求" }
       ]
     },
     {
@@ -225,10 +266,9 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "02",
       name_zh: "定义",
       name_en: "Define",
+      note: "角色任务、旅程结构与需求补全",
       skills: [
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey", status: "idle", hint_dep: "/uxb" },
-        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/blueprint", status: "idle", hint_dep: "/uxb" },
-        { id: "page-spec", name_zh: "页面规格", slash: "/page-spec", status: "idle", hint_dep: "/blueprint" }
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/uxb", scene_hint: "补全角色旅程", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 uxb 再进入，以便复用需求定案结果。" }
       ]
     },
     {
@@ -236,11 +276,34 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "03",
       name_zh: "设计",
       name_en: "Design",
+      note: "方案生成、规格细化与页面落地",
       skills: [
-        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "/page-spec" },
-        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/blueprint" },
-        { id: "board", name_zh: "视觉情绪板", slash: "/board", status: "idle", hint_dep: "/blueprint" },
-        { id: "check", name_zh: "设计走查", slash: "/check", status: "idle", hint_dep: "/blueprint" }
+        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb", scene_hint: "生成体验方案" },
+        { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" },
+        { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取页面规格" },
+        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "/page-spec", scene_hint: "产出页面原型" },
+      ]
+    },
+    {
+      id: "validate",
+      number: "04",
+      name_zh: "验证",
+      name_en: "Validate",
+      note: "异常覆盖、质量校验与度量口径",
+      skills: [
+        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常状态" },
+        { id: "check", name_zh: "设计走查", slash: "/check", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "做一致性走查" },
+        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "定义埋点口径" }
+      ]
+    },
+    {
+      id: "deliver",
+      number: "05",
+      name_zh: "沉淀",
+      name_en: "Archive",
+      note: "产物归档、知识沉淀与后续复用",
+      skills: [
+        { id: "knowledge-wiki", name_zh: "知识库", slash: "/knowledge-wiki", status: "ready", hint_dep: null, scene_hint: "沉淀可复用知识" }
       ]
     }
   ]
@@ -258,24 +321,35 @@ function escapeHtml(value) {
 function render() {
   const app = document.getElementById("app");
   const footer = document.getElementById("footer");
-  const phases = PREVIEW_STATE.phases || [];
+  const sections = PREVIEW_STATE.sections || [];
 
-  app.innerHTML = phases.map((phase) => {
+  app.innerHTML = sections.map((phase) => {
     const doneCount = phase.skills.filter((skill) => skill.status === "done").length;
     const totalCount = phase.skills.length;
     const cards = phase.skills.map((skill) => {
-      const cardClass = skill.status === "done"
-        ? "card is-done"
-        : skill.status === "current"
-          ? "card is-current"
-          : "card";
-      const statusText = skill.status === "done"
-        ? "\u5df2\u4ea7\u51fa"
-        : skill.status === "current"
-          ? "\u73b0\u5728\u53ef\u4ee5\u505a"
-          : skill.hint_dep
-            ? `\u5148\u505a ${skill.hint_dep}`
-            : "\u6682\u672a\u4ea7\u51fa";
+      let cardClass = "card";
+      if (skill.status === "done") {
+        cardClass = "card is-done";
+      } else if (skill.status === "current") {
+        cardClass = "card is-current";
+      } else if (skill.status === "ready") {
+        cardClass = "card is-ready";
+      }
+
+      let statusText = "\u6682\u672a\u4ea7\u51fa";
+      if (skill.status === "done") {
+        statusText = "\u5df2\u4ea7\u51fa";
+      } else if (skill.status === "current") {
+        statusText = "\u73b0\u5728\u53ef\u4ee5\u505a";
+      } else if (skill.status === "ready") {
+        statusText = "\u8be5\u73af\u8282\u53ef\u7528";
+      } else if (skill.standalone_usable) {
+        statusText = skill.hint_dep
+          ? `\u53ef\u72ec\u7acb\u4f7f\u7528\uff0c\u4e3b\u94fe\u5efa\u8bae\u5148\u505a ${skill.hint_dep}`
+          : "\u53ef\u72ec\u7acb\u4f7f\u7528";
+      } else if (skill.hint_dep) {
+        statusText = `\u5148\u505a ${skill.hint_dep}`;
+      }
 
       return `
         <section class="${cardClass}">
@@ -285,6 +359,7 @@ function render() {
           </div>
           <div class="card-slash">${escapeHtml(skill.slash)}</div>
           <div class="card-status">${escapeHtml(statusText)}</div>
+          ${skill.scene_hint ? `<div class="card-scene">${escapeHtml(skill.scene_hint)}</div>` : ""}
         </section>
       `;
     }).join("");
@@ -293,8 +368,11 @@ function render() {
       <section class="phase">
         <div class="phase-head">
           <div class="phase-num">${escapeHtml(phase.number)}</div>
-          <div class="phase-name">${escapeHtml(phase.name_zh)}</div>
-          <div class="phase-en">${escapeHtml(phase.name_en)}</div>
+          <div>
+            <div class="phase-name">${escapeHtml(phase.name_zh)}</div>
+            <div class="phase-en">${escapeHtml(phase.name_en)}</div>
+            <div class="phase-note">${escapeHtml(phase.note || "")}</div>
+          </div>
           <div class="phase-count">${doneCount} / ${totalCount}</div>
         </div>
         <div class="cards">${cards}</div>
