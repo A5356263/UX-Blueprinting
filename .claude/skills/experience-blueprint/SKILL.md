@@ -29,7 +29,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 
 启动后固定按以下顺序读取：
 
-1. 读取 `_shared/skill-graph.json`，确认自己的角色和位置
+1. 读取 `shared-workflow/skill-graph.json`，确认自己的角色和位置
 2. 读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要的叙述性分析
 3. 读取 `spark-output/context/journey-analysis.json`（如存在），用于 `§1` 旅程消费摘要的结构化数据
 4. 读取 `spark-output/context/uxb.json`
@@ -455,10 +455,10 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 ## 交接
 
-当前是否为链路终端，以 `_shared/skill-graph.json` 为准。完成后：
+当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
 
-1. 读取 `_shared/next-skill.md` 交接话术模板
-2. 读取 `_shared/skill-graph.json` 中 id 为 `experience-blueprint` 的 `next_hint`
+1. 读取 `shared-workflow/next-skill.md` 交接话术模板
+2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `experience-blueprint` 的 `next_hint`
 3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术
 
 ## HTML 预览

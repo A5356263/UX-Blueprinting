@@ -30,7 +30,7 @@ description: 设计策略生成 Skill。读取 PRD 或需求材料，执行两�
 
 用户可显式指定其他材料路径或输出位置来覆盖默认行为。
 
-> 此规则与 `_shared/skill-graph.json` 保持一致。上下游关系待后续 Skill 丰富后再定义。
+> 此规则与 `shared-workflow/skill-graph.json` 保持一致。上下游关系待后续 Skill 丰富后再定义。
 
 ## 两阶段流程
 

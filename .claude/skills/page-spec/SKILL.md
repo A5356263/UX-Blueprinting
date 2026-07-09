@@ -32,7 +32,7 @@ Page Spec 必须保留语义组件类型，用于页面生成。语义组件类�
 
 启动后固定按以下顺序读取：
 
-1. 读取 `_shared/skill-graph.json`
+1. 读取 `shared-workflow/skill-graph.json`
 2. 读取 `spark-output/context/experience-blueprint.json`（如有）
 3. 读取 `spark-output/experience_blueprint.md`
 
@@ -377,7 +377,7 @@ ASCII 框图可作为结构来源，但页面规格主体必须提取为区域�
 
 完成后：
 
-1. 读取 `_shared/next-skill.md` 交接话术模板
-2. 读取 `_shared/skill-graph.json` 中 id 为 `page-spec` 的 `next_hint`
+1. 读取 `shared-workflow/next-skill.md` 交接话术模板
+2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `page-spec` 的 `next_hint`
 3. 如果 `next_hint.preferred` 为空，按终端节点口径输出
 4. 如果 `next_hint.preferred` 非空，按标准三层结构输出

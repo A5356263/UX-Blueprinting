@@ -592,8 +592,8 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 完成后：
 
-1. 读取 `_shared/next-skill.md` 交接话术模板
-2. 读取 `_shared/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
+1. 读取 `shared-workflow/next-skill.md` 交接话术模板
+2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
 3. 按模板输出交接话术
 4. 如果分析过程中产生了可复用知识变化（按 `references/knowledge_candidate_guide.md` 判断），在交接话术末尾附加：
    `📌 本次分析中有 {N} 条可复用知识变化，建议进入 knowledge-wiki 生成知识候选。`

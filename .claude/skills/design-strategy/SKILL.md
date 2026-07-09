@@ -35,7 +35,7 @@ description: 设计策略生成 Skill。读取 PRD 或需求材料，先形成�
 - 可以默认扫描 `spark-output/`，但这属于默认材料入口，不表示必须依赖某个固定工作区结构才能运行
 - 如果宿主不支持文件系统，则不依赖目录扫描，改为仅使用用户当前明确提供的材料
 
-> 此规则与 `_shared/skill-graph.json` 保持一致。上下游关系待后续 Skill 丰富后再定义。
+> 此规则与 `shared-workflow/skill-graph.json` 保持一致。上下游关系待后续 Skill 丰富后再定义。
 
 ## 两阶段流程
 

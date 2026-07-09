@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。就绪判定算法与交接话术模板见 _shared/next-skill.md。",
+  "_comment": "本文件是 Skill 依赖关系的权威数据源。与 SKILL.md 内部硬编码冲突时，以本文件为准。就绪判定算法与交接话术模板见 shared-workflow/next-skill.md。",
   "skills": [
     {
       "id": "uxb",

@@ -26,7 +26,7 @@ description: >
 
 ### 链式模式
 
-1. 读取 `_shared/skill-graph.json`，确认自己的角色和位置。
+1. 读取 `shared-workflow/skill-graph.json`，确认自己的角色和位置。
 2. 读取 `spark-output/context/uxb.json`。
 3. 读取 `spark-output/uxb_output.md`。
 4. 执行知识补充消费，读取与旅程相关的业务知识。
@@ -304,6 +304,6 @@ HTML 预览只消费该 JSON，不从 MD 二次解析。生成 HTML 前不得临
 
 完成后：
 
-1. 读取 `_shared/next-skill.md` 交接话术模板。
-2. 读取 `_shared/skill-graph.json` 中 id 为 `journey-analysis` 的 `next_hint`。
+1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
+2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `journey-analysis` 的 `next_hint`。
 3. 按模板输出交接话术。

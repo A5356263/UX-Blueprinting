@@ -27,14 +27,14 @@ uxb -> experience-blueprint
 
 - `.claude/`
   Skill 能力层，存放各个 Skill 的定义与规则。
-- `_shared/`
+- `shared-workflow/`
   协同规则层，定义 Skill 之间怎么衔接、什么时候衔接。
 - `spark-output/`
   正式输出层，存放每一步的文档产物和结构化上下文数据。
 
-## `_shared/` 的作用
+## `shared-workflow/` 的作用
 
-`_shared/` 现在只保留 2 个文件：
+`shared-workflow/` 现在只保留 2 个文件：
 
 - `skill-graph.json`
   Skill 关系与推荐流转的数据源，定义谁依赖谁、下一步推荐进入谁。
@@ -64,4 +64,4 @@ uxb -> experience-blueprint
 
 ## 一句话总结
 
-这个项目本质上是一套以 Skill 为核心、以 `_shared` 为协同规则、以 `spark-output` 为结果出口的轻量智能工作流。
+这个项目本质上是一套以 Skill 为核心、以 `shared-workflow` 为协同规则、以 `spark-output` 为结果出口的轻量智能工作流。

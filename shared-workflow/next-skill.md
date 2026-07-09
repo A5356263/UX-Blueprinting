@@ -1,6 +1,6 @@
 # 就绪判定与交接话术
 
-> **单一来源**：`_shared/skill-graph.json` 是依赖关系数据的权威源。本文件定义算法和模板，skill-graph.json 提供数据。
+> **单一来源**：`shared-workflow/skill-graph.json` 是依赖关系数据的权威源。本文件定义算法和模板，skill-graph.json 提供数据。
 
 ---
 
@@ -51,15 +51,15 @@
 ### 1.6 优先级关系
 
 ```text
-_shared/skill-graph.json  >  各 Skill 的 SKILL.md 硬编码
+shared-workflow/skill-graph.json  >  各 Skill 的 SKILL.md 硬编码
 ```
 
-当两者信息不一致时，以 `_shared/` 文件为准。
+当两者信息不一致时，以 `shared-workflow/` 文件为准。
 
 各 Skill 的 SKILL.md 中应保留硬编码副本作为降级方案，并标注：
 
 ```text
-此规则与 _shared/skill-graph.json 保持一致，若冲突以 _shared/ 版本为准。
+此规则与 shared-workflow/skill-graph.json 保持一致，若冲突以 shared-workflow/ 版本为准。
 ```
 
 ---
