@@ -1,0 +1,306 @@
+{
+  "skill": "experience-blueprint",
+  "version": "1.0",
+  "generated_at": "2026-07-11",
+  "project_name": "子管理员权限复制能力",
+  "source_mode": "framing-mode",
+  "source_refs": [
+    "spark-output/context/problem-framing.json",
+    "spark-output/problem_framing.md",
+    "spark-output/context/stories.json",
+    "spark-output/stories.md",
+    "spark-output/context/journey-analysis.json",
+    "spark-output/journey_analysis.md"
+  ],
+  "uxb_mapping": [],
+  "problem_framing_mapping": [
+    {
+      "from": "方向A：权限复制工具",
+      "decision": "不新增角色/模板，微调复用现有权限编辑页",
+      "section": "§0 判断4, §4 次流程3"
+    },
+    {
+      "from": "选择源和目标的方式",
+      "decision": "单页内源只读区块+目标多选列表",
+      "section": "§3 节点1-2, §6 页面2"
+    },
+    {
+      "from": "复制后微调的交互形态",
+      "decision": "结果页直通现有权限编辑页，高亮差异项",
+      "section": "§4 次流程3"
+    },
+    {
+      "from": "操作记录与审计",
+      "decision": "结果页独立存储，操作日志参考审计契约字段",
+      "section": "§4 次流程2, §7"
+    }
+  ],
+  "stories_consumption": "已消费S1-S5，每个Story在§3-§6中有对应设计落点",
+  "journey_consumption": {
+    "confidence_lows": [
+      {
+        "role": "企业超管",
+        "stage": "定规则与执行",
+        "confidence": "中",
+        "blueprint_section": "§5 异常流程：冲突策略、部分失败、执行中断"
+      },
+      {
+        "role": "企业超管",
+        "stage": "适配收尾",
+        "confidence": "中",
+        "blueprint_section": "§5 并发冲突异常；§6 编辑页差异项高亮"
+      }
+    ],
+    "key_transitions": [
+      {
+        "role": "企业超管",
+        "from": "锁定参照",
+        "to": "圈定目标",
+        "trigger": "确认源可用",
+        "blueprint_section": "§3 节点1→节点2"
+      },
+      {
+        "role": "企业超管",
+        "from": "圈定目标",
+        "to": "定规则与执行",
+        "trigger": "目标确认",
+        "blueprint_section": "§3 节点2→节点3"
+      },
+      {
+        "role": "企业超管",
+        "from": "定规则与执行",
+        "to": "核验结果",
+        "trigger": "复制完成",
+        "blueprint_section": "§3 节点3→结果页"
+      },
+      {
+        "role": "企业超管",
+        "from": "核验结果",
+        "to": "适配收尾",
+        "trigger": "发现微调目标",
+        "blueprint_section": "§4 次流程3"
+      }
+    ],
+    "dropout_risks": [
+      {
+        "role": "企业超管",
+        "stage": "定规则与执行",
+        "risk": "高",
+        "blueprint_section": "§6 操作确认区：变更预览+进度+取消",
+        "mitigation": "执行前变更预览降低不确定性，执行中进度和取消能力"
+      },
+      {
+        "role": "企业超管",
+        "stage": "圈定目标",
+        "risk": "中",
+        "blueprint_section": "§6 目标选择区：分组勾选+权限差异标签",
+        "mitigation": "按部门/角色分组批量勾选，嵌入差异标签"
+      },
+      {
+        "role": "企业超管",
+        "stage": "核验结果",
+        "risk": "中",
+        "blueprint_section": "§6 结果页：差异对比分组+筛选",
+        "mitigation": "差异对比按子应用分组，支持筛选'只看变更项'"
+      }
+    ]
+  },
+  "interaction_overview": "主路径：用户授权页→权限全景预览Drawer→权限复制单页(源/目标/策略/确认)→复制结果页→各目标权限编辑页微调。分支：冲突逐项确认、结果日志追溯、单项变更回滚。",
+  "main_flow": [
+    {
+      "step": 1,
+      "name": "选择源子管理员",
+      "action": "在用户授权页选中源→点击复制权限→查看全景预览Drawer→确认源",
+      "target_page": "用户授权页+预览Drawer",
+      "section": "§3 节点1"
+    },
+    {
+      "step": 2,
+      "name": "配置目标与策略",
+      "action": "搜索/筛选目标→勾选多目标→查看冲突检测→选择冲突策略",
+      "target_page": "权限复制页（目标区块+策略区块）",
+      "section": "§3 节点2"
+    },
+    {
+      "step": 3,
+      "name": "确认并执行复制",
+      "action": "查看确认摘要→点击执行复制→等待进度→完成自动跳转结果页",
+      "target_page": "权限复制页（确认区块）→结果页",
+      "section": "§3 节点3"
+    }
+  ],
+  "sub_flows": [
+    {
+      "name": "逐项确认冲突项",
+      "trigger": "选择追加策略后存在冲突",
+      "action": "展开冲突列表逐项选择保留目标或使用源配置",
+      "section": "§4 次流程1"
+    },
+    {
+      "name": "查看结果与日志追溯",
+      "trigger": "复制完成后",
+      "action": "浏览变更摘要卡片，展开差异对比，核对日志",
+      "section": "§4 次流程2"
+    },
+    {
+      "name": "从结果页回滚单项变更",
+      "trigger": "发现不符合预期的变更项",
+      "action": "在差异对比视图中点击撤销此变更",
+      "section": "§4 次流程3"
+    }
+  ],
+  "exceptions": [
+    {
+      "scenario": "源子管理员无权限",
+      "trigger": "源权限数据为空",
+      "feedback": "Drawer空态提示，确认按钮置灰",
+      "section": "§5 异常1"
+    },
+    {
+      "scenario": "所有目标无变更",
+      "trigger": "源与所有目标权限完全一致",
+      "feedback": "结果页展示空变更状态",
+      "section": "§5 异常2"
+    },
+    {
+      "scenario": "复制操作超时",
+      "trigger": "后端处理超过30秒",
+      "feedback": "进度条停留，Toast提示异步处理",
+      "section": "§5 异常3"
+    },
+    {
+      "scenario": "部分目标复制失败",
+      "trigger": "网络波动/权限校验不通过/范围变更",
+      "feedback": "结果页失败卡片展示原因，提供重试",
+      "section": "§5 异常4"
+    },
+    {
+      "scenario": "微调时并发冲突",
+      "trigger": "多人同时编辑同一子管理员",
+      "feedback": "保存失败弹窗提示刷新",
+      "section": "§5 异常5"
+    },
+    {
+      "scenario": "执行复制时数据已变更",
+      "trigger": "配置过程中源或目标被他人修改",
+      "feedback": "执行前校验失败，弹窗提示刷新重配",
+      "section": "§5 异常6"
+    }
+  ],
+  "pages": [
+    {
+      "name": "用户授权页",
+      "type": "page",
+      "goal": "展示子管理员列表，提供复制入口",
+      "section": "§6 页面1"
+    },
+    {
+      "name": "权限全景预览Drawer",
+      "type": "drawer",
+      "goal": "确认源子管理员权限适合作为复制来源",
+      "section": "§6 抽屉1"
+    },
+    {
+      "name": "权限复制页",
+      "type": "page",
+      "goal": "单页完成目标选择、策略配置和执行",
+      "section": "§6 页面2"
+    },
+    {
+      "name": "复制结果页",
+      "type": "page",
+      "goal": "展示变更摘要，支持差异对比和微调跳转",
+      "section": "§6 页面3"
+    }
+  ],
+  "states": [
+    {
+      "state": "待配置",
+      "meaning": "用户尚未进入复制流程",
+      "user_action": "点击进入",
+      "copy": "从现有子管理员复制权限，快速完成配置",
+      "section": "§7"
+    },
+    {
+      "state": "源确认中",
+      "meaning": "用户正在查看源权限全景",
+      "user_action": "确认/取消",
+      "copy": "查看该管理员的完整权限配置，确认可作为复制来源",
+      "section": "§7"
+    },
+    {
+      "state": "目标待选",
+      "meaning": "已确认源，待选择目标",
+      "user_action": "搜索/勾选",
+      "copy": "选择需要复制权限的目标子管理员",
+      "section": "§7"
+    },
+    {
+      "state": "有冲突待处理",
+      "meaning": "目标已有权限，待选择策略",
+      "user_action": "选择策略/查看详情",
+      "copy": "部分目标已有权限，请选择合并方式",
+      "section": "§7"
+    },
+    {
+      "state": "执行中",
+      "meaning": "复制操作正在处理",
+      "user_action": "可取消",
+      "copy": "正在复制权限（{当前}/{总数}），处理中请勿关闭",
+      "section": "§7"
+    },
+    {
+      "state": "复制完成",
+      "meaning": "全部目标复制成功",
+      "user_action": "查看详情/编辑",
+      "copy": "权限复制完成，共为{N}个目标完成配置",
+      "section": "§7"
+    },
+    {
+      "state": "部分成功",
+      "meaning": "部分目标复制失败",
+      "user_action": "查看失败详情/重试",
+      "copy": "部分目标复制失败，失败项已标记，可重试",
+      "section": "§7"
+    },
+    {
+      "state": "复制失败",
+      "meaning": "全部目标复制失败",
+      "user_action": "查看原因/返回重配",
+      "copy": "复制失败，请检查后重新配置",
+      "section": "§7"
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "冲突策略默认行为：是否接受追加+提示为默认",
+      "impact": "影响§3节点3的默认交互",
+      "suggested_owner": "客户/产品经理"
+    },
+    {
+      "question": "微调形态：是否接受跳转到现有权限编辑页",
+      "impact": "影响§4次流程1的设计方案",
+      "suggested_owner": "产品经理/前端开发"
+    },
+    {
+      "question": "差异对比深度：只展示变更项or全部权限对比",
+      "impact": "影响§6结果页信息密度和加载性能",
+      "suggested_owner": "产品经理/后端开发"
+    },
+    {
+      "question": "操作通知：复制后是否通知目标子管理员",
+      "impact": "影响§7状态定义范围",
+      "suggested_owner": "客户/产品经理"
+    },
+    {
+      "question": "目标列表分组维度：按部门分组是否满足客户组织架构",
+      "impact": "影响§6目标选择区批量操作设计",
+      "suggested_owner": "客户"
+    },
+    {
+      "question": "复制中的取消策略：取消后回滚还是保留已处理项",
+      "impact": "影响§3节点3异常处理逻辑",
+      "suggested_owner": "后端开发/产品经理"
+    }
+  ]
+}
