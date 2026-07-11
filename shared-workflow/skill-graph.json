@@ -210,13 +210,14 @@
       "id": "product-analysis",
       "name_zh": "产品分析",
       "type": "infrastructure",
+      "_comment": "纠偏型基础设施 Skill。用于在需求方向不成立、问题未定清或 UXB 执行中发现方向需要重定义时，产出问题重定义与方向选项；完成后统一回流到 UXB，由 UXB 继续正式定案。不作为主链正式节点，也不直接进入 experience-blueprint。",
       "reads": [],
       "required": [],
       "next_hint": {
         "preferred": [
           "uxb"
         ],
-        "reason": "产品分析完成后，回到需求定案继续推进。",
+        "reason": "产品分析完成后，统一回到 UXB 承接：独立进入时回到需求定案；若本来就在 UXB 执行中，则回到当前 UXB 上下文继续定案。",
         "alternatives": []
       }
     },
