@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TemplatePath = "shared-workflow/progress-preview.html",
   [string]$GraphPath = "shared-workflow/skill-graph.json",
   [string]$OutputPath = "spark-output/progress-preview.html"
@@ -11,6 +11,8 @@ function Get-SlashAlias {
 
   $aliasMap = @{
     "uxb" = "/uxb"
+    "problem-framing" = "/problem-framing"
+    "stories" = "/stories"
     "journey-analysis" = "/journey-analysis"
     "experience-blueprint" = "/experience-blueprint"
     "page-spec" = "/page-spec"
@@ -37,6 +39,8 @@ function Get-ContextPath {
 
   $contextMap = @{
     "uxb" = "spark-output/context/uxb.json"
+    "problem-framing" = "spark-output/context/problem-framing.json"
+    "stories" = "spark-output/context/stories.json"
     "journey-analysis" = "spark-output/context/journey-analysis.json"
     "experience-blueprint" = "spark-output/context/experience-blueprint.json"
     "page-spec" = "spark-output/context/page-spec.json"
@@ -94,12 +98,28 @@ function Get-SectionMeta {
       note = "需求读取、问题诊断与方向收敛"
       order = 1
     }
+    "problem-framing" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
+    "stories" = [pscustomobject]@{
+      id = "define"
+      number = "02"
+      name_zh = "定义"
+      name_en = "Define"
+      note = "用户故事、旅程结构与需求补全"
+      order = 2
+    }
     "journey-analysis" = [pscustomobject]@{
       id = "define"
       number = "02"
       name_zh = "定义"
       name_en = "Define"
-      note = "角色任务、旅程结构与需求补全"
+      note = "用户故事、旅程结构与需求补全"
       order = 2
     }
     "experience-blueprint" = [pscustomobject]@{

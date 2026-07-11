@@ -51,67 +51,76 @@
 
 就绪判定算法在扫描候选时应跳过 `type: "infrastructure"` 的条目。
 
-### 1.5 journey-analysis 的特别说明
+### 1.5 多上游主链说明
 
-`journey-analysis` 在主链中的正式位置仍然是：
+当前主链允许两个第一梯队正式来源：
 
 ```text
-uxb -> journey-analysis -> experience-blueprint
+uxb -> stories -> journey-analysis -> experience-blueprint
+problem-framing -> stories -> journey-analysis -> experience-blueprint
 ```
 
-但当前 `journey-analysis` 已支持在用户显式要求时直接读取 `PRD` 或原始需求运行 `standalone / guided-completion` 能力。
+`uxb` 负责有 PRD 或明确需求材料时的需求定案；`problem-framing` 负责无 PRD、白纸或问题未定清时的问题框定。两者都是第一梯队来源，但不互相替代。
 
-这条能力扩展只属于 `journey-analysis/SKILL.md` 内部执行逻辑，不改变 shared-workflow 的主链 ready 判定规则。
+`stories` 和 `journey-analysis` 属于第二梯队深化：
 
-因此：
+- `stories` 把第一梯队结论转成用户故事、任务单元和验收口径
+- `journey-analysis` 把上游输入收拢为阶段、触点、断点和旅程结构
+- 二者职责不同，可按项目需要独立调用，但主链优先顺序是 `stories -> journey-analysis`
 
-- `journey-analysis` 在主链推荐中仍然要求 `uxb` 先完成
-- 如果用户在 `UXB` 前强制调用它，允许由 `journey-analysis` 自身按降级规则执行
-- 此类执行结果不视为替代 `UXB` 的正式定案
+硬规则：
+
+- `experience-blueprint` 需要至少一个第一梯队正式来源：`uxb` 或 `problem-framing`
+- `stories`、`journey-analysis` 的 standalone 结果不能替代第一梯队正式来源
+- shared-workflow 只做推荐与提示，不拦截用户强制调用；降级、补问和跳转由各 Skill 的 `SKILL.md` 执行
 
 ### 1.5A journey-analysis 完成后的动态推荐说明
 
-`journey-analysis` 完成后的下一步推荐，不是单纯套用 `skill-graph.json` 里的静态 `next_hint` 文案。
+`journey-analysis` 完成后的下一步推荐，必须结合当前文件状态判断，不是单纯套用 `skill-graph.json` 的静态 `next_hint`。
 
 执行规则如下：
 
 1. 该动态判断由 `journey-analysis` 自身在收尾阶段执行
-2. `shared-workflow/next-skill.md` 只负责记录这条规则，不替代 Skill 自己做判断
-3. 判断顺序固定为：
-   - 先检查 `spark-output/context/uxb.json`
-   - 若不存在，再检查 `spark-output/uxb_output.md`
-4. 若任一存在，视为已有 `UXB`，允许推荐 `experience-blueprint`
-5. 若两者都不存在，视为无 `UXB`，必须推荐回 `uxb`
+2. `shared-workflow/next-skill.md` 只记录规则，不替代 Skill 自己做判断
+3. 先检查第一梯队来源：
+   - `spark-output/context/uxb.json` 或 `spark-output/uxb_output.md`
+   - `spark-output/context/problem-framing.json` 或 `spark-output/problem_framing.md`
+4. 再检查 Stories：
+   - `spark-output/context/stories.json`
+   - `spark-output/stories.md`
+5. 若存在第一梯队来源且 Stories 已存在，允许推荐 `experience-blueprint`
+6. 若存在第一梯队来源但 Stories 不存在，优先推荐 `stories`
+7. 若第一梯队来源不存在，推荐回 `problem-framing` 或 `uxb`，不得推荐 `experience-blueprint`
 
 硬规则：
 
-- 无 `UXB` 时不得推荐 `experience-blueprint`
+- 无第一梯队正式来源时不得推荐 `experience-blueprint`
 - 不允许把“最直接的下游消费方”等同于“当前一定可执行的下一步”
 
-### 1.6 UXB 后的旅程去重过滤
+### 1.6 第一梯队后的 Stories 去重过滤
 
-当当前节点是 `uxb` 时，在输出下一步推荐前增加一次轻量过滤：
+当当前节点是 `uxb` 或 `problem-framing` 时，在输出下一步推荐前增加一次轻量过滤：
 
-- 检查 `spark-output/context/uxb.json` 是否存在
-- 检查 `spark-output/context/journey-analysis.json` 是否存在
-- 检查 `spark-output/journey_analysis.md` 是否存在
+- 检查当前第一梯队 JSON 是否存在：`uxb.json` 或 `problem-framing.json`
+- 检查 `spark-output/context/stories.json` 是否存在
+- 检查 `spark-output/stories.md` 是否存在
 - 读取两者的 `project_name`
 
-只有当以下条件同时满足时，才视为“同一需求已完成旅程分析”：
+只有当以下条件同时满足时，才视为“同一需求已完成用户故事深化”：
 
-1. `uxb.json.project_name` 存在且非空
-2. `journey-analysis.json.project_name` 存在且非空
+1. 第一梯队 JSON 的 `project_name` 存在且非空
+2. `stories.json.project_name` 存在且非空
 3. 两者 `project_name` 完全一致
-4. `spark-output/journey_analysis.md` 正式产物存在
+4. `spark-output/stories.md` 正式产物存在
 
 满足上述条件时：
 
-- `UXB` 完成后不再重复推荐 `journey-analysis`
-- 直接推荐 `experience-blueprint`
+- 第一梯队完成后不再重复推荐 `stories`
+- 可继续推荐 `journey-analysis`；如旅程也已完成，可推荐 `experience-blueprint`
 
 任一条件不满足时：
 
-- 保持 `skill-graph.json` 中原有的主链推荐逻辑
+- 保持 `skill-graph.json` 中的主链推荐逻辑
 
 ### 1.7 无文件系统时的降级
 
@@ -194,8 +203,16 @@ shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
 
 ```text
 ✅ 需求定案完成，需求文档和结构化数据已就位。
-你可以选择：用户旅程 - 进入用户旅程分析，梳理角色任务生命周期，为体验蓝图补充旅程视角。
-你回复“用户旅程”即可
+你可以选择：用户故事 - 把需求定案转成用户故事、任务单元和验收口径。
+你回复“用户故事”即可
+```
+
+### 3.1A 问题框定完成后的单选项
+
+```text
+✅ 问题框定完成，问题定义、目标用户、场景边界和方向判断已就位。
+你可以选择：用户故事 - 把问题框定结果转成用户故事、任务单元和验收口径。
+你回复“用户故事”即可
 ```
 
 ### 3.2 体验策略完成后的多选项

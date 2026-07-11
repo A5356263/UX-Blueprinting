@@ -10,9 +10,52 @@
       "required": [],
       "next_hint": {
         "preferred": [
+          "stories"
+        ],
+        "reason": "需求定案已完成，进入用户故事可以先把需求结论拆成可承接的任务单元；如任务已清楚，也可直接进入旅程分析或体验蓝图。",
+        "alternatives": [
+          "journey-analysis",
+          "experience-blueprint"
+        ]
+      }
+    },
+    {
+      "id": "problem-framing",
+      "name_zh": "问题框定",
+      "phase": 1,
+      "standalone_usable": true,
+      "standalone_note": "用于无 PRD、问题未成形的白纸场景；输出问题定义、方向判断和下游承接要求。",
+      "anchor": false,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "stories"
+        ],
+        "reason": "问题框定已完成，进入用户故事可以把推荐方向拆成可设计、可验证的任务单元；如任务已清楚，也可直接进入旅程分析或体验蓝图。",
+        "alternatives": [
+          "journey-analysis",
+          "experience-blueprint"
+        ]
+      }
+    },
+    {
+      "id": "stories",
+      "name_zh": "用户故事",
+      "phase": 2,
+      "standalone_usable": true,
+      "standalone_note": "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
+      "anchor": false,
+      "reads": [
+        "uxb",
+        "problem-framing"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [
           "journey-analysis"
         ],
-        "reason": "需求定案已完成，进入用户旅程分析可以梳理角色任务生命周期，为体验蓝图提供旅程视角的洞察；如需跳过旅程，也可直接进入体验蓝图。",
+        "reason": "用户故事已拆出任务单元，进入用户旅程可以把任务放入阶段、触点和流失风险中继续深化。",
         "alternatives": [
           "experience-blueprint"
         ]
@@ -20,18 +63,18 @@
     },
     {
       "id": "journey-analysis",
-      "_comment": "正式主链仍要求先完成 uxb，再进入 journey-analysis。当前 Skill 已支持在用户显式调用时直接读取 PRD 或原始需求做 standalone / guided-completion，但这属于 Skill 内部能力扩展，不改变 shared-workflow 的 ready 判定与主链推荐顺序。",
+      "_comment": "当前 Skill 优先承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
       "phase": 2,
       "standalone_usable": true,
-      "standalone_note": "可独立使用；主链推荐先完成 uxb 再进入，以便复用需求定案结果。",
+      "standalone_note": "可独立使用；主链推荐先完成 stories 或第一阶梯正式上游，再进入旅程分析。",
       "anchor": false,
       "reads": [
-        "uxb"
+        "stories",
+        "uxb",
+        "problem-framing"
       ],
-      "required": [
-        "uxb"
-      ],
+      "required": [],
       "next_hint": {
         "preferred": [
           "experience-blueprint"
@@ -43,14 +86,15 @@
     {
       "id": "experience-blueprint",
       "name_zh": "体验策略",
-      "phase": 2,
+      "phase": 3,
+      "_comment": "多上游承接规则写在 SKILL.md 内：正式来源至少需要 uxb 或 problem-framing，stories / journey-analysis 作为深化输入。这里不使用或条件 required，避免图谱硬编码导致独立调用卡壳。",
       "reads": [
         "uxb",
+        "problem-framing",
+        "stories",
         "journey-analysis"
       ],
-      "required": [
-        "uxb"
-      ],
+      "required": [],
       "next_hint": {
         "preferred": [
           "page-spec",
@@ -193,13 +237,18 @@
       "id": "interface-audit",
       "name_zh": "界面诊断",
       "phase": null,
-      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、journey-analysis、product-analysis、check 消费的诊断结果。不参与主链 ready 计算，只在需要时按需调用。",
+      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、problem-framing、product-analysis、check 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
       "reads": [],
       "required": [],
       "next_hint": {
-        "preferred": [],
-        "reason": "独立增强 Skill，重点是输出现状界面诊断结果并交给其他 Skill 消费，当前无固定单一下游。",
-        "alternatives": []
+        "preferred": [
+          "uxb",
+          "problem-framing"
+        ],
+        "reason": "界面诊断完成后，建议根据问题性质进入需求定案或问题框定，把诊断证据转成正式上游结论。",
+        "alternatives": [
+          "check"
+        ]
       }
     },
     {

@@ -1,9 +1,9 @@
 ---
 name: interface-audit
 description: >
-  界面诊断 Skill。基于截图、DOM、Accessibility、runtime 或混合证据，评估现有页面、流程或状态的界面清晰度，输出证据化问题、影响、改进方向与下一步建议。
-  当用户想分析已有页面、比较改版前后界面、做截图诊断、做 DOM/A11Y 走查、做批量界面评分，或希望把界面现状问题整理成可供 UXB、journey-analysis、product-analysis、check 消费的输入时触发。
-  保留 UCATS 作为内部评分框架；默认输出人类可读报告，明确问题与后续去向；当用户要求自动化、批量、CI、benchmark、JSON 或可复现评分时，再输出规范 JSON。
+  界面诊断 Skill。基于截图、DOM、Accessibility 或混合证据，评估现有页面、流程或状态的界面质量，输出证据化的问题清单与改进方向。
+  触发关键词：界面诊断、截图诊断、UI 走查、界面分析、改版前后对比、DOM 走查、无障碍走查、界面评分、界面问题、UI audit。
+  排除：体验设计方案（用 experience-blueprint）、需求定案（用 uxb）、设计走查（用 check）。
 ---
 
 # Interface Audit

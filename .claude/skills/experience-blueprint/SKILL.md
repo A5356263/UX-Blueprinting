@@ -1,11 +1,16 @@
 ---
 name: experience-blueprint
-description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整的体验设计方案（含旅程消费摘要、交互流程、页面设计、状态文案），在需求定案完成后需要进入交互设计阶段时触发。
+description: >
+  体验蓝图 Skill。基于 UXB 或问题框定等第一阶梯正式上游结论，生成完整的体验设计方案，含旅程消费摘要、交互流程、页面设计和状态文案。
+  触发关键词：体验蓝图、体验设计、交互设计、交互方案、交互流程设计、体验方案、设计交互、体验策略、蓝图设计、做体验设计。
+  排除：需求定案（用 uxb）、页面规格提取（用 page-spec）、旅程分析（用 journey-analysis）。
 ---
 
 # Experience Blueprint
 
-这个 skill 负责读取 UXB 的正式需求定案产出，并把它展开为完整的交互设计方案。默认先输出 Markdown 与 context JSON；HTML 预览改为用户确认后再继续生成。
+这个 skill 负责读取第一阶梯正式上游结论，并把它展开为完整的交互设计方案。默认先输出 Markdown 与 context JSON；HTML 预览改为用户确认后再继续生成。
+
+本次能力支持多上游承接，但不改变 `§0-§9` 的正文分析骨架。
 
 ## 角色定义
 
@@ -16,7 +21,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 - 展开异常与阻断
 - 承接业务边界、风险与反馈要求
 - 生成旅程消费摘要模块
-- 在 UXB 已定边界上输出尽量完整的体验方案
+- 在第一阶梯已定边界上输出尽量完整的体验方案
 
 体验蓝图不负责：
 
@@ -30,24 +35,36 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 启动后固定按以下顺序读取：
 
 1. 读取 `shared-workflow/skill-graph.json`，确认自己的角色和位置
-2. 读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要的叙述性分析
-3. 读取 `spark-output/context/journey-analysis.json`（如存在），用于 `§1` 旅程消费摘要的结构化数据
-4. 读取 `spark-output/context/uxb.json`
-5. 读取 `spark-output/uxb_output.md`
-6. 优先读取 `§9` 待确认问题，判断上游定案稳定性
-7. 执行知识补充消费（必须执行，不可跳过）
+2. 读取 `spark-output/context/uxb.json`
+3. 读取 `spark-output/uxb_output.md`
+4. 读取 `spark-output/context/problem-framing.json`
+5. 读取 `spark-output/problem_framing.md`
+6. 读取 `spark-output/context/stories.json`（如存在），用于 `§2-§4` 的任务单元深化
+7. 读取 `spark-output/stories.md`（如存在），用于任务叙述补充
+8. 读取 `spark-output/context/journey-analysis.json`（如存在），用于 `§1` 旅程消费摘要的结构化数据
+9. 读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要的叙述性分析
+10. 优先读取第一阶梯来源中的待确认问题，判断上游稳定性
+11. 执行知识补充消费（必须执行，不可跳过）
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流，不视为历史残留。
+
+模式判断：
+
+- `uxb-mode`：检测到 `uxb.json` 或 `uxb_output.md`，以 UXB 作为第一阶梯正式来源
+- `framing-mode`：未检测到 UXB，但检测到 `problem-framing.json` 或 `problem_framing.md`，以问题框定作为第一阶梯正式来源
+- `deepened-mode`：在 `uxb-mode` 或 `framing-mode` 基础上，同时检测到 `stories` 或 `journey-analysis`
 
 降级规则：
 
 - 如果 `uxb.json` 未找到，回退到只读 `uxb_output.md`
 - 如果 `uxb.json` 存在但 `uxb_output.md` 未找到，仅基于 JSON 结构化数据继续执行，在 `§0` 中标注"叙述性分析缺失，仅基于结构化数据推导"
-- 如果 `uxb_output.md` 也未找到（JSON 和 MD 均缺失），输出引导提示后继续执行：
-  "未找到 UXB 需求定案产出物。建议先完成 UXB 需求定案，以获得更准确的体验策略。当前将基于可用信息输出体验方案。"
+- 如果 UXB 不存在但 `problem-framing` 存在，进入 `framing-mode`，基于问题定义、推荐方向和承接要求继续执行
+- 如果 UXB 和 `problem-framing` 均不存在，不进入正式蓝图生成，输出引导提示：
+  "未找到第一阶梯正式上游结论。建议先完成 UXB 需求定案或问题框定，再进入体验蓝图。"
+- 如果 `stories` 不存在，允许继续，但必须在 `§9` 标注"当前未经过用户故事深化，主任务链基于第一阶梯结论推导"
 - 如果 `journey_analysis.md` 存在但 `journey-analysis.json` 不存在，仅基于 MD 继续
 - 如果 `journey-analysis.json` 存在但 `journey_analysis.md` 不存在，仅基于 JSON 继续，在 `§1` 标注"叙述性分析缺失"
-- 如果两者均未找到，`§1` 进入降级模式（从 UXB 推导简化旅程）
+- 如果两者均未找到，`§1` 进入降级模式（从第一阶梯结论或 stories 推导简化旅程）
 - 如果 `knowledge-wiki` 当前不可用，在 `§9` 附录注明”知识库不可用”，继续后续设计，但不得伪造知识消费结果
 
 双轨读取原因：
@@ -84,7 +101,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 强制步骤：
 
 1. 按固定发现顺序命中知识
-2. 结合 UXB 产出，判断哪些知识与当前体验设计相关
+2. 结合第一阶梯正式来源，判断哪些知识与当前体验设计相关
 3. 对判断为“相关”的条目，先读 summary，再继续读该 summary 对应的 raw
 4. 将提取出的体验策略写入 `§9` 附录，并在正文中落到真实章节或节点
 5. 完成孤儿判断反查，确认不存在“有知识来源、无设计落点”的条目
@@ -92,14 +109,14 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 必须遵守：
 
 - 不得跳过整个知识消费步骤
-- 不得只抄 UXB 已选结论而不做体验阶段独立判断
+- 不得只抄第一阶梯已选结论而不做体验阶段独立判断
 - 不得只读 summary 不读 raw
 - 不得只留下“知识来源”而没有正文落点
 - 不得把 summary 当作可以停留的深度信息层
 
 ## 体验推导责任
 
-体验蓝图必须承接 UXB 已经形成的业务判断，并将其转译为：
+体验蓝图必须承接第一阶梯已经形成的正式结论，并将其转译为：
 
 - 角色路径
 - 任务流
@@ -111,11 +128,12 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 不得：
 
 - 重新裁决需求是否成立
-- 绕过 UXB 自行判断能力形态
-- 只根据需求文档罗列页面功能，不基于 UXB 业务边界展开
+- 绕过第一阶梯来源自行判断能力形态
+- 只根据需求文档罗列页面功能，不基于第一阶梯边界展开
 - 用“体验友好”“提示清晰”这类空泛表述替代具体页面结构、状态和文案
-- 绕回 UXB 原始输入重新解释业务规则、状态模型或能力形态
-- 如果 UXB 仍未定主方案、核心角色职责、关键状态闭环或核心异常策略，硬输出“完整方案”
+- 绕回原始输入重新解释业务规则、状态模型或能力形态
+- 用 `stories` 或 `journey-analysis` 的派生信息反向覆盖第一阶梯正式结论
+- 如果第一阶梯来源仍未定主方向、核心角色职责、关键状态闭环或核心异常策略，硬输出“完整方案”
 
 ## 输出结构
 
@@ -161,7 +179,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 
 ## `§0` 本次关键设计判断
 
-体验蓝图自己的核心设计判断，不复述 UXB `§0`。
+体验蓝图自己的核心设计判断，不复述第一阶梯来源的 `§0` 或关键判断。
 
 每条判断必须包含具体的设计做法。"需要关注 XX"是复述，"XX 场景用 XX 方式处理"是判断。
 
@@ -178,7 +196,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 - “当前按完整执行路线处理”
 - “标准路线下优先写主流程”
 - 任何内部执行术语
-- 对 UXB `§0` 判断的重新表述或增强措辞
+- 对第一阶梯关键判断的重新表述或增强措辞
 
 ## `§1` 旅程消费摘要
 
@@ -192,7 +210,7 @@ description: 体验策略 Skill。读取 UXB 需求定案产出，输出完整�
 
 每个提取项写明来源角色和阶段，以及在本蓝图中的具体落点。
 
-降级：如果 journey-analysis 未执行（`spark-output/journey_analysis.md` 和 `spark-output/context/journey-analysis.json` 均不存在），从 UXB `§5` 角色职责 + `§6` 状态流转推导简化版旅程，并标注"基于 UXB 推导，未经深度旅程分析"。
+降级：如果 journey-analysis 未执行（`spark-output/journey_analysis.md` 和 `spark-output/context/journey-analysis.json` 均不存在），从第一阶梯正式来源和 stories 推导简化版旅程，并标注"基于上游结论推导，未经深度旅程分析"。
 
 ## `§2` 交互流程总览
 
@@ -388,7 +406,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - 影响
 - 建议确认方
 
-如果 UXB `§9` 层级一问题仍未闭合，必须在这里标注“基于推荐方案推进”。
+如果第一阶梯来源中的关键待确认问题仍未闭合，必须在这里标注“基于推荐方案推进”。
 
 ## `§9` 附录：设计指南消费说明
 
@@ -399,37 +417,37 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - 设计准则消费
 - 业务知识消费
 - 知识缺口
-- UXB 承接追踪
+- 上游承接追踪
 
-`UXB 承接追踪` 固定表格：
+`上游承接追踪` 固定表格：
 
-| UXB 判断 | 对体验意味着什么 | 体验设计决策 | 落点章节 |
+| 上游判断 | 对体验意味着什么 | 体验设计决策 | 落点章节 |
 |---|---|---|---|
-| [来自 UXB §7 或 uxb.json.experience_handoff_requirements] | [体验影响] | [本次体验蓝图的具体设计决策] | [§3 / §5 / §6 / §7 等] |
+| [来自 UXB §7 / uxb.json.experience_handoff_requirements / problem-framing.handoff_requirements] | [体验影响] | [本次体验蓝图的具体设计决策] | [§3 / §5 / §6 / §7 等] |
 
 ## 自检清单
 
-生成 `experience_blueprint.md` 前，回看 UXB 产出，逐项检查：
+生成 `experience_blueprint.md` 前，回看第一阶梯正式来源，逐项检查：
 
 ```text
-□ 1. UXB §3 每个角色是否都有对应的路径、页面或职责落点？
-□ 2. UXB §7 每条承接要求是否都有对应展开？
-□ 3. UXB §5 每个异常是否都有交互流程展开？
-□ 4. UXB §4 每种状态是否都有展示位置和反馈文案？
+□ 1. 第一阶梯来源中的每个角色是否都有对应的路径、页面或职责落点？
+□ 2. 第一阶梯来源中的每条承接要求是否都有对应展开？
+□ 3. 第一阶梯来源中的每个异常或风险是否都有交互流程展开？
+□ 4. 第一阶梯来源中的每种状态是否都有展示位置和反馈文案？
 □ 5. 配置态 / 关闭态 / 回退态等非主线场景是否被省略？
-□ 6. UXB §9 层级一问题是否在文档中标注为“基于推荐方案推进”？
-□ 7. UXB 的关键判断、规则边界和已消费知识条目，是否都在体验蓝图中有对应的设计落点？
-□ 8. `§9` 的 `UXB 承接追踪` 是否非空，且每行都能落到真实章节？
-□ 9. `§0` 每条判断是否都包含具体设计做法，而非 UXB `§0` 的复述或增强？
+□ 6. 第一阶梯来源中的关键待确认问题是否在文档中标注为“基于推荐方案推进”？
+□ 7. 第一阶梯来源的关键判断、规则边界和已消费知识条目，是否都在体验蓝图中有对应的设计落点？
+□ 8. `§9` 的承接追踪是否非空，且每行都能落到真实章节？
+□ 9. `§0` 每条判断是否都包含具体设计做法，而非第一阶梯结论的复述或增强？
 □ 10. `§1` 旅程消费摘要是否非空，且三类信息（信心最低点 / 关键转折 / 流失风险）都有提取？
 ```
 
 关键原则：
 
-- 只检查自己的输出，不检查上游 UXB 的输出质量
+- 只检查自己的输出，不检查上游来源的输出质量
 - 如果某项目前无法明确承接，应显式写入 `§8`
-- 如果某项属于 UXB 本应定清的主方案前提，应优先指出上游未闭合
-- 自检第 7 项是反向检查：不是检查“体验蓝图写了什么”，而是检查“UXB 的判断和已消费知识是否被遗漏了”
+- 如果某项属于第一阶梯本应定清的主方案前提，应优先指出上游未闭合
+- 自检第 7 项是反向检查：不是检查“体验蓝图写了什么”，而是检查“第一阶梯来源的判断和已消费知识是否被遗漏了”
 
 ## Context JSON 写入
 
@@ -441,7 +459,11 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - `version`
 - `generated_at`
 - `project_name`
+- `source_mode`
+- `source_refs[]`
 - `uxb_mapping[]`
+- `problem_framing_mapping[]`
+- `stories_consumption`
 - `journey_consumption`（包含 `confidence_lows[]` / `key_transitions[]` / `dropout_risks[]`，每项含来源角色、阶段、蓝图落点）
 - `interaction_overview`
 - `main_flow[]`
@@ -481,7 +503,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 HTML 预览不是只展示 `experience_blueprint.md`，而是要在一个固定骨架里同时承接：
 
-- `spark-output/uxb_output.md`
+- `spark-output/uxb_output.md` 或 `spark-output/problem_framing.md`
 - `spark-output/experience_blueprint.md`
 
 固定展示方式：
@@ -494,7 +516,7 @@ HTML 预览不是只展示 `experience_blueprint.md`，而是要在一个固定�
 
 映射要求：
 
-- `uxb_output.md` 的正式章节必须进入 `业务蓝图` 面板
+- `uxb_output.md` 或 `problem_framing.md` 的正式章节必须进入 `业务蓝图` 面板
 - `experience_blueprint.md` 的正式章节必须进入 `体验蓝图` 面板
 - `§0`、附录、表格、ASCII 框图、待确认问题都不能丢
 - `§0` 和附录必须同时出现在导航和正文中，不能只保留内容块
@@ -515,7 +537,7 @@ HTML 预览不是只展示 `experience_blueprint.md`，而是要在一个固定�
 固定执行顺序：
 
 1. 读取 `references/preview_template.html`
-2. 读取 `spark-output/uxb_output.md`
+2. 读取第一阶梯正文产物：优先 `spark-output/uxb_output.md`，如不存在则读取 `spark-output/problem_framing.md`
 3. 读取 `spark-output/experience_blueprint.md`
 4. 先生成 `业务蓝图` 面板的导航项和章节容器
 5. 再生成 `体验蓝图` 面板的导航项和章节容器
@@ -541,15 +563,15 @@ HTML 预览不是只展示 `experience_blueprint.md`，而是要在一个固定�
 
 - 修改模板的 CSS / JS / HTML 结构
 - 擅自删减任何正式章节
-- 把 `uxb_output.md` 只压缩成摘要后再展示
+- 把第一阶梯正文产物只压缩成摘要后再展示
 - 把 `experience_blueprint.md` 的章节内容合并、偏移或错挂到其他区块
 - 新增模板中没有的视觉组件
 - 重新设计布局或配色方案
 
 ## 设计参考使用规则
 
-- 优先承接 UXB 已明确选中的设计准则和业务知识
-- 可以补充 UXB 未选中但与当前体验设计强相关的知识条目
+- 优先承接第一阶梯来源已明确选中的设计准则和业务知识
+- 可以补充第一阶梯来源未选中但与当前体验设计强相关的知识条目
 - 不根据关键词自动命中设计指南
 - 命中 guideline 后，必须先读 summary，再读对应 raw
 - 不自动补充与当前体验设计无关的 guideline

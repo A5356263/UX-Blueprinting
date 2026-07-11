@@ -258,7 +258,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
         { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "方向不稳时使用" },
         { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "已有界面诊断" },
         { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" },
-        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "收敛正式需求" }
+        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
+        { id: "problem-framing", name_zh: "问题框定", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "无 PRD 时先定清问题" }
       ]
     },
     {
@@ -266,9 +267,10 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "02",
       name_zh: "定义",
       name_en: "Define",
-      note: "角色任务、旅程结构与需求补全",
+      note: "用户故事、旅程结构与需求补全",
       skills: [
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/uxb", scene_hint: "补全角色旅程", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 uxb 再进入，以便复用需求定案结果。" }
+        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "转成任务单元与验收口径", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "补全角色旅程", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
       ]
     },
     {
@@ -278,7 +280,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Design",
       note: "方案生成、规格细化与页面落地",
       skills: [
-        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb", scene_hint: "生成体验方案" },
+        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "生成体验方案" },
         { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" },
         { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取页面规格" },
         { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "/page-spec", scene_hint: "产出页面原型" },
