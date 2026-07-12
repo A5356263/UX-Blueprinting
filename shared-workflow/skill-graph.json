@@ -103,9 +103,7 @@
           "journey-metrics"
         ],
         "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向。",
-        "alternatives": [
-          "check"
-        ]
+        "alternatives": []
       }
     },
     {
@@ -113,59 +111,6 @@
       "name_zh": "设计文档",
       "phase": 2.5,
       "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
-        "preferred": [
-          "xft-design"
-        ],
-        "reason": "页面规格提取完成后，进入页面原型生成，把页面结构、交互和文案规格落成 HTML 原型。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "xft-design",
-      "name_zh": "页面原型",
-      "phase": 3,
-      "reads": [
-        "page-spec"
-      ],
-      "required": [
-        "page-spec"
-      ],
-      "next_hint": {
-        "preferred": [],
-        "reason": "当前链路终点，无下游 Skill。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "edge",
-      "name_zh": "异常态",
-      "phase": 2.5,
-      "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
-        "preferred": [
-          "check"
-        ],
-        "reason": "异常态补充完成后，建议进入设计走查，检查整体完整性和一致性。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "check",
-      "name_zh": "设计走查",
-      "phase": 3,
-      "reads": [
-        "uxb",
         "experience-blueprint",
         "edge"
       ],
@@ -174,7 +119,25 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "当前链路终点，无下游 Skill。",
+        "reason": "页面规格提取完成后，当前链路在页面规格层收口，等待后续页面原型能力完善后再接入。",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "edge",
+      "name_zh": "异常态",
+      "phase": 3,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [
+          "page-spec"
+        ],
+        "reason": "异常态补充完成后，可进入设计文档把状态补丁吸收到页面生成规格中。",
         "alternatives": []
       }
     },
@@ -238,7 +201,7 @@
       "id": "interface-audit",
       "name_zh": "界面诊断",
       "phase": null,
-      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、problem-framing、product-analysis、check 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
+      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、problem-framing、product-analysis 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
       "reads": [],
       "required": [],
       "next_hint": {
@@ -247,9 +210,7 @@
           "problem-framing"
         ],
         "reason": "界面诊断完成后，建议根据问题性质进入需求定案或问题框定，把诊断证据转成正式上游结论。",
-        "alternatives": [
-          "check"
-        ]
+        "alternatives": []
       }
     },
     {

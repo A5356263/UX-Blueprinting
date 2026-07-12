@@ -92,7 +92,7 @@
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 10px;
     padding-top: 12px;
   }
@@ -255,22 +255,22 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Explore",
       note: "需求读取、问题诊断与方向收敛",
       skills: [
-        { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "方向不稳时使用" },
-        { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "已有界面诊断" },
-        { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" },
         { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
-        { id: "problem-framing", name_zh: "问题框定", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "无 PRD 时先定清问题" }
+        { id: "problem-framing", name_zh: "问题框定", slash: "/problem-framing", status: "current", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
+        { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
+        { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
+        { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" }
       ]
     },
     {
-      id: "define",
+      id: "task-journey",
       number: "02",
-      name_zh: "定义",
-      name_en: "Define",
-      note: "用户故事、旅程结构与需求补全",
+      name_zh: "任务与旅程",
+      name_en: "Task & Journey",
+      note: "把需求拆成任务，再看用户一路怎么完成",
       skills: [
-        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "转成任务单元与验收口径", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "补全角色旅程", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
+        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "拆清用户要做哪些事、做到什么算完成", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
       ]
     },
     {
@@ -278,29 +278,37 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "03",
       name_zh: "设计",
       name_en: "Design",
-      note: "方案生成、规格细化与页面落地",
+      note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
       skills: [
-        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "生成体验方案" },
-        { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" },
+        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "把需求变成正式体验方案" },
+        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
+        { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" }
+      ]
+    },
+    {
+      id: "page-build",
+      number: "04",
+      name_zh: "页面生成",
+      name_en: "Page Build",
+      note: "整理页面规格，页面原型能力当前仅静态展示，不参与主流程",
+      skills: [
         { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取页面规格" },
-        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "/page-spec", scene_hint: "产出页面原型" },
+        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "暂不接入主流程", scene_hint: "能力保留展示，后续完善后再接入" }
       ]
     },
     {
       id: "validate",
-      number: "04",
+      number: "05",
       name_zh: "验证",
       name_en: "Validate",
-      note: "异常覆盖、质量校验与度量口径",
+      note: "定义关键节点的埋点与度量口径",
       skills: [
-        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常状态" },
-        { id: "check", name_zh: "设计走查", slash: "/check", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "做一致性走查" },
-        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "定义埋点口径" }
+        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "定义关键节点的埋点与度量口径" }
       ]
     },
     {
       id: "deliver",
-      number: "05",
+      number: "06",
       name_zh: "沉淀",
       name_en: "Archive",
       note: "产物归档、知识沉淀与后续复用",
