@@ -63,6 +63,12 @@ description: >
 - 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
 - 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
 
+当正式来源为 `problem-framing` 时，先检查其信息分层：
+
+- `confirmed_facts` 可直接消费
+- `working_assumptions` 可有限消费，但必须显式标记
+- `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
+
 ## 核心判断规则
 
 正式生成前必须判断：
@@ -155,6 +161,12 @@ Story 索引必须包含：
 - 是否关键假设
 - 来源依据
 
+如果来源为 `problem-framing` 且关键缺口仍未闭合，只允许三种结果：
+
+- 仅输出 Story 索引
+- 输出带 `critical_assumption` 的 Story
+- 明确停止本次 Story 展开，并提示需先补齐问题框定的关键缺口
+
 ### Step 3：Story 生成
 
 每个 Story 固定包含：
@@ -171,7 +183,7 @@ Story 索引必须包含：
 
 Story 主体使用用户能理解的自然语言，不写工程字段、接口、表结构或页面布局。
 
-完成标准必须可观察、可验证。
+完成标准必须可观察、可验证。来源为 `problem-framing` 时，未确认项不得直接写入完成标准。
 
 设计触点只写：
 
@@ -289,6 +301,7 @@ Markdown 固定结构：
 - `stories[]` 不得为空。
 - `acceptance_criteria[]` 每个 Story 至少 2 条。
 - `design_touchpoints[]` 每个 Story 至少 1 条。
+- 若 `critical_assumption` 非空，必须与对应 `risk` 或 `gaps[]` 对齐。
 
 写入失败不阻断完成，但应在输出中提示。
 
@@ -336,6 +349,8 @@ Markdown 固定结构：
 - Story 标题必须是用户任务，不是页面名或功能模块名。
 - 不得把多个任务用“并且 / 同时”塞进一个 Story。
 - 来源为 `problem-framing` 时，最小澄清停顿不得超过 3 个问题，且只服务拆解。
+- 来源为 `problem-framing` 时，`open_gaps` 不得被写成验收标准。
+- 来源为 `problem-framing` 时，若信息仍不稳，允许只输出 Story Index，不强行展开全部 Story。
 
 ## 红线规则
 
@@ -348,3 +363,5 @@ Markdown 固定结构：
 - 不写具体文案方案。
 - 不把工程实现项伪装成用户故事。
 - 不得用最小澄清停顿替代 `problem-framing` 或 `uxb`。
+- 不得把上游未确认项写成 `acceptance_criteria`。
+- 不得把 Story 写成页面规格或蓝图方案。
