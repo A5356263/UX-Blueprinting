@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const markdownRenderer = require("../../markdown_renderer");
 
 const TEXT = {
   missing: "\u672a\u63d0\u4f9b",
@@ -24,10 +25,11 @@ function fail(message) {
   process.exit(1);
 }
 
-function readFile(filePath, label) {
+function readFile(filePath, label, required = true) {
   try {
     return fs.readFileSync(filePath, "utf8");
   } catch (error) {
+    if (!required) return "";
     fail(`failed to read ${label}: ${filePath}\n${error.message}`);
   }
 }
@@ -170,6 +172,18 @@ function buildContent(data) {
   return journeys.map((journey, index) => renderJourney(journey, index, data)).join("");
 }
 
+function buildMarkdownFallback(markdown) {
+  const sections = markdownRenderer.markdownToSections(markdown, {
+    prefix: "journey-analysis-markdown-section",
+    fallbackTitle: TEXT.product
+  });
+  return {
+    contentHtml: `<h1 class="preview-document-title">${TEXT.product}</h1>${markdownRenderer.renderSections(sections)}`,
+    navHtml: markdownRenderer.renderNav(sections, "journey-analysis"),
+    title: TEXT.product
+  };
+}
+
 function parseArgs(args) {
   if (args.length === 5) {
     const [shellPathArg, templatePathArg, contextPathArg, markdownPathArg, outputPathArg] = args;
@@ -201,24 +215,28 @@ function main() {
 
   const shellRaw = readFile(shellPath, "shell template");
   const templateRaw = readFile(templatePath, "content template");
-  if (markdownPathArg) readFile(path.resolve(process.cwd(), markdownPathArg), "markdown source");
+  const markdown = markdownPathArg ? readFile(path.resolve(process.cwd(), markdownPathArg), "markdown source") : "";
 
   let contextData = null;
   try {
-    contextData = JSON.parse(readFile(contextPath, "context json"));
-  } catch (error) {
-    fail(`failed to parse context json: ${contextPath}\n${error.message}`);
+    const contextRaw = readFile(contextPath, "context json", false);
+    if (contextRaw.trim()) contextData = JSON.parse(contextRaw);
+  } catch (_) {
+    contextData = null;
   }
 
-  const contentHtml = replaceRequired(templateRaw, "<!-- JOURNEY_CONTENT -->", buildContent(contextData));
-  const sidebarNav = `<a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">${TEXT.product}</a>`;
+  const fallback = contextData ? null : buildMarkdownFallback(markdown);
+  const contentHtml = replaceRequired(templateRaw, "<!-- JOURNEY_CONTENT -->", contextData ? buildContent(contextData) : fallback.contentHtml);
+  const sidebarNav = contextData
+    ? `<a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">${TEXT.product}</a>`
+    : fallback.navHtml;
   const bootstrapData = JSON.stringify({
     activeSkill: "journey-analysis",
     skills: ["journey-analysis"]
   }, null, 2);
 
   let html = shellRaw;
-  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(text(contextData.project_name, TEXT.product))}</title>`);
+  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(contextData ? text(contextData.project_name, TEXT.product) : TEXT.product)}</title>`);
   html = replaceRequired(html, "<!-- PREVIEW_SIDEBAR_NAV -->", sidebarNav);
   html = replaceRequired(html, "<!-- PREVIEW_CONTENT -->", contentHtml);
   html = replaceRequired(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);

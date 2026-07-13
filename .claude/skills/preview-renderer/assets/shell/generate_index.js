@@ -1,4 +1,141 @@
-<!doctype html>
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+
+const PRODUCTS = [
+  {
+    id: "uxb",
+    label: "业务蓝图",
+    purpose: "需求定案与业务边界的正式入口",
+    markdown: "spark-output/uxb_output.md",
+    context: "spark-output/context/uxb.json",
+    script: ".claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js",
+    preview: "spark-output/preview/uxb_preview.html"
+  },
+  {
+    id: "problem-framing",
+    label: "问题框定",
+    purpose: "无 PRD 场景下的问题收敛与方向判断",
+    markdown: "spark-output/problem_framing.md",
+    context: "spark-output/context/problem-framing.json",
+    script: ".claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js",
+    preview: "spark-output/preview/problem_framing_preview.html"
+  },
+  {
+    id: "stories",
+    label: "用户故事",
+    purpose: "把上游结论转成任务单元与验收口径",
+    markdown: "spark-output/stories.md",
+    context: "spark-output/context/stories.json",
+    script: ".claude/skills/preview-renderer/assets/skills/stories/generate_preview.js",
+    preview: "spark-output/preview/stories_preview.html"
+  },
+  {
+    id: "journey-analysis",
+    label: "角色旅程",
+    purpose: "展开角色阶段、触点、断点和机会点",
+    markdown: "spark-output/journey_analysis.md",
+    context: "spark-output/context/journey-analysis.json",
+    script: ".claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js",
+    preview: "spark-output/preview/journey_analysis_preview.html"
+  },
+  {
+    id: "experience-blueprint",
+    label: "体验蓝图",
+    purpose: "把上游结论展开为交互流程、页面和状态方案",
+    markdown: "spark-output/experience_blueprint.md",
+    context: "spark-output/context/experience-blueprint.json",
+    script: ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js",
+    preview: "spark-output/preview/experience_blueprint_preview.html"
+  }
+];
+
+function exists(root, filePath) {
+  return fs.existsSync(path.resolve(root, filePath));
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function stateFor(product, root) {
+  const markdownExists = exists(root, product.markdown);
+  const contextExists = exists(root, product.context);
+  const scriptExists = exists(root, product.script);
+  const previewExists = exists(root, product.preview);
+  let status = "missing_markdown";
+
+  if (markdownExists && previewExists) status = "generated";
+  else if (markdownExists && scriptExists) status = "missing_preview";
+  else if (markdownExists && !scriptExists) status = "missing_script";
+
+  return {
+    ...product,
+    markdownExists,
+    contextExists,
+    scriptExists,
+    previewExists,
+    canGenerate: markdownExists && scriptExists,
+    status
+  };
+}
+
+function statusLabel(status) {
+  if (status === "generated") return "已生成";
+  if (status === "missing_preview") return "待生成预览";
+  if (status === "missing_script") return "缺少渲染脚本";
+  return "未生成正式产物";
+}
+
+function statusClass(status) {
+  if (status === "generated") return "is-ready";
+  if (status === "missing_preview") return "is-pending";
+  if (status === "missing_script") return "is-blocked";
+  return "is-empty";
+}
+
+function boolText(value) {
+  return value ? "已存在" : "未检测到";
+}
+
+function renderCard(item) {
+  const href = item.status === "generated"
+    ? `./${path.basename(item.preview)}`
+    : "";
+  const action = item.status === "generated"
+    ? `<a class="preview-card-action" href="${escapeHtml(href)}">打开预览</a>`
+    : `<span class="preview-card-action is-disabled">${escapeHtml(statusLabel(item.status))}</span>`;
+
+  return `
+    <article class="preview-card ${statusClass(item.status)}">
+      <div class="preview-card-topline">
+        <span class="preview-card-kicker">${escapeHtml(item.id)}</span>
+        <span class="preview-card-status">${escapeHtml(statusLabel(item.status))}</span>
+      </div>
+      <h2>${escapeHtml(item.label)}</h2>
+      <p class="preview-card-purpose">${escapeHtml(item.purpose)}</p>
+      <dl class="preview-card-meta">
+        <div><dt>正式 Markdown</dt><dd>${escapeHtml(boolText(item.markdownExists))}</dd></div>
+        <div><dt>Context JSON</dt><dd>${escapeHtml(boolText(item.contextExists))}</dd></div>
+        <div><dt>HTML 预览</dt><dd>${escapeHtml(boolText(item.previewExists))}</dd></div>
+      </dl>
+      ${action}
+    </article>
+  `;
+}
+
+function renderHtml(items) {
+  const generated = items.filter((item) => item.status === "generated").length;
+  const pending = items.filter((item) => item.status === "missing_preview").length;
+  const missing = items.filter((item) => item.status === "missing_markdown").length;
+
+  return `<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -241,93 +378,27 @@
         <p class="preview-lead">这里仅展示正式 Markdown 产物对应的 HTML 预览状态。点击已生成的卡片进入对应预览页；预览不会改变主链状态。</p>
       </div>
       <div class="preview-stats" aria-label="预览状态统计">
-        <div class="preview-stat"><strong>5</strong><span>已生成</span></div>
-        <div class="preview-stat"><strong>0</strong><span>待生成</span></div>
-        <div class="preview-stat"><strong>0</strong><span>未产出</span></div>
+        <div class="preview-stat"><strong>${generated}</strong><span>已生成</span></div>
+        <div class="preview-stat"><strong>${pending}</strong><span>待生成</span></div>
+        <div class="preview-stat"><strong>${missing}</strong><span>未产出</span></div>
       </div>
     </section>
     <section class="preview-grid" aria-label="预览产物">
-      
-    <article class="preview-card is-ready">
-      <div class="preview-card-topline">
-        <span class="preview-card-kicker">uxb</span>
-        <span class="preview-card-status">已生成</span>
-      </div>
-      <h2>业务蓝图</h2>
-      <p class="preview-card-purpose">需求定案与业务边界的正式入口</p>
-      <dl class="preview-card-meta">
-        <div><dt>正式 Markdown</dt><dd>已存在</dd></div>
-        <div><dt>Context JSON</dt><dd>已存在</dd></div>
-        <div><dt>HTML 预览</dt><dd>已存在</dd></div>
-      </dl>
-      <a class="preview-card-action" href="./uxb_preview.html">打开预览</a>
-    </article>
-  
-
-    <article class="preview-card is-ready">
-      <div class="preview-card-topline">
-        <span class="preview-card-kicker">problem-framing</span>
-        <span class="preview-card-status">已生成</span>
-      </div>
-      <h2>问题框定</h2>
-      <p class="preview-card-purpose">无 PRD 场景下的问题收敛与方向判断</p>
-      <dl class="preview-card-meta">
-        <div><dt>正式 Markdown</dt><dd>已存在</dd></div>
-        <div><dt>Context JSON</dt><dd>已存在</dd></div>
-        <div><dt>HTML 预览</dt><dd>已存在</dd></div>
-      </dl>
-      <a class="preview-card-action" href="./problem_framing_preview.html">打开预览</a>
-    </article>
-  
-
-    <article class="preview-card is-ready">
-      <div class="preview-card-topline">
-        <span class="preview-card-kicker">stories</span>
-        <span class="preview-card-status">已生成</span>
-      </div>
-      <h2>用户故事</h2>
-      <p class="preview-card-purpose">把上游结论转成任务单元与验收口径</p>
-      <dl class="preview-card-meta">
-        <div><dt>正式 Markdown</dt><dd>已存在</dd></div>
-        <div><dt>Context JSON</dt><dd>已存在</dd></div>
-        <div><dt>HTML 预览</dt><dd>已存在</dd></div>
-      </dl>
-      <a class="preview-card-action" href="./stories_preview.html">打开预览</a>
-    </article>
-  
-
-    <article class="preview-card is-ready">
-      <div class="preview-card-topline">
-        <span class="preview-card-kicker">journey-analysis</span>
-        <span class="preview-card-status">已生成</span>
-      </div>
-      <h2>角色旅程</h2>
-      <p class="preview-card-purpose">展开角色阶段、触点、断点和机会点</p>
-      <dl class="preview-card-meta">
-        <div><dt>正式 Markdown</dt><dd>已存在</dd></div>
-        <div><dt>Context JSON</dt><dd>已存在</dd></div>
-        <div><dt>HTML 预览</dt><dd>已存在</dd></div>
-      </dl>
-      <a class="preview-card-action" href="./journey_analysis_preview.html">打开预览</a>
-    </article>
-  
-
-    <article class="preview-card is-ready">
-      <div class="preview-card-topline">
-        <span class="preview-card-kicker">experience-blueprint</span>
-        <span class="preview-card-status">已生成</span>
-      </div>
-      <h2>体验蓝图</h2>
-      <p class="preview-card-purpose">把上游结论展开为交互流程、页面和状态方案</p>
-      <dl class="preview-card-meta">
-        <div><dt>正式 Markdown</dt><dd>已存在</dd></div>
-        <div><dt>Context JSON</dt><dd>已存在</dd></div>
-        <div><dt>HTML 预览</dt><dd>已存在</dd></div>
-      </dl>
-      <a class="preview-card-action" href="./experience_blueprint_preview.html">打开预览</a>
-    </article>
-  
+      ${items.map(renderCard).join("\n")}
     </section>
   </main>
 </body>
-</html>
+</html>`;
+}
+
+function main() {
+  const root = process.cwd();
+  const outputPath = path.resolve(root, "spark-output/preview/index.html");
+  const items = PRODUCTS.map((product) => stateFor(product, root));
+
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, renderHtml(items), "utf8");
+  console.log(`preview index generated: ${outputPath}`);
+}
+
+main();

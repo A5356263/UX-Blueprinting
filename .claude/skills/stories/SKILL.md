@@ -323,10 +323,13 @@ Markdown 固定结构：
 - `stories` 自身不生成 HTML 预览。
 - 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`。
 - 不得为了预览修改当前 Skill 的正式 Markdown、Context JSON、Story 优先级或验收标准。
+- 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
 - 固定提示口径：
 
 ```text
-用户故事 Markdown 与 Context JSON 已生成。如果需要，我可以继续交给 `preview-renderer` 渲染 HTML 预览。
+附加操作：
+如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+这不会改变主链流转。
 ```
 
 ## 交接

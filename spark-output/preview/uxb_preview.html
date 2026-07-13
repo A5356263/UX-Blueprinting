@@ -397,139 +397,134 @@
   
     <section class="preview-section-block" id="uxb-section-0">
       <h2 class="preview-section-heading">业务蓝图</h2>
-      <div class="preview-section-body"><p>---</p></div>
+      <div class="preview-section-body"></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-1">
       <h2 class="preview-section-heading">§0 本次关键判断</h2>
-      <div class="preview-section-body"><p>这是一项&quot;把权限授权从管理员集中处理转向员工自助+上级审批+自动生效&quot;的治理结构调整，不是页面级功能优化。</p>
-<p><strong>业务判断</strong>：推荐在现有权限模块中新增&quot;员工自助申请&quot;能力线。<strong>关键前提</strong>是审批流基建（审批引擎、上级负责人路由、自动授权执行接口）的成熟度，它们决定方案可行性和实施路径。<strong>不建议</strong>保留人工执行环节或改为管理员审批——那没有解决时效不稳定的核心矛盾。<strong>最高优先级待确认</strong>：审批流引擎的接口能力是否支持&quot;审批通过后自动触发授权执行&quot;。</p>
-<p>---</p></div>
+      <div class="preview-section-body"><p><strong>总判断：新增&quot;员工自助申请权限&quot;能力是成立的，但前提是先解决与现有治理模式的共存策略。</strong></p>
+<ul><li><strong>判断</strong>：本次需求是在已有管理员侧授权体系上新增一个员工侧入口能力，不改变底层权限对象关系和生效机制。核心挑战不在&quot;能不能做&quot;，而在&quot;怎么做才能既让员工用起来顺，又不打乱已有的治理体系&quot;。</li><li><strong>主要影响</strong>：三个角色（员工、审批人、管理员）的任务路径和信息结构有明显变化，但底层业务骨架不变。</li><li><strong>建议方案</strong>：采用&quot;自助申请为补充能力，不是替代能力&quot;的定位——管理员保持全局控制，员工获得自助入口，审批流由 OA 底座承接。</li><li><strong>不建议方案</strong>：把自助申请做成完全开放的系统（削弱管控），或把它做成仅一个入口没有审批（失去治理）。</li><li><strong>关键待确认</strong>：与子管理员模式、双管理员模式、权限变更审批模式的共存策略——这决定了产品层面的功能开关逻辑。</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-2">
       <h2 class="preview-section-heading">§1 需求输入摘要</h2>
-      <div class="preview-section-body"><h3>需求背景</h3>
-<p>中大型企业员工权限分配目前依赖管理员或超级管理员集中处理。员工数量多、人员流动频繁，权限新增、变更、核对工作量大。部分企业的超级管理员就是老板本人。</p>
-<h3>目标用户</h3>
-<ul><li><strong>员工</strong>（核心）：业务人员/经办人员，需要被授予功能权限或加入角色</li><li><strong>上级组织负责人</strong>：审批人，审批下属的权限申请</li><li><strong>权限管理员/超级管理员</strong>：负责权限策略配置和治理</li></ul>
-<h3>业务目标</h3>
-<p>支持员工自助查看和申请权限，把部分权限申请工作从管理员侧分散到员工侧，同时保留管理员对申请范围和审批流程的控制。</p>
-<h3>功能范围</h3>
-<ul><li><strong>覆盖</strong>：功能权限申请 + 角色授权申请</li><li><strong>不覆盖</strong>：数据权限的自助申请、协作可见性的自助申请</li></ul>
-<h3>明确约束</h3>
-<ul><li>申请范围由管理员预制，排除敏感权限 [FACT]</li><li>审批人为上级组织负责人，不是管理员 [FACT]</li><li>审批通过后自动生效，不留人工执行环节 [FACT]</li><li>作为已有平台新增能力，需兼容现有权限模块架构 [CONFIRMED]</li></ul>
-<h3>输入缺口</h3>
-<ul><li>审批流引擎基建就绪度未明确 [GAP]</li><li>自动授权执行接口可用性未明确 [GAP]</li></ul>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>需求背景（原文提取）</h3>
+<ul><li>中大型企业员工数量多、流动频繁，权限管理工作量大</li><li>超管可能是老板本人，员工需要私下找管理员处理，沟通成本高、时效不稳定</li><li>目标：把部分权限申请工作从管理员侧分散到员工侧，保留管理侧控制</li></ul>
+<h3>目标用户（原文提取）</h3>
+<ul><li><strong>员工</strong>：查看已有权限、申请权限、查看申请记录和审批状态</li><li><strong>审批人</strong>：收到申请后查看内容和原因，决定同意或拒绝</li><li><strong>管理员</strong>：开启/关闭自助申请能力，配置可申请范围和审批流程</li></ul>
+<h3>功能范围（原文提取）</h3>
+<ul><li>管理员配置：开启/关闭、设置范围、设置审批流程、后续调整配置</li><li>员工端：查看权限、申请权限、查看申请记录</li><li>审批端：查看申请、同意/拒绝、系统自动授权</li></ul>
+<h3>未覆盖内容（原文缺口标注）</h3>
+<div class="table-wrap"><table><thead><tr><th>缺口</th><th>原文标注</th></tr></thead><tbody><tr><td>可申请范围配置方式</td><td>&quot;需要进一步设计&quot;</td></tr><tr><td>员工端业务规则</td><td>&quot;帮我补充&quot;</td></tr><tr><td>审批端业务规则</td><td>&quot;帮我补充&quot;</td></tr><tr><td>与现有治理模式的关系</td><td>提出风险但未做判断</td></tr><tr><td>关闭能力时的影响范围</td><td>提出但未展开</td></tr></tbody></table></div></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-3">
       <h2 class="preview-section-heading">§2 业务场景判断</h2>
       <div class="preview-section-body"><h3>业务定位</h3>
-<p>这是权限管理域中<strong>新增的自助服务子能力</strong>，不是对现有授权方式的替代或重构。现有管理员侧授权保持不变，新增一条员工侧发起→上级审批→系统自动执行的并行路径。</p>
+<p>本次需求是<strong>既有能力扩展</strong>，不是全新能力，也不是替代方案。</p>
+<ul><li>当前产品已有完整的<strong>管理员侧授权链路</strong>（用户授权→功能授权→数据授权、角色管理、应用管理），这些不受影响</li><li>自助申请是<strong>在员工侧新增一个入口</strong>，本质上把&quot;申请→审批→生效&quot;流程中&quot;发起&quot;这一步从线下沟通转为线上操作</li><li>审批和生效环节仍然复用已有能力（OA 底座审批、权限生效机制）</li></ul>
 <h3>与现有能力的关系</h3>
-<div class="table-wrap"><table><thead><tr><th>现有能力</th><th>关系</th><th>说明</th></tr></thead><tbody><tr><td>管理员用户直授</td><td>并行存在</td><td>管理员仍可主动为员工授权，自助申请是新增入口</td></tr><tr><td>角色授权</td><td>被复用</td><td>员工申请加入角色后，复用已有角色-权限绑定关系</td></tr><tr><td>审批中台</td><td>依赖关系</td><td>审批流需要接入平台审批能力路由到上级负责人</td></tr><tr><td>组织域成员关系</td><td>依赖关系</td><td>审批人匹配依赖组织域中&quot;上级负责人&quot;关系的完整性</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>现有能力</th><th>关系</th></tr></thead><tbody><tr><td>管理员侧用户授权</td><td>互补，员工自助申请通过审批后自动触发的授权，等同于管理员授权的一种来源</td></tr><tr><td>子管理员模式</td><td>潜在互斥或叠加，需进一步判断</td></tr><tr><td>双管理员模式</td><td>潜在互斥或叠加，需进一步判断</td></tr><tr><td>权限变更审批模式</td><td>潜在互斥或叠加，需进一步判断</td></tr><tr><td>角色管理</td><td>自助申请的目标之一是角色权限包，但角色定义和管理仍在管理员侧</td></tr></tbody></table></div>
 <h3>最大业务不确定性</h3>
-<p><strong>审批流转链路能否闭环</strong>——从&quot;员工提交&quot;到&quot;上级审批&quot;到&quot;系统自动授权&quot;的三段链路，每一段都依赖平台既有基建。审批流引擎和自动授权执行接口的就绪度是当前最大的业务风险。</p>
+<p><strong>与现有治理模式的共存策略</strong>是最不确定的问题。当前产品有三种治理模式（子管理员、双管理员、权限变更审批），自助申请加入后是&quot;可同时开启&quot;还是&quot;互斥选择&quot;，会直接影响：</p>
+<ul><li>产品功能开关的设计方式</li><li>权限来源的解释逻辑（同一份权限从&quot;自助申请&quot;来 vs 从&quot;管理员授权&quot;来）</li><li>审批链路的冲突处理（同时开启自助申请审批和双管理员互审时如何处理）</li></ul>
 <h3>判断错误的影响</h3>
-<p>如果判断错&quot;审批基建已就绪&quot;但实际上未就绪，后续体验方案中&quot;自动生效&quot;环节需要改为半自动（通知管理员手动执行），这会破坏核心价值主张（时效可预期）。如果判断错&quot;上级负责人关系已定义完整&quot;但实际上不完整，审批人匹配会大面积失败，需要补充兜底机制。</p>
-<p>---</p></div>
+<p>如果共存策略判断错误，后续体验蓝图中的功能开关设计、权限来源展示、审批链路设计都需要重做。</p></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-4">
       <h2 class="preview-section-heading">§3 需求成立性判断</h2>
-      <div class="preview-section-body"><h3>价值判断</h3>
-<p><strong>成立。</strong> 从三个角度看：</p>
-<ol><li><strong>问题真实</strong> — 中大型企业人员流动性高，非正式沟通模式无法规模化管理，这是管理常识级痛点，不依赖特定场景验证</li><li><strong>收益明确</strong> — 员工获得可预期的授权时效，管理员从执行者变为策略定义者，审批人在上下文中做判断而非空白审批，三层角色各有所获</li><li><strong>用户体验收益</strong> — 从&quot;找到人→说清楚→等待&quot;的模糊链路变为&quot;提交→等审批→自动获得&quot;的清晰链路</li></ol>
-<h3>系统代价</h3>
-<ul><li><strong>建设成本中等</strong>：新增员工端入口、申请目录、申请 Drawer、审批详情 Drawer、我的申请页等前端实体</li><li><strong>依赖成本偏高</strong>：审批流引擎、上级负责人路由、自动授权接口三项基建缺一不可</li><li><strong>维护成本中等</strong>：管理员需持续维护可申请目录和敏感权限标记</li></ul>
-<h3>更低成本替代方案</h3>
-<ul><li><strong>不做自助申请，只优化管理员授权体验</strong>：在后台增加批量授权、模板授权能力。这能解决管理员的效率问题，但不解决员工侧的&quot;不知道找谁、不知道有什么权限&quot;问题</li><li><strong>不做自动生效，只做申请+审批通知</strong>：审批通过后通知管理员手动执行。这降低了对授权接口的依赖，但重新引入了时效不稳定的核心矛盾</li></ul>
-<p><strong>建议</strong>：进入正式体验设计，但前提是审批流基建和自动授权接口必须在设计阶段确认就绪度。如果基建不满足，需要在上游提前暴露风险，而不是等方案完成后再回头补。</p>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>收益</h3>
+<ul><li>降低管理侧重复性工作：管理员从逐个处理申请变为一次性配置规则</li><li>缩短授权时效：员工在线提交，审批人在线处理，不再依赖线下沟通</li><li>审计可追溯：每笔申请有完整的发起→审批→生效记录</li><li>员工体验提升：从&quot;找谁问&quot;变为&quot;自己办&quot;</li></ul>
+<h3>代价</h3>
+<ul><li>开发成本：新增员工侧入口、申请流程、状态管理、与 OA 底座对接</li><li>培训成本：需要让员工理解&quot;什么是自助申请权限&quot;——但这个成本可以通过语义降维（用业务语言代替管理术语）来降低</li><li>治理复杂度：新增一种权限来源，权限解释链路（&quot;为什么有这个权限&quot;）需要增加&quot;自助申请&quot;这一来源类型</li></ul>
+<h3>更低成本的替代路径</h3>
+<ul><li><strong>替代路径 A</strong>：不做自助申请，只做&quot;权限查看&quot;功能——员工只能看自己有什么权限，申请仍走线下。成本最低，但未解决&quot;申请效率&quot;这个核心问题。</li><li><strong>替代路径 B</strong>：不做产品功能，只在管理侧做一个&quot;代客下单&quot;工具——管理员替员工提交申请。成本中等，但核心矛盾（管理员仍要逐个处理）没有解决。</li><li><strong>替代路径 C（推荐）</strong>：本次需求方案——员工自助申请+管理员配置规则。成本最高，但从根本上解耦了&quot;发起&quot;和&quot;处理&quot;两个环节。</li></ul>
+<h3>结论</h3>
+<p><strong>建议进入正式体验设计。</strong> 需求真实（中大型企业权限管理确实是痛点），方案合理（在线化+审批流+管理员配置），且已有 OA 底座能力支撑。但需要先确认 §0 所述的共存策略。</p></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-5">
       <h2 class="preview-section-heading">§4 推荐业务边界</h2>
-      <div class="preview-section-body"><h3>推荐能力形态</h3>
-<ul><li>员工侧：可申请目录浏览 → 权限/角色详情查看 → 选择并发起申请 → 追踪进度 → 接收结果</li><li>审批人侧：待办列表 → 申请详情查看（含权限说明和风险提示）→ 审批操作</li><li>管理员侧：角色和功能权限的&quot;可自助申请&quot;标记开关 → 批量标记 → 配置生效</li></ul>
-<h3>不推荐能力形态</h3>
-<ul><li><strong>不推荐</strong>让员工自由申请全部权限（必须预制范围）— 安全失控</li><li><strong>不推荐</strong>由管理员审批（必须限定为上级负责人）— 未解决管理者负担</li><li><strong>不推荐</strong>审批通过后留人工执行环节 — 未解决时效不稳定</li><li><strong>不推荐</strong>在员工侧暴露可申请的数据权限或协作可见性 — 超出本次范围</li></ul>
-<h3>与现有能力的边界</h3>
-<ul><li>复用现有角色-权限绑定关系（员工加入角色即获得关联的功能权限）</li><li>复用现有组织架构成员关系（审批人路由依赖上级负责人定义）</li><li>不改变管理员侧授权路径</li><li>不改变敏感权限的管控方式</li></ul>
-<h3>不新增</h3>
-<ul><li>不新增独立的审批流引擎（复用平台审批能力）</li><li>不新增权限对象模型（复用现有主体、资源、动作、范围定义）</li></ul>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>业务能力边界</h3>
+<div class="table-wrap"><table><thead><tr><th>维度</th><th>本次范围</th><th>不在本次范围</th></tr></thead><tbody><tr><td>申请发起</td><td>员工在线提交申请，含申请理由</td><td>批量申请、代他人申请</td></tr><tr><td>申请内容</td><td>功能权限、角色（权限包）</td><td>数据权限（本次不覆盖）</td></tr><tr><td>敏感权限</td><td>系统级排除，不可申请</td><td>不改变敏感权限定义规则</td></tr><tr><td>审批流程</td><td>由 OA 底座承接，上级负责人审批</td><td>不重新设计审批引擎</td></tr><tr><td>权限生效</td><td>审批通过后系统自动授权</td><td>定时生效、权限回收（后续考虑）</td></tr><tr><td>管理员控制</td><td>可申请范围配置、开启/关闭</td><td>不改变管理员侧已有授权功能</td></tr><tr><td>权限来源</td><td>新增&quot;自助申请&quot;作为权限来源类型</td><td>不改变已有来源类型的管理逻辑</td></tr></tbody></table></div>
+<h3>[CONFIRMED] 与现有治理模式的建议关系</h3>
+<p>基于领域知识和当前系统架构判断：</p>
+<ul><li><strong>自助申请 ≠ 治理模式</strong></li><li>自助申请是一种权限来源方式，而不是一种治理模式</li><li>它与子管理员模式、双管理员模式、权限变更审批模式<strong>不互斥</strong></li><li>关系建议：自助申请作为&quot;权限的获取方式&quot;独立存在，已获取的权限在流转过程中仍受已有治理模式约束</li></ul>
+<h3>[GAP] 需进一步验证</h3>
+<p>上述关系判断需要产品侧和架构侧确认。如果判断错误，需要返回 §2 和 §4 重做。</p></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-6">
       <h2 class="preview-section-heading">§5 角色、功能、规则范围</h2>
       <div class="preview-section-body"><h3>角色职责</h3>
-<div class="table-wrap"><table><thead><tr><th>角色</th><th>职责</th></tr></thead><tbody><tr><td>员工</td><td>浏览可申请目录 → 选择需要项 → 提交申请（含理由）→ 追踪进度 → 申请通过后使用权限 / 被拒后查看原因并决定是否重试</td></tr><tr><td>上级组织负责人</td><td>接收审批待办 → 查看申请详情（含申请人、内容、理由、权限说明）→ 通过或拒绝 → 拒绝时填写原因</td></tr><tr><td>权限管理员</td><td>在角色/功能权限管理中标记&quot;可自助申请&quot; → 批量标记/取消标记 → 配置即时生效；持续维护可申请目录和敏感权限边界</td></tr></tbody></table></div>
-<h3>功能单元</h3>
-<div class="table-wrap"><table><thead><tr><th>功能</th><th>输入</th><th>处理</th><th>结果</th></tr></thead><tbody><tr><td>浏览可申请目录</td><td>员工进入权限申请页面</td><td>系统按管理员预制的可申请标记过滤，排除敏感权限，聚合展示</td><td>角色列表（全量，区分可申请标记）+ 功能权限列表（仅可申请项）</td></tr><tr><td>提交权限申请</td><td>员工选择项 + 申请理由</td><td>校验重复项和必填项，匹配审批人，写入申请记录</td><td>申请进入待审批状态，记录持久化</td></tr><tr><td>审批申请</td><td>审批人通过/拒绝操作 + 拒绝原因（拒绝时必填）</td><td>审批人操作确认后，写入审批结果</td><td>通过→触发自动授权；拒绝→通知申请人</td></tr><tr><td>自动授权</td><td>审批通过事件</td><td>系统执行为用户添加功能权限/加入角色</td><td>授权成功→通知双方；授权失败→通知双方+失败原因</td></tr><tr><td>配置可申请目录</td><td>管理员设置角色/权限的可自助申请标记</td><td>系统保存配置，排除敏感权限的保护性禁用</td><td>员工端目录即时更新</td></tr></tbody></table></div>
-<h3>关键业务规则</h3>
-<div class="table-wrap"><table><thead><tr><th>规则</th><th>触发条件</th><th>处理结果</th><th>不满足时处理</th></tr></thead><tbody><tr><td>申请范围预制</td><td>员工浏览可申请目录</td><td>仅展示管理员标记为可申请的项，排除敏感权限</td><td>员工不可见的项视为无权申请</td></tr><tr><td>审批人确定</td><td>员工提交申请</td><td>自动匹配申请人上级组织负责人</td><td>匹配失败→通知员工联系管理员</td></tr><tr><td>申请理由必填</td><td>提交申请时</td><td>理由为空则校验不通过</td><td>InlineError + 阻断提交</td></tr><tr><td>拒绝原因必填</td><td>审批人拒绝时</td><td>原因为空则校验不通过</td><td>InlineError + 阻断提交</td></tr><tr><td>审批通过自动生效</td><td>审批人点击通过</td><td>触发授权执行接口</td><td>执行失败→通知双方+失败原因</td></tr><tr><td>已有权限重复申请</td><td>提交时检测</td><td>提示重复项，支持一键移除</td><td>不阻断，可保留重复项（系统自动过滤）</td></tr></tbody></table></div>
-<p>---</p></div>
+<div class="table-wrap"><table><thead><tr><th>角色</th><th>职责</th></tr></thead><tbody><tr><td>员工</td><td>查看已有权限 → 发现可申请权限 → 发起申请 → 追踪进度 → 使用已获得的权限</td></tr><tr><td>审批人（上级组织负责人）</td><td>查看申请上下文 → 批准/拒绝（附理由）→ 申请生效/退回</td></tr><tr><td>权限管理员/超管</td><td>开启/关闭自助申请能力 → 配置可申请范围 → 配置审批规则 → 查看审计记录</td></tr></tbody></table></div>
+<h3>功能范围</h3>
+<ol><li><strong>权限查看</strong>：员工查看自己当前拥有的权限清单（功能权限+角色），含生效状态</li><li><strong>权限申请</strong>：员工从缺口触发或主动搜索，选择所需权限/角色，填写理由，提交申请</li><li><strong>进度追踪</strong>：员工查看申请记录列表，含当前状态、处理人、处理时间</li><li><strong>审批处理</strong>：审批人在 OA 底座中查看申请上下文，批准或拒绝</li><li><strong>管理员配置</strong>：管理员配置可申请范围（按功能权限/角色维度），开启/关闭能力</li><li><strong>权限自动生效</strong>：审批通过后系统自动完成授权</li></ol>
+<h3>[FACT] 业务规则</h3>
+<div class="table-wrap"><table><thead><tr><th>规则</th><th>说明</th></tr></thead><tbody><tr><td>申请资格</td><td>所有正式员工均可提交申请，已离职/停用成员不可</td></tr><tr><td>申请范围</td><td>仅管理员开放且非系统排除的权限可申请</td></tr><tr><td>申请理由</td><td>员工需说明申请原因（选填，但建议填写以利审批）</td></tr><tr><td>审批人</td><td>默认为员工的上级组织负责人</td></tr><tr><td>审批决策</td><td>批准即进入生效流程，拒绝需附原因</td></tr><tr><td>生效机制</td><td>审批通过后由权限系统自动执行授权</td></tr><tr><td>关闭能力</td><td>管理员关闭后，员工侧申请入口隐藏；进行中的申请按预设策略处理</td></tr></tbody></table></div>
+<h3>[GAP] 待确认的规则</h3>
+<div class="table-wrap"><table><thead><tr><th>规则</th><th>当前状态</th></tr></thead><tbody><tr><td>一次申请可包含的权限数量</td><td>未定，建议支持多选</td></tr><tr><td>申请理由是否必填</td><td>未定，建议选填</td></tr><tr><td>审批超时处理方式</td><td>未定</td></tr><tr><td>关闭能力时进行中申请的处理策略</td><td>未定</td></tr><tr><td>与现有治理模式的具体技术互斥关系</td><td>未定</td></tr></tbody></table></div></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-7">
       <h2 class="preview-section-heading">§6 状态、异常与边界</h2>
-      <div class="preview-section-body"><h3>核心状态</h3>
-<div class="table-wrap"><table><thead><tr><th>状态</th><th>说明</th><th>用户下一步</th></tr></thead><tbody><tr><td>待审批</td><td>申请已提交，等待上级审批</td><td>等待或催办</td></tr><tr><td>审批人已查看</td><td>审批人已打开查看</td><td>等待审批结果</td></tr><tr><td>已通过</td><td>审批人已批准</td><td>等待权限生效</td></tr><tr><td>已拒绝</td><td>审批人未批准</td><td>查看拒绝原因，重新申请或放弃</td></tr><tr><td>授权中</td><td>系统正在执行授权</td><td>等待</td></tr><tr><td>授权成功</td><td>权限已生效</td><td>去使用权限</td></tr><tr><td>授权失败</td><td>系统自动授权不成功</td><td>联系管理员</td></tr></tbody></table></div>
-<h3>关键异常</h3>
-<div class="table-wrap"><table><thead><tr><th>异常</th><th>触发条件</th><th>系统处理结果</th><th>用户下一步</th></tr></thead><tbody><tr><td>审批人不存在/已离职</td><td>提交后匹配审批人失败</td><td>申请状态→&quot;审批人匹配失败&quot;；通知员工+通知管理员</td><td>员工联系管理员确认组织关系，管理员修复后系统自动重新路由</td></tr><tr><td>审批超时</td><td>超过预设时限（如24h/48h）未处理</td><td>员工端可催办，审批端超时标记置顶</td><td>员工催办或联系审批人</td></tr><tr><td>自动授权失败</td><td>授权执行接口返回失败</td><td>申请状态→&quot;授权失败&quot;；通知双方+失败原因</td><td>员工联系管理员；审批人可协助排查</td></tr><tr><td>批量授权部分失败</td><td>逐项执行时部分失败</td><td>成功项即时生效，失败项展示原因；状态→&quot;部分成功&quot;</td><td>失败项单独重新申请或联系管理员</td></tr><tr><td>权限已拥有重复申请</td><td>员工选择的项含已拥有权限</td><td>提醒可移除，不阻断提交</td><td>选择一键移除重复项或保留（系统自动过滤）</td></tr></tbody></table></div>
-<h3>边界</h3>
-<ul><li>敏感权限不在员工可申请目录中展示，管理员也无法标记为可自助申请 [GAP：敏感权限标记机制是否已定义]</li></ul>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>[CONFIRMED] 核心状态</h3>
+<div class="table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>用户下一步</th></tr></thead><tbody><tr><td>审批中</td><td>申请已提交，等待审批人处理</td><td>查看进度，或联系审批人提醒</td></tr><tr><td>已批准</td><td>审批人已批准，权限进入生效流程</td><td>等待系统完成授权</td></tr><tr><td>已生效</td><td>权限已完成授权，员工可使用</td><td>回到功能页面使用权限</td></tr><tr><td>已拒绝</td><td>审批人拒绝申请（附原因）</td><td>查看拒绝原因，重新申请或联系审批人</td></tr><tr><td>已撤销</td><td>员工在审批前主动撤销</td><td>重新发起申请</td></tr></tbody></table></div>
+<h3>[GAP] 异常场景</h3>
+<div class="table-wrap"><table><thead><tr><th>异常</th><th>触发条件</th><th>系统处理</th><th>用户下一步</th></tr></thead><tbody><tr><td>审批超时</td><td>审批人超过预设时限未处理</td><td>系统自动催办/升级</td><td>等待或联系审批人</td></tr><tr><td>生效失败</td><td>审批通过后权限系统授权失败</td><td>系统自动重试，状态保持&quot;已批准&quot;</td><td>等待或联系管理员</td></tr><tr><td>审批人缺失</td><td>申请人没有上级组织负责人</td><td>申请无法提交，提示联系管理员</td><td>联系管理员设置审批人</td></tr><tr><td>能力关闭冲击</td><td>管理员关闭时存在进行中申请</td><td>需预设策略（允许完成/强制终止）</td><td>视策略而定</td></tr></tbody></table></div></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-8">
       <h2 class="preview-section-heading">§7 体验蓝图承接要求</h2>
-      <div class="preview-section-body"><div class="table-wrap"><table><thead><tr><th>业务判断</th><th>对体验设计的影响</th><th>必须承接的问题</th><th>禁止下游重判</th></tr></thead><tbody><tr><td>申请范围由管理员预制，排除敏感权限</td><td>目录不是全量权限，员工只看到可申请的项</td><td>权限目录的筛选逻辑、可申请标记的展示方式、敏感权限的保护机制</td><td>不得让员工自由申请全部权限</td></tr><tr><td>审批人为上级组织负责人</td><td>审批人自动匹配，申请人不需要选择</td><td>审批人匹配失败时的降级处理、审批上下文中展示权限说明和风险提示</td><td>不得改为管理员审批或让申请人自选审批人</td></tr><tr><td>审批通过后自动生效</td><td>生效环节无人工干预，状态需实时可感知</td><td>自动授权执行链路、授权成功/失败的反馈机制、部分成功的处理策略</td><td>不得保留人工执行环节</td></tr><tr><td>覆盖功能权限和角色授权</td><td>目录有两类授权对象，角色是权限集合</td><td>角色与功能权限的分栏展示、角色详情中包含关联权限清单</td><td>不得扩展至数据权限或协作可见性</td></tr><tr><td>员工可看到全部角色</td><td>角色列表全量，但仅部分可申请</td><td>可申请角色与不可申请角色的视觉区分、全部角色的可浏览性</td><td>不得隐藏不可申请的角色</td></tr><tr><td>申请需填写理由</td><td>理由帮助审批人判断</td><td>理由输入引导、理由校验、拒绝时原因的填写</td><td>不得取消理由必填</td></tr><tr><td>申请进度需透明可追踪</td><td>等待区间需中间态</td><td>状态时间线、催办机制、超时标记</td><td>不得仅展示终态</td></tr></tbody></table></div>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>判断 1：缺口触发是主要入口</h3>
+<ul><li><strong>业务判断</strong>：员工在操作无权限功能时被拦截，是最自然、转化率最高的申请触发场景</li><li><strong>体验影响</strong>：拦截页除了告知&quot;无权限&quot;，还需告知&quot;能不能申请&quot;、&quot;怎么申请&quot;</li><li><strong>必须承接的问题</strong>：拦截页如何识别缺失的权限、判断可申请状态、降级策略</li><li><strong>禁止下游重判</strong>：不需要重新判断&quot;缺口触发是否为主要入口&quot;</li></ul>
+<h3>判断 2：语义降维</h3>
+<ul><li><strong>业务判断</strong>：功能权限、数据权限、角色是管理术语，员工不熟悉</li><li><strong>体验影响</strong>：权限列表和权限展示需要业务语言描述（&quot;可以做什么&quot;），而不是管理分类名</li><li><strong>必须承接的问题</strong>：如何把管理术语转译为业务语言，角色和功能权限如何统一呈现</li><li><strong>禁止下游重判</strong>：不需要重新判断&quot;是否需要语义降维&quot;</li></ul>
+<h3>判断 3：审批上下文决定决策效率</h3>
+<ul><li><strong>业务判断</strong>：审批人需要知道&quot;谁、申请了什么、为什么&quot;才能做判断</li><li><strong>体验影响</strong>：审批详情页不能只展示权限名称，还需展示申请理由、业务说明、持有情况</li><li><strong>必须承接的问题</strong>：OA 底座审批页面的自定义信息承载能力范围</li><li><strong>禁止下游重判</strong>：不需要重新判断&quot;审批人是否需要上下文&quot;</li></ul>
+<h3>判断 4：状态透明度影响信任</h3>
+<ul><li><strong>业务判断</strong>：申请→审批→生效的全链路对员工不透明，是&quot;私下问&quot;的根本原因</li><li><strong>体验影响</strong>：员工需要随时知道&quot;当前在哪个环节、谁在处理、预计还要多久&quot;</li><li><strong>必须承接的问题</strong>：进度展示方式、通知策略、生效确认</li><li><strong>禁止下游重判</strong>：不需要重新判断&quot;状态是否需要可视化&quot;</li></ul>
+<h3>判断 5：关闭行为需要治理设计</h3>
+<ul><li><strong>业务判断</strong>：关闭自助申请能力不是简单功能开关，会影响进行中的申请和已生效的权限</li><li><strong>体验影响</strong>：关闭时需要告知影响范围，并提供预设策略（允许完成/强制终止）</li><li><strong>必须承接的问题</strong>：关闭策略的选项设计、关闭后的展示和引导</li><li><strong>禁止下游重判</strong>：不需要重新判断&quot;关闭是否需要治理设计&quot;</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-9">
       <h2 class="preview-section-heading">§8 约束与不做什么</h2>
-      <div class="preview-section-body"><h3>硬约束</h3>
-<ul><li>作为已有平台新增能力，需兼容现有权限模块的架构和数据模型 [FACT]</li><li>所有申请必须可审计、可追溯 [CONFIRMED]</li><li>管理员仍为权限策略的定义者和控制者，不被绕过 [CONFIRMED]</li><li>从申请到生效的全链路必须有明确的失败感知和处理机制 [CONFIRMED]</li></ul>
-<h3>不做什么</h3>
-<ul><li>不覆盖数据权限的自助申请 [FACT]</li><li>不覆盖协作可见性的自助申请 [FACT]</li><li>不做员工自由申请全部权限（必须预制范围） [FACT]</li><li>不做管理员侧的权限申请代办（审批人限定为上级负责人） [CONFIRMED]</li><li>不做审批通过后仍需人工执行的半自动模式 [FACT]</li></ul>
-<p>---</p></div>
+      <div class="preview-section-body"><h3>[FACT] 约束</h3>
+<div class="table-wrap"><table><thead><tr><th>约束</th><th>说明</th></tr></thead><tbody><tr><td>敏感权限系统级排除</td><td>不可由员工申请，不可通过配置开放</td></tr><tr><td>审批流程引擎由 OA 底座提供</td><td>不重新设计审批引擎</td></tr><tr><td>上级负责人由组织域定义</td><td>权限中心引用不定义</td></tr><tr><td>角色定义在管理员侧</td><td>自助申请可申请角色权限包，但不创建/修改角色</td></tr></tbody></table></div>
+<h3>[CONFIRMED] 不做什么</h3>
+<ul><li>不做管理员侧的角色管理与权限配置功能（已有成熟链路）</li><li>不做审批流程引擎设计（OA 底座承担）</li><li>不做敏感权限的定义与标记（系统级预置）</li><li>不做批量权限申请（本次聚焦单次申请）</li><li>不做权限到期自动回收（属于治理范畴，后续考虑）</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-10">
       <h2 class="preview-section-heading">§9 待确认问题</h2>
-      <div class="preview-section-body"><h3>层级一：影响主方案是否成立</h3>
-<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>审批流引擎的接口能力是否支持&quot;审批通过后自动触发授权执行&quot;</td><td>若不可支持，自动生效需改为半自动，核心价值受损</td><td>后端架构师</td></tr><tr><td>自动授权执行接口就绪度</td><td>是否存在可被外部事件触发的授权执行接口</td><td>后端架构师</td></tr></tbody></table></div>
-<h3>层级二：影响局部体验设计</h3>
-<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>审批流引擎是否提供&quot;审批人已查看&quot;事件回调</td><td>影响申请进度时间线中&quot;审批人已查看&quot;节点的可行性</td><td>后端架构师</td></tr><tr><td>审批流引擎是否支持超时自动提醒</td><td>影响审批超时机制的实现方式</td><td>后端架构师</td></tr><tr><td>组织域中&quot;上级负责人&quot;关系是否已定义完整</td><td>影响审批人匹配的准确性和异常处理策略</td><td>产品/架构师</td></tr><tr><td>权限管理域是否有&quot;敏感等级&quot;标记</td><td>影响可申请目录的筛选逻辑和敏感权限保护机制</td><td>产品/知识维护方</td></tr><tr><td>员工端入口位置（工作台/导航/全局）</td><td>影响入口设计和引导策略</td><td>产品/体验决策方</td></tr></tbody></table></div>
+      <div class="preview-section-body"><h3>层级一：影响主策略的问题</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>与子管理员/双管理员/权限变更审批模式的共存策略</td><td>功能开关逻辑、权限来源解释、审批链路设计</td><td>产品 + 架构</td></tr><tr><td>关闭自助申请时进行中申请的处理策略</td><td>关闭功能的行为设计</td><td>产品</td></tr></tbody></table></div>
+<h3>层级二：影响局部设计的问题</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>一次申请可包含多个权限/角色还是每次只能一个</td><td>申请表单交互</td><td>产品</td></tr><tr><td>审批超时升级策略</td><td>异常流程设计</td><td>产品</td></tr><tr><td>申请理由是否必填</td><td>表单校验规则</td><td>产品</td></tr><tr><td>通知渠道（站内/消息/邮件）</td><td>通知方案</td><td>产品 + 技术</td></tr><tr><td>任务→权限映射关系的维护方</td><td>目标驱动场景可行性</td><td>产品 + 业务方</td></tr><tr><td>OA 底座审批页面的自定义信息承载能力</td><td>审批详情展示</td><td>技术</td></tr><tr><td>已生效权限是否展示来源说明</td><td>权限详情的展示深度</td><td>产品</td></tr></tbody></table></div>
 <p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="uxb-section-11">
       <h2 class="preview-section-heading">附录：事实、知识与判断追踪</h2>
-      <div class="preview-section-body"><h3>原始输入事实</h3>
-<ul><li>当前做法：员工私下找老板或管理员申请，管理员集中处理</li><li>触发原因：中大型企业人员多、流动频繁，沟通成本高、时效不稳定</li><li>目标：员工自助查看和申请权限，管理员保留控制权</li><li>产品形态：企业数字化产品的权限管理模块</li><li>覆盖：功能权限和角色授权</li></ul>
-<h3>知识库支撑</h3>
-<div class="table-wrap"><table><thead><tr><th>知识来源</th><th>支撑了哪些判断</th></tr></thead><tbody><tr><td>权限管理/00_领域概述</td><td>确认权限管理域的定义和核心对象（主体、资源、动作、范围）</td></tr><tr><td>权限管理/01_范围与边界</td><td>确认权限域与相邻域（组织、应用、审批、协作）的边界；引用数据权限职责划分</td></tr><tr><td>权限管理/03_业务对象</td><td>确认主体、资源、动作、范围、来源、治理因子等对象定义，用于判断不做数据权限的边界合理性</td></tr><tr><td>权限管理/10_能力地图</td><td>确认现有能力覆盖（用户直授、角色授权、全局治理），判断自助申请是新增能力而非替代</td></tr><tr><td>权限管理/11_任务场景</td><td>确认现有授权场景链路（按人授权、按角色授权），判断自助申请路径与现有路径的并行关系</td></tr><tr><td>权限管理/14_角色边界</td><td>确认员工、子管理员、超级管理员的角色边界，判断审批人职责和可见范围</td></tr><tr><td>权限管理/15_页面载体语义</td><td>确认用户授权 Page、功能授权 Drawer 等页面类型和结构，作为后续体验参考</td></tr></tbody></table></div>
-<h3>AI 设计判断</h3>
-<ul><li>双入口策略（权限拦截处直达 + 工作台固定入口）— 对应 §7 承接要求第 1 条</li><li>角色与功能权限分栏展示 — 对应 §7 承接要求第 4 条</li><li>申请表单 Drawer + 单页结构（非步骤条）— 对应 §7 承接要求第 6 条</li><li>审批上下文三层信息（申请人信息 + 申请内容 + 权限风险说明）— 对应 §7 承接要求第 2 条</li><li>全链路状态追踪（含中间态）— 对应 §7 承接要求第 7 条</li></ul>
-<h3>未确认 GAP</h3>
-<p>见 §9 待确认问题。</p></div>
+      <div class="preview-section-body"><h3>事实追踪</h3>
+<div class="table-wrap"><table><thead><tr><th>事实</th><th>来源</th><th>类型</th></tr></thead><tbody><tr><td>中大型企业权限管理压力大</td><td>需求文档 §1</td><td>原文提取</td></tr><tr><td>当前做法为私下联系管理员</td><td>需求文档 §1</td><td>原文提取</td></tr><tr><td>希望员工可查看/申请/追踪权限</td><td>需求文档 §2</td><td>原文提取</td></tr><tr><td>管理员可控制范围/审批流程</td><td>需求文档 §2</td><td>原文提取</td></tr><tr><td>存在模式互斥风险</td><td>需求文档 §8.4</td><td>原文提取</td></tr><tr><td>申请范围配置方式待定</td><td>需求文档 §7.1</td><td>原文提取</td></tr><tr><td>已有 OA 底座支撑</td><td>用户对话补充</td><td>用户补充</td></tr></tbody></table></div>
+<h3>知识追踪</h3>
+<div class="table-wrap"><table><thead><tr><th>已消费知识</th><th>支撑判断</th><th>落点章节</th></tr></thead><tbody><tr><td>权限管理 00_领域概述</td><td>自助申请不改变权限域核心对象</td><td>§4 业务边界</td></tr><tr><td>权限管理 01_范围与边界</td><td>权限域不负责审批引擎设计</td><td>§8 约束</td></tr><tr><td>权限管理 24_治理状态模型</td><td>审批状态模型（draft→pending→approved→effective）</td><td>§6 核心状态</td></tr></tbody></table></div>
+<h3>判断追踪</h3>
+<div class="table-wrap"><table><thead><tr><th>判断</th><th>依据</th><th>信心</th></tr></thead><tbody><tr><td>本次为既有能力扩展</td><td>不改变核心对象、规则、状态机</td><td>高</td></tr><tr><td>自助申请≠治理模式，不互斥</td><td>领域边界分析</td><td>中（需要产品确认）</td></tr><tr><td>缺口触发为主要入口</td><td>问题框定结论（已消费）</td><td>高</td></tr><tr><td>语义降维为关键体验前提</td><td>需求文档风险 §8.1 延伸</td><td>高</td></tr></tbody></table></div></div>
     </section>
   
   

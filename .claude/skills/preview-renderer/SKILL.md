@@ -1,7 +1,7 @@
 ---
 name: preview-renderer
 description: >
-  统一预览渲染 Skill。用于在正式产物已经生成后，把支持预览的 skill 产物按各自模板与渲染规则投影为 HTML 预览，并挂载到统一预览容器中。当前只在用户明确表示“生成 HTML 预览”“渲染成预览页”“把 md 做成可视化页面”“打开预览”“把产物做成 html”这类场景下触发；不要在正式产物生成时自动执行，除非上游 skill 已明确提示并得到用户确认。
+  统一预览渲染 Skill。用于在正式产物已经生成后，把支持预览的 skill 产物按各自模板与渲染规则投影为单产物 HTML 预览，并生成统一卡片式预览目录页。当前只在用户明确表示“生成 HTML 预览”“渲染成预览页”“把 md 做成可视化页面”“打开预览”“把产物做成 html”这类场景下触发；不要在正式产物生成时自动执行，除非上游 skill 已明确提示并得到用户确认。
 ---
 
 # Preview Renderer
@@ -20,9 +20,10 @@ description: >
 
 - 识别当前有哪些 skill 产物支持预览
 - 扫描 `spark-output/` 中已经存在的正式产物
-- 使用统一预览容器承载多个 skill 的预览结果
+- 使用各产物自己的模板生成单产物 HTML 预览页
+- 生成 `spark-output/preview/index.html` 卡片式目录页
 - 保持整体视觉风格一致
-- 把选中的 skill 内容挂载到统一 HTML 中
+- 告诉用户哪些预览已生成、哪些待生成、点击去哪里
 
 它不负责：
 
@@ -32,21 +33,22 @@ description: >
 - 依赖业务 skill 自带 preview 接入文件
 - 让业务 skill 感知模板、脚本或渲染规则
 
-## 统一预览容器
+## 统一预览入口
 
-最终预览不是“一 skill 一页面”的松散模式，而是一个统一容器：
+最终预览入口是卡片式目录页：
 
-- 左侧顶部：预制所有支持预览的产物选择器
-- 左侧：当前激活 skill 的章节锚点导航
-- 右侧：当前激活 skill 的正文渲染结果
+- 目录页路径：`spark-output/preview/index.html`
+- 单产物预览页路径：`spark-output/preview/<skill>_preview.html`
+- 目录页只展示状态卡片和跳转入口
+- 单产物预览页继续使用各自的阅读壳和章节导航
 
 硬规则：
 
-- 产物选择器属于公共层
-- 左侧锚点只显示当前 skill 自己的章节
-- 右侧正文只显示当前 skill 的渲染结果
-- 产物选择项固定写在公共壳中，不由单个 skill 模板动态生成；某次未渲染的选项可以继续展示，但不得伪装成已生成内容
-- 没有产物或未接入的 skill 可以静态展示，但不得伪装成“已可渲染”
+- `index.html` 只能由 `assets/shell/generate_index.js` 生成
+- 不得复制某个单产物 HTML 覆盖 `index.html`
+- 目录页不得读取、抽取或合并单产物 HTML 正文
+- 目录页不得承担主链推荐、业务分析或产物重写职责
+- 某个产物未生成 HTML 时，目录页只展示“待生成预览”，不得伪装成可点击内容
 
 ## 触发时机
 
@@ -76,15 +78,40 @@ description: >
 
 执行时固定按以下顺序：
 
-1. 扫描 `spark-output/` 下的正式 Markdown 产物
-2. 排除 `spark-output/preview/`、`spark-output/context/`、进度预览、临时文件和非正式产物
-3. 根据文件名、一级标题和关联 Context JSON 识别产物类型
-4. 汇总“当前可渲染产物列表”
-5. 如果存在多个可渲染目标，先让用户选择一个或多个
-6. 根据 `preview-renderer` 内部集中规则选择模板、脚本或降级方式
-7. 最后生成统一预览容器输出
+1. 扫描支持产物的正式 Markdown、专属脚本和 HTML preview 状态
+2. 输出当前预览状态表，区分“已生成预览”“可生成但尚未生成”“缺少正式 Markdown”“缺少脚本”
+3. 如果存在多个可生成但尚未生成的目标，先让用户选择一个或多个
+4. 用户选择后，根据 `preview-renderer` 内部集中规则调用对应 `generate_preview.js`
+5. 所有选中单产物 HTML 生成后，执行 `assets/shell/generate_index.js`
+6. 输出统一目录入口和本次生成的单产物入口
+7. 回显“预览不会改变主链状态”
 
 如果只有一个可渲染目标，也不要静默执行，仍应先确认用户是否要生成预览。
+
+执行前固定输出状态表：
+
+```text
+当前预览状态：
+- 问题框定：Markdown 已存在 / HTML 已生成
+- 用户故事：Markdown 已存在 / HTML 未生成
+- 角色旅程：Markdown 已存在 / HTML 已生成
+- 体验蓝图：Markdown 已存在 / HTML 已生成
+- 业务蓝图：Markdown 未检测到 / HTML 未生成
+```
+
+如果存在 Markdown 已存在但 HTML 未生成的产物，必须提示用户可以选择编号补齐，不得直接说“所有产物预览均已生成”。
+
+执行完成后固定说明：
+
+```text
+HTML 预览已生成。
+统一入口：spark-output/preview/index.html
+本次生成：{列表}
+
+附加说明：
+预览不会改变主链状态。
+请继续使用上一个业务 skill 完成时给出的主链下一步。
+```
 
 ## 产物识别规则
 
@@ -107,10 +134,11 @@ description: >
 
 1. 文件名精确匹配
 2. Markdown 一级标题匹配
-3. 关联 Context JSON 存在性校验
-4. 用户手动选择
+3. 用户手动选择
 
 不得只凭正文关键词猜测产物类型。
+
+Context JSON 只允许作为目录页状态展示，不得作为是否能生成 HTML 预览的前置条件。
 
 当前支持产物：
 
@@ -135,6 +163,7 @@ description: >
 统一公共壳：
 
 - `.claude/skills/preview-renderer/assets/shell/preview_shell.html`
+- `.claude/skills/preview-renderer/assets/shell/generate_index.js`
 
 ## 公共层与规则层
 
@@ -143,10 +172,8 @@ description: >
 公共层由 `preview-renderer` 统一维护，只负责：
 
 - 整体视觉 token
-- 基础布局骨架
-- 左侧产物选择器
-- 左侧锚点导航容器
-- 右侧正文容器
+- 单产物阅读壳
+- 卡片式目录页生成器
 - 基础排版样式
 - 通用预览运行脚本
 
@@ -165,11 +192,11 @@ description: >
 - 公共层负责“像同一套产品”
 - 规则层负责“识别和渲染具体产物”
 - 公共壳不得暴露项目名构建占位字段；项目名只允许进入最终 `<title>` 或具体内容区
-- 公共壳固定维护当前支持预览的产物选项：`uxb`、`problem-framing`、`stories`、`journey-analysis`、`experience-blueprint`
+- 目录页固定维护当前支持预览的产物卡片：`uxb`、`problem-framing`、`stories`、`journey-analysis`、`experience-blueprint`
 - 业务 skill 不维护 `preview/manifest.json`、`render-rule.md`、模板或脚本
 - 不允许为了预览要求业务 skill 反向补充接入配置
-- 预览脚本只允许结构化展示既有 Markdown 与 Context JSON，不得新增业务结论、改写优先级、补写缺失验收标准或替代正式产物
-- HTML 信息必须 100% 来源于正式 Markdown / Context JSON；允许改变展示结构和视觉样式，不允许改变业务语义、字段含义、优先级、状态或验收口径
+- 预览脚本只允许结构化展示既有 Markdown，不得新增业务结论、改写优先级、补写缺失验收标准或替代正式产物
+- HTML 信息必须 100% 来源于正式 Markdown；允许改变展示结构和视觉样式，不允许改变业务语义、字段含义、优先级、状态或验收口径
 
 ## 视觉基线
 
@@ -196,16 +223,15 @@ description: >
 
 - `spark-output/preview/`
 
-统一容器入口：
+统一目录入口：
 
 - `spark-output/preview/index.html`
 
-按 skill 生成的局部结果可以落到：
+按 skill 生成的单产物预览页落到：
 
-- `spark-output/preview/<skill-id>.html`
-- 或中间注入片段
+- `spark-output/preview/<skill>_preview.html`
 
-但最终用户打开的默认入口应优先指向：
+最终用户打开的默认入口应优先指向：
 
 - `spark-output/preview/index.html`
 
@@ -213,7 +239,7 @@ description: >
 
 1. 先判断能不能渲染，不要先假设自己能渲染
 2. 先扫描正式产物，再让用户确认目标，再读模板或脚本
-3. 先生成当前产物的章节导航数据，再挂进统一壳层
+3. 先生成选中的单产物 HTML，再刷新卡片式目录页
 4. 先保证结构正确，再考虑局部美化
 5. 如果某类产物的投影规则不完整，宁可降级为正文直出，也不要瞎补结构
 
@@ -222,20 +248,19 @@ description: >
 如果出现以下情况，允许降级：
 
 - 模板存在，但局部结构无法完整投影
-- 只有 Markdown，没有足够的 JSON 辅助
 - 文件名无法稳定识别，但用户明确选择该产物
 
 降级方式：
 
-- 保留统一容器
-- 保留当前 skill 产物选项
-- 保留章节锚点
+- 保留单产物预览页
+- 保留当前 skill 的章节锚点
 - 正文区降级为通用文档渲染
+- 生成或刷新卡片式目录页
 
 补充规则：
 
-- `template-projection` 缺少 Context JSON 时，可降级为 Markdown 直出。
-- `native-script` 缺少必要 JSON 时，不得绕过脚本临时拼装 HTML，应提示缺少必要输入。
+- 缺少 Context JSON 时，不得阻断 HTML 预览生成。
+- 现有 `native-script` 不得把 Context JSON 作为预览生成的必要输入。
 - 模板缺失时，不现场设计新模板，只提示当前产物暂无法生成专属预览。
 - 用户选择未支持的 Markdown 时，只能输出通用降级预览，并明确标注为通用预览。
 
@@ -257,7 +282,7 @@ description: >
 
 接入原则：
 
-- 已有正式 Markdown / Context JSON 的产物，才允许进入专属预览。
+- 已有正式 Markdown 的产物，才允许进入专属预览。
 - `problem-framing`、`stories`、`journey-analysis` 走 `native-script`，由集中脚本完成结构化投影。
 - `uxb`、`experience-blueprint` 走 `native-script`，由集中脚本读取正式 Markdown 并注入专属内容模板。
 - `xft-design` 当前不属于正式产物投影预览范围，暂不接入。

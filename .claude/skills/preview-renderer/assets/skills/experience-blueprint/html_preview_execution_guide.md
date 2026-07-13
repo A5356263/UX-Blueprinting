@@ -23,6 +23,8 @@
 - 当前模板只承接 `体验蓝图` 右侧内容片段。
 - 左侧章节导航由公共壳注入，不在本模板内维护。
 - 表格、ASCII 图、附录、待确认问题必须保留。
+- `§2 交互流程总览` 中可稳定识别的箭头流程代码块，可以投影为横向流程图展示。
+- `§2` 流程节点、顺序和文案必须来自原 Markdown；无法稳定识别时保留原 Markdown 渲染。
 
 ## 执行顺序
 
@@ -56,3 +58,4 @@ node ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generat
 - 不把正文压缩成摘要卡片。
 - 不为预览临时改写 Markdown 标题。
 - 不根据 `experience-blueprint.json` 重新生成业务结论。
+- 不为了 `§2` 视觉效果新增、删除、合并或重排流程节点。

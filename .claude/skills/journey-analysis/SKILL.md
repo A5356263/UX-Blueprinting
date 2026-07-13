@@ -681,11 +681,13 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 - `journey-analysis` 自身不再生成 HTML 预览。
 - 正式产物完成并通过 JSON 校验后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览临时补字段或绕过当前 JSON 校验。
-- `preview-renderer` 扫描 `spark-output/` 中的角色旅程产物，并按自身集中规则执行渲染。
+- 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
 - 固定提示口径：
 
 ```text
-角色旅程 Markdown 与 Context JSON 已生成。如果需要，我可以继续交给 `preview-renderer` 渲染 HTML 预览。
+附加操作：
+如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+这不会改变主链流转。
 ```
 
 ## Context JSON 校验
@@ -753,35 +755,49 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 1. 读取 `shared-workflow/next-skill.md`。
 2. 读取 `shared-workflow/skill-graph.json` 中 `journey-analysis` 的 `next_hint`。
-3. 先判断 `UXB` 是否存在：
+3. 先判断第一梯队正式来源是否存在：
    - 先检查 `spark-output/context/uxb.json`
-   - 若不存在，再检查 `spark-output/uxb_output.md`
-   - 任一存在，视为已有 `UXB`
-   - 两者都不存在，视为无 `UXB`
-4. 按以下硬规则输出完成语和下一步推荐：
-   - 已有 `UXB` 时：
+   - 再检查 `spark-output/uxb_output.md`
+   - 再检查 `spark-output/context/problem-framing.json`
+   - 再检查 `spark-output/problem_framing.md`
+   - 任一存在，视为已有第一梯队正式来源
+   - 全部不存在，视为缺少第一梯队正式来源
+4. 再判断用户故事是否存在：
+   - 先检查 `spark-output/context/stories.json`
+   - 再检查 `spark-output/stories.md`
+   - 任一存在，视为已有 `stories`
+5. 按以下硬规则输出完成语和下一步推荐：
+   - 已有第一梯队正式来源，且已有 `stories` 时：
 
 ```text
 ✅ 用户旅程完成，{产物简述}
-你可以选择：体验策略 - 当前已具备 UXB 产出，且旅程洞察已补齐，可以把旅程洞察转化为具体的交互流程和页面设计。
+你可以选择：体验策略 - 当前已有第一梯队正式来源和用户故事，旅程洞察已补齐，可以进入体验蓝图展开交互流程和页面设计。
 你回复“体验策略”即可
 ```
 
-   - 无 `UXB` 时：
+   - 已有第一梯队正式来源，但没有 `stories` 时：
 
 ```text
 ✅ 用户旅程完成，{产物简述}
-你可以选择：需求定案 - 体验策略正式依赖 UXB 产出，当前应先完成需求定案，再进入体验策略。
-你回复“需求定案”即可
+你可以选择：用户故事 - 当前已有第一梯队正式来源，但任务单元尚未拆解，建议先补齐用户故事。
+你回复“用户故事”即可
 ```
 
-5. 不允许在无 `UXB` 时仍然推荐 `experience-blueprint`。
-6. 不允许使用“旅程之后直接接体验策略”“下一步就是体验策略”这类绝对表述。
-7. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
+   - 缺少第一梯队正式来源时：
+
+```text
+✅ 用户旅程完成，{产物简述}
+你可以选择：问题框定 / 需求定案 - 当前缺少第一梯队正式来源，建议先完成问题框定或需求定案，再进入体验策略。
+```
+
+6. 如果旅程结果为 `skeleton`，不得直接推荐 `experience-blueprint`，应提示先补齐缺口或回到第一梯队收敛。
+7. 不允许在缺少第一梯队正式来源时仍然推荐 `experience-blueprint`。
+8. 不允许使用“旅程之后直接接体验策略”“下一步就是体验策略”这类绝对表述。
+9. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
 
 ```text
 shared-workflow/generate-progress-preview.ps1
 ```
 
-8. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
-9. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。
+10. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
+11. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。

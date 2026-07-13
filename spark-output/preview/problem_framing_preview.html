@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>问题框定预览 - 企业数字化产品权限自助申请</title>
+  <title>问题框定预览 - 企业数字化产品员工权限自助申请</title>
   <style>
     :root {
       --bg: #f5f4ed;
@@ -482,30 +482,30 @@
   </style>
   
     <div class="pf-document-lead">
-      <h1 class="preview-document-title">问题框定：企业数字化产品权限自助申请</h1>
+      <h1 class="preview-document-title">问题框定：企业数字化产品员工权限自助申请</h1>
       <div class="pf-lead-grid">
         
     <div class="pf-lead-item">
       <p class="pf-lead-label">推荐方向</p>
-      <p class="pf-lead-value">基于申请目录的自助授权（方向A）。理由：直接命中核心矛盾（沟通成本高、时效不稳定），预制目录+审批+自动生效完整覆盖&#39;控制权交给管理员、效率还给员工&#39;的目标，与现有权限能力体系的衔接成本相对可控。</p>
+      <p class="pf-lead-value">方向C：统一自助权限中心</p>
     </div>
   
         
     <div class="pf-lead-item">
       <p class="pf-lead-label">核心问题</p>
-      <p class="pf-lead-value">企业权限配置权集中在管理员侧，员工获取权限需经过&#39;发现需求→找到管理员→沟通申请→等待处理&#39;的长链路。随着企业规模扩大，链路的沟通成本和时效不稳定非线性增长，同时损害员工体验和管理侧效率。</p>
+      <p class="pf-lead-value">在中大型企业数字化产品中，员工权限的新增、变更和了解完全依赖管理员侧集中处理，导致管理侧瓶颈、员工体验断层、授权时效不可控。核心矛盾是权限配置的集中管控需求与员工侧自主获取权限的效率需求之间的冲突。</p>
     </div>
   
         
     <div class="pf-lead-item">
       <p class="pf-lead-label">目标角色</p>
-      <p class="pf-lead-value">员工（业务人员/经办人员） / 上级组织负责人（审批人） / 权限管理员/超级管理员</p>
+      <p class="pf-lead-value">[object Object] / [object Object] / [object Object]</p>
     </div>
   
         
     <div class="pf-lead-item">
       <p class="pf-lead-label">关键约束</p>
-      <p class="pf-lead-value">作为已有平台新增能力，需兼容现有权限模块的架构和数据模型；管理员仍为权限策略的定义者和控制者，不被绕过；所有申请必须可审计、可追溯</p>
+      <p class="pf-lead-value">敏感权限系统级排除，不可申请；审批流程由OA底座提供；上级负责人基于组织域管辖关系判定</p>
     </div>
   
       </div>
@@ -513,67 +513,79 @@
   
     <section class="preview-section-block" id="problem-framing-summary">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>01 输入摘要</h2>
-      <div class="preview-section-body"><p>企业数字化平台权限管理模块中，员工获取权限需私下找管理员或老板，沟通成本高、时效不稳定。希望通过自助查看和申请权限，将部分权限申请工作从管理员侧分散到员工侧，同时保留管理员对申请范围和审批流程的控制。</p></div>
+      <div class="preview-section-body"><p>中大型企业员工权限完全依赖管理员集中处理，员工需私下联系老板或管理员申请权限，沟通成本高、授权时效不稳定。目标是将权限申请工作从管理侧分散到员工侧，保留管理侧对申请范围的审批控制。</p></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-definition">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>02 问题定义</h2>
-      <div class="preview-section-body"><p>企业权限配置权集中在管理员侧，员工获取权限需经过&#39;发现需求→找到管理员→沟通申请→等待处理&#39;的长链路。随着企业规模扩大，链路的沟通成本和时效不稳定非线性增长，同时损害员工体验和管理侧效率。</p></div>
+      <div class="preview-section-body"><p>在中大型企业数字化产品中，员工权限的新增、变更和了解完全依赖管理员侧集中处理，导致管理侧瓶颈、员工体验断层、授权时效不可控。核心矛盾是权限配置的集中管控需求与员工侧自主获取权限的效率需求之间的冲突。</p></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-roles">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>03 目标用户与场景</h2>
-      <div class="preview-section-body"><h3 class="pf-subtitle">目标角色</h3><ul class="pf-list"><li>员工（业务人员/经办人员）</li><li>上级组织负责人（审批人）</li><li>权限管理员/超级管理员</li></ul><h3 class="pf-subtitle">目标场景</h3><ul class="pf-list"><li>新员工入职后获取标准权限集</li><li>员工因业务变更需新增功能权限或加入新角色</li><li>角色清理与权限回收的审计追溯</li></ul></div>
+      <div class="preview-section-body"><h3 class="pf-subtitle">目标角色</h3><ul class="pf-list"><li>role: 员工；description: 需要查看和申请权限的终端用户；core_needs: 知道已有权限；知道可申请范围；申请后能追踪进度；无需私下找人</li><li>role: 上级组织负责人；description: 审批员工权限申请的管理者；core_needs: 在业务上下文中理解申请事项；做出审批决策；不被无关申请打扰</li><li>role: 权限管理员/超级管理员；description: 配置可申请范围和审批规则的后台管理者；core_needs: 保持全局控制；无需处理单个授权请求；审计可追溯</li></ul><h3 class="pf-subtitle">目标场景</h3><ul class="pf-list"><li>缺口触发：员工在访问无权限功能时，系统引导进入申请流程</li><li>目标驱动：员工知道要完成某项业务任务，系统按任务推荐所需权限并引导申请</li><li>状态追踪：员工查看已发起申请的进度</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-workarounds">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>04 当前替代做法</h2>
-      <div class="preview-section-body"><ul class="pf-list"><li>私下找老板/管理员通过即时通讯申请，手动配置</li><li>管理员集中处理定期批量变更</li><li>超级管理员直接承担配置工作</li></ul></div>
+      <div class="preview-section-body"><ul class="pf-list"><li>私下联系老板/管理员口头或消息申请，沟通成本高、无记录可追溯</li><li>管理员在大量申请中插队处理，时效不稳定</li><li>员工到操作入口才发现无权限，路径浪费</li><li>离职/转岗时由管理员被动发现并调整，治理滞后</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-opportunities">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>05 机会点</h2>
-      <div class="preview-section-body"><ol class="pf-number-list"><li>减少咨询类沟通成本：员工自助查看可申请权限目录，无需询问管理员</li><li>预制+审批的权责分离：管理员定义策略，上级审批合理性，系统自动执行</li><li>角色作为批量授权载体：申请加入角色获取一组权限，比逐项申请更高效</li><li>自动生效缩短等待：审批通过即自动授权，从&#39;天级&#39;缩短到&#39;分钟级&#39;</li><li>审计链路闭环：申请记录、审批记录和授权记录形成完整证据链</li></ol></div>
+      <div class="preview-section-body"><ol class="pf-number-list"><li>id: 1；description: 即时触发式申请：在无权限拦截页面直接提供申请入口；scenario: 缺口感</li><li>id: 2；description: 任务语义解耦：通过&#39;我要做 XX&#39;的自然语言匹配所需权限；scenario: 目标驱动型</li><li>id: 3；description: 申请进度可视化：公开申请状态，减少沟通需求；scenario: 状态追踪</li><li>id: 4；description: 管理侧控制面前置：管理员预设可申请范围和审批规则；scenario: 管理员控制</li><li>id: 5；description: 申请即治理：每次申请自动产生审计记录；scenario: 权限治理</li></ol></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-directions">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>06 候选方向</h2>
-      <div class="preview-section-body"><ol class="pf-number-list"><li>基于申请目录的自助授权（推荐）：管理员预制可申请清单，员工提交申请→上级审批→自动生效</li><li>申请工单式审批台：员工提交混合工单，管理员或上级审批，保留人工或半自动执行</li><li>角色驱动自助授权（轻量变体）：仅支持通过申请角色获取权限，不单独支持功能权限申请</li></ol></div>
+      <div class="preview-section-body"><ol class="pf-number-list"><li>name: 方向A：以缺口触发为核心的轻量申请方案；problem_solved: 员工在操作入口被拦截时的即时申请需求；user_value: 最短路径解决&#39;我没有权限&#39;的问题；risk: 被动触发，员工无法主动了解和规划权限；precondition: 系统能明确告知缺少哪些权限以及是否能申请</li><li>name: 方向B：以任务感知为核心的权限发现方案；problem_solved: 员工不知道需要什么权限的认知缺口；user_value: 用业务语言匹配权限，降低理解门槛；risk: 任务与权限映射关系维护成本高；precondition: 产品侧能建立稳定的业务任务→所需权限映射关系</li><li>name: 方向C：统一自助权限中心（推荐）；problem_solved: 同时覆盖即时缺口感与主动发现场景；user_value: 一个入口解决所有权限相关问题；risk: 入口曝光不足时员工不知去哪里申请；precondition: 独立入口嵌入工作台或全局导航；缺口拦截页正确引导到自助中心</li></ol></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-recommendation">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>07 推荐方向</h2>
-      <div class="preview-section-body"><p>基于申请目录的自助授权（方向A）。理由：直接命中核心矛盾（沟通成本高、时效不稳定），预制目录+审批+自动生效完整覆盖&#39;控制权交给管理员、效率还给员工&#39;的目标，与现有权限能力体系的衔接成本相对可控。</p></div>
+      <div class="preview-section-body"><p>方向C：统一自助权限中心</p></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-handoff">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>08 承接契约</h2>
-      <div class="preview-section-body"><ul class="pf-list"><li>申请范围由管理员预制，排除敏感权限——下游不得开放员工自由申请全部权限</li><li>审批人为上级组织负责人——下游不得改为管理员审批或任意审批</li><li>审批通过后自动生效——下游不得保留人工执行环节</li><li>功能权限和角色授权为本次覆盖范围——下游默认不扩展至数据权限和协作可见性</li><li>下游必须继续展开：权限目录的员工端呈现方式</li><li>下游必须继续展开：审批人在移动端的审批体验</li><li>下游必须继续展开：申请进度追踪和结果通知的触达方式</li><li>下游必须继续展开：自动授权失败时的降级处理和可感知回滚</li><li>下游必须继续展开：可申请角色标记的管理员配置界面</li><li>下游必须继续展开：功能权限单独申请的展示粒度</li></ul></div>
+      <div class="preview-section-body"><ul class="pf-list"><li>敏感权限由系统级预置排除，不在员工可申请范围内（不可重判）</li><li>OA底座提供审批流程引擎，不重新设计审批流引擎（不可重判）</li><li>组织架构和上级负责人关系由组织域定义，权限中心仅引用（不可重判）</li><li>必须展开：员工可通过哪些维度感知&#39;自己需要什么权限&#39;（任务映射关系）</li><li>必须展开：管理员如何配置可申请范围</li><li>必须展开：审批人与被审批人上下级关系确认规则</li><li>必须展开：申请生效后的通知策略与生效时机</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-constraints">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>09 约束与不做什么</h2>
-      <div class="preview-section-body"><ul class="pf-list"><li>作为已有平台新增能力，需兼容现有权限模块的架构和数据模型</li><li>管理员仍为权限策略的定义者和控制者，不被绕过</li><li>所有申请必须可审计、可追溯</li><li>从申请到生效的全链路必须有明确的失败感知和处理机制</li></ul></div>
+      <div class="preview-section-body"><ul class="pf-list"><li>敏感权限系统级排除，不可申请</li><li>审批流程由OA底座提供</li><li>上级负责人基于组织域管辖关系判定</li><li>角色定义和管理在管理员侧</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-gaps">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>10 待确认问题</h2>
-      <div class="preview-section-body"><ul class="pf-list"><li>审批流引擎基建就绪度不明确，影响方案可行性和工期</li><li>上级负责人路由数据就绪度不明确，影响审批路由准确性</li><li>自动授权执行接口就绪度不明确，影响自动生效的技术可行性</li><li>敏感权限标记机制是否已在权限域中定义，影响可申请目录筛选逻辑</li></ul></div>
+      <div class="preview-section-body"><ul class="pf-list"><li>审批升级策略：超时或上级不在时如何处理</li><li>申请粒度：一次申请可包含多个权限/角色还是每次只能一个</li><li>通知渠道：生效后通过什么方式通知员工</li><li>任务-权限映射关系维护方</li><li>已生效权限在员工端的来源展示方式</li></ul></div>
     </section>
   
 
     <section class="preview-section-block" id="problem-framing-knowledge">
       <h2 class="preview-section-heading"><span class="pf-section-icon">&#9670;</span>11 知识锚定</h2>
-      <div class="preview-section-body"><p class="preview-empty">未提供</p></div>
+      <div class="preview-section-body"><div class="table-wrap"><table><tbody>
+    <tr><th>primary_domain</th><td>权限管理</td></tr>
+  
+    <tr><th>read_summaries</th><td></td></tr>
+  
+    <tr><th>read_raws</th><td>00_领域概述；01_范围与边界；03_业务对象；10_能力地图；11_任务场景；14_角色边界；24_治理状态模型</td></tr>
+  
+    <tr><th>supplementary_domains</th><td></td></tr>
+  
+    <tr><th>calibrations</th><td>现有权限能力全部集中在管理员侧，无员工自助申请场景对应；功能权限与角色需在员工侧做语义降维统一呈现；审批域状态模型与OA底座能力一致可复用；上级负责人判定依赖组织域管辖关系，权限中心只引用不定义</td></tr>
+  
+    <tr><th>unresolved</th><td>当前知识库未覆盖&#39;自助申请范围预配置&#39;的管理员配置模式，需在UX阶段补充</td></tr>
+  </tbody></table></div></div>
     </section>
   
 </article>

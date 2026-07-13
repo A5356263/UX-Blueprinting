@@ -48,6 +48,69 @@ function inlineMarkdown(value) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 }
 
+function decodeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&amp;", "&");
+}
+
+function plainTextFromHtml(value) {
+  return decodeHtml(String(value ?? "").replace(/<[^>]+>/g, "")).trim();
+}
+
+function flowLabelFromPrevious(html) {
+  const strong = String(html ?? "").match(/<strong>([\s\S]*?)<\/strong>/);
+  const label = plainTextFromHtml(strong ? strong[1] : html);
+  return label || "\u4e3b\u8def\u5f84";
+}
+
+function flowNodesFromCode(codeHtml) {
+  const text = decodeHtml(codeHtml)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(" ");
+  if (!/[→]|->/.test(text)) return [];
+  return text
+    .split(/\s*(?:→|->)\s*/)
+    .map((node) => node.trim())
+    .filter(Boolean);
+}
+
+function renderFlowVisual(label, nodes) {
+  if (nodes.length < 2) return "";
+  const steps = nodes.map((node, index) => {
+    const step = `<span class="summary-step">${inlineMarkdown(node)}</span>`;
+    if (index === nodes.length - 1) return step;
+    return `${step}<span class="summary-arrow">→</span>`;
+  }).join("");
+  return `
+    <div class="summary-visual main-node-map">
+      <div class="summary-row">
+        <div class="summary-role">${escapeHtml(label)}</div>
+        <div class="summary-path">${steps}</div>
+      </div>
+    </div>
+  `;
+}
+
+function enhanceFlowOverview(sections) {
+  for (const section of sections) {
+    if (!section.title.includes("\u4ea4\u4e92\u6d41\u7a0b\u603b\u89c8")) continue;
+    section.html = section.html.map((item, index, list) => {
+      const match = item.match(/^<pre><code>([\s\S]*?)<\/code><\/pre>$/);
+      if (!match) return item;
+      const nodes = flowNodesFromCode(match[1]);
+      if (nodes.length < 2) return item;
+      const label = flowLabelFromPrevious(list[index - 1]);
+      return renderFlowVisual(label, nodes);
+    });
+  }
+}
+
 function flushParagraph(lines, out) {
   if (!lines.length) return;
   out.push(`<p>${inlineMarkdown(lines.join(" "))}</p>`);
@@ -180,6 +243,7 @@ function markdownToSections(markdown) {
   if (code) ensureSection().html.push(`<pre><code>${escapeHtml(code.lines.join("\n"))}</code></pre>`);
   closeSection();
   if (!sections.length) sections.push({ id: slug(0), title: TEXT.product, html: [`<p>${TEXT.missing}</p>`] });
+  enhanceFlowOverview(sections);
   return sections;
 }
 
@@ -213,6 +277,65 @@ function parseArgs(args) {
   fail("shell_path content_template_path context_json_path markdown_path output_html_path are required");
 }
 
+const ADDITIONAL_STYLES = `
+    .summary-visual {
+      margin: 12px 0 14px;
+      padding: 16px;
+      background: var(--panel-subtle);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: none;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: nowrap;
+      min-width: max-content;
+    }
+
+    .summary-role {
+      min-width: 132px;
+      max-width: 180px;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 32px;
+      white-space: nowrap;
+    }
+
+    .summary-path {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      min-width: max-content;
+    }
+
+    .summary-step {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      max-width: 260px;
+      padding: 6px 11px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: normal;
+    }
+
+    .summary-arrow {
+      color: var(--text-soft);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+`;
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const shellRaw = readFile(path.resolve(process.cwd(), args.shellPathArg), "shell template");
@@ -236,7 +359,7 @@ function main() {
   html = requiredReplace(html, "<!-- PREVIEW_SIDEBAR_NAV -->", renderNav(sections));
   html = requiredReplace(html, "<!-- PREVIEW_CONTENT -->", templateRaw);
   html = requiredReplace(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);
-  html = html.replace("/* PREVIEW_ADDITIONAL_STYLES */", "");
+  html = html.replace("/* PREVIEW_ADDITIONAL_STYLES */", ADDITIONAL_STYLES);
   html = html.replace("<!-- PREVIEW_ADDITIONAL_SCRIPTS -->", "");
 
   for (const marker of ["PROJECT_NAME_HERE", "PREVIEW_SKILL_TABS", "CONTENT_SECTIONS", "EXPERIENCE_SECTIONS", "FOOTER_SOURCE_PATH"]) {

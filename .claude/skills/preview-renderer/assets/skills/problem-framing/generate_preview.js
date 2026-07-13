@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const markdownRenderer = require("../../markdown_renderer");
 
 const TEXT = {
   missing: "\u672a\u63d0\u4f9b",
@@ -154,6 +155,18 @@ function buildContent(data) {
   return { html: hero + sections.join("\n"), nav, projectName };
 }
 
+function buildMarkdownFallback(markdown) {
+  const sections = markdownRenderer.markdownToSections(markdown, {
+    prefix: "problem-framing-markdown-section",
+    fallbackTitle: TEXT.product
+  });
+  return {
+    html: `<h1 class="preview-document-title">${TEXT.product}</h1>${markdownRenderer.renderSections(sections)}`,
+    nav: sections.map((section) => ({ id: section.id, title: section.title, level: 1 })),
+    projectName: TEXT.product
+  };
+}
+
 function main() {
   const [shellArg, templateArg, contextArg, markdownArg, outputArg] = process.argv.slice(2);
   if (!shellArg || !templateArg || !contextArg || !markdownArg || !outputArg) {
@@ -162,16 +175,17 @@ function main() {
 
   const shellRaw = readFile(path.resolve(process.cwd(), shellArg), "shell template");
   const templateRaw = readFile(path.resolve(process.cwd(), templateArg), "content template");
-  readFile(path.resolve(process.cwd(), markdownArg), "markdown", false);
+  const markdown = readFile(path.resolve(process.cwd(), markdownArg), "markdown");
 
   let data = null;
   try {
-    data = JSON.parse(readFile(path.resolve(process.cwd(), contextArg), "context json"));
-  } catch (error) {
-    fail(`failed to parse context json: ${contextArg}\n${error.message}`);
+    const contextRaw = readFile(path.resolve(process.cwd(), contextArg), "context json", false);
+    if (contextRaw.trim()) data = JSON.parse(contextRaw);
+  } catch (_) {
+    data = null;
   }
 
-  const rendered = buildContent(data);
+  const rendered = data ? buildContent(data) : buildMarkdownFallback(markdown);
   const contentHtml = requiredReplace(templateRaw, "<!-- PROBLEM_FRAMING_CONTENT -->", rendered.html);
   const sidebarNav = rendered.nav.map((item) => `<a class="preview-nav-item level-${item.level}" href="#${item.id}" data-skill="problem-framing">${escapeHtml(item.title)}</a>`).join("\n");
   const bootstrapData = JSON.stringify({ activeSkill: "problem-framing", skills: ["problem-framing"] }, null, 2);
