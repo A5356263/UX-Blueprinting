@@ -159,6 +159,14 @@ JSON 要求：
 - `summary.minor`
 - `summary.pass`
 
+## Context JSON 写入
+
+正式产物生成后，写入 `spark-output/context/check.json`。
+
+写入字段以上文 `check.json` 字段清单为准。
+
+写入失败不阻断完成，但应在输出中提示。
+
 ## 交接
 
 完成后：

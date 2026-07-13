@@ -10,6 +10,8 @@ description: >
 
 > 你是旅程分析师，不是交互设计师，也不是用户研究员。你的职责是判断旅程是否可生成，在必要时补齐最小关键结构，并输出可供下游消费的旅程分析结果。
 
+默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
+
 ## 适用场景与排除场景
 
 ### 适用场景
@@ -467,11 +469,10 @@ description: >
 node {skill_dir}/scripts/validate_context.js {context_json_path}
 ```
 
-### Step 11：生成 HTML 预览
+### Step 11：如需预览则交接
 
-只有 JSON 校验通过后，才允许生成：
-
-- `spark-output/preview/journey_analysis_preview.html`
+`journey-analysis` 自身不再生成 HTML 预览。
+如用户明确确认需要预览，则在 JSON 校验通过后交给 `preview-renderer`。
 
 ### Step 12：执行 shared-workflow 交接
 
@@ -599,12 +600,8 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 ## 输出结构
 
-正式产物固定为 3 类：
-
-1. Markdown 文档
-2. Context JSON
-3. HTML 预览
-
+正式产物固定为 Markdown 文档与 Context JSON。
+如用户确认，可在正式产物完成后追加一份 HTML 预览，由 `preview-renderer` 承接。
 ## Markdown 输出
 
 生成：
@@ -623,23 +620,6 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 当前缺口
 - 无法输出完整旅程的原因
 - 建议下一步
-
-## HTML 预览输出
-
-用户确认后，生成：
-
-- `spark-output/preview/journey_analysis_preview.html`
-
-约束：
-
-- 预览必须使用 `assets/journey_preview_template.html`。
-- HTML 只能消费 `spark-output/context/journey-analysis.json`。
-- 不允许从 Markdown 二次解析。
-- 不允许为了 HTML 临时补字段。
-- 如 JSON 字段缺失，必须先修复 JSON，再生成 HTML。
-- 预览生成只允许通过 `scripts/generate_preview.js` 完成；该脚本是当前 Skill 的唯一正式预览生成入口。
-- 不允许通过模糊文本替换去截断模板中的 JS 函数区。
-- 模板占位点只允许替换 `/* __JOURNEY_DATA_JSON__ */` 这一处。
 
 ## Context JSON 写入
 
@@ -688,9 +668,20 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 新增字段不得替换原字段。
 - 新增字段只作为元信息补充。
 
+## 预览交接
+
+- `journey-analysis` 自身不再生成 HTML 预览。
+- 正式产物完成并通过 JSON 校验后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览临时补字段或绕过当前 JSON 校验。
+- `preview-renderer` 扫描 `spark-output/` 中的角色旅程产物，并按自身集中规则执行渲染。
+- 固定提示口径：
+
+```text
+角色旅程 Markdown 已生成。如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+```
+
 ## Context JSON 校验
 
-写入 JSON 后、生成 HTML 前，必须运行：
+写入 JSON 后，且在交给 `preview-renderer` 前，必须运行：
 
 ```bash
 node {skill_dir}/scripts/validate_context.js {context_json_path}
@@ -700,7 +691,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 1. 先修复 `journey-analysis.json`。
 2. 重新执行校验。
-3. 校验通过后，才允许生成 HTML。
+3. 校验通过后，才允许交给 `preview-renderer`。
 
 ## 与 probe 的边界
 
@@ -747,7 +738,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - `completed`：视为补全后完成的正式旅程，可按正式输入消费。
 - `skeleton`：只视为参考骨架，不得等同于完整旅程。
 
-## 完成后交接
+## 交接
 
 完成后：
 
@@ -777,20 +768,11 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 5. 不允许在无 `UXB` 时仍然推荐 `experience-blueprint`。
 6. 不允许使用“旅程之后直接接体验策略”“下一步就是体验策略”这类绝对表述。
-7. 如宿主支持本地命令执行，则在正式产物写出并完成 JSON 校验后，优先执行以下预览生成脚本：
-
-```text
-node {skill_dir}/scripts/generate_preview.js {skill_dir}/assets/journey_preview_template.html spark-output/context/journey-analysis.json spark-output/preview/journey_analysis_preview.html
-```
-
-8. 预览生成失败时：
-   - 允许提示用户预览未生成
-   - 不得影响 Markdown 与 Context JSON 的完成判定
-9. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
+7. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
 
 ```text
 shared-workflow/generate-progress-preview.ps1
 ```
 
-10. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
-11. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。
+8. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
+9. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。

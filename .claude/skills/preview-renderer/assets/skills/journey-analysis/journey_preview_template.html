@@ -1,65 +1,7 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>旅程分析预览</title>
+<article class="preview-content-panel is-active" data-skill="journey-analysis" id="journey-analysis-panel">
+  <!-- CONTENT_NAV_ITEMS -->
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f5f6f8;
-      --panel: #ffffff;
-      --text: #1f2933;
-      --muted: #667085;
-      --line: #d8dee8;
-      --header: #eef2f7;
-      --accent: #2563eb;
-      --green: #16803c;
-      --amber: #b45309;
-      --red: #b42318;
-      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
-      --radius: 8px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
-      line-height: 1.55;
-    }
-
-    .page {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 32px;
-    }
-
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: flex-end;
-      margin-bottom: 24px;
-    }
-
-    h1, h2, p { margin: 0; }
-
-    h1 {
-      font-size: 32px;
-      font-weight: 750;
-      letter-spacing: 0;
-    }
-
-    .meta {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .role {
+    .journey-role {
       margin-top: 28px;
       background: var(--panel);
       border: 1px solid var(--line);
@@ -68,40 +10,43 @@
       overflow: hidden;
     }
 
-    .role-head {
+    .journey-role-head {
       display: flex;
       justify-content: space-between;
       gap: 16px;
       align-items: center;
       padding: 18px 20px;
       border-bottom: 1px solid var(--line);
-      background: #fff;
+      background: var(--panel-strong);
     }
 
-    h2 {
+    .journey-role-title {
+      margin: 0;
       font-size: 20px;
-      font-weight: 750;
+      font-weight: 700;
+      color: var(--accent-strong);
     }
 
-    .role-note {
-      color: var(--muted);
+    .journey-role-note {
+      margin: 0;
+      color: var(--text-muted);
       font-size: 13px;
       text-align: right;
       max-width: 560px;
     }
 
-    .matrix-wrap {
+    .journey-matrix-wrap {
       overflow-x: auto;
       background: var(--panel);
     }
 
-    .matrix {
+    .journey-matrix {
       display: grid;
       min-width: 980px;
       border-bottom: 1px solid var(--line);
     }
 
-    .cell {
+    .journey-cell {
       min-height: 82px;
       padding: 14px 16px;
       border-right: 1px solid var(--line);
@@ -110,94 +55,90 @@
       white-space: pre-wrap;
     }
 
-    .stage-title {
+    .journey-stage-title {
       min-height: 64px;
-      background: var(--header);
-      font-weight: 750;
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      font-weight: 700;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .row-label {
+    .journey-row-label {
       position: sticky;
       left: 0;
       z-index: 2;
-      background: #f8fafc;
-      color: #344054;
-      font-weight: 750;
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      font-weight: 700;
       border-right: 1px solid var(--line);
       display: flex;
       align-items: center;
     }
 
-    .stage-title.row-label {
+    .journey-stage-title.journey-row-label {
       z-index: 3;
       justify-content: flex-start;
-      background: #e8edf5;
+      background: var(--accent-soft);
     }
 
-    .confidence {
+    .journey-confidence {
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
       padding: 3px 9px;
       margin-bottom: 8px;
       font-size: 12px;
-      font-weight: 750;
+      font-weight: 700;
       border: 1px solid currentColor;
     }
 
-    .confidence-high { color: var(--green); background: #ecfdf3; }
-    .confidence-medium { color: var(--amber); background: #fffaeb; }
-    .confidence-low { color: var(--red); background: #fef3f2; }
+    .journey-confidence-high { color: #16803c; background: #ecfdf3; }
+    .journey-confidence-medium { color: var(--warn); background: var(--warn-soft); }
+    .journey-confidence-low { color: var(--danger); background: var(--danger-soft); }
 
-    .tag {
+    .journey-tag {
       display: inline-flex;
       align-items: center;
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 2px 8px;
       margin: 0 6px 6px 0;
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 12px;
-      background: #fff;
+      background: var(--panel-strong);
     }
 
-    .opportunity {
+    .journey-opportunity {
       border-left: 3px solid var(--accent);
       padding-left: 10px;
       margin-top: 6px;
     }
 
-    .transitions {
+    .journey-transitions {
       padding: 14px 20px 18px;
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 13px;
-      background: #fff;
+      background: var(--panel-strong);
     }
 
     @media (max-width: 760px) {
-      .page { padding: 20px; }
-      .hero, .role-head { display: block; }
-      .role-note {
+      .journey-role-head { display: block; }
+      .journey-role-note {
         margin-top: 8px;
         text-align: left;
       }
     }
   </style>
-</head>
-<body>
-  <main class="page">
-    <header class="hero">
-      <div>
-        <h1 id="project-title">旅程分析预览</h1>
-        <p class="meta" id="project-meta"></p>
-      </div>
-    </header>
-    <section id="roles"></section>
-  </main>
+
+  <h1 class="preview-document-title" id="journey-project-title">旅程分析预览</h1>
+  <p class="preview-footer" id="journey-project-meta"></p>
+  <section class="preview-section-block" id="journey-analysis-section-0" data-section-key="journey-roles">
+    <h2 class="preview-section-heading">角色旅程</h2>
+    <div class="preview-section-body" id="journey-roles"></div>
+  </section>
 
   <script>
     const JOURNEY_DATA = /* __JOURNEY_DATA_JSON__ */ null;
@@ -230,15 +171,15 @@
     }
 
     function confidenceClass(value) {
-      if (value === "高") return "confidence-high";
-      if (value === "低") return "confidence-low";
-      return "confidence-medium";
+      if (value === "高") return "journey-confidence-high";
+      if (value === "低") return "journey-confidence-low";
+      return "journey-confidence-medium";
     }
 
     function renderTags(values) {
       const list = Array.isArray(values) ? values : values ? [values] : [];
       if (!list.length) return escapeHtml(emptyText);
-      return list.map((item) => `<span class="tag">${escapeHtml(text(item))}</span>`).join("");
+      return list.map((item) => `<span class="journey-tag">${escapeHtml(text(item))}</span>`).join("");
     }
 
     function renderOpportunities(values) {
@@ -247,7 +188,7 @@
       return list.map((item) => {
         const direction = escapeHtml(text(item.direction));
         const hint = item.downstream_hint ? `（下游：${escapeHtml(item.downstream_hint)}）` : "";
-        return `<div class="opportunity">${direction}${hint}</div>`;
+        return `<div class="journey-opportunity">${direction}${hint}</div>`;
       }).join("");
     }
 
@@ -257,7 +198,7 @@
       if (key === "confidence") {
         const confidence = text(stage.confidence);
         const reason = text(stage.confidence_reason);
-        return `<span class="confidence ${confidenceClass(confidence)}">${escapeHtml(confidence)}</span><br>${escapeHtml(reason)}`;
+        return `<span class="journey-confidence ${confidenceClass(confidence)}">${escapeHtml(confidence)}</span><br>${escapeHtml(reason)}`;
       }
       return escapeHtml(text(stage[key]));
     }
@@ -265,44 +206,45 @@
     function transitionText(transitions) {
       const list = Array.isArray(transitions) ? transitions : [];
       if (!list.length) return emptyText;
-      return list.map((item) => `${text(item.from)} → ${text(item.to)}：${text(item.trigger)}`).join(" / ");
+      return list.map((item) => `${text(item.from)} -> ${text(item.to)}：${text(item.reason)}`).join("；");
     }
 
     function renderRole(role) {
       const stages = Array.isArray(role.stages) ? role.stages : [];
       const columns = `180px repeat(${Math.max(stages.length, 1)}, minmax(180px, 1fr))`;
-      const stageHeads = stages.map((stage) => `<div class="cell stage-title">${escapeHtml(text(stage.name))}</div>`).join("");
+      const stageHeads = stages.map((stage) => `<div class="journey-cell journey-stage-title">${escapeHtml(text(stage.name))}</div>`).join("");
       const bodyRows = rows.map(([key, label]) => `
-        <div class="cell row-label">${label}</div>
-        ${stages.map((stage) => `<div class="cell">${renderValue(stage, key)}</div>`).join("")}
+        <div class="journey-cell journey-row-label">${label}</div>
+        ${stages.map((stage) => `<div class="journey-cell">${renderValue(stage, key)}</div>`).join("")}
       `).join("");
 
       return `
-        <section class="role">
-          <div class="role-head">
-            <h2>${escapeHtml(text(role.role))}</h2>
-            <p class="role-note">${escapeHtml(text(role.summary))}</p>
+        <section class="journey-role">
+          <div class="journey-role-head">
+            <h2 class="journey-role-title">${escapeHtml(text(role.role))}</h2>
+            <p class="journey-role-note">${escapeHtml(text(role.summary))}</p>
           </div>
-          <div class="matrix-wrap">
-            <div class="matrix" style="grid-template-columns: ${columns};">
-              <div class="cell stage-title row-label">阶段</div>
-              ${stageHeads || `<div class="cell stage-title">${emptyText}</div>`}
+          <div class="journey-matrix-wrap">
+            <div class="journey-matrix" style="grid-template-columns: ${columns};">
+              <div class="journey-cell journey-stage-title journey-row-label">阶段</div>
+              ${stageHeads || `<div class="journey-cell journey-stage-title">${emptyText}</div>`}
               ${bodyRows}
             </div>
           </div>
-          <div class="transitions">阶段转折：${escapeHtml(transitionText(role.key_transitions))}</div>
+          <div class="journey-transitions">阶段转折：${escapeHtml(transitionText(role.key_transitions))}</div>
         </section>
       `;
     }
 
     function render() {
-      document.getElementById("project-title").textContent = `旅程分析：${JOURNEY_DATA.project_name || emptyText}`;
-      document.getElementById("project-meta").textContent = `${JOURNEY_DATA.generated_at || emptyText} / ${JOURNEY_DATA.mode || emptyText} / ${JOURNEY_DATA.source || emptyText}`;
+      document.getElementById("journey-project-title").textContent = `旅程分析：${JOURNEY_DATA.project_name || emptyText}`;
+      document.getElementById("journey-project-meta").textContent = `${JOURNEY_DATA.generated_at || emptyText} / ${JOURNEY_DATA.mode || emptyText} / ${JOURNEY_DATA.source || emptyText}`;
       const roles = Array.isArray(JOURNEY_DATA.journeys) ? JOURNEY_DATA.journeys : [];
-      document.getElementById("roles").innerHTML = roles.map(renderRole).join("");
+      document.getElementById("journey-roles").innerHTML = roles.length
+        ? roles.map(renderRole).join("")
+        : `<p>${escapeHtml(emptyText)}</p>`;
     }
 
     render();
   </script>
-</body>
-</html>
+</article>

@@ -250,6 +250,14 @@ Markdown 建议结构：
 - 用户出口 / 恢复路径
 - 建议注入章节（`target_section`）
 
+## Context JSON 写入
+
+正式产物生成后，写入 `spark-output/context/edge.json`。
+
+写入字段以上文 `edge.json` 字段清单为准。
+
+写入失败不阻断完成，但应在输出中提示。
+
 ## 交接
 
 完成后：

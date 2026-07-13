@@ -8,7 +8,7 @@ description: >
 
 # Experience Blueprint
 
-这个 skill 负责读取第一阶梯正式上游结论，并把它展开为完整的交互设计方案。默认先输出 Markdown 与 context JSON；HTML 预览改为用户确认后再继续生成。
+这个 skill 负责读取第一阶梯正式上游结论，并把它展开为完整的交互设计方案。默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
 
 本次能力支持多上游承接，但不改变 `§0-§9` 的正文分析骨架。
 
@@ -179,13 +179,9 @@ description: >
 - `spark-output/experience_blueprint.md`
 - `spark-output/context/experience-blueprint.json`
 
-默认不自动输出：
-
-- `spark-output/preview/experience_blueprint_preview.html`
-
 输出规则补充：
 
-- 如果宿主支持文件系统，先检查并创建 `spark-output/`、`spark-output/context/` 与需要时的 `spark-output/preview/`，再写入产物
+- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
 
 必须包含以下 9 个正文章节和 1 个附录部分：
 
@@ -535,6 +531,17 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 写入失败不阻断完成，但应在输出中提示。
 
+## 预览交接
+
+- `experience-blueprint` 自身不再生成 HTML 预览。
+- 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改当前 skill 的正式 Markdown、Context JSON 或知识消费逻辑。
+- `preview-renderer` 扫描 `spark-output/` 中的体验蓝图产物，并按自身集中规则执行渲染。
+- 固定提示口径：
+
+```text
+体验蓝图 Markdown 已生成。如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+```
+
 ## 交接
 
 当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
@@ -544,89 +551,6 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术
 4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
 5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
-
-## HTML 预览
-
-体验蓝图基于骨架模板生成自包含 HTML 预览文件。
-
-默认策略：
-
-- 先完成 `experience_blueprint.md`
-- 先完成 `spark-output/context/experience-blueprint.json`
-- 完成后停止，不自动继续输出 HTML 预览
-- 向用户提示：`体验蓝图 Markdown 已生成。如需继续生成 HTML 预览，请明确确认。`
-- 仅在用户明确确认后，才继续执行本节的 HTML 预览生成流程
-
-核心原则：AI 填数据，不搭结构。
-
-稳定性原则：优先复用已经沉淀到当前 Skill 内的预览结构经验，不丢弃历史前端迭代结果。相关经验来源于此前多轮预览打磨与 `uxb/refactor` 分支中的同类实现思路，但当前分支的正式能力承载位置是 Skill 本身，不再外溢为新的包级主链路。
-
-HTML 预览不是只展示 `experience_blueprint.md`，而是要在一个固定骨架里同时承接：
-
-- `spark-output/uxb_output.md` 或 `spark-output/problem_framing.md`
-- `spark-output/experience_blueprint.md`
-
-固定展示方式：
-
-- 左侧固定侧边栏
-- 左侧只切换 `业务蓝图 / 体验蓝图` 两份正文
-- 当前蓝图正文保持整份可见，章节继续通过锚点导航访问
-- 在同一份 HTML 中同时承接 `业务蓝图` 与 `体验蓝图` 的正式章节
-- 右侧内容区按固定章节容器渲染，不让 AI 临时决定布局
-
-映射要求：
-
-- `uxb_output.md` 或 `problem_framing.md` 的正式章节必须进入 `业务蓝图` 面板
-- `experience_blueprint.md` 的正式章节必须进入 `体验蓝图` 面板
-- `§0`、附录、表格、ASCII 框图、待确认问题都不能丢
-- `§0` 和附录必须同时出现在导航和正文中，不能只保留内容块
-- `§1` 旅程消费摘要中的信心最低点、关键转折、流失风险必须保持外显
-- `§1` 旅程消费摘要里出现的来源角色和阶段必须完整保留，不能只保留第一个角色
-- 如果某一章节暂时无法组件化展示，也必须完整保留在对应章节容器内，宁可降级为通用正文渲染，也不能漏或错放到相邻章节
-- 导航锚点必须和章节容器一一对应，不能只保留内容不保留导航
-- 体验蓝图中已经稳定组件化的区块，优先沿用历史组件映射，不重新发明新结构
-
-模板：
-
-- `references/preview_template.html`
-
-输出：
-
-- `spark-output/preview/experience_blueprint_preview.html`
-
-固定执行顺序：
-
-1. 读取 `references/preview_template.html`
-2. 读取第一阶梯正文产物：优先 `spark-output/uxb_output.md`，如不存在则读取 `spark-output/problem_framing.md`
-3. 读取 `spark-output/experience_blueprint.md`
-4. 先生成 `业务蓝图` 面板的导航项和章节容器
-5. 再生成 `体验蓝图` 面板的导航项和章节容器
-6. 生成左侧 `业务蓝图 / 体验蓝图` 顶层切换，但不生成章节级第二层 tab
-7. 将两侧内容注入固定骨架
-8. 保留表格、ASCII 框图、附录、待确认问题
-9. 输出到 `spark-output/preview/experience_blueprint_preview.html`
-
-章节标题口径要求：
-
-- 体验蓝图正式文档使用 `§0` 到 `§9`
-- HTML 中允许为了稳定映射做内部标题归一，但最终展示口径必须与正式文档一致
-- 不允许要求执行者手动修改 Markdown 标题来配合预览生成
-
-允许：
-
-- 填充固定模板中的导航项和章节内容
-- 在既定组件模式内按数据量增减卡片数量
-- 对无法结构化的数据回退为通用正文渲染
-- 在不改骨架的前提下沿用历史稳定的 section/component 映射方式
-
-禁止：
-
-- 修改模板的 CSS / JS / HTML 结构
-- 擅自删减任何正式章节
-- 把第一阶梯正文产物只压缩成摘要后再展示
-- 把 `experience_blueprint.md` 的章节内容合并、偏移或错挂到其他区块
-- 新增模板中没有的视觉组件
-- 重新设计布局或配色方案
 
 ## 设计参考使用规则
 

@@ -205,6 +205,16 @@ Markdown 固定结构：
   - `continue-product-analysis`
   - `return-to-uxb`
 
+## 交接
+
+当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+
+1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
+2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `product-analysis` 的 `next_hint`。
+3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术。
+4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`。
+5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续。
+
 ## 边界
 
 - 可以吸收问题聚焦、5 Why、轻量方案发散
