@@ -11,6 +11,7 @@
 - `spark-output/context/uxb.json`（如存在）
 - `.claude/skills/preview-renderer/assets/shell/preview_shell.html`
 - `.claude/skills/preview-renderer/assets/skills/uxb/preview_template.html`
+- `.claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js`
 
 ## 输出
 
@@ -25,12 +26,28 @@
 
 ## 执行顺序
 
-1. 读取 `uxb_output.md`。
-2. 提取 `业务蓝图` 的正式章节。
-3. 生成左侧章节导航并注入公共壳。
-4. 将章节内容注入业务蓝图内容片段。
-5. 将内容片段注入公共壳。
-6. 输出到 `spark-output/preview/uxb_preview.html`。
+1. 调用 `.claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js`。
+2. 读取 `uxb_output.md`。
+3. 读取 `uxb.json`（如存在，仅用于元信息，不补业务正文）。
+4. 提取 `业务蓝图` 的正式章节。
+5. 生成左侧章节导航并注入公共壳。
+6. 将章节内容注入业务蓝图内容片段。
+7. 将内容片段注入公共壳。
+8. 输出到 `spark-output/preview/uxb_preview.html`。
+
+## 脚本入口
+
+默认执行：
+
+```powershell
+node ".claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js"
+```
+
+显式参数执行：
+
+```powershell
+node ".claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js" ".claude/skills/preview-renderer/assets/shell/preview_shell.html" ".claude/skills/preview-renderer/assets/skills/uxb/preview_template.html" "spark-output/context/uxb.json" "spark-output/uxb_output.md" "spark-output/preview/uxb_preview.html"
+```
 
 ## 红线
 
@@ -38,3 +55,4 @@
 - 不删除正式章节。
 - 不把正文压缩成摘要卡片。
 - 不为预览临时改写 Markdown 标题。
+- 不根据 `uxb.json` 重新生成业务结论。

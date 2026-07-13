@@ -196,15 +196,14 @@ description: >
 - `§8` 待确认问题
 - `§9` 附录：设计指南消费说明
 
-当来源为 `problem-framing` 且 `3+1` 未通过时，必须在 `§0` 开头增加两段固定内容：
+当来源为 `problem-framing` 且 `3+1` 未通过时，不得在 `§0` 开头增加 `来源可用性检查` 或 `本轮展开限制`。
 
-- `来源可用性检查`
-- `本轮展开限制`
+`3+1` 检查只作为 `framing-mode` 的内部承接门槛和尾部追踪信息：
 
-其中：
-
-- `来源可用性检查` 固定写 4 项结果：角色与目标 / 业务边界与对象 / 关键状态与阻断 / 是否存在会改写主流程的未决问题
-- `本轮展开限制` 只写三类信息：已确认可展开部分、当前不足以完整展开部分、本轮不会假设补全的部分
+- `§0` 仍只写体验蓝图自己的关键设计判断
+- `§8` 汇总会影响流程、页面、状态或文案的待确认问题
+- `§9` 用最小篇幅记录 `上游承接检查`，只写大白话，不写内部字段名
+- Context JSON 可记录机器侧字段，但用户侧 Markdown 正文不得直接展示 `source_usability_check`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited`
 
 ## 正文承载规则
 
@@ -529,6 +528,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - 当来源为 `uxb` 时，`source_usability_check` 可为空或标记 `not_applicable`
 - 当来源为 `problem-framing` 时，`source_usability_check` 必须记录 `3+1` 检查结果
 - `expansion_mode` 只能是 `full` 或 `limited`
+- `source_usability_check`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited` 属于机器侧承接记录，不得作为用户侧 Markdown 正文字段名直接展示
 
 写入失败不阻断完成，但应在输出中提示。
 

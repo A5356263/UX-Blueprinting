@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>业务蓝图预览</title>
+  <style>
+    :root {
+      --bg: #f5f4ed;
+      --panel: #faf9f5;
+      --panel-strong: #faf9f5;
+      --panel-subtle: #f2f0e8;
+      --line: #e8e6dc;
+      --line-strong: #d8d1c2;
+      --text: #2b2b28;
+      --text-muted: #6b6a64;
+      --text-soft: #75746e;
+      --accent: #1f6b5b;
+      --accent-soft: #e2f1eb;
+      --accent-strong: #155245;
+      --warn: #8a5a14;
+      --warn-soft: #f6ead5;
+      --danger: #8b3a3a;
+      --danger-soft: #f8e4e1;
+      --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .hidden { display: none !important; }
+
+    .preview-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .preview-sidebar {
+      width: 200px;
+      min-width: 200px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 14px 0;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .preview-product-switcher {
+      padding: 0 16px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-product-select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      border-radius: var(--radius);
+      padding: 8px 32px 8px 10px;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .preview-product-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .preview-section-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 16px 8px;
+    }
+
+    .preview-nav-item {
+      display: block;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 1px 0;
+      transition: all 0.12s;
+      cursor: pointer;
+    }
+
+    .preview-nav-item:hover,
+    .preview-nav-item.is-active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    .preview-nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+    .preview-nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+
+    .preview-main {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      padding: 32px 40px 80px;
+      max-width: 1400px;
+    }
+
+    .preview-content-panel { display: block; }
+    .preview-content-panel.hidden { display: none; }
+
+    .preview-document-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent-strong);
+      margin: 0 0 28px;
+    }
+
+    .preview-section-block,
+    .section-block {
+      margin-bottom: 36px;
+      scroll-margin-top: 24px;
+    }
+
+    .preview-section-heading,
+    .section-heading {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 0 0 12px;
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .preview-section-heading.level-2,
+    .section-heading.level-2 {
+      font-size: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-section-heading.level-3,
+    .section-heading.level-3 {
+      font-size: 15px;
+      color: var(--text-muted);
+      border-bottom: none;
+      font-weight: 600;
+    }
+
+    .preview-section-body,
+    .section-body { font-size: 15px; }
+
+    .preview-section-body p,
+    .section-body p { margin: 0 0 10px; }
+
+    .preview-section-body ul,
+    .section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
+
+    .preview-section-body ul li,
+    .section-body ul li {
+      position: relative;
+      padding: 4px 0 4px 16px;
+      margin: 2px 0;
+    }
+
+    .preview-section-body ul li::before,
+    .section-body ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    .preview-section-body strong,
+    .section-body strong { color: var(--accent-strong); font-weight: 600; }
+
+    .preview-section-body code,
+    .section-body code {
+      background: var(--panel-subtle);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+      border: 1px solid var(--line);
+    }
+
+    .preview-section-body pre,
+    .section-body pre {
+      background: var(--panel-subtle);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .preview-section-body h3,
+    .preview-section-body h4,
+    .preview-section-body h5,
+    .preview-section-body h6,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5,
+    .section-body h6 {
+      margin: 18px 0 10px;
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .preview-section-body table,
+    .section-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    .preview-section-body th,
+    .preview-section-body td,
+    .section-body th,
+    .section-body td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .preview-section-body th,
+    .section-body th {
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .preview-section-body ol,
+    .section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+
+    .preview-section-body ol li,
+    .section-body ol li { padding: 4px 0; }
+
+    .preview-card,
+    .component-card,
+    .summary-visual,
+    .journey-visual,
+    .flow-field,
+    .state-card,
+    .callout {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 12px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .callout {
+      border-left: 0;
+      background: var(--accent-soft);
+      box-shadow: none;
+    }
+
+    .callout.warn {
+      border-left-color: transparent;
+      background: var(--warn-soft);
+    }
+
+    .callout.danger {
+      border-left-color: transparent;
+      background: var(--danger-soft);
+    }
+
+    .visual-row,
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 12px 0 18px;
+    }
+
+    .flow-node,
+    .journey-phase-card {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin: 10px 0;
+    }
+
+    .flow-node-title,
+    .journey-phase-title {
+      margin: 0 0 8px;
+      color: var(--accent-strong);
+      font-weight: 700;
+    }
+
+    .journey-phase-toggle {
+      border: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .journey-phase-card.is-collapsed .journey-phase-detail {
+      display: none;
+    }
+
+    .table-wrap,
+    .state-feedback-table-wrap {
+      overflow-x: auto;
+      margin: 12px 0 18px;
+    }
+
+    .status-pill,
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: var(--panel-subtle);
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 4px 4px 0;
+    }
+
+    .status-pill.strong,
+    .tag.strong {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border-color: var(--accent-soft);
+    }
+
+    .preview-footer {
+      color: var(--text-soft);
+      font-size: 12px;
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .preview-sidebar { display: none; }
+      .preview-main { padding: 20px 16px 60px; }
+    }
+
+    
+  </style>
+</head>
+<body>
+  <div class="preview-shell">
+    <aside class="preview-sidebar">
+      <div class="preview-product-switcher">
+        <select class="preview-product-select" id="preview-product-select" aria-label="预览产物">
+          <option value="uxb">业务蓝图</option>
+          <option value="problem-framing">问题框定</option>
+          <option value="stories">用户故事</option>
+          <option value="journey-analysis">角色旅程</option>
+          <option value="experience-blueprint">体验蓝图</option>
+        </select>
+      </div>
+
+      <nav class="preview-section-nav" aria-label="章节导航">
+        <a class="preview-nav-item level-1" href="#uxb-section-0" data-skill="uxb">业务蓝图</a>
+<a class="preview-nav-item level-1" href="#uxb-section-1" data-skill="uxb">§0 本次关键判断</a>
+<a class="preview-nav-item level-1" href="#uxb-section-2" data-skill="uxb">§1 需求输入摘要</a>
+<a class="preview-nav-item level-1" href="#uxb-section-3" data-skill="uxb">§2 业务场景判断</a>
+<a class="preview-nav-item level-1" href="#uxb-section-4" data-skill="uxb">§3 需求成立性判断</a>
+<a class="preview-nav-item level-1" href="#uxb-section-5" data-skill="uxb">§4 推荐业务边界</a>
+<a class="preview-nav-item level-1" href="#uxb-section-6" data-skill="uxb">§5 角色、功能、规则范围</a>
+<a class="preview-nav-item level-1" href="#uxb-section-7" data-skill="uxb">§6 状态、异常与边界</a>
+<a class="preview-nav-item level-1" href="#uxb-section-8" data-skill="uxb">§7 体验蓝图承接要求</a>
+<a class="preview-nav-item level-1" href="#uxb-section-9" data-skill="uxb">§8 约束与不做什么</a>
+<a class="preview-nav-item level-1" href="#uxb-section-10" data-skill="uxb">§9 待确认问题</a>
+<a class="preview-nav-item level-1" href="#uxb-section-11" data-skill="uxb">附录：事实、知识与判断追踪</a>
+      </nav>
+    </aside>
+
+    <main class="preview-main">
+      <article class="preview-content-panel is-active" data-skill="uxb">
+  <h1 class="preview-document-title">业务蓝图</h1>
+  
+  
+    <section class="preview-section-block" id="uxb-section-0">
+      <h2 class="preview-section-heading">业务蓝图</h2>
+      <div class="preview-section-body"><p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-1">
+      <h2 class="preview-section-heading">§0 本次关键判断</h2>
+      <div class="preview-section-body"><p>这是一项&quot;把权限授权从管理员集中处理转向员工自助+上级审批+自动生效&quot;的治理结构调整，不是页面级功能优化。</p>
+<p><strong>业务判断</strong>：推荐在现有权限模块中新增&quot;员工自助申请&quot;能力线。<strong>关键前提</strong>是审批流基建（审批引擎、上级负责人路由、自动授权执行接口）的成熟度，它们决定方案可行性和实施路径。<strong>不建议</strong>保留人工执行环节或改为管理员审批——那没有解决时效不稳定的核心矛盾。<strong>最高优先级待确认</strong>：审批流引擎的接口能力是否支持&quot;审批通过后自动触发授权执行&quot;。</p>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-2">
+      <h2 class="preview-section-heading">§1 需求输入摘要</h2>
+      <div class="preview-section-body"><h3>需求背景</h3>
+<p>中大型企业员工权限分配目前依赖管理员或超级管理员集中处理。员工数量多、人员流动频繁，权限新增、变更、核对工作量大。部分企业的超级管理员就是老板本人。</p>
+<h3>目标用户</h3>
+<ul><li><strong>员工</strong>（核心）：业务人员/经办人员，需要被授予功能权限或加入角色</li><li><strong>上级组织负责人</strong>：审批人，审批下属的权限申请</li><li><strong>权限管理员/超级管理员</strong>：负责权限策略配置和治理</li></ul>
+<h3>业务目标</h3>
+<p>支持员工自助查看和申请权限，把部分权限申请工作从管理员侧分散到员工侧，同时保留管理员对申请范围和审批流程的控制。</p>
+<h3>功能范围</h3>
+<ul><li><strong>覆盖</strong>：功能权限申请 + 角色授权申请</li><li><strong>不覆盖</strong>：数据权限的自助申请、协作可见性的自助申请</li></ul>
+<h3>明确约束</h3>
+<ul><li>申请范围由管理员预制，排除敏感权限 [FACT]</li><li>审批人为上级组织负责人，不是管理员 [FACT]</li><li>审批通过后自动生效，不留人工执行环节 [FACT]</li><li>作为已有平台新增能力，需兼容现有权限模块架构 [CONFIRMED]</li></ul>
+<h3>输入缺口</h3>
+<ul><li>审批流引擎基建就绪度未明确 [GAP]</li><li>自动授权执行接口可用性未明确 [GAP]</li></ul>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-3">
+      <h2 class="preview-section-heading">§2 业务场景判断</h2>
+      <div class="preview-section-body"><h3>业务定位</h3>
+<p>这是权限管理域中<strong>新增的自助服务子能力</strong>，不是对现有授权方式的替代或重构。现有管理员侧授权保持不变，新增一条员工侧发起→上级审批→系统自动执行的并行路径。</p>
+<h3>与现有能力的关系</h3>
+<div class="table-wrap"><table><thead><tr><th>现有能力</th><th>关系</th><th>说明</th></tr></thead><tbody><tr><td>管理员用户直授</td><td>并行存在</td><td>管理员仍可主动为员工授权，自助申请是新增入口</td></tr><tr><td>角色授权</td><td>被复用</td><td>员工申请加入角色后，复用已有角色-权限绑定关系</td></tr><tr><td>审批中台</td><td>依赖关系</td><td>审批流需要接入平台审批能力路由到上级负责人</td></tr><tr><td>组织域成员关系</td><td>依赖关系</td><td>审批人匹配依赖组织域中&quot;上级负责人&quot;关系的完整性</td></tr></tbody></table></div>
+<h3>最大业务不确定性</h3>
+<p><strong>审批流转链路能否闭环</strong>——从&quot;员工提交&quot;到&quot;上级审批&quot;到&quot;系统自动授权&quot;的三段链路，每一段都依赖平台既有基建。审批流引擎和自动授权执行接口的就绪度是当前最大的业务风险。</p>
+<h3>判断错误的影响</h3>
+<p>如果判断错&quot;审批基建已就绪&quot;但实际上未就绪，后续体验方案中&quot;自动生效&quot;环节需要改为半自动（通知管理员手动执行），这会破坏核心价值主张（时效可预期）。如果判断错&quot;上级负责人关系已定义完整&quot;但实际上不完整，审批人匹配会大面积失败，需要补充兜底机制。</p>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-4">
+      <h2 class="preview-section-heading">§3 需求成立性判断</h2>
+      <div class="preview-section-body"><h3>价值判断</h3>
+<p><strong>成立。</strong> 从三个角度看：</p>
+<ol><li><strong>问题真实</strong> — 中大型企业人员流动性高，非正式沟通模式无法规模化管理，这是管理常识级痛点，不依赖特定场景验证</li><li><strong>收益明确</strong> — 员工获得可预期的授权时效，管理员从执行者变为策略定义者，审批人在上下文中做判断而非空白审批，三层角色各有所获</li><li><strong>用户体验收益</strong> — 从&quot;找到人→说清楚→等待&quot;的模糊链路变为&quot;提交→等审批→自动获得&quot;的清晰链路</li></ol>
+<h3>系统代价</h3>
+<ul><li><strong>建设成本中等</strong>：新增员工端入口、申请目录、申请 Drawer、审批详情 Drawer、我的申请页等前端实体</li><li><strong>依赖成本偏高</strong>：审批流引擎、上级负责人路由、自动授权接口三项基建缺一不可</li><li><strong>维护成本中等</strong>：管理员需持续维护可申请目录和敏感权限标记</li></ul>
+<h3>更低成本替代方案</h3>
+<ul><li><strong>不做自助申请，只优化管理员授权体验</strong>：在后台增加批量授权、模板授权能力。这能解决管理员的效率问题，但不解决员工侧的&quot;不知道找谁、不知道有什么权限&quot;问题</li><li><strong>不做自动生效，只做申请+审批通知</strong>：审批通过后通知管理员手动执行。这降低了对授权接口的依赖，但重新引入了时效不稳定的核心矛盾</li></ul>
+<p><strong>建议</strong>：进入正式体验设计，但前提是审批流基建和自动授权接口必须在设计阶段确认就绪度。如果基建不满足，需要在上游提前暴露风险，而不是等方案完成后再回头补。</p>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-5">
+      <h2 class="preview-section-heading">§4 推荐业务边界</h2>
+      <div class="preview-section-body"><h3>推荐能力形态</h3>
+<ul><li>员工侧：可申请目录浏览 → 权限/角色详情查看 → 选择并发起申请 → 追踪进度 → 接收结果</li><li>审批人侧：待办列表 → 申请详情查看（含权限说明和风险提示）→ 审批操作</li><li>管理员侧：角色和功能权限的&quot;可自助申请&quot;标记开关 → 批量标记 → 配置生效</li></ul>
+<h3>不推荐能力形态</h3>
+<ul><li><strong>不推荐</strong>让员工自由申请全部权限（必须预制范围）— 安全失控</li><li><strong>不推荐</strong>由管理员审批（必须限定为上级负责人）— 未解决管理者负担</li><li><strong>不推荐</strong>审批通过后留人工执行环节 — 未解决时效不稳定</li><li><strong>不推荐</strong>在员工侧暴露可申请的数据权限或协作可见性 — 超出本次范围</li></ul>
+<h3>与现有能力的边界</h3>
+<ul><li>复用现有角色-权限绑定关系（员工加入角色即获得关联的功能权限）</li><li>复用现有组织架构成员关系（审批人路由依赖上级负责人定义）</li><li>不改变管理员侧授权路径</li><li>不改变敏感权限的管控方式</li></ul>
+<h3>不新增</h3>
+<ul><li>不新增独立的审批流引擎（复用平台审批能力）</li><li>不新增权限对象模型（复用现有主体、资源、动作、范围定义）</li></ul>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-6">
+      <h2 class="preview-section-heading">§5 角色、功能、规则范围</h2>
+      <div class="preview-section-body"><h3>角色职责</h3>
+<div class="table-wrap"><table><thead><tr><th>角色</th><th>职责</th></tr></thead><tbody><tr><td>员工</td><td>浏览可申请目录 → 选择需要项 → 提交申请（含理由）→ 追踪进度 → 申请通过后使用权限 / 被拒后查看原因并决定是否重试</td></tr><tr><td>上级组织负责人</td><td>接收审批待办 → 查看申请详情（含申请人、内容、理由、权限说明）→ 通过或拒绝 → 拒绝时填写原因</td></tr><tr><td>权限管理员</td><td>在角色/功能权限管理中标记&quot;可自助申请&quot; → 批量标记/取消标记 → 配置即时生效；持续维护可申请目录和敏感权限边界</td></tr></tbody></table></div>
+<h3>功能单元</h3>
+<div class="table-wrap"><table><thead><tr><th>功能</th><th>输入</th><th>处理</th><th>结果</th></tr></thead><tbody><tr><td>浏览可申请目录</td><td>员工进入权限申请页面</td><td>系统按管理员预制的可申请标记过滤，排除敏感权限，聚合展示</td><td>角色列表（全量，区分可申请标记）+ 功能权限列表（仅可申请项）</td></tr><tr><td>提交权限申请</td><td>员工选择项 + 申请理由</td><td>校验重复项和必填项，匹配审批人，写入申请记录</td><td>申请进入待审批状态，记录持久化</td></tr><tr><td>审批申请</td><td>审批人通过/拒绝操作 + 拒绝原因（拒绝时必填）</td><td>审批人操作确认后，写入审批结果</td><td>通过→触发自动授权；拒绝→通知申请人</td></tr><tr><td>自动授权</td><td>审批通过事件</td><td>系统执行为用户添加功能权限/加入角色</td><td>授权成功→通知双方；授权失败→通知双方+失败原因</td></tr><tr><td>配置可申请目录</td><td>管理员设置角色/权限的可自助申请标记</td><td>系统保存配置，排除敏感权限的保护性禁用</td><td>员工端目录即时更新</td></tr></tbody></table></div>
+<h3>关键业务规则</h3>
+<div class="table-wrap"><table><thead><tr><th>规则</th><th>触发条件</th><th>处理结果</th><th>不满足时处理</th></tr></thead><tbody><tr><td>申请范围预制</td><td>员工浏览可申请目录</td><td>仅展示管理员标记为可申请的项，排除敏感权限</td><td>员工不可见的项视为无权申请</td></tr><tr><td>审批人确定</td><td>员工提交申请</td><td>自动匹配申请人上级组织负责人</td><td>匹配失败→通知员工联系管理员</td></tr><tr><td>申请理由必填</td><td>提交申请时</td><td>理由为空则校验不通过</td><td>InlineError + 阻断提交</td></tr><tr><td>拒绝原因必填</td><td>审批人拒绝时</td><td>原因为空则校验不通过</td><td>InlineError + 阻断提交</td></tr><tr><td>审批通过自动生效</td><td>审批人点击通过</td><td>触发授权执行接口</td><td>执行失败→通知双方+失败原因</td></tr><tr><td>已有权限重复申请</td><td>提交时检测</td><td>提示重复项，支持一键移除</td><td>不阻断，可保留重复项（系统自动过滤）</td></tr></tbody></table></div>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-7">
+      <h2 class="preview-section-heading">§6 状态、异常与边界</h2>
+      <div class="preview-section-body"><h3>核心状态</h3>
+<div class="table-wrap"><table><thead><tr><th>状态</th><th>说明</th><th>用户下一步</th></tr></thead><tbody><tr><td>待审批</td><td>申请已提交，等待上级审批</td><td>等待或催办</td></tr><tr><td>审批人已查看</td><td>审批人已打开查看</td><td>等待审批结果</td></tr><tr><td>已通过</td><td>审批人已批准</td><td>等待权限生效</td></tr><tr><td>已拒绝</td><td>审批人未批准</td><td>查看拒绝原因，重新申请或放弃</td></tr><tr><td>授权中</td><td>系统正在执行授权</td><td>等待</td></tr><tr><td>授权成功</td><td>权限已生效</td><td>去使用权限</td></tr><tr><td>授权失败</td><td>系统自动授权不成功</td><td>联系管理员</td></tr></tbody></table></div>
+<h3>关键异常</h3>
+<div class="table-wrap"><table><thead><tr><th>异常</th><th>触发条件</th><th>系统处理结果</th><th>用户下一步</th></tr></thead><tbody><tr><td>审批人不存在/已离职</td><td>提交后匹配审批人失败</td><td>申请状态→&quot;审批人匹配失败&quot;；通知员工+通知管理员</td><td>员工联系管理员确认组织关系，管理员修复后系统自动重新路由</td></tr><tr><td>审批超时</td><td>超过预设时限（如24h/48h）未处理</td><td>员工端可催办，审批端超时标记置顶</td><td>员工催办或联系审批人</td></tr><tr><td>自动授权失败</td><td>授权执行接口返回失败</td><td>申请状态→&quot;授权失败&quot;；通知双方+失败原因</td><td>员工联系管理员；审批人可协助排查</td></tr><tr><td>批量授权部分失败</td><td>逐项执行时部分失败</td><td>成功项即时生效，失败项展示原因；状态→&quot;部分成功&quot;</td><td>失败项单独重新申请或联系管理员</td></tr><tr><td>权限已拥有重复申请</td><td>员工选择的项含已拥有权限</td><td>提醒可移除，不阻断提交</td><td>选择一键移除重复项或保留（系统自动过滤）</td></tr></tbody></table></div>
+<h3>边界</h3>
+<ul><li>敏感权限不在员工可申请目录中展示，管理员也无法标记为可自助申请 [GAP：敏感权限标记机制是否已定义]</li></ul>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-8">
+      <h2 class="preview-section-heading">§7 体验蓝图承接要求</h2>
+      <div class="preview-section-body"><div class="table-wrap"><table><thead><tr><th>业务判断</th><th>对体验设计的影响</th><th>必须承接的问题</th><th>禁止下游重判</th></tr></thead><tbody><tr><td>申请范围由管理员预制，排除敏感权限</td><td>目录不是全量权限，员工只看到可申请的项</td><td>权限目录的筛选逻辑、可申请标记的展示方式、敏感权限的保护机制</td><td>不得让员工自由申请全部权限</td></tr><tr><td>审批人为上级组织负责人</td><td>审批人自动匹配，申请人不需要选择</td><td>审批人匹配失败时的降级处理、审批上下文中展示权限说明和风险提示</td><td>不得改为管理员审批或让申请人自选审批人</td></tr><tr><td>审批通过后自动生效</td><td>生效环节无人工干预，状态需实时可感知</td><td>自动授权执行链路、授权成功/失败的反馈机制、部分成功的处理策略</td><td>不得保留人工执行环节</td></tr><tr><td>覆盖功能权限和角色授权</td><td>目录有两类授权对象，角色是权限集合</td><td>角色与功能权限的分栏展示、角色详情中包含关联权限清单</td><td>不得扩展至数据权限或协作可见性</td></tr><tr><td>员工可看到全部角色</td><td>角色列表全量，但仅部分可申请</td><td>可申请角色与不可申请角色的视觉区分、全部角色的可浏览性</td><td>不得隐藏不可申请的角色</td></tr><tr><td>申请需填写理由</td><td>理由帮助审批人判断</td><td>理由输入引导、理由校验、拒绝时原因的填写</td><td>不得取消理由必填</td></tr><tr><td>申请进度需透明可追踪</td><td>等待区间需中间态</td><td>状态时间线、催办机制、超时标记</td><td>不得仅展示终态</td></tr></tbody></table></div>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-9">
+      <h2 class="preview-section-heading">§8 约束与不做什么</h2>
+      <div class="preview-section-body"><h3>硬约束</h3>
+<ul><li>作为已有平台新增能力，需兼容现有权限模块的架构和数据模型 [FACT]</li><li>所有申请必须可审计、可追溯 [CONFIRMED]</li><li>管理员仍为权限策略的定义者和控制者，不被绕过 [CONFIRMED]</li><li>从申请到生效的全链路必须有明确的失败感知和处理机制 [CONFIRMED]</li></ul>
+<h3>不做什么</h3>
+<ul><li>不覆盖数据权限的自助申请 [FACT]</li><li>不覆盖协作可见性的自助申请 [FACT]</li><li>不做员工自由申请全部权限（必须预制范围） [FACT]</li><li>不做管理员侧的权限申请代办（审批人限定为上级负责人） [CONFIRMED]</li><li>不做审批通过后仍需人工执行的半自动模式 [FACT]</li></ul>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-10">
+      <h2 class="preview-section-heading">§9 待确认问题</h2>
+      <div class="preview-section-body"><h3>层级一：影响主方案是否成立</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>审批流引擎的接口能力是否支持&quot;审批通过后自动触发授权执行&quot;</td><td>若不可支持，自动生效需改为半自动，核心价值受损</td><td>后端架构师</td></tr><tr><td>自动授权执行接口就绪度</td><td>是否存在可被外部事件触发的授权执行接口</td><td>后端架构师</td></tr></tbody></table></div>
+<h3>层级二：影响局部体验设计</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>审批流引擎是否提供&quot;审批人已查看&quot;事件回调</td><td>影响申请进度时间线中&quot;审批人已查看&quot;节点的可行性</td><td>后端架构师</td></tr><tr><td>审批流引擎是否支持超时自动提醒</td><td>影响审批超时机制的实现方式</td><td>后端架构师</td></tr><tr><td>组织域中&quot;上级负责人&quot;关系是否已定义完整</td><td>影响审批人匹配的准确性和异常处理策略</td><td>产品/架构师</td></tr><tr><td>权限管理域是否有&quot;敏感等级&quot;标记</td><td>影响可申请目录的筛选逻辑和敏感权限保护机制</td><td>产品/知识维护方</td></tr><tr><td>员工端入口位置（工作台/导航/全局）</td><td>影响入口设计和引导策略</td><td>产品/体验决策方</td></tr></tbody></table></div>
+<p>---</p></div>
+    </section>
+  
+
+    <section class="preview-section-block" id="uxb-section-11">
+      <h2 class="preview-section-heading">附录：事实、知识与判断追踪</h2>
+      <div class="preview-section-body"><h3>原始输入事实</h3>
+<ul><li>当前做法：员工私下找老板或管理员申请，管理员集中处理</li><li>触发原因：中大型企业人员多、流动频繁，沟通成本高、时效不稳定</li><li>目标：员工自助查看和申请权限，管理员保留控制权</li><li>产品形态：企业数字化产品的权限管理模块</li><li>覆盖：功能权限和角色授权</li></ul>
+<h3>知识库支撑</h3>
+<div class="table-wrap"><table><thead><tr><th>知识来源</th><th>支撑了哪些判断</th></tr></thead><tbody><tr><td>权限管理/00_领域概述</td><td>确认权限管理域的定义和核心对象（主体、资源、动作、范围）</td></tr><tr><td>权限管理/01_范围与边界</td><td>确认权限域与相邻域（组织、应用、审批、协作）的边界；引用数据权限职责划分</td></tr><tr><td>权限管理/03_业务对象</td><td>确认主体、资源、动作、范围、来源、治理因子等对象定义，用于判断不做数据权限的边界合理性</td></tr><tr><td>权限管理/10_能力地图</td><td>确认现有能力覆盖（用户直授、角色授权、全局治理），判断自助申请是新增能力而非替代</td></tr><tr><td>权限管理/11_任务场景</td><td>确认现有授权场景链路（按人授权、按角色授权），判断自助申请路径与现有路径的并行关系</td></tr><tr><td>权限管理/14_角色边界</td><td>确认员工、子管理员、超级管理员的角色边界，判断审批人职责和可见范围</td></tr><tr><td>权限管理/15_页面载体语义</td><td>确认用户授权 Page、功能授权 Drawer 等页面类型和结构，作为后续体验参考</td></tr></tbody></table></div>
+<h3>AI 设计判断</h3>
+<ul><li>双入口策略（权限拦截处直达 + 工作台固定入口）— 对应 §7 承接要求第 1 条</li><li>角色与功能权限分栏展示 — 对应 §7 承接要求第 4 条</li><li>申请表单 Drawer + 单页结构（非步骤条）— 对应 §7 承接要求第 6 条</li><li>审批上下文三层信息（申请人信息 + 申请内容 + 权限风险说明）— 对应 §7 承接要求第 2 条</li><li>全链路状态追踪（含中间态）— 对应 §7 承接要求第 7 条</li></ul>
+<h3>未确认 GAP</h3>
+<p>见 §9 待确认问题。</p></div>
+    </section>
+  
+  
+  <footer class="preview-footer">
+    spark-output/uxb_output.md
+  </footer>
+</article>
+
+    </main>
+  </div>
+
+  <script type="application/json" id="preview-bootstrap-data">
+    {
+  "activeSkill": "uxb",
+  "skills": [
+    "uxb"
+  ]
+}
+  </script>
+  <script>
+    (function() {
+      function setActiveSkill(skill) {
+        var hasPanel = Boolean(document.querySelector('.preview-content-panel[data-skill="' + skill + '"]'));
+        if (!hasPanel) return;
+
+        var productSelect = document.getElementById('preview-product-select');
+        if (productSelect) productSelect.value = skill;
+
+        document.querySelectorAll('.preview-content-panel').forEach(function(panel) {
+          panel.classList.toggle('hidden', panel.dataset.skill !== skill);
+          panel.classList.toggle('is-active', panel.dataset.skill === skill);
+        });
+        document.querySelectorAll('.preview-nav-item').forEach(function(item) {
+          item.classList.toggle('hidden', item.dataset.skill !== skill);
+        });
+      }
+
+      var productSelect = document.getElementById('preview-product-select');
+      if (productSelect) {
+        productSelect.addEventListener('change', function() {
+          var previous = document.querySelector('.preview-content-panel.is-active');
+          setActiveSkill(productSelect.value);
+          if (!document.querySelector('.preview-content-panel[data-skill="' + productSelect.value + '"]') && previous) {
+            productSelect.value = previous.dataset.skill;
+          }
+        });
+      }
+
+      document.querySelectorAll('.preview-nav-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+          event.preventDefault();
+          var skill = item.dataset.skill;
+          if (skill) setActiveSkill(skill);
+          var targetId = item.getAttribute('href').replace('#', '');
+          var target = document.getElementById(targetId);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      document.querySelectorAll('.journey-phase-toggle').forEach(function(button) {
+        button.addEventListener('click', function() {
+          var card = button.closest('.journey-phase-card');
+          if (!card) return;
+          var collapsed = card.classList.toggle('is-collapsed');
+          button.textContent = collapsed ? '展开详情' : '收起详情';
+        });
+      });
+
+      var activePanel = document.querySelector('.preview-content-panel.is-active')
+        || document.querySelector('.preview-content-panel');
+      if (activePanel) setActiveSkill(activePanel.dataset.skill);
+    })();
+  </script>
+  
+</body>
+</html>

@@ -116,21 +116,21 @@ description: >
 
 | 产物类型 | Markdown | Context JSON | 渲染方式 | 输出 |
 |---|---|---|---|---|
-| 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | template-projection | `spark-output/preview/uxb_preview.html` |
+| 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | native-script | `spark-output/preview/uxb_preview.html` |
 | 问题框定 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
 | 用户故事 | `spark-output/stories.md` | `spark-output/context/stories.json` | native-script | `spark-output/preview/stories_preview.html` |
 | 角色旅程 | `spark-output/journey_analysis.md` | `spark-output/context/journey-analysis.json` | native-script | `spark-output/preview/journey_analysis_preview.html` |
-| 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | template-projection | `spark-output/preview/experience_blueprint_preview.html` |
+| 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | native-script | `spark-output/preview/experience_blueprint_preview.html` |
 
 集中资产：
 
 | 产物类型 | 模板 / 脚本 | 规则参考 |
 |---|---|---|
-| 业务蓝图 | `.claude/skills/preview-renderer/assets/skills/uxb/preview_template.html` | `.claude/skills/preview-renderer/assets/skills/uxb/html_preview_execution_guide.md` |
+| 业务蓝图 | `.claude/skills/preview-renderer/assets/skills/uxb/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/uxb/html_preview_execution_guide.md` |
 | 问题框定 | `.claude/skills/preview-renderer/assets/skills/problem-framing/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/problem-framing/html_preview_execution_guide.md` |
 | 用户故事 | `.claude/skills/preview-renderer/assets/skills/stories/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/stories/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/stories/html_preview_execution_guide.md` |
 | 角色旅程 | `.claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/journey-analysis/html_preview_execution_guide.md` |
-| 体验蓝图 | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html` | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/html_preview_execution_guide.md` |
+| 体验蓝图 | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/html_preview_execution_guide.md` |
 
 统一公共壳：
 
@@ -259,7 +259,7 @@ description: >
 
 - 已有正式 Markdown / Context JSON 的产物，才允许进入专属预览。
 - `problem-framing`、`stories`、`journey-analysis` 走 `native-script`，由集中脚本完成结构化投影。
-- `uxb`、`experience-blueprint` 使用已收口到 `preview-renderer` 的专属模板资产。
+- `uxb`、`experience-blueprint` 走 `native-script`，由集中脚本读取正式 Markdown 并注入专属内容模板。
 - `xft-design` 当前不属于正式产物投影预览范围，暂不接入。
 
 ## 边界
