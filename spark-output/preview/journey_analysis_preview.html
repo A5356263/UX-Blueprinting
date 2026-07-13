@@ -44,8 +44,8 @@
     }
 
     .preview-sidebar {
-      width: 280px;
-      min-width: 280px;
+      width: 200px;
+      min-width: 200px;
       background: var(--panel);
       border-right: 1px solid var(--line);
       padding: 14px 0;
@@ -110,8 +110,10 @@
 
     .preview-main {
       flex: 1;
+      min-width: 0;
+      width: 100%;
       padding: 32px 40px 80px;
-      max-width: 1080px;
+      max-width: 1400px;
     }
 
     .preview-content-panel { display: block; }
@@ -136,8 +138,8 @@
       font-weight: 500;
       color: var(--text);
       margin: 0 0 12px;
-      padding-left: 12px;
-      border-left: 3px solid var(--accent);
+      padding-left: 0;
+      border-left: 0;
     }
 
     .preview-section-heading.level-2,
@@ -264,18 +266,18 @@
     }
 
     .callout {
-      border-left: 3px solid var(--accent);
+      border-left: 0;
       background: var(--accent-soft);
       box-shadow: none;
     }
 
     .callout.warn {
-      border-left-color: var(--warn);
+      border-left-color: transparent;
       background: var(--warn-soft);
     }
 
     .callout.danger {
-      border-left-color: var(--danger);
+      border-left-color: transparent;
       background: var(--danger-soft);
     }
 
@@ -385,7 +387,9 @@
       --journey-muted: #6b7280;
       --journey-line: #e5e7eb;
       --journey-paper: #fff;
-      --journey-soft: #f3f4f6;
+      --journey-blue: #263c66;
+      --journey-blue-soft: #edf3fb;
+      --journey-soft: #f4f7fb;
       --journey-warm: #fef3c7;
       --journey-green: #ecfdf5;
       color: var(--journey-ink);
@@ -414,25 +418,25 @@
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 20px;
-      margin: 14px 0 26px;
-      background: var(--journey-paper);
-      border: 1px solid var(--journey-line);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      padding: 0;
+      margin: 12px 0 22px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .journey-avatar {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1, #ec4899);
+      background: var(--journey-blue);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 13px;
       flex: 0 0 auto;
     }
 
@@ -455,7 +459,7 @@
       margin: 0 0 26px;
       padding: 12px 16px;
       background: var(--journey-warm);
-      border-left: 4px solid #f59e0b;
+      border-left: 0;
       border-radius: 4px;
       font-size: 14px;
       line-height: 1.6;
@@ -470,7 +474,7 @@
 
     .journey-grid {
       display: grid;
-      min-width: 1080px;
+      min-width: max-content;
       gap: 1px;
       background: var(--journey-line);
       overflow: hidden;
@@ -486,9 +490,9 @@
     }
 
     .journey-label {
-      background: var(--journey-soft);
+      background: var(--journey-blue-soft);
       font-weight: 700;
-      color: #4b5563;
+      color: #29466f;
       display: flex;
       align-items: center;
       font-size: 13px;
@@ -498,23 +502,29 @@
     }
 
     .journey-stage-header {
-      background: #1f2937;
+      background: var(--journey-blue);
       color: white;
-      text-align: center;
+      text-align: left;
       font-size: 13px;
       font-weight: 700;
-      line-height: 1.45;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
     }
 
     .journey-stage-index {
-      display: block;
-      margin: 0 auto 6px;
-      width: 28px;
-      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.14);
-      line-height: 28px;
+      line-height: 22px;
       font-size: 12px;
+      flex: 0 0 auto;
     }
 
     .journey-cell {
@@ -554,7 +564,7 @@
       color: #4b5563;
       padding: 7px 9px;
       background: #f9fafb;
-      border-left: 3px solid #d1d5db;
+      border-left: 0;
       border-radius: 3px;
     }
 
@@ -640,32 +650,32 @@
       </div>
       <p class="journey-jtbd">员工在业务场景中被权限拦住，意识到需要某项功能权限或角色才能继续工作</p>
       <div class="journey-map-wrap">
-        <div class="journey-grid" style="grid-template-columns: 120px repeat(5, minmax(180px, 1fr));">
+        <div class="journey-grid" style="grid-template-columns: 120px repeat(5, 250px);">
           <div class="journey-label"></div>
           
     <div class="journey-stage-header">
       <span class="journey-stage-index">1</span>
-      感知需求与发现入口
+      <span>感知需求与发现入口</span>
     </div>
   
     <div class="journey-stage-header">
       <span class="journey-stage-index">2</span>
-      浏览与评估
+      <span>浏览与评估</span>
     </div>
   
     <div class="journey-stage-header">
       <span class="journey-stage-index">3</span>
-      申请提交
+      <span>申请提交</span>
     </div>
   
     <div class="journey-stage-header">
       <span class="journey-stage-index">4</span>
-      等待审批
+      <span>等待审批</span>
     </div>
   
     <div class="journey-stage-header">
       <span class="journey-stage-index">5</span>
-      结果处理
+      <span>结果处理</span>
     </div>
   
           

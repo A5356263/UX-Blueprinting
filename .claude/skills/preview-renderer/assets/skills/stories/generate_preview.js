@@ -3,6 +3,38 @@
 const fs = require("fs");
 const path = require("path");
 
+const TEXT = {
+  missing: "\u672a\u63d0\u4f9b",
+  product: "\u7528\u6237\u6545\u4e8b",
+  previewTitle: "\u7528\u6237\u6545\u4e8b\u9884\u89c8",
+  untitledProject: "\u672a\u547d\u540d\u9879\u76ee",
+  untitledStory: "\u672a\u547d\u540d\u6545\u4e8b",
+  overview: "\u6545\u4e8b\u6982\u89c8",
+  source: "\u6765\u6e90",
+  storyCount: "\u6545\u4e8b\u6570\u91cf",
+  p0: "P0 \u4e3b\u94fe",
+  assumption: "\u5173\u952e\u5047\u8bbe",
+  role: "\u89d2\u8272",
+  goal: "\u76ee\u6807",
+  scenario: "\u573a\u666f",
+  userTask: "\u7528\u6237\u8981\u5b8c\u6210\u4ec0\u4e48",
+  acceptance: "\u5b8c\u6210\u6807\u51c6",
+  touchpoints: "\u8bbe\u8ba1\u89e6\u70b9",
+  sourceRisk: "\u6765\u6e90\u4e0e\u98ce\u9669",
+  sourceBasis: "\u6765\u6e90\u4f9d\u636e",
+  risk: "\u98ce\u9669",
+  mainAndAssumption: "\u4e3b\u94fe\u4e0e\u5047\u8bbe",
+  p0List: "P0 \u4e3b\u94fe\u6e05\u5355",
+  auxiliaryList: "\u8f85\u52a9\u80fd\u529b\u6e05\u5355",
+  assumptionList: "\u5047\u8bbe\u9879\u6e05\u5355",
+  employee: "\u5458\u5de5",
+  approver: "\u5ba1\u6279\u4eba",
+  admin: "\u7ba1\u7406\u5458",
+  system: "\u7cfb\u7edf",
+  priorityMissing: "\u672a\u6807\u4f18\u5148\u7ea7",
+  summaryMissing: "\u672a\u63d0\u4f9b\u65b9\u5411\u6458\u8981"
+};
+
 function fail(message) {
   console.error(message);
   process.exit(1);
@@ -31,6 +63,14 @@ function requiredReplace(source, marker, value) {
   return source.replace(marker, value);
 }
 
+function formatValue(value) {
+  if (Array.isArray(value)) return value.map(formatValue).join("\uff1b");
+  if (value && typeof value === "object") {
+    return Object.entries(value).map(([key, item]) => `${key}: ${formatValue(item)}`).join("\uff1b");
+  }
+  return String(value ?? "").trim() || TEXT.missing;
+}
+
 function asList(value) {
   if (Array.isArray(value)) return value.filter((item) => item !== undefined && item !== null && String(item).trim());
   if (value && typeof value === "object") return Object.entries(value).map(([key, item]) => `${key}: ${formatValue(item)}`);
@@ -38,25 +78,27 @@ function asList(value) {
   return [value];
 }
 
-function formatValue(value) {
-  if (Array.isArray(value)) return value.map(formatValue).join("；");
-  if (value && typeof value === "object") return Object.entries(value).map(([key, item]) => `${key}: ${formatValue(item)}`).join("；");
-  return String(value ?? "").trim() || "未提供";
-}
-
 function renderList(items) {
   const list = asList(items);
-  if (!list.length) return '<p class="preview-empty">未提供</p>';
+  if (!list.length) return '<p class="preview-empty">' + TEXT.missing + "</p>";
   return `<ul>${list.map((item) => `<li>${escapeHtml(formatValue(item))}</li>`).join("")}</ul>`;
 }
 
 function normalizeRole(role) {
   const roleText = formatValue(role);
-  if (roleText.includes("员工")) return "员工";
-  if (roleText.includes("审批") || roleText.includes("负责人")) return "审批人";
-  if (roleText.includes("管理")) return "管理员";
-  if (roleText.includes("系统")) return "系统";
+  if (roleText.includes(TEXT.employee)) return TEXT.employee;
+  if (roleText.includes("\u5ba1\u6279") || roleText.includes("\u8d1f\u8d23\u4eba")) return TEXT.approver;
+  if (roleText.includes("\u7ba1\u7406")) return TEXT.admin;
+  if (roleText.includes(TEXT.system)) return TEXT.system;
   return roleText;
+}
+
+function roleIcon(role) {
+  if (role === TEXT.employee) return "01";
+  if (role === TEXT.approver) return "02";
+  if (role === TEXT.admin) return "03";
+  if (role === TEXT.system) return "04";
+  return "#";
 }
 
 function priorityClass(priority) {
@@ -68,33 +110,33 @@ function renderStoryCard(story) {
   return `
     <article class="story-card">
       <div class="story-card-head">
-        <h3>${escapeHtml(story.id || "Story")} · ${escapeHtml(story.title || "未命名故事")}</h3>
+        <h3>${escapeHtml(story.id || "Story")} · ${escapeHtml(story.title || TEXT.untitledStory)}</h3>
       </div>
       <div class="story-meta">
-        <span class="story-pill ${priorityClass(story.priority)}">${escapeHtml(story.priority || "未标优先级")}</span>
+        <span class="story-pill ${priorityClass(story.priority)}">${escapeHtml(story.priority || TEXT.priorityMissing)}</span>
         <span class="story-pill">${escapeHtml(story.size || story.type || "Story")}</span>
-        ${assumption ? '<span class="story-pill assumption">关键假设</span>' : ""}
+        ${assumption ? `<span class="story-pill assumption">${TEXT.assumption}</span>` : ""}
       </div>
-      <p><strong>角色：</strong>${escapeHtml(story.persona || story.role || "未提供")}</p>
-      <p><strong>目标：</strong>${escapeHtml(story.goal || "未提供")}</p>
-      <p><strong>场景：</strong>${escapeHtml(story.scenario || "未提供")}</p>
+      <p><strong>${TEXT.role}\uff1a</strong>${escapeHtml(story.persona || story.role || TEXT.missing)}</p>
+      <p><strong>${TEXT.goal}\uff1a</strong>${escapeHtml(story.goal || TEXT.missing)}</p>
+      <p><strong>${TEXT.scenario}\uff1a</strong>${escapeHtml(story.scenario || TEXT.missing)}</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
-        <p>${escapeHtml(story.story_text || story.user_story || "未提供")}</p>
+        <h4>${TEXT.userTask}</h4>
+        <p>${escapeHtml(story.story_text || story.user_story || TEXT.missing)}</p>
       </div>
       <div class="story-card-section">
-        <h4>完成标准</h4>
+        <h4>${TEXT.acceptance}</h4>
         ${renderList(story.acceptance_criteria)}
       </div>
       <div class="story-card-section">
-        <h4>设计触点</h4>
+        <h4>${TEXT.touchpoints}</h4>
         ${renderList(story.design_touchpoints)}
       </div>
       <div class="story-card-section">
-        <h4>来源与风险</h4>
-        <p><strong>来源依据：</strong>${escapeHtml(story.source_basis || "未提供")}</p>
-        <p><strong>风险：</strong>${escapeHtml(story.risk || "未提供")}</p>
-        ${assumption ? `<p><strong>关键假设：</strong>${escapeHtml(assumption)}</p>` : ""}
+        <h4>${TEXT.sourceRisk}</h4>
+        <p><strong>${TEXT.sourceBasis}\uff1a</strong>${escapeHtml(story.source_basis || TEXT.missing)}</p>
+        <p><strong>${TEXT.risk}\uff1a</strong>${escapeHtml(story.risk || TEXT.missing)}</p>
+        ${assumption ? `<p><strong>${TEXT.assumption}\uff1a</strong>${escapeHtml(assumption)}</p>` : ""}
       </div>
     </article>
   `;
@@ -118,19 +160,19 @@ function buildContent(data) {
 
   const p0Count = stories.filter((story) => String(story.priority || "").toUpperCase() === "P0").length;
   const assumptionCount = stories.filter((story) => story.critical_assumption).length;
-  const nav = [{ id: "stories-overview", title: "故事概览", level: 1 }];
+  const nav = [{ id: "stories-overview", title: TEXT.overview, level: 1 }];
 
   let html = `
-    <h1 class="preview-document-title">用户故事：${escapeHtml(data.project_name || "未命名项目")}</h1>
+    <h1 class="preview-document-title">${TEXT.product}\uff1a${escapeHtml(data.project_name || TEXT.untitledProject)}</h1>
     <section class="preview-section-block" id="stories-overview">
-      <h2 class="preview-section-heading">故事概览</h2>
+      <h2 class="preview-section-heading">${TEXT.overview}</h2>
       <div class="story-summary">
-        <div class="story-summary-card"><span>来源</span><strong>${escapeHtml(data.source_mode || data.source || "未提供")}</strong></div>
-        <div class="story-summary-card"><span>故事数量</span><strong>${stories.length}</strong></div>
-        <div class="story-summary-card"><span>P0 主链</span><strong>${p0Count}</strong></div>
-        <div class="story-summary-card"><span>关键假设</span><strong>${assumptionCount}</strong></div>
+        <div class="story-summary-card"><span>${TEXT.source}</span><strong>${escapeHtml(data.source_mode || data.source || TEXT.missing)}</strong></div>
+        <div class="story-summary-card"><span>${TEXT.storyCount}</span><strong>${stories.length}</strong></div>
+        <div class="story-summary-card"><span>${TEXT.p0}</span><strong>${p0Count}</strong></div>
+        <div class="story-summary-card"><span>${TEXT.assumption}</span><strong>${assumptionCount}</strong></div>
       </div>
-      <p>${escapeHtml(data.direction || data.summary || "未提供方向摘要")}</p>
+      <p>${escapeHtml(data.direction || data.summary || TEXT.summaryMissing)}</p>
     </section>
   `;
 
@@ -139,7 +181,7 @@ function buildContent(data) {
     nav.push({ id, title: role, level: 1 });
     html += `
       <section class="preview-section-block story-role-group" id="${id}">
-        <h2 class="story-role-title">${escapeHtml(role)}</h2>
+        <h2 class="story-role-title"><span class="story-role-icon">${escapeHtml(roleIcon(role))}</span>${escapeHtml(role)}</h2>
         <div class="story-grid">${roleStories.map(renderStoryCard).join("")}</div>
       </section>
     `;
@@ -153,16 +195,16 @@ function buildContent(data) {
     .map((story) => `${story.id || "Story"} ${story.title || ""}`.trim());
   const assumptions = stories
     .filter((story) => story.critical_assumption)
-    .map((story) => `${story.id || "Story"}：${story.critical_assumption}`);
+    .map((story) => `${story.id || "Story"}\uff1a${story.critical_assumption}`);
 
-  nav.push({ id: "stories-lists", title: "主链与假设", level: 1 });
+  nav.push({ id: "stories-lists", title: TEXT.mainAndAssumption, level: 1 });
   html += `
     <section class="preview-section-block" id="stories-lists">
-      <h2 class="preview-section-heading">主链与假设</h2>
+      <h2 class="preview-section-heading">${TEXT.mainAndAssumption}</h2>
       <div class="preview-section-body">
-        <h3>P0 主链清单</h3>${renderList(p0Stories)}
-        <h3>辅助能力清单</h3>${renderList(auxiliaryStories)}
-        <h3>假设项清单</h3>${renderList(assumptions)}
+        <h3>${TEXT.p0List}</h3>${renderList(p0Stories)}
+        <h3>${TEXT.auxiliaryList}</h3>${renderList(auxiliaryStories)}
+        <h3>${TEXT.assumptionList}</h3>${renderList(assumptions)}
       </div>
     </section>
   `;
@@ -193,7 +235,7 @@ function main() {
   const bootstrapData = JSON.stringify({ activeSkill: "stories", skills: ["stories"] }, null, 2);
 
   let html = shellRaw;
-  html = html.replace("<title>统一预览</title>", `<title>用户故事预览 - ${escapeHtml(data.project_name || "未命名项目")}</title>`);
+  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(data.project_name || TEXT.untitledProject)}</title>`);
   html = requiredReplace(html, "<!-- PREVIEW_SIDEBAR_NAV -->", sidebarNav);
   html = requiredReplace(html, "<!-- PREVIEW_CONTENT -->", contentHtml);
   html = requiredReplace(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);

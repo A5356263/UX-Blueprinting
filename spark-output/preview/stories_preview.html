@@ -44,8 +44,8 @@
     }
 
     .preview-sidebar {
-      width: 280px;
-      min-width: 280px;
+      width: 200px;
+      min-width: 200px;
       background: var(--panel);
       border-right: 1px solid var(--line);
       padding: 14px 0;
@@ -110,8 +110,10 @@
 
     .preview-main {
       flex: 1;
+      min-width: 0;
+      width: 100%;
       padding: 32px 40px 80px;
-      max-width: 1080px;
+      max-width: 1400px;
     }
 
     .preview-content-panel { display: block; }
@@ -136,8 +138,8 @@
       font-weight: 500;
       color: var(--text);
       margin: 0 0 12px;
-      padding-left: 12px;
-      border-left: 3px solid var(--accent);
+      padding-left: 0;
+      border-left: 0;
     }
 
     .preview-section-heading.level-2,
@@ -264,18 +266,18 @@
     }
 
     .callout {
-      border-left: 3px solid var(--accent);
+      border-left: 0;
       background: var(--accent-soft);
       box-shadow: none;
     }
 
     .callout.warn {
-      border-left-color: var(--warn);
+      border-left-color: transparent;
       background: var(--warn-soft);
     }
 
     .callout.danger {
-      border-left-color: var(--danger);
+      border-left-color: transparent;
       background: var(--danger-soft);
     }
 
@@ -388,17 +390,30 @@
     .story-summary {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 0 0 24px;
+      gap: 14px;
+      margin: 0 0 28px;
     }
-    .story-summary-card,
+
+    .story-summary-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(31,41,55,0.06);
+      padding: 16px 18px;
+    }
+
+    .story-summary-card:nth-child(1) { background: #eef3f8; }
+    .story-summary-card:nth-child(2) { background: #f1eff8; }
+    .story-summary-card:nth-child(3) { background: #f8f0e8; }
+    .story-summary-card:nth-child(4) { background: #eef6f1; }
+
     .story-card {
       background: #fff;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      padding: 14px 16px;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(31,41,55,0.08);
+      padding: 18px 20px;
     }
+
     .story-summary-card span {
       display: block;
       color: var(--text-muted);
@@ -410,19 +425,37 @@
       font-size: 18px;
     }
     .story-role-group {
-      margin: 0 0 28px;
+      margin: 0 0 34px;
     }
+
     .story-role-title {
-      margin: 0 0 12px;
-      color: var(--accent-strong);
-      font-size: 18px;
-      font-weight: 700;
+      margin: 0 0 16px;
+      color: #111827;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
     }
+
+    .story-role-title .story-role-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      border-radius: 999px;
+      background: #e8f1ee;
+      color: var(--accent-strong);
+      font-size: 15px;
+      vertical-align: 2px;
+    }
+
     .story-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
     }
+
     .story-card-head {
       display: flex;
       justify-content: space-between;
@@ -433,8 +466,10 @@
     .story-card h3 {
       margin: 0;
       color: #111827;
-      font-size: 16px;
+      font-size: 17px;
+      line-height: 1.45;
     }
+
     .story-meta {
       display: flex;
       flex-wrap: wrap;
@@ -454,15 +489,16 @@
     .story-pill.p0 { background: #ecfdf5; color: #047857; }
     .story-pill.assumption { background: #fef3c7; color: #b45309; }
     .story-card-section {
-      margin-top: 10px;
-      padding-top: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
       border-top: 1px solid var(--line);
     }
+
     .story-card-section h4 {
       margin: 0 0 6px;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 700;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 850;
     }
     .story-card-section ul {
       margin: 0;
@@ -470,7 +506,13 @@
     }
     .story-card-section li {
       margin: 3px 0;
-      line-height: 1.45;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   
@@ -487,7 +529,7 @@
     </section>
   
       <section class="preview-section-block story-role-group" id="stories-role-1">
-        <h2 class="story-role-title">员工</h2>
+        <h2 class="story-role-title"><span class="story-role-icon">01</span>员工</h2>
         <div class="story-grid">
     <article class="story-card">
       <div class="story-card-head">
@@ -502,7 +544,7 @@
       <p><strong>目标：</strong>知道自己当前能申请哪些功能权限和角色</p>
       <p><strong>场景：</strong>新员工入职了解可申请权限；因业务变更寻找对应权限</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为员工，我想查看可申请的功能权限和角色列表，了解每个权限的名称、所属应用、作用和申请前提，从而判断哪些权限适合我当前的工作需要。</p>
       </div>
       <div class="story-card-section">
@@ -534,7 +576,7 @@
       <p><strong>目标：</strong>提交权限申请并附上申请理由，等待审批处理</p>
       <p><strong>场景：</strong>确定了需要某个权限或角色，发起申请流程</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为员工，当我确认需要的权限后，我想选择一项或多项功能权限/角色并发起申请，填写申请理由，从而让审批人了解我的需求并处理审批。</p>
       </div>
       <div class="story-card-section">
@@ -566,7 +608,7 @@
       <p><strong>目标：</strong>了解自己当前已生效的功能权限和所属角色</p>
       <p><strong>场景：</strong>申请前了解已有权限现状；被拒绝后确认当前权限边界</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为员工，我想查看我已拥有的功能权限和所属的角色列表，了解每个权限的来源（直接授予/通过角色获得）和生效状态，从而避免重复申请和了解自己的权限范围。</p>
       </div>
       <div class="story-card-section">
@@ -598,7 +640,7 @@
       <p><strong>目标：</strong>了解已提交申请的审批进度和最终结果</p>
       <p><strong>场景：</strong>提交申请后等待审批结果；查看历史申请记录</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为员工，提交权限申请后，我想随时查看我所有申请记录的当前状态和审批进度，当申请被处理时收到通知，从而及时了解申请是否通过或需要补充信息。</p>
       </div>
       <div class="story-card-section">
@@ -620,7 +662,7 @@
       </section>
     
       <section class="preview-section-block story-role-group" id="stories-role-2">
-        <h2 class="story-role-title">审批人</h2>
+        <h2 class="story-role-title"><span class="story-role-icon">02</span>审批人</h2>
         <div class="story-grid">
     <article class="story-card">
       <div class="story-card-head">
@@ -635,7 +677,7 @@
       <p><strong>目标：</strong>快速处理下属的权限申请，做出通过或拒绝的判断</p>
       <p><strong>场景：</strong>下属提交权限申请后，审批人收到待办需要判断合理性</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为上级组织负责人，当有下属提交权限申请时，我想在审批待办中看到申请详情，包括申请内容、申请理由和权限说明，从而快速判断该申请是否合理并做出审批决定。</p>
       </div>
       <div class="story-card-section">
@@ -657,7 +699,7 @@
       </section>
     
       <section class="preview-section-block story-role-group" id="stories-role-3">
-        <h2 class="story-role-title">系统</h2>
+        <h2 class="story-role-title"><span class="story-role-icon">04</span>系统</h2>
         <div class="story-grid">
     <article class="story-card">
       <div class="story-card-head">
@@ -672,7 +714,7 @@
       <p><strong>目标：</strong>审批通过后即时自动执行授权，实现无人工干预的生效链路</p>
       <p><strong>场景：</strong>审批人通过申请后，系统自动执行授权操作</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为系统，当审批人通过一项权限申请后，我想自动为申请人执行对应的授权操作（添加功能权限或加入角色），记录完整的授权链路和审计日志，从而实现审批通过即生效并确保可追溯。</p>
       </div>
       <div class="story-card-section">
@@ -694,7 +736,7 @@
       </section>
     
       <section class="preview-section-block story-role-group" id="stories-role-4">
-        <h2 class="story-role-title">管理员</h2>
+        <h2 class="story-role-title"><span class="story-role-icon">03</span>管理员</h2>
         <div class="story-grid">
     <article class="story-card">
       <div class="story-card-head">
@@ -709,7 +751,7 @@
       <p><strong>目标：</strong>标记哪些角色和功能权限可供员工自助申请，控制自助申请的边界</p>
       <p><strong>场景：</strong>初始化自助申请功能时配置可申请目录；日常运营中调整可申请范围</p>
       <div class="story-card-section">
-        <h4>Story 主体</h4>
+        <h4>用户要完成什么</h4>
         <p>作为权限管理员，我想在管理后台配置哪些角色和功能权限可供员工自助申请，对敏感或高风险权限进行保护性排除，从而在控制安全边界的前提下让员工自主获取权限。</p>
       </div>
       <div class="story-card-section">

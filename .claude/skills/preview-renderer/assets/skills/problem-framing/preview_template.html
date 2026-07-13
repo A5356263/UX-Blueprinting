@@ -1,42 +1,91 @@
 <article class="preview-content-panel is-active" data-skill="problem-framing">
   <style>
-    .pf-hero {
+    .pf-document-lead {
+      margin: 0 0 26px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pf-lead-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin: 0 0 24px;
+      gap: 18px;
+      margin-top: 18px;
     }
-    .pf-card {
-      background: var(--panel-strong);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      box-shadow: var(--shadow);
+
+    .pf-lead-item {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 18px;
+      align-items: start;
     }
-    .pf-card-label {
-      margin: 0 0 6px;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 600;
+
+    .pf-lead-label {
+      margin: 0;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
-    .pf-card-value {
+
+    .pf-lead-value {
       margin: 0;
       color: var(--text);
-      font-size: 14px;
-      line-height: 1.55;
+      font-size: 15px;
+      line-height: 1.75;
     }
+
+    .pf-section-icon {
+      margin-right: 8px;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .pf-subtitle {
+      margin: 18px 0 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
     .pf-list {
       margin: 8px 0 0;
-      padding: 0;
-      list-style: none;
+      padding-left: 22px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .pf-list li {
+      padding-left: 2px;
+      line-height: 1.7;
+    }
+
+    .pf-list li::marker {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .pf-number-list {
+      margin: 8px 0 0;
+      padding-left: 24px;
       display: grid;
       gap: 8px;
     }
-    .pf-list li {
-      padding: 8px 10px;
-      background: var(--panel-subtle);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+
+    .pf-number-list li {
+      line-height: 1.7;
+      padding-left: 2px;
+    }
+
+    .pf-number-list li::marker {
+      color: var(--accent-strong);
+      font-weight: 900;
+    }
+
+    @media (max-width: 760px) {
+      .pf-lead-item {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
     }
   </style>
   <!-- PROBLEM_FRAMING_CONTENT -->

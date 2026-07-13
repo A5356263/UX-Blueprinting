@@ -3,17 +3,30 @@
     .story-summary {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 0 0 24px;
+      gap: 14px;
+      margin: 0 0 28px;
     }
-    .story-summary-card,
+
+    .story-summary-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(31,41,55,0.06);
+      padding: 16px 18px;
+    }
+
+    .story-summary-card:nth-child(1) { background: #eef3f8; }
+    .story-summary-card:nth-child(2) { background: #f1eff8; }
+    .story-summary-card:nth-child(3) { background: #f8f0e8; }
+    .story-summary-card:nth-child(4) { background: #eef6f1; }
+
     .story-card {
       background: #fff;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      padding: 14px 16px;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(31,41,55,0.08);
+      padding: 18px 20px;
     }
+
     .story-summary-card span {
       display: block;
       color: var(--text-muted);
@@ -25,19 +38,37 @@
       font-size: 18px;
     }
     .story-role-group {
-      margin: 0 0 28px;
+      margin: 0 0 34px;
     }
+
     .story-role-title {
-      margin: 0 0 12px;
-      color: var(--accent-strong);
-      font-size: 18px;
-      font-weight: 700;
+      margin: 0 0 16px;
+      color: #111827;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
     }
+
+    .story-role-title .story-role-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      border-radius: 999px;
+      background: #e8f1ee;
+      color: var(--accent-strong);
+      font-size: 15px;
+      vertical-align: 2px;
+    }
+
     .story-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
     }
+
     .story-card-head {
       display: flex;
       justify-content: space-between;
@@ -48,8 +79,10 @@
     .story-card h3 {
       margin: 0;
       color: #111827;
-      font-size: 16px;
+      font-size: 17px;
+      line-height: 1.45;
     }
+
     .story-meta {
       display: flex;
       flex-wrap: wrap;
@@ -69,15 +102,16 @@
     .story-pill.p0 { background: #ecfdf5; color: #047857; }
     .story-pill.assumption { background: #fef3c7; color: #b45309; }
     .story-card-section {
-      margin-top: 10px;
-      padding-top: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
       border-top: 1px solid var(--line);
     }
+
     .story-card-section h4 {
       margin: 0 0 6px;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 700;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 850;
     }
     .story-card-section ul {
       margin: 0;
@@ -85,7 +119,13 @@
     }
     .story-card-section li {
       margin: 3px 0;
-      line-height: 1.45;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <!-- STORIES_CONTENT -->

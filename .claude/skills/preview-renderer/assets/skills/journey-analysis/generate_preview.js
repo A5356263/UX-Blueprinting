@@ -3,6 +3,22 @@
 const fs = require("fs");
 const path = require("path");
 
+const TEXT = {
+  missing: "\u672a\u63d0\u4f9b",
+  product: "\u89d2\u8272\u65c5\u7a0b",
+  previewTitle: "\u89d2\u8272\u65c5\u7a0b\u9884\u89c8",
+  userGoal: "\u7528\u6237\u76ee\u6807",
+  userAction: "\u7528\u6237\u884c\u52a8",
+  touchpoint: "\u89e6\u70b9",
+  userVoice: "\u7528\u6237\u5fc3\u58f0",
+  confidenceRisk: "\u4fe1\u5fc3\u4e0e\u98ce\u9669",
+  painPoint: "\u75db\u70b9",
+  opportunity: "\u8bbe\u8ba1\u673a\u4f1a",
+  transition: "\u9636\u6bb5\u8f6c\u6298",
+  high: "\u9ad8",
+  low: "\u4f4e"
+};
+
 function fail(message) {
   console.error(message);
   process.exit(1);
@@ -30,8 +46,8 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function text(value, fallback = "未提供") {
-  if (Array.isArray(value)) return value.length ? value.map((item) => text(item, fallback)).join("；") : fallback;
+function text(value, fallback = TEXT.missing) {
+  if (Array.isArray(value)) return value.length ? value.map((item) => text(item, fallback)).join("\uff1b") : fallback;
   if (value && typeof value === "object") return text(value.direction || value.label || value.name || fallback, fallback);
   const normalized = String(value ?? "").trim();
   return normalized || fallback;
@@ -45,8 +61,8 @@ function listHtml(value) {
 
 function confidenceClass(value) {
   const normalized = text(value, "");
-  if (normalized.includes("高")) return "journey-confidence-high";
-  if (normalized.includes("低")) return "journey-confidence-low";
+  if (normalized.includes(TEXT.high)) return "journey-confidence-high";
+  if (normalized.includes(TEXT.low)) return "journey-confidence-low";
   return "journey-confidence-medium";
 }
 
@@ -87,35 +103,35 @@ function renderTransitions(transitions) {
     const from = text(item.from);
     const to = text(item.to);
     const reason = text(item.reason);
-    return `${from} -> ${to}：${reason}`;
-  }).map(escapeHtml).join("；")}</p>`;
+    return `${from} -> ${to}\uff1a${reason}`;
+  }).map(escapeHtml).join("\uff1b")}</p>`;
 }
 
 function renderJourney(journey, index, data) {
   const stages = Array.isArray(journey.stages) ? journey.stages : [];
-  const columns = `120px repeat(${Math.max(stages.length, 1)}, minmax(180px, 1fr))`;
+  const columns = `120px repeat(${Math.max(stages.length, 1)}, 250px)`;
   const primaryRole = text(journey.role || data.primary_role);
   const stageHeaders = stages.map((stage, stageIndex) => `
     <div class="journey-stage-header">
       <span class="journey-stage-index">${stageIndex + 1}</span>
-      ${escapeHtml(text(stage.name))}
+      <span>${escapeHtml(text(stage.name))}</span>
     </div>
   `).join("");
 
   const rows = [
-    renderRow("用户目标", stages, (stage) => `<div class="journey-goal">${escapeHtml(text(stage.goal))}</div>`),
-    renderRow("用户行动", stages, (stage) => listHtml(stage.actions)),
-    renderRow("触点", stages, (stage) => listHtml(stage.touchpoints)),
-    renderRow("用户心声", stages, (stage) => `<div class="journey-quote">${escapeHtml(text(stage.user_voice))}</div>`),
-    renderRow("信心与风险", stages, renderSignal),
-    renderRow("痛点", stages, (stage) => listHtml(stage.pain_points)),
-    renderRow("设计机会", stages, (stage) => renderOpportunities(stage.opportunities))
+    renderRow(TEXT.userGoal, stages, (stage) => `<div class="journey-goal">${escapeHtml(text(stage.goal))}</div>`),
+    renderRow(TEXT.userAction, stages, (stage) => listHtml(stage.actions)),
+    renderRow(TEXT.touchpoint, stages, (stage) => listHtml(stage.touchpoints)),
+    renderRow(TEXT.userVoice, stages, (stage) => `<div class="journey-quote">${escapeHtml(text(stage.user_voice))}</div>`),
+    renderRow(TEXT.confidenceRisk, stages, renderSignal),
+    renderRow(TEXT.painPoint, stages, (stage) => listHtml(stage.pain_points)),
+    renderRow(TEXT.opportunity, stages, (stage) => renderOpportunities(stage.opportunities))
   ].join("");
 
   return `
     <section class="preview-section-block" id="journey-analysis-section-${index}" data-section-key="journey-${index}">
       <div class="journey-header">
-        <h1 class="journey-title">${escapeHtml(text(data.project_name, "角色旅程"))} - User Journey Map</h1>
+        <h1 class="journey-title">${escapeHtml(text(data.project_name, TEXT.product))} - User Journey Map</h1>
         <p class="journey-subtitle">${escapeHtml(text(data.generated_at))} / ${escapeHtml(text(data.mode))} / ${escapeHtml(text(data.source))}</p>
       </div>
       <div class="journey-persona-card">
@@ -129,12 +145,12 @@ function renderJourney(journey, index, data) {
       <div class="journey-map-wrap">
         <div class="journey-grid" style="grid-template-columns: ${columns};">
           <div class="journey-label"></div>
-          ${stageHeaders || `<div class="journey-stage-header"><span class="journey-stage-index">1</span>${escapeHtml(text(null))}</div>`}
+          ${stageHeaders || `<div class="journey-stage-header"><span class="journey-stage-index">1</span><span>${escapeHtml(text(null))}</span></div>`}
           ${rows}
         </div>
       </div>
       <div class="journey-transition">
-        <h3>阶段转折</h3>
+        <h3>${TEXT.transition}</h3>
         ${renderTransitions(journey.key_transitions)}
       </div>
     </section>
@@ -146,7 +162,7 @@ function buildContent(data) {
   if (!journeys.length) {
     return `
       <section class="preview-section-block" id="journey-analysis-section-0">
-        <h1 class="journey-title">${escapeHtml(text(data.project_name, "角色旅程"))}</h1>
+        <h1 class="journey-title">${escapeHtml(text(data.project_name, TEXT.product))}</h1>
         <p>${escapeHtml(text(null))}</p>
       </section>
     `;
@@ -195,14 +211,14 @@ function main() {
   }
 
   const contentHtml = replaceRequired(templateRaw, "<!-- JOURNEY_CONTENT -->", buildContent(contextData));
-  const sidebarNav = '<a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">角色旅程</a>';
+  const sidebarNav = `<a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">${TEXT.product}</a>`;
   const bootstrapData = JSON.stringify({
     activeSkill: "journey-analysis",
     skills: ["journey-analysis"]
   }, null, 2);
 
   let html = shellRaw;
-  html = html.replace("<title>统一预览</title>", `<title>角色旅程预览 - ${escapeHtml(text(contextData.project_name, "角色旅程"))}</title>`);
+  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(text(contextData.project_name, TEXT.product))}</title>`);
   html = replaceRequired(html, "<!-- PREVIEW_SIDEBAR_NAV -->", sidebarNav);
   html = replaceRequired(html, "<!-- PREVIEW_CONTENT -->", contentHtml);
   html = replaceRequired(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);
