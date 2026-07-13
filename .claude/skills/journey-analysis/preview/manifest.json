@@ -1,0 +1,21 @@
+{
+  "skill_id": "journey-analysis",
+  "label": "角色旅程",
+  "enabled": true,
+  "source_files": [
+    "spark-output/journey_analysis.md",
+    "spark-output/context/journey-analysis.json"
+  ],
+  "template_path": ".claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html",
+  "output_path": "spark-output/preview/journey_analysis_preview.html",
+  "container_slot": "journey-analysis",
+  "section_source": "json",
+  "nav_mode": "skill-sections",
+  "requires_confirmation": true,
+  "render_engine": "native-script",
+  "style_profile": "experience-blueprint-like",
+  "fallback_mode": "raw-markdown",
+  "generator_script": ".claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js",
+  "generator_command": "node .claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js .claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html spark-output/context/journey-analysis.json spark-output/preview/journey_analysis_preview.html",
+  "legacy_preview_retained": true
+}

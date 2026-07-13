@@ -1,0 +1,19 @@
+{
+  "skill_id": "experience-blueprint",
+  "label": "体验蓝图",
+  "enabled": true,
+  "source_files": [
+    "spark-output/experience_blueprint.md",
+    "spark-output/context/experience-blueprint.json"
+  ],
+  "template_path": ".claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html",
+  "output_path": "spark-output/preview/experience_blueprint_preview.html",
+  "container_slot": "experience-blueprint",
+  "section_source": "markdown+json",
+  "nav_mode": "dual-panel-sections",
+  "requires_confirmation": true,
+  "render_engine": "template-projection",
+  "style_profile": "experience-blueprint-like",
+  "fallback_mode": "raw-markdown",
+  "legacy_preview_retained": true
+}
