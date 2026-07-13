@@ -577,6 +577,13 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 - 不允许把 `未提供` 伪装成结论。
 - 不允许把推导冒充原文。
+- 当来源链路包含 `problem-framing` 与 `stories` 时，必须进一步区分：
+  - 来自 `problem-framing` 的业务边界、角色、规则、承接契约。
+  - 来自 `stories` 的任务单元、验收口径、设计触点。
+  - 基于旅程分析方法形成的体验推导。
+- 体验推导不得写成上游事实。
+- 每个高流失风险、低信心点、关键转折和设计机会，都必须能追溯到上游来源或明确标为规则推导。
+- 如果关键角色、阶段目标或主任务不明确，必须先补问；补问后仍不清晰时，只能输出骨架旅程或降级结果。
 
 ## 旅程骨架输出规则
 
@@ -661,6 +668,8 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 未补问时，`user_completion` 可为空对象。
 - 输出骨架时，`result_level = skeleton`。
 - 输出完整旅程时，`result_level = full` 或 `completed`。
+- `evidence_sources[]` 必须记录来源分层，不得只写泛化的“上游材料”。
+- 当字段来自体验推导时，必须在来源说明中标为 `规则推导`。
 
 向后兼容原则：
 
@@ -676,7 +685,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 固定提示口径：
 
 ```text
-角色旅程 Markdown 已生成。如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+角色旅程 Markdown 与 Context JSON 已生成。如果需要，我可以继续交给 `preview-renderer` 渲染 HTML 预览。
 ```
 
 ## Context JSON 校验

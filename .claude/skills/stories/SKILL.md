@@ -68,6 +68,9 @@ description: >
 - `confirmed_facts` 可直接消费
 - `working_assumptions` 可有限消费，但必须显式标记
 - `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
+- 上游明确排除的范围，不得滑入 P0/P1 主线 Story
+- 为体验完整性推导出的辅助能力，必须标为辅助能力或 P1/P2，不得抢主链
+- 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在 `source_basis` 中说明
 
 ## 核心判断规则
 
@@ -184,6 +187,14 @@ Story 索引必须包含：
 Story 主体使用用户能理解的自然语言，不写工程字段、接口、表结构或页面布局。
 
 完成标准必须可观察、可验证。来源为 `problem-framing` 时，未确认项不得直接写入完成标准。
+
+来源为 `problem-framing` 时，完成标准还必须满足：
+
+- 只能把 `confirmed_facts` 写成稳定验收标准。
+- `working_assumptions` 可进入 Story，但必须在 `critical_assumption` 或 `risk` 中显式标记。
+- `open_gaps` 不得写入验收标准。
+- 上游明确限定或排除的内容，不得作为 P0/P1 主线验收标准。
+- 为体验闭环推导出的辅助能力，必须降级为辅助 Story 或可选增强，不得覆盖上游主任务。
 
 设计触点只写：
 
@@ -302,8 +313,21 @@ Markdown 固定结构：
 - `acceptance_criteria[]` 每个 Story 至少 2 条。
 - `design_touchpoints[]` 每个 Story 至少 1 条。
 - 若 `critical_assumption` 非空，必须与对应 `risk` 或 `gaps[]` 对齐。
+- P0 Story 必须能追溯到 `confirmed_facts`、UXB 定案或 problem-framing 承接契约。
+- 辅助能力或可选增强不得伪装成主线 Story。
 
 写入失败不阻断完成，但应在输出中提示。
+
+## 预览交接
+
+- `stories` 自身不生成 HTML 预览。
+- 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`。
+- 不得为了预览修改当前 Skill 的正式 Markdown、Context JSON、Story 优先级或验收标准。
+- 固定提示口径：
+
+```text
+用户故事 Markdown 与 Context JSON 已生成。如果需要，我可以继续交给 `preview-renderer` 渲染 HTML 预览。
+```
 
 ## 交接
 
@@ -314,6 +338,7 @@ Markdown 固定结构：
 3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术。
 4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`。
 5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续。
+6. 完成前必须确认已输出预览交接提示。
 
 默认推荐下游：
 

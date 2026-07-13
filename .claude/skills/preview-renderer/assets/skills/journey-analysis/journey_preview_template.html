@@ -1,250 +1,250 @@
 <article class="preview-content-panel is-active" data-skill="journey-analysis" id="journey-analysis-panel">
-  <!-- CONTENT_NAV_ITEMS -->
   <style>
-    .journey-role {
-      margin-top: 28px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .journey-page {
+      --journey-ink: #1f2937;
+      --journey-muted: #6b7280;
+      --journey-line: #e5e7eb;
+      --journey-paper: #fff;
+      --journey-soft: #f3f4f6;
+      --journey-warm: #fef3c7;
+      --journey-green: #ecfdf5;
+      color: var(--journey-ink);
     }
 
-    .journey-role-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel-strong);
+    .journey-header {
+      margin-bottom: 22px;
     }
 
-    .journey-role-title {
+    .journey-title {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--journey-ink);
+    }
+
+    .journey-subtitle {
       margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-strong);
-    }
-
-    .journey-role-note {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 13px;
-      text-align: right;
-      max-width: 560px;
-    }
-
-    .journey-matrix-wrap {
-      overflow-x: auto;
-      background: var(--panel);
-    }
-
-    .journey-matrix {
-      display: grid;
-      min-width: 980px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .journey-cell {
-      min-height: 82px;
-      padding: 14px 16px;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
       font-size: 14px;
-      white-space: pre-wrap;
+      color: var(--journey-muted);
     }
 
-    .journey-stage-title {
-      min-height: 64px;
-      background: var(--panel-subtle);
-      color: var(--accent-strong);
-      font-weight: 700;
-      text-align: center;
+    .journey-persona-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      margin: 14px 0 26px;
+      background: var(--journey-paper);
+      border: 1px solid var(--journey-line);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
       display: flex;
       align-items: center;
       justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      flex: 0 0 auto;
     }
 
-    .journey-row-label {
+    .journey-persona-info b {
+      display: block;
+      font-size: 15px;
+      color: #111827;
+      margin-bottom: 3px;
+    }
+
+    .journey-persona-info span {
+      display: block;
+      font-size: 13px;
+      color: var(--journey-muted);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    .journey-jtbd {
+      margin: 0 0 26px;
+      padding: 12px 16px;
+      background: var(--journey-warm);
+      border-left: 4px solid #f59e0b;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .journey-map-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-grid {
+      display: grid;
+      min-width: 1080px;
+      gap: 1px;
+      background: var(--journey-line);
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .journey-label,
+    .journey-stage-header,
+    .journey-cell {
+      padding: 14px 12px;
+      font-size: 12px;
+      background: var(--journey-paper);
+    }
+
+    .journey-label {
+      background: var(--journey-soft);
+      font-weight: 700;
+      color: #4b5563;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
       position: sticky;
       left: 0;
       z-index: 2;
-      background: var(--panel-subtle);
-      color: var(--accent-strong);
-      font-weight: 700;
-      border-right: 1px solid var(--line);
-      display: flex;
-      align-items: center;
     }
 
-    .journey-stage-title.journey-row-label {
-      z-index: 3;
-      justify-content: flex-start;
-      background: var(--accent-soft);
+    .journey-stage-header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .journey-stage-index {
+      display: block;
+      margin: 0 auto 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      line-height: 28px;
+      font-size: 12px;
+    }
+
+    .journey-cell {
+      line-height: 1.45;
+      color: var(--journey-ink);
+      min-height: 72px;
+    }
+
+    .journey-cell ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .journey-cell li {
+      padding: 3px 0;
+    }
+
+    .journey-cell li::before {
+      content: "·";
+      color: #9ca3af;
+      margin-right: 6px;
+    }
+
+    .journey-goal {
+      background: #f0fdf4;
+      color: #166534;
+      border-radius: 4px;
+      padding: 7px 8px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .journey-quote {
+      font-style: italic;
+      color: #4b5563;
+      padding: 7px 9px;
+      background: #f9fafb;
+      border-left: 3px solid #d1d5db;
+      border-radius: 3px;
+    }
+
+    .journey-signal {
+      text-align: center;
+      font-size: 13px;
+      color: #4b5563;
     }
 
     .journey-confidence {
       display: inline-flex;
       align-items: center;
-      border-radius: 999px;
-      padding: 3px 9px;
+      justify-content: center;
+      min-width: 52px;
+      padding: 4px 10px;
       margin-bottom: 8px;
-      font-size: 12px;
+      border-radius: 999px;
       font-weight: 700;
       border: 1px solid currentColor;
     }
 
-    .journey-confidence-high { color: #16803c; background: #ecfdf3; }
-    .journey-confidence-medium { color: var(--warn); background: var(--warn-soft); }
-    .journey-confidence-low { color: var(--danger); background: var(--danger-soft); }
+    .journey-confidence-high { color: #059669; background: #d1fae5; }
+    .journey-confidence-medium { color: #d97706; background: #fef3c7; }
+    .journey-confidence-low { color: #dc2626; background: #fee2e2; }
 
-    .journey-tag {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 2px 8px;
-      margin: 0 6px 6px 0;
-      color: var(--text-muted);
-      font-size: 12px;
-      background: var(--panel-strong);
+    .journey-risk-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      background: #fee2e2;
+      color: #dc2626;
     }
 
     .journey-opportunity {
-      border-left: 3px solid var(--accent);
-      padding-left: 10px;
-      margin-top: 6px;
+      background: var(--journey-green);
+      color: #047857;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin: 3px 0;
+      line-height: 1.45;
     }
 
-    .journey-transitions {
-      padding: 14px 20px 18px;
-      color: var(--text-muted);
+    .journey-transition {
+      margin-top: 22px;
+      padding: 16px 18px;
+      background: var(--journey-paper);
+      border: 1px solid var(--journey-line);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-transition h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .journey-transition p {
+      margin: 0;
+      color: var(--journey-muted);
       font-size: 13px;
-      background: var(--panel-strong);
-    }
-
-    @media (max-width: 760px) {
-      .journey-role-head { display: block; }
-      .journey-role-note {
-        margin-top: 8px;
-        text-align: left;
-      }
+      line-height: 1.7;
     }
   </style>
 
-  <h1 class="preview-document-title" id="journey-project-title">旅程分析预览</h1>
-  <p class="preview-footer" id="journey-project-meta"></p>
-  <section class="preview-section-block" id="journey-analysis-section-0" data-section-key="journey-roles">
-    <h2 class="preview-section-heading">角色旅程</h2>
-    <div class="preview-section-body" id="journey-roles"></div>
-  </section>
-
-  <script>
-    const JOURNEY_DATA = /* __JOURNEY_DATA_JSON__ */ null;
-
-    const emptyText = "未提供";
-    const rows = [
-      ["goal", "用户目标"],
-      ["actions", "用户行动"],
-      ["touchpoints", "触点"],
-      ["user_voice", "用户心声"],
-      ["confidence", "信心度"],
-      ["pain_points", "痛点"],
-      ["dropout_risk", "流失风险"],
-      ["opportunities", "设计机会"]
-    ];
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    function text(value) {
-      if (Array.isArray(value)) return value.length ? value.map(text).join("、") : emptyText;
-      if (value && typeof value === "object") return text(value.direction || value.label || emptyText);
-      return value || emptyText;
-    }
-
-    function confidenceClass(value) {
-      if (value === "高") return "journey-confidence-high";
-      if (value === "低") return "journey-confidence-low";
-      return "journey-confidence-medium";
-    }
-
-    function renderTags(values) {
-      const list = Array.isArray(values) ? values : values ? [values] : [];
-      if (!list.length) return escapeHtml(emptyText);
-      return list.map((item) => `<span class="journey-tag">${escapeHtml(text(item))}</span>`).join("");
-    }
-
-    function renderOpportunities(values) {
-      const list = Array.isArray(values) ? values : [];
-      if (!list.length) return escapeHtml(emptyText);
-      return list.map((item) => {
-        const direction = escapeHtml(text(item.direction));
-        const hint = item.downstream_hint ? `（下游：${escapeHtml(item.downstream_hint)}）` : "";
-        return `<div class="journey-opportunity">${direction}${hint}</div>`;
-      }).join("");
-    }
-
-    function renderValue(stage, key) {
-      if (key === "touchpoints") return renderTags(stage.touchpoints);
-      if (key === "opportunities") return renderOpportunities(stage.opportunities);
-      if (key === "confidence") {
-        const confidence = text(stage.confidence);
-        const reason = text(stage.confidence_reason);
-        return `<span class="journey-confidence ${confidenceClass(confidence)}">${escapeHtml(confidence)}</span><br>${escapeHtml(reason)}`;
-      }
-      return escapeHtml(text(stage[key]));
-    }
-
-    function transitionText(transitions) {
-      const list = Array.isArray(transitions) ? transitions : [];
-      if (!list.length) return emptyText;
-      return list.map((item) => `${text(item.from)} -> ${text(item.to)}：${text(item.reason)}`).join("；");
-    }
-
-    function renderRole(role) {
-      const stages = Array.isArray(role.stages) ? role.stages : [];
-      const columns = `180px repeat(${Math.max(stages.length, 1)}, minmax(180px, 1fr))`;
-      const stageHeads = stages.map((stage) => `<div class="journey-cell journey-stage-title">${escapeHtml(text(stage.name))}</div>`).join("");
-      const bodyRows = rows.map(([key, label]) => `
-        <div class="journey-cell journey-row-label">${label}</div>
-        ${stages.map((stage) => `<div class="journey-cell">${renderValue(stage, key)}</div>`).join("")}
-      `).join("");
-
-      return `
-        <section class="journey-role">
-          <div class="journey-role-head">
-            <h2 class="journey-role-title">${escapeHtml(text(role.role))}</h2>
-            <p class="journey-role-note">${escapeHtml(text(role.summary))}</p>
-          </div>
-          <div class="journey-matrix-wrap">
-            <div class="journey-matrix" style="grid-template-columns: ${columns};">
-              <div class="journey-cell journey-stage-title journey-row-label">阶段</div>
-              ${stageHeads || `<div class="journey-cell journey-stage-title">${emptyText}</div>`}
-              ${bodyRows}
-            </div>
-          </div>
-          <div class="journey-transitions">阶段转折：${escapeHtml(transitionText(role.key_transitions))}</div>
-        </section>
-      `;
-    }
-
-    function render() {
-      document.getElementById("journey-project-title").textContent = `旅程分析：${JOURNEY_DATA.project_name || emptyText}`;
-      document.getElementById("journey-project-meta").textContent = `${JOURNEY_DATA.generated_at || emptyText} / ${JOURNEY_DATA.mode || emptyText} / ${JOURNEY_DATA.source || emptyText}`;
-      const roles = Array.isArray(JOURNEY_DATA.journeys) ? JOURNEY_DATA.journeys : [];
-      document.getElementById("journey-roles").innerHTML = roles.length
-        ? roles.map(renderRole).join("")
-        : `<p>${escapeHtml(emptyText)}</p>`;
-    }
-
-    render();
-  </script>
+  <div class="journey-page">
+    <!-- JOURNEY_CONTENT -->
+  </div>
 </article>

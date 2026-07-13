@@ -1,0 +1,565 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Preview</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --panel: #ffffff;
+    --border: #ece7e1;
+    --border-strong: #f6a55a;
+    --text: #231f1c;
+    --muted: #93897f;
+    --muted-soft: #c7beb6;
+    --line: #eee7df;
+    --card-idle-bg: #fcfbfa;
+    --card-idle-border: #efebe7;
+    --card-active-bg: #fff7ee;
+    --card-active-text: #f97316;
+    --card-done-bg: #f5fbf8;
+    --card-done-border: #b8e3cf;
+    --card-done-text: #198754;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  body {
+    padding: 24px 18px 40px;
+  }
+
+  .shell {
+    max-width: 1280px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .phase + .phase {
+    margin-top: 24px;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 0 0 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .phase-num {
+    color: #a8a29e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .phase-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c1917;
+  }
+
+  .phase-en {
+    color: #a8a29e;
+    font-style: italic;
+    font-size: 12px;
+  }
+
+  .phase-note {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .phase-count {
+    margin-left: auto;
+    color: #a8a29e;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    padding-top: 12px;
+  }
+
+  .card {
+    min-height: 70px;
+    border-radius: 10px;
+    border: 1px solid var(--card-idle-border);
+    background: var(--card-idle-bg);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .card.is-current {
+    background: var(--card-active-bg);
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
+  }
+
+  .card.is-done {
+    background: var(--card-done-bg);
+    border-color: var(--card-done-border);
+  }
+
+  .card.is-ready {
+    background: #ffffff;
+    border-color: #d6d3d1;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e5dfda;
+    flex: 0 0 auto;
+  }
+
+  .card.is-current .dot {
+    background: var(--card-active-text);
+  }
+
+  .card.is-done .dot {
+    background: var(--card-done-text);
+  }
+
+  .card.is-ready .dot {
+    background: #9f9489;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #58504a;
+    line-height: 1.25;
+  }
+
+  .card.is-current .card-title,
+  .card.is-done .card-title {
+    color: #1f1b18;
+  }
+
+  .card.is-ready .card-title {
+    color: #1c1917;
+  }
+
+  .card-slash {
+    color: #a8a29e;
+    font-size: 11px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  .card-status {
+    color: #a8a29e;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .card-scene {
+    margin-top: auto;
+    padding-top: 4px;
+    color: #b7afa8;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .card.is-current .card-status {
+    color: var(--card-active-text);
+  }
+
+  .card.is-done .card-status {
+    color: var(--card-done-text);
+  }
+
+  .card.is-ready .card-status {
+    color: #57534e;
+  }
+
+  .footer {
+    margin-top: 22px;
+    color: #b0a49a;
+    font-size: 12px;
+    text-align: right;
+  }
+
+  @media (max-width: 1040px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .shell {
+      padding: 20px 14px 24px;
+      border-radius: 12px;
+    }
+
+    .phase-num {
+      font-size: 11px;
+    }
+
+    .phase-name {
+      font-size: 15px;
+    }
+
+    .phase-count {
+      font-size: 12px;
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div id="app"></div>
+    <div class="footer" id="footer"></div>
+  </div>
+
+<script>window.__PREVIEW_STATE__ = {
+    "generated_at":  "2026-07-13 16:20:03",
+    "sections":  [
+                     {
+                         "id":  "explore",
+                         "number":  "01",
+                         "name_zh":  "探索",
+                         "name_en":  "Explore",
+                         "note":  "需求读取、问题诊断与方向收敛",
+                         "skills":  [
+                                        {
+                                            "id":  "uxb",
+                                            "name_zh":  "需求定案",
+                                            "slash":  "/uxb",
+                                            "status":  "current",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "problem-framing",
+                                            "name_zh":  "问题框定",
+                                            "slash":  "/problem-framing",
+                                            "status":  "done",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  true,
+                                            "standalone_note":  "用于无 PRD、问题未成形的白纸场景；输出问题定义、方向判断和下游承接要求。"
+                                        },
+                                        {
+                                            "id":  "product-analysis",
+                                            "name_zh":  "产品分析",
+                                            "slash":  "/product-analysis",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "design-strategy",
+                                            "name_zh":  "设计策略生成",
+                                            "slash":  "/design-strategy",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "interface-audit",
+                                            "name_zh":  "界面诊断",
+                                            "slash":  "/interface-audit",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        }
+                                    ]
+                     },
+                     {
+                         "id":  "define",
+                         "number":  "02",
+                         "name_zh":  "定义",
+                         "name_en":  "Define",
+                         "note":  "用户故事、旅程结构与需求补全",
+                         "skills":  [
+                                        {
+                                            "id":  "stories",
+                                            "name_zh":  "用户故事",
+                                            "slash":  "/stories",
+                                            "status":  "done",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  true,
+                                            "standalone_note":  "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。"
+                                        },
+                                        {
+                                            "id":  "journey-analysis",
+                                            "name_zh":  "用户旅程",
+                                            "slash":  "/journey-analysis",
+                                            "status":  "done",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  true,
+                                            "standalone_note":  "可独立使用；主链推荐先完成 stories 或第一阶梯正式上游，再进入旅程分析。"
+                                        }
+                                    ]
+                     },
+                     {
+                         "id":  "design",
+                         "number":  "03",
+                         "name_zh":  "设计",
+                         "name_en":  "Design",
+                         "note":  "方案生成、规格细化与页面落地",
+                         "skills":  [
+                                        {
+                                            "id":  "experience-blueprint",
+                                            "name_zh":  "体验策略",
+                                            "slash":  "/experience-blueprint",
+                                            "status":  "done",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "page-spec",
+                                            "name_zh":  "设计文档",
+                                            "slash":  "/page-spec",
+                                            "status":  "done",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "board",
+                                            "name_zh":  "视觉风格",
+                                            "slash":  "/board",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        }
+                                    ]
+                     },
+                     {
+                         "id":  "validate",
+                         "number":  "04",
+                         "name_zh":  "验证",
+                         "name_en":  "Validate",
+                         "note":  "异常覆盖、质量校验与度量口径",
+                         "skills":  [
+                                        {
+                                            "id":  "edge",
+                                            "name_zh":  "异常态",
+                                            "slash":  "/edge",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        },
+                                        {
+                                            "id":  "journey-metrics",
+                                            "name_zh":  "旅程埋点与度量需求",
+                                            "slash":  "/journey-metrics",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        }
+                                    ]
+                     },
+                     {
+                         "id":  "deliver",
+                         "number":  "05",
+                         "name_zh":  "沉淀",
+                         "name_en":  "Archive",
+                         "note":  "产物归档、知识沉淀与后续复用",
+                         "skills":  [
+                                        {
+                                            "id":  "knowledge-wiki",
+                                            "name_zh":  "知识库",
+                                            "slash":  "/knowledge-wiki",
+                                            "status":  "ready",
+                                            "hint_dep":  null,
+                                            "standalone_usable":  false,
+                                            "standalone_note":  null
+                                        }
+                                    ]
+                     }
+                 ]
+};</script>
+<script>
+const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
+  generated_at: "template",
+  sections: [
+    {
+      id: "explore",
+      number: "01",
+      name_zh: "探索",
+      name_en: "Explore",
+      note: "需求读取、问题诊断与方向收敛",
+      skills: [
+        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
+        { id: "problem-framing", name_zh: "问题框定", slash: "/problem-framing", status: "current", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
+        { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
+        { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
+        { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" }
+      ]
+    },
+    {
+      id: "task-journey",
+      number: "02",
+      name_zh: "任务与旅程",
+      name_en: "Task & Journey",
+      note: "把需求拆成任务，再看用户一路怎么完成",
+      skills: [
+        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "拆清用户要做哪些事、做到什么算完成", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
+      ]
+    },
+    {
+      id: "design",
+      number: "03",
+      name_zh: "设计",
+      name_en: "Design",
+      note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
+      skills: [
+        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "把需求变成正式体验方案" },
+        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
+        { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" }
+      ]
+    },
+    {
+      id: "page-build",
+      number: "04",
+      name_zh: "页面生成",
+      name_en: "Page Build",
+      note: "整理页面规格，页面原型能力当前仅静态展示，不参与主流程",
+      skills: [
+        { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取页面规格" },
+        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "暂不接入主流程", scene_hint: "能力保留展示，后续完善后再接入" }
+      ]
+    },
+    {
+      id: "validate",
+      number: "05",
+      name_zh: "验证",
+      name_en: "Validate",
+      note: "定义关键节点的埋点与度量口径",
+      skills: [
+        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "定义关键节点的埋点与度量口径" }
+      ]
+    },
+    {
+      id: "deliver",
+      number: "06",
+      name_zh: "沉淀",
+      name_en: "Archive",
+      note: "产物归档、知识沉淀与后续复用",
+      skills: [
+        { id: "knowledge-wiki", name_zh: "知识库", slash: "/knowledge-wiki", status: "ready", hint_dep: null, scene_hint: "沉淀可复用知识" }
+      ]
+    }
+  ]
+};
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function render() {
+  const app = document.getElementById("app");
+  const footer = document.getElementById("footer");
+  const sections = PREVIEW_STATE.sections || [];
+
+  app.innerHTML = sections.map((phase) => {
+    const doneCount = phase.skills.filter((skill) => skill.status === "done").length;
+    const totalCount = phase.skills.length;
+    const cards = phase.skills.map((skill) => {
+      let cardClass = "card";
+      if (skill.status === "done") {
+        cardClass = "card is-done";
+      } else if (skill.status === "current") {
+        cardClass = "card is-current";
+      } else if (skill.status === "ready") {
+        cardClass = "card is-ready";
+      }
+
+      let statusText = "\u6682\u672a\u4ea7\u51fa";
+      if (skill.status === "done") {
+        statusText = "\u5df2\u4ea7\u51fa";
+      } else if (skill.status === "current") {
+        statusText = "\u73b0\u5728\u53ef\u4ee5\u505a";
+      } else if (skill.status === "ready") {
+        statusText = "\u8be5\u73af\u8282\u53ef\u7528";
+      } else if (skill.standalone_usable) {
+        statusText = skill.hint_dep
+          ? `\u53ef\u72ec\u7acb\u4f7f\u7528\uff0c\u4e3b\u94fe\u5efa\u8bae\u5148\u505a ${skill.hint_dep}`
+          : "\u53ef\u72ec\u7acb\u4f7f\u7528";
+      } else if (skill.hint_dep) {
+        statusText = `\u5148\u505a ${skill.hint_dep}`;
+      }
+
+      return `
+        <section class="${cardClass}">
+          <div class="card-top">
+            <span class="dot"></span>
+            <div class="card-title">${escapeHtml(skill.name_zh)}</div>
+          </div>
+          <div class="card-slash">${escapeHtml(skill.slash)}</div>
+          <div class="card-status">${escapeHtml(statusText)}</div>
+          ${skill.scene_hint ? `<div class="card-scene">${escapeHtml(skill.scene_hint)}</div>` : ""}
+        </section>
+      `;
+    }).join("");
+
+    return `
+      <section class="phase">
+        <div class="phase-head">
+          <div class="phase-num">${escapeHtml(phase.number)}</div>
+          <div>
+            <div class="phase-name">${escapeHtml(phase.name_zh)}</div>
+            <div class="phase-en">${escapeHtml(phase.name_en)}</div>
+            <div class="phase-note">${escapeHtml(phase.note || "")}</div>
+          </div>
+          <div class="phase-count">${doneCount} / ${totalCount}</div>
+        </div>
+        <div class="cards">${cards}</div>
+      </section>
+    `;
+  }).join("");
+
+  footer.textContent = `Updated at ${PREVIEW_STATE.generated_at}`;
+}
+
+render();
+</script>
+</body>
+</html>

@@ -117,16 +117,20 @@ description: >
 | 产物类型 | Markdown | Context JSON | 渲染方式 | 输出 |
 |---|---|---|---|---|
 | 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | template-projection | `spark-output/preview/uxb_preview.html` |
-| 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | template-projection | `spark-output/preview/experience_blueprint_preview.html` |
+| 问题框定 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
+| 用户故事 | `spark-output/stories.md` | `spark-output/context/stories.json` | native-script | `spark-output/preview/stories_preview.html` |
 | 角色旅程 | `spark-output/journey_analysis.md` | `spark-output/context/journey-analysis.json` | native-script | `spark-output/preview/journey_analysis_preview.html` |
+| 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | template-projection | `spark-output/preview/experience_blueprint_preview.html` |
 
 集中资产：
 
 | 产物类型 | 模板 / 脚本 | 规则参考 |
 |---|---|---|
 | 业务蓝图 | `.claude/skills/preview-renderer/assets/skills/uxb/preview_template.html` | `.claude/skills/preview-renderer/assets/skills/uxb/html_preview_execution_guide.md` |
+| 问题框定 | `.claude/skills/preview-renderer/assets/skills/problem-framing/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/problem-framing/html_preview_execution_guide.md` |
+| 用户故事 | `.claude/skills/preview-renderer/assets/skills/stories/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/stories/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/stories/html_preview_execution_guide.md` |
+| 角色旅程 | `.claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/journey-analysis/html_preview_execution_guide.md` |
 | 体验蓝图 | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html` | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/html_preview_execution_guide.md` |
-| 角色旅程 | `.claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js` | 脚本入口为正式规则 |
 
 统一公共壳：
 
@@ -161,9 +165,11 @@ description: >
 - 公共层负责“像同一套产品”
 - 规则层负责“识别和渲染具体产物”
 - 公共壳不得暴露项目名构建占位字段；项目名只允许进入最终 `<title>` 或具体内容区
-- 公共壳固定维护首批支持预览的产物选项：`uxb`、`experience-blueprint`、`journey-analysis`
+- 公共壳固定维护当前支持预览的产物选项：`uxb`、`problem-framing`、`stories`、`journey-analysis`、`experience-blueprint`
 - 业务 skill 不维护 `preview/manifest.json`、`render-rule.md`、模板或脚本
 - 不允许为了预览要求业务 skill 反向补充接入配置
+- 预览脚本只允许结构化展示既有 Markdown 与 Context JSON，不得新增业务结论、改写优先级、补写缺失验收标准或替代正式产物
+- HTML 信息必须 100% 来源于正式 Markdown / Context JSON；允许改变展示结构和视觉样式，不允许改变业务语义、字段含义、优先级、状态或验收口径
 
 ## 视觉基线
 
@@ -239,21 +245,22 @@ description: >
 - 因为字段缺失就补造业务内容
 - 因为模板缺口就现场重新设计整页结构
 
-## 首批接入建议
+## 当前接入范围
 
-当前优先接入：
+当前支持专属预览的正式产物：
 
 - `uxb`
-- `experience-blueprint`
+- `problem-framing`
+- `stories`
 - `journey-analysis`
+- `experience-blueprint`
 
-原因：
+接入原则：
 
-- 这三个 skill 已有明确的正式预览结构或稳定的预览投影边界
-- `uxb` 与 `experience-blueprint` 已完成业务蓝图 / 体验蓝图拆分
-- `journey-analysis` 已有稳定脚本入口，适合作为 `native-script` 路径样例
-
-`xft-design` 不属于“正式产物投影预览”这一类，当前不作为首批接入对象。
+- 已有正式 Markdown / Context JSON 的产物，才允许进入专属预览。
+- `problem-framing`、`stories`、`journey-analysis` 走 `native-script`，由集中脚本完成结构化投影。
+- `uxb`、`experience-blueprint` 使用已收口到 `preview-renderer` 的专属模板资产。
+- `xft-design` 当前不属于正式产物投影预览范围，暂不接入。
 
 ## 边界
 
@@ -264,7 +271,7 @@ description: >
 - 不把“统一样式”误做成“统一内容结构”
 - 不在没有用户确认时自动生成 HTML
 
-## 首批接入补充约束
+## 接入补充约束
 
 - 业务 skill 不再提供 `preview/manifest.json` 或 `render-rule.md`。
 - 模板、脚本和规则说明等正式预览资产统一收口到 `preview-renderer/assets/skills/`。

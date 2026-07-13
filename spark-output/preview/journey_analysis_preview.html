@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>角色旅程预览 - 企业数字化产品权限自助申请</title>
+  <style>
+    :root {
+      --bg: #f5f4ed;
+      --panel: #faf9f5;
+      --panel-strong: #faf9f5;
+      --panel-subtle: #f2f0e8;
+      --line: #e8e6dc;
+      --line-strong: #d8d1c2;
+      --text: #2b2b28;
+      --text-muted: #6b6a64;
+      --text-soft: #75746e;
+      --accent: #1f6b5b;
+      --accent-soft: #e2f1eb;
+      --accent-strong: #155245;
+      --warn: #8a5a14;
+      --warn-soft: #f6ead5;
+      --danger: #8b3a3a;
+      --danger-soft: #f8e4e1;
+      --shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(180deg, #faf9f5 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .hidden { display: none !important; }
+
+    .preview-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .preview-sidebar {
+      width: 280px;
+      min-width: 280px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 14px 0;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .preview-product-switcher {
+      padding: 0 16px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-product-select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      border-radius: var(--radius);
+      padding: 8px 32px 8px 10px;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .preview-product-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .preview-section-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 16px 8px;
+    }
+
+    .preview-nav-item {
+      display: block;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 1px 0;
+      transition: all 0.12s;
+      cursor: pointer;
+    }
+
+    .preview-nav-item:hover,
+    .preview-nav-item.is-active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    .preview-nav-item.level-2 { padding-left: 24px; font-size: 12px; }
+    .preview-nav-item.level-3 { padding-left: 36px; font-size: 12px; color: var(--text-soft); }
+
+    .preview-main {
+      flex: 1;
+      padding: 32px 40px 80px;
+      max-width: 1080px;
+    }
+
+    .preview-content-panel { display: block; }
+    .preview-content-panel.hidden { display: none; }
+
+    .preview-document-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent-strong);
+      margin: 0 0 28px;
+    }
+
+    .preview-section-block,
+    .section-block {
+      margin-bottom: 36px;
+      scroll-margin-top: 24px;
+    }
+
+    .preview-section-heading,
+    .section-heading {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 0 0 12px;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .preview-section-heading.level-2,
+    .section-heading.level-2 {
+      font-size: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-section-heading.level-3,
+    .section-heading.level-3 {
+      font-size: 15px;
+      color: var(--text-muted);
+      border-bottom: none;
+      font-weight: 600;
+    }
+
+    .preview-section-body,
+    .section-body { font-size: 15px; }
+
+    .preview-section-body p,
+    .section-body p { margin: 0 0 10px; }
+
+    .preview-section-body ul,
+    .section-body ul { margin: 8px 0 16px; padding-left: 20px; list-style: none; }
+
+    .preview-section-body ul li,
+    .section-body ul li {
+      position: relative;
+      padding: 4px 0 4px 16px;
+      margin: 2px 0;
+    }
+
+    .preview-section-body ul li::before,
+    .section-body ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    .preview-section-body strong,
+    .section-body strong { color: var(--accent-strong); font-weight: 600; }
+
+    .preview-section-body code,
+    .section-body code {
+      background: var(--panel-subtle);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+      border: 1px solid var(--line);
+    }
+
+    .preview-section-body pre,
+    .section-body pre {
+      background: var(--panel-subtle);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .preview-section-body h3,
+    .preview-section-body h4,
+    .preview-section-body h5,
+    .preview-section-body h6,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5,
+    .section-body h6 {
+      margin: 18px 0 10px;
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .preview-section-body table,
+    .section-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    .preview-section-body th,
+    .preview-section-body td,
+    .section-body th,
+    .section-body td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .preview-section-body th,
+    .section-body th {
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .preview-section-body ol,
+    .section-body ol { margin: 8px 0 16px; padding-left: 22px; }
+
+    .preview-section-body ol li,
+    .section-body ol li { padding: 4px 0; }
+
+    .preview-card,
+    .component-card,
+    .summary-visual,
+    .journey-visual,
+    .flow-field,
+    .state-card,
+    .callout {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 12px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      box-shadow: none;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+
+    .callout.danger {
+      border-left-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .visual-row,
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 12px 0 18px;
+    }
+
+    .flow-node,
+    .journey-phase-card {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin: 10px 0;
+    }
+
+    .flow-node-title,
+    .journey-phase-title {
+      margin: 0 0 8px;
+      color: var(--accent-strong);
+      font-weight: 700;
+    }
+
+    .journey-phase-toggle {
+      border: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--accent-strong);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .journey-phase-card.is-collapsed .journey-phase-detail {
+      display: none;
+    }
+
+    .table-wrap,
+    .state-feedback-table-wrap {
+      overflow-x: auto;
+      margin: 12px 0 18px;
+    }
+
+    .status-pill,
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: var(--panel-subtle);
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 4px 4px 0;
+    }
+
+    .status-pill.strong,
+    .tag.strong {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border-color: var(--accent-soft);
+    }
+
+    .preview-footer {
+      color: var(--text-soft);
+      font-size: 12px;
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .preview-sidebar { display: none; }
+      .preview-main { padding: 20px 16px 60px; }
+    }
+
+    
+  </style>
+</head>
+<body>
+  <div class="preview-shell">
+    <aside class="preview-sidebar">
+      <div class="preview-product-switcher">
+        <select class="preview-product-select" id="preview-product-select" aria-label="预览产物">
+          <option value="uxb">业务蓝图</option>
+          <option value="problem-framing">问题框定</option>
+          <option value="stories">用户故事</option>
+          <option value="journey-analysis">角色旅程</option>
+          <option value="experience-blueprint">体验蓝图</option>
+        </select>
+      </div>
+
+      <nav class="preview-section-nav" aria-label="章节导航">
+        <a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">角色旅程</a>
+      </nav>
+    </aside>
+
+    <main class="preview-main">
+      <article class="preview-content-panel is-active" data-skill="journey-analysis" id="journey-analysis-panel">
+  <style>
+    .journey-page {
+      --journey-ink: #1f2937;
+      --journey-muted: #6b7280;
+      --journey-line: #e5e7eb;
+      --journey-paper: #fff;
+      --journey-soft: #f3f4f6;
+      --journey-warm: #fef3c7;
+      --journey-green: #ecfdf5;
+      color: var(--journey-ink);
+    }
+
+    .journey-header {
+      margin-bottom: 22px;
+    }
+
+    .journey-title {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--journey-ink);
+    }
+
+    .journey-subtitle {
+      margin: 0;
+      font-size: 14px;
+      color: var(--journey-muted);
+    }
+
+    .journey-persona-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      margin: 14px 0 26px;
+      background: var(--journey-paper);
+      border: 1px solid var(--journey-line);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .journey-persona-info b {
+      display: block;
+      font-size: 15px;
+      color: #111827;
+      margin-bottom: 3px;
+    }
+
+    .journey-persona-info span {
+      display: block;
+      font-size: 13px;
+      color: var(--journey-muted);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    .journey-jtbd {
+      margin: 0 0 26px;
+      padding: 12px 16px;
+      background: var(--journey-warm);
+      border-left: 4px solid #f59e0b;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .journey-map-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-grid {
+      display: grid;
+      min-width: 1080px;
+      gap: 1px;
+      background: var(--journey-line);
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .journey-label,
+    .journey-stage-header,
+    .journey-cell {
+      padding: 14px 12px;
+      font-size: 12px;
+      background: var(--journey-paper);
+    }
+
+    .journey-label {
+      background: var(--journey-soft);
+      font-weight: 700;
+      color: #4b5563;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      position: sticky;
+      left: 0;
+      z-index: 2;
+    }
+
+    .journey-stage-header {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .journey-stage-index {
+      display: block;
+      margin: 0 auto 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      line-height: 28px;
+      font-size: 12px;
+    }
+
+    .journey-cell {
+      line-height: 1.45;
+      color: var(--journey-ink);
+      min-height: 72px;
+    }
+
+    .journey-cell ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .journey-cell li {
+      padding: 3px 0;
+    }
+
+    .journey-cell li::before {
+      content: "·";
+      color: #9ca3af;
+      margin-right: 6px;
+    }
+
+    .journey-goal {
+      background: #f0fdf4;
+      color: #166534;
+      border-radius: 4px;
+      padding: 7px 8px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .journey-quote {
+      font-style: italic;
+      color: #4b5563;
+      padding: 7px 9px;
+      background: #f9fafb;
+      border-left: 3px solid #d1d5db;
+      border-radius: 3px;
+    }
+
+    .journey-signal {
+      text-align: center;
+      font-size: 13px;
+      color: #4b5563;
+    }
+
+    .journey-confidence {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      padding: 4px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      border: 1px solid currentColor;
+    }
+
+    .journey-confidence-high { color: #059669; background: #d1fae5; }
+    .journey-confidence-medium { color: #d97706; background: #fef3c7; }
+    .journey-confidence-low { color: #dc2626; background: #fee2e2; }
+
+    .journey-risk-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .journey-opportunity {
+      background: var(--journey-green);
+      color: #047857;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin: 3px 0;
+      line-height: 1.45;
+    }
+
+    .journey-transition {
+      margin-top: 22px;
+      padding: 16px 18px;
+      background: var(--journey-paper);
+      border: 1px solid var(--journey-line);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .journey-transition h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .journey-transition p {
+      margin: 0;
+      color: var(--journey-muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+  </style>
+
+  <div class="journey-page">
+    
+    <section class="preview-section-block" id="journey-analysis-section-0" data-section-key="journey-0">
+      <div class="journey-header">
+        <h1 class="journey-title">企业数字化产品权限自助申请 - User Journey Map</h1>
+        <p class="journey-subtitle">2026-07-13 / prd-standalone / problem-framing, stories</p>
+      </div>
+      <div class="journey-persona-card">
+        <div class="journey-avatar">员</div>
+        <div class="journey-persona-info">
+          <b>员工（业务人员/经办人员）</b>
+          <span>员工在业务场景中被权限拦住→发现自助申请入口→浏览权限目录确定需要什么→提交申请→等待上级审批→获得权限或被拒绝后处理结果。聚焦员工端自助申请全流程，从感知需求到获得结果。</span>
+        </div>
+      </div>
+      <p class="journey-jtbd">员工在业务场景中被权限拦住，意识到需要某项功能权限或角色才能继续工作</p>
+      <div class="journey-map-wrap">
+        <div class="journey-grid" style="grid-template-columns: 120px repeat(5, minmax(180px, 1fr));">
+          <div class="journey-label"></div>
+          
+    <div class="journey-stage-header">
+      <span class="journey-stage-index">1</span>
+      感知需求与发现入口
+    </div>
+  
+    <div class="journey-stage-header">
+      <span class="journey-stage-index">2</span>
+      浏览与评估
+    </div>
+  
+    <div class="journey-stage-header">
+      <span class="journey-stage-index">3</span>
+      申请提交
+    </div>
+  
+    <div class="journey-stage-header">
+      <span class="journey-stage-index">4</span>
+      等待审批
+    </div>
+  
+    <div class="journey-stage-header">
+      <span class="journey-stage-index">5</span>
+      结果处理
+    </div>
+  
+          
+    <div class="journey-label">用户目标</div>
+    <div class="journey-cell"><div class="journey-goal">员工意识到需要某项权限才能完成工作，并知道可以通过自助方式申请</div></div><div class="journey-cell"><div class="journey-goal">在可申请目录中找到自己需要的权限或角色，理解其含义和作用</div></div><div class="journey-cell"><div class="journey-goal">选择所需权限/角色，填写申请理由，成功提交申请</div></div><div class="journey-cell"><div class="journey-goal">了解申请进度，等待上级处理，在需要时跟进</div></div><div class="journey-cell"><div class="journey-goal">获得权限开始工作 / 了解被拒绝原因并决定下一步</div></div>
+  
+    <div class="journey-label">用户行动</div>
+    <div class="journey-cell"><ul><li>在工作中遇到权限不足提示或被功能入口挡住</li><li>询问同事&#39;这个功能怎么用不了&#39;</li><li>同事/文档告知可通过权限自助申请</li><li>找到申请入口</li></ul></div><div class="journey-cell"><ul><li>进入权限申请页面</li><li>查看可申请的角色列表和功能权限列表</li><li>浏览分类/搜索权限名称</li><li>点击查看详情</li><li>判断是不是自己需要的</li><li>对比不同选项</li></ul></div><div class="journey-cell"><ul><li>勾选需要申请的功能权限/角色</li><li>查看已选项汇总</li><li>填写申请理由</li><li>确认提交</li><li>收到提交成功反馈</li></ul></div><div class="journey-cell"><ul><li>收到提交成功通知</li><li>（被动）等待审批</li><li>间歇性查看&#39;我的申请&#39;页面了解进度</li><li>（主动）如果着急可能私聊上级提醒</li></ul></div><div class="journey-cell"><ul><li>（通过）收到审批通过通知</li><li>（通过）查看已生效权限</li><li>（通过）回到工作场景使用权限</li><li>（拒绝）收到拒绝通知</li><li>（拒绝）查看拒绝原因</li><li>（拒绝）决定是否重新申请、补充说明或放弃</li></ul></div>
+  
+    <div class="journey-label">触点</div>
+    <div class="journey-cell"><ul><li>系统权限拦截提示</li><li>同事（口头/IM）</li><li>帮助文档/FAQ</li><li>工作台首页/导航入口</li></ul></div><div class="journey-cell"><ul><li>权限申请页面</li><li>目录筛选/搜索</li><li>权限/角色详情弹窗</li><li>分类标签页</li></ul></div><div class="journey-cell"><ul><li>申请表单（权限选择区、理由输入区、汇总确认区）</li><li>提交成功提示</li></ul></div><div class="journey-cell"><ul><li>提交成功通知</li><li>我的申请页面</li><li>审批状态标签</li><li>消息通知</li></ul></div><div class="journey-cell"><ul><li>审批结果通知（站内信/消息）</li><li>我的权限页面</li><li>已生效权限列表</li><li>权限功能入口</li></ul></div>
+  
+    <div class="journey-label">用户心声</div>
+    <div class="journey-cell"><div class="journey-quote">我根本不知道还能自己申请权限，以前都是找xx帮忙的</div></div><div class="journey-cell"><div class="journey-quote">这么多权限和角色，我到底该申请哪个？</div></div><div class="journey-cell"><div class="journey-quote">希望理由写得够清楚，上级能理解我为什么需要这个权限</div></div><div class="journey-cell"><div class="journey-quote">审批怎么还没好，我都等了一天了……</div></div><div class="journey-cell"><div class="journey-quote">（通过）终于有了，可以继续干活了 / （拒绝）为什么拒绝我？那我怎么办？</div></div>
+  
+    <div class="journey-label">信心与风险</div>
+    <div class="journey-cell">
+    <div class="journey-signal">
+      <span class="journey-confidence journey-confidence-medium">中</span>
+      <div>基于问题框定中用户描述的场景推导——当前做法是私下找管理员，员工对自助申请的存在和入口无认知</div>
+      <span class="journey-risk-badge">高。员工如果不知道自助入口，会直接回到找管理员/老板的旧模式，自助申请的价值归零</span>
+    </div>
+  </div><div class="journey-cell">
+    <div class="journey-signal">
+      <span class="journey-confidence journey-confidence-high">高</span>
+      <div>上游直接提供了目录结构、分类方式和员工可看到全部角色的规则（confirmed_facts）</div>
+      <span class="journey-risk-badge">中。看不懂目录→随意选一个试试/放弃自助转而问人</span>
+    </div>
+  </div><div class="journey-cell">
+    <div class="journey-signal">
+      <span class="journey-confidence journey-confidence-high">高</span>
+      <div>上游 confirmed_facts 和故事 US-02 完成标准提供了完整的申请流程定义</div>
+      <span class="journey-risk-badge">低。流程明确、操作简单，但&#39;不确定怎么写理由&#39;可能在理由输入处卡住</span>
+    </div>
+  </div><div class="journey-cell">
+    <div class="journey-signal">
+      <span class="journey-confidence journey-confidence-medium">中</span>
+      <div>等待行为和情绪反应基于体验设计常识推导，审批流基建成熟度仍为 open_gap</div>
+      <span class="journey-risk-badge">高。等待时间过长→员工绕过流程找管理员直接授权→自助流程被架空且产生不一致的授权记录</span>
+    </div>
+  </div><div class="journey-cell">
+    <div class="journey-signal">
+      <span class="journey-confidence journey-confidence-high">高</span>
+      <div>上游 confirmed_facts 明确了自动生效规则，stories 提供了通过和拒绝两个分支的验收标准</div>
+      <span class="journey-risk-badge">中。拒绝场景下如果没有明确的重新申请路径，员工会退回找管理员模式</span>
+    </div>
+  </div>
+  
+    <div class="journey-label">痛点</div>
+    <div class="journey-cell"><ul><li>员工不知道平台有自助申请功能，回到找人的老路</li><li>入口不明显或藏在深层菜单中，员工找不到</li><li>权限被拦截时只看到&#39;无权限&#39;提示，没有引导去向</li></ul></div><div class="journey-cell"><ul><li>权限名称为技术编码，员工看不懂是什么</li><li>功能权限与角色的区别不清晰，不确定选哪种方式</li><li>不知道申请某个权限后会有什么实际影响</li><li>角色列表全量展示但只有部分可申请，区分不直观</li><li>搜索结果为空时不知道是没权限还是没搜对关键词</li></ul></div><div class="journey-cell"><ul><li>不确定申请理由要写多详细，写太简单怕被拒、写太复杂费时间</li><li>一次性申请多个权限时，审批人可能只熟悉其中一部分，部分被拒的原因不明</li><li>已拥有的权限没有前置提示，提交后才被告知重复</li></ul></div><div class="journey-cell"><ul><li>不知道审批人什么时候处理，等待焦虑</li><li>审批超时无人跟进，员工也不敢催上级</li><li>只有&#39;待审批&#39;一个状态，没有更细的进度信息</li><li>着急用权限但只能被动等待</li></ul></div><div class="journey-cell"><ul><li>（通过后）权限生效了但员工不知道去哪里用</li><li>（拒绝后）拒绝原因太笼统，不知道如何改进重新申请</li><li>（拒绝后）没有重新申请的入口或指引，又回到找人的老路</li><li>（自动授权失败）系统提示&#39;授权失败&#39;但员工不知道找谁处理</li></ul></div>
+  
+    <div class="journey-label">设计机会</div>
+    <div class="journey-cell"><div class="journey-opportunity">权限拦截时直接给出自助申请入口（&#39;去申请权限&#39;按钮） <span>(蓝图)</span></div><div class="journey-opportunity">在工作台/首页提供显性化的自助申请入口 <span>(蓝图)</span></div><div class="journey-opportunity">新员工入职引导中加入权限自助申请的指引 <span>(故事)</span></div></div><div class="journey-cell"><div class="journey-opportunity">权限描述使用业务语言，说明&#39;谁可以用&#39;&#39;用来做什么&#39;&#39;申请后能做什么&#39; <span>(蓝图)</span></div><div class="journey-opportunity">角色与功能权限分栏展示，明确说明各自适用场景 <span>(蓝图)</span></div><div class="journey-opportunity">为每个权限/角色标注申请前提或推荐人群 <span>(蓝图)</span></div><div class="journey-opportunity">搜索结果为空时提供引导&#39;试试其他关键词&#39;或&#39;联系管理员确认&#39; <span>(蓝图)</span></div></div><div class="journey-cell"><div class="journey-opportunity">申请理由输入框提供示例模板（&#39;我在XX业务中需要XX权限来做XX&#39;） <span>(蓝图)</span></div><div class="journey-opportunity">提交前自动检测已拥有权限并提示移除 <span>(蓝图)</span></div><div class="journey-opportunity">提交成功后清晰告知下一步（&#39;你的申请已提交给XX审批，预计处理时间为XX&#39;） <span>(蓝图)</span></div></div><div class="journey-cell"><div class="journey-opportunity">提交时告知预计审批时间（&#39;通常XX小时内处理&#39;） <span>(蓝图)</span></div><div class="journey-opportunity">审批超时自动提醒审批人 <span>(待确认)</span></div><div class="journey-opportunity">我的申请页展示审批进度节点（已提交→审批人已查看→已通过/已拒绝） <span>(蓝图)</span></div><div class="journey-opportunity">审批超时后允许员工自助催办 <span>(蓝图)</span></div></div><div class="journey-cell"><div class="journey-opportunity">通过后引导到对应的功能入口（&#39;去看看新权限&#39;） <span>(蓝图)</span></div><div class="journey-opportunity">拒绝原因结构化（提供具体原因而非一句话带过） <span>(蓝图)</span></div><div class="journey-opportunity">提供&#39;修改后重新申请&#39;按钮，保留原申请内容供修改 <span>(蓝图)</span></div><div class="journey-opportunity">授权失败时明确引导：&#39;请联系管理员处理&#39;并附管理员联系方式 <span>(蓝图)</span></div></div>
+  
+        </div>
+      </div>
+      <div class="journey-transition">
+        <h3>阶段转折</h3>
+        <p>感知需求与发现入口 -&gt; 浏览与评估：员工找到自助申请入口并进入；浏览与评估 -&gt; 申请提交：员工确定需要申请的权限或角色；申请提交 -&gt; 等待审批：申请成功提交；等待审批 -&gt; 结果处理：审批人做出审批决定（通过/拒绝）</p>
+      </div>
+    </section>
+  
+  </div>
+</article>
+
+    </main>
+  </div>
+
+  <script type="application/json" id="preview-bootstrap-data">
+    {
+  "activeSkill": "journey-analysis",
+  "skills": [
+    "journey-analysis"
+  ]
+}
+  </script>
+  <script>
+    (function() {
+      function setActiveSkill(skill) {
+        var hasPanel = Boolean(document.querySelector('.preview-content-panel[data-skill="' + skill + '"]'));
+        if (!hasPanel) return;
+
+        var productSelect = document.getElementById('preview-product-select');
+        if (productSelect) productSelect.value = skill;
+
+        document.querySelectorAll('.preview-content-panel').forEach(function(panel) {
+          panel.classList.toggle('hidden', panel.dataset.skill !== skill);
+          panel.classList.toggle('is-active', panel.dataset.skill === skill);
+        });
+        document.querySelectorAll('.preview-nav-item').forEach(function(item) {
+          item.classList.toggle('hidden', item.dataset.skill !== skill);
+        });
+      }
+
+      var productSelect = document.getElementById('preview-product-select');
+      if (productSelect) {
+        productSelect.addEventListener('change', function() {
+          var previous = document.querySelector('.preview-content-panel.is-active');
+          setActiveSkill(productSelect.value);
+          if (!document.querySelector('.preview-content-panel[data-skill="' + productSelect.value + '"]') && previous) {
+            productSelect.value = previous.dataset.skill;
+          }
+        });
+      }
+
+      document.querySelectorAll('.preview-nav-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+          event.preventDefault();
+          var skill = item.dataset.skill;
+          if (skill) setActiveSkill(skill);
+          var targetId = item.getAttribute('href').replace('#', '');
+          var target = document.getElementById(targetId);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      document.querySelectorAll('.journey-phase-toggle').forEach(function(button) {
+        button.addEventListener('click', function() {
+          var card = button.closest('.journey-phase-card');
+          if (!card) return;
+          var collapsed = card.classList.toggle('is-collapsed');
+          button.textContent = collapsed ? '展开详情' : '收起详情';
+        });
+      });
+
+      var activePanel = document.querySelector('.preview-content-panel.is-active')
+        || document.querySelector('.preview-content-panel');
+      if (activePanel) setActiveSkill(activePanel.dataset.skill);
+    })();
+  </script>
+  
+</body>
+</html>
