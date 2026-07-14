@@ -2,11 +2,38 @@
 name: uxb
 description: >
   需求定案 Skill。读取用户提供的需求材料或问题背景，输出正式需求定案文档与结构化上下文，作为主链路入口驱动下游体验设计。
-  触发关键词：需求分析、读需求、分析 PRD、需求定案、需求评审、体验诊断、问题背景分析、需求拆解、分析需求方向、读需求文档。
-  排除：交互设计方案（用 experience-blueprint）、需求方向不成立需重构问题（用 product-analysis）。
+  触发关键词：需求定案、生成 UXB、输出 uxb_output.md、为体验蓝图准备正式上游、进入需求定案。
+  排除：问题框定、产品分析、竞品拆解、设计走查、交互设计方案（用 experience-blueprint）、需求方向不成立需重构问题（用 product-analysis）。
 ---
 
 # UXB
+
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/uxb_output.md`
+- `spark-output/context/uxb.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
 
 这个 skill 负责把 UXB 用成一个用户听得懂的业务与体验入口，并在用户确认后输出正式的需求定案文档和结构化上下文。默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
 
@@ -29,8 +56,14 @@ UXB 只负责需求定案与上游分析，不承担仓库维护、工程实现�
 - 不让用户自己选 `fast / standard / full`
 - 只有用户确认后，才生成正式需求定案文档
 
-## 需求输入获取
+## 触发边界
 
+UXB 只在用户明确要求“需求定案”“生成 UXB”“输出 uxb_output.md”“为体验蓝图准备正式上游”，或用户已经完成问题框定并明确选择“进入需求定案”时执行。
+
+不得因为工作区存在详细需求文档、`input/` 下有 PRD、`spark-output/context/uxb.json` 已存在，或用户只是说“分析一下”“看看这个需求”“问题是什么”，就接管当前任务。
+
+如果用户明确指定当前要做“问题框定 / 产品分析 / 竞品拆解 / 设计走查”，UXB 不得因为检测到 PRD、需求文档或 `spark-output` 产物而接管。
+## 需求输入获取
 本次任务的需求信息，只能来自“本轮用户明确提供的正式输入”，不从历史聊天自动提取。
 
 可能的输入形式包括：
@@ -638,28 +671,129 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 ## Context JSON 写入
 
-文档生成并自检通过后，按下方字段列表写入 `spark-output/context/uxb.json`。
+文档生成并自检通过后，按固定结构写入 `spark-output/context/uxb.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `input_summary`
-- `business_scenario_judgment`
-- `viability_judgment`
-- `business_boundary`
-- `roles[]`
-- `features[]`
-- `business_rules[]`
-- `states[]`
-- `exceptions[]`
-- `experience_handoff_requirements[]`
-- `gaps[]`
-- `knowledge_trace[]`
+```json
+{
+  "skill": "uxb",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/uxb_requirements.md",
+  "source_refs": [],
+  "read_sections": [],
+  "key_design_judgments": [
+    {
+      "judgment": "unknown",
+      "impact": "unknown",
+      "recommended_approach": "unknown",
+      "not_recommended": "unknown",
+      "open_question": "unknown"
+    }
+  ],
+  "input_summary": {
+    "raw_request": "unknown",
+    "confirmed_facts": [],
+    "explicit_constraints": [],
+    "missing_information": []
+  },
+  "business_scenario_judgment": {
+    "scenario": "unknown",
+    "role": "unknown",
+    "task": "unknown",
+    "value": "unknown"
+  },
+  "viability_judgment": {
+    "is_valid": "unknown",
+    "reason": "unknown",
+    "blocking_issues": [],
+    "assumptions": []
+  },
+  "business_boundary": {
+    "in_scope": [],
+    "out_of_scope": [],
+    "boundary_reason": []
+  },
+  "roles": [
+    {
+      "name": "unknown",
+      "type": "unknown",
+      "responsibility": "unknown",
+      "needs": []
+    }
+  ],
+  "features": [
+    {
+      "name": "unknown",
+      "input": "unknown",
+      "process": "unknown",
+      "output": "unknown",
+      "result": "unknown",
+      "boundary": "unknown"
+    }
+  ],
+  "business_rules": [
+    {
+      "rule": "unknown",
+      "trigger": "unknown",
+      "result": "unknown",
+      "fallback": "unknown"
+    }
+  ],
+  "states": [
+    {
+      "state": "unknown",
+      "meaning": "unknown",
+      "system_result": "unknown",
+      "user_next_step": "unknown"
+    }
+  ],
+  "exceptions": [
+    {
+      "name": "unknown",
+      "trigger": "unknown",
+      "system_result": "unknown",
+      "user_next_step": "unknown",
+      "recovery": "unknown"
+    }
+  ],
+  "experience_handoff_requirements": [
+    {
+      "business_judgment": "unknown",
+      "experience_impact": "unknown",
+      "must_continue": "unknown",
+      "forbidden_rejudge": "unknown"
+    }
+  ],
+  "constraints": [],
+  "gaps": [
+    {
+      "question": "unknown",
+      "impact": "unknown",
+      "suggested_owner": "unknown"
+    }
+  ],
+  "knowledge_trace": [
+    {
+      "knowledge_source": "unknown",
+      "supported_judgment": "unknown",
+      "unconfirmed_part": "unknown"
+    }
+  ]
+}
+```
 
-写入失败不阻断完成，但应在输出中提示。
+硬规则：
+
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
+- 不得为了填满 JSON 编造信息。
+- `features[]` 不得只写功能名，必须保留输入、处理、输出、结果、边界。
+- `experience_handoff_requirements[]` 不得压缩成一句话。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
 ## 预览交接
 
@@ -674,15 +808,35 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 这不会改变主链流转。
 ```
 
-## 交接
+## Handoff · 固定下一步
 
-完成后：
+本 Skill 完成后，只输出固定下一步推荐。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `uxb` 的 `next_hint`
-3. 按模板输出交接话术
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+需求定案已完成。你可以继续：
+1. 用户旅程
+2. 体验蓝图
+3. 页面规格
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+
 ## 复杂度资料
 
 复杂度相关资料继续保留原结构：

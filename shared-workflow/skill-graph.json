@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "_comment": "本文档是 Skill 依赖关系的权威数据源。与各 Skill 的 SKILL.md 内部规则冲突时，以本文档为准。就绪判定算法与交接话术模板见 shared-workflow/next-skill.md。",
+  "_comment": "本文档只作为 Skill 静态关系图、进度预览和人工查看的数据源；不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。字段 id、name_zh、phase、reads、required、next_hint、standalone_usable、standalone_note 只用于关系展示、进度预览和人工参考；不用于低算力模式下的运行时路由。",
   "skills": [
     {
       "id": "uxb",
@@ -102,7 +102,7 @@
           "board",
           "journey-metrics"
         ],
-        "reason": "体验蓝图完成后，建议进入异常态穷举补齐状态覆盖，或进入视觉情绪板收敛视觉方向。",
+        "reason": "体验蓝图完成后，可进入设计文档提取页面规格，也可按需要补异常态、视觉风格或旅程埋点与度量需求。",
         "alternatives": []
       }
     },

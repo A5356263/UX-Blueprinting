@@ -1,20 +1,22 @@
 {
   "skill": "page-spec",
   "version": "1.0",
-  "generated_at": "2026-07-13T00:00:00+08:00",
-  "project_name": "企业数字化产品员工权限自助申请",
+  "generated_at": "2026-07-14T10:30:00+08:00",
+  "project_name": "员工自助权限申请",
   "entities": [
-    {"name": "权限中心首页", "type": "Page"},
-    {"name": "我的申请列表", "type": "Page"},
-    {"name": "我的权限页", "type": "Page"},
-    {"name": "权限申请 Drawer", "type": "Drawer"},
-    {"name": "无权限拦截页", "type": "嵌入式组件"}
+    { "name": "我的权限 Page", "type": "Page" },
+    { "name": "权限申请 Drawer", "type": "Drawer" },
+    { "name": "申请记录列表 Page", "type": "Page" },
+    { "name": "申请详情 Page", "type": "Page" },
+    { "name": "审批详情 Page", "type": "Page" },
+    { "name": "自助申请配置 Page", "type": "Page" },
+    { "name": "关闭确认 Modal", "type": "Modal" }
   ],
   "extraction_summary": {
-    "entities_count": 5,
-    "states_count": 8,
-    "copy_count": 24,
-    "exceptions_count": 7
+    "entities_count": 7,
+    "states_count": 7,
+    "copy_count": 42,
+    "exceptions_count": 8
   },
   "edge_consumed": false,
   "edge_trace": []

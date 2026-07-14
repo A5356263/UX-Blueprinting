@@ -8,6 +8,33 @@ description: >
 
 # Experience Blueprint
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/experience_blueprint.md`
+- `spark-output/context/experience-blueprint.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 负责读取第一阶梯正式上游结论，并把它展开为完整的交互设计方案。默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
 
 本次能力支持多上游承接，但不改变 `§0-§9` 的正文分析骨架。
@@ -34,7 +61,7 @@ description: >
 
 启动后固定按以下顺序读取：
 
-1. 读取 `shared-workflow/skill-graph.json`，确认自己的角色和位置
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身角色和输入边界
 2. 读取 `spark-output/context/uxb.json`
 3. 读取 `spark-output/uxb_output.md`
 4. 读取 `spark-output/context/problem-framing.json`
@@ -499,38 +526,207 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 ## Context JSON 写入
 
-文档生成并自检通过后，按下方字段列表写入 `spark-output/context/experience-blueprint.json`。
+文档生成并自检通过后，按固定结构写入 `spark-output/context/experience-blueprint.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `source_mode`
-- `source_refs[]`
-- `source_usability_check`
-- `expansion_mode`
-- `uxb_mapping[]`
-- `problem_framing_mapping[]`
-- `stories_consumption`
-- `journey_consumption`（包含 `confidence_lows[]` / `key_transitions[]` / `dropout_risks[]`，每项含来源角色、阶段、蓝图落点）
-- `interaction_overview`
-- `main_flow[]`
-- `sub_flows[]`
-- `exceptions[]`
-- `pages[]`
-- `states[]`
-- `open_questions[]`
+```json
+{
+  "skill": "experience-blueprint",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/experience_blueprint.md",
+  "source_refs": [],
+  "read_sections": [],
+  "source_mode": "unknown",
+  "source_usability_check": {
+    "usable": "unknown",
+    "reason": "unknown",
+    "missing_inputs": []
+  },
+  "expansion_mode": "unknown",
+  "critical_design_judgments": [
+    {
+      "judgment": "unknown",
+      "major_impact": "unknown",
+      "recommended_solution": "unknown",
+      "not_recommended_solution": "unknown",
+      "key_open_question": "unknown"
+    }
+  ],
+  "uxb_mapping": [
+    {
+      "upstream_judgment": "unknown",
+      "experience_meaning": "unknown",
+      "blueprint_decision": "unknown",
+      "target_section": "unknown"
+    }
+  ],
+  "problem_framing_mapping": [
+    {
+      "upstream_judgment": "unknown",
+      "experience_meaning": "unknown",
+      "blueprint_decision": "unknown",
+      "target_section": "unknown"
+    }
+  ],
+  "stories_consumption": {
+    "used_stories": [],
+    "excluded_stories": [],
+    "story_to_flow_mapping": []
+  },
+  "journey_consumption": {
+    "confidence_lows": [
+      {
+        "role": "unknown",
+        "stage": "unknown",
+        "reason": "unknown",
+        "blueprint_impact": "unknown"
+      }
+    ],
+    "key_transitions": [
+      {
+        "from_stage": "unknown",
+        "to_stage": "unknown",
+        "trigger": "unknown",
+        "blueprint_impact": "unknown"
+      }
+    ],
+    "dropout_risks": [
+      {
+        "role": "unknown",
+        "stage": "unknown",
+        "risk": "unknown",
+        "blueprint_impact": "unknown"
+      }
+    ]
+  },
+  "interaction_overview": {
+    "pages": [],
+    "modals": [],
+    "drawers": [],
+    "user_actions": [],
+    "system_feedback": [],
+    "state_changes": [],
+    "toast": [],
+    "inline_error": [],
+    "empty_state": [],
+    "loading_state": []
+  },
+  "main_flow": [
+    {
+      "node_id": "unknown",
+      "node_name": "unknown",
+      "user_action": "unknown",
+      "system_feedback": "unknown",
+      "pre_explanation": "unknown",
+      "copy_suggestion": "unknown",
+      "state_change": "unknown",
+      "next_step": "unknown"
+    }
+  ],
+  "sub_flows": [
+    {
+      "flow_id": "unknown",
+      "flow_name": "unknown",
+      "trigger_condition": "unknown",
+      "user_action": "unknown",
+      "system_feedback": "unknown",
+      "pre_explanation": "unknown",
+      "copy_suggestion": "unknown",
+      "next_step": "unknown"
+    }
+  ],
+  "exceptions": [
+    {
+      "exception_id": "unknown",
+      "name": "unknown",
+      "timing": "unknown",
+      "trigger_condition": "unknown",
+      "basis": "unknown",
+      "feedback_form": "unknown",
+      "system_feedback": "unknown",
+      "user_next_step": "unknown",
+      "recovery_path": "unknown"
+    }
+  ],
+  "pages": [
+    {
+      "page_id": "unknown",
+      "page_name": "unknown",
+      "page_goal": "unknown",
+      "entry_condition": "unknown",
+      "structure_ascii": "unknown",
+      "regions": [],
+      "buttons": [],
+      "success_feedback": "unknown",
+      "failure_feedback": "unknown"
+    }
+  ],
+  "modals": [
+    {
+      "modal_id": "unknown",
+      "modal_name": "unknown",
+      "goal": "unknown",
+      "trigger_condition": "unknown",
+      "structure_ascii": "unknown",
+      "copy": [],
+      "buttons": [],
+      "success_feedback": "unknown",
+      "failure_feedback": "unknown"
+    }
+  ],
+  "drawers": [
+    {
+      "drawer_id": "unknown",
+      "drawer_name": "unknown",
+      "goal": "unknown",
+      "entry_condition": "unknown",
+      "structure_ascii": "unknown",
+      "copy": [],
+      "buttons": [],
+      "success_feedback": "unknown",
+      "failure_feedback": "unknown"
+    }
+  ],
+  "states": [
+    {
+      "state": "unknown",
+      "meaning": "unknown",
+      "applies_to": "unknown",
+      "user_action_available": "unknown",
+      "feedback_standard": "unknown"
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "unknown",
+      "impact": "unknown",
+      "suggested_owner": "unknown"
+    }
+  ],
+  "knowledge_consumption": {
+    "design_guidelines_used": [],
+    "business_knowledge_used": [],
+    "knowledge_gaps": [],
+    "upstream_trace": []
+  }
+}
+```
 
-字段规则：
+硬规则：
 
-- 当来源为 `uxb` 时，`source_usability_check` 可为空或标记 `not_applicable`
-- 当来源为 `problem-framing` 时，`source_usability_check` 必须记录 `3+1` 检查结果
-- `expansion_mode` 只能是 `full` 或 `limited`
-- `source_usability_check`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited` 属于机器侧承接记录，不得作为用户侧 Markdown 正文字段名直接展示
-
-写入失败不阻断完成，但应在输出中提示。
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
+- 不得为了填满 JSON 编造信息。
+- `expansion_mode` 只能是 `full`、`limited` 或 `unknown`。
+- `interaction_overview` 必须保留 `toast`、`inline_error`、`empty_state`、`loading_state`。
+- `pages[]`、`modals[]`、`drawers[]` 不得合并成无类型数组。
+- `structure_ascii` 必须来自 Markdown 中的结构草图；未输出则写 `unknown`。
+- `source_usability_check`、`expansion_mode`、`full`、`limited` 属于机器侧承接记录，不得作为用户侧 Markdown 正文字段名直接展示。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
 ## 预览交接
 
@@ -545,16 +741,34 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 这不会改变主链流转。
 ```
 
-## 交接
+## Handoff · 固定下一步
 
-当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+本 Skill 完成后，只输出固定下一步推荐。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `experience-blueprint` 的 `next_hint`
-3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
-6. 完成前必须确认已输出预览交接提示
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+体验蓝图已完成。你可以继续：
+1. 页面规格
+2. 异常态
+3. 视觉情绪板
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 设计参考使用规则
 

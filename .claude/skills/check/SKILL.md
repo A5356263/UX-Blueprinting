@@ -5,6 +5,33 @@ description: 设计走查 Skill。读取需求定案、体验策略和可选的�
 
 # Check
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/check_output.md`
+- `spark-output/context/check.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 负责在体验蓝图完成后，做一轮独立的设计走查。
 
 它不是重新生成方案，而是用固定检查清单和外部基线，找出遗漏、冲突、不一致和需要优先修复的问题。
@@ -29,7 +56,7 @@ Check 不负责：
 
 启动后按以下顺序读取：
 
-1. 读取 `shared-workflow/skill-graph.json`
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 读取 `spark-output/context/uxb.json`
 3. 读取 `spark-output/uxb_output.md`
 4. 读取 `spark-output/context/experience-blueprint.json`
@@ -161,22 +188,101 @@ JSON 要求：
 
 ## Context JSON 写入
 
-正式产物生成后，写入 `spark-output/context/check.json`。
+正式产物生成后，按固定结构写入 `spark-output/context/check.json`。
 
-写入字段以上文 `check.json` 字段清单为准。
+固定结构：
 
-写入失败不阻断完成，但应在输出中提示。
+```json
+{
+  "skill": "check",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/check_report.md",
+  "source_refs": [],
+  "read_sections": [],
+  "target": {
+    "artifact": "unknown",
+    "scope": "unknown"
+  },
+  "basis": [
+    {
+      "source": "unknown",
+      "rule_or_section": "unknown"
+    }
+  ],
+  "findings": [
+    {
+      "id": "unknown",
+      "category": "unknown",
+      "severity": "unknown",
+      "description": "unknown",
+      "suggestion": "unknown",
+      "location": "unknown",
+      "evidence": "unknown"
+    }
+  ],
+  "summary": {
+    "total": 0,
+    "blocker": 0,
+    "major": 0,
+    "minor": 0,
+    "pass": "unknown"
+  },
+  "degraded_items": [
+    {
+      "item": "unknown",
+      "reason": "unknown",
+      "impact": "unknown"
+    }
+  ],
+  "skipped_items": [
+    {
+      "item": "unknown",
+      "reason": "unknown"
+    }
+  ]
+}
+```
 
-## 交接
+硬规则：
 
-完成后：
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown` 或空数组。
+- 不得为了填满 JSON 编造信息。
+- `findings[]` 必须保留 `location` 和 `evidence`。
+- `basis[]` 必须说明走查依据，不能只写主观判断。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `check` 的 `next_hint`
-3. 如果 `next_hint.preferred` 为空，按终端节点口径输出
-4. 如果 `next_hint.preferred` 非空，按标准三层结构输出
-5. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-6. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
+## Handoff · 固定下一步
+
+本 Skill 完成后，只输出固定下一步推荐。
+
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+设计走查已完成。你可以继续：
+1. 体验蓝图
+2. 页面规格
+3. 停在这里
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

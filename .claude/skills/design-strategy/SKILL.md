@@ -5,6 +5,35 @@ description: 设计策略生成 Skill。读取 PRD 或需求材料，先形成�
 
 # 设计策略生成
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/phase1_<run_name>.md`
+- `spark-output/report_<run_name>.md`
+
+如果无法确定 `run_name`，只允许用 `spark-output/phase1_*.md` 或 `spark-output/report_*.md` 做存在性状态标注，不读取正文，不推断是否同一项目。
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 读取产品需求材料（PRD、流程图、原型、需求文档等），完成两阶段设计策略生成：Phase 1 从材料中识别用户问题并形成设计判断，Phase 2 基于判断展开结构化策略报告。
 
 ## 角色定义
@@ -35,7 +64,7 @@ description: 设计策略生成 Skill。读取 PRD 或需求材料，先形成�
 - 可以默认扫描 `spark-output/`，但这属于默认材料入口，不表示必须依赖某个固定工作区结构才能运行
 - 如果宿主不支持文件系统，则不依赖目录扫描，改为仅使用用户当前明确提供的材料
 
-> 此规则与 `shared-workflow/skill-graph.json` 保持一致。上下游关系待后续 Skill 丰富后再定义。
+> `shared-workflow/skill-graph.json` 仅作为静态关系和预览参考，不参与本 Skill 的运行时路由。上下游关系待后续 Skill 丰富后再定义。
 
 ## 两阶段流程
 
@@ -190,3 +219,33 @@ Phase 2 的角色是展开和表达 Phase 1 已建立的判断，不是重新决
 | [references/output_templates.md](references/output_templates.md) | Phase 1 和 Phase 2 的完整输出模板 | 需要完整模板参考时 |
 | [references/source_grading.md](references/source_grading.md) | 5 级来源分级的详细定义和使用示例 | Phase 2 标注来源时 |
 | [knowledge/README.md](knowledge/README.md) | knowledge 文件索引和用途说明 | 判断是否需要读取 knowledge 时 |
+
+
+## Handoff · 固定下一步
+
+本 Skill 完成后，只输出固定下一步推荐。
+
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+设计策略已完成。你可以继续：
+1. 需求定案
+2. 问题框定
+3. 体验蓝图
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。

@@ -8,6 +8,33 @@ description: >
 
 # Page Spec
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/page_spec.md`
+- `spark-output/context/page-spec.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 只做一件事：把设计材料整理成页面生成契约，过滤掉页面生成无关的叙事和说服性内容，输出一份干净的、可直接用于页面生成的规格文档。主要输入是体验蓝图，也接受用户直接上传的设计材料。
 
 ## 角色定义
@@ -39,7 +66,7 @@ Page Spec 必须保留语义组件类型，用于页面生成。语义组件类�
 
 启动后先判断当前输入模式，再进入正式提取流程：
 
-1. 读取 `shared-workflow/skill-graph.json`
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 检查 `spark-output/experience_blueprint.md` 是否存在
 3. 可选检查 `spark-output/context/edge.json` 与 `spark-output/edge_output.md` 是否存在
 
@@ -358,8 +385,6 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 ```markdown
 # 页面生成规格：{项目名}
 
----
-
 ## 1. 页面摘要
 - **产品领域**：
 - **页面类型**：
@@ -471,34 +496,206 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 
 ## Context JSON 写入
 
-文档生成后，按下方字段列表写入 `spark-output/context/page-spec.json`。
+文档生成后，按固定结构写入 `spark-output/context/page-spec.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `entities[]`：每个实体的 `name`、`type`
-- `extraction_summary`：`entities_count`、`states_count`、`copy_count`、`exceptions_count`
-- `edge_consumed`
-- `edge_trace[]`：仅在吸收 `edge` 时写入，记录被吸收的 `screen_id`、`state_type`、`target_section`
+```json
+{
+  "skill": "page-spec",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/page_spec.md",
+  "source_refs": [],
+  "read_sections": [],
+  "page_summary": {
+    "product_domain": "unknown",
+    "page_type": "unknown",
+    "user_role": "unknown",
+    "core_task": "unknown"
+  },
+  "generation_scope": {
+    "generate": [],
+    "reference_only": [],
+    "do_not_generate": []
+  },
+  "entity_relationships": [
+    {
+      "entity": "unknown",
+      "type": "unknown",
+      "relation": "unknown"
+    }
+  ],
+  "entities": [
+    {
+      "name": "unknown",
+      "type": "unknown"
+    }
+  ],
+  "extraction_summary": {
+    "entities_count": 0,
+    "states_count": 0,
+    "copy_count": 0,
+    "exceptions_count": 0
+  },
+  "pages": [
+    {
+      "page_id": "unknown",
+      "page_name": "unknown",
+      "page_goal": "unknown",
+      "structure_ascii": "unknown",
+      "regions": [
+        {
+          "region_id": "unknown",
+          "name": "unknown",
+          "purpose": "unknown",
+          "content": []
+        }
+      ],
+      "extraction_notes": [],
+      "list_fields": [
+        {
+          "field": "unknown",
+          "meaning": "unknown",
+          "source": "unknown"
+        }
+      ],
+      "key_actions": [
+        {
+          "action": "unknown",
+          "trigger": "unknown",
+          "result": "unknown"
+        }
+      ]
+    }
+  ],
+  "entity_specs": [
+    {
+      "entity_name": "unknown",
+      "surface_type": "unknown",
+      "goal": "unknown",
+      "structure_ascii": "unknown",
+      "regions": [],
+      "validation_blocking_state_changes": [],
+      "non_compliance_confirm_area": {
+        "structure": "unknown",
+        "copy": [],
+        "actions": []
+      }
+    }
+  ],
+  "main_interaction_flow": [
+    {
+      "step_id": "unknown",
+      "trigger": "unknown",
+      "user_action": "unknown",
+      "system_response": "unknown",
+      "state_change": "unknown",
+      "next_step": "unknown"
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "unknown",
+      "object": "unknown",
+      "condition": "unknown",
+      "blocking": "unknown",
+      "message_key": "unknown"
+    }
+  ],
+  "states": [
+    {
+      "state": "unknown",
+      "trigger_condition": "unknown",
+      "ui_behavior": "unknown",
+      "copy_key": "unknown"
+    }
+  ],
+  "exception_recovery": [
+    {
+      "exception": "unknown",
+      "trigger": "unknown",
+      "ui_behavior": "unknown",
+      "recovery_path": "unknown"
+    }
+  ],
+  "result_states": [
+    {
+      "state": "unknown",
+      "condition": "unknown",
+      "ui_behavior": "unknown",
+      "copy_key": "unknown"
+    }
+  ],
+  "copy_pool": {
+    "modal": [],
+    "object_selection": [],
+    "validation_and_execution": [],
+    "result_and_feedback": [],
+    "buttons": []
+  },
+  "template_variables": [
+    {
+      "variable": "unknown",
+      "meaning": "unknown",
+      "value_range": "unknown"
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "unknown",
+      "impact": "unknown"
+    }
+  ],
+  "edge_consumed": false,
+  "edge_trace": [
+    {
+      "screen_id": "unknown",
+      "state_type": "unknown",
+      "target_section": "unknown"
+    }
+  ]
+}
+```
 
-写入失败不阻断完成，但应在输出中提示。
+硬规则：
 
-字段规则：
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
+- 不得为了填满 JSON 编造信息。
+- 不得只保留实体和统计数；页面结构、流程、校验、状态、异常恢复、结果态、文案池必须同步写入。
+- `copy_pool` 必须保留五类文案池。
+- 未读取或未吸收 `edge` 时，`edge_consumed = false` 且 `edge_trace = []`。
+- 吸收 `edge` 时，`edge_trace[]` 只记录来源锚点，不复制整段状态描述。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
-- 未读取 `edge` 时，`edge_consumed = false`
-- 读取并吸收了 `edge` 补强信息时，`edge_consumed = true`
-- 未吸收 `edge` 时，`edge_trace = []`
-- 吸收 `edge` 时，`edge_trace[]` 只记录最小来源锚点，不复制整段状态描述，避免上下文膨胀
+## Handoff · 固定下一步
 
-## 交接
+本 Skill 完成后，只输出固定下一步推荐。
 
-当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `page-spec` 的 `next_hint`
-3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+页面规格已完成。你可以继续：
+1. 设计走查
+2. 异常态
+3. 停在这里
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。

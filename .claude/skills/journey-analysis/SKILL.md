@@ -8,6 +8,33 @@ description: >
 
 # 旅程分析
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/journey_analysis.md`
+- `spark-output/context/journey-analysis.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 > 你是旅程分析师，不是交互设计师，也不是用户研究员。你的职责是判断旅程是否可生成，在必要时补齐最小关键结构，并输出可供下游消费的旅程分析结果。
 
 默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
@@ -92,7 +119,7 @@ description: >
 
 ### 读取顺序
 
-1. 读取 `shared-workflow/skill-graph.json`，确认当前 Skill 在主链中的位置。
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界。
 2. 优先读取 `spark-output/context/uxb.json`。
 3. 若 `uxb.json` 不可用，则读取 `spark-output/uxb_output.md`。
 4. 若 `UXB` 上下文都不可用，则读取用户提供的 `PRD`、需求文档、场景描述或口头需求。
@@ -474,11 +501,11 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 `journey-analysis` 自身不再生成 HTML 预览。
 如用户明确确认需要预览，则在 JSON 校验通过后交给 `preview-renderer`。
 
-### Step 12：执行 shared-workflow 交接
+### Step 12：固定收口
 
-- 读取 `shared-workflow/next-skill.md`
-- 读取 `shared-workflow/skill-graph.json`
-- 输出完成语和下一步推荐
+- 使用本文末尾 Handoff · 固定下一步。
+- 不读取 shared-workflow/next-skill.md 或 shared-workflow/skill-graph.json 生成候选项。
+- 收口后等待用户明确选择。
 
 ## 阶段生成规则
 
@@ -630,50 +657,105 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 ## Context JSON 写入
 
-生成：
+生成 `spark-output/context/journey-analysis.json`。
 
-- `spark-output/context/journey-analysis.json`
-
-在原有 schema 基础上，新增以下元信息：
+固定结构：
 
 ```json
 {
-  "mode": "uxb-chain | prd-standalone",
-  "completion_used": true,
-  "result_level": "full | completed | skeleton",
-  "readiness": {
-    "role_clarity": "pass | partial | fail",
-    "scope_clarity": "pass | partial | fail",
-    "stage_divisibility": "pass | partial | fail",
-    "touchpoint_recoverability": "pass | partial | fail",
-    "painpoint_evidence": "pass | partial | fail"
+  "skill": "journey-analysis",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/journey_analysis.md",
+  "source_refs": [],
+  "read_sections": [],
+  "mode": "unknown",
+  "completion_used": false,
+  "result_level": "unknown",
+  "journey_subject": {
+    "primary_role": "unknown",
+    "journey_scope": "unknown",
+    "journey_type": "unknown",
+    "start_condition": "unknown",
+    "end_condition": "unknown"
   },
-  "gaps": [],
+  "readiness": {
+    "role_clarity": "unknown",
+    "scope_clarity": "unknown",
+    "stage_divisibility": "unknown",
+    "touchpoint_recoverability": "unknown",
+    "painpoint_evidence": "unknown"
+  },
+  "skeleton_result": {
+    "primary_role_candidates": [],
+    "journey_theme": "unknown",
+    "rough_stages": [],
+    "current_gaps": [],
+    "reason_full_journey_unavailable": "unknown",
+    "suggested_next_step": "unknown"
+  },
+  "stages": [
+    {
+      "stage_id": "unknown",
+      "stage_name": "unknown",
+      "user_goal": "unknown",
+      "actions": [],
+      "touchpoints": [],
+      "user_voice": "unknown",
+      "emotion": "unknown",
+      "confidence": "unknown",
+      "confidence_reason": "unknown",
+      "pain_points": [],
+      "dropout_risk": {
+        "level": "unknown",
+        "reason": "unknown"
+      },
+      "opportunities": [],
+      "evidence": []
+    }
+  ],
+  "key_transitions": [
+    {
+      "from_stage": "unknown",
+      "to_stage": "unknown",
+      "trigger": "unknown",
+      "risk": "unknown"
+    }
+  ],
+  "gaps": [
+    {
+      "gap": "unknown",
+      "impact": "unknown",
+      "needed_input": "unknown"
+    }
+  ],
   "user_completion": {
-    "primary_role": "",
-    "journey_scope": "",
-    "journey_type": "",
-    "start_condition": "",
-    "end_condition": "",
+    "primary_role": "unknown",
+    "journey_scope": "unknown",
+    "journey_type": "unknown",
+    "start_condition": "unknown",
+    "end_condition": "unknown",
     "suspected_breakpoints": [],
     "evidence_sources": [],
-    "notes": []
+    "notes": "unknown"
   }
 }
 ```
 
-字段硬规则：
+硬规则：
 
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
+- 不得为了填满 JSON 编造信息。
+- `mode` 只允许 `uxb-chain`、`prd-standalone` 或 `unknown`。
+- `result_level` 只允许 `full`、`completed`、`skeleton` 或 `unknown`。
 - 未触发补问时，`completion_used = false`。
-- 未补问时，`user_completion` 可为空对象。
-- 输出骨架时，`result_level = skeleton`。
-- 输出完整旅程时，`result_level = full` 或 `completed`。
+- 输出骨架时，`result_level = skeleton`，`skeleton_result` 必须完整，`stages[]` 可为空。
+- 输出完整旅程时，`stages[]` 必须保留 `actions[]`、`touchpoints[]`、`pain_points[]`、`dropout_risk`、`opportunities[]`。
 - `evidence_sources[]` 必须记录来源分层，不得只写泛化的“上游材料”。
 - 当字段来自体验推导时，必须在来源说明中标为 `规则推导`。
-
-向后兼容原则：
-
-- 原有核心字段结构必须保留。
+- JSON 不复制 Markdown 全文。
 - 新增字段不得替换原字段。
 - 新增字段只作为元信息补充。
 
@@ -728,76 +810,37 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 不输出访谈大纲
 - 不假装拥有真实研究证据
 
-## 与 shared-workflow 的衔接
+## 与 shared-workflow 的边界
 
-### 主链推荐规则
+- shared-workflow 只作为静态关系、进度预览和人工查看数据源。
+- 当前 Skill 的启动、输入读取、执行分支和收口，以用户显式意图和本 SKILL.md 为准。
+- standalone 能力只表示本 Skill 可在材料足够时独立执行，不改变全局预览面板的展示口径。
 
-- 正式主链仍以 `shared-workflow/skill-graph.json` 为准。
-- 当前 Skill 即使支持 `prd-standalone`，也不改变主链的 ready 判断。
+## Handoff · 固定下一步
 
-### standalone 能力的意义
+本 Skill 完成后，只输出固定下一步推荐。
 
-- `prd-standalone` 和 `guided-completion` 是当前 Skill 的内部能力。
-- 它们用于在用户显式调用时扩大可用场景。
-- 它们不代表 `UXB` 已被替代，也不代表主链顺序发生变化。
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
-### 下游消费兼容约束
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
 
-下游若消费 `spark-output/context/journey-analysis.json`，必须先检查 `result_level`：
-
-- `full`：视为完整旅程，可按正式输入消费。
-- `completed`：视为补全后完成的正式旅程，可按正式输入消费。
-- `skeleton`：只视为参考骨架，不得等同于完整旅程。
-
-## 交接
-
-完成后：
-
-1. 读取 `shared-workflow/next-skill.md`。
-2. 读取 `shared-workflow/skill-graph.json` 中 `journey-analysis` 的 `next_hint`。
-3. 先判断第一梯队正式来源是否存在：
-   - 先检查 `spark-output/context/uxb.json`
-   - 再检查 `spark-output/uxb_output.md`
-   - 再检查 `spark-output/context/problem-framing.json`
-   - 再检查 `spark-output/problem_framing.md`
-   - 任一存在，视为已有第一梯队正式来源
-   - 全部不存在，视为缺少第一梯队正式来源
-4. 再判断用户故事是否存在：
-   - 先检查 `spark-output/context/stories.json`
-   - 再检查 `spark-output/stories.md`
-   - 任一存在，视为已有 `stories`
-5. 按以下硬规则输出完成语和下一步推荐：
-   - 已有第一梯队正式来源，且已有 `stories` 时：
+固定输出：
 
 ```text
-✅ 用户旅程完成，{产物简述}
-你可以选择：体验策略 - 当前已有第一梯队正式来源和用户故事，旅程洞察已补齐，可以进入体验蓝图展开交互流程和页面设计。
-你回复“体验策略”即可
+用户旅程已完成。你可以继续：
+1. 体验蓝图
+2. 页面规格
+3. 设计走查
+
+你回复对应名称即可。
 ```
 
-   - 已有第一梯队正式来源，但没有 `stories` 时：
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-```text
-✅ 用户旅程完成，{产物简述}
-你可以选择：用户故事 - 当前已有第一梯队正式来源，但任务单元尚未拆解，建议先补齐用户故事。
-你回复“用户故事”即可
-```
-
-   - 缺少第一梯队正式来源时：
-
-```text
-✅ 用户旅程完成，{产物简述}
-你可以选择：问题框定 / 需求定案 - 当前缺少第一梯队正式来源，建议先完成问题框定或需求定案，再进入体验策略。
-```
-
-6. 如果旅程结果为 `skeleton`，不得直接推荐 `experience-blueprint`，应提示先补齐缺口或回到第一梯队收敛。
-7. 不允许在缺少第一梯队正式来源时仍然推荐 `experience-blueprint`。
-8. 不允许使用“旅程之后直接接体验策略”“下一步就是体验策略”这类绝对表述。
-9. 如宿主支持本地命令执行，则在正式产物写出后优先尝试执行项目内的进度预览刷新脚本：
-
-```text
-shared-workflow/generate-progress-preview.ps1
-```
-
-10. 进度预览刷新只允许通过项目现有刷新脚本完成；当前仓库提供的脚本是 `shared-workflow/generate-progress-preview.ps1`，默认消费 `shared-workflow/progress-preview.html` 并输出到 `spark-output/progress-preview.html`。当前 Skill 不直接修改 `progress-preview.html` 模板。
-11. 如当前环境不支持该脚本、模板缺失、执行失败，或宿主本身不支持本地命令执行，则直接跳过刷新，不得影响当前 Skill 的完成判定。
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。

@@ -5,6 +5,33 @@ description: 视觉风格 Skill。读取体验策略与现有设计规范，输�
 
 # Board
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/board_output.md`
+- `spark-output/context/board.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 负责把体验蓝图里的角色、场景和触点，转成可落地的视觉方向方案。
 
 它的任务不是发明一套全新设计系统，而是在现有规范和当前产品语境内，整理出几套清晰可选的视觉方向，并把选定方案沉淀为可复用的设计变量。
@@ -29,7 +56,7 @@ Board 不负责：
 
 启动后按以下顺序读取：
 
-1. 读取 `shared-workflow/skill-graph.json`
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 读取 `spark-output/context/experience-blueprint.json`
 3. 读取 `spark-output/experience_blueprint.md`
 4. 如存在，读取知识库中与现有设计规范、品牌约束、视觉准则相关的内容
@@ -140,22 +167,95 @@ JSON 要求：
 
 ## Context JSON 写入
 
-正式产物生成后，写入 `spark-output/context/board.json`。
+正式产物生成后，按固定结构写入 `spark-output/context/board.json`。
 
-写入字段以上文 `board.json` 字段清单为准。
+固定结构：
 
-写入失败不阻断完成，但应在输出中提示。
+```json
+{
+  "skill": "board",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/board.md",
+  "source_refs": [],
+  "read_sections": [],
+  "selected_scheme": {
+    "scheme_id": "unknown",
+    "scheme_name": "unknown",
+    "selection_reason": "unknown"
+  },
+  "style_keywords": [],
+  "color": {
+    "primary": "unknown",
+    "secondary": "unknown",
+    "background": "unknown",
+    "surface": "unknown",
+    "text": "unknown",
+    "semantic": {}
+  },
+  "typography": {
+    "font_family": "unknown",
+    "scale": [],
+    "weight": []
+  },
+  "spacing": {
+    "base": "unknown",
+    "scale": []
+  },
+  "radius": {
+    "base": "unknown",
+    "scale": []
+  },
+  "component": {
+    "button": {},
+    "card": {},
+    "input": {},
+    "navigation": {},
+    "feedback": {}
+  },
+  "open_questions": []
+}
+```
 
-## 交接
+硬规则：
 
-完成后：
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
+- 不得为了填满 JSON 编造信息。
+- 只写最终选中方案和变量；未确认候选方案不得写成最终方案。
+- `component` 只填当前产物明确给出的组件规则，不补设计系统。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `board` 的 `next_hint`
-3. 如果 `next_hint.preferred` 为空，按终端节点口径输出
-4. 如果 `next_hint.preferred` 非空，按标准三层结构输出
-5. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-6. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
+## Handoff · 固定下一步
+
+本 Skill 完成后，只输出固定下一步推荐。
+
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+视觉情绪板已完成。你可以继续：
+1. 页面规格
+2. 设计走查
+3. 停在这里
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

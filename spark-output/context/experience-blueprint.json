@@ -1,306 +1,363 @@
 {
   "skill": "experience-blueprint",
   "version": "1.0",
-  "generated_at": "2026-07-13T00:00:00+08:00",
-  "project_name": "企业数字化产品员工权限自助申请",
-  "source_mode": "framing-mode",
+  "generated_at": "2026-07-14T10:00:00+08:00",
+  "project_name": "员工自助权限申请",
+  "source_mode": "uxb-mode",
   "source_refs": [
-    "spark-output/context/problem-framing.json",
-    "spark-output/problem_framing.md",
-    "spark-output/context/stories.json",
-    "spark-output/stories.md",
+    "spark-output/context/uxb.json",
+    "spark-output/uxb_output.md",
     "spark-output/context/journey-analysis.json",
     "spark-output/journey_analysis.md"
   ],
-  "source_usability_check": {
-    "role_and_goal_clarity": "pass",
-    "boundary_and_object_clarity": "pass",
-    "state_and_block_clarity": "pass",
-    "no_flow_rewriting_gaps": "pass",
-    "conclusion": "all_pass"
-  },
+  "source_usability_check": "not_applicable",
   "expansion_mode": "full",
-  "design_judgments": [
+  "uxb_mapping": [
     {
-      "id": "DJ-1",
-      "title": "无权限拦截页采用信息告知+行动引导双层结构",
-      "impact": "无权限拦截页（S1核心触点）",
-      "approach": "上方告知缺少的具体权限名称和可申请状态，下方提供去申请按钮",
-      "not_recommended": "只显示无权限让员工自己找入口",
-      "key_pending": "拦截页能否准确识别缺少的权限并判断可申请状态"
+      "uxb_ref": "§7 范围配置集中化",
+      "blueprint_ref": "§6.6 自助申请配置页 - 配置区与开启开关绑定"
     },
     {
-      "id": "DJ-2",
-      "title": "权限申请采用单页Drawer而非步骤条",
-      "impact": "权限申请流程（S1、S4）",
-      "approach": "Drawer承载申请流程，选择权限+填写理由+提交在一页内完成",
-      "not_recommended": "使用步骤条增加跨步骤往返成本",
-      "key_pending": "一次申请可包含多个权限/角色还是每次只能一个"
+      "uxb_ref": "§7 员工侧用业务语言展示权限",
+      "blueprint_ref": "§6.1 我的权限页 - 权限项双行展示模式"
     },
     {
-      "id": "DJ-3",
-      "title": "审批侧以权限申请上下文为核心展示审批信息",
-      "impact": "审批人处理申请（S2）",
-      "approach": "展示申请理由、权限业务说明、同类权限持有情况",
-      "not_recommended": "只展示XX申请了YY权限的极简信息",
-      "key_pending": "OA底座审批页面自定义信息承载能力"
+      "uxb_ref": "§7 审批界面需包含判断依据",
+      "blueprint_ref": "§6.5 审批详情页 - 批准后影响+风险等级区块"
     },
     {
-      "id": "DJ-4",
-      "title": "状态追踪以当前节点+预计时间为核心信息",
-      "impact": "申请进度追踪（S5）",
-      "approach": "展示当前状态标签、处理人、预计剩余时间",
-      "not_recommended": "只显示审批中一个状态",
-      "key_pending": "通知渠道和审批超时策略"
+      "uxb_ref": "§7 审批通过到生效的过程需要可见",
+      "blueprint_ref": "§6.4 申请详情页 - 状态时间线+已通过中间态"
+    },
+    {
+      "uxb_ref": "§7 关闭操作需校验进行中申请",
+      "blueprint_ref": "§6.7 关闭确认弹窗 - 进行中申请校验与展示"
+    },
+    {
+      "uxb_ref": "§7 范围选择器适配不同权限组织形式",
+      "blueprint_ref": "§6.6 配置页 - 按应用/模块分组+搜索+全选/反选"
+    },
+    {
+      "uxb_ref": "§6 状态流转(draft→pending→approved→rejected→effective→revoked)",
+      "blueprint_ref": "§7 状态表 + §6.4 时间线展示"
+    },
+    {
+      "uxb_ref": "§6 异常清单7项",
+      "blueprint_ref": "§5 异常与阻断流程 - 全部展开"
     }
   ],
-  "problem_framing_mapping": [
-    {
-      "handoff": "敏感权限系统级排除，不在员工可申请范围内",
-      "experience_impact": "员工侧不可感知不可申请，不可绕过",
-      "design_decision": "不可申请项置灰+标注原因说明",
-      "chapter": "§5 E3"
-    },
-    {
-      "handoff": "OA底座提供审批流程引擎，不重新设计审批流引擎",
-      "experience_impact": "审批节点、待办、通知由OA底座承载",
-      "design_decision": "审批详情页展示申请上下文信息",
-      "chapter": "§3 节点4"
-    },
-    {
-      "handoff": "组织架构和上级负责人关系由组织域定义，权限中心仅引用",
-      "experience_impact": "权限中心引用不定义审批人",
-      "design_decision": "审批人由OA底座自动匹配组织架构",
-      "chapter": "§3 节点3"
-    },
-    {
-      "handoff": "语义降维：终端用户不感知功能权限vs角色",
-      "experience_impact": "员工侧统一呈现能力而非管理术语",
-      "design_decision": "权限列表混合展示功能权限和角色，用业务说明",
-      "chapter": "§6 P2"
-    },
-    {
-      "handoff": "审批上下文：审批人看到的不只是权限名称",
-      "experience_impact": "审批人需要知道为什么需要",
-      "design_decision": "审批详情页展示申请理由和业务说明",
-      "chapter": "§3 节点4"
-    },
-    {
-      "handoff": "状态闭环：生效通知和失败可解释才是体验闭环",
-      "experience_impact": "通过/拒绝都需通知+原因",
-      "design_decision": "通知文案包含结果和引导",
-      "chapter": "§3 节点5"
-    },
-    {
-      "handoff": "缺口触发为主要入口",
-      "experience_impact": "无权限拦截页必须高效引导申请",
-      "design_decision": "双层结构：信息告知+行动引导",
-      "chapter": "§6 P1"
-    }
-  ],
-  "stories_consumption": {
-    "consumed": true,
-    "stories_used": ["S1", "S2", "S3", "S4", "S5", "S6"],
-    "notes": "S1-S6全部作为交互流程和页面设计的设计触点输入"
-  },
   "journey_consumption": {
     "confidence_lows": [
       {
-        "role": "员工",
-        "stage": "定位与选择权限",
-        "blueprint_impact": "驱动§5 E2搜索无结果和E3权限不可申请的降级引导"
+        "source_role": "管理员",
+        "stage": "了解与开启",
+        "blueprint_focus": "§4.1 - 安全说明+默认配置模板"
       },
       {
-        "role": "员工",
-        "stage": "等待审批与追踪进度",
-        "blueprint_impact": "驱动§5 E5审批超时升级策略"
+        "source_role": "管理员",
+        "stage": "日常监控",
+        "blueprint_focus": "§4.4 - 统计概览+异常标记"
       },
       {
-        "role": "员工",
-        "stage": "接收审批结果",
-        "blueprint_impact": "驱动§5 E6拒绝原因缺失和E7生效空窗期处理"
+        "source_role": "审批人",
+        "stage": "接收审批任务",
+        "blueprint_focus": "§5.7 - 审批超时处理"
+      },
+      {
+        "source_role": "审批人",
+        "stage": "评估申请",
+        "blueprint_focus": "§6.5 - 审批详情页判断依据"
       }
     ],
     "key_transitions": [
       {
-        "role": "员工",
-        "from": "感知权限缺口",
-        "to": "定位与选择权限",
-        "blueprint_impact": "§3节点1.2前置说明：员工需要知道缺少的具体权限和是否可以申请"
+        "source_role": "员工",
+        "transition": "了解→申请",
+        "blueprint_focus": "§3.6 提交前确认 - 确认感"
       },
       {
-        "role": "员工",
-        "from": "等待审批与追踪进度",
-        "to": "接收审批结果",
-        "blueprint_impact": "§3节点3.4前置说明：员工需要知道预计时长和超时处理方式"
+        "source_role": "员工",
+        "transition": "申请→跟踪",
+        "blueprint_focus": "§3.7 提交成功反馈 - 明确下一步预期"
+      },
+      {
+        "source_role": "管理员",
+        "transition": "了解→配置",
+        "blueprint_focus": "§4.1 - 渐进引导+默认值"
+      },
+      {
+        "source_role": "审批人",
+        "transition": "接收→评估",
+        "blueprint_focus": "§6.5 - 关键信息前置"
       }
     ],
     "dropout_risks": [
       {
-        "role": "员工",
-        "stage": "感知权限缺口",
-        "blueprint_impact": "§6 P1拦截页直接引导到申请流程"
+        "source_role": "员工",
+        "stage": "了解权限",
+        "blueprint_focus": "§6.1 - 业务语言展示+搜索筛选"
       },
       {
-        "role": "员工",
-        "stage": "定位与选择权限",
-        "blueprint_impact": "§6 P2搜索无结果提供替代方案"
+        "source_role": "员工",
+        "stage": "提交申请",
+        "blueprint_focus": "§6.2 - 权限推荐+原因模板"
       },
       {
-        "role": "员工",
-        "stage": "等待审批与追踪进度",
-        "blueprint_impact": "§6 P4进度可视化+预计时间"
+        "source_role": "员工",
+        "stage": "跟踪结果",
+        "blueprint_focus": "§6.4 - 时间线+预计生效提示"
+      },
+      {
+        "source_role": "管理员",
+        "stage": "配置范围",
+        "blueprint_focus": "§6.6 - 分组展示+全选/反选+预览"
+      },
+      {
+        "source_role": "审批人",
+        "stage": "评估申请",
+        "blueprint_focus": "§6.5 - 判断依据+风险标签"
       }
     ]
   },
-  "interaction_overview": "2条主路径（缺口触发P0 + 目标驱动P1），4条分支路径（查看权限/查看申请/审批处理/管理员配置），7个异常流程",
+  "interaction_overview": "1条主路径（员工提交权限申请）+ 5条子路径（管理员开启配置、管理员关闭、员工撤销、审批人审批、管理员调整配置）",
   "main_flow": [
     {
-      "node": "无权限拦截",
-      "page": "P1",
-      "actions": "员工操作功能→系统识别缺失权限→展示拦截提示",
-      "branch": "可申请→去申请；不可申请→联系管理员"
+      "step": "进入我的权限页",
+      "page": "我的权限 Page",
+      "actions": ["浏览已有权限", "查看可申请权限"],
+      "branches": ["点击[申请权限]进入Drawer"]
     },
     {
-      "node": "权限申请Drawer",
-      "page": "P2",
-      "actions": "选择权限→填写理由→提交",
-      "branch": "预填场景vs手动选择场景"
+      "step": "打开申请 Drawer",
+      "page": "权限申请 Drawer",
+      "actions": ["选择权限", "填写申请原因"],
+      "branches": ["未选择权限→[提交]置灰", "原因为空→[提交]置灰"]
     },
     {
-      "node": "提交成功反馈",
-      "page": "Toast + P4",
-      "actions": "Drawer关闭→Toast→新增申请记录→推送待办",
-      "branch": ""
+      "step": "提交申请",
+      "page": "权限申请 Drawer",
+      "actions": ["系统校验（范围/去重/进行中）", "校验通过→关闭Drawer→Toast"],
+      "branches": ["校验失败→Drawer不关闭→InlineError"]
     },
     {
-      "node": "审批人处理",
-      "page": "OA审批详情",
-      "actions": "查看上下文→批准/拒绝→填写原因→通知申请人",
-      "branch": ""
-    },
-    {
-      "node": "接收结果",
-      "page": "通知 + P4",
-      "actions": "收到通知→查看状态→使用权限或重新申请",
-      "branch": ""
+      "step": "跟踪结果",
+      "page": "申请详情 Page",
+      "actions": ["查看时间线", "查看状态"],
+      "branches": ["审批中→可撤销/催办", "已通过→等待生效", "已拒绝→查看原因"]
     }
   ],
   "sub_flows": [
     {
-      "name": "查看已有权限",
-      "trigger": "员工希望了解自己当前拥有的权限",
-      "page": "P5"
+      "name": "管理员开启并配置",
+      "trigger": "管理员进入配置页",
+      "actions": ["切换启用开关", "选择范围类型", "勾选权限", "选择审批流程", "保存"],
+      "blueprint_ref": "§4.1"
     },
     {
-      "name": "查看申请进度",
-      "trigger": "员工提交申请后想了解处理状态",
-      "page": "P4"
+      "name": "管理员关闭",
+      "trigger": "管理员切换开关为关闭",
+      "actions": ["校验进行中数量", "弹窗确认", "确认关闭"],
+      "blueprint_ref": "§4.6"
     },
     {
-      "name": "管理员配置可申请范围",
-      "trigger": "管理员需要设定可申请权限范围",
-      "page": "P6（后台配置页）"
+      "name": "员工撤销申请",
+      "trigger": "员工在申请详情页点击撤销",
+      "actions": ["弹窗确认", "确认撤销->状态变更->Toast"],
+      "blueprint_ref": "§4.2"
     },
     {
-      "name": "撤销申请",
-      "trigger": "员工在审批前希望撤销申请",
-      "page": "P4"
+      "name": "审批人审批",
+      "trigger": "审批人进入审批详情页",
+      "actions": ["查看申请", "同意/拒绝", "如拒绝填写原因", "确认"],
+      "blueprint_ref": "§4.3"
+    },
+    {
+      "name": "管理员调整配置",
+      "trigger": "管理员修改已启用配置",
+      "actions": ["修改范围/流程", "提示不影响已有申请", "保存"],
+      "blueprint_ref": "§4.5"
     }
   ],
   "exceptions": [
     {
-      "id": "E1",
-      "name": "从缺口到申请的链路失败",
-      "trigger": "无法确定员工缺少的权限",
-      "feedback": "降级文案+联系管理员"
+      "name": "申请超出可申请范围",
+      "trigger": "所选权限不在可申请范围",
+      "feedback": "InlineError",
+      "recovery": "原路恢复，无信息丢失",
+      "blueprint_ref": "§5.1"
     },
     {
-      "id": "E2",
-      "name": "搜索无结果",
-      "trigger": "搜索关键词无匹配权限",
-      "feedback": "空状态+替代方案"
+      "name": "员工已有该权限",
+      "trigger": "所选权限员工已拥有",
+      "feedback": "InlineError",
+      "recovery": "原路恢复，无信息丢失",
+      "blueprint_ref": "§5.2"
     },
     {
-      "id": "E3",
-      "name": "权限不可申请",
-      "trigger": "选中权限为系统排除或管理员未开放",
-      "feedback": "置灰+不可申请标记"
+      "name": "存在进行中的相同申请",
+      "trigger": "该权限已有审批中申请",
+      "feedback": "InlineError",
+      "recovery": "原路恢复，无信息丢失",
+      "blueprint_ref": "§5.3"
     },
     {
-      "id": "E4",
-      "name": "提交校验失败",
-      "trigger": "申请理由为空",
-      "feedback": "InlineError不关闭Drawer"
+      "name": "审批人缺失",
+      "trigger": "审批流程无有效审批人",
+      "feedback": "提交时Toast",
+      "recovery": "管理员配置审批人后重新提交",
+      "blueprint_ref": "§5.4"
     },
     {
-      "id": "E5",
-      "name": "审批长时间未处理",
-      "trigger": "超过预设时限审批人未操作",
-      "feedback": "催办→升级策略"
+      "name": "审批通过但授权失败",
+      "trigger": "自动授权接口失败",
+      "feedback": "三方通知（审批人/管理员/员工）",
+      "recovery": "管理员介入手动授权",
+      "blueprint_ref": "§5.5"
     },
     {
-      "id": "E6",
-      "name": "审批拒绝",
-      "trigger": "审批人拒绝申请",
-      "feedback": "通知+拒绝原因+后续引导"
+      "name": "关闭期间有新申请",
+      "trigger": "功能关闭后尝试提交",
+      "feedback": "提交按钮置灰+提示",
+      "recovery": "管理员重新开启功能",
+      "blueprint_ref": "§5.6"
     },
     {
-      "id": "E7",
-      "name": "审批通过但权限未生效",
-      "trigger": "权限系统生效失败",
-      "feedback": "已批准状态+自动重试"
+      "name": "审批超时未处理",
+      "trigger": "超过超时阈值",
+      "feedback": "员工端催办可用+审批人端提醒",
+      "recovery": "催办或联系管理员转派",
+      "blueprint_ref": "§5.7"
     }
   ],
   "pages": [
     {
-      "id": "P1",
-      "type": "嵌入式提示条",
-      "name": "无权限拦截页",
-      "target": "告知缺少的权限并引导申请"
+      "name": "我的权限 Page",
+      "sections": ["已有权限区", "可申请权限区", "搜索筛选"],
+      "blueprint_ref": "§6.1"
     },
     {
-      "id": "P2",
-      "type": "drawer",
-      "name": "权限申请Drawer",
-      "target": "选择和确认要申请的权限并提交"
+      "name": "权限申请 Drawer",
+      "sections": ["权限选择区", "申请原因输入区", "提交按钮"],
+      "blueprint_ref": "§6.2"
     },
     {
-      "id": "P3",
-      "type": "page",
-      "name": "权限中心首页",
-      "target": "员工侧权限统一入口"
+      "name": "申请记录列表 Page",
+      "sections": ["筛选区", "申请卡片列表"],
+      "blueprint_ref": "§6.3"
     },
     {
-      "id": "P4",
-      "type": "page",
-      "name": "我的申请列表",
-      "target": "查看所有申请记录及处理状态"
+      "name": "申请详情 Page/Drawer",
+      "sections": ["状态时间线", "申请信息", "操作按钮（催办/撤销）"],
+      "blueprint_ref": "§6.4"
     },
     {
-      "id": "P5",
-      "type": "page",
-      "name": "我的权限页",
-      "target": "查看已有权限清单"
+      "name": "审批详情 Page",
+      "sections": ["申请人信息", "权限详情", "批准后影响", "风险等级", "审批意见", "同意/拒绝按钮"],
+      "blueprint_ref": "§6.5"
+    },
+    {
+      "name": "自助申请配置 Page",
+      "sections": ["启用开关", "范围配置区", "审批流程区", "保存/预览按钮"],
+      "blueprint_ref": "§6.6"
+    },
+    {
+      "name": "关闭确认弹窗",
+      "sections": ["关闭说明", "进行中申请数量提示", "确认/取消按钮"],
+      "blueprint_ref": "§6.7"
     }
   ],
   "states": [
-    {"state": "待提交", "meaning": "已选择权限但尚未提交", "feedback": "请确认申请信息后提交"},
-    {"state": "审批中", "meaning": "等待审批人处理", "feedback": "等待{审批人姓名}处理"},
-    {"state": "已批准", "meaning": "已批准尚未生效", "feedback": "申请已通过，权限生效中"},
-    {"state": "已生效", "meaning": "权限已生效", "feedback": "权限已生效，可以正常使用了"},
-    {"state": "已拒绝", "meaning": "审批人拒绝", "feedback": "申请未通过，原因：{审批意见}"},
-    {"state": "已撤销", "meaning": "主动撤销", "feedback": "申请已撤销"},
-    {"state": "已失效", "meaning": "已过期或回收", "feedback": "此权限已失效"},
-    {"state": "不可申请", "meaning": "系统排除或未开放", "feedback": "此权限不可自助申请"}
+    {
+      "state": "草稿",
+      "meaning": "员工已填写但未提交",
+      "display": "未提交",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "审批中",
+      "meaning": "已提交，等待审批人处理",
+      "display": "审批中（等待审批人处理）",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "已通过",
+      "meaning": "审批人已同意，等待系统自动授权",
+      "display": "已通过（审批已通过，正在自动授权）",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "已生效",
+      "meaning": "权限已成功授予",
+      "display": "已生效（权限已生效）",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "已拒绝",
+      "meaning": "审批人不同意",
+      "display": "已拒绝（申请已被拒绝）",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "已撤销",
+      "meaning": "员工在审批中主动撤回",
+      "display": "已撤销（申请已撤销）",
+      "blueprint_ref": "§7"
+    },
+    {
+      "state": "授权异常",
+      "meaning": "审批通过但自动授权失败",
+      "display": "已通过（授权异常）",
+      "blueprint_ref": "§7"
+    }
   ],
   "open_questions": [
-    {"question": "审批超时或审批人不在线时的升级策略", "scope": "§5 E5", "status": "based_on_recommendation"},
-    {"question": "申请生效后的通知渠道", "scope": "§3 节点5", "status": "based_on_recommendation"},
-    {"question": "任务→权限映射关系的维护方和更新频率", "scope": "§6 P2", "status": "based_on_recommendation"},
-    {"question": "一次申请可包含多个权限/角色还是每次只能一个", "scope": "§6 P2", "status": "based_on_recommendation"},
-    {"question": "已生效权限是否展示来源", "scope": "§6 P5", "status": "based_on_recommendation"},
-    {"question": "申请理由是否必填", "scope": "§6 P2", "status": "based_on_recommendation"},
-    {"question": "OA底座审批页面的自定义信息承载能力", "scope": "§3 节点4", "status": "open"}
+    {
+      "level": 1,
+      "issue": "审批流程复用问题",
+      "impact": "审批流程对接方式",
+      "suggested_owner": "产品/技术"
+    },
+    {
+      "level": 1,
+      "issue": "审批人确定机制",
+      "impact": "审批详情页语义",
+      "suggested_owner": "产品"
+    },
+    {
+      "level": 1,
+      "issue": "是否支持多权限同时申请",
+      "impact": "申请 Drawer 权限选择器设计",
+      "suggested_owner": "产品/设计"
+    },
+    {
+      "level": 2,
+      "issue": "权限名称与业务场景映射",
+      "impact": "权限列表展示",
+      "suggested_owner": "业务侧"
+    },
+    {
+      "level": 2,
+      "issue": "权限影响范围描述模板",
+      "impact": "审批详情页",
+      "suggested_owner": "业务侧"
+    },
+    {
+      "level": 2,
+      "issue": "员工端入口位置",
+      "impact": "导航设计",
+      "suggested_owner": "产品/设计"
+    },
+    {
+      "level": 2,
+      "issue": "审批通知方式",
+      "impact": "超时提醒和催办通知",
+      "suggested_owner": "产品"
+    },
+    {
+      "level": 2,
+      "issue": "授权生效平均时间",
+      "impact": "时间线展示文案",
+      "suggested_owner": "技术侧"
+    }
   ]
 }

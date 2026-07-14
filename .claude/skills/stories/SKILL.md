@@ -8,6 +8,33 @@ description: >
 
 # 用户故事
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/stories.md`
+- `spark-output/context/stories.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 负责把第一阶梯已经形成的正式上游结论，拆成可承接的用户任务单元。它不重新判断问题是否成立，也不写旅程阶段和页面方案。
 
 来源为 `problem-framing` 时，本 skill 可以执行最小澄清停顿，但该停顿只服务任务拆解，不服务重新判断方向。
@@ -48,7 +75,7 @@ description: >
 
 ## 上游读取协议
 
-启动后先读取 `shared-workflow/skill-graph.json`，再按以下顺序读取上游：
+启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
 
 1. `spark-output/context/uxb.json`
 2. `spark-output/uxb_output.md`
@@ -275,48 +302,84 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按下方字段列表写入 `spark-output/context/stories.json`。
+文档生成后，按固定结构写入 `spark-output/context/stories.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `source_mode`
-- `source_refs[]`
-- `direction`
-- `persona`
-- `stories[]`
-- `excluded_items[]`
-- `gaps[]`
+```json
+{
+  "skill": "stories",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/user_stories.md",
+  "source_refs": [],
+  "read_sections": [],
+  "source_mode": "unknown",
+  "source_and_direction": {
+    "source_summary": "unknown",
+    "product_direction": "unknown",
+    "scope_boundary": "unknown"
+  },
+  "direction": "unknown",
+  "persona": "unknown",
+  "story_index": [
+    {
+      "story_id": "unknown",
+      "title": "unknown",
+      "priority": "unknown",
+      "persona": "unknown",
+      "scenario": "unknown"
+    }
+  ],
+  "stories": [
+    {
+      "story_id": "unknown",
+      "title": "unknown",
+      "persona": "unknown",
+      "scenario": "unknown",
+      "goal": "unknown",
+      "priority": "unknown",
+      "source_basis": [],
+      "story_text": "unknown",
+      "acceptance_criteria": [],
+      "design_touchpoints": {
+        "pages_or_scenarios": [],
+        "component_types": [],
+        "states": [],
+        "interaction_patterns": []
+      },
+      "risks": [],
+      "critical_assumptions": []
+    }
+  ],
+  "excluded_items": [
+    {
+      "item": "unknown",
+      "reason": "unknown"
+    }
+  ],
+  "gaps": [
+    {
+      "question": "unknown",
+      "impact": "unknown"
+    }
+  ]
+}
+```
 
-每个 `stories[]` 元素必须包含：
+硬规则：
 
-- `id`
-- `title`
-- `size`
-- `persona`
-- `scenario`
-- `goal`
-- `story_text`
-- `acceptance_criteria[]`
-- `design_touchpoints[]`
-- `priority`
-- `source_basis`
-- `risk`
-- `critical_assumption`
-
-字段规则：
-
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
+- 不得为了填满 JSON 编造信息。
 - `stories[]` 不得为空。
 - `acceptance_criteria[]` 每个 Story 至少 2 条。
-- `design_touchpoints[]` 每个 Story 至少 1 条。
-- 若 `critical_assumption` 非空，必须与对应 `risk` 或 `gaps[]` 对齐。
-- P0 Story 必须能追溯到 `confirmed_facts`、UXB 定案或 problem-framing 承接契约。
+- `design_touchpoints` 必须按固定对象填写，不得写成自由文本数组。
+- P0 Story 必须能追溯到已确认事实、UXB 定案或 problem-framing 承接契约。
 - 辅助能力或可选增强不得伪装成主线 Story。
-
-写入失败不阻断完成，但应在输出中提示。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
 ## 预览交接
 
@@ -332,21 +395,34 @@ Markdown 固定结构：
 这不会改变主链流转。
 ```
 
-## 交接
+## Handoff · 固定下一步
 
-当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+本 Skill 完成后，只输出固定下一步推荐。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `stories` 的 `next_hint`。
-3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术。
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`。
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续。
-6. 完成前必须确认已输出预览交接提示。
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
-默认推荐下游：
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
 
-- `journey-analysis`：需要把任务单元放入阶段、触点和流失风险中。
-- `experience-blueprint`：任务已经足够清楚，可以直接展开交互流程和页面设计。
+固定输出：
+
+```text
+用户故事已完成。你可以继续：
+1. 用户旅程
+2. 体验蓝图
+3. 停在这里
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

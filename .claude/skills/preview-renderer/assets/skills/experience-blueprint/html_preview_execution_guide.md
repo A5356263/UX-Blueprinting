@@ -41,13 +41,13 @@
 
 默认执行：
 
-```powershell
+```text
 node ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js"
 ```
 
 显式参数执行：
 
-```powershell
+```text
 node ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js" ".claude/skills/preview-renderer/assets/shell/preview_shell.html" ".claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html" "spark-output/context/experience-blueprint.json" "spark-output/experience_blueprint.md" "spark-output/preview/experience_blueprint_preview.html"
 ```
 

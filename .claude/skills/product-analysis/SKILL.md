@@ -8,6 +8,33 @@ description: >
 
 # Product Analysis
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/product_analysis.md`
+- `spark-output/context/product-analysis.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 用于承接一种特定情况：
 
 ```text
@@ -178,42 +205,116 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按下方字段列表写入 `spark-output/context/product-analysis.json`。
+文档生成后，按固定结构写入 `spark-output/context/product-analysis.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `source_mode`
-- `input_summary`
-- `current_direction_failure`
-- `reframed_problem`
-- `skipped_premises[]`
-- `alternative_directions[]`
-- `recommended_direction`
-- `next_step`
-- `gaps[]`
+```json
+{
+  "skill": "product-analysis",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/product_analysis.md",
+  "source_refs": [],
+  "read_sections": [],
+  "source_mode": "unknown",
+  "key_judgments": [
+    {
+      "judgment": "unknown",
+      "impact": "unknown",
+      "recommended_approach": "unknown",
+      "not_recommended": "unknown",
+      "open_question": "unknown"
+    }
+  ],
+  "input_summary": {
+    "raw_request": "unknown",
+    "confirmed_facts": [],
+    "explicit_constraints": [],
+    "missing_information": []
+  },
+  "current_direction_failure": {
+    "direction": "unknown",
+    "why_invalid": "unknown",
+    "evidence": []
+  },
+  "reframed_problem": {
+    "problem": "unknown",
+    "root_cause": "unknown",
+    "target_user": "unknown"
+  },
+  "skipped_premises": [
+    {
+      "premise": "unknown",
+      "impact": "unknown"
+    }
+  ],
+  "alternative_directions": [
+    {
+      "direction": "unknown",
+      "core_idea": "unknown",
+      "solves": "unknown",
+      "risk": "unknown",
+      "assumption": "unknown"
+    }
+  ],
+  "recommended_direction": {
+    "summary": "unknown",
+    "reason": "unknown",
+    "next_step": "unknown"
+  },
+  "next_step": "unknown",
+  "not_to_do": [],
+  "gaps": [
+    {
+      "question": "unknown",
+      "impact": "unknown"
+    }
+  ]
+}
+```
 
-字段规则：
+硬规则：
 
-- `source_mode` 只允许 `direct-input` 或 `uxb-inflight`
-- `alternative_directions[]` 只允许 2-3 条
-- `recommended_direction` 必须非空
-- `next_step` 只允许：
-  - `continue-product-analysis`
-  - `return-to-uxb`
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
+- 不得为了填满 JSON 编造信息。
+- `source_mode` 只允许 `direct-input`、`uxb-inflight` 或 `unknown`。
+- `current_direction_failure` 和 `reframed_problem` 必须同时保留。
+- `skipped_premises[]` 不得并入 `gaps[]`。
+- `recommended_direction` 必须是结构对象，不能只写标题。
+- `next_step` 只允许 `continue-product-analysis`、`return-to-uxb` 或 `unknown`。
+- JSON 不复制 Markdown 全文。
 
-## 交接
+## Handoff · 固定下一步
 
-当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+本 Skill 完成后，只输出固定下一步推荐。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `product-analysis` 的 `next_hint`。
-3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术。
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`。
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续。
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+产品分析已完成。你可以继续：
+1. 需求定案
+2. 问题框定
+3. 停在这里继续补充产品判断
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

@@ -5,6 +5,33 @@ description: 异常态 Skill。读取体验策略产出或用户指定的目标�
 
 # Edge
 
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/edge_output.md`
+- `spark-output/context/edge.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
+
 这个 skill 负责在主流程设计完成后，补齐异常态、空状态、加载态、权限态、边界数据态和离线态。
 
 它的目标不是检查“有没有问题”，而是主动把容易漏掉的状态设计出来，给后续走查、页面规格或页面生成直接使用。
@@ -51,7 +78,7 @@ Edge 不负责：
 
 启动后按以下顺序读取：
 
-1. 读取 `shared-workflow/skill-graph.json`，确认自己的位置和下游
+1. 按当前 `SKILL.md` 的规则确认本 Skill 自身位置和输入边界
 2. 读取 `spark-output/context/experience-blueprint.json`
 3. 读取 `spark-output/experience_blueprint.md`
 4. 如有需要，补读 `knowledge-wiki` 中与反馈、报错、异常态相关的知识
@@ -252,22 +279,124 @@ Markdown 建议结构：
 
 ## Context JSON 写入
 
-正式产物生成后，写入 `spark-output/context/edge.json`。
+正式产物生成后，按固定结构写入 `spark-output/context/edge.json`。
 
-写入字段以上文 `edge.json` 字段清单为准。
+固定结构：
 
-写入失败不阻断完成，但应在输出中提示。
+```json
+{
+  "skill": "edge",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/edge_cases.md",
+  "source_refs": [],
+  "read_sections": [],
+  "source_mode": "unknown",
+  "scope": {
+    "targets": [],
+    "included": [],
+    "excluded": []
+  },
+  "overview_stats": {
+    "targets_count": 0,
+    "states_count": 0,
+    "critical_missing_count": 0,
+    "compressible_count": 0
+  },
+  "targets": [
+    {
+      "screen_id": "unknown",
+      "screen_name": "unknown",
+      "source": "unknown"
+    }
+  ],
+  "states_matrix": [
+    {
+      "screen": "unknown",
+      "screen_id": "unknown",
+      "states": [
+        {
+          "state_type": "unknown",
+          "required": "unknown",
+          "severity": "unknown",
+          "design_description": "unknown",
+          "fallback_behavior": "unknown",
+          "visual_hint": "unknown",
+          "copy_hint": "unknown",
+          "target_section": "unknown"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "covered": [],
+    "missing": [],
+    "not_applicable": []
+  },
+  "critical_missing": [
+    {
+      "screen_id": "unknown",
+      "state_type": "unknown",
+      "reason": "unknown",
+      "impact": "unknown",
+      "suggested_fix": "unknown"
+    }
+  ],
+  "compressible_states": [
+    {
+      "state_type": "unknown",
+      "can_be_absorbed_by": "unknown",
+      "reason": "unknown"
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "unknown",
+      "impact": "unknown"
+    }
+  ]
+}
+```
 
-## 交接
+硬规则：
 
-完成后：
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
+- 不得为了填满 JSON 编造信息。
+- `states_matrix[].states[]` 是核心，不得压缩成统计数。
+- `critical_missing[]` 必须保留影响和建议修复。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `edge` 的 `next_hint`
-3. 如果 `next_hint.preferred` 为空，按终端节点口径输出
-4. 如果 `next_hint.preferred` 非空，按标准三层结构输出
-5. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`
-6. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续
+## Handoff · 固定下一步
+
+本 Skill 完成后，只输出固定下一步推荐。
+
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
+
+固定输出：
+
+```text
+异常态已完成。你可以继续：
+1. 页面规格
+2. 体验蓝图
+3. 设计走查
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

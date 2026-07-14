@@ -3,10 +3,37 @@ name: problem-framing
 description: >
   问题框定 Skill。用于无 PRD、问题未成形、方向尚不清楚的白纸场景，先获取支撑判断所需的必要信息，再通过问题聚焦、机会点收敛和方向判断，输出可供 stories、journey-analysis、experience-blueprint 消费的正式上游结论。
   触发关键词：问题框定、白纸、没有 PRD、无 PRD、方向探索、问题没想清楚、帮我想想方向、从零开始、模糊想法、设计方向、机会点、方向判断。
-  排除：已有明确 PRD 或需求文档（用 uxb）、现有界面诊断（用 interface-audit）、方向已被否定需重构问题（用 product-analysis）、交互设计方案（用 experience-blueprint）。
+  排除：用户明确要求需求定案（用 uxb）、现有界面诊断（用 interface-audit）、方向已被否定需重构问题（用 product-analysis）、交互设计方案（用 experience-blueprint）。如果用户明确要求问题框定，即使材料中有 PRD 或详细需求文档，也仍使用本 Skill。
 ---
 
 # 问题框定
+
+## Step 0 · 产物状态检查
+
+执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
+
+正式产物：
+- `spark-output/problem_framing.md`
+- `spark-output/context/problem-framing.json`
+
+只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+
+若任一正式产物存在，只输出：
+
+```text
+检测到本 Skill 已有正式产物（已产出）。
+```
+
+该提示只表示状态，不代表采取任何处理动作。
+
+禁止：
+- 读取产物正文
+- 解析 JSON 内容
+- 根据已有产物改变当前任务类型
+- 根据已有产物执行下游
+- 根据已有产物询问处理方式
+- 根据已有产物推断用户意图
+
 
 这个 skill 负责在没有 PRD、问题尚未成形时，先尽量获取支撑判断所需的必要信息，再把模糊想法收敛为清楚的问题定义、方向判断和下游承接要求。它与 `uxb` 平级，不是 `uxb` 的前置步骤，也不是轻版 `uxb`。
 
@@ -35,13 +62,14 @@ description: >
 ### 适用场景
 
 - 用户没有 PRD。
+- 用户明确要求基于 PRD、需求文档或历史 UXB 产物先做问题框定。
 - 用户只有模糊问题域、方向想法或一句话需求。
 - 用户需要先判断“到底在解决什么问题”。
 - 用户希望在设计展开前先收敛方向。
 
 ### 排除场景
 
-- 已有明确 PRD、需求文档或较完整业务描述：用 `uxb`。
+- 用户明确要求需求定案、生成 UXB 或输出 `uxb_output.md`：用 `uxb`。
 - 已有截图、DOM、A11Y 或运行态证据，重点是诊断现有界面：用 `interface-audit`。
 - 当前方向已经被判断不成立，需要重构问题：用 `product-analysis`。
 - 已经要展开交互流程、页面结构和状态文案：用 `experience-blueprint`。
@@ -65,8 +93,18 @@ description: >
 - 现有界面问题：提示“这更适合 `interface-audit`，也可以继续在这里抽象问题”。
 - 方向已被否定：提示“这更适合 `product-analysis`，也可以先在这里重新框问题”。
 
-## 核心判断规则
+当用户明确要求“问题框定”时，即使材料中存在完整 PRD、详细需求文档、历史 UXB 产物，也仍按问题框定执行。
 
+这些材料只能作为问题框定输入，不得作为切换到 UXB 的理由。
+
+允许提示：
+
+```text
+你提供的材料已经比较完整，后续也可以进入需求定案。本次先按问题框定处理。
+```
+
+禁止输出表示已经切换到其他 Skill 的话术。
+## 核心判断规则
 正式执行前必须先检查 7 个最小必要信息项是否闭合：
 
 1. 主角色是谁。
@@ -278,39 +316,123 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按下方字段列表写入 `spark-output/context/problem-framing.json`。
+文档生成后，按固定结构写入 `spark-output/context/problem-framing.json`。
 
-写入字段包括：
+固定结构：
 
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `input_summary`
-- `problem_definition`
-- `target_roles[]`
-- `target_scenarios[]`
-- `current_workarounds[]`
-- `opportunities[]`
-- `candidate_directions[]`
-- `recommended_direction`
-- `experience_focus`
-- `confirmed_facts[]`
-- `working_assumptions[]`
-- `handoff_contract[]`
-- `constraints[]`
-- `gaps[]`
-- `knowledge_anchoring`
+```json
+{
+  "skill": "problem-framing",
+  "version": "1.0",
+  "generated_at": "unknown",
+  "project_name": "unknown",
+  "artifact_md": "spark-output/problem_framing.md",
+  "source_refs": [],
+  "read_sections": [],
+  "key_judgments": [
+    {
+      "judgment": "unknown",
+      "impact": "unknown",
+      "recommended_approach": "unknown",
+      "not_recommended": "unknown",
+      "open_question": "unknown"
+    }
+  ],
+  "input_summary": {
+    "raw_request": "unknown",
+    "confirmed_facts": [],
+    "explicit_constraints": [],
+    "missing_information": []
+  },
+  "problem_definition": {
+    "problem": "unknown",
+    "why_it_matters": "unknown",
+    "not_the_problem": []
+  },
+  "target_roles": [
+    {
+      "role": "unknown",
+      "scenario": "unknown",
+      "goal": "unknown",
+      "pain": "unknown"
+    }
+  ],
+  "target_scenarios": [
+    {
+      "scenario": "unknown",
+      "trigger": "unknown",
+      "current_context": "unknown"
+    }
+  ],
+  "current_workarounds": [
+    {
+      "workaround": "unknown",
+      "limitation": "unknown",
+      "evidence": "unknown"
+    }
+  ],
+  "opportunities": [
+    {
+      "title": "unknown",
+      "user_value": "unknown",
+      "business_value": "unknown",
+      "risk": "unknown"
+    }
+  ],
+  "candidate_directions": [
+    {
+      "direction": "unknown",
+      "solves": "unknown",
+      "user_value": "unknown",
+      "risk": "unknown",
+      "assumption": "unknown"
+    }
+  ],
+  "recommended_direction": {
+    "summary": "unknown",
+    "reason": "unknown",
+    "experience_focus": "unknown",
+    "handoff_requirements": []
+  },
+  "experience_focus": "unknown",
+  "handoff_contract": [
+    {
+      "item": "unknown",
+      "requirement": "unknown",
+      "reason": "unknown"
+    }
+  ],
+  "constraints": [],
+  "not_to_do": [],
+  "confirmed_facts": [],
+  "working_assumptions": [],
+  "gaps": [
+    {
+      "question": "unknown",
+      "impact": "unknown",
+      "suggested_owner": "unknown"
+    }
+  ],
+  "knowledge_anchoring": {
+    "used_sources": [],
+    "supported_conclusions": [],
+    "unsupported_parts": []
+  }
+}
+```
 
-字段规则：
+硬规则：
 
-- `recommended_direction` 必须非空。
-- `handoff_contract[]` 必须非空。
-- `gaps[]` 只记录会影响方向判断或下游设计承接的问题。
+- 字段固定，不得新增、删除或改名。
+- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
+- 不得为了填满 JSON 编造信息。
+- `recommended_direction` 必须是结构对象，不能只写标题。
+- `experience_focus` 与 `handoff_contract[]` 必须保留，用于承接 `§7` 推荐方向与承接要求。
+- `not_the_problem`、`not_to_do` 必须保留。
 - 未标记为假设的信息，不得进入 `confirmed_facts[]`。
-- `knowledge_anchoring` 只记录命中领域、已读 summary/raw、校准判断和仍无法确认项；不得复述知识原文。
-
-写入失败不阻断完成，但应在输出中提示。
+- `knowledge_anchoring` 不得复述知识原文。
+- JSON 不复制 Markdown 全文。
+- 写入失败不阻断完成，但应在输出中提示。
 
 ## 预览交接
 
@@ -326,22 +448,34 @@ Markdown 固定结构：
 这不会改变主链流转。
 ```
 
-## 交接
+## Handoff · 固定下一步
 
-当前是否为链路终端，以 `shared-workflow/skill-graph.json` 为准。完成后：
+本 Skill 完成后，只输出固定下一步推荐。
 
-1. 读取 `shared-workflow/next-skill.md` 交接话术模板。
-2. 读取 `shared-workflow/skill-graph.json` 中 id 为 `problem-framing` 的 `next_hint`。
-3. 根据 `next_hint.preferred` 是否为空，输出标准交接或终端节点交接话术。
-4. 如宿主支持文件系统与本地命令执行，写出正式产物后立即刷新一次进度预览，优先执行 `shared-workflow/generate-progress-preview.ps1`。
-5. 如刷新失败或宿主不支持，直接跳过，不影响当前 Skill 完成与下游继续。
-6. 完成前必须确认已输出预览交接提示。
+输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
-默认推荐下游：
+禁止：
+- 读取推荐项产物正文
+- 根据产物存在改变推荐顺序
+- 动态计算候选项
+- 读取 shared-workflow/next-skill.md 生成候选项
+- 读取 shared-workflow/skill-graph.json 生成候选项
+- 直接执行下一步
 
-- `stories`：需要把方向拆成用户任务单元时。
-- `journey-analysis`：任务阶段和体验断点更关键时。
-- `experience-blueprint`：只有当主角色、目标结果、正式业务对象、核心能力边界、关键状态/规则足以支撑蓝图骨架时才推荐直接进入。
+固定输出：
+
+```text
+问题框定已完成。你可以继续：
+1. 需求定案
+2. 用户旅程
+3. 体验蓝图
+
+你回复对应名称即可。
+```
+
+“（已产出）”只代表状态，不代表该项被选中或质量通过。
+
+如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
 
 ## 边界
 

@@ -1,10 +1,25 @@
 # 就绪判定与交接话术
 
-> **单一来源**：`shared-workflow/skill-graph.json` 是依赖关系数据的权威源。本文档定义算法和模板，`skill-graph.json` 提供数据。
+## 使用边界
+
+本文件只用于说明历史上的下一步推荐算法、进度面板展示口径和人工维护参考。
+
+低算力稳定模式下，业务 Skill 执行时不得读取本文件来决定：
+
+- 当前应该触发哪个 Skill
+- 是否切换到另一个 Skill
+- 是否根据 `spark-output/context/*.json` 动态计算 ready set
+- 是否覆盖用户显式指定的任务类型
+
+当前 Skill 的启动、执行、输入读取、输出和收口，以用户显式意图和对应 `SKILL.md` 为准。
+
+> **静态参考**：`shared-workflow/skill-graph.json` 只提供静态关系、进度预览和人工查看数据。本文档中的算法只作为历史说明或面板参考，不作为低算力模式下的运行时执行规则。
 
 ---
 
 ## 一、就绪判定算法
+
+> 本章算法只作为历史说明或进度面板参考，不作为低算力模式下的运行时执行规则。
 
 ### 1.1 done 集合
 
@@ -64,8 +79,8 @@
 当前主链允许两个第一梯队正式来源：
 
 ```text
-uxb -> stories -> journey-analysis -> experience-blueprint
-problem-framing -> stories -> journey-analysis -> experience-blueprint
+uxb -> experience-blueprint
+problem-framing -> experience-blueprint
 ```
 
 `uxb` 负责有 PRD 或明确需求材料时的需求定案；`problem-framing` 负责无 PRD、白纸或问题未定清时的问题框定。两者都是第一梯队来源，但不互相替代。
@@ -74,12 +89,14 @@ problem-framing -> stories -> journey-analysis -> experience-blueprint
 
 - `stories` 把第一梯队结论转成用户故事、任务单元和验收口径
 - `journey-analysis` 把上游输入收拢为阶段、触点、断点和旅程结构
-- 二者职责不同，可按项目需要独立调用，但主链优先顺序是 `stories -> journey-analysis`
+- 二者职责不同，可按项目需要插入或独立调用；当二者都需要时，推荐深化顺序是 `stories -> journey-analysis`
+- 二者是增强型输入，不是进入 `experience-blueprint` 的必经项
 
 硬规则：
 
 - `experience-blueprint` 需要至少一个第一梯队正式来源：`uxb` 或 `problem-framing`
 - `stories`、`journey-analysis` 的 standalone 结果不能替代第一梯队正式来源
+- 不得因为缺少 `stories` 或 `journey-analysis` 阻止推荐 `experience-blueprint`
 - shared-workflow 只做推荐与提示，不拦截用户强制调用；降级、补问和跳转由各 Skill 的 `SKILL.md` 执行
 
 ### 1.5A journey-analysis 完成后的动态推荐说明
@@ -96,13 +113,14 @@ problem-framing -> stories -> journey-analysis -> experience-blueprint
 4. 再检查 Stories：
    - `spark-output/context/stories.json`
    - `spark-output/stories.md`
-5. 若存在第一梯队来源且 Stories 已存在，允许推荐 `experience-blueprint`
-6. 若存在第一梯队来源但 Stories 不存在，优先推荐 `stories`
+5. 若存在第一梯队来源，允许推荐 `experience-blueprint`
+6. 若存在第一梯队来源但 Stories 不存在，可把 `stories` 作为可选增强提示，不得把它写成进入体验策略前的必经项
 7. 若第一梯队来源不存在，推荐回 `problem-framing` 或 `uxb`，不得推荐 `experience-blueprint`
 
 硬规则：
 
 - 无第一梯队正式来源时不得推荐 `experience-blueprint`
+- 有第一梯队正式来源时，不得因为 `stories` 缺失而阻止推荐 `experience-blueprint`
 - 不允许把“最直接的下游消费方”等同于“当前一定可执行的下一步”
 
 ### 1.6 第一梯队后的 Stories 去重过滤
@@ -128,23 +146,25 @@ problem-framing -> stories -> journey-analysis -> experience-blueprint
 
 任一条件不满足时：
 
-- 保持 `skill-graph.json` 中的主链推荐逻辑
+- 保持 `skill-graph.json` 中的推荐逻辑，但不得把 `stories` 或 `journey-analysis` 写成 `experience-blueprint` 的前置阻断项
 
 ### 1.7 无文件系统时的降级
 
 当宿主没有文件系统能力时，无法扫描目录。此时各 Skill 依赖自身 `SKILL.md` 中的规则判断上游是否存在。
 
-### 1.8 优先级关系
+### 1.8 低算力模式优先级关系
 
 ```text
-shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
+用户显式意图 > 当前 Skill 的 SKILL.md > 用户明确指定的输入材料 > 当前 Skill 内部读取规则
 ```
 
-当两者信息不一致时，以 `shared-workflow/` 文件为准。
+当 `shared-workflow/` 与当前 `SKILL.md` 信息不一致时，低算力稳定模式下以用户显式意图和当前 `SKILL.md` 为准。`shared-workflow/` 只用于静态关系、进度预览和人工维护参考。
 
 ---
 
 ## 二、交接话术模板
+
+> 本章模板只作为历史说明或人工维护参考。低算力稳定模式下，各业务 Skill 使用自身 `SKILL.md` 内的固定 Handoff 推荐，不读取本文件动态生成下一步。
 
 ### 2.1 完成句
 
@@ -207,6 +227,17 @@ shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
 
 若无法判断是独立进入还是 `uxb` 中途回流，默认仍输出“回到 UXB 继续定案”，不要输出进入正式蓝图或其他下游的建议。
 
+### 2.4 进度预览刷新策略
+
+进度预览指 `spark-output/progress-preview.html`，用于展示 Skill 流程完成状态。
+
+执行规则：
+
+- 如需要刷新进度面板，优先执行跨平台入口：`node shared-workflow/generate-progress-preview.js`。
+- Windows 环境也可使用 PowerShell 兼容入口：`shared-workflow/generate-progress-preview.ps1`。
+- 如果当前环境不支持刷新脚本、脚本缺失或执行失败，直接跳过，不得阻断当前 Skill 完成。
+- 不直接修改 `shared-workflow/progress-preview.html` 模板。
+
 ---
 
 ## 三、示例
@@ -236,7 +267,6 @@ shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
 - 2.异常态
 - 3.视觉风格
 - 4.旅程埋点与度量需求
-- 5.设计走查
 你回复对应数字编号即可
 ```
 
@@ -244,14 +274,14 @@ shared-workflow/skill-graph.json > 各 Skill 的 SKILL.md 硬编码
 
 ```text
 ✅ 异常态完成，状态矩阵和异常设计补充已输出。
-你可以选择：设计走查 - 整体过一遍完整性和一致性。
-你回复“设计走查”即可
+你可以选择：设计文档 - 把异常态补充吸收到页面规格中。
+你回复“设计文档”即可
 ```
 
 ### 3.4 终点节点
 
 ```text
-✅ 页面原型完成，正式链路已到终点。
+✅ 设计文档完成，页面规格层已收口。
 ```
 
 ### 3.5 基础设施型 Skill

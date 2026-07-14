@@ -39,13 +39,13 @@
 
 默认执行：
 
-```powershell
+```text
 node ".claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js"
 ```
 
 显式参数执行：
 
-```powershell
+```text
 node ".claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js" ".claude/skills/preview-renderer/assets/shell/preview_shell.html" ".claude/skills/preview-renderer/assets/skills/uxb/preview_template.html" "spark-output/context/uxb.json" "spark-output/uxb_output.md" "spark-output/preview/uxb_preview.html"
 ```
 

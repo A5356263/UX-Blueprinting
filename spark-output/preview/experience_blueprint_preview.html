@@ -453,420 +453,452 @@
   
     <section class="preview-section-block" id="experience-blueprint-section-0">
       <h2 class="preview-section-heading">体验蓝图</h2>
-      <div class="preview-section-body"><ul><li><strong>运行模式</strong>：<code>framing-mode</code> + <code>deepened-mode</code></li><li><strong>数据来源</strong>：<code>problem-framing</code>（问题框定）+ <code>stories</code>（用户故事）+ <code>journey-analysis</code>（旅程分析）</li><li><strong>设计准则消费</strong>：流程模式 BFM-01/02/03、信息架构 IA-01/02/03、可用性 U-01/02/03/05、认知 C-01/03/04、治理 G-01/02/03</li><li><strong>业务知识消费</strong>：权限管理领域（00_领域概述、01_范围与边界、03_业务对象、10_能力地图、11_任务场景、14_角色边界、24_治理状态模型）</li></ul></div>
+      <div class="preview-section-body"><p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-1">
       <h2 class="preview-section-heading">§0 本次关键设计判断</h2>
-      <div class="preview-section-body"><h3>判断 1：无权限拦截页采用&quot;信息告知 + 行动引导&quot;双层结构</h3>
-<ul><li><strong>主要影响</strong>：无权限拦截页（S1 核心触点）</li><li><strong>建议方案</strong>：拦截页上方告知缺少的具体权限名称和可申请状态（信息层），下方提供&quot;去申请&quot;按钮引导进入权限中心申请流程（行动层）。员工不需要离开拦截页理解全部信息。</li><li><strong>不建议方案</strong>：只显示&quot;无权限&quot;并让员工自己去找申请入口。根据旅程分析 Stage 1，员工在没有引导的情况下大概率放弃操作。</li><li><strong>关键待确认</strong>：拦截页能否准确识别缺少的权限并判断可申请状态；如果网络异常或权限信息不可达，需要降级文案。</li></ul>
-<h3>判断 2：权限申请采用单页 Drawer 而非步骤条</h3>
-<ul><li><strong>主要影响</strong>：权限申请流程（S1、S4）</li><li><strong>建议方案</strong>：使用 Drawer 承载申请流程——上方展示可申请的权限列表（含搜索/分类），下方为申请理由输入区和提交按钮。选择权限 + 填写理由 + 提交，三步在一页内完成。参考 BFM-01（默认非步骤化），权限申请的任务依赖简单，不需要分步。</li><li><strong>不建议方案</strong>：使用步骤条（Step 1 选权限 → Step 2 填理由 → Step 3 确认）。这增加了跨步骤往返成本，且每个步骤信息量不足以独立成步。</li><li><strong>关键待确认</strong>：一次申请可包含多个权限/角色还是每次只能一个（影响列表是否支持多选）。</li></ul>
-<h3>判断 3：审批侧以&quot;权限申请上下文&quot;为核心展示审批信息</h3>
-<ul><li><strong>主要影响</strong>：审批人处理申请（S2）</li><li><strong>建议方案</strong>：在 OA 底座审批详情页中，除了展示申请人、申请时间和权限名称外，额外展示申请理由、该权限的简要说明（&quot;有了它可以做什么&quot;）和当前同类权限的持有情况（可选）。审批人不需要切出审批页面查背景信息就能做决策。</li><li><strong>不建议方案</strong>：只展示&quot;XX 申请了 YY 权限&quot;的极简信息。根据旅程分析 Stage 5，审批人缺乏上下文会导致决策延迟或频繁驳回。</li><li><strong>关键待确认</strong>：OA 底座审批页面的自定义信息承载能力范围。</li></ul>
-<h3>判断 4：状态追踪以&quot;当前节点 + 预计时间&quot;为核心信息</h3>
-<ul><li><strong>主要影响</strong>：申请进度追踪（S5）</li><li><strong>建议方案</strong>：在&quot;我的申请&quot;列表中，每条申请展示：申请时间、权限名称、当前状态（带标签颜色）、处理人（如已进入审批）、预计剩余时间（如可计算）。点击进入详情展示完整审批流转历史。</li><li><strong>不建议方案</strong>：只显示&quot;审批中&quot;一个状态没有时间参考。根据旅程分析 Stage 4，员工最大的焦虑是&quot;不知道要等多久&quot;。</li><li><strong>关键待确认</strong>：通知渠道和审批超时策略。</li></ul></div>
+      <div class="preview-section-body"><h3>判断一：员工端 &quot;我的权限&quot; 页面使用业务语言展示权限，不暴露后台来源模型</h3>
+<p>员工看不懂&quot;费用管理-报销单-新增&quot;这类后台权限名，这是旅程分析确认的高置信度痛点。体验蓝图中，权限列表统一用业务场景描述代替后台权限名。</p>
+<ul><li><strong>主要影响</strong>：员工端&quot;我的权限&quot;页面、&quot;可申请权限&quot;选择区域的展示方式</li><li><strong>建议方案</strong>：每个权限项展示&quot;权限名（业务场景说明）&quot;的双行模式，如&quot;报销提交权限（可提交报销申请）&quot;；来源模型在员工端完全隐藏，用&quot;已有/可申请&quot;二分类替代</li><li><strong>不建议方案</strong>：直接展示后台权限树结构；让员工在权限森林里自行搜索</li><li><strong>关键待确认</strong>：权限名称与业务场景描述的映射关系需要业务侧确认</li></ul>
+<h3>判断二：申请流程使用单页 Drawer 承载，不采用步骤条</h3>
+<p>权限申请的表单字段少（选择权限 + 填写原因），不存在强步骤依赖，用 Drawer 承载更轻量，员工可随时取消返回。</p>
+<ul><li><strong>主要影响</strong>：申请表单的承载形式</li><li><strong>建议方案</strong>：从&quot;我的权限&quot;页点击申请后，右侧滑出 Drawer，内嵌权限选择器 + 申请原因输入区 + 提交按钮</li><li><strong>不建议方案</strong>：跳转到独立申请页；使用步骤条（Step wizard）</li><li><strong>关键待确认</strong>：是否需要支持一次性申请多个权限（影响 Drawer 内的权限选择器设计）</li></ul>
+<h3>判断三：审批界面在同意/拒绝按钮之外，必须展示权限影响范围的业务语义说明</h3>
+<p>审批人缺乏判断依据是旅程分析确认的高流失风险点。审批人需要知道&quot;批准后申请人能做什么&quot;，而不是只看到权限名称。</p>
+<ul><li><strong>主要影响</strong>：审批人处理申请的界面布局</li><li><strong>建议方案</strong>：审批详情中增加&quot;批准后影响&quot;区块，用一句话说明权限授予后的实际效果（如&quot;批准后，申请人可以查看全公司报销数据&quot;），风险等级用标签区分</li><li><strong>不建议方案</strong>：只展示权限后台名称 + 申请人 + 申请原因三个字段</li><li><strong>关键待确认</strong>：权限影响范围的描述需要业务侧提供模板或映射规则</li></ul>
+<h3>判断四：申请通过后到生效的过程必须对员工可见，不默认为&quot;通过即生效&quot;</h3>
+<p>审批通过≠权限生效——治理模式（如双管理员审批、子管理员隔离）可能导致延迟。旅程分析确认员工会在&quot;通过但未生效&quot;阶段产生焦虑。</p>
+<ul><li><strong>主要影响</strong>：申请记录详情页的展示逻辑、通知内容</li><li><strong>建议方案</strong>：申请详情页按时间线展示完整状态流转（提交→审批通过→生效中→已生效/生效失败）；审批通过后 Toast 提示&quot;审批已通过，正在自动授权&quot;</li><li><strong>不建议方案</strong>：审批通过后直接跳到&quot;已完成&quot;，不展示中间状态</li><li><strong>关键待确认</strong>：授权生效的平均时间，用于&quot;预计生效&quot;的时间提示</li></ul>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-2">
       <h2 class="preview-section-heading">§1 旅程消费摘要</h2>
-      <div class="preview-section-body"><h3>信心最低点 → 驱动异常流程设计</h3>
-<div class="table-wrap"><table><thead><tr><th>阶段</th><th>信心</th><th>驱动异常优先级</th><th>蓝图落点</th></tr></thead><tbody><tr><td>Stage 1 感知缺口</td><td>高</td><td>—</td><td>—</td></tr><tr><td>Stage 2 定位与选择权限</td><td><strong>中</strong></td><td>搜索无结果、权限不可申请的降级引导</td><td>§5 E2、E3</td></tr><tr><td>Stage 3 发起申请</td><td>高</td><td>—</td><td>—</td></tr><tr><td>Stage 4 等待审批与追踪进度</td><td><strong>中</strong></td><td>审批超时、审批人不在线的升级策略</td><td>§5 E5</td></tr><tr><td>Stage 5 接收审批结果</td><td><strong>中</strong></td><td>拒绝原因缺失、生效空窗期</td><td>§5 E6、E7</td></tr><tr><td>Stage 6 使用已获得权限</td><td>高</td><td>—</td><td>—</td></tr></tbody></table></div>
-<h3>关键转折 → 驱动交互流程的前置说明</h3>
-<div class="table-wrap"><table><thead><tr><th>转折</th><th>来源阶段 → 目标阶段</th><th>需要的前置信息</th><th>蓝图落点</th></tr></thead><tbody><tr><td>T1</td><td>感知缺口 → 定位与选择</td><td>员工需要知道&quot;缺少的具体权限&quot;和&quot;是否可以申请&quot;</td><td>§3 节点 1.2</td></tr><tr><td>T2</td><td>定位与选择 → 发起申请</td><td>员工需要权限的业务说明（&quot;有了它可以做什么&quot;）而非管理术语</td><td>§3 节点 2.2</td></tr><tr><td>T4</td><td>等待审批 → 接收结果</td><td>员工需要知道审批预计时长和超时处理方式</td><td>§3 节点 3.4</td></tr><tr><td>T5</td><td>接收结果 → 使用权限</td><td>员工需要知道生效时间和拒绝原因</td><td>§3 节点 5.1</td></tr></tbody></table></div>
-<h3>流失风险 → 驱动页面设计引导策略</h3>
-<div class="table-wrap"><table><thead><tr><th>阶段</th><th>流失风险</th><th>引导策略</th><th>蓝图落点</th></tr></thead><tbody><tr><td>Stage 1</td><td>高</td><td>拦截页直接引导到申请流程，不给放弃的机会</td><td>§6 P1 无权限拦截页</td></tr><tr><td>Stage 2</td><td>中高</td><td>搜索无结果时提供替代方案（浏览全部/联系管理员）</td><td>§6 P2 权限中心 Drawer</td></tr><tr><td>Stage 4</td><td>中</td><td>进度可视化 + 预计时间</td><td>§6 P4 我的申请列表</td></tr></tbody></table></div></div>
+      <div class="preview-section-body"><p>本节从旅程分析中提取三类信息，驱动后续章节的设计决策。</p>
+<h3>信心最低点 → 驱动 §5 异常流程设计优先级</h3>
+<div class="table-wrap"><table><thead><tr><th>来源角色</th><th>阶段</th><th>信心</th><th>驱动内容</th><th>蓝图落点</th></tr></thead><tbody><tr><td>管理员</td><td>了解与开启</td><td>中</td><td>管理员担忧安全风险和配置复杂度的心理，需在开启流程中提供明确的安全保障说明和默认配置模板</td><td>§4 次交互流程 - 开启与配置</td></tr><tr><td>管理员</td><td>日常监控</td><td>中</td><td>缺少统计概览和异常标记，导致管理员发现问题的滞后</td><td>§4 次交互流程 - 日常监控</td></tr><tr><td>审批人</td><td>接收审批任务</td><td>中</td><td>通知方式未定，审批通知被淹没的风险高</td><td>§5 异常流程 - 审批超时</td></tr><tr><td>审批人</td><td>评估申请</td><td>高（痛点明确）</td><td>审批人信息不足导致倾向拒绝</td><td>§6 审批详情页设计</td></tr></tbody></table></div>
+<h3>关键转折 → 驱动 §3 / §4 前置说明字段</h3>
+<div class="table-wrap"><table><thead><tr><th>来源角色</th><th>转折点</th><th>转折说明</th><th>蓝图落点</th></tr></thead><tbody><tr><td>员工</td><td>了解和查看权限 → 选择和提交申请</td><td>员工选中目标权限后进入表单，需要明确&quot;我选对了&quot;的确认感</td><td>§3 主流程节点&quot;提交前确认&quot;</td></tr><tr><td>员工</td><td>选择和提交申请 → 跟踪结果与生效</td><td>提交成功后，员工从&quot;填写者&quot;转为&quot;等待者&quot;，需要明确知道接下来会发生什么</td><td>§3 主流程节点&quot;提交成功反馈&quot;</td></tr><tr><td>管理员</td><td>了解与开启 → 配置范围与审批</td><td>从&quot;了解功能&quot;到&quot;动手配置&quot;，需要清晰的引导和默认值</td><td>§4 次流程 - 开启配置</td></tr><tr><td>审批人</td><td>接收审批任务 → 评估申请</td><td>从&quot;知道有申请&quot;到&quot;开始判断&quot;，需要关键信息前置而不是点进去才看</td><td>§6 审批详情页</td></tr></tbody></table></div>
+<h3>流失风险 → 驱动 §6 引导策略</h3>
+<div class="table-wrap"><table><thead><tr><th>来源角色</th><th>阶段</th><th>流失风险</th><th>引导策略</th><th>蓝图落点</th></tr></thead><tbody><tr><td>员工</td><td>了解权限</td><td>看不懂权限列表→放弃→找管理员</td><td>用业务语言展示权限，提供搜索和分类筛选</td><td>§6 &quot;我的权限&quot;页</td></tr><tr><td>员工</td><td>提交申请</td><td>犹豫选哪个→放弃；写不满原因→不敢提交</td><td>提供权限推荐、申请原因模板</td><td>§6 申请 Drawer</td></tr><tr><td>员工</td><td>跟踪结果</td><td>通过但未生效→以为出问题→找管理员</td><td>展示完整时间线，明确&quot;预计生效&quot;</td><td>§6 申请记录详情</td></tr><tr><td>管理员</td><td>配置范围</td><td>配置太麻烦→随便选几个→功能形同虚设</td><td>按应用/模块分组，提供全选/反选，支持员工视角预览</td><td>§4 次流程 - 范围配置</td></tr><tr><td>审批人</td><td>评估申请</td><td>信息不足→倾向拒绝</td><td>展示权限影响范围、风险等级、申请人上下文</td><td>§6 审批详情页</td></tr></tbody></table></div>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-3">
       <h2 class="preview-section-heading">§2 交互流程总览</h2>
       <div class="preview-section-body"><h3>主路径</h3>
-<p><strong>路径 A — 缺口触发申请（P0）</strong></p>
+<p><strong>员工提交权限申请</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 A — 缺口触发申请（P0）</div>
-        <div class="summary-path"><span class="summary-step">功能操作页面（无权限）</span><span class="summary-arrow">→</span><span class="summary-step">无权限拦截页（告知缺少权限 + 引导申请）</span><span class="summary-arrow">→</span><span class="summary-step">权限申请 Drawer（权限已预填）</span><span class="summary-arrow">→</span><span class="summary-step">补充申请理由</span><span class="summary-arrow">→</span><span class="summary-step">提交</span><span class="summary-arrow">→</span><span class="summary-step">提交成功反馈</span><span class="summary-arrow">→</span><span class="summary-step">我的申请列表（新增一条&quot;审批中&quot;记录）</span></div>
+        <div class="summary-role">员工提交权限申请</div>
+        <div class="summary-path"><span class="summary-step">我的权限 Page</span><span class="summary-arrow">→</span><span class="summary-step">点击 [申请权限]</span><span class="summary-arrow">→</span><span class="summary-step">打开 权限申请 Drawer</span><span class="summary-arrow">→</span><span class="summary-step">浏览/搜索可申请权限</span><span class="summary-arrow">→</span><span class="summary-step">选择一个权限</span><span class="summary-arrow">→</span><span class="summary-step">填写申请原因</span><span class="summary-arrow">→</span><span class="summary-step">点击 [提交申请]</span><span class="summary-arrow">→</span><span class="summary-step">系统校验（范围检查</span><span class="summary-arrow">→</span><span class="summary-step">去重</span><span class="summary-arrow">→</span><span class="summary-step">进行中检查）</span><span class="summary-arrow">→</span><span class="summary-step">校验通过</span><span class="summary-arrow">→</span><span class="summary-step">Drawer 关闭</span><span class="summary-arrow">→</span><span class="summary-step">Toast：申请已提交</span><span class="summary-arrow">→</span><span class="summary-step">申请记录列表新增一条&quot;审批中&quot;记录</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S1</p>
-<p><strong>路径 B — 目标驱动申请（P1）</strong></p>
+<p>分支：</p>
+<ul><li>未选择权限 → [提交申请] 置灰</li><li>申请原因为空 → [提交申请] 置灰</li><li>校验不通过（超范围/已拥有/进行中）→ Drawer 不关闭，对应位置显示 InlineError</li></ul>
+<h3>子路径</h3>
+<p><strong>1. 管理员开启并配置自助申请</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 B — 目标驱动申请（P1）</div>
-        <div class="summary-path"><span class="summary-step">权限中心首页</span><span class="summary-arrow">→</span><span class="summary-step">搜索/浏览可申请权限</span><span class="summary-arrow">→</span><span class="summary-step">权限申请 Drawer（需手动选择）</span><span class="summary-arrow">→</span><span class="summary-step">补充申请理由</span><span class="summary-arrow">→</span><span class="summary-step">提交</span><span class="summary-arrow">→</span><span class="summary-step">提交成功反馈</span><span class="summary-arrow">→</span><span class="summary-step">我的申请列表（新增一条&quot;审批中&quot;记录）</span></div>
+        <div class="summary-role">1. 管理员开启并配置自助申请</div>
+        <div class="summary-path"><span class="summary-step">权限管理</span><span class="summary-arrow">→</span><span class="summary-step">自助申请配置 Page</span><span class="summary-arrow">→</span><span class="summary-step">阅读功能说明</span><span class="summary-arrow">→</span><span class="summary-step">切换 [启用] 开关</span><span class="summary-arrow">→</span><span class="summary-step">选择范围类型（按功能权限/按角色/按应用）</span><span class="summary-arrow">→</span><span class="summary-step">勾选可申请权限</span><span class="summary-arrow">→</span><span class="summary-step">选择或关联审批流程</span><span class="summary-arrow">→</span><span class="summary-step">点击 [保存]</span><span class="summary-arrow">→</span><span class="summary-step">Toast：配置已保存，自助申请已启用</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S4</p>
-<h3>分支路径</h3>
-<p><strong>路径 C — 查看已有权限（P1）</strong></p>
+<p><strong>2. 管理员关闭自助申请</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 C — 查看已有权限（P1）</div>
-        <div class="summary-path"><span class="summary-step">权限中心</span><span class="summary-arrow">→</span><span class="summary-step">我的权限页</span><span class="summary-arrow">→</span><span class="summary-step">按应用/功能分类浏览</span></div>
+        <div class="summary-role">2. 管理员关闭自助申请</div>
+        <div class="summary-path"><span class="summary-step">自助申请配置 Page</span><span class="summary-arrow">→</span><span class="summary-step">切换 [启用] 开关为关闭</span><span class="summary-arrow">→</span><span class="summary-step">系统校验进行中的申请数量</span><span class="summary-arrow">→</span><span class="summary-step">弹窗确认：当前有 X 个申请进行中，关闭后新申请不可提交</span><span class="summary-arrow">→</span><span class="summary-step">管理员确认关闭</span><span class="summary-arrow">→</span><span class="summary-step">Toast：自助申请已关闭</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S6</p>
-<p><strong>路径 D — 查看申请进度（P1）</strong></p>
+<p><strong>3. 员工撤销申请</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 D — 查看申请进度（P1）</div>
-        <div class="summary-path"><span class="summary-step">权限中心</span><span class="summary-arrow">→</span><span class="summary-step">我的申请列表</span><span class="summary-arrow">→</span><span class="summary-step">申请详情页</span></div>
+        <div class="summary-role">3. 员工撤销申请</div>
+        <div class="summary-path"><span class="summary-step">申请记录列表 / 详情</span><span class="summary-arrow">→</span><span class="summary-step">点击 [撤销申请]</span><span class="summary-arrow">→</span><span class="summary-step">弹窗确认：撤销后申请将结束</span><span class="summary-arrow">→</span><span class="summary-step">确认</span><span class="summary-arrow">→</span><span class="summary-step">状态变更为&quot;已撤销&quot;</span><span class="summary-arrow">→</span><span class="summary-step">Toast：申请已撤销</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S5</p>
-<p><strong>路径 E — 审批人处理申请（P0）</strong></p>
+<p><strong>4. 审批人审批申请</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 E — 审批人处理申请（P0）</div>
-        <div class="summary-path"><span class="summary-step">OA 底座审批待办列表</span><span class="summary-arrow">→</span><span class="summary-step">审批详情页</span><span class="summary-arrow">→</span><span class="summary-step">批准/拒绝</span></div>
+        <div class="summary-role">4. 审批人审批申请</div>
+        <div class="summary-path"><span class="summary-step">审批通知/待办列表</span><span class="summary-arrow">→</span><span class="summary-step">进入审批详情 Page</span><span class="summary-arrow">→</span><span class="summary-step">查看申请信息（权限详情、影响范围、申请原因、申请人信息）</span><span class="summary-arrow">→</span><span class="summary-step">点击 [同意] 或 [拒绝]</span><span class="summary-arrow">→</span><span class="summary-step">如拒绝，填写拒绝原因</span><span class="summary-arrow">→</span><span class="summary-step">确认</span><span class="summary-arrow">→</span><span class="summary-step">审批完成反馈</span><span class="summary-arrow">→</span><span class="summary-step">同意：系统自动授权</span><span class="summary-arrow">→</span><span class="summary-step">状态变更为&quot;已通过&quot;</span><span class="summary-arrow">→</span><span class="summary-step">拒绝：状态变更为&quot;已拒绝&quot;</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S2</p>
-<p><strong>路径 F — 管理员配置可申请范围（P0）</strong></p>
+<p><strong>5. 管理员调整配置（运行中）</strong></p>
 
     <div class="summary-visual main-node-map">
       <div class="summary-row">
-        <div class="summary-role">路径 F — 管理员配置可申请范围（P0）</div>
-        <div class="summary-path"><span class="summary-step">权限管理后台</span><span class="summary-arrow">→</span><span class="summary-step">可申请范围配置页</span><span class="summary-arrow">→</span><span class="summary-step">按功能权限/角色设置</span><span class="summary-arrow">→</span><span class="summary-step">保存</span></div>
+        <div class="summary-role">5. 管理员调整配置（运行中）</div>
+        <div class="summary-path"><span class="summary-step">自助申请配置 Page</span><span class="summary-arrow">→</span><span class="summary-step">修改可申请范围</span><span class="summary-arrow">→</span><span class="summary-step">修改审批流程</span><span class="summary-arrow">→</span><span class="summary-step">点击 [保存]</span><span class="summary-arrow">→</span><span class="summary-step">提示：配置变更不影响已提交的申请</span><span class="summary-arrow">→</span><span class="summary-step">Toast：配置已更新</span></div>
       </div>
     </div>
   
-<p>覆盖 Story：S3</p></div>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-4">
       <h2 class="preview-section-heading">§3 主交互流程</h2>
-      <div class="preview-section-body"><h3>节点 1：无权限拦截</h3>
-<p><strong>用户动作</strong> 员工在操作某功能时，页面顶部出现无权限提示条，或功能入口置灰不可点击。</p>
-<p><strong>系统反馈</strong> 系统识别当前用户缺少的具体权限，并判断该权限是否可自助申请（非敏感且管理员已开放可申请范围）。</p>
-<ul><li>如可申请 → 拦截页显示：&quot;你需要 {权限名} 才能使用此功能。此权限可以申请。&quot;</li><li>如不可申请（系统排除）→ 拦截页显示：&quot;此权限当前不可申请，请联系管理员。&quot;</li><li>如无法判断 → 降级显示：&quot;无法确认此权限的申请状态，请联系管理员。&quot;</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>告知员工缺少的具体权限名称（而非泛化&quot;无权限&quot;）</li><li>告知该权限是否可自助申请</li><li>如可申请，告知审批人由谁处理（你上级负责人）</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>场景</th><th>文案</th></tr></thead><tbody><tr><td>可申请</td><td>你需要「{权限名}」才能使用此功能，此权限可以自助申请。点击下方按钮前往申请。</td></tr><tr><td>不可申请</td><td>此权限涉及敏感操作，当前不可自助申请。如需使用，请联系你的管理员。</td></tr><tr><td>无法判断</td><td>暂无法确认此权限的申请状态，请联系管理员处理。</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>可申请 → 员工点击&quot;去申请&quot;进入申请 Drawer（§3 节点 2）</li><li>不可申请/无法判断 → 员工联系管理员</li></ul>
-<p>---</p>
-<h3>节点 2：权限申请 Drawer</h3>
-<p><strong>用户动作</strong> 员工从无权限拦截页点击&quot;去申请&quot;，或从权限中心主动发起申请，打开权限申请 Drawer。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>如从拦截页进入：Drawer 中该权限已预勾选/预填充，且为只读不可取消</li><li>如从权限中心主动进入：Drawer 展示可申请权限/角色列表，支持搜索和按应用分类筛选</li><li>列表中的每个权限项显示：权限名 + 业务说明（&quot;有了它可以做什么&quot;）+ 是否已拥有标签</li><li>底部：申请理由输入区（多行文本框）+ 提交按钮</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>每个权限项附带业务语义说明，不展示&quot;功能权限&quot;&quot;数据权限&quot;等管理术语</li><li>如果权限已拥有，标记&quot;已拥有&quot;并置灰不可选择</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>区域</th><th>文案</th></tr></thead><tbody><tr><td>Drawer 标题</td><td>申请权限</td></tr><tr><td>预填场景提示</td><td>缺少「{权限名}」，请确认并补充申请理由</td></tr><tr><td>理由占位</td><td>请说明你需要此权限做什么（如：每月需处理部门报销单）</td></tr><tr><td>提交按钮</td><td>提交申请</td></tr><tr><td>已拥有标记</td><td>已拥有</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>选择权限 + 填写理由 → 点击提交 → 系统校验 → 提交成功反馈（§3 节点 3）</li><li>权限未选择 → 提交按钮置灰</li><li>理由为空 → 提交按钮置灰（或提交时 InlineError 提示&quot;请填写申请理由&quot;）</li></ul>
-<p>---</p>
-<h3>节点 3：提交成功反馈</h3>
-<p><strong>用户动作</strong> 员工点击提交后，系统进行校验。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>校验通过 → Drawer 关闭 → 页面底部 Toast：&quot;申请已提交，等待上级审批&quot;</li><li>&quot;我的申请&quot;列表新增一条记录，状态为&quot;审批中&quot;</li><li>同步推送审批待办至申请人的上级组织负责人</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>告知员工审批人是谁（你的上级 {审批人姓名}）</li><li>告知预计处理时间（如有，如&quot;通常在 2 个工作日内处理&quot;）</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>区域</th><th>文案</th></tr></thead><tbody><tr><td>Toast</td><td>申请已提交，已通知你的上级 {审批人姓名} 处理</td></tr><tr><td>记录状态</td><td>审批中</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>员工可在&quot;我的申请&quot;列表追踪进度（§4 路径 D）</li></ul>
-<p>---</p>
-<h3>节点 4：审批人处理申请</h3>
-<p><strong>用户动作</strong> 审批人在 OA 底座待办列表中看到待审批申请，点击进入审批详情页。</p>
-<p><strong>系统反馈</strong> 审批详情页展示：</p>
-<ul><li>申请人姓名 + 部门</li><li>申请的权限/角色名称 + 业务说明（&quot;有了它可以做什么&quot;）</li><li>申请理由（员工填写的原文）</li><li>该权限当前在企业内的持有情况（可选，如&quot;当前有 5 人拥有此权限&quot;）</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>审批人需要理解&quot;这个员工为什么需要这个权限&quot;——申请理由是最关键信息</li><li>如该权限已拥有敏感标记或高风险标签，建议在审批页标注&quot;请注意：此权限涉及 {说明}&quot;</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>区域</th><th>文案</th></tr></thead><tbody><tr><td>审批页面标题</td><td>权限申请审批</td></tr><tr><td>申请人信息</td><td>{员工姓名} · {部门名称}</td></tr><tr><td>申请详情</td><td>权限：{权限名}；理由：{员工填写}</td></tr><tr><td>批准按钮</td><td>批准</td></tr><tr><td>拒绝按钮</td><td>拒绝</td></tr><tr><td>拒绝原因输入</td><td>请说明拒绝原因（将通知申请人）</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>批准 → 状态更新为&quot;已批准&quot; → 系统执行权限生效 → 员工收到通知</li><li>拒绝（附原因）→ 状态更新为&quot;已拒绝&quot; → 员工收到通知及拒绝原因</li></ul>
-<p>---</p>
-<h3>节点 5：接收审批结果</h3>
-<p><strong>用户动作</strong> 员工收到审批结果通知，或在&quot;我的申请&quot;列表中看到状态变更。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>批准 → 状态变为&quot;已生效&quot; → 员工可立即使用权限（如即时生效）或看到预计生效时间</li><li>拒绝（附原因）→ 状态变为&quot;已拒绝&quot; → 展示拒绝原因</li><li>通知方式：站内通知（默认）+ 可选消息/邮件（取决于企业配置）</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>批准后：告知员工&quot;权限已生效，你可以访问 {功能名} 了&quot;</li><li>拒绝时：展示拒绝原因，并提供后续引导（&quot;如需更多帮助，请联系你的上级或管理员&quot;）</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>场景</th><th>文案</th></tr></thead><tbody><tr><td>通过生效</td><td>你的「{权限名}」申请已通过，权限已生效。</td></tr><tr><td>申请被拒</td><td>你的「{权限名}」申请未通过。原因：{审批人填写}。如需进一步了解，可联系你的上级或管理员。</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>通过 → 员工回到功能页面使用权限</li><li>被拒 → 员工可选择联系审批人/管理员，或查看其他可申请权限</li></ul></div>
+      <div class="preview-section-body"><h3>节点 3.1：进入&quot;我的权限&quot;页面</h3>
+<ul><li><strong>用户动作</strong>：员工从工作台或导航进入&quot;我的权限&quot;页面</li><li><strong>系统反馈</strong>：加载并展示当前员工的权限概览</li><li><strong>需要前置解释的信息</strong>：说明这是&quot;查看自己已有权限 + 申请新权限&quot;的统一入口</li><li><strong>建议文案</strong>：页面标题&quot;我的权限&quot;；副标题说明&quot;查看你已有的权限，或申请新的权限&quot;</li><li><strong>下一步</strong>：员工浏览已有权限列表，或点击 [申请权限]</li></ul>
+<h3>节点 3.2：浏览已有权限</h3>
+<ul><li><strong>用户动作</strong>：员工查看权限列表，可按应用/模块筛选</li><li><strong>系统反馈</strong>：按应用分组展示权限项，每项展示权限名称 + 业务场景说明</li><li><strong>需要前置解释的信息</strong>：已有权限用&quot;已有&quot;标签标记，与可申请权限区分</li><li><strong>建议文案</strong>：分组标题如&quot;费用管理&quot;、&quot;考勤管理&quot;；权限项如&quot;报销提交权限（可提交报销申请）&quot;</li><li><strong>下一步</strong>：员工点击底部或页面的 [申请权限] 按钮</li></ul>
+<h3>节点 3.3：打开申请 Drawer</h3>
+<ul><li><strong>用户动作</strong>：点击 [申请权限] 按钮</li><li><strong>系统反馈</strong>：右侧滑出 Drawer，展示可申请权限列表 + 申请原因输入区 + 提交按钮</li><li><strong>需要前置解释的信息</strong>：Drawer 顶部说明&quot;请选择需要申请的权限&quot;</li><li><strong>建议文案</strong>：Drawer 标题&quot;申请权限&quot;</li><li><strong>下一步</strong>：员工浏览或搜索可申请权限</li></ul>
+<h3>节点 3.4：选择权限</h3>
+<ul><li><strong>用户动作</strong>：在可申请权限列表中搜索或浏览，点击选中一个权限项</li><li><strong>系统反馈</strong>：选中项高亮，底部显示已选中的权限名称</li><li><strong>需要前置解释的信息</strong>：每个权限项展示权限名 + 业务场景说明 + &quot;申请&quot;按钮</li><li><strong>建议文案</strong>：权限项展示格式同已有权限列表，保持一致性（U-04）</li><li><strong>下一步</strong>：如支持多选，可继续选择其他权限；如单选直接进入填写原因</li></ul>
+<h3>节点 3.5：填写申请原因</h3>
+<ul><li><strong>用户动作</strong>：在原因输入框中填写申请理由</li><li><strong>系统反馈</strong>：输入框显示占位符引导，字数实时统计（可选）</li><li><strong>需要前置解释的信息</strong>：告知申请人&quot;充分的申请原因有助于审批人快速处理&quot;（C-02 减少认知负担）</li><li><strong>建议文案</strong>：占位符&quot;请说明为什么需要该权限，例如：因负责XX业务，需要查看XX数据&quot;</li><li><strong>下一步</strong>：点击 [提交申请]</li></ul>
+<h3>节点 3.6：提交前确认</h3>
+<ul><li><strong>用户动作</strong>：点击 [提交申请]</li><li><strong>系统反馈</strong>：系统自动校验：①是否在可申请范围内 ②是否已有该权限 ③是否存在进行中的相同申请</li><li><strong>需要前置解释的信息</strong>：校验失败时在对应位置显示 InlineError</li><li><strong>建议文案</strong>：</li><li>超出范围：&quot;该权限暂未开放自助申请，如需申请请联系管理员&quot;</li><li>已拥有：&quot;您已有该权限，无需重复申请&quot;</li><li>进行中：&quot;该权限已有一个进行中的申请，请等待处理结果&quot;</li><li><strong>下一步</strong>：校验通过 → Drawer 关闭 → 显示成功 Toast</li></ul>
+<h3>节点 3.7：提交成功反馈</h3>
+<ul><li><strong>用户动作</strong>：提交后自动回到&quot;我的权限&quot;页或申请记录列表</li><li><strong>系统反馈</strong>：Toast &quot;申请已提交&quot;，申请记录列表新增一条状态为&quot;审批中&quot;的记录</li><li><strong>需要前置解释的信息</strong>：告知员工接下来会发生什么——&quot;请等待审批人处理，审批通过后将自动授权&quot;</li><li><strong>建议文案</strong>：Toast &quot;申请已提交，请等待审批&quot;；记录卡片显示当前进度为&quot;审批中&quot;</li><li><strong>下一步</strong>：员工可继续浏览权限、查看申请记录、等待通知</li></ul>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-5">
       <h2 class="preview-section-heading">§4 次交互流程</h2>
-      <div class="preview-section-body"><h3>路径 C：查看已有权限</h3>
-<p><strong>触发条件</strong> 员工希望了解自己当前拥有哪些权限，或核对某项权限是否已到位。</p>
-<p><strong>用户动作</strong> 进入权限中心 → 切换到&quot;我的权限&quot;标签页。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>按应用或功能分类展示已生效的权限清单</li><li>每项权限显示：权限名 + 业务说明 + 生效状态标签（已生效/审批中/已失效）</li><li>如果某个权限还在审批中，标注&quot;审批中&quot;而非&quot;已生效&quot;</li><li>分类展示，每类可折叠展开</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>权限展示使用业务语言（如&quot;查看和编辑报销单&quot;而非&quot;费用管理_编辑&quot;）</li><li>如果需要展示来源（来自哪个角色/哪次申请），以次要信息形式展示（小字或 tooltip）</li></ul>
-<p><strong>下一步</strong></p>
-<ul><li>员工检查完权限后，可返回权限中心首页或发起新申请</li></ul>
-<p>---</p>
-<h3>路径 D：查看申请进度</h3>
-<p><strong>触发条件</strong> 员工提交申请后想了解审批处理状态。</p>
-<p><strong>用户动作</strong> 进入权限中心 → 切换到&quot;我的申请&quot;标签页。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>按时间倒序展示所有申请记录（进行中在前，已完成在后）</li><li>每条记录展示：</li><li>申请时间</li><li>申请的权限/角色名称</li><li>当前状态（审批中/已批准/已拒绝/已生效）</li><li>处理人（如已进入审批）</li><li>操作时间（审批人在何时处理）</li><li>点击单条记录进入详情页，展示完整审批流转历史</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>审批中 → 告知审批人和预计时间</li><li>已批准 → 告知权限将在何时生效（即时/定时）</li><li>已拒绝 → 展示拒绝原因和后续建议</li></ul>
-<p><strong>下一步</strong></p>
-<ul><li>如仍在审批中 → 员工可继续等待</li><li>如已拒绝 → 可联系审批人或管理员</li></ul>
-<p>---</p>
-<h3>路径 E：管理员配置可申请范围</h3>
-<p><strong>触发条件</strong> 权限管理员需要设定哪些功能权限和角色允许员工自助申请。</p>
-<p><strong>用户动作</strong> 进入权限管理后台 → 找到&quot;可申请范围&quot;配置入口。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>按&quot;功能权限&quot;和&quot;角色&quot;两个标签页分类展示</li><li>每个权限/角色项显示：</li><li>名称 + 业务说明</li><li>当前状态（可申请/不可申请/系统锁定）</li><li>切换开关（系统锁定的不可操作且明确标识）</li><li>提供批量搜索和筛选能力</li><li>支持批量勾选设置</li></ul>
-<p><strong>需要前置解释的信息</strong></p>
-<ul><li>系统锁定的权限（敏感权限）明确标注，管理员不可误操作</li><li>修改后提示&quot;修改将立即生效，员工侧只能看到你开放的内容&quot;</li></ul>
-<p><strong>下一步</strong></p>
-<ul><li>保存配置 → 配置即时生效</li><li>如有高风险操作，增加二次确认</li></ul>
-<p>---</p>
-<h3>路径 F：撤销申请（待确认）</h3>
-<p><strong>触发条件</strong> 员工提交申请后，在审批人尚未处理前希望撤销。</p>
-<p><strong>用户动作</strong> 在&quot;我的申请&quot;列表中找到待处理的申请 → 点击&quot;撤销申请&quot;。</p>
-<p><strong>系统反馈</strong></p>
-<ul><li>如申请状态为&quot;审批中&quot;且审批人尚未处理 → 允许撤销</li><li>撤销后状态变为&quot;已撤销&quot; → 审批人待办自动取消</li><li>如审批人已处理 → 撤销按钮置灰不可操作</li></ul>
-<p><strong>建议文案</strong></p>
-<div class="table-wrap"><table><thead><tr><th>场景</th><th>文案</th></tr></thead><tbody><tr><td>撤销确认</td><td>确定要撤销此申请吗？撤销后审批人的待办将自动取消。</td></tr><tr><td>撤销成功</td><td>申请已撤销。</td></tr></tbody></table></div>
-<p><strong>下一步</strong></p>
-<ul><li>员工可重新发起申请或放弃</li></ul></div>
+      <div class="preview-section-body"><h3>4.1 管理员开启并配置自助申请</h3>
+<p><strong>触发条件</strong>：管理员进入自助申请配置页，首次开启或关闭后重新开启。</p>
+<ul><li><strong>用户动作</strong>：切换 [启用] 开关 → 选择范围类型 → 勾选可申请权限 → 选择审批流程 → 点击 [保存]</li><li><strong>系统反馈</strong>：</li><li>切换 [启用] 时检查是否与现有治理模式冲突</li><li>保存时校验：至少勾选一个权限、审批流程已配置</li><li>保存成功后 Toast &quot;配置已保存，自助申请已启用&quot;</li><li><strong>需要前置解释的信息</strong>：</li><li>开启前：一句话说明&quot;开启后，员工可以在指定范围内自助申请权限，申请需经过审批&quot;</li><li>选择范围时：按应用/模块分组展示，配合搜索（IA-02 分块）</li><li>选择审批流程时：展示已有审批流程列表，或提供&quot;去审批管理配置&quot;的快捷入口</li><li><strong>建议文案</strong>：</li><li>页面标题&quot;自助申请配置&quot;</li><li>范围说明&quot;选择允许员工自助申请的权限范围&quot;</li><li>审批流程说明&quot;选择申请提交后需要经过的审批流程&quot;</li><li><strong>下一步</strong>：管理员可点击&quot;员工视角预览&quot;查看员工端效果；或点击 [保存] 完成配置</li></ul>
+<h3>4.2 员工撤销申请</h3>
+<p><strong>触发条件</strong>：员工在申请记录列表中看到一个&quot;审批中&quot;状态的申请，决定撤回。</p>
+<ul><li><strong>用户动作</strong>：点击 [撤销申请] → 弹窗确认 → 确认撤销</li><li><strong>系统反馈</strong>：</li><li>弹窗提示&quot;撤销后申请将结束，审批人将不再处理&quot;</li><li>确认后状态变更为&quot;已撤销&quot;</li><li>Toast &quot;申请已撤销&quot;</li><li><strong>需要前置解释的信息</strong>：撤销不可逆，撤销后需重新提交（U-03 用户控制与自由）</li><li><strong>建议文案</strong>：弹窗标题&quot;撤销申请&quot;；弹窗正文&quot;撤销后该申请将结束，审批人不再处理。如仍需该权限，需要重新提交申请。&quot;</li><li><strong>下一步</strong>：员工可重新申请该权限</li></ul>
+<h3>4.3 审批人审批处理</h3>
+<p><strong>触发条件</strong>：审批人收到审批通知，进入审批详情页处理申请。</p>
+<ul><li><strong>用户动作</strong>：查看申请详情 → 点击 [同意] 或 [拒绝] → 如拒绝填写原因 → 确认</li><li><strong>系统反馈</strong>：</li><li>同意 → 状态变更为&quot;已通过&quot; → 系统自动执行授权 → 状态变更为&quot;已生效&quot; 或 &quot;生效失败&quot;</li><li>拒绝 → 状态变更为&quot;已拒绝&quot; → 申请结束</li><li>操作成功 Toast &quot;审批已完成&quot;</li><li><strong>需要前置解释的信息</strong>：</li><li>审批详情页展示：权限名称 + 业务场景说明、权限影响范围、风险等级标签、申请人部门/岗位、申请原因</li><li>拒绝原因提供常用模板：&quot;权限过大，建议申请更小范围&quot;&quot;与现有角色重复&quot;&quot;请补充申请理由&quot;</li><li><strong>建议文案</strong>：审批详情页标题&quot;审批权限申请&quot;；&quot;批准后影响&quot;区块文案&quot;批准后，申请人可以{具体影响}&quot;</li><li><strong>下一步</strong>：审批人返回待办列表；申请人收到结果通知</li></ul>
+<h3>4.4 管理员日常监控</h3>
+<p><strong>触发条件</strong>：管理员进入自助申请配置页或申请记录列表查看运行状态。</p>
+<ul><li><strong>用户动作</strong>：查看统计概览 → 浏览申请记录 → 标记异常</li><li><strong>系统反馈</strong>：</li><li>统计卡片：今日申请数、通过率、平均审批时长、进行中数量</li><li>申请列表：按提交时间排序，支持按状态筛选</li><li>异常标记：高频申请相同权限、同一人被多次拒绝时自动标记</li><li><strong>需要前置解释的信息</strong>：统计卡片帮助管理员快速了解整体运行情况（U-06 识别优于回忆）</li><li><strong>建议文案</strong>：统计卡片标题&quot;运行概况&quot;</li><li><strong>下一步</strong>：管理员可调整配置或关闭功能</li></ul>
+<h3>4.5 管理员调整配置（运行中）</h3>
+<p><strong>触发条件</strong>：管理员在已启用状态下修改可申请范围或审批流程。</p>
+<ul><li><strong>用户动作</strong>：进入自助申请配置页 → 修改配置 → 点击 [保存]</li><li><strong>系统反馈</strong>：</li><li>保存时提示&quot;配置变更不影响已提交的申请，已审批通过的授权不受影响&quot;</li><li>Toast &quot;配置已更新&quot;</li><li><strong>需要前置解释的信息</strong>：配置变更的生效范围——<strong>只影响变更后提交的申请</strong>（ISO-04 符合预期）</li><li><strong>建议文案</strong>：提示文案&quot;已提交的申请按原配置继续流转，不受本次变更影响&quot;</li><li><strong>下一步</strong>：管理员确认变更已生效</li></ul>
+<h3>4.6 管理员关闭自助申请</h3>
+<p><strong>触发条件</strong>：管理员不再需要自助申请功能，或需要临时关闭进行调整。</p>
+<ul><li><strong>用户动作</strong>：切换 [启用] 开关为关闭 → 系统校验 → 弹窗确认 → 确认关闭</li><li><strong>系统反馈</strong>：</li><li>校验结果：显示当前进行中的申请数量</li><li>弹窗提示：关闭后新申请不可提交，进行中的 X 个申请将继续流转</li><li>确认后 Toast &quot;自助申请已关闭&quot;</li><li><strong>需要前置解释的信息</strong>：关闭的边界：不收回已授予的权限，不影响进行中的申请（UXB §8 硬约束）</li><li><strong>建议文案</strong>：弹窗标题&quot;关闭自助申请&quot;；弹窗正文&quot;关闭后，员工将无法提交新的权限申请。正在进行中的 {N} 个申请将继续正常流转，不受影响。已授予的权限不会被收回。&quot;</li><li><strong>下一步</strong>：管理员可重新开启，上次的配置保留</li></ul>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-6">
       <h2 class="preview-section-heading">§5 异常与阻断流程</h2>
-      <div class="preview-section-body"><h3>E1：从缺口到申请的链路失败</h3>
-<p><strong>发生时机</strong>：员工在无权限拦截页点击&quot;去申请&quot;时 <strong>触发条件</strong>：无法确定员工缺少的权限，或该权限信息不可达 <strong>判断依据</strong>：系统无法获取当前用户的权限缺失详情（网络异常/权限服务不可达） <strong>反馈形式</strong>：拦截页降级文案 <strong>系统反馈</strong>：显示&quot;暂无法确认此权限的申请状态&quot; <strong>用户下一步</strong>：联系管理员处理 <strong>恢复路径</strong>：原路恢复，无信息丢失。网络恢复后员工可从权限中心正常发起申请。</p>
-<h3>E2：搜索无结果</h3>
-<p><strong>发生时机</strong>：员工在权限申请 Drawer 中搜索权限时 <strong>触发条件</strong>：搜索关键词无匹配结果 <strong>判断依据</strong>：权限名称和业务说明均不匹配 <strong>反馈形式</strong>：Drawer 内空状态展示 <strong>系统反馈</strong>：显示&quot;没有找到匹配的权限&quot;，并提供替代方案 <strong>用户下一步</strong>：</p>
-<ul><li>更换搜索关键词</li><li>浏览全部分类列表</li><li>联系管理员（提供&quot;联系管理员&quot;入口）</li></ul>
-<p><strong>恢复路径</strong>：原路恢复，无信息丢失。</p>
-<h3>E3：权限不可申请</h3>
-<p><strong>发生时机</strong>：员工在权限申请 Drawer 中选择权限时 <strong>触发条件</strong>：该权限被系统设为不可申请（敏感权限/管理员未开放） <strong>判断依据</strong>：系统级权限标记或管理员配置 <strong>反馈形式</strong>：该权限项在列表中置灰，并标注不可申请原因 <strong>系统反馈</strong>：显示&quot;此权限不可自助申请&quot; + 原因 <strong>用户下一步</strong>：联系管理员申请 <strong>恢复路径</strong>：原路恢复，无信息丢失。</p>
-<h3>E4：提交校验失败</h3>
-<p><strong>发生时机</strong>：员工点击提交申请时 <strong>触发条件</strong>：申请理由为空或不符合要求 <strong>判断依据</strong>：前端校验 <strong>反馈形式</strong>：Drawer 不关闭，申请理由输入区下方显示 InlineError <strong>系统反馈</strong>：显示&quot;请填写申请理由&quot; <strong>用户下一步</strong>：填写申请理由后重新提交 <strong>恢复路径</strong>：原路恢复，已填写内容不丢失。</p>
-<h3>E5：审批长时间未处理</h3>
-<p><strong>发生时机</strong>：申请提交后，审批人在规定时间内未处理 <strong>触发条件</strong>：超过预设处理时限（如 48 小时）审批人仍未操作 <strong>判断依据</strong>：OA 底座超时规则 <strong>反馈形式</strong>（推荐方案，待确认）：</p>
-<ul><li>首次超时 → 系统自动发送催办通知给审批人</li><li>二次超时 → 升级至审批人的上级或后备审批人</li><li>员工侧：在申请详情中显示&quot;审批人暂未处理，已发送催办提醒&quot;</li></ul>
-<p><strong>系统反馈</strong>：根据超时等级执行催办或升级 <strong>用户下一步</strong>：继续等待或联系审批人 <strong>恢复路径</strong>：审批人处理或升级后自动流转，申请信息不丢失。</p>
-<h3>E6：审批拒绝</h3>
-<p><strong>发生时机</strong>：审批人拒绝申请 <strong>触发条件</strong>：审批人点击拒绝并填写（或未填写）原因 <strong>判断依据</strong>：审批人操作 <strong>反馈形式</strong>：通知 + 状态更新 <strong>系统反馈</strong>：</p>
-<ul><li>员工收到通知：申请被拒 + 原因（如有）</li><li>&quot;我的申请&quot;列表中该记录状态变为&quot;已拒绝&quot;，展示拒绝原因</li></ul>
-<p><strong>用户下一步</strong>：</p>
-<ul><li>如有拒绝原因 → 根据原因调整后重新申请，或联系审批人沟通</li><li>如无拒绝原因 → 可联系审批人了解情况</li></ul>
-<p><strong>恢复路径</strong>：重新发起新的申请流程。</p>
-<h3>E7：审批通过但权限未生效</h3>
-<p><strong>发生时机</strong>：审批人批准后 <strong>触发条件</strong>：权限系统生效失败（权限服务异常/配置异常） <strong>判断依据</strong>：后端生效结果回调 <strong>反馈形式</strong>：状态更新 + 说明 <strong>系统反馈</strong>：</p>
-<ul><li>申请状态变为&quot;已批准&quot;（而非&quot;已生效&quot;）</li><li>显示&quot;权限生效中，请稍后查看&quot;</li><li>系统后台自动重试生效</li></ul>
-<p><strong>用户下一步</strong>：等待生效结果或联系管理员 <strong>恢复路径</strong>：后台自动重试，生效后状态更新为&quot;已生效&quot;并通知员工。如果重试仍失败，需要管理员介入。</p></div>
+      <div class="preview-section-body"><h3>5.1 申请超出可申请范围</h3>
+<ul><li><strong>发生时机</strong>：员工在选择权限后点击提交时</li><li><strong>触发条件</strong>：所选权限不在管理员配置的可申请范围列表中</li><li><strong>判断依据</strong>：系统对比所选权限与可申请范围列表</li><li><strong>反馈形式</strong>：Drawer 内 InlineError，不关闭 Drawer</li><li><strong>系统反馈</strong>：提交按钮下方显示错误提示，已填信息保留</li><li><strong>用户下一步</strong>：重新选择其他权限，或放弃申请联系管理员</li><li><strong>恢复路径</strong>：原路恢复，无信息丢失。员工可继续选择其他权限或关闭 Drawer 退出</li></ul>
+<h3>5.2 员工已有该权限</h3>
+<ul><li><strong>发生时机</strong>：员工选择权限后点击提交时</li><li><strong>触发条件</strong>：所选权限当前员工已拥有</li><li><strong>判断依据</strong>：系统对比所选权限与当前员工已授权权限</li><li><strong>反馈形式</strong>：权限选择区该权限项下方显示 InlineError</li><li><strong>系统反馈</strong>：错误提示&quot;您已有该权限，无需重复申请&quot;</li><li><strong>用户下一步</strong>：重新选择其他权限</li><li><strong>恢复路径</strong>：原路恢复，无信息丢失。员工可直接切换选择其他权限</li></ul>
+<h3>5.3 存在进行中的相同申请</h3>
+<ul><li><strong>发生时机</strong>：员工选择权限后点击提交时</li><li><strong>触发条件</strong>：该权限已有一份&quot;审批中&quot;状态的申请</li><li><strong>判断依据</strong>：系统查询该员工该权限的进行中申请</li><li><strong>反馈形式</strong>：Drawer 内该权限项下方显示 InlineError</li><li><strong>系统反馈</strong>：错误提示&quot;该权限已有一个进行中的申请，请等待处理结果&quot;</li><li><strong>用户下一步</strong>：去申请记录页面查看该申请的状态，或等待审批结果</li><li><strong>恢复路径</strong>：原路恢复，无信息丢失。员工可查看现有申请记录</li></ul>
+<h3>5.4 审批人缺失</h3>
+<ul><li><strong>发生时机</strong>：员工提交申请时，或提交后转审批时</li><li><strong>触发条件</strong>：管理员配置的审批流程中无有效审批人（如审批人已离职、角色为空）</li><li><strong>判断依据</strong>：系统在申请提交时实时检查审批流程的有效性</li><li><strong>反馈形式</strong>：提交时 Drawer 显示 Toast 错误，不关闭 Drawer</li><li><strong>系统反馈</strong>：Toast &quot;审批流程未配置有效审批人，请联系管理员处理&quot;</li><li><strong>用户下一步</strong>：联系管理员补充审批人配置；管理员收到异常通知</li><li><strong>恢复路径</strong>：原路恢复，无信息丢失。管理员配置审批人后员工可重新提交</li></ul>
+<h3>5.5 审批通过但授权失败</h3>
+<ul><li><strong>发生时机</strong>：审批人点击同意后，系统执行自动授权时</li><li><strong>触发条件</strong>：系统调用授权接口失败（接口超时、权限模型冲突、治理模式阻断等）</li><li><strong>判断依据</strong>：授权接口返回失败</li><li><strong>反馈形式</strong>：审批人端 Toast + 管理员端通知 + 员工端状态更新</li><li><strong>系统反馈</strong>：</li><li>审批人：&quot;授权执行异常，已通知管理员处理&quot;</li><li>管理员：收到&quot;自动授权失败&quot;的通知</li><li>员工端：状态变更为&quot;已通过（授权异常）&quot;</li><li><strong>用户下一步</strong>：管理员介入手动授权或排查原因</li><li><strong>恢复路径</strong>：非自动恢复。管理员手动处理后，在后台将申请状态更新为&quot;已生效&quot;</li></ul>
+<h3>5.6 关闭期间有新申请</h3>
+<ul><li><strong>发生时机</strong>：员工在自助申请已关闭后尝试提交申请</li><li><strong>触发条件</strong>：自助申请功能已关闭</li><li><strong>判断依据</strong>：系统检查功能开关状态</li><li><strong>反馈形式</strong>：Drawer 无法打开，或打开后提交按钮置灰并显示提示</li><li><strong>系统反馈</strong>：提示&quot;当前未开放自助申请，如需申请权限请联系管理员&quot;</li><li><strong>用户下一步</strong>：联系管理员线下申请</li><li><strong>恢复路径</strong>：无法自行恢复。管理员重新开启后员工可正常申请</li></ul>
+<h3>5.7 审批超时未处理</h3>
+<ul><li><strong>发生时机</strong>：申请已提交，但审批人在规定时间内未处理</li><li><strong>触发条件</strong>：超过管理员配置的超时阈值（参考审批管理知识库&quot;超时处理&quot;策略：提醒/转派/通过/拒绝）</li><li><strong>判断依据</strong>：系统超时计时器触发</li><li><strong>反馈形式</strong>：员工端催办按钮变为可用 + 审批人端超时提醒</li><li><strong>系统反馈</strong>：</li><li>员工端：申请详情页显示&quot;已超过预计处理时间&quot;，[催办] 按钮亮起</li><li>审批人端：收到超时提醒通知（可能的方式：系统内通知/短信/邮件）</li><li><strong>用户下一步</strong>：员工点击 [催办] 提醒审批人；审批人尽快处理</li><li><strong>恢复路径</strong>：催办后等待审批人处理；如审批人长期不处理，员工联系管理员转派</li></ul>
+<h3>5.8 催办功能</h3>
+<ul><li><strong>发生时机</strong>：员工在申请详情页点击 [催办] 按钮</li><li><strong>触发条件</strong>：申请超过预计处理时间，员工主动催办</li><li><strong>判断依据</strong>：员工点击催办操作</li><li><strong>反馈形式</strong>：按钮置灰 + Toast + 审批人收到催办通知</li><li><strong>系统反馈</strong>：</li><li>员工端：&quot;已催办审批人，请耐心等待&quot;；[催办] 按钮置灰 24 小时</li><li>审批人端：收到催办通知（&quot;XXX 催办了权限申请：{权限名}&quot;）</li><li><strong>用户下一步</strong>：等待审批人处理</li><li><strong>恢复路径</strong>：无需恢复，催办后路径回到等待审批状态</li></ul>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-7">
       <h2 class="preview-section-heading">§6 页面 / 弹窗 / 抽屉设计</h2>
-      <div class="preview-section-body"><h3>P1：无权限拦截页（页面嵌入式提示条）</h3>
-<p><strong>页面目标</strong> 在员工访问无权限功能时，告知缺少的权限并引导下一步操作。</p>
-<p><strong>进入条件</strong> 员工点击/访问需要特定权限但尚未拥有的功能或页面。</p>
-<p><strong>页面结构</strong></p>
-<pre><code>┌──────────────────────────────────────────────────┐
-│  ⚠️ 你需要「{权限名}」才能使用此功能              │
-│  此权限可以自助申请，点击下方按钮前往申请            │
-│                                                  │
-│  ┌──────────┐  ┌──────────────┐                  │
-│  │  知道了   │  │  去申请      │                  │
-│  └──────────┘  └──────────────┘                  │
-└──────────────────────────────────────────────────┘
-
-或（不可申请版）：
-┌──────────────────────────────────────────────────┐
-│  ⚠️ 你需要「{权限名}」才能使用此功能              │
-│  此权限涉及敏感操作，不可自助申请                  │
-│  请联系你的管理员处理                              │
-│                                                  │
-│  ┌──────────────┐                                │
-│  │  我知道了     │                                │
-│  └──────────────┘                                │
-└──────────────────────────────────────────────────┘</code></pre>
-<p><strong>按钮</strong></p>
-<ul><li>&quot;去申请&quot;（主按钮）：跳转到权限申请 Drawer，预填充缺少的权限</li><li>&quot;知道了&quot;（次按钮）：关闭提示条，停留在当前页面</li></ul>
-<p><strong>成功反馈</strong> 点击&quot;去申请&quot;后打开权限申请 Drawer（见 P2）。</p>
-<p><strong>失败反馈</strong> 如果无法判断缺失权限，降级显示通用文案：&quot;暂无法确认此权限状态，请联系管理员。&quot;</p>
-<p>---</p>
-<h3>P2：权限申请 Drawer</h3>
-<p><strong>页面目标</strong> 让员工选择和确认要申请的权限，填写申请理由并提交。</p>
-<p><strong>进入条件</strong> 从无权限拦截页点击&quot;去申请&quot;，或在权限中心点击&quot;申请权限&quot;。</p>
-<p><strong>页面结构</strong></p>
-<pre><code>┌─────────────────────────────────────────────┐
-│  ← 申请权限                      关闭 ×    │
-├─────────────────────────────────────────────┤
-│                                             │
-│  🔍 搜索权限名称或业务关键词...              │
-│                                             │
-│  全部权限  │  按应用分类  ▼                  │
-├─────────────────────────────────────────────┤
-│  ☑ {权限名}                                 │
-│     可以做什么：{业务说明}                    │
-│                                             │
-│  ☐ {权限名}                                 │
-│     可以做什么：{业务说明}                    │
-│                                             │
-│  ☐ {角色名}（权限包）                        │
-│     包含：{权限 A}、{权限 B}、{权限 C}       │
-│                                             │
-│  ⚪ {权限名}  已拥有                         │
-│     可以做什么：{业务说明}                    │
-│                                             │
-│  （更多权限项...）                           │
-│                                             │
-├─────────────────────────────────────────────┤
-│  申请理由                                    │
-│  ┌─────────────────────────────────────────┐│
-│  │ 请说明你需要此权限做什么...（选填）      ││
-│  └─────────────────────────────────────────┘│
-│                                             │
-│  ┌──────────────────────────────┐           │
-│  │        提交申请              │           │
-│  └──────────────────────────────┘           │
-│    提交后通知你的上级处理                     │
-└─────────────────────────────────────────────┘</code></pre>
-<p><strong>按钮</strong></p>
-<ul><li>&quot;提交申请&quot;（主按钮）：校验 → 提交 → 反馈</li><li>关闭/返回：不保存当前选择</li></ul>
-<p><strong>成功反馈</strong> Drawer 关闭，Toast 提示&quot;申请已提交，已通知你的上级 {审批人姓名} 处理&quot;。</p>
-<p><strong>失败反馈</strong></p>
-<ul><li>校验失败：Drawer 不关闭，字段下方显示 InlineError</li><li>提交失败（网络/服务异常）：Drawer 不关闭，Toast 提示&quot;提交失败，请稍后重试&quot;</li></ul>
-<p><strong>状态反馈区</strong></p>
-<ul><li>加载态：权限列表区显示 Loading Skeleton</li><li>空状态：搜索无结果时显示&quot;没有找到匹配的权限&quot; + &quot;浏览全部&quot;链接</li><li>不可申请项：置灰 + &quot;不可申请&quot;标记 + tooltip 说明原因</li></ul>
-<p>---</p>
-<h3>P3：权限中心首页</h3>
-<p><strong>页面目标</strong> 作为员工侧权限操作的统一入口，聚合查看、申请、追踪能力。</p>
-<p><strong>进入条件</strong> 员工从工作台/全局导航进入权限中心。</p>
-<p><strong>页面结构</strong></p>
-<pre><code>┌─────────────────────────────────────────────┐
-│  权限中心                                     │
-├─────────────────────────────────────────────┤
-│                                             │
-│  ┌─────────────┐  ┌──────────┐  ┌──────────┐│
-│  │  我的权限     │  │ 我的申请  │  │ 申请权限  ││
-│  │  {已有N项}   │  │ {N项处理中}│  │  +       ││
-│  └─────────────┘  └──────────┘  └──────────┘│
-│                                             │
-│  ─ 快速操作 ─                                │
-│                                             │
-│  🔍 搜索你想申请的权限...                    │
-│                                             │
-│  按角色探索：                                │
-│  [{角色 A}] [{角色 B}] [{角色 C}] 查看更多 → │
-│                                             │
-│  ─ 最近申请 ─                               │
-│  {权限名}  ·  {状态}  ·  {时间}             │
-│  {权限名}  ·  {状态}  ·  {时间}             │
-│  查看全部 →                                 │
-│                                             │
-└─────────────────────────────────────────────┘</code></pre>
-<p><strong>按钮</strong></p>
-<ul><li>&quot;我的权限&quot;：跳转到我的权限页（P5）</li><li>&quot;我的申请&quot;：跳转到我的申请列表（P4）</li><li>&quot;申请权限&quot;：打开权限申请 Drawer（P2）</li></ul>
-<p><strong>成功反馈</strong> 正常进入页面即展示数据。</p>
-<p><strong>失败反馈</strong></p>
-<ul><li>加载失败：显示占位骨架屏 + 重试按钮</li></ul>
-<p>---</p>
-<h3>P4：我的申请列表</h3>
-<p><strong>页面目标</strong> 让员工查看所有申请记录及其当前处理状态。</p>
-<p><strong>进入条件</strong> 从权限中心首页点击&quot;我的申请&quot;。</p>
-<p><strong>页面结构</strong></p>
-<pre><code>┌─────────────────────────────────────────────┐
-│  ← 我的申请                     + 申请权限  │
-├─────────────────────────────────────────────┤
-│  全部 │ 进行中 │ 已完成                     │
-├─────────────────────────────────────────────┤
-│                                             │
-│  {权限名}                      ● 审批中     │
-│  申请时间：2026-07-13 10:30                 │
-│  处理人：{审批人姓名}                       │
-│  ─────────────────────────────────           │
-│  {权限名}                      ✓ 已生效     │
-│  申请时间：2026-07-12 14:20                 │
-│  已生效：2026-07-13 09:00                   │
-│  ─────────────────────────────────           │
-│  {权限名}                      ✗ 已拒绝     │
-│  申请时间：2026-07-11 09:00                 │
-│  原因：当前岗位暂不需要此权限                │
-│  ─────────────────────────────────           │
-│                                             │
-└─────────────────────────────────────────────┘</code></pre>
-<p><strong>状态标签配色</strong></p>
-<ul><li>审批中：蓝色</li><li>已生效：绿色</li><li>已拒绝：红色</li><li>已撤销：灰色</li></ul>
-<p><strong>点击行为</strong> 点击单条记录进入申请详情页（展示完整流转历史和审批意见）。</p>
-<p>---</p>
-<h3>P5：我的权限页</h3>
-<p><strong>页面目标</strong> 让员工查看自己当前已有的权限清单。</p>
-<p><strong>进入条件</strong> 从权限中心首页点击&quot;我的权限&quot;。</p>
-<p><strong>页面结构</strong></p>
-<pre><code>┌─────────────────────────────────────────────┐
-│  ← 我的权限                                   │
-├─────────────────────────────────────────────┤
-│                                             │
-│  ▼ 应用分类 A（{N} 项权限）                   │
-│    ✅ {权限名}            已生效             │
-│    ✅ {权限名}            已生效             │
-│                                             │
-│  ▼ 应用分类 B（{N} 项权限）                   │
-│    ✅ {权限名}            已生效             │
-│    ⏳ {权限名}            审批中             │
-│    ❌ {权限名}            已失效             │
-│                                             │
-│  ▼ 角色权限包                                │
-│    ✅ {角色名}            已生效             │
-│    📎 包含：{权限A}、{权限B}、{权限C}        │
-│                                             │
-└─────────────────────────────────────────────┘</code></pre>
-<p><strong>说明</strong></p>
-<ul><li>使用业务语言展示权限（如&quot;查看和编辑报销单&quot;）</li><li>已生效/审批中/已失效 三个状态标签明显区分</li><li>角色类权限包可展开查看包含的具体权限</li></ul></div>
+      <div class="preview-section-body"><h3>6.1 &quot;我的权限&quot; Page</h3>
+<p><strong>页面目标</strong>：员工在此页面查看自己已有权限，并发起权限申请。</p>
+<p><strong>进入条件</strong>：员工从工作台或导航进入&quot;我的权限&quot;。</p>
+<p><strong>页面结构</strong>：</p>
+<pre><code>┌─────────────────────────────────────────┐
+│  我的权限                      [申请权限] │
+│  查看你已有的权限，或申请新的权限           │
+├─────────────────────────────────────────┤
+│  ┌─────────────────────────────────────┐ │
+│  │  已有权限 (共 {已有权限总数} 项)        │ │
+│  │                                     │ │
+│  │  ▸ 费用管理                         │ │
+│  │    报销提交权限——可提交报销申请      │ │
+│  │    报销查看权限——可查看报销记录      │ │
+│  │                                     │ │
+│  │  ▸ 考勤管理                         │ │
+│  │    考勤查看权限——可查看考勤记录      │ │
+│  │                                     │ │
+│  │  ▸ 更多 {应用数} 个应用             │ │
+│  │    [展开全部]                       │ │
+│  └─────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────┐ │
+│  │  可申请权限 ({可申请总数} 项)          │ │
+│  │  ┌─ 搜索权限 ───────────────────┐   │ │
+│  │  │  🔍 输入权限名称搜索...       │   │ │
+│  │  └─────────────────────────────┘   │ │
+│  │  ▸ 按应用筛选: [全部] [费用管理]... │ │
+│  │                                     │ │
+│  │  智能报表查看权限——可查看智能报表    │ │
+│  │  [申请]                             │ │
+│  │                                     │ │
+│  │  客户管理编辑权限——可编辑客户信息    │ │
+│  │  [申请]                             │ │
+│  └─────────────────────────────────────┘ │
+└─────────────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[申请权限]：主按钮，位于页面右上角，点击打开申请 Drawer</li><li>[申请]：行内按钮，位于可申请权限每行右侧，点击直接选中该权限并打开申请 Drawer</li></ul>
+<p><strong>成功反馈</strong>：提交申请后 Drawer 关闭，Toast &quot;申请已提交&quot;，可申请权限区无变化（申请后仍可查看）。</p>
+<p><strong>失败反馈</strong>：Drawer 内 InlineError 提示（参见 §5 异常流程）。</p>
+<p><strong>状态反馈区</strong>：</p>
+<ul><li>加载态：骨架屏，权限列表按应用分组占位</li><li>空状态（无权限）：&quot;暂无权限数据&quot; + 引导文案&quot;如需申请权限，点击右上角 [申请权限]&quot;</li><li>空状态（无可申请权限）：&quot;当前无可申请的权限&quot; + 引导文案&quot;如需其他权限，请联系管理员&quot;</li><li>异常态（加载失败）：&quot;权限数据加载失败&quot; + [重新加载] 按钮</li></ul>
+<h3>6.2 权限申请 Drawer</h3>
+<p><strong>弹窗目标</strong>：员工在此选择一个或多个权限并提交申请。</p>
+<p><strong>触发条件</strong>：员工点击 [申请权限] 按钮或行内 [申请] 按钮。</p>
+<p><strong>弹窗结构</strong>：</p>
+<pre><code>┌───────────────────────────────────┐
+│ ← 申请权限                  ✕    │
+│                                    │
+│  ┌─ 选择权限 ──────────────────┐  │
+│  │  🔍 搜索权限...             │  │
+│  │                             │  │
+│  │  ◉ 智能报表查看权限          │  │
+│  │    可查看智能报表             │  │
+│  │                             │  │
+│  │  ○ 客户管理编辑权限          │  │
+│  │    可编辑客户信息             │  │
+│  │                             │  │
+│  │  ○ 招聘管理权限              │  │
+│  │    可管理招聘流程             │  │
+│  └─────────────────────────────┘  │
+│                                    │
+│  申请原因                           │
+│  ┌─────────────────────────────┐  │
+│  │ 请说明为什么需要该权限，     │  │
+│  │ 例如：因负责XX业务，需要     │  │
+│  │ 查看XX数据                   │  │
+│  └─────────────────────────────┘  │
+│                                    │
+│      已选择：智能报表查看权限        │
+│                                    │
+│  [取消]              [提交申请]    │
+└───────────────────────────────────┘</code></pre>
+<p><strong>具体文案</strong>：</p>
+<ul><li>Drawer 标题：&quot;申请权限&quot;</li><li>搜索占位符：&quot;搜索权限名称...&quot;</li><li>原因输入框占位符：&quot;请说明为什么需要该权限，例如：因负责XX业务，需要查看XX数据&quot;</li><li>底部已选区域：&quot;已选择：{权限名称}&quot;</li></ul>
+<p><strong>按钮</strong>：</p>
+<ul><li>[取消]：关闭 Drawer，不保存</li><li>[提交申请]：主要按钮，提交申请（权限未选或原因为空时置灰）</li></ul>
+<p><strong>成功反馈</strong>：Drawer 关闭，Toast &quot;申请已提交&quot;。</p>
+<p><strong>失败反馈</strong>：Drawer 不关闭，对应错误字段下方显示 InlineError（参见 §5）。</p>
+<h3>6.3 申请记录列表 Page</h3>
+<p><strong>页面目标</strong>：员工查看自己提交的所有申请记录及状态。</p>
+<p><strong>进入条件</strong>：员工从&quot;我的权限&quot;页或导航进入&quot;申请记录&quot;。</p>
+<p><strong>页面结构</strong>：</p>
+<pre><code>┌─────────────────────────────────────────┐
+│  申请记录                  筛选: [全部▾] │
+├─────────────────────────────────────────┤
+│  ┌─────────────────────────────────────┐ │
+│  │  智能报表查看权限        审批中   ●  │ │
+│  │  申请时间：2026-07-14 09:30        │ │
+│  │  [查看详情]                        │ │
+│  ├─────────────────────────────────────┤ │
+│  │  客户管理编辑权限        已生效   ✅  │ │
+│  │  申请时间：2026-07-13 14:00        │ │
+│  │  [查看详情]                        │ │
+│  ├─────────────────────────────────────┤ │
+│  │  招聘管理权限            已拒绝   ❌  │ │
+│  │  申请时间：2026-07-12 10:00        │ │
+│  │  [查看详情]                        │ │
+│  └─────────────────────────────────────┘ │
+└─────────────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[查看详情]：进入单条申请的详情页</li><li>筛选下拉：全部 / 审批中 / 已通过 / 已生效 / 已拒绝 / 已撤销</li></ul>
+<p><strong>成功反馈</strong>：列表正常展示。</p>
+<p><strong>状态反馈区</strong>：</p>
+<ul><li>空状态：暂无申请记录</li><li>异常态：加载失败 + [重新加载]</li></ul>
+<h3>6.4 申请详情 Page / Drawer</h3>
+<p><strong>页面目标</strong>：员工查看单条申请的完整状态和流转过程。</p>
+<p><strong>进入条件</strong>：员工从申请记录列表点击 [查看详情]。</p>
+<p><strong>页面结构</strong>：</p>
+<pre><code>┌─────────────────────────────────────────┐
+│ ← 申请详情                              │
+├─────────────────────────────────────────┤
+│  申请权限：智能报表查看权限              │
+│  ─────────────────────────────────      │
+│  状态时间线                              │
+│                                         │
+│  ✅ 已生效         2026-07-14 10:00     │
+│    系统已自动授权                        │
+│  │                                      │
+│  ✅ 审批通过       2026-07-14 09:45     │
+│    审批人：{审批人姓名} 已同意           │
+│  │                                      │
+│  ⏳ 审批中         2026-07-14 09:30     │
+│    等待审批人处理                        │
+│  │                                      │
+│  ● 已提交          2026-07-14 09:30     │
+│    申请已提交，等待审批                  │
+│                                         │
+│  ─────────────────────────────────      │
+│  申请信息                                │
+│  申请原因：因负责智能报表模块，需要       │
+│  查看报表数据支持日常分析                 │
+│                                         │
+│  [返回列表]              [催办]         │
+└─────────────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[返回列表]：回到申请记录列表</li><li>[催办]：仅&quot;审批中&quot;状态可用，催办后置灰 24 小时</li><li>[撤销申请]：仅&quot;审批中&quot;状态可用，点击弹出确认弹窗</li></ul>
+<p><strong>状态反馈区</strong>：</p>
+<ul><li>时间线节点根据状态动态展示：已完成 ✅ / 处理中 ⏳ / 失败 ❌ / 待处理 ●</li><li>拒绝状态展示拒绝原因</li><li>授权异常状态展示&quot;已通过（授权异常）&quot;并提示联系管理员</li></ul>
+<h3>6.5 审批详情 Page</h3>
+<p><strong>页面目标</strong>：审批人查看申请详情并做出审批决定。</p>
+<p><strong>进入条件</strong>：审批人从审批通知或待办列表进入。</p>
+<p><strong>页面结构</strong>：</p>
+<pre><code>┌─────────────────────────────────────────┐
+│  审批权限申请                            │
+├─────────────────────────────────────────┤
+│  申请人信息                              │
+│  {申请人姓名} · {申请人部门} · {岗位}    │
+│  ─────────────────────────────────      │
+│                                         │
+│  申请权限                                │
+│  智能报表查看权限                        │
+│  └ 可查看智能报表数据                    │
+│                                         │
+│  ⚠️ 批准后影响                            │
+│  批准后，该员工可以查看智能报表模块下     │
+│  的所有报表数据，包括销售报表、费用报表   │
+│                                         │
+│  风险等级: 🟢 低风险                     │
+│  ─────────────────────────────────      │
+│                                         │
+│  申请原因                                │
+│  因负责智能报表模块，需要查看报表数据     │
+│  支持日常分析                            │
+│                                         │
+│  ─────────────────────────────────      │
+│                                         │
+│  审批意见                                 │
+│  ┌─────────────────────────────────────┐ │
+│  │ 选填，如拒绝请说明原因...            │ │
+│  └─────────────────────────────────────┘ │
+│                                         │
+│  [拒绝]                    [同意]       │
+└─────────────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[同意]：主要按钮，绿色，同意申请</li><li>[拒绝]：次要按钮，红色，弹出拒绝原因输入框</li></ul>
+<p><strong>成功反馈</strong>：</p>
+<ul><li>同意：Toast &quot;已同意，正在自动授权&quot; → 稍后状态更新为&quot;已通过&quot;</li><li>拒绝：Toast &quot;已拒绝&quot;，申请结束</li></ul>
+<p><strong>失败反馈</strong>：授权失败时 Toast &quot;授权执行异常，已通知管理员处理&quot;。</p>
+<p><strong>状态反馈区</strong>：</p>
+<ul><li>加载态：骨架屏</li><li>异常态（申请已被撤销）：页面顶部 Banner &quot;该申请已被申请人撤销&quot;</li><li>异常态（审批人已不是有效审批人）：页面顶部 Banner &quot;您已不是该申请的有效审批人，请确认后联系管理员&quot;</li></ul>
+<h3>6.6 自助申请配置 Page（管理端）</h3>
+<p><strong>页面目标</strong>：管理员在此开启/关闭自助申请能力，配置可申请范围和审批流程。</p>
+<p><strong>进入条件</strong>：管理员进入权限管理 → 自助申请配置。</p>
+<p><strong>页面结构</strong>：</p>
+<pre><code>┌─────────────────────────────────────────┐
+│  自助申请配置                            │
+├─────────────────────────────────────────┤
+│  启用状态                    [● 已启用] │
+│  开启后，员工可在指定范围内自助申请权限   │
+│                                         │
+│  ── 可申请范围 ─────────────────────    │
+│  范围类型: [功能权限 ▾]                  │
+│                                         │
+│  ┌─ 搜索权限 ─────────────────────┐    │
+│  │  🔍 搜索...                    │    │
+│  └───────────────────────────────┘    │
+│                                         │
+│  ☑ 全部 (全选/取消全选)                │
+│  ┌─────────────────────────────────────┐│
+│  │ ▸ 费用管理                          ││
+│  │  ☑ 报销提交权限 □ 报销删除权限      ││
+│  │                                     ││
+│  │ ▸ 智能报表                          ││
+│  │  ☑ 报表查看权限 ☑ 报表导出权限     ││
+│  └─────────────────────────────────────┘│
+│                                         │
+│  ── 审批流程 ───────────────────────    │
+│  审批流程: [选择审批流程 ▾]             │
+│  当前: 默认审批流程                     │
+│  [编辑审批流程]                         │
+│                                         │
+│  ─────────────────────────────────      │
+│  [员工视角预览]            [保存]       │
+└─────────────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[保存]：主要按钮，保存配置</li><li>[员工视角预览]：次要按钮，预览员工端&quot;我的权限&quot;效果</li><li>[编辑审批流程]：跳转或打开审批流程配置 Drawer</li></ul>
+<p><strong>成功反馈</strong>：Toast &quot;配置已保存，自助申请已启用&quot;。</p>
+<p><strong>失败反馈</strong>：</p>
+<ul><li>未勾选任何权限 → InlineError &quot;请至少选择一个可申请的权限&quot;</li><li>未选择审批流程 → InlineError &quot;请选择审批流程&quot;</li><li>模式冲突 → 弹窗提示&quot;当前已开启{冲突模式}，不支持同时开启自助申请&quot;</li></ul>
+<p><strong>状态反馈区</strong>：</p>
+<ul><li>启用开关关闭时：范围配置区和审批流程区置灰不可编辑，提示&quot;请先启用自助申请&quot;</li><li>首次进入：展示功能说明，管理员阅读后开启</li></ul>
+<h3>6.7 关闭确认弹窗</h3>
+<p><strong>弹窗目标</strong>：确认管理员关闭自助申请的意图，并提示进行中申请的影响。</p>
+<p><strong>触发条件</strong>：管理员将 [启用] 开关切换为关闭，且存在进行中的申请。</p>
+<p><strong>弹窗结构</strong>：</p>
+<pre><code>┌───────────────────────────────────┐
+│  关闭自助申请                      │
+│                                    │
+│  关闭后，员工将无法提交新的权限     │
+│  申请。                             │
+│                                    │
+│  当前有 {N} 个申请正在进行中，      │
+│  关闭后这些申请将继续正常流转。     │
+│  已授予的权限不会被收回。           │
+│                                    │
+│  [取消]          [确认关闭]        │
+└───────────────────────────────────┘</code></pre>
+<p><strong>按钮</strong>：</p>
+<ul><li>[取消]：不关闭，回到配置页</li><li>[确认关闭]：确认关闭，关闭后 Toast &quot;自助申请已关闭&quot;</li></ul>
+<p><strong>特殊情况</strong>：如无进行中申请，不展示弹窗，直接关闭并 Toast。</p>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-8">
       <h2 class="preview-section-heading">§7 状态与反馈文案</h2>
-      <div class="preview-section-body"><h3>统一状态口径</h3>
-<div class="table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>待提交</td><td>员工已选择权限但尚未提交</td><td>申请记录</td><td>编辑/取消</td><td>请确认申请信息后提交</td></tr><tr><td>审批中</td><td>申请已提交，等待审批人处理</td><td>申请记录</td><td>撤销申请（如未处理）</td><td>申请已提交，等待{审批人姓名}处理</td></tr><tr><td>已批准</td><td>审批人已批准，权限尚未生效</td><td>申请记录</td><td>查看</td><td>申请已通过，权限生效中</td></tr><tr><td>已生效</td><td>权限已生效，员工可使用</td><td>申请记录/权限项</td><td>查看/使用</td><td>权限已生效，可以正常使用了</td></tr><tr><td>已拒绝</td><td>审批人拒绝申请</td><td>申请记录</td><td>重新申请</td><td>申请未通过，原因：{审批意见}</td></tr><tr><td>已撤销</td><td>员工在审批前主动撤销</td><td>申请记录</td><td>重新申请</td><td>申请已撤销</td></tr><tr><td>已失效</td><td>权限已过期或回收</td><td>权限项</td><td>查看</td><td>此权限已失效</td></tr><tr><td>不可申请</td><td>权限由系统排除或管理员未开放</td><td>权限项</td><td>—</td><td>此权限不可自助申请</td></tr></tbody></table></div>
-<h3>操作反馈文案</h3>
-<div class="table-wrap"><table><thead><tr><th>操作</th><th>成功</th><th>失败</th></tr></thead><tbody><tr><td>提交申请</td><td>申请已提交，已通知你的上级 {审批人姓名} 处理</td><td>提交失败，请稍后重试</td></tr><tr><td>撤销申请</td><td>申请已撤销</td><td>撤销失败，请联系管理员</td></tr><tr><td>审批批准</td><td>（通知申请人）你的「{权限名}」申请已通过</td><td>审批失败，请稍后重试</td></tr><tr><td>审批拒绝</td><td>（通知申请人）你的「{权限名}」申请未通过</td><td>审批失败，请稍后重试</td></tr><tr><td>配置保存</td><td>配置已保存，已即时生效</td><td>保存失败，请稍后重试</td></tr></tbody></table></div></div>
+      <div class="preview-section-body"><h3>申请单状态</h3>
+<div class="table-wrap"><table><thead><tr><th>状态</th><th>含义</th><th>适用对象</th><th>用户可操作</th><th>统一反馈口径</th></tr></thead><tbody><tr><td>草稿</td><td>员工已填写但未提交</td><td>员工</td><td>编辑、提交、删除</td><td>未提交</td></tr><tr><td>审批中</td><td>已提交，等待审批人处理</td><td>员工、审批人</td><td>员工可撤销；审批人可处理</td><td>等待审批人处理</td></tr><tr><td>已通过</td><td>审批人已同意，等待系统自动授权</td><td>员工、审批人</td><td>无</td><td>审批已通过，正在自动授权</td></tr><tr><td>已生效</td><td>权限已成功授予</td><td>员工、审批人</td><td>无</td><td>权限已生效</td></tr><tr><td>已拒绝</td><td>审批人不同意</td><td>员工</td><td>可查看拒绝原因</td><td>申请已被拒绝</td></tr><tr><td>已撤销</td><td>员工在审批中主动撤回</td><td>员工</td><td>可重新申请</td><td>申请已撤销</td></tr><tr><td>授权异常</td><td>审批通过但自动授权失败</td><td>员工、管理员</td><td>联系管理员</td><td>审批已通过，但自动授权异常，请联系管理员</td></tr></tbody></table></div>
+<h3>按钮文案</h3>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>按钮</th><th>文案</th><th>说明</th></tr></thead><tbody><tr><td>我的权限页</td><td>主按钮</td><td>申请权限</td><td>打开申请 Drawer</td></tr><tr><td>申请 Drawer</td><td>主按钮</td><td>提交申请</td><td>提交权限申请</td></tr><tr><td>申请 Drawer</td><td>次按钮</td><td>取消</td><td>关闭 Drawer</td></tr><tr><td>申请详情</td><td>操作按钮</td><td>撤销申请</td><td>撤销进行中的申请</td></tr><tr><td>申请详情</td><td>操作按钮</td><td>催办</td><td>提醒审批人处理</td></tr><tr><td>撤销确认弹窗</td><td>确认按钮</td><td>确认撤销</td><td>确认撤回申请</td></tr><tr><td>撤销确认弹窗</td><td>取消按钮</td><td>不撤销了</td><td>返回详情</td></tr><tr><td>审批详情</td><td>主按钮</td><td>同意</td><td>批准申请</td></tr><tr><td>审批详情</td><td>次按钮</td><td>拒绝</td><td>驳回申请</td></tr><tr><td>配置页</td><td>主按钮</td><td>保存</td><td>保存配置</td></tr><tr><td>配置页</td><td>次按钮</td><td>员工视角预览</td><td>预览员工端效果</td></tr><tr><td>关闭弹窗</td><td>确认按钮</td><td>确认关闭</td><td>确认关闭功能</td></tr><tr><td>关闭弹窗</td><td>取消按钮</td><td>取消</td><td>保持开启</td></tr></tbody></table></div>
+<h3>Toast 反馈</h3>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>Toast 文案</th><th>持续时间</th></tr></thead><tbody><tr><td>申请提交成功</td><td>申请已提交，请等待审批</td><td>3s</td></tr><tr><td>申请撤销成功</td><td>申请已撤销</td><td>3s</td></tr><tr><td>催办成功</td><td>已催办审批人，请耐心等待</td><td>3s</td></tr><tr><td>审批同意</td><td>已同意，正在自动授权</td><td>3s</td></tr><tr><td>审批拒绝</td><td>已拒绝</td><td>3s</td></tr><tr><td>授权异常</td><td>授权执行异常，已通知管理员处理</td><td>5s</td></tr><tr><td>配置保存成功</td><td>配置已保存</td><td>3s</td></tr><tr><td>关闭成功</td><td>自助申请已关闭</td><td>3s</td></tr><tr><td>开启成功</td><td>自助申请已启用</td><td>3s</td></tr></tbody></table></div>
+<h3>InlineError/提示文案</h3>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>文案</th></tr></thead><tbody><tr><td>申请超出范围</td><td>该权限暂未开放自助申请，如需申请请联系管理员</td></tr><tr><td>已有该权限</td><td>您已有该权限，无需重复申请</td></tr><tr><td>存在进行中申请</td><td>该权限已有一个进行中的申请，请等待处理结果</td></tr><tr><td>未选择权限提交</td><td>请先选择需要申请的权限</td></tr><tr><td>未填写申请原因</td><td>请填写申请原因</td></tr><tr><td>审批人缺失（提交时）</td><td>审批流程未配置有效审批人，请联系管理员处理</td></tr><tr><td>功能已关闭</td><td>当前未开放自助申请，如需申请权限请联系管理员</td></tr><tr><td>配置页未选范围</td><td>请至少选择一个可申请的权限</td></tr><tr><td>配置页未选审批流程</td><td>请选择审批流程</td></tr></tbody></table></div>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-9">
       <h2 class="preview-section-heading">§8 待确认问题</h2>
-      <div class="preview-section-body"><div class="table-wrap"><table><thead><tr><th>问题</th><th>影响范围</th><th>建议确认方</th><th>基于推荐方案推进</th></tr></thead><tbody><tr><td>审批超时或审批人不在线时的升级策略（催办/升级/转交）</td><td>§5 E5 异常流程</td><td>产品/管理员</td><td>是，按&quot;催办→升级&quot;两阶段推进</td></tr><tr><td>申请生效后的通知渠道（站内/消息/邮件）</td><td>§3 节点 5、§7</td><td>产品/技术</td><td>是，默认站内通知</td></tr><tr><td>任务→权限映射关系的维护方和更新频率</td><td>§6 P2 权限列表</td><td>产品/业务方</td><td>是，S4 按 P1 优先级推进</td></tr><tr><td>一次申请可包含多个权限/角色还是每次只能一个</td><td>§6 P2 交互设计</td><td>产品</td><td>是，按&quot;支持多选&quot;设计</td></tr><tr><td>已生效权限是否展示来源（角色/申请记录）</td><td>§6 P5</td><td>产品</td><td>是，按次要信息展示</td></tr><tr><td>申请理由是否必填</td><td>§6 P2 表单校验</td><td>产品</td><td>是，按&quot;选填&quot;设计</td></tr><tr><td>OA 底座审批页面的自定义信息承载能力</td><td>§3 节点 4</td><td>技术</td><td>—</td></tr></tbody></table></div></div>
+      <div class="preview-section-body"><h3>层级一：影响主方案是否成立的问题</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>当前系统是否已启用&quot;权限变更审批模式&quot;？自助申请的审批流程是否能复用现有配置？</td><td>影响 §6 配置页的审批流程对接方式</td><td>产品/技术</td></tr><tr><td>审批人如何确定：由管理员指定审批人、按组织架构路由、还是超管统一审批？</td><td>影响 §6 审批详情页的&quot;审批人&quot;语义和 §5 审批人缺失的异常处理</td><td>产品</td></tr><tr><td>是否需要支持一次性申请多个权限？</td><td>影响 §6 申请 Drawer 的权限选择器设计（单选 vs 多选）</td><td>产品/设计</td></tr></tbody></table></div>
+<h3>层级二：影响局部体验设计的问题</h3>
+<div class="table-wrap"><table><thead><tr><th>问题</th><th>影响</th><th>建议确认方</th></tr></thead><tbody><tr><td>权利名称与业务场景描述的映射关系</td><td>影响 §6 权限列表的展示方式</td><td>业务侧</td></tr><tr><td>权限影响范围的描述模版</td><td>影响 §6 审批详情页的&quot;批准后影响&quot;区块</td><td>业务侧</td></tr><tr><td>员工端入口位置（工作台/导航/应用内）</td><td>影响 §6 &quot;我的权限&quot;页的入口路径</td><td>产品/设计</td></tr><tr><td>审批通知方式（系统内通知/短信/邮件）</td><td>影响 §5 超时提醒和催办的通知触达</td><td>产品</td></tr><tr><td>授权生效的平均时间</td><td>影响 &quot;已通过&quot;状态的时间线展示文案</td><td>技术侧</td></tr></tbody></table></div>
+<p><strong>当前未经过用户故事深化</strong>，主任务链基于 UXB 和旅程分析结论推导。如后续补充用户故事，建议对 §3 主流程节点和 §6 页面结构做微调对齐。</p>
+<p>---</p></div>
     </section>
   
 
     <section class="preview-section-block" id="experience-blueprint-section-10">
       <h2 class="preview-section-heading">§9 附录：设计指南消费说明</h2>
       <div class="preview-section-body"><h3>设计准则消费</h3>
-<div class="table-wrap"><table><thead><tr><th>准则</th><th>消费方式</th><th>落点章节</th></tr></thead><tbody><tr><td>BFM-01 默认非步骤化</td><td>权限申请采用单页 Drawer，不拆步骤条</td><td>§6 P2</td></tr><tr><td>IA-01 信息气味</td><td>权限列表项附带业务说明，让员工知道&quot;有了它可以做什么&quot;</td><td>§6 P2</td></tr><tr><td>IA-02 分块</td><td>权限列表按应用分类展示</td><td>§6 P2、P5</td></tr><tr><td>U-01 系统状态可见</td><td>申请进度全程可视化，审批中/已生效/已拒绝等状态标签</td><td>§6 P4、§7</td></tr><tr><td>U-02 贴近现实世界</td><td>用业务语言描述权限，不展示&quot;功能权限/数据权限&quot;管理术语</td><td>§6 P2、P5</td></tr><tr><td>U-03 用户控制与自由</td><td>支持撤销申请</td><td>§4 路径 F</td></tr><tr><td>U-05 错误预防</td><td>提交前校验理由填写，敏感权限不可申请时明确标识</td><td>§5 E4、E3</td></tr><tr><td>C-01 选择越多越慢</td><td>权限列表提供搜索和分类筛选，减少同屏选项</td><td>§6 P2</td></tr><tr><td>C-03 减少无关认知负荷</td><td>不可申请的权限置灰并标注原因，不让员工研究</td><td>§6 P2</td></tr><tr><td>C-04 渐进披露</td><td>先展示主要权限分类，角色权限包可展开查看详情</td><td>§6 P5</td></tr><tr><td>G-01 最小惊讶</td><td>审批拒绝必附原因，避免员工困惑</td><td>§3 节点 5</td></tr><tr><td>G-02 可解释性</td><td>不可申请/申请被拒都有可读原因</td><td>§5 E3、E6</td></tr><tr><td>G-03 可追溯</td><td>申请全过程可查看流转历史</td><td>§6 P4</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>使用依据</th><th>转换结果</th><th>落点</th><th>是否新增补充</th></tr></thead><tbody><tr><td>IA-02 分块</td><td>权限列表按应用/模块分组，组与组边界清晰</td><td>§6 我的权限页</td><td>承接 UXB</td></tr><tr><td>IA-01 信息气味</td><td>权限项展示名称+业务场景说明，帮助员工判断是否匹配</td><td>§6 权限项展示</td><td>新增补充</td></tr><tr><td>BFM-01 默认非步骤化</td><td>申请表单不使用步骤条，用单页 Drawer 承载</td><td>§6 申请 Drawer</td><td>承接 UXB</td></tr><tr><td>G-02 可解释性</td><td>审批详情页展示权限影响范围和风险等级</td><td>§6 审批详情页</td><td>承接 UXB</td></tr><tr><td>G-01 最小惊讶</td><td>审批通过后显示&quot;正在自动授权&quot;，不默认为立即生效</td><td>§6 申请详情时间线</td><td>新增补充</td></tr><tr><td>U-01 系统状态可见</td><td>申请详情页展示完整状态时间线</td><td>§6 申请详情页</td><td>新增补充</td></tr><tr><td>U-03 用户控制与自由</td><td>支持撤销申请、催办、重新申请</td><td>§4 撤销流程</td><td>新增补充</td></tr><tr><td>U-04 一致性与标准</td><td>已有权限和可申请权限展示格式保持一致</td><td>§6 权限列表</td><td>新增补充</td></tr><tr><td>U-06 识别优于回忆</td><td>管理端配置页提供统计概览和异常标记</td><td>§4 日常监控</td><td>新增补充</td></tr><tr><td>U-09 可行动的错误恢复</td><td>所有异常反馈含原因+用户下一步</td><td>§5 异常流程</td><td>新增补充</td></tr><tr><td>R-01 朴素语言</td><td>员工端权限展示使用业务场景描述，不暴露后台术语</td><td>§6 权限展示</td><td>承接 UXB</td></tr><tr><td>C-03 减少认知负荷</td><td>申请原因提供模板/示例引导</td><td>§6 申请 Drawer</td><td>承接 UXB</td></tr><tr><td>C-05 默认效应</td><td>自助申请默认关闭，由管理员主动开启</td><td>§6 配置页</td><td>新增补充</td></tr><tr><td>ISO-04 符合预期</td><td>关闭时提示进行中申请不受影响</td><td>§4 关闭流程</td><td>新增补充</td></tr></tbody></table></div>
 <h3>业务知识消费</h3>
-<div class="table-wrap"><table><thead><tr><th>已消费知识</th><th>体验设计决策</th><th>落点章节</th></tr></thead><tbody><tr><td>权限管理 00_领域概述</td><td>自助申请不影响管理员侧授权链路，两者并存</td><td>§3</td></tr><tr><td>权限管理 01_范围与边界</td><td>功能权限与角色独立管理，员工侧做语义降维统一呈现</td><td>§6 P2</td></tr><tr><td>权限管理 03_业务对象</td><td>申请人（subject）、权限（resource）、动作（action）作为申请表单核心字段</td><td>§6 P2</td></tr><tr><td>权限管理 10_能力地图</td><td>员工自助申请为新增能力，不替代&quot;用户授权&quot;&quot;角色授权&quot;等现有管理侧能力</td><td>§0 判断 1</td></tr><tr><td>权限管理 11_任务场景</td><td>新增&quot;员工自助申请&quot;任务场景，补充现有任务清单</td><td>§2</td></tr><tr><td>权限管理 14_角色边界</td><td>员工默认由角色决定可见性，自助申请不影响此基础规则</td><td>—</td></tr><tr><td>权限管理 24_治理状态模型</td><td>状态流转 draft→pending→approved→effective 作为申请状态设计基础</td><td>§7</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>知识来源</th><th>关键规则/事实</th><th>转换成的体验策略</th><th>落点</th><th>raw 读取情况</th></tr></thead><tbody><tr><td>审批管理 10_审批管理.md §3.5</td><td>超时处理支持提醒/转派/通过/拒绝四种策略</td><td>审批超时场景需同时支持员工催办和系统自动超时处理</td><td>§5.7 审批超时、§5.8 催办</td><td>已读 raw</td></tr><tr><td>审批管理 10_审批管理.md §3.2</td><td>审批人来源支持成员组、角色、组织架构负责人、审批角色等多类型</td><td>审批人缺失检测需在提交时实时校验，而非事后发现</td><td>§5.4 审批人缺失</td><td>已读 raw</td></tr><tr><td>审批管理 10_审批管理.md §3.5</td><td>审批/处理意见必填配置</td><td>拒绝原因强填写，并用模板降低填写成本</td><td>§6.5 审批详情页</td><td>已读 raw</td></tr><tr><td>审批管理 10_审批管理.md §10.2</td><td>支持批量审批（管理员开启后）</td><td>未来可扩展批量审批能力，本期不做</td><td>§8 待确认</td><td>已读 raw</td></tr></tbody></table></div>
 <h3>知识缺口</h3>
-<div class="table-wrap"><table><thead><tr><th>缺口</th><th>影响</th></tr></thead><tbody><tr><td>自助申请范围预配置的管理员配置模式</td><td>当前知识库未覆盖此配置场景，§6 F3 配置页为基于体验推导的设计</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>缺口主题</th><th>当前缺什么</th><th>影响章节</th><th>建议确认方</th></tr></thead><tbody><tr><td>权限名称与业务场景的映射规则</td><td>缺乏权限名称→业务场景描述的映射表</td><td>§6 权限列表展示</td><td>业务侧</td></tr><tr><td>权限影响范围的描述模板</td><td>缺乏每种权限批准后影响的标准化描述</td><td>§6 审批详情页</td><td>业务侧</td></tr><tr><td>授权接口的响应时间和异常码</td><td>缺乏自动授权接口的异常场景信息</td><td>§5.5 授权失败</td><td>技术侧</td></tr></tbody></table></div>
 <h3>上游承接追踪</h3>
-<div class="table-wrap"><table><thead><tr><th>上游判断</th><th>对体验意味着什么</th><th>体验设计决策</th><th>落点章节</th></tr></thead><tbody><tr><td>敏感权限系统级排除</td><td>员工侧不可感知不可申请，不可绕过</td><td>不可申请项置灰 + 标注+ 原因说明</td><td>§5 E3</td></tr><tr><td>OA底座提供审批流程引擎</td><td>审批节点、待办、通知由OA底座承载</td><td>审批详情页展示申请上下文信息</td><td>§3 节点 4</td></tr><tr><td>组织域定义上级关系</td><td>权限中心引用不定义审批人</td><td>审批人由OA底座自动匹配组织架构</td><td>§3 节点 3</td></tr><tr><td>语义降维：不感知功能权限vs角色</td><td>员工侧统一呈现&quot;能力&quot;</td><td>权限列表混合展示功能权限和角色，统一用业务说明</td><td>§6 P2</td></tr><tr><td>审批上下文：不只是权限名称</td><td>审批人需要知道&quot;为什么需要&quot;</td><td>审批详情页展示申请理由</td><td>§3 节点 4</td></tr><tr><td>状态闭环：生效通知和可解释</td><td>通过/拒绝都需通知+原因</td><td>通知文案包含结果和引导</td><td>§3 节点 5</td></tr><tr><td>缺口触发为主要入口</td><td>无权限拦截页必须高效引导申请</td><td>双层结构：信息告知+行动引导</td><td>§6 P1</td></tr></tbody></table></div></div>
+<div class="table-wrap"><table><thead><tr><th>上游判断</th><th>对体验意味着什么</th><th>体验设计决策</th><th>落点章节</th></tr></thead><tbody><tr><td>[UXB §7] 可申请范围由管理员在开启时一次配置</td><td>范围配置需要一个集中配置界面，关联开启动作</td><td>配置页将&quot;开启/关闭&quot;与&quot;范围配置&quot;绑定，关闭时范围区置灰</td><td>§6.6 配置页</td></tr><tr><td>[UXB §7] 员工侧不展示后台来源模型</td><td>员工侧权限展示需要业务化</td><td>权限项用&quot;权限名（业务场景说明）&quot;双行模式展示</td><td>§6.1 我的权限页</td></tr><tr><td>[UXB §7] 审批人需要决策依据</td><td>审批界面需要展示影响范围和风险等级</td><td>审批详情页增加&quot;批准后影响&quot;和&quot;风险等级&quot;区块</td><td>§6.5 审批详情页</td></tr><tr><td>[UXB §7] 审批通过≠已生效</td><td>员工侧需要展示生效进度</td><td>申请详情页使用时间线展示状态流转全过程</td><td>§6.4 申请详情页</td></tr><tr><td>[UXB §7] 关闭不影响进行中申请</td><td>关闭操作需要校验和提示</td><td>关闭时校验进行中申请数量，弹窗确认</td><td>§6.7 关闭弹窗</td></tr><tr><td>[旅程分析 员工-阶段1] 员工不确定是没权限还是系统问题</td><td>需要在功能受限处提供明确的权限说明</td><td>本期不做上下文触发（二期），但在本期页面内提供清晰的权限展示</td><td>§6.1 我的权限页</td></tr><tr><td>[旅程分析 员工-阶段4] 通过但未生效导致焦虑</td><td>需要展示审批通过→生效的过渡状态</td><td>增加&quot;已通过&quot;中间态，显示&quot;正在自动授权&quot;</td><td>§6.4 申请详情页、§7 状态表</td></tr><tr><td>[旅程分析 审批人-阶段2] 缺乏判断依据倾向拒绝</td><td>审批界面需要补充判断依据信息</td><td>审批详情页增加&quot;批准后影响&quot;区块和&quot;风险等级&quot;标签</td><td>§6.5 审批详情页</td></tr></tbody></table></div></div>
     </section>
   
   
