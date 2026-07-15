@@ -106,6 +106,15 @@ When porting this capability to a newer UXB project, read `references/migration-
 - Treat `assets/fixtures/` as regression fixtures, not production inputs.
 - Add the CLI entrypoint only after the host command registry and packaging model are known.
 
+## Handoff · 固定下一步
+
+固定输出：
+
+```text
+旅程埋点与度量需求已完成。当前没有固定下一步推荐。
+你可以停在这里。
+```
+
 ## Bundled Resources
 
 - `references/journey-metrics-contract.md`: compact rule contract.

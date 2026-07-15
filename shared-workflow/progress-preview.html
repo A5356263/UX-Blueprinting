@@ -270,7 +270,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       note: "把需求拆成任务，再看用户一路怎么完成",
       skills: [
         { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "拆清用户要做哪些事、做到什么算完成", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/uxb、/problem-framing 或 /stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。" }
       ]
     },
     {

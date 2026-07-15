@@ -46,10 +46,26 @@ description: >
 
 #### 输入来源识别
 
+- 检查 `spark-output/context/stories.json`。
+- 检查 `spark-output/stories.md`。
 - 检查 `spark-output/context/uxb.json`。
 - 检查 `spark-output/uxb_output.md`。
-- 如有 `UXB`，进入 `uxb-chain`。
+- 如有 `stories`，进入 `stories-chain`。
+- 如无 `stories` 但有 `UXB`，进入 `uxb-chain`。
 - 如无 `UXB`，进入 `prd-standalone`。
+
+#### `stories-chain`
+
+触发条件：
+
+- `spark-output/context/stories.json` 存在；或
+- `spark-output/stories.md` 可读。
+
+用途：
+
+- 基于用户故事结果做旅程深化。
+- 如同时存在 `UXB`，将 `UXB` 作为业务边界和约束补充，不替代 `stories` 的任务单元。
+- 仍必须先做旅程可生成性判断；如缺少阶段、触点或关键角色，进入补问。
 
 #### `uxb-chain`
 
@@ -86,13 +102,13 @@ description: >
 
 用途：
 
-- 作为 `uxb-chain` 或 `prd-standalone` 下的补问执行态。
+- 作为 `stories-chain`、`uxb-chain` 或 `prd-standalone` 下的补问执行态。
 - 补问后必须回写结构化字段，再进入正式生成。
 
 约束：
 
 - `guided-completion` 是执行态，不是最终 `mode` 值。
-- 最终 `mode` 只记录 `uxb-chain` 或 `prd-standalone`。
+- 最终 `mode` 只记录 `stories-chain`、`uxb-chain` 或 `prd-standalone`。
 - 是否使用补问，通过 `completion_used: true | false` 记录。
 
 ### Step 0.3 · 输入读取
@@ -102,14 +118,19 @@ description: >
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界。
 2. 优先读取 `spark-output/context/uxb.json`。
 3. 若 `uxb.json` 不可用，则读取 `spark-output/uxb_output.md`。
-4. 若 `UXB` 上下文都不可用，则读取用户提供的 `PRD`、需求文档、场景描述或口头需求。
-5. 如 `knowledge-wiki` 可用，则按项目知识消费协议补充与旅程相关的业务知识。
+2. 优先读取 `spark-output/context/stories.json`。
+3. 若 `stories.json` 不可用，则读取 `spark-output/stories.md`。
+4. 若 `stories` 上下文都不可用，则读取 `spark-output/context/uxb.json`。
+5. 若 `uxb.json` 不可用，则读取 `spark-output/uxb_output.md`。
+6. 若 `stories` 与 `UXB` 上下文都不可用，则读取用户提供的 `PRD`、需求文档、场景描述或口头需求。
+7. 如 `knowledge-wiki` 可用，则按项目知识消费协议补充与旅程相关的业务知识。
 
 #### 输入确认硬门槛
 
-- 无论是否检测到 `UXB`，都必须先向用户说明当前状态并等待确认。
-- 如果检测到 `UXB`，必须先确认“是否基于当前 UXB 继续做旅程分析”。
-- 如果未检测到 `UXB`，必须先要求用户提供或确认本次要分析的需求材料。
+- 无论是否检测到上游，都必须先向用户说明当前状态并等待确认。
+- 如果检测到 `stories`，必须先确认“是否基于当前用户故事继续做旅程分析”。
+- 如果未检测到 `stories` 但检测到 `UXB`，必须先确认“是否基于当前 UXB 继续做旅程分析”。
+- 如果未检测到 `stories` 和 `UXB`，必须先要求用户提供或确认本次要分析的需求材料。
 - 未收到用户确认前，不得进入 readiness 判断。
 - 未收到用户确认前，不得抽取旅程结构。
 - 未收到用户确认前，不得生成正式旅程，也不得生成骨架版旅程。
@@ -120,6 +141,12 @@ description: >
 - 如果 `uxb.json` 和 `uxb_output.md` 都可用，优先以 `uxb.json` 为结构化依据，`uxb_output.md` 作为正文补充。
 - 如果只有 `uxb_output.md`，仍允许进入 `uxb-chain`，但必须降低结构化信息置信度。
 - 如果两者均不可用，则不得假定已完成 `UXB`，必须切换到 `prd-standalone`。
+
+#### Stories 读取规则
+
+- 如果 `stories.json` 和 `stories.md` 都可用，优先以 `stories.json` 为任务单元依据，`stories.md` 作为正文补充。
+- 如果只有 `stories.md`，仍允许进入 `stories-chain`，但必须降低结构化信息置信度。
+- 如果同时存在 `UXB`，只将 `UXB` 作为业务边界和约束补充，不替代 `stories` 的任务单元。
 
 #### 原始需求读取规则
 
@@ -148,6 +175,7 @@ description: >
 
 ### Step 0.4 · 固定输入确认
 
+- 如处于 `stories-chain`，先输出用户故事确认话术并等待用户确认继续。
 - 如处于 `uxb-chain`，先输出 UXB 确认话术并等待用户确认继续。
 - 如处于 `prd-standalone`，先输出原始需求确认话术并等待用户确认输入材料。
 - 未确认前，不得进入 readiness 判断。
@@ -645,7 +673,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 文档头部必须包含：
 
-- 运行模式：`uxb-chain | prd-standalone`
+- 运行模式：`stories-chain | uxb-chain | prd-standalone`
 - 是否使用补问：`是 | 否`
 - 数据来源：列出具体来源
 - 结果等级：`完整旅程 | 补全后旅程 | 旅程骨架`
@@ -749,7 +777,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 - 字段固定，不得新增、删除或改名。
 - 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
 - 不得为了填满 JSON 编造信息。
-- `mode` 只允许 `uxb-chain`、`prd-standalone` 或 `unknown`。
+- `mode` 只允许 `stories-chain`、`uxb-chain`、`prd-standalone` 或 `unknown`。
 - `result_level` 只允许 `full`、`completed`、`skeleton` 或 `unknown`。
 - 未触发补问时，`completion_used = false`。
 - 输出骨架时，`result_level = skeleton`，`skeleton_result` 必须完整，`stages[]` 可为空。
@@ -821,7 +849,10 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 本 Skill 完成后，只输出固定下一步推荐。
 
-输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+推荐项产物映射：
+- 体验蓝图：`spark-output/experience_blueprint.md` 或 `spark-output/context/experience-blueprint.json`
 
 禁止：
 - 读取推荐项产物正文
@@ -836,8 +867,6 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 ```text
 用户旅程已完成。你可以继续：
 1. 体验蓝图
-2. 页面规格
-3. 设计走查
 
 你回复对应名称即可。
 ```

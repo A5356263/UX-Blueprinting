@@ -748,7 +748,13 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 本 Skill 完成后，只输出固定下一步推荐。
 
-输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+推荐项产物映射：
+- 页面规格：`spark-output/page_spec.md` 或 `spark-output/context/page-spec.json`
+- 异常态：`spark-output/edge_output.md` 或 `spark-output/context/edge.json`
+- 视觉情绪板：`spark-output/board_output.md` 或 `spark-output/context/board.json`
+- 旅程埋点与度量需求：`spark-output/journey_metrics/journey_visual.md`、`spark-output/journey_metrics/journey_visual.html`、`spark-output/journey_metrics/journey_tracking_spec.md` 或 `spark-output/journey_metrics/error_tracking_spec.md`
 
 禁止：
 - 读取推荐项产物正文
@@ -765,6 +771,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 1. 页面规格
 2. 异常态
 3. 视觉情绪板
+4. 旅程埋点与度量需求
 
 你回复对应名称即可。
 ```

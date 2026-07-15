@@ -815,7 +815,14 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 本 Skill 完成后，只输出固定下一步推荐。
 
-输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
+
+推荐项产物映射：
+- 用户旅程：`spark-output/journey_analysis.md` 或 `spark-output/context/journey-analysis.json`
+- 用户故事：`spark-output/stories.md` 或 `spark-output/context/stories.json`
+- 体验蓝图：`spark-output/experience_blueprint.md` 或 `spark-output/context/experience-blueprint.json`
+
+若推荐项已有“（推荐）”等固定标签，保留固定标签，再追加“（已产出）”。
 
 禁止：
 - 读取推荐项产物正文
@@ -829,9 +836,9 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 ```text
 需求定案已完成。你可以继续：
-1. 用户旅程
-2. 体验蓝图
-3. 页面规格
+1. 用户旅程（推荐）
+2. 用户故事
+3. 体验蓝图
 
 你回复对应名称即可。
 ```

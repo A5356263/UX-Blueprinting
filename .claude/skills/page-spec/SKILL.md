@@ -38,13 +38,19 @@ description: >
 - 根据已有产物询问处理方式
 - 根据已有产物推断用户意图
 
-### Step 0.2 · 输入模式与上游读取
+### Step 0.2 · 上游读取
 
-启动后先判断当前输入模式，再进入正式提取流程：
+启动后按以下顺序读取或识别输入：
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
-2. 检查 `spark-output/experience_blueprint.md` 是否存在
-3. 可选检查 `spark-output/context/edge.json` 与 `spark-output/edge_output.md` 是否存在
+2. 检查 `spark-output/context/experience-blueprint.json` 与 `spark-output/experience_blueprint.md` 是否存在
+3. 若体验蓝图产物存在，优先读取 JSON，再读取 Markdown 正文
+4. 可选检查并读取 `spark-output/context/edge.json` 与 `spark-output/edge_output.md`
+5. 识别用户当前明确提供的文档、截图、交互稿或其他设计材料
+
+### Step 0.3 · 模式判断与降级
+
+完成输入识别后，再判断当前输入模式并进入正式提取流程。
 
 `page-spec` 支持两种正式输入模式：
 
@@ -53,9 +59,7 @@ description: >
 
 #### 链路模式（检测到蓝图）
 
-继续读取 `spark-output/context/experience-blueprint.json`（如有）和 `spark-output/experience_blueprint.md`，进入正式提取流程。
-
-如果同时存在 `spark-output/context/edge.json` 或 `spark-output/edge_output.md`，则将其作为可选补强输入一并读取。
+以 Step 0.2 已读取的体验蓝图作为正式输入；如存在异常态产物，将其作为可选补强输入。
 
 如果 JSON 存在但 MD 不完整（缺少 §3/§5/§6/§7 中的任一章节），在输出开头标注缺失项，继续提取已有部分。
 
@@ -676,29 +680,11 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 
 ## Handoff · 固定下一步
 
-本 Skill 完成后，只输出固定下一步推荐。
-
-输出推荐前，仅检查推荐项对应正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
-
-禁止：
-- 读取推荐项产物正文
-- 根据产物存在改变推荐顺序
-- 动态计算候选项
-- 读取 shared-workflow/next-skill.md 生成候选项
-- 读取 shared-workflow/skill-graph.json 生成候选项
-- 直接执行下一步
-
 固定输出：
 
 ```text
-页面规格已完成。你可以继续：
-1. 设计走查
-2. 异常态
-3. 停在这里
-
-你回复对应名称即可。
+页面设计文档已输出。
+目前 design skill 正在建设中，你可以让 agent 根据文档直接生成 HTML 原型。
 ```
-
-“（已产出）”只代表状态，不代表该项被选中或质量通过。
 
 如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。

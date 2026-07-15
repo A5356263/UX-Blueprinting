@@ -10,11 +10,11 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "stories"
+          "journey-analysis"
         ],
-        "reason": "需求定案已完成，进入用户故事可以先把需求结论拆成可承接的任务单元；如任务已清楚，也可直接进入旅程分析或体验蓝图。",
+        "reason": "需求定案已完成，优先进入用户旅程，把需求结论收拢为阶段、触点和体验断点；用户故事可作为可选任务拆解补充。",
         "alternatives": [
-          "journey-analysis",
+          "stories",
           "experience-blueprint"
         ]
       }
@@ -32,10 +32,9 @@
         "preferred": [
           "stories"
         ],
-        "reason": "问题框定已完成，进入用户故事可以把推荐方向拆成可设计、可验证的任务单元；如任务已清楚，也可直接进入旅程分析或体验蓝图。",
+        "reason": "问题框定已完成，优先进入用户故事，把方向判断拆成可设计、可验证的任务单元。",
         "alternatives": [
-          "journey-analysis",
-          "experience-blueprint"
+          "journey-analysis"
         ]
       }
     },
@@ -63,11 +62,11 @@
     },
     {
       "id": "journey-analysis",
-      "_comment": "当前 Skill 优先承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
+      "_comment": "当前 Skill 可承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
       "phase": 2,
       "standalone_usable": true,
-      "standalone_note": "可独立使用；主链推荐先完成 stories 或第一阶梯正式上游，再进入旅程分析。",
+      "standalone_note": "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。",
       "anchor": false,
       "reads": [
         "stories",
@@ -85,7 +84,7 @@
     },
     {
       "id": "experience-blueprint",
-      "name_zh": "体验策略",
+      "name_zh": "体验蓝图",
       "phase": 3,
       "_comment": "多上游承接规则写在 SKILL.md 内：正式来源至少需要 uxb 或 problem-framing，stories / journey-analysis 作为深化输入。这里不使用或条件 required，避免图谱硬编码导致独立调用卡壳。",
       "reads": [
@@ -108,7 +107,7 @@
     },
     {
       "id": "page-spec",
-      "name_zh": "设计文档",
+      "name_zh": "页面规格",
       "phase": 2.5,
       "reads": [
         "experience-blueprint",
@@ -119,7 +118,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "页面规格提取完成后，当前链路在页面规格层收口，等待后续页面原型能力完善后再接入。",
+        "reason": "页面设计文档已输出，目前 design skill 正在建设中，可让 agent 根据文档直接生成 HTML 原型。",
         "alternatives": []
       }
     },
@@ -134,16 +133,14 @@
         "experience-blueprint"
       ],
       "next_hint": {
-        "preferred": [
-          "page-spec"
-        ],
-        "reason": "异常态补充完成后，可进入设计文档把状态补丁吸收到页面生成规格中。",
+        "preferred": [],
+        "reason": "异常态补充完成后，当前无固定下游推荐；后续由用户显式指定是否进入页面规格、走查或页面生成。",
         "alternatives": []
       }
     },
     {
       "id": "board",
-      "name_zh": "视觉风格",
+      "name_zh": "视觉情绪板",
       "phase": 3,
       "reads": [
         "experience-blueprint"
@@ -186,7 +183,7 @@
     },
     {
       "id": "design-strategy",
-      "name_zh": "设计策略生成",
+      "name_zh": "设计策略",
       "phase": null,
       "_comment": "独立 Skill，不依赖也不被其他 Skill 依赖。默认从 spark-output/ 读取材料，产出策略报告写回 spark-output/。后续可再与 uxb / experience-blueprint 建立关系。",
       "reads": [],
@@ -201,15 +198,36 @@
       "id": "interface-audit",
       "name_zh": "界面诊断",
       "phase": null,
-      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、problem-framing、product-analysis 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
+      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、journey-analysis、product-analysis 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
       "reads": [],
       "required": [],
       "next_hint": {
         "preferred": [
-          "uxb",
-          "problem-framing"
+          "uxb"
         ],
-        "reason": "界面诊断完成后，建议根据问题性质进入需求定案或问题框定，把诊断证据转成正式上游结论。",
+        "reason": "界面诊断完成后，优先进入需求定案；也可进入用户旅程或产品分析继续消费诊断证据。",
+        "alternatives": [
+          "journey-analysis",
+          "product-analysis"
+        ]
+      }
+    },
+    {
+      "id": "check",
+      "name_zh": "设计走查",
+      "phase": 4,
+      "standalone_usable": true,
+      "standalone_note": "可读取体验蓝图、异常态和 UXB 做链路走查，也可基于用户明确提供的文件或文本独立执行。",
+      "anchor": false,
+      "reads": [
+        "uxb",
+        "experience-blueprint",
+        "edge"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "设计走查完成后，当前无固定下游推荐。",
         "alternatives": []
       }
     },
@@ -225,7 +243,7 @@
       ],
       "next_hint": {
         "preferred": [],
-        "reason": "journey-metrics 产出旅程节点、埋点需求和异常/中断追踪口径后，当前登记图谱未包含客观数据分析等下游 Skill。如需继续，可进入客观数据分析或主观反馈分析。",
+        "reason": "旅程埋点与度量需求完成后，当前无固定下游推荐。",
         "alternatives": []
       }
     }

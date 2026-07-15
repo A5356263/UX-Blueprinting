@@ -244,7 +244,7 @@
   </div>
 
 <script>window.__PREVIEW_STATE__ = {
-  "generated_at": "2026-07-14 15:35:43",
+  "generated_at": "2026-07-15 10:04:36",
   "sections": [
     {
       "id": "explore",
@@ -282,7 +282,7 @@
         },
         {
           "id": "design-strategy",
-          "name_zh": "设计策略生成",
+          "name_zh": "设计策略",
           "slash": "/design-strategy",
           "status": "ready",
           "hint_dep": null,
@@ -311,7 +311,7 @@
           "id": "stories",
           "name_zh": "用户故事",
           "slash": "/stories",
-          "status": "ready",
+          "status": "done",
           "hint_dep": null,
           "standalone_usable": true,
           "standalone_note": "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。"
@@ -323,7 +323,7 @@
           "status": "done",
           "hint_dep": null,
           "standalone_usable": true,
-          "standalone_note": "可独立使用；主链推荐先完成 stories 或第一阶梯正式上游，再进入旅程分析。"
+          "standalone_note": "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。"
         }
       ]
     },
@@ -336,7 +336,7 @@
       "skills": [
         {
           "id": "experience-blueprint",
-          "name_zh": "体验策略",
+          "name_zh": "体验蓝图",
           "slash": "/experience-blueprint",
           "status": "done",
           "hint_dep": null,
@@ -345,7 +345,7 @@
         },
         {
           "id": "page-spec",
-          "name_zh": "设计文档",
+          "name_zh": "页面规格",
           "slash": "/page-spec",
           "status": "done",
           "hint_dep": null,
@@ -354,7 +354,7 @@
         },
         {
           "id": "board",
-          "name_zh": "视觉风格",
+          "name_zh": "视觉情绪板",
           "slash": "/board",
           "status": "ready",
           "hint_dep": null,
@@ -378,6 +378,15 @@
           "hint_dep": null,
           "standalone_usable": false,
           "standalone_note": null
+        },
+        {
+          "id": "check",
+          "name_zh": "设计走查",
+          "slash": "/check",
+          "status": "ready",
+          "hint_dep": null,
+          "standalone_usable": true,
+          "standalone_note": "可读取体验蓝图、异常态和 UXB 做链路走查，也可基于用户明确提供的文件或文本独立执行。"
         },
         {
           "id": "journey-metrics",
@@ -436,7 +445,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       note: "把需求拆成任务，再看用户一路怎么完成",
       skills: [
         { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "拆清用户要做哪些事、做到什么算完成", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链推荐先完成 stories，再进入旅程收拢。" }
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/uxb、/problem-framing 或 /stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。" }
       ]
     },
     {
