@@ -1,760 +1,516 @@
 {
   "skill": "page-spec",
   "version": "1.0",
-  "generated_at": "2026-07-15",
-  "project_name": "员工自助申请权限",
+  "generated_at": "unknown",
+  "project_name": "子管理员配置复制",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
-    "spark-output/experience_blueprint.md",
-    "spark-output/context/experience-blueprint.json"
+    {
+      "type": "experience-blueprint",
+      "path": "spark-output/context/experience-blueprint.json"
+    },
+    {
+      "type": "experience-blueprint",
+      "path": "spark-output/experience_blueprint.md"
+    }
   ],
   "read_sections": [
-    "1 页面摘要",
-    "2 生成范围",
-    "3 页面实体关系",
-    "4 我的权限 Page",
-    "5 权限申请 Drawer",
-    "6 申请记录 Page",
-    "7 申请详情 Modal",
-    "8 自助申请配置 Page（管理端）",
-    "9 关闭确认 Modal",
-    "10 主交互流程",
-    "11 校验规则",
-    "12 状态表现",
-    "13 异常恢复",
-    "14 结果态",
-    "15 文案池",
-    "16 模板变量",
-    "17 待确认项"
+    "§0 本次关键设计判断",
+    "§3 主交互流程",
+    "§4 次交互流程",
+    "§5 异常与阻断流程",
+    "§6 页面/弹窗/抽屉设计",
+    "§7 状态与反馈文案"
   ],
   "page_summary": {
-    "product_domain": "企业权限管理 — 员工自助申请权限",
-    "page_type": "Page（我的权限、申请记录、自助申请配置）、Drawer（权限申请）、Modal（申请详情、关闭确认）",
-    "user_role": "普通员工、超级管理员",
-    "core_task": "员工查看自有权限并提交权限申请，超管配置自助申请范围和审批流程"
+    "product_domain": "企业权限管理 — 子管理员治理",
+    "page_type": "列表页、弹窗（Modal）、详情编辑页",
+    "user_role": "超级管理员 / 权限管理员",
+    "core_task": "将已有子管理员的配置（可授权组织 + 可授权功能）复制给目标用户"
   },
   "generation_scope": {
     "generate": [
-      "我的权限 Page",
-      "权限申请 Drawer",
-      "申请记录 Page",
-      "申请详情 Modal",
-      "自助申请配置 Page（管理端）",
-      "关闭确认 Modal"
+      "子管理配置页（列表）",
+      "复制弹窗",
+      "子管理员编辑详情页"
     ],
     "reference_only": [
-      "功能受限页面"
+      "员工选择弹窗 — 复用现有组件",
+      "审批管理页 — 已有系统能力"
     ],
     "do_not_generate": [
-      "审批卡片"
+      "操作记录详情页 — 蓝图未给出页面结构"
     ]
   },
   "entity_relationships": [
     {
-      "entity": "我的权限 Page",
-      "type": "Page",
-      "relation": "独立入口，承载页"
+      "entity": "子管理配置页（列表）",
+      "type": "承载页",
+      "relation": "顶级页面，有独立菜单入口，触发方式为直接导航"
     },
     {
-      "entity": "权限申请 Drawer",
-      "type": "Drawer",
-      "relation": "依附于 我的权限 Page 或 功能受限页面"
-    },
-    {
-      "entity": "申请记录 Page",
-      "type": "Page",
-      "relation": "独立入口，承载页"
-    },
-    {
-      "entity": "申请详情 Modal",
+      "entity": "复制弹窗",
       "type": "Modal",
-      "relation": "依附于 申请记录 Page"
+      "relation": "依附于子管理配置页，通过行操作「复制」按钮触发"
     },
     {
-      "entity": "自助申请配置 Page（管理端）",
-      "type": "Page",
-      "relation": "独立入口，承载页"
-    },
-    {
-      "entity": "关闭确认 Modal",
+      "entity": "员工选择弹窗",
       "type": "Modal",
-      "relation": "依附于 自助申请配置 Page（管理端）"
+      "relation": "依附于复制弹窗，通过「选择员工」按钮触发"
+    },
+    {
+      "entity": "子管理员编辑详情页",
+      "type": "Page",
+      "relation": "从子管理配置页行操作「编辑」跳转"
+    },
+    {
+      "entity": "审批管理页",
+      "type": "Page",
+      "relation": "从复制弹窗审批提交态「查看审批进度」链接跳转"
     }
   ],
   "entities": [
     {
-      "name": "我的权限 Page",
+      "name": "子管理配置页（列表）",
       "type": "Page"
     },
     {
-      "name": "权限申请 Drawer",
-      "type": "Drawer"
-    },
-    {
-      "name": "申请记录 Page",
-      "type": "Page"
-    },
-    {
-      "name": "申请详情 Modal",
+      "name": "复制弹窗",
       "type": "Modal"
     },
     {
-      "name": "自助申请配置 Page（管理端）",
-      "type": "Page"
+      "name": "员工选择弹窗",
+      "type": "Modal"
     },
     {
-      "name": "关闭确认 Modal",
-      "type": "Modal"
+      "name": "子管理员编辑详情页",
+      "type": "Page"
     }
   ],
   "extraction_summary": {
-    "entities_count": 6,
-    "states_count": 7,
-    "copy_count": 32,
-    "exceptions_count": 5
+    "entities_count": 4,
+    "states_count": 8,
+    "copy_count": 20,
+    "exceptions_count": 7
   },
   "pages": [
     {
-      "page_id": "page-1",
-      "page_name": "我的权限",
-      "page_goal": "让员工查看自己当前拥有的所有权限，了解权限来源和生效状态",
-      "structure_ascii": "标题区 | 搜索与筛选区 | 权限列表区（按业务域分组，每项含权限名、用途说明、来源标签）",
+      "page_id": "P01",
+      "page_name": "子管理配置页（列表）",
+      "page_goal": "展示所有子管理员列表，支持新建、编辑、复制、删除等操作",
+      "structure_ascii": "导航区(A)+操作栏(B)+列表表格区(C)+分页区(D)",
       "regions": [
         {
-          "region_id": "region-a",
-          "name": "页面标题区",
-          "purpose": "展示页面标题和主操作入口",
-          "content": ["Text: 我的权限", "Text: 查看你当前拥有的功能和数据权限", "Button: 申请权限"]
+          "region_id": "R01-A",
+          "name": "导航区域",
+          "purpose": "面包屑导航",
+          "content": ["Breadcrumb：权限管理模式 > 子管理员配置"]
         },
         {
-          "region_id": "region-b",
-          "name": "搜索与筛选区",
-          "purpose": "支持按名称搜索和按业务域筛选权限",
-          "content": ["Input: 搜索权限名称", "Select: 按业务域筛选"]
+          "region_id": "R01-B",
+          "name": "操作栏",
+          "purpose": "全局操作入口和搜索",
+          "content": ["Button：添加子管理员", "Input：搜索框"]
         },
         {
-          "region_id": "region-c",
-          "name": "权限列表区",
-          "purpose": "按业务域分组展示权限项及其来源",
-          "content": ["ListGroup: 按业务域分组", "每项: Checkbox + Text(权限名) + Tag(来源标签) + Text(用途说明) + Text(来源详情)"]
+          "region_id": "R01-C",
+          "name": "列表区域",
+          "purpose": "展示子管理员列表数据",
+          "content": ["Table：姓名、手机号、可授权功能、可授权组织、来源标记、操作"]
+        },
+        {
+          "region_id": "R01-D",
+          "name": "分页区域",
+          "purpose": "翻页和总条数展示",
+          "content": ["Pagination", "Text：共{总数}个"]
         }
       ],
       "extraction_notes": [
-        "知识库中的用户授权页（管理后台）结构与此不同，本页为员工端新页面",
-        "权限来源标签依赖授权来源模型的标准化输出"
+        "承载页面为顶级页面，无需额外父页面查找",
+        "审批中状态时来源标记显示待审批"
       ],
       "list_fields": [
-        {
-          "field": "业务域名",
-          "meaning": "权限所属的业务域",
-          "source": "权限分类体系"
-        },
-        {
-          "field": "权限名",
-          "meaning": "权限的具体名称",
-          "source": "权限定义"
-        },
-        {
-          "field": "一句话用途说明",
-          "meaning": "权限的通俗用途说明",
-          "source": "权限定义（需补充）"
-        },
-        {
-          "field": "来源标签",
-          "meaning": "权限的获取方式（自助申请/角色继承/系统授予）",
-          "source": "授权来源模型"
-        },
-        {
-          "field": "来源详情",
-          "meaning": "来源的补充说明（申请时间/角色名）",
-          "source": "授权来源模型"
-        }
-      ],
-      "key_actions": [
-        {
-          "action": "点击申请权限",
-          "trigger": "员工点击主按钮",
-          "result": "打开权限申请 Drawer"
-        },
-        {
-          "action": "搜索权限名称",
-          "trigger": "员工输入关键词",
-          "result": "区域C过滤匹配项"
-        },
-        {
-          "action": "筛选业务域",
-          "trigger": "员工选择业务域",
-          "result": "区域C仅展示该域权限"
-        }
-      ]
-    },
-    {
-      "page_id": "page-3",
-      "page_name": "申请记录",
-      "page_goal": "让员工查看历史申请记录和当前进度",
-      "structure_ascii": "标题区 | 筛选Tab区（全部/进行中/已完成） | 申请列表区（卡片式，含状态标签、时间、审批人）",
-      "regions": [
-        {
-          "region_id": "region-a",
-          "name": "页面标题区",
-          "purpose": "展示页面标题",
-          "content": ["Text: 申请记录"]
-        },
-        {
-          "region_id": "region-b",
-          "name": "筛选Tab区",
-          "purpose": "按状态筛选申请记录",
-          "content": ["Tab: 全部", "Tab: 进行中", "Tab: 已完成"]
-        },
-        {
-          "region_id": "region-c",
-          "name": "申请列表区",
-          "purpose": "展示申请记录卡片列表",
-          "content": ["List: 卡片式列表", "每卡: Text(权限名+数量) + Tag(状态) + Text(时间/审批人/原因) + TextLink(查看详情) + Button(重新申请)"]
-        }
-      ],
-      "extraction_notes": [
-        "列表卡片的内容根据状态变化展示不同字段",
-        "重新申请按钮仅已拒绝状态显示"
-      ],
-      "list_fields": [
-        {
-          "field": "权限名",
-          "meaning": "申请的权限名称",
-          "source": "申请单"
-        },
-        {
-          "field": "N",
-          "meaning": "该次申请的权限项数量",
-          "source": "申请单"
-        },
-        {
-          "field": "状态",
-          "meaning": "申请单当前状态",
-          "source": "申请单状态"
-        },
-        {
-          "field": "时间",
-          "meaning": "提交时间或审批时间",
-          "source": "申请单时间戳"
-        },
         {
           "field": "姓名",
-          "meaning": "审批人姓名",
-          "source": "审批流程"
+          "meaning": "子管理员姓名",
+          "source": "系统用户数据"
         },
         {
-          "field": "时长",
-          "meaning": "已等待时间",
-          "source": "实时计算"
+          "field": "手机号",
+          "meaning": "子管理员手机号（脱敏显示）",
+          "source": "系统用户数据"
         },
         {
-          "field": "拒绝原因",
-          "meaning": "审批人填写的拒绝理由",
-          "source": "审批操作"
+          "field": "可授权功能",
+          "meaning": "该子管理员可授权的功能数量摘要",
+          "source": "配置数据"
+        },
+        {
+          "field": "可授权组织",
+          "meaning": "该子管理员可管辖的组织数量摘要",
+          "source": "配置数据"
+        },
+        {
+          "field": "来源标记",
+          "meaning": "手动创建/复制自{来源姓名}/待审批",
+          "source": "配置来源记录"
         }
       ],
       "key_actions": [
         {
-          "action": "切换Tab",
-          "trigger": "员工点击筛选Tab",
-          "result": "区域C按状态过滤列表"
+          "action": "添加子管理员",
+          "trigger": "点击添加子管理员按钮",
+          "result": "打开新增子管理员弹窗"
         },
         {
-          "action": "点击查看详情",
-          "trigger": "员工点击文字链接",
-          "result": "打开申请详情Modal"
+          "action": "复制",
+          "trigger": "点击行操作复制按钮（操作列最左侧）",
+          "result": "打开复制弹窗"
         },
         {
-          "action": "点击重新申请",
-          "trigger": "员工点击按钮（仅已拒绝状态）",
-          "result": "打开权限申请Drawer"
-        }
-      ]
-    },
-    {
-      "page_id": "page-5",
-      "page_name": "自助申请配置（管理端）",
-      "page_goal": "让超管开启/关闭自助申请能力，配置可申请范围和审批流程",
-      "structure_ascii": "标题区 | 能力开关区 | 可申请范围配置区 | 审批流程配置区 | 底部操作区",
-      "regions": [
-        {
-          "region_id": "region-a",
-          "name": "页面标题区",
-          "purpose": "展示页面标题",
-          "content": ["Text: 自助申请权限配置"]
-        },
-        {
-          "region_id": "region-b",
-          "name": "能力开关区",
-          "purpose": "开启或关闭自助申请能力",
-          "content": ["Text: 允许员工自助申请权限", "Switch: 开启/关闭", "Text: 开启后，员工可在权限中心查看和申请权限"]
-        },
-        {
-          "region_id": "region-c",
-          "name": "可申请范围配置区",
-          "purpose": "配置员工可申请的权限范围",
-          "content": ["Text: 不在范围内的权限，员工无法自助申请", "Radio: 全部权限", "CheckboxGroup: 按业务域选择", "Text: 已选N项权限"]
-        },
-        {
-          "region_id": "region-d",
-          "name": "审批流程配置区",
-          "purpose": "选择审批流程",
-          "content": ["Text: 选择审批流程", "Select: 审批流程下拉", "Text: 提示说明", "TextLink: 去审批管理创建流程"]
-        },
-        {
-          "region_id": "region-e",
-          "name": "底部操作区",
-          "purpose": "保存配置",
-          "content": ["Button: 保存"]
-        }
-      ],
-      "extraction_notes": [
-        "可申请范围的配置粒度取决于权限分类体系的标准化程度",
-        "审批流程复用现有审批引擎，下拉选项来自审批管理模块"
-      ],
-      "list_fields": [],
-      "key_actions": [
-        {
-          "action": "开启/关闭开关",
-          "trigger": "超管点击Switch",
-          "result": "开启：区域C/D可编辑；关闭：弹确认Modal"
-        },
-        {
-          "action": "选择可申请范围",
-          "trigger": "超管勾选Checkbox",
-          "result": "更新已选计数"
-        },
-        {
-          "action": "选择审批流程",
-          "trigger": "超管从Select选择",
-          "result": "关联审批流程"
-        },
-        {
-          "action": "点击保存",
-          "trigger": "超管点击",
-          "result": "校验→保存→Toast反馈"
+          "action": "编辑",
+          "trigger": "点击行操作编辑按钮",
+          "result": "跳转子管理员编辑详情页"
         }
       ]
     }
   ],
   "entity_specs": [
     {
-      "entity_name": "权限申请 Drawer",
-      "surface_type": "Drawer",
-      "goal": "让员工选择和提交要申请的权限",
-      "structure_ascii": "抽屉标题区 | 搜索与分类区(Tab+搜索) | 权限列表区(CheckboxGroup) | 申请原因区(Textarea) | 底部操作区(取消/提交)",
+      "entity_name": "复制弹窗",
+      "surface_type": "Modal",
+      "goal": "超管选择复制内容和目标，执行复制操作",
+      "structure_ascii": "编辑态（默认）：标题区+复制信息区+复制对象区+底部操作栏；结果汇总态：结果标题+成功列表+失败列表+底部操作；审批提交态：审批状态说明+摘要+链接+关闭",
       "regions": [
         {
-          "region_id": "region-a",
-          "name": "抽屉标题区",
-          "purpose": "标题与说明",
-          "content": ["Text: 申请权限", "Text: 说明文字", "IconButton: 关闭"]
+          "region_id": "M01-A",
+          "name": "弹窗标题区",
+          "purpose": "标识弹窗功能",
+          "content": ["Text：复制子管理员配置", "Button：[×] 关闭"]
         },
         {
-          "region_id": "region-b",
-          "name": "搜索与分类区",
-          "purpose": "搜索和分类筛选权限",
-          "content": ["Input: 搜索", "Select: 业务域筛选", "Tabs: 全部+业务域名"]
+          "region_id": "M01-B",
+          "name": "复制信息区",
+          "purpose": "选择复制内容，来源预填",
+          "content": ["CheckboxGroup：可授权组织、可授权功能（默认全选）", "Text：从{来源姓名}复制"]
         },
         {
-          "region_id": "region-c",
-          "name": "权限列表区",
-          "purpose": "展示可申请的权限项",
-          "content": ["CheckboxGroup: 权限项（Checkbox + Text）", "Text: 已选计数"]
+          "region_id": "M01-C",
+          "name": "复制对象区",
+          "purpose": "选择并展示目标用户",
+          "content": ["Button：选择员工 >", "Text：已选{N}人", "List：已选用户（姓名+手机号）"]
         },
         {
-          "region_id": "region-d",
-          "name": "申请原因区",
-          "purpose": "填写申请理由",
-          "content": ["Label: 申请原因", "Textarea: 输入框", "Text: 字数统计", "Text: 示例引导"]
+          "region_id": "M01-D",
+          "name": "底部操作栏",
+          "purpose": "执行或放弃操作",
+          "content": ["Button：取消", "Button：确认"]
         },
         {
-          "region_id": "region-e",
-          "name": "底部操作区",
-          "purpose": "提交或取消",
-          "content": ["Button: 取消", "Button: 提交申请（禁用/启用）"]
+          "region_id": "M01-E",
+          "name": "结果标题",
+          "purpose": "展示汇总结果",
+          "content": ["Text：复制完成（{成功数}/{总数}）或复制失败"]
+        },
+        {
+          "region_id": "M01-F",
+          "name": "成功列表",
+          "purpose": "展示复制成功的用户",
+          "content": ["List：姓名+手机号+✓标记"]
+        },
+        {
+          "region_id": "M01-G",
+          "name": "失败列表",
+          "purpose": "展示复制失败的用户及原因",
+          "content": ["List：姓名+手机号+失败原因文本"]
+        },
+        {
+          "region_id": "M01-H",
+          "name": "结果态底部操作",
+          "purpose": "重试或关闭",
+          "content": ["Button：重新复制失败项", "Button：关闭"]
+        },
+        {
+          "region_id": "M01-I",
+          "name": "审批状态区",
+          "purpose": "告知超管已提交审批",
+          "content": ["Text：已提交审批", "Text：说明文字", "Text：复制内容摘要", "Text：复制对象摘要", "Link：查看审批进度"]
         }
       ],
       "validation_blocking_state_changes": [
-        {
-          "condition": "未选择任何权限",
-          "change": "提交申请按钮置灰禁用"
-        },
-        {
-          "condition": "申请原因为空",
-          "change": "Textarea下方显示InlineError"
-        },
-        {
-          "condition": "权限不在可申请范围",
-          "change": "C区域该项标记不可选或提交时报InlineError"
-        },
-        {
-          "condition": "审批流程配置异常",
-          "change": "Toast提示"
-        }
+        "复制信息未勾选→InlineError，确认按钮不可点击",
+        "复制对象未选择→InlineError，确认按钮不可点击",
+        "复制中→确认按钮Loading态"
       ],
       "non_compliance_confirm_area": {
-        "structure": "无不合规确认区，提交失败就地反馈",
-        "copy": [],
-        "actions": []
-      }
-    },
-    {
-      "entity_name": "申请详情 Modal",
-      "surface_type": "Modal",
-      "goal": "让员工查看单条申请的完整信息",
-      "structure_ascii": "弹窗标题区 | 申请信息区（权限名/原因/时间/状态） | 审批流转区（时间线） | 底部操作区（关闭）",
-      "regions": [
-        {
-          "region_id": "region-a",
-          "name": "弹窗标题区",
-          "purpose": "标题",
-          "content": ["Text: 申请详情", "IconButton: 关闭"]
-        },
-        {
-          "region_id": "region-b",
-          "name": "申请信息区",
-          "purpose": "展示申请基本信息",
-          "content": ["Text: 申请权限", "Text: 申请原因", "Text: 提交时间", "Tag: 状态"]
-        },
-        {
-          "region_id": "region-c",
-          "name": "审批流转区",
-          "purpose": "展示审批节点和状态",
-          "content": ["Text: 流转路径", "Text: 节点时间", "Text: 状态提示"]
-        },
-        {
-          "region_id": "region-d",
-          "name": "底部操作区",
-          "purpose": "关闭弹窗",
-          "content": ["Button: 关闭"]
-        }
-      ],
-      "validation_blocking_state_changes": [],
-      "non_compliance_confirm_area": {
-        "structure": "不适用",
-        "copy": [],
-        "actions": []
-      }
-    },
-    {
-      "entity_name": "关闭确认 Modal",
-      "surface_type": "Modal",
-      "goal": "管理员关闭自助申请能力前二次确认，保护进行中申请不受影响",
-      "structure_ascii": "弹窗标题区 | 提示信息区（进行中申请数量） | 底部操作区（取消/确认关闭）",
-      "regions": [
-        {
-          "region_id": "region-a",
-          "name": "弹窗标题区",
-          "purpose": "标题",
-          "content": ["Text: 关闭确认", "IconButton: 关闭"]
-        },
-        {
-          "region_id": "region-b",
-          "name": "提示信息区",
-          "purpose": "提示进行中申请数量",
-          "content": ["Text: 当前有{N}个进行中的申请..."]
-        },
-        {
-          "region_id": "region-c",
-          "name": "底部操作区",
-          "purpose": "确认或取消关闭",
-          "content": ["Button: 取消", "Button: 确认关闭"]
-        }
-      ],
-      "validation_blocking_state_changes": [],
-      "non_compliance_confirm_area": {
-        "structure": "不适用",
-        "copy": [],
-        "actions": []
+        "structure": "结果汇总态中的重新复制失败项按钮",
+        "copy": ["Button：重新复制失败项"],
+        "actions": ["点击后仅对失败项重新执行校验和复制"]
       }
     }
   ],
   "main_interaction_flow": [
     {
-      "step_id": "flow1-step1",
-      "trigger": "员工在功能受限页或我的权限页点击申请权限",
-      "user_action": "点击申请权限",
-      "system_response": "打开权限申请Drawer",
-      "state_change": "none",
-      "next_step": "选择权限"
+      "step_id": "F01",
+      "trigger": "超管进入子管理配置页",
+      "user_action": "导航到权限管理→子管理配置页",
+      "system_response": "展示子管理员列表（加载态→正常态/空态）",
+      "state_change": "列表加载完成",
+      "next_step": "定位来源子管理员"
     },
     {
-      "step_id": "flow1-step2",
-      "trigger": "Drawer打开后",
-      "user_action": "浏览分类Tab或搜索，勾选要申请的权限项",
-      "system_response": "选中项高亮，显示已选计数",
-      "state_change": "none",
-      "next_step": "填写原因"
+      "step_id": "F02",
+      "trigger": "点击行操作复制",
+      "user_action": "点击某子管理员行的复制按钮",
+      "system_response": "打开复制弹窗（编辑态），复制信息默认全选",
+      "state_change": "弹窗打开→复制前（待操作）",
+      "next_step": "选择复制内容和目标"
     },
     {
-      "step_id": "flow1-step3",
-      "trigger": "权限选择完成后",
-      "user_action": "在Textarea中输入申请理由",
-      "system_response": "字数实时统计，示例引导",
-      "state_change": "none",
-      "next_step": "提交申请"
+      "step_id": "F03",
+      "trigger": "弹窗打开",
+      "user_action": "勾选要复制的选项",
+      "system_response": "勾选框响应选择",
+      "state_change": "复制内容确定",
+      "next_step": "选择目标用户"
     },
     {
-      "step_id": "flow1-step4",
-      "trigger": "点击提交申请",
-      "user_action": "点击提交申请按钮",
-      "system_response": "校验→创建申请单→Drawer关闭→Toast提示→申请记录刷新",
-      "state_change": "新增待审批申请记录",
-      "next_step": "跳转到申请记录页"
+      "step_id": "F04",
+      "trigger": "点击选择员工",
+      "user_action": "点击选择员工按钮",
+      "system_response": "打开员工选择弹窗（引用现有组件）",
+      "state_change": "子弹窗打开",
+      "next_step": "在员工弹窗中选择用户"
     },
     {
-      "step_id": "flow1-step5",
-      "trigger": "申请进入审批流程",
-      "user_action": "查看申请记录页关注进度",
-      "system_response": "状态标签展示，状态变更时推送通知",
-      "state_change": "待审批→审批中",
-      "next_step": "等待或催办"
+      "step_id": "F05",
+      "trigger": "员工弹窗确认",
+      "user_action": "选择用户后点击确认",
+      "system_response": "员工弹窗关闭，已选用户出现在复制弹窗复制对象区",
+      "state_change": "目标列表更新",
+      "next_step": "点击确认执行复制"
     },
     {
-      "step_id": "flow1-step6",
-      "trigger": "审批人做出决定",
-      "user_action": "收到审批通知",
-      "system_response": "通过：状态变已通过，自动授权；被拒：状态变已拒绝，推送原因",
-      "state_change": "待审批/审批中→已通过/已拒绝",
-      "next_step": "通过：回到功能；被拒：查看原因"
+      "step_id": "F06",
+      "trigger": "点击确认",
+      "user_action": "点击确认按钮",
+      "system_response": "触发顺序校验→校验通过执行复制写入",
+      "state_change": "弹窗编辑态→结果汇总态/审批提交态",
+      "next_step": "查看结果"
     },
     {
-      "step_id": "flow2-step1",
-      "trigger": "超管进入配置页",
-      "user_action": "打开Switch",
-      "system_response": "范围/流程配置区可编辑",
-      "state_change": "none",
-      "next_step": "配置范围和流程"
-    },
-    {
-      "step_id": "flow2-step2",
-      "trigger": "配置完成后",
-      "user_action": "点击保存",
-      "system_response": "校验→Toast反馈",
-      "state_change": "none",
-      "next_step": "完成"
-    },
-    {
-      "step_id": "flow3-step1",
-      "trigger": "超管点击关闭Switch",
-      "user_action": "点击Switch",
-      "system_response": "检测进行中申请数量",
-      "state_change": "none",
-      "next_step": "有进行中申请→弹确认Modal；无→直接关闭"
-    },
-    {
-      "step_id": "flow3-step2",
-      "trigger": "确认Modal",
-      "user_action": "点击确认关闭或取消",
-      "system_response": "确认→关闭能力+Toast；取消→弹窗关闭",
-      "state_change": "能力关闭",
-      "next_step": "完成"
+      "step_id": "F07",
+      "trigger": "复制完成",
+      "user_action": "查看结果汇总",
+      "system_response": "全部成功→Toast+关闭；部分成功/全部失败→结果汇总态；双管理员→审批提交态",
+      "state_change": "复制完成",
+      "next_step": "根据结果操作（重试/关闭/查看审批）"
     }
   ],
   "validation_rules": [
     {
-      "rule_id": "v-1",
-      "object": "权限选择",
-      "condition": "至少选择1项权限",
-      "blocking": "true",
-      "message_key": "error.no_selection（按钮置灰，无独立文案）"
+      "rule_id": "R01",
+      "object": "复制信息",
+      "condition": "至少选择一项（可授权组织/可授权功能）",
+      "blocking": "是",
+      "message_key": "validate.info_empty"
     },
     {
-      "rule_id": "v-2",
-      "object": "申请原因",
-      "condition": "原因不能为空",
-      "blocking": "true",
-      "message_key": "error.reason_empty"
+      "rule_id": "R02",
+      "object": "复制对象",
+      "condition": "至少选择一名用户",
+      "blocking": "是",
+      "message_key": "validate.target_empty"
     },
     {
-      "rule_id": "v-3",
-      "object": "申请范围",
-      "condition": "所选权限在可申请范围内",
-      "blocking": "true",
-      "message_key": "error.scope_violation"
+      "rule_id": "R03",
+      "object": "目标加入状态",
+      "condition": "每个目标加入状态为已加入",
+      "blocking": "否（标记失败，继续处理其他目标）",
+      "message_key": "validate.join_status"
     },
     {
-      "rule_id": "v-4",
-      "object": "审批流程",
-      "condition": "审批人存在且流程完整",
-      "blocking": "true",
-      "message_key": "error.flow_invalid"
-    },
-    {
-      "rule_id": "v-5",
-      "object": "配置-范围",
-      "condition": "至少选择1项权限",
-      "blocking": "true",
-      "message_key": "error.scope_not_configured"
-    },
-    {
-      "rule_id": "v-6",
-      "object": "配置-流程",
-      "condition": "已选择审批流程",
-      "blocking": "true",
-      "message_key": "error.flow_not_configured"
+      "rule_id": "R04",
+      "object": "目标认证状态",
+      "condition": "每个目标认证状态为已认证",
+      "blocking": "否（标记失败，继续处理其他目标）",
+      "message_key": "validate.auth_status"
     }
   ],
   "states": [
     {
-      "state": "待审批",
-      "trigger_condition": "申请提交成功，等待审批人处理",
-      "ui_behavior": "Tag（蓝色）",
-      "copy_key": "status.pending"
+      "state": "复制前（待操作）",
+      "trigger_condition": "弹窗打开，编辑态就绪",
+      "ui_behavior": "弹窗展示编辑态，确认按钮可用",
+      "copy_key": ""
+    },
+    {
+      "state": "复制中（执行中）",
+      "trigger_condition": "点击确认，校验通过",
+      "ui_behavior": "确认按钮 Loading 态",
+      "copy_key": "result.progress"
+    },
+    {
+      "state": "全部成功",
+      "trigger_condition": "所有目标复制成功",
+      "ui_behavior": "Toast 提示，弹窗关闭",
+      "copy_key": "result.success_all"
+    },
+    {
+      "state": "部分成功",
+      "trigger_condition": "部分目标成功，部分失败",
+      "ui_behavior": "弹窗切换为结果汇总态（成功列表+失败列表）",
+      "copy_key": "result.partial_success"
+    },
+    {
+      "state": "全部失败",
+      "trigger_condition": "所有目标复制失败",
+      "ui_behavior": "弹窗切换为结果汇总态（全部失败列表）",
+      "copy_key": "result.all_failed"
     },
     {
       "state": "审批中",
-      "trigger_condition": "多人审批，部分节点已通过",
-      "ui_behavior": "Tag（蓝色）",
-      "copy_key": "status.approving"
+      "trigger_condition": "双管理员模式下复制完成",
+      "ui_behavior": "弹窗切换为审批提交态",
+      "copy_key": "modal.approval_title"
     },
     {
-      "state": "已通过",
-      "trigger_condition": "审批全部通过",
-      "ui_behavior": "Tag（绿色）",
-      "copy_key": "status.approved"
+      "state": "审批通过",
+      "trigger_condition": "审批通过，结果生效",
+      "ui_behavior": "审批管理页状态更新",
+      "copy_key": ""
     },
     {
-      "state": "已拒绝",
-      "trigger_condition": "审批人拒绝申请",
-      "ui_behavior": "Tag（红色）",
-      "copy_key": "status.rejected"
-    },
-    {
-      "state": "已撤回",
-      "trigger_condition": "员工在审批前主动撤回",
-      "ui_behavior": "Tag（灰色）",
-      "copy_key": "status.withdrawn"
-    },
-    {
-      "state": "已失效",
-      "trigger_condition": "能力关闭或权限已删除",
-      "ui_behavior": "Tag（灰色）",
-      "copy_key": "status.expired"
-    },
-    {
-      "state": "授权异常",
-      "trigger_condition": "审批通过但自动授权失败",
-      "ui_behavior": "Tag（橙色）",
-      "copy_key": "status.auth_error"
+      "state": "审批驳回",
+      "trigger_condition": "审批未通过",
+      "ui_behavior": "审批管理页展示驳回原因",
+      "copy_key": ""
     }
   ],
   "exception_recovery": [
     {
-      "exception": "权限不在可申请范围",
-      "trigger": "员工提交申请时，权限不在管理配置范围中",
-      "ui_behavior": "Drawer内InlineError",
-      "recovery_path": "重新选择其他权限或关闭Drawer，不丢失已填信息"
+      "exception": "复制信息未选择",
+      "trigger": "点击确认时未勾选",
+      "ui_behavior": "复制信息区下方 InlineError",
+      "recovery_path": "勾选一项后确认按钮恢复，无信息丢失"
     },
     {
-      "exception": "审批人缺失或流程无效",
-      "trigger": "员工提交申请时，审批人不存在或流程未配置",
-      "ui_behavior": "Toast + 申请单不创建",
-      "recovery_path": "管理员修复审批流程后，员工重新提交申请，已填信息丢失"
+      "exception": "复制对象未选择",
+      "trigger": "点击确认时未选目标",
+      "ui_behavior": "复制对象区下方 InlineError",
+      "recovery_path": "选择目标后确认按钮恢复，无信息丢失"
     },
     {
-      "exception": "自动授权失败",
-      "trigger": "审批通过后，系统调用授权接口失败",
-      "ui_behavior": "申请单标记授权异常，通知管理员和员工",
-      "recovery_path": "管理员手动处理或重试授权，员工无需重新申请"
+      "exception": "目标加入状态异常",
+      "trigger": "校验阶段检测到",
+      "ui_behavior": "该目标标记失败，继续处理其他目标",
+      "recovery_path": "用户完成加入后通过重新复制失败项重试；或更换目标。已成功不受影响"
     },
     {
-      "exception": "申请后权限被删除",
-      "trigger": "申请进行中或已通过但未生效时，管理员删除该权限",
-      "ui_behavior": "申请单标记已失效，通知员工",
-      "recovery_path": "无法自动恢复，员工联系管理员或重新选择其他权限"
+      "exception": "目标认证状态异常",
+      "trigger": "校验阶段检测到",
+      "ui_behavior": "该目标标记失败，继续处理其他目标",
+      "recovery_path": "用户完成认证后通过重新复制失败项重试。已成功不受影响"
     },
     {
-      "exception": "关闭能力时有进行中申请",
-      "trigger": "管理员关闭开关，系统检测到待审批/审批中的申请",
-      "ui_behavior": "弹窗提示数量 + 确认关闭",
-      "recovery_path": "确认后关闭，已有申请不受影响"
+      "exception": "全部目标状态异常",
+      "trigger": "所有目标均校验失败",
+      "ui_behavior": "弹窗切换为结果汇总态，列出全部失败原因",
+      "recovery_path": "关闭弹窗，解决问题后重新选择目标执行复制"
+    },
+    {
+      "exception": "复制来源异常",
+      "trigger": "触发复制操作时",
+      "ui_behavior": "Toast 提示来源异常，弹窗不打开",
+      "recovery_path": "选择其他正常子管理员作为来源"
+    },
+    {
+      "exception": "批量复制超限",
+      "trigger": "已选200人继续添加",
+      "ui_behavior": "选择器阻止添加，已选计数展示200/200",
+      "recovery_path": "移除部分目标后再添加，或分批操作"
     }
   ],
   "result_states": [
     {
-      "state": "all_success_submit",
-      "condition": "权限申请提交成功",
-      "ui_behavior": "Drawer关闭 + Toast提示 + 申请记录新增待审批",
-      "copy_key": "success.submitted"
+      "state": "全部成功",
+      "condition": "所有目标复制成功",
+      "ui_behavior": "Toast 提示，弹窗自动关闭",
+      "copy_key": "result.success_all"
     },
     {
-      "state": "all_success_save",
-      "condition": "配置保存成功",
-      "ui_behavior": "Toast提示",
-      "copy_key": "success.config_saved"
+      "state": "部分成功",
+      "condition": "部分目标成功，部分失败",
+      "ui_behavior": "弹窗切换为结果汇总态（成功列表+失败列表+重新复制按钮）",
+      "copy_key": "result.partial_success"
     },
     {
-      "state": "all_success_close",
-      "condition": "关闭成功",
-      "ui_behavior": "Toast提示 + 员工端入口隐藏",
-      "copy_key": "success.closed"
+      "state": "全部失败",
+      "condition": "所有目标复制失败",
+      "ui_behavior": "弹窗切换为结果汇总态（全部失败列表+关闭按钮）",
+      "copy_key": "result.all_failed"
+    },
+    {
+      "state": "审批提交",
+      "condition": "双管理员模式下复制完成",
+      "ui_behavior": "弹窗切换为审批提交态（不自动关闭）",
+      "copy_key": "modal.approval_title"
     }
   ],
   "copy_pool": {
     "modal": [
-      {"key": "title.close_confirm", "文案": "关闭确认", "变量": "", "位置": "关闭确认Modal"},
-      {"key": "hint.close_confirm", "文案": "当前有{N}个进行中的申请。关闭后，新申请入口将隐藏，已提交的申请将继续流转直至结束。", "变量": "{N}", "位置": "关闭确认Modal"},
-      {"key": "title.application_detail", "文案": "申请详情", "变量": "", "位置": "申请详情Modal"},
-      {"key": "status.pending", "文案": "你的申请已提交，正在等待{审批人姓名}审批", "变量": "{审批人姓名}", "位置": "申请记录/详情"},
-      {"key": "status.approving", "文案": "你的申请正在审批中，当前节点：{审批人姓名}", "变量": "{审批人姓名}", "位置": "申请记录/详情"},
-      {"key": "status.approved", "文案": "你的{权限名}申请已通过，权限已生效", "变量": "{权限名}", "位置": "申请记录/详情"},
-      {"key": "status.rejected", "文案": "你的{权限名}申请已被拒绝。原因：{拒绝原因}", "变量": "{权限名},{拒绝原因}", "位置": "申请记录/详情"},
-      {"key": "status.withdrawn", "文案": "你已撤回{权限名}的申请", "变量": "{权限名}", "位置": "申请记录/详情"},
-      {"key": "status.expired", "文案": "该申请已失效，如需帮助请联系管理员", "变量": "", "位置": "申请记录/详情"},
-      {"key": "status.auth_error", "文案": "审批已通过，但授权时出现异常，管理员正在处理中", "变量": "", "位置": "申请记录/详情"}
+      {"key": "modal.title", "copy": "复制子管理员配置", "variables": [], "location": "弹窗标题区"},
+      {"key": "modal.source_label", "copy": "可授权组织——从{来源姓名}复制组织范围", "variables": ["{来源姓名}"], "location": "复制信息区"},
+      {"key": "modal.source_label_2", "copy": "可授权功能——从{来源姓名}复制功能权限", "variables": ["{来源姓名}"], "location": "复制信息区"},
+      {"key": "modal.approval_title", "copy": "已提交审批", "variables": [], "location": "审批提交态标题"},
+      {"key": "modal.approval_desc", "copy": "复制操作已提交，等待另一位管理员审批后生效。", "variables": [], "location": "审批提交态说明"},
+      {"key": "modal.approval_content_label", "copy": "复制内容：可授权组织、可授权功能", "variables": [], "location": "审批提交态内容摘要"},
+      {"key": "modal.approval_target_label", "copy": "复制对象：{姓名}、{姓名}（共{N}人）", "variables": ["{姓名}", "{N}"], "location": "审批提交态对象摘要"}
     ],
-    "object_selection": [],
+    "object_selection": [
+      {"key": "target.select_button", "copy": "选择员工 >", "variables": [], "location": "复制对象区按钮"},
+      {"key": "target.selected_count", "copy": "已选{N}人", "variables": ["{N}"], "location": "复制对象区计数"},
+      {"key": "target.limit_hint", "copy": "最多选择 200 名复制对象", "variables": [], "location": "选择器超限提示"}
+    ],
     "validation_and_execution": [
-      {"key": "error.reason_empty", "文案": "请填写申请原因", "变量": "", "位置": "权限申请Drawer InlineError"},
-      {"key": "error.scope_violation", "文案": "该权限暂不支持自助申请，如需此权限请联系管理员", "变量": "", "位置": "权限申请Drawer InlineError"},
-      {"key": "error.flow_invalid", "文案": "审批流程配置异常，无法提交，请联系管理员", "变量": "", "位置": "权限申请Drawer Toast"},
-      {"key": "error.scope_not_configured", "文案": "请先选择可申请范围", "变量": "", "位置": "配置页Toast"},
-      {"key": "error.flow_not_configured", "文案": "请先选择审批流程", "变量": "", "位置": "配置页Toast"}
+      {"key": "validate.info_empty", "copy": "请选择复制信息", "variables": [], "location": "复制信息区 InlineError"},
+      {"key": "validate.target_empty", "copy": "请选择至少一名复制对象", "variables": [], "location": "复制对象区 InlineError"},
+      {"key": "validate.join_status", "copy": "{姓名} 加入状态不是已加入，不能成为子管理员", "variables": ["{姓名}"], "location": "失败列表项"},
+      {"key": "validate.auth_status", "copy": "{姓名} 未完成实名认证，不能成为子管理员", "variables": ["{姓名}"], "location": "失败列表项"}
     ],
     "result_and_feedback": [
-      {"key": "success.submitted", "文案": "申请已提交，审批人：{审批人姓名}，可在申请记录中查看进度", "变量": "{审批人姓名}", "位置": "权限申请Drawer Toast"},
-      {"key": "success.config_saved", "文案": "配置已保存", "变量": "", "位置": "配置页Toast"},
-      {"key": "success.closed", "文案": "已关闭自助申请能力，进行中的申请将继续流转", "变量": "", "位置": "配置页Toast"}
+      {"key": "result.success_all", "copy": "复制成功", "variables": [], "location": "Toast（全部成功）"},
+      {"key": "result.progress", "copy": "正在复制…", "variables": [], "location": "Toast/进度提示"},
+      {"key": "result.partial_success", "copy": "复制完成（{成功数}/{总数}）", "variables": ["{成功数}", "{总数}"], "location": "结果汇总态标题"},
+      {"key": "result.all_failed", "copy": "复制失败", "variables": [], "location": "结果汇总态标题"},
+      {"key": "result.source_error", "copy": "该子管理员状态异常，无法作为复制来源", "variables": [], "location": "Toast（来源异常）"}
     ],
     "buttons": [
-      {"key": "btn.apply", "文案": "申请权限", "位置": "我的权限Page"},
-      {"key": "btn.submit", "文案": "提交申请", "位置": "权限申请Drawer"},
-      {"key": "btn.cancel", "文案": "取消", "位置": "权限申请Drawer / 关闭确认Modal"},
-      {"key": "btn.save", "文案": "保存", "位置": "配置页"},
-      {"key": "btn.close", "文案": "关闭", "位置": "申请详情Modal"},
-      {"key": "btn.confirm_close", "文案": "确认关闭", "位置": "关闭确认Modal"},
-      {"key": "btn.reapply", "文案": "重新申请", "位置": "申请记录Page"},
-      {"key": "btn.retry", "文案": "重试", "位置": "我的权限/申请记录"},
-      {"key": "link.view_detail", "文案": "查看详情", "位置": "申请记录Page"},
-      {"key": "link.go_flow_config", "文案": "去审批管理创建流程 >", "位置": "配置页"}
+      {"key": "button.confirm", "copy": "确认", "location": "编辑态底部操作区"},
+      {"key": "button.cancel", "copy": "取消", "location": "编辑态底部操作区"},
+      {"key": "button.close", "copy": "关闭", "location": "结果汇总态/审批提交态"},
+      {"key": "button.retry", "copy": "重新复制失败项", "location": "结果汇总态底部操作区"},
+      {"key": "button.select_employee", "copy": "选择员工 >", "location": "复制对象区"},
+      {"key": "link.view_approval", "copy": "查看审批进度", "location": "审批提交态"}
     ]
   },
   "template_variables": [
-    {"variable": "{权限名}", "meaning": "权限的具体名称", "value_range": "权限定义中的名称"},
-    {"variable": "{业务域名}", "meaning": "权限所属的业务域", "value_range": "权限分类体系中的一级分类"},
-    {"variable": "{权限总数}", "meaning": "当前员工的权限数量", "value_range": "整数"},
-    {"variable": "{审批人姓名}", "meaning": "当前审批节点负责人姓名", "value_range": "用户姓名"},
-    {"variable": "{申请原因文本}", "meaning": "员工填写的申请理由", "value_range": "用户输入文本"},
-    {"variable": "{来源标签}", "meaning": "权限获取方式", "value_range": "自助申请/角色继承/系统授予"},
-    {"variable": "{来源详情}", "meaning": "来源补充说明", "value_range": "由你于{日期}申请/角色:{角色名}"},
-    {"variable": "{时间}", "meaning": "操作时间戳", "value_range": "日期+时间"},
-    {"variable": "{时长}", "meaning": "等待时长", "value_range": "如2小时、1天"},
-    {"variable": "{拒绝原因}", "meaning": "审批人填写的拒绝理由", "value_range": "审批人输入文本"},
-    {"variable": "{N}", "meaning": "数量占位符", "value_range": "整数"},
-    {"variable": "{M}", "meaning": "最大字数", "value_range": "整数（如200）"},
-    {"variable": "{资源名}", "meaning": "加载失败的资源名称", "value_range": "权限信息/申请记录"}
+    {"variable": "{来源姓名}", "meaning": "复制来源子管理员的姓名", "value_range": "用户真实姓名"},
+    {"variable": "{姓名}", "meaning": "目标用户的姓名", "value_range": "用户真实姓名"},
+    {"variable": "{手机号}", "meaning": "目标用户的手机号（脱敏）", "value_range": "138****1234"},
+    {"variable": "{N}", "meaning": "数量占位符", "value_range": "正整数"},
+    {"variable": "{成功数}", "meaning": "复制成功的用户数量", "value_range": "正整数"},
+    {"variable": "{总数}", "meaning": "复制目标总数量", "value_range": "1-200的正整数"},
+    {"variable": "{来源}", "meaning": "来源标记列的取值", "value_range": "手动/复制自{姓名}/待审批"},
+    {"variable": "{失败原因}", "meaning": "校验失败的具体原因文本", "value_range": "加入状态不是已加入/未完成实名认证"}
   ],
   "open_questions": [
-    {"question": "功能页面的受限提示是否支持嵌入交互入口（按钮/链接）", "impact": "影响现场触发路径能否实现，当前按支持嵌入方案推进"},
-    {"question": "现有权限是否有清晰的业务域分类和用途说明", "impact": "影响权限选择列表的信息架构，当前按业务域分组方案推进"},
-    {"question": "审批端是否支持定制化审批卡片内容", "impact": "影响审批人判断依据的呈现方式，当前按展示申请人权限上下文方案推进"},
-    {"question": "是否支持催办功能", "impact": "影响等待审批阶段的交互设计，当前按暂不支持处理"},
-    {"question": "申请原因是否设置最低字数限制", "impact": "影响申请表单的校验规则，当前按不设最低字数处理"},
-    {"question": "被拒后重申请是否可修改申请内容", "impact": "影响重新申请的交互流程，当前按重新打开Drawer处理"},
-    {"question": "自助申请权限的记录是否需要同步至操作审计日志", "impact": "影响数据留存方案，当前按需要同步推进"}
+    {"question": "加入状态校验口径（已启用 vs 已加入）", "impact": "影响校验文案和异常文案"},
+    {"question": "叠加后的配置在列表页是否需要展示摘要", "impact": "影响列表页来源标记列"},
+    {"question": "双管理员审批的具体流程边界", "impact": "影响审批提交态后续行为"},
+    {"question": "批量复制200目标的后端处理方式", "impact": "影响复制中态交互设计"},
+    {"question": "普通用户成为子管理员后是否需要系统通知", "impact": "是否增加通知触点"},
+    {"question": "配置来源展示的交互形式", "impact": "影响编辑详情页配置来源区"}
   ],
   "edge_consumed": false,
   "edge_trace": []

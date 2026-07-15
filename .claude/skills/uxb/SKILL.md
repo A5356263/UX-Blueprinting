@@ -1,9 +1,10 @@
 ---
 name: uxb
 description: >
-  需求定案 Skill。读取用户提供的需求材料或问题背景，输出正式需求定案文档与结构化上下文，作为主链路入口驱动下游体验设计。
+  需求定案 Skill。将用户已明确的需求材料收敛为正式需求定案文档与结构化上下文。
   触发关键词：需求定案、生成 UXB、输出 uxb_output.md、为体验蓝图准备正式上游、进入需求定案。
-  排除：问题框定、产品分析、竞品拆解、设计走查、交互设计方案（用 experience-blueprint）、需求方向不成立需重构问题（用 product-analysis）。
+  仅在用户明确要求需求定案、UXB，或明确接受进入需求定案时使用；不得仅因工作区存在 PRD 或详细需求文档而自动触发。
+  排除：问题框定（用 problem-framing）、方向不成立需重构问题（用 product-analysis）、交互方案（用 experience-blueprint）。
 ---
 
 # UXB
@@ -466,7 +467,7 @@ UXB 的正常顺序固定为：
 禁止表达：
 
 - 列表按三层结构展示
-- 审批页顶部放已有权限摘要
+- {承载页面}顶部放{业务对象}摘要
 - 弹窗里放确认摘要
 - 任何具体页面、组件、布局、文案或流程方案
 
@@ -684,7 +685,7 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
   "version": "1.0",
   "generated_at": "unknown",
   "project_name": "unknown",
-  "artifact_md": "spark-output/uxb_requirements.md",
+  "artifact_md": "spark-output/uxb_output.md",
   "source_refs": [],
   "read_sections": [],
   "key_design_judgments": [

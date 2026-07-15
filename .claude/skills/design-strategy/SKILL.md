@@ -1,6 +1,9 @@
 ---
 name: design-strategy
-description: 设计策略生成 Skill。读取 PRD 或需求材料，先形成设计判断，再输出带来源分级的策略报告，在需要做需求评审、方向判断或生成设计策略报告时触发。
+description: >
+  设计策略生成 Skill。基于已存在的 PRD 或需求材料形成设计判断，输出带来源分级的设计策略报告。
+  仅在用户明确要求设计策略、设计策略报告或策略评审时使用；不得仅因发现 PRD 或需求材料而自动触发。
+  排除：问题框定（用 problem-framing）、问题重构（用 product-analysis）、需求定案（用 uxb）、交互方案（用 experience-blueprint）、页面规格（用 page-spec）。
 ---
 
 # 设计策略生成

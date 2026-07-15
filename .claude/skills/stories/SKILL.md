@@ -315,7 +315,7 @@ Markdown 固定结构：
   "version": "1.0",
   "generated_at": "unknown",
   "project_name": "unknown",
-  "artifact_md": "spark-output/user_stories.md",
+  "artifact_md": "spark-output/stories.md",
   "source_refs": [],
   "read_sections": [],
   "source_mode": "unknown",

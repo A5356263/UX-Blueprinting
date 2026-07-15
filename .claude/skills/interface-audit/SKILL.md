@@ -1,9 +1,10 @@
 ---
 name: interface-audit
 description: >
-  界面诊断 Skill。基于截图、DOM、Accessibility 或混合证据，评估现有页面、流程或状态的界面质量，输出证据化的问题清单与改进方向。
+  界面诊断 Skill。基于截图、DOM、Accessibility 或运行证据评估现有界面，输出证据化问题清单与改进方向。
   触发关键词：界面诊断、截图诊断、UI 走查、界面分析、改版前后对比、DOM 走查、无障碍走查、界面评分、界面问题、UI audit。
-  排除：体验设计方案（用 experience-blueprint）、需求定案（用 uxb）、设计走查（用 check）。
+  仅在存在现状证据且用户要求诊断现有界面时使用。
+  排除：体验方案（用 experience-blueprint）、正式设计产物走查（用 check）。
 ---
 
 # Interface Audit
