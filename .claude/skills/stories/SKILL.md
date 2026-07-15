@@ -8,7 +8,13 @@ description: >
 
 # 用户故事
 
-## Step 0 · 产物状态检查
+这个 skill 负责把第一阶梯已经形成的正式上游结论，拆成可承接的用户任务单元。它不重新判断问题是否成立，也不写旅程阶段和页面方案。
+
+来源为 `problem-framing` 时，本 skill 可以执行最小澄清停顿，但该停顿只服务任务拆解，不服务重新判断方向。
+
+## Step 0 · 运行入口
+
+### Step 0.1 · 本 Skill 产物状态
 
 执行本 Skill 前，只检查本 Skill 对应正式产物是否存在。
 
@@ -18,7 +24,7 @@ description: >
 
 只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
 
-若任一正式产物存在，只输出：
+若任一正式产物存在，先输出以下状态提示，然后继续执行本 Skill 的入口规则：
 
 ```text
 检测到本 Skill 已有正式产物（已产出）。
@@ -34,10 +40,33 @@ description: >
 - 根据已有产物询问处理方式
 - 根据已有产物推断用户意图
 
+### Step 0.2 · 上游读取
 
-这个 skill 负责把第一阶梯已经形成的正式上游结论，拆成可承接的用户任务单元。它不重新判断问题是否成立，也不写旅程阶段和页面方案。
+启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
 
-来源为 `problem-framing` 时，本 skill 可以执行最小澄清停顿，但该停顿只服务任务拆解，不服务重新判断方向。
+1. `spark-output/context/uxb.json`
+2. `spark-output/uxb_output.md`
+3. `spark-output/context/problem-framing.json`
+4. `spark-output/problem_framing.md`
+5. 用户当前对话中明确提供的方向、角色、任务背景
+
+### Step 0.3 · 正式来源判断
+
+读取规则：
+
+- 如果 `uxb` 与 `problem-framing` 同时存在，优先以 `uxb` 作为正式上游来源。
+- 如果只有 `problem-framing`，允许正式运行。
+- 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
+- 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
+
+当正式来源为 `problem-framing` 时，先检查其信息分层：
+
+- `confirmed_facts` 可直接消费
+- `working_assumptions` 可有限消费，但必须显式标记
+- `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
+- 上游明确排除的范围，不得滑入 P0/P1 主线 Story
+- 为体验完整性推导出的辅助能力，必须标为辅助能力或 P1/P2，不得抢主链
+- 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在 `source_basis` 中说明
 
 ## 角色定义
 
@@ -72,32 +101,6 @@ description: >
 - 需要旅程阶段、情绪、流失风险：用 `journey-analysis`。
 - 需要交互流程、页面设计、状态文案：用 `experience-blueprint`。
 - 需要页面生成规格：用 `page-spec`。
-
-## 上游读取协议
-
-启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
-
-1. `spark-output/context/uxb.json`
-2. `spark-output/uxb_output.md`
-3. `spark-output/context/problem-framing.json`
-4. `spark-output/problem_framing.md`
-5. 用户当前对话中明确提供的方向、角色、任务背景
-
-读取规则：
-
-- 如果 `uxb` 与 `problem-framing` 同时存在，优先以 `uxb` 作为正式上游来源。
-- 如果只有 `problem-framing`，允许正式运行。
-- 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
-- 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
-
-当正式来源为 `problem-framing` 时，先检查其信息分层：
-
-- `confirmed_facts` 可直接消费
-- `working_assumptions` 可有限消费，但必须显式标记
-- `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
-- 上游明确排除的范围，不得滑入 P0/P1 主线 Story
-- 为体验完整性推导出的辅助能力，必须标为辅助能力或 P1/P2，不得抢主链
-- 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在 `source_basis` 中说明
 
 ## 核心判断规则
 
