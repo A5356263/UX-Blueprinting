@@ -255,9 +255,9 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Explore",
       note: "需求读取、问题诊断与方向收敛",
       skills: [
-        { id: "uxb", name_zh: "需求定案", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
-        { id: "problem-framing", name_zh: "问题框定", slash: "/problem-framing", status: "current", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
-        { id: "product-analysis", name_zh: "产品分析", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
+        { id: "uxb", name_zh: "PRD需求分析", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
+        { id: "problem-framing", name_zh: "需求讨论", slash: "/problem-framing", status: "current", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
+        { id: "product-analysis", name_zh: "需求方案发散", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
         { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
         { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" }
       ]
@@ -280,8 +280,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Design",
       note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
       skills: [
-        { id: "experience-blueprint", name_zh: "体验策略", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "把需求变成正式体验方案" },
-        { id: "edge", name_zh: "异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
+        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "把需求变成正式体验方案" },
+        { id: "edge", name_zh: "穷举体验蓝图所有异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
         { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" }
       ]
     },

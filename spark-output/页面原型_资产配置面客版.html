@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>资产配置建议书 - 页面原型</title>
+<style>
+  /* ===== Design Tokens ===== */
+  :root {
+    /* Colors - Accent */
+    --color-bg-accent-regular: #0B25DF;
+    --color-bg-accent-regular-hover: #3B50E5;
+    --color-bg-accent-regular-active: #041ABA;
+    --color-bg-accent-regular-disable: #BDC3FA;
+    --color-bg-accent-light: #DEE1FC;
+    --color-bg-accent-subtle: #F0F1FF;
+    --color-text-accent-regular: #0B25DF;
+    --color-border-accent-regular: #0B25DF;
+
+    /* Colors - Neutral */
+    --color-container-bg-neutral-bright: #FFFFFF;
+    --color-container-bg-neutral-bright-hover: #F2F4F7;
+    --color-container-bg-neutral-bright-active: #E6E9EF;
+    --color-container-bg-neutral-dark: #2D384D;
+    --color-layout-bg-neutral-bright: #FFFFFF;
+    --color-layout-bg-neutral-gray: #F2F4F7;
+    --color-text-neutral-gray1: #080A0D;
+    --color-text-neutral-gray2: #364765;
+    --color-text-neutral-gray3: #5B6C8C;
+    --color-text-neutral-gray4: #ABB5C9;
+    --color-text-neutral-white: #FFFFFF;
+    --color-icononly-neutral-1: #75829C;
+    --color-border-neutral: #CAD0DB;
+    --color-divider-neutral: #E6E9EF;
+
+    /* Colors - Status */
+    --color-bg-error-light: #FFDBDB;
+    --color-text-error-regular: #FF4040;
+    --color-bg-warning-light: #FFF2E3;
+    --color-text-warning-regular: #FF8C0F;
+    --color-bg-success-light: #EDFFF7;
+    --color-text-success-regular: #0FD77D;
+    --color-text-link: #0B25DF;
+    --color-text-link-hover: #3B50E5;
+    --color-text-highlight-red: #FF4040;
+    --color-text-highlight-orange: #FF8B0F;
+    --color-text-highlight-green: #0FD77D;
+
+    /* Font */
+    --font-size-small: 12px;
+    --font-size-regular: 14px;
+    --font-size-large: 16px;
+    --font-size-h14: 14px;
+    --font-size-h16: 16px;
+    --font-size-h18: 18px;
+    --font-size-h22: 22px;
+    --font-size-h24: 24px;
+    --font-size-h32: 32px;
+    --font-weight-regular: 400;
+    --font-weight-bold: 700;
+    --font-height-regular: 1.37;
+    --font-height-loose: 1.6;
+
+    /* Radius */
+    --border-radius-small: 2px;
+    --border-radius-regular: 4px;
+    --border-radius-large: 8px;
+    --border-radius-circle: 50%;
+
+    /* Spacing */
+    --spacing-1: 4px;
+    --spacing-2: 6px;
+    --spacing-3: 8px;
+    --spacing-4: 12px;
+    --spacing-5: 16px;
+    --spacing-6: 24px;
+    --spacing-7: 32px;
+
+    /* Shadow */
+    --shadow-level1: 0px 1px 6px 0px rgba(117, 130, 156, 0.1);
+    --shadow-level2: 0px 2px 12px 0px rgba(117, 130, 156, 0.2);
+    --shadow-level3: 0px 4px 16px 0px rgba(117, 130, 156, 0.3);
+    --shadow-level4: 0px 10px 24px 0px rgba(117, 130, 156, 0.3);
+  }
+
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: var(--font-size-regular);
+    line-height: var(--font-height-regular);
+    color: var(--color-text-neutral-gray1);
+    background: var(--color-layout-bg-neutral-gray);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Layout ===== */
+  .app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+  }
+
+  /* ===== Header ===== */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-5) var(--spacing-6);
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-level1);
+    margin-bottom: var(--spacing-5);
+  }
+  .page-title {
+    font-size: var(--font-size-h22);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray1);
+  }
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-bg-accent-regular);
+    color: var(--color-text-neutral-white);
+    border: none;
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-regular);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-download:hover { background: var(--color-bg-accent-regular-hover); }
+  .btn-download:active { background: var(--color-bg-accent-regular-active); }
+
+  /* ===== Account Selector ===== */
+  .account-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-6);
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-level1);
+    margin-bottom: var(--spacing-5);
+  }
+  .account-label {
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray2);
+    white-space: nowrap;
+  }
+  .account-select {
+    padding: var(--spacing-2) var(--spacing-4);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray1);
+    background: var(--color-container-bg-neutral-bright);
+    min-width: 240px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235B6C8C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  /* ===== Summary Cards ===== */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-5);
+    margin-bottom: var(--spacing-5);
+  }
+  .summary-card {
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    padding: var(--spacing-5) var(--spacing-6);
+    box-shadow: var(--shadow-level1);
+  }
+  .summary-card .label {
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray3);
+    margin-bottom: var(--spacing-2);
+  }
+  .summary-card .value {
+    font-size: var(--font-size-h24);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray1);
+  }
+  .summary-card .unit {
+    font-size: var(--font-size-regular);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-neutral-gray3);
+    margin-left: var(--spacing-1);
+  }
+  .summary-card .sub {
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray3);
+    margin-top: var(--spacing-1);
+  }
+
+  /* ===== Section ===== */
+  .section {
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-level1);
+    margin-bottom: var(--spacing-5);
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-5) var(--spacing-6);
+    border-bottom: 1px solid var(--color-divider-neutral);
+  }
+  .section-title {
+    font-size: var(--font-size-h18);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray1);
+  }
+  .section-subtitle {
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray3);
+  }
+  .section-body {
+    padding: var(--spacing-5) var(--spacing-6);
+  }
+
+  /* ===== Time Filter ===== */
+  .time-filter {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+  .time-btn {
+    padding: var(--spacing-1) var(--spacing-3);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: var(--border-radius-regular);
+    background: var(--color-container-bg-neutral-bright);
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .time-btn.active {
+    background: var(--color-bg-accent-subtle);
+    border-color: var(--color-border-accent-regular);
+    color: var(--color-text-accent-regular);
+  }
+  .time-btn:hover { border-color: var(--color-text-accent-regular); }
+  .time-custom {
+    padding: var(--spacing-1) var(--spacing-3);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray2);
+    background: var(--color-container-bg-neutral-bright);
+    cursor: pointer;
+  }
+
+  /* ===== Metrics Grid ===== */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-5);
+    margin-bottom: var(--spacing-5);
+  }
+  .metric-item {
+    padding: var(--spacing-3);
+    background: var(--color-layout-bg-neutral-gray);
+    border-radius: var(--border-radius-regular);
+  }
+  .metric-item .label {
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray3);
+  }
+  .metric-item .value {
+    font-size: var(--font-size-large);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray1);
+    margin-top: var(--spacing-1);
+  }
+  .metric-item .value.up { color: var(--color-text-highlight-green); }
+  .metric-item .value.down { color: var(--color-text-highlight-red); }
+
+  /* ===== Chart Placeholder ===== */
+  .chart-area {
+    background: linear-gradient(180deg, var(--color-bg-accent-subtle) 0%, var(--color-container-bg-neutral-bright) 100%);
+    border: 1px solid var(--color-divider-neutral);
+    border-radius: var(--border-radius-regular);
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-neutral-gray4);
+    font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-4);
+  }
+
+  /* ===== Table ===== */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table th {
+    text-align: left;
+    padding: var(--spacing-3) var(--spacing-2);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray3);
+    border-bottom: 1px solid var(--color-divider-neutral);
+  }
+  .data-table td {
+    padding: var(--spacing-3) var(--spacing-2);
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray1);
+    border-bottom: 1px solid var(--color-divider-neutral);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .rank { color: var(--color-text-neutral-gray3); width: 48px; }
+  .data-table .highlight { color: var(--color-text-accent-regular); font-weight: var(--font-weight-bold); }
+  .data-table .up { color: var(--color-text-highlight-green); }
+  .data-table .down { color: var(--color-text-highlight-red); }
+
+  /* ===== Tabs ===== */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--color-divider-neutral);
+    margin-bottom: var(--spacing-5);
+  }
+  .tab-item {
+    padding: var(--spacing-3) var(--spacing-5);
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-item.active {
+    color: var(--color-text-accent-regular);
+    border-bottom-color: var(--color-border-accent-regular);
+    font-weight: var(--font-weight-bold);
+  }
+  .tab-item:hover { color: var(--color-text-neutral-gray1); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== Diagnosis ===== */
+  .diagnosis-list { list-style: none; }
+  .diagnosis-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-5);
+    border-radius: var(--border-radius-regular);
+    margin-bottom: var(--spacing-3);
+    background: var(--color-layout-bg-neutral-gray);
+    gap: var(--spacing-4);
+  }
+  .diagnosis-item.warning { background: var(--color-bg-warning-light); border-left: 3px solid var(--color-text-warning-regular); }
+  .diagnosis-item.info { background: var(--color-bg-accent-subtle); border-left: 3px solid var(--color-text-accent-regular); }
+  .diagnosis-item .icon { font-size: var(--font-size-large); flex-shrink: 0; }
+  .diagnosis-item .content { flex: 1; }
+  .diagnosis-item .content .title { font-weight: var(--font-weight-bold); color: var(--color-text-neutral-gray1); }
+  .diagnosis-item .content .desc { font-size: var(--font-size-small); color: var(--color-text-neutral-gray3); margin-top: 2px; }
+  .diagnosis-item .amount { font-weight: var(--font-weight-bold); white-space: nowrap; }
+  .diagnosis-item .amount.warning-amount { color: var(--color-text-warning-regular); }
+  .btn-link {
+    color: var(--color-text-link);
+    background: none;
+    border: none;
+    font-size: var(--font-size-regular);
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .btn-link:hover { color: var(--color-text-link-hover); text-decoration: underline; }
+  .diagnosis-bridge {
+    text-align: center;
+    padding: var(--spacing-4) 0 0;
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray3);
+    border-top: 1px solid var(--color-divider-neutral);
+    margin-top: var(--spacing-4);
+  }
+
+  /* ===== Product Recommendation ===== */
+  .product-table { width: 100%; border-collapse: collapse; }
+  .product-table th {
+    text-align: left;
+    padding: var(--spacing-3) var(--spacing-2);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray3);
+    border-bottom: 1px solid var(--color-divider-neutral);
+  }
+  .product-table td {
+    padding: var(--spacing-3) var(--spacing-2);
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray1);
+    border-bottom: 1px solid var(--color-divider-neutral);
+    vertical-align: middle;
+  }
+  .product-table .product-link {
+    color: var(--color-text-link);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .product-table .product-link:hover { text-decoration: underline; color: var(--color-text-link-hover); }
+  .btn-buy {
+    padding: var(--spacing-1) var(--spacing-4);
+    background: var(--color-bg-accent-regular);
+    color: var(--color-text-neutral-white);
+    border: none;
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-buy:hover { background: var(--color-bg-accent-regular-hover); }
+  .btn-buy.small { padding: 2px var(--spacing-3); font-size: var(--font-size-small); }
+  .batch-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-layout-bg-neutral-gray);
+    border-radius: var(--border-radius-regular);
+    margin-top: var(--spacing-4);
+  }
+  .batch-bar label { display: flex; align-items: center; gap: var(--spacing-2); cursor: pointer; font-size: var(--font-size-regular); color: var(--color-text-neutral-gray2); }
+
+  /* ===== Disclaimer ===== */
+  .disclaimer {
+    padding: var(--spacing-5) var(--spacing-6);
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-level1);
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray3);
+    line-height: var(--font-height-loose);
+  }
+  .disclaimer p { margin-bottom: var(--spacing-3); }
+  .disclaimer p:last-child { margin-bottom: 0; }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: var(--color-container-bg-neutral-bright);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-level4);
+    width: 420px;
+    padding: var(--spacing-6);
+  }
+  .modal-title {
+    font-size: var(--font-size-h18);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-neutral-gray1);
+    margin-bottom: var(--spacing-5);
+  }
+  .modal-prompt {
+    font-size: var(--font-size-regular);
+    color: var(--color-text-neutral-gray2);
+    margin-bottom: var(--spacing-4);
+  }
+  .modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-5);
+  }
+  .modal-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: var(--border-radius-regular);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-option:hover { border-color: var(--color-text-accent-regular); }
+  .modal-option.selected { border-color: var(--color-border-accent-regular); background: var(--color-bg-accent-subtle); }
+  .modal-option input[type="radio"] { accent-color: var(--color-bg-accent-regular); }
+  .modal-hint {
+    font-size: var(--font-size-small);
+    color: var(--color-text-neutral-gray4);
+    margin-bottom: var(--spacing-5);
+    padding: var(--spacing-3);
+    background: var(--color-layout-bg-neutral-gray);
+    border-radius: var(--border-radius-regular);
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-3);
+  }
+  .btn-secondary {
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-container-bg-neutral-bright);
+    color: var(--color-text-neutral-gray2);
+    border: 1px solid var(--color-border-neutral);
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-regular);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--color-text-neutral-gray3); }
+  .btn-primary {
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-bg-accent-regular);
+    color: var(--color-text-neutral-white);
+    border: none;
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-regular);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--color-bg-accent-regular-hover); }
+  .btn-primary:disabled { background: var(--color-bg-accent-regular-disable); cursor: not-allowed; }
+
+  /* ===== Status Tags ===== */
+  .tag {
+    display: inline-block;
+    padding: 1px var(--spacing-2);
+    border-radius: var(--border-radius-small);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+  }
+  .tag.warning { background: var(--color-bg-warning-light); color: var(--color-text-warning-regular); }
+  .tag.error { background: var(--color-bg-error-light); color: var(--color-text-error-regular); }
+  .tag.success { background: var(--color-bg-success-light); color: var(--color-text-success-regular); }
+
+  /* ===== Pie Chart Placeholder ===== */
+  .pie-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius-circle);
+    background: conic-gradient(
+      var(--color-bg-accent-regular) 0deg 130deg,
+      var(--color-text-highlight-green) 130deg 220deg,
+      var(--color-text-warning-regular) 220deg 290deg,
+      var(--color-text-highlight-red) 290deg 340deg,
+      var(--color-text-neutral-gray4) 340deg 360deg
+    );
+    flex-shrink: 0;
+  }
+  .dist-layout {
+    display: flex;
+    gap: var(--spacing-6);
+    align-items: flex-start;
+  }
+  .dist-legend { flex: 1; }
+  .dist-legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) 0;
+    font-size: var(--font-size-regular);
+  }
+  .dist-legend-item .dot {
+    width: 10px; height: 10px;
+    border-radius: var(--border-radius-small);
+    flex-shrink: 0;
+  }
+
+  /* ===== Toast ===== */
+  .toast-container {
+    position: fixed;
+    top: var(--spacing-6);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+  .toast {
+    display: none;
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-container-bg-neutral-dark);
+    color: var(--color-text-neutral-white);
+    border-radius: var(--border-radius-regular);
+    font-size: var(--font-size-regular);
+    box-shadow: var(--shadow-level3);
+    white-space: nowrap;
+  }
+
+  /* ===== Empty State ===== */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-7) var(--spacing-5);
+    color: var(--color-text-neutral-gray3);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: var(--spacing-4); opacity: 0.3; }
+  .empty-state .text { font-size: var(--font-size-regular); margin-bottom: var(--spacing-4); }
+
+  /* ===== Loading ===== */
+  .loading-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding: var(--spacing-5) 0;
+  }
+  .skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, var(--color-divider-neutral) 25%, var(--color-layout-bg-neutral-gray) 50%, var(--color-divider-neutral) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--border-radius-small);
+  }
+  .skeleton-line:nth-child(1) { width: 60%; }
+  .skeleton-line:nth-child(2) { width: 80%; }
+  .skeleton-line:nth-child(3) { width: 45%; }
+  .skeleton-line:nth-child(4) { width: 70%; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .app-container { padding: var(--spacing-4); }
+    .summary-row { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .modal-box { width: 90vw; }
+    .dist-layout { flex-direction: column; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--color-border-neutral); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="toast-container">
+  <div class="toast" id="toastDownloadComplete">下载完成</div>
+</div>
+
+<div class="app-container">
+
+  <!-- ===== R1: Header ===== -->
+  <div class="page-header">
+    <span class="page-title">资产配置建议书</span>
+    <button class="btn-download" id="btnOpenModal">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v9M4 7l4 4 4-4M2 12v2h12v-2"/></svg>
+      下载建议书
+    </button>
+  </div>
+
+  <!-- ===== R2: Account Selector ===== -->
+  <div class="account-bar">
+    <span class="account-label">银行账号：</span>
+    <select class="account-select" id="accountSelect">
+      <option value="all">全部账号 — 综合汇总</option>
+      <option value="acct1">星辰科技有限公司 — ****5632</option>
+      <option value="acct2">星辰科技有限公司 — ****7841</option>
+      <option value="acct3">星辰科技有限公司 — ****2256</option>
+    </select>
+  </div>
+
+  <!-- ===== R3: Summary Cards ===== -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="label">总资产</div>
+      <div class="value">1,286.45<span class="unit">万元</span></div>
+      <div class="sub">截至 2026-07-15</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">区间收益</div>
+      <div class="value">23.68<span class="unit">万元</span></div>
+      <div class="sub">近 1 个月</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">年化收益率</div>
+      <div class="value up">+3.52<span class="unit">%</span></div>
+      <div class="sub">近 1 个月</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">持仓产品</div>
+      <div class="value">12<span class="unit">只</span></div>
+      <div class="sub">理财 + 公募基金 + 信托</div>
+    </div>
+  </div>
+
+  <!-- ===== R4: 持仓表现 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">持仓表现</div>
+      <div class="time-filter">
+        <button class="time-btn active" data-period="1m">近1月</button>
+        <button class="time-btn" data-period="3m">近3月</button>
+        <button class="time-btn" data-period="6m">近6月</button>
+        <button class="time-btn" data-period="1y">近1年</button>
+        <span style="color:var(--color-text-neutral-gray4);margin:0 2px;">|</span>
+        <select class="time-custom">
+          <option>自定义区间</option>
+        </select>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="metrics-grid">
+        <div class="metric-item"><div class="label">持仓金额</div><div class="value">1,286.45 万元</div></div>
+        <div class="metric-item"><div class="label">较期初</div><div class="value up">+2.18%</div></div>
+        <div class="metric-item"><div class="label">区间收益</div><div class="value up">+23.68 万元</div></div>
+        <div class="metric-item"><div class="label">年化收益率</div><div class="value up">+3.52%</div></div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-item"><div class="label">购买笔数</div><div class="value">3 笔</div></div>
+        <div class="metric-item"><div class="label">购买金额</div><div class="value">150.00 万元</div></div>
+        <div class="metric-item"><div class="label">赎回笔数</div><div class="value">1 笔</div></div>
+        <div class="metric-item"><div class="label">赎回金额</div><div class="value">50.00 万元</div></div>
+      </div>
+
+      <div class="chart-area">持仓变动趋势图（示例）</div>
+      <div class="chart-area">收益金额趋势图（示例）</div>
+
+      <div style="font-size:var(--font-size-h16);font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-3);margin-top:var(--spacing-4);">产品收益排行</div>
+      <table class="data-table">
+        <thead><tr><th class="rank">排名</th><th>产品名称</th><th>持仓金额</th><th>持仓收益</th></tr></thead>
+        <tbody>
+          <tr><td class="rank">1</td><td>招银理财·招睿增利</td><td>356.80 万元</td><td class="up">+8.23 万元</td></tr>
+          <tr><td class="rank">2</td><td>招银理财·招智合富</td><td>280.50 万元</td><td class="up">+5.67 万元</td></tr>
+          <tr><td class="rank">3</td><td>招银理财·招赢日日金</td><td>420.00 万元</td><td class="up">+3.45 万元</td></tr>
+          <tr><td class="rank">4</td><td>招银理财·招睿月月盈</td><td>150.00 万元</td><td class="down">-0.82 万元</td></tr>
+          <tr><td class="rank">5</td><td>招银理财·招智平衡</td><td>79.15 万元</td><td class="up">+0.56 万元</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== R5: 投资分布 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">投资分布</div>
+      <div class="section-subtitle">仅展示理财年化收益率及排名，其他业务按类型汇总金额和占比</div>
+    </div>
+    <div class="section-body">
+      <div class="tab-bar" id="investTabBar">
+        <span class="tab-item active" data-tab="invest-li">理财</span>
+        <span class="tab-item" data-tab="invest-other">其他业务</span>
+      </div>
+      <div class="tab-content active" id="invest-li">
+        <div class="dist-layout">
+          <div class="pie-placeholder"></div>
+          <div class="dist-legend">
+            <div class="dist-legend-item"><span class="dot" style="background:var(--color-bg-accent-regular)"></span>活钱管理 — 420.00 万元（32.6%）</div>
+            <div class="dist-legend-item"><span class="dot" style="background:var(--color-text-highlight-green)"></span>固收类 — 506.80 万元（39.4%）</div>
+            <div class="dist-legend-item"><span class="dot" style="background:var(--color-text-warning-regular)"></span>混合类 — 150.00 万元（11.7%）</div>
+            <div class="dist-legend-item"><span class="dot" style="background:var(--color-text-highlight-red)"></span>权益类 — 79.15 万元（6.2%）</div>
+            <div class="dist-legend-item"><span class="dot" style="background:var(--color-text-neutral-gray4)"></span>其他 — 130.50 万元（10.1%）</div>
+          </div>
+        </div>
+        <table class="data-table" style="margin-top:var(--spacing-5);">
+          <thead><tr><th>产品类型</th><th>持仓金额</th><th>占比</th><th>年化收益率</th><th>排名</th></tr></thead>
+          <tbody>
+            <tr><td>活钱管理类</td><td>420.00 万元</td><td>32.6%</td><td>+2.15%</td><td>4</td></tr>
+            <tr><td>固收类</td><td>506.80 万元</td><td>39.4%</td><td>+4.23%</td><td>1</td></tr>
+            <tr><td>混合类</td><td>150.00 万元</td><td>11.7%</td><td>+3.86%</td><td>2</td></tr>
+            <tr><td>权益类</td><td>79.15 万元</td><td>6.2%</td><td>+3.12%</td><td>3</td></tr>
+            <tr><td>其他</td><td>130.50 万元</td><td>10.1%</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-content" id="invest-other">
+        <table class="data-table">
+          <thead><tr><th>业务类型</th><th>持仓金额</th><th>占比</th></tr></thead>
+          <tbody>
+            <tr><td>公募基金</td><td>85.30 万元</td><td>6.6%</td></tr>
+            <tr><td>资管计划</td><td>30.20 万元</td><td>2.3%</td></tr>
+            <tr><td>信托计划</td><td>15.00 万元</td><td>1.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== R6: 期限分布 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">期限分布</div>
+      <div class="section-subtitle">仅展示理财年化收益率，其他业务按持有期汇总金额和占比</div>
+    </div>
+    <div class="section-body">
+      <div class="tab-bar" id="termTabBar">
+        <span class="tab-item active" data-tab="term-li">理财</span>
+        <span class="tab-item" data-tab="term-other">其他业务</span>
+      </div>
+      <div class="tab-content active" id="term-li">
+        <table class="data-table">
+          <thead><tr><th>产品期限</th><th>持仓金额</th><th>占比</th><th>年化收益率</th></tr></thead>
+          <tbody>
+            <tr><td>T+0 / T+1</td><td>420.00 万元</td><td>32.6%</td><td>+2.15%</td></tr>
+            <tr><td>1 个月以内</td><td>150.00 万元</td><td>11.7%</td><td>+3.52%</td></tr>
+            <tr><td>1 - 3 个月</td><td>80.00 万元</td><td>6.2%</td><td>+3.86%</td></tr>
+            <tr><td>3 - 6 个月</td><td>200.00 万元</td><td>15.5%</td><td>+4.12%</td></tr>
+            <tr><td>6 - 12 个月</td><td>356.80 万元</td><td>27.7%</td><td>+4.35%</td></tr>
+            <tr><td>1 年以上</td><td>79.15 万元</td><td>6.2%</td><td>+4.58%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-content" id="term-other">
+        <table class="data-table">
+          <thead><tr><th>持有期</th><th>持仓金额</th><th>占比</th></tr></thead>
+          <tbody>
+            <tr><td>7 天可赎回</td><td>25.00 万元</td><td>1.9%</td></tr>
+            <tr><td>1 个月可赎回</td><td>40.30 万元</td><td>3.1%</td></tr>
+            <tr><td>3 个月可赎回</td><td>35.20 万元</td><td>2.7%</td></tr>
+            <tr><td>6 个月以上</td><td>30.00 万元</td><td>2.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== R7: 持仓诊断 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">持仓诊断</div>
+      <div class="section-subtitle">仅支持理财</div>
+    </div>
+    <div class="section-body">
+      <ul class="diagnosis-list">
+        <li class="diagnosis-item warning">
+          <span class="icon">⚠️</span>
+          <div class="content">
+            <div class="title">活钱管理持仓占比过高</div>
+            <div class="desc">活钱管理类产品占比 ≥ 60%，建议适当调整配置</div>
+          </div>
+          <div class="amount warning-amount">32.6% · 420.00 万元</div>
+          <button class="btn-link" onclick="alert('查看活钱管理产品详情')">查看</button>
+        </li>
+        <li class="diagnosis-item info">
+          <span class="icon">🔔</span>
+          <div class="content">
+            <div class="title">2 只产品近两周到期</div>
+            <div class="desc">招睿月月盈 2026-07-22 到期 · 招智平衡 2026-07-28 到期</div>
+          </div>
+          <button class="btn-link" onclick="alert('查看到期产品列表')">查看</button>
+        </li>
+        <li class="diagnosis-item info">
+          <span class="icon">🔔</span>
+          <div class="content">
+            <div class="title">1 只产品持仓时间过长</div>
+            <div class="desc">招赢日日金 · 持续持仓 85 天，建议关注流动性</div>
+          </div>
+          <button class="btn-link" onclick="alert('查看超期产品列表')">查看</button>
+        </li>
+      </ul>
+      <div class="diagnosis-bridge">
+        <span style="color:var(--color-text-neutral-gray2);">基于以上诊断，建议关注以下产品</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== R8: 产品推荐 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">产品推荐</div>
+      <div class="section-subtitle">仅支持理财</div>
+    </div>
+    <div class="section-body">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th style="width:28px;"></th>
+            <th>产品名称 / 代码</th>
+            <th>交易时间</th>
+            <th>期限</th>
+            <th>收益率</th>
+            <th>近一月最大回撤</th>
+            <th>推荐理由</th>
+            <th style="width:70px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="product-link" onclick="alert('跳转产品详情')">招睿增利<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">ZZL001</span></span></td>
+            <td>工作日 23:59 后收市<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">最快 T+1 到账</span></td>
+            <td>180 天</td>
+            <td class="up">+4.35%</td>
+            <td>0.52%</td>
+            <td>降低活钱占比，提升收益</td>
+            <td><button class="btn-buy small">购买</button></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="product-link" onclick="alert('跳转产品详情')">招智合富<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">ZZH002</span></span></td>
+            <td>工作日 23:59 后收市<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">最快 T+1 到账</span></td>
+            <td>365 天</td>
+            <td class="up">+4.58%</td>
+            <td>0.68%</td>
+            <td>替代活钱仓位，拉长期限</td>
+            <td><button class="btn-buy small">购买</button></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><span class="product-link" onclick="alert('跳转产品详情')">招赢日日金<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">ZYR001</span></span></td>
+            <td>工作日 15:00 前<br><span style="font-size:var(--font-size-small);color:var(--color-text-neutral-gray3);">T+0 实时到账</span></td>
+            <td>T+0</td>
+            <td class="up">+2.15%</td>
+            <td><span class="tag success">不适用</span></td>
+            <td>保留流动性，应对日常赎回</td>
+            <td><button class="btn-buy small">购买</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="batch-bar">
+        <label><input type="checkbox" id="selectAllProducts"> 全选</label>
+        <button class="btn-buy" id="btnBatchBuy" disabled>加入购物车（0 件）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== R9: Disclaimer ===== -->
+  <div class="disclaimer">
+    <p><strong>理财非存款，产品有风险，投资需谨慎</strong></p>
+    <p>本报告持仓市值、平均持仓成本、持仓天数、收益、持仓年化收益率等数据均由管理机构提供的最新净值测算，由于管理机构净值下发可能会延迟，为提升数据准确性，当发生净值下发延迟时，系统会对相关日期的数据做重算处理，所以可能会存在着相同生成条件下在不同时间生成的结果不一致的情况。</p>
+    <p>本报告中收益率数据使用产品最新净值测算，因管理机构提供的产品净值精度有限，故计算结果仅供参考。该测算不会影响您的实际收益，实际收益请以管理机构确认金额为准。</p>
+  </div>
+</div>
+
+<!-- ===== Download Modal ===== -->
+<div class="modal-overlay" id="downloadModal">
+  <div class="modal-box">
+    <div class="modal-title">下载建议书</div>
+    <div class="modal-prompt">请选择下载格式：</div>
+    <div class="modal-options">
+      <label class="modal-option selected" id="optionPdf">
+        <input type="radio" name="format" value="pdf" checked>
+        <span>PDF（适合打印分享）</span>
+      </label>
+      <label class="modal-option" id="optionPng">
+        <input type="radio" name="format" value="png">
+        <span>PNG（适合图片查看）</span>
+      </label>
+    </div>
+    <div class="modal-hint">📄 将下载当前账号下所有模块内容</div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btnCancelModal">取消</button>
+      <button class="btn-primary" id="btnConfirmDownload">开始下载</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // === Time filter switching ===
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // === Tab switching: Investment Distribution ===
+  document.querySelectorAll('#investTabBar .tab-item').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#investTabBar .tab-item').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('#invest-li, #invest-other').forEach(c => c.classList.remove('active'));
+      document.getElementById(this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // === Tab switching: Term Distribution ===
+  document.querySelectorAll('#termTabBar .tab-item').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#termTabBar .tab-item').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('#term-li, #term-other').forEach(c => c.classList.remove('active'));
+      document.getElementById(this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // === Download Modal ===
+  const modal = document.getElementById('downloadModal');
+  const btnOpen = document.getElementById('btnOpenModal');
+  const btnCancel = document.getElementById('btnCancelModal');
+  const btnConfirm = document.getElementById('btnConfirmDownload');
+  const formatRadios = document.querySelectorAll('input[name="format"]');
+  const modalOptions = document.querySelectorAll('.modal-option');
+
+  btnOpen.addEventListener('click', () => modal.classList.add('active'));
+
+  btnCancel.addEventListener('click', () => modal.classList.remove('active'));
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) modal.classList.remove('active');
+  });
+
+  modalOptions.forEach(opt => {
+    opt.addEventListener('click', function() {
+      modalOptions.forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      this.querySelector('input[type="radio"]').checked = true;
+    });
+  });
+
+  btnConfirm.addEventListener('click', function() {
+    const format = document.querySelector('input[name="format"]:checked').value;
+    this.disabled = true;
+    this.textContent = '生成中...';
+    modal.classList.remove('active');
+    setTimeout(() => {
+      this.disabled = false;
+      this.textContent = '开始下载';
+      const toast = document.getElementById('toastDownloadComplete');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }, 1500);
+  });
+
+  // === Batch buy ===
+  const productCheckboxes = document.querySelectorAll('.product-table input[type="checkbox"]');
+  const selectAllCheckbox = document.getElementById('selectAllProducts');
+  const batchBtn = document.getElementById('btnBatchBuy');
+
+  function updateBatchBtn() {
+    const checked = document.querySelectorAll('.product-table input[type="checkbox"]:checked').length;
+    batchBtn.textContent = `加入购物车（${checked} 件）`;
+    batchBtn.disabled = checked === 0;
+  }
+
+  productCheckboxes.forEach(cb => cb.addEventListener('change', updateBatchBtn));
+  selectAllCheckbox.addEventListener('change', function() {
+    productCheckboxes.forEach(cb => cb.checked = this.checked);
+    updateBatchBtn();
+  });
+
+  batchBtn.addEventListener('click', function() {
+    if (this.disabled) return;
+    alert('跳转购物车页面');
+  });
+
+  // === Product buy buttons ===
+  document.querySelectorAll('.btn-buy.small').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert('跳转购买页');
+    });
+  });
+</script>
+
+</body>
+</html>
