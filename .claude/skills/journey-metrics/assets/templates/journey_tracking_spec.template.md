@@ -1,7 +1,7 @@
 # 旅程埋点需求文档
 
 > 本模板定义 `journey_tracking_spec.md` 的输出结构。
-> 埋点方法优先遵循宿主已提供的本地埋点方法文档；若不存在，再通过 `knowledge-wiki` 命中相关埋点方法知识，并按 `summary -> raw` 顺序消费。
+> 埋点方法优先遵循宿主已提供的本地埋点方法文档；若不存在，从 `knowledge-wiki` 的 index 按实际入口进入必要 README 或单一 raw，只读取命中的埋点方法、业务对象或状态章节。
 > 旅程节点使用 `x-track-taskname` 属性（Button）或 `tasknodeName` 手动埋点，taskName 建议格式 `{DOMAIN}_{MODULE}_{ACTION}`。
 > 每个事件标注"来源"属性：confirmed / inferred / conflict。参数取值来源必须明确，不得使用 `待定`、`TBD` 等占位符。
 > 基础信息（企业信息、页面信息、任务上下文）由系统自动携带，不在此文档中列出。

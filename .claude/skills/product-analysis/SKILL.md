@@ -317,7 +317,7 @@ Markdown 固定结构：
 
 “（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 

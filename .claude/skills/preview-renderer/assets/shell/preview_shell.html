@@ -57,30 +57,6 @@
       overflow: hidden;
     }
 
-    .preview-product-switcher {
-      padding: 0 16px 10px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .preview-product-select {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: var(--panel-subtle);
-      color: var(--accent-strong);
-      border-radius: var(--radius);
-      padding: 8px 32px 8px 10px;
-      font-size: 13px;
-      font-weight: 400;
-      cursor: pointer;
-      transition: all 0.12s;
-    }
-
-    .preview-product-select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-    }
-
     .preview-section-nav {
       flex: 1;
       overflow-y: auto;
@@ -364,16 +340,6 @@
 <body>
   <div class="preview-shell">
     <aside class="preview-sidebar">
-      <div class="preview-product-switcher">
-        <select class="preview-product-select" id="preview-product-select" aria-label="预览产物">
-          <option value="uxb">业务蓝图</option>
-          <option value="problem-framing">问题框定</option>
-          <option value="stories">用户故事</option>
-          <option value="journey-analysis">角色旅程</option>
-          <option value="experience-blueprint">体验蓝图</option>
-        </select>
-      </div>
-
       <nav class="preview-section-nav" aria-label="章节导航">
         <!-- PREVIEW_SIDEBAR_NAV -->
       </nav>
@@ -393,26 +359,12 @@
         var hasPanel = Boolean(document.querySelector('.preview-content-panel[data-skill="' + skill + '"]'));
         if (!hasPanel) return;
 
-        var productSelect = document.getElementById('preview-product-select');
-        if (productSelect) productSelect.value = skill;
-
         document.querySelectorAll('.preview-content-panel').forEach(function(panel) {
           panel.classList.toggle('hidden', panel.dataset.skill !== skill);
           panel.classList.toggle('is-active', panel.dataset.skill === skill);
         });
         document.querySelectorAll('.preview-nav-item').forEach(function(item) {
           item.classList.toggle('hidden', item.dataset.skill !== skill);
-        });
-      }
-
-      var productSelect = document.getElementById('preview-product-select');
-      if (productSelect) {
-        productSelect.addEventListener('change', function() {
-          var previous = document.querySelector('.preview-content-panel.is-active');
-          setActiveSkill(productSelect.value);
-          if (!document.querySelector('.preview-content-panel[data-skill="' + productSelect.value + '"]') && previous) {
-            productSelect.value = previous.dataset.skill;
-          }
         });
       }
 

@@ -1,63 +1,74 @@
-# 校验规则
+# 知识入库校验
 
-本文件用于收尾时检查知识落点、命名、raw-summary 一致性和边界约束。
+每次写入后必须完成机械校验和语义复核。新增顶层知识类型、业务集合、文件、大文件章节或跨域依赖时，再做一次性真实问题路由抽查。
 
-## 更新流程
+## 机械校验
 
-raw 更新后执行：
-
-```bash
-python knowledge/scripts/update_wiki.py --apply
-```
-
-如果只更新一个 raw 文件：
+运行：
 
 ```bash
-python knowledge/scripts/update_wiki.py --apply --only <raw-file-path>
+python knowledge/scripts/update_wiki.py --strict
 ```
 
-## 校验项目
+确认：
 
-### 落点
+- `domain_readme_missing_count=0`
+- `unindexed_domain_count=0`
+- `unrouted_raw_count=0`
+- `broken_raw_path_count=0`
+- `broken_section_anchor_count=0`
+- `duplicate_route_target_count=0`
+- `long_raw_without_navigation_count=0`
+- `forbidden_summary_reference_count=0`
+- `duplicate_numeric_prefix_count=0`
+- `encoding_issue_count=0`
+- `unimported_candidate_count` 符合本次预期
+- `git diff --check` 通过
 
-- 业务事实是否在 `knowledge/raw/业务/`
-- 设计规则是否在 `knowledge/raw/设计准则/`
-- 归属不清内容是否在 `knowledge/raw/inbox/`
-- FAQ 是否落在 `50_常见问题.md` 或明确关联的 FAQ 文件
-- 过程残留是否没有混进正式知识
+`400` 行只是大文件快速导航检查阈值，不是自动拆分阈值。
 
-### 命名
+## 结构复核
 
-- 新正式目录是否使用中文
-- 新正式文件是否使用中文
-- 编号是否跟随本地风格
-- 是否引入了随意的英文文件名
+- 新知识是否符合 `knowledge/LLM.md` 定义的当前本地结构。
+- 是否先判断知识集合和最终结果所有权，而不是按文件名或关键词归类。
+- 新建大文件是否具备稳定定位、适用范围、场景路由、快速导航、正式章节、未决项和维护边界。
+- 文件拆分是否基于不同责任、适用范围、独立消费或变更风险，而不是行数。
+- README 是否能明显缩小范围；单一大文件已可直接路由时是否避免新建 README。
+- index 是否只路由顶层知识类型、业务集合、可直接消费的领域或大文件，而没有膨胀为逐文件目录。
+- 没有新建空目录、空文件、第二语义镜像、registry、catalog、mapping table 或额外状态字段。
 
-### Raw / Summary 一致性
+## 语义复核
 
-- 是否先改 raw
-- summary 是否已生成或更新
-- `source_path` 是否指向真实 raw 文件
-- `knowledge/wiki/index.md` 是否同步更新
-- `knowledge/wiki/questions.md` 是否收录 `[GAP]`、`[CONFLICT]`、`[QUESTION]`
+- 主体、对象和动作是否清晰。
+- 前置条件、适用范围和例外是否保留。
+- 状态、生效、失败和恢复是否明确。
+- 权限责任和审计是否遗漏。
+- 方案、历史、外部参考和 AI 推断是否冒充现状。
+- 图片推断、模糊字段、数字、状态和无证据顺序是否被写成事实。
+- 弱来源是否覆盖强来源，冲突是否被静默抹平。
+- 主域是否拥有最终状态和结果，依赖域是否只记录自身机制。
+- 范围受限、冲突、覆盖、废弃和高风险规则是否保留必要来源与适用范围。
+- 直接入库门槛不满足的内容是否进入候选，而不是降低标准。
 
-### 禁止改动检查
+## 候选复核
 
-确认没有新建或恢复：
+- 候选是否位于 `candidates/未入库/`，来源类型是否写在文件内而不是再建子目录。
+- 已确认事实与待确认事实是否分开。
+- 冲突、缺口和问题是否具体。
+- 建议知识集合、主域和落点是否仍被视为线索，而不是已确认结论。
+- 促进后是否记录正式落点并自动移入 `candidates/已入库/`。
+
+## 一次性路由抽查
+
+当结构或跨域路由变化时，使用一个直接命中新知识的真实问题，验证：
 
 ```text
-source_manifest
-build_manifest
-registry
-catalog
-mapping table
-old wiki/topics mechanism
-mainline code changes
+index
+→ 必要的知识集合 README / 领域 README / 单一大文件
+→ 命中 raw 或章节
+→ 条件依赖
+→ 回主域
+→ 停止
 ```
 
-## 禁止事项
-
-- 不越界修改根目录 `knowledge/`
-- 不删除旧 skill
-- 不引入同步机制
-- 不顺手改主链路代码
+普通单点正文修正不强制新增测试文件、场景库、消费轨迹或召回指标。

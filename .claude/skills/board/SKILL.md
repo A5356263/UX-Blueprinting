@@ -47,7 +47,7 @@ description: >
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 读取 `spark-output/context/experience-blueprint.json`
 3. 读取 `spark-output/experience_blueprint.md`
-4. 如存在，读取知识库中与现有设计规范、品牌约束、视觉准则相关的内容
+4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入必要 README 或单一 raw，只读命中的设计规范、品牌约束或视觉准则章节；不得预设目录层级或遍历 raw
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
 
@@ -241,7 +241,7 @@ JSON 要求：
 你可以停在这里。
 ```
 
-如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 

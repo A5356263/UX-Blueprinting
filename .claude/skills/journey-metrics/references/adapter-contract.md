@@ -11,7 +11,7 @@ The host project must expose or map:
 | Requirement source | Requirement materials | Locate or provide requirement text. |
 | Scenario background | Background materials | Optional; locate or provide background text. |
 | Experience blueprint | Experience blueprint materials | Optional; locate or provide prior journey skeleton. |
-| Tracking method | `knowledge-wiki` 中与埋点方法相关的知识 | Provide equivalent API/parameter rules. |
+| Tracking method | 从 `knowledge-wiki` 的 index 按实际入口命中的埋点方法知识 | Provide equivalent API/parameter rules. |
 | Output directory | Host-agreed `journey_metrics/` output directory | Create and preserve generated files. |
 
 ## CLI Adapter

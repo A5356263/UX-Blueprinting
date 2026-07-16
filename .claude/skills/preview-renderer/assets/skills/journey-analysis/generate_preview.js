@@ -55,6 +55,60 @@ function text(value, fallback = TEXT.missing) {
   return normalized || fallback;
 }
 
+function normalizeStage(stage) {
+  const risk = stage.dropout_risk;
+  const normalizedRisk = risk && typeof risk === "object"
+    ? `${text(risk.level, "")}${risk.reason ? `：${text(risk.reason, "")}` : ""}`
+    : risk;
+  return {
+    ...stage,
+    name: stage.name || stage.stage_name,
+    goal: stage.goal || stage.user_goal,
+    dropout_risk: normalizedRisk
+  };
+}
+
+function normalizeTransition(transition) {
+  const reason = [transition.reason, transition.trigger, transition.risk]
+    .map((item) => text(item, ""))
+    .filter(Boolean)
+    .join("；");
+  return {
+    from: transition.from || transition.from_stage,
+    to: transition.to || transition.to_stage,
+    reason
+  };
+}
+
+function normalizeContext(data) {
+  const subject = data.journey_subject || {};
+  const nestedJourneys = Array.isArray(data.journeys)
+    ? data.journeys.filter((journey) => Array.isArray(journey.stages) && journey.stages.length)
+    : [];
+  const journeys = nestedJourneys.length
+    ? nestedJourneys
+    : (Array.isArray(data.stages) && data.stages.length ? [{
+        role: subject.primary_role,
+        summary: subject.journey_scope,
+        stages: data.stages,
+        key_transitions: data.key_transitions
+      }] : []);
+
+  return {
+    ...data,
+    primary_role: data.primary_role || subject.primary_role,
+    journey_type: data.journey_type || subject.journey_type,
+    start_condition: data.start_condition || subject.start_condition,
+    journeys: journeys.map((journey) => ({
+      ...journey,
+      stages: journey.stages.map(normalizeStage),
+      key_transitions: Array.isArray(journey.key_transitions)
+        ? journey.key_transitions.map(normalizeTransition)
+        : []
+    }))
+  };
+}
+
 function listHtml(value) {
   const list = Array.isArray(value) ? value : value ? [value] : [];
   if (!list.length) return `<span>${escapeHtml(text(null))}</span>`;
@@ -114,7 +168,7 @@ function renderJourney(journey, index, data) {
   const columns = `120px repeat(${Math.max(stages.length, 1)}, 250px)`;
   const primaryRole = text(journey.role || data.primary_role);
   const stageHeaders = stages.map((stage, stageIndex) => `
-    <div class="journey-stage-header">
+    <div class="journey-stage-header" id="journey-analysis-section-${index}-stage-${stageIndex}">
       <span class="journey-stage-index">${stageIndex + 1}</span>
       <span>${escapeHtml(text(stage.name))}</span>
     </div>
@@ -172,6 +226,17 @@ function buildContent(data) {
   return journeys.map((journey, index) => renderJourney(journey, index, data)).join("");
 }
 
+function buildJourneyNav(data) {
+  return data.journeys.flatMap((journey, journeyIndex) => {
+    const role = text(journey.role || data.primary_role);
+    const roleNav = `<a class="preview-nav-item level-1" href="#journey-analysis-section-${journeyIndex}" data-skill="journey-analysis">${escapeHtml(role)}旅程</a>`;
+    const stageNav = journey.stages.map((stage, stageIndex) =>
+      `<a class="preview-nav-item level-2" href="#journey-analysis-section-${journeyIndex}-stage-${stageIndex}" data-skill="journey-analysis">${escapeHtml(text(stage.name))}</a>`
+    );
+    return [roleNav, ...stageNav];
+  }).join("\n");
+}
+
 function buildMarkdownFallback(markdown) {
   const sections = markdownRenderer.markdownToSections(markdown, {
     prefix: "journey-analysis-markdown-section",
@@ -225,18 +290,18 @@ function main() {
     contextData = null;
   }
 
-  const fallback = contextData ? null : buildMarkdownFallback(markdown);
-  const contentHtml = replaceRequired(templateRaw, "<!-- JOURNEY_CONTENT -->", contextData ? buildContent(contextData) : fallback.contentHtml);
-  const sidebarNav = contextData
-    ? `<a class="preview-nav-item level-1" href="#journey-analysis-section-0" data-skill="journey-analysis">${TEXT.product}</a>`
-    : fallback.navHtml;
+  const normalizedData = contextData ? normalizeContext(contextData) : null;
+  const hasStructuredJourney = Boolean(normalizedData && normalizedData.journeys.length);
+  const fallback = hasStructuredJourney ? null : buildMarkdownFallback(markdown);
+  const contentHtml = replaceRequired(templateRaw, "<!-- JOURNEY_CONTENT -->", hasStructuredJourney ? buildContent(normalizedData) : fallback.contentHtml);
+  const sidebarNav = hasStructuredJourney ? buildJourneyNav(normalizedData) : fallback.navHtml;
   const bootstrapData = JSON.stringify({
     activeSkill: "journey-analysis",
     skills: ["journey-analysis"]
   }, null, 2);
 
   let html = shellRaw;
-  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(contextData ? text(contextData.project_name, TEXT.product) : TEXT.product)}</title>`);
+  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(normalizedData ? text(normalizedData.project_name, TEXT.product) : TEXT.product)}</title>`);
   html = replaceRequired(html, "<!-- PREVIEW_SIDEBAR_NAV -->", sidebarNav);
   html = replaceRequired(html, "<!-- PREVIEW_CONTENT -->", contentHtml);
   html = replaceRequired(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);

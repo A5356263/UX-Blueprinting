@@ -234,4 +234,4 @@ Phase 2 的角色是展开和表达 Phase 1 已建立的判断，不是重新决
 你可以停在这里。
 ```
 
-如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**

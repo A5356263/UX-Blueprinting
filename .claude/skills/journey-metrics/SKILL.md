@@ -33,7 +33,7 @@ Prefer inputs in this order:
 2. Background materials: derive a role/path skeleton from scenario background.
 3. Requirement materials: derive a minimal journey and mark inferred context explicitly.
 
-Also read the host project's tracking method document when available. Prefer a local tracking method document when it exists because it contains the fuller host specification; otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and read it in `summary -> raw` order. If the host lacks both, ask for or infer a local tracking method document before finalizing parameter and API details.
+如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，按实际入口进入必要 README 或单一 raw，只读命中的埋点方法、业务对象或状态章节。不得预设目录层级或 README 必然存在。两者都不存在时，在定案参数与 API 细节前先索取或形成明确假设。
 
 ## Outputs
 
@@ -115,6 +115,8 @@ When porting this capability to a newer UXB project, read `references/migration-
 旅程埋点与度量需求已完成。当前没有固定下一步推荐。
 你可以停在这里。
 ```
+
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## Bundled Resources
 

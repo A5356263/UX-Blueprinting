@@ -50,7 +50,7 @@ description: >
 4. 读取 `spark-output/context/experience-blueprint.json`
 5. 读取 `spark-output/experience_blueprint.md`
 6. 如存在，再读取 `spark-output/context/edge.json`
-7. 如有需要，补读 `knowledge-wiki` 中相关设计准则
+7. 如需补读设计准则，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入原则集，只读与当前检查项直接相关的章节；不得整份默认读取或遍历 raw
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
 
@@ -268,7 +268,7 @@ JSON 要求：
 你可以停在这里。
 ```
 
-如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 

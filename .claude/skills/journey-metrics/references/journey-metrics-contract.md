@@ -36,7 +36,7 @@ Keep conflict scope narrow. If only a field limit, parameter value, copy rule, o
 
 ## Tracking API Contract
 
-When a host project has a local tracking method document, use it as the highest-priority local tracking specification. Otherwise use `knowledge-wiki` to locate the relevant tracking-method knowledge and consume it in `summary -> raw` order.
+宿主项目存在本地埋点方法文档时，将其作为最高优先级的本地规范；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，按实际入口进入必要 README 或单一 raw，只读取命中的埋点方法、业务对象或状态章节，不预设目录层级或 README 必然存在。
 
 User journey rules:
 

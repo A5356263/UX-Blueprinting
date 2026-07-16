@@ -53,7 +53,7 @@ description: >
 6. 检查 `spark-output/context/problem-framing.json`；存在时作为问题方向和边界依据。
 7. 检查 `spark-output/problem_framing.md`；存在时作为问题框定正文补充，或在 JSON 不可用时作为降级输入。
 8. 上述正式上游均不可用时，读取用户明确提供的 `PRD`、需求文档、场景描述或口头需求。
-9. 如 `knowledge-wiki` 可用，再按项目知识消费协议补充与旅程相关的业务知识。
+9. 如 `knowledge-wiki` 可用，从其 `knowledge/wiki/index.md` 按实际入口进入必要 README 或单一 raw，只读与旅程角色、任务、状态、异常或回流直接相关的章节；条件依赖触发时补读后回到主域，不预设目录层级或遍历 raw。
 
 读取约束：
 
@@ -914,4 +914,4 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 “（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-如需刷新进度预览，可使用项目已有预览入口；刷新失败不影响当前 Skill 完成。
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
