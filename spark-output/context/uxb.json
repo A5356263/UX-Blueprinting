@@ -1,386 +1,406 @@
 {
   "skill": "uxb",
   "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "资产配置面客版",
+  "generated_at": "2026-07-18",
+  "project_name": "财富专区-资产配置面客版",
   "artifact_md": "spark-output/uxb_output.md",
   "source_refs": [
-    "input/【财富专区】资产配置面客版/【财富专区】资产配置面客版.md",
-    "input/【财富专区】资产配置面客版/ubank Design token Guide.md"
+    "input/【财富专区】资产配置面客版/【财富专区】资产配置面客版.md"
   ],
   "read_sections": [
-    "knowledge-wiki index → 无匹配财富管理业务域"
+    "UXB references/user_response_guide.md",
+    "UXB references/knowledge_usage_guide.md",
+    "UXB references/complexity/00_core_complexity_judgment.md",
+    "UXB references/demand_type_judgment_guide.md",
+    "UXB references/output_structure_guide.md",
+    "knowledge-wiki/knowledge/wiki/index.md"
   ],
   "key_design_judgments": [
     {
-      "judgment": "本次将月度诊断报告改造为实时资产配置功能，底层业务骨架复用企业财富+现有能力，体验设计压力集中在信息分层和链路转化上",
-      "impact": "六大模块同屏承载带来信息过载风险；账号和时间双维度筛选联动需明确；推荐到购买的链路流畅度直接影响业务KPI",
-      "recommended_approach": "优先确定信息浏览优先级再做页面承载设计；明确'全部账号'的数据语义；诊断结果与推荐方案建立可感知的承接关系",
-      "not_recommended": "不推荐六个模块平铺展示不加分层；不推荐在账号'全部'语义未确定前开始页面设计；不推荐购买跳转路径超过两步",
-      "open_question": "账号'全部'选项的数据汇总方式、下载建议书的数据快照范围、诊断与推荐的关联逻辑"
+      "judgment": "将月度诊断报告改造为动态资产配置功能，方向合理且业务价值明确",
+      "impact": "信息密度大幅提升带来阅读负担，诊断与推荐之间缺少因果衔接，客户经理角色当前被架空",
+      "recommended_approach": "按中等复杂度推进，优先解决信息分层、诊断到推荐的逻辑闭环和模块级异常态体验",
+      "not_recommended": "不建议一次性将所有信息模块做平铺展示，不建议在客户经理场景未确认时提前投入角色化设计",
+      "open_question": "客户经理是否具备主动为客户生成或推送建议书的权限和场景"
     }
   ],
   "input_summary": {
-    "raw_request": "将月度诊断报告改造为资产配置功能，提供企业客户资产配置建议书，包含持仓展示、诊断、推荐和下载能力",
+    "raw_request": "将原财富专区月度诊断报告改造为资产配置功能，提供客户资产配置建议书",
     "confirmed_facts": [
       "源数据由企业财富+资产配置提供",
-      "持仓表现/诊断/推荐仅支持理财",
-      "投资分布/期限分布支持理财+公募基金+资管计划+信托计划",
-      "去掉白名单逻辑",
-      "持仓概览本版本不做",
-      "历史建议书保存本版本不做",
-      "支持PDF和PNG下载"
+      "持仓表现、诊断、推荐仅支持理财业务",
+      "入口去掉白名单逻辑",
+      "本版本不做持仓概览和历史建议书保存",
+      "支持 PDF/PNG 格式下载"
     ],
     "explicit_constraints": [
-      "数据计算≤5秒，页面加载≤3秒",
-      "支持同时1000用户在线",
-      "所有源数据由企业财富+资产配置提供",
-      "下载内容需全部平铺"
+      "所有数据来自企业财富+资产配置，前端不自行计算",
+      "金额展示按范围自动换算，保留2位小数",
+      "区间年化收益率公式固定"
     ],
     "missing_information": [
-      "账号'全部'的数据含义",
-      "下载快照的数据范围",
-      "诊断与推荐的关联逻辑",
-      "客户经理具体使用场景"
+      "客户经理的具体使用场景和操作能力未展开",
+      "三类诊断结果的差异化行动指引未定义",
+      "各信息模块的加载依赖和优先级未明确",
+      "批量购买的局部异常处理未展开"
     ]
   },
   "business_scenario_judgment": {
-    "scenario": "既有模块功能升级——月度诊断报告更名为资产配置，从定期报告变为实时交互工具",
-    "role": "企业客户（主要）、客户经理（次要）",
-    "task": "查看资产配置建议书 → 了解持仓情况 → 发现配置问题 → 获取优化推荐 → 执行购买",
-    "value": "从'看报告'升级为'做配置'，缩短从建议到行动的路径，提升投资决策效率和购买转化率"
+    "scenario": "将原有固定周期的资产报告升级为实时动态的资产配置工具，替代月度诊断报告位置",
+    "role": "企业客户（核心），客户经理（辅助）",
+    "task": "查看资产配置建议书、了解持仓情况和诊断结果、获取产品推荐并购买",
+    "value": "从'每月一封固定报告'变为'随时可看的动态诊断工具'，信息时效性提升，决策到行动的路径缩短"
   },
   "viability_judgment": {
-    "is_valid": "true",
-    "reason": "业务价值清晰，收益大于代价，无更低成本替代路径能达到相同业务目标",
-    "blocking_issues": [
-      "企业财富+资产配置的数据计算能力和响应速度决定了前端体验质量",
-      "'仅理财'的业务范围与用户可能的全业务预期存在差距"
-    ],
+    "is_valid": "是",
+    "reason": "业务价值清晰、技术可行性明确、用户场景真实",
+    "blocking_issues": [],
     "assumptions": [
-      "企业财富+资产配置接口能在5秒内稳定返回",
-      "'仅理财'的业务范围在当前版本可接受"
+      "客户经理角色定位待确认，如果实际参与深度超出预期则需要调整设计框架"
     ]
   },
   "business_boundary": {
     "in_scope": [
-      "资产配置建议书的查看和交互浏览",
-      "多银行账号选择和切换",
-      "自定义时间区间筛选",
-      "持仓表现（仅理财）",
-      "投资分布（多业务）",
-      "期限分布（多业务）",
-      "持仓诊断（仅理财）",
-      "产品推荐（仅理财）及购买跳转",
-      "建议书下载（PDF/PNG）"
+      "资产配置建议书作为财富专区核心功能入口",
+      "数据全部由企业财富+资产配置计算，前端负责展示和交互",
+      "支持按银行账号切换查看不同账户",
+      "支持自定义时间区间筛选持仓表现数据",
+      "支持 PDF/PNG 格式下载全量内容",
+      "产品推荐到购买页的跳转链路保持完整"
     ],
     "out_of_scope": [
-      "历史建议书的保存/查看/删除",
-      "持仓概览模块",
-      "其他业务的期限分布和投资分布细分类",
-      "到期诊断中的开放期/每日可赎回产品",
-      "客户经理独立视图",
-      "建议书编辑和自定义"
+      "前端自行计算或缓存资产配置数据",
+      "客户经理主动生成配置方案",
+      "理财以外业务类型的诊断和推荐",
+      "历史建议书保存和管理",
+      "持仓概览模块"
     ],
     "boundary_reason": [
-      "本版本不做已在需求文档明确划线",
-      "不改变账户/持仓/产品等业务对象关系",
-      "不新增外部回写链路",
-      "不改变数据口径"
+      "数据依赖企业财富+资产配置，前端不做独立计算",
+      "客户经理角色场景未确认，冒进设计风险高",
+      "业务限定理财为诊断和推荐范围"
     ]
   },
   "roles": [
     {
       "name": "企业客户",
-      "type": "primary",
-      "responsibility": "查看资产配置建议书，了解持仓情况和优化建议，执行产品购买",
+      "type": "核心用户",
+      "responsibility": "查看资产配置建议书、了解持仓情况和诊断结果、获取产品推荐并购买",
       "needs": [
-        "查看资产全貌",
-        "发现配置问题",
-        "获取优化推荐",
-        "执行购买"
+        "快速理解自己的资产全貌",
+        "了解持仓健康度",
+        "获得可行动的产品建议",
+        "便捷完成产品购买"
       ]
     },
     {
       "name": "客户经理",
-      "type": "secondary",
-      "responsibility": "了解客户资产配置情况",
+      "type": "辅助用户",
+      "responsibility": "查看名下客户的资产配置情况",
       "needs": [
-        "查看指定客户的资产配置概况"
+        "了解客户资产配置概况"
       ]
     }
   ],
   "features": [
     {
-      "name": "账号选择",
-      "input": "用户选择账号（默认全部）",
-      "process": "切换后所有模块联动刷新",
-      "output": "各模块展示对应账号数据",
-      "result": "用户查看不同账号配置",
-      "boundary": "仅展示有权限的有效账号"
+      "name": "查看资产配置",
+      "input": "进入资产配置入口",
+      "process": "请求企业财富+获取资产配置数据",
+      "output": "展示资产配置建议书",
+      "result": "客户看到完整的持仓、诊断和推荐信息"
     },
     {
-      "name": "时间区间筛选",
-      "input": "用户选择时间区间（默认近一个月）",
-      "process": "持仓表现各指标按区间重算",
-      "output": "更新后的持仓表现数据",
-      "result": "用户查看不同时间维度的表现",
-      "boundary": "支持近两年数据范围"
+      "name": "切换银行账号",
+      "input": "选择目标银行账号",
+      "process": "按选定账号重新请求资产配置数据",
+      "output": "更新对应账号的配置数据",
+      "result": "客户看到对应账户的配置情况"
     },
     {
-      "name": "持仓表现查看",
-      "input": "选定账号和时间区间",
-      "process": "取区间结束时间余额、区间收益、年化收益率、购买/赎回数据、走势图",
-      "output": "持仓金额、较期初、区间收益、年化收益率、交易笔数和金额、走势图、收益排行",
-      "result": "用户了解选定区间持仓表现",
-      "boundary": "仅支持理财"
+      "name": "筛选持仓表现区间",
+      "input": "选择自定义时间区间",
+      "process": "请求区间数据，计算区间内收益和年化收益率",
+      "output": "更新持仓表现模块数据",
+      "result": "客户看到选定区间内的表现数据"
     },
     {
-      "name": "投资分布查看",
-      "input": "选定账号",
-      "process": "按业务类型汇总持仓金额和占比",
-      "output": "理财（按产品特点汇总含年化收益率及排名）+ 其他业务（按类型汇总金额和占比）",
-      "result": "用户了解资产分布",
-      "boundary": "支持理财+公募基金+资管计划+信托计划"
+      "name": "查看持仓诊断",
+      "input": "系统自动执行诊断规则",
+      "process": "按规则判断集中度、产品到期、持仓时长",
+      "output": "展示诊断结果列表",
+      "result": "客户了解当前持仓的健康状况"
     },
     {
-      "name": "期限分布查看",
-      "input": "选定账号",
-      "process": "按产品期限汇总持仓金额和占比",
-      "output": "理财（含年化收益率）+ 其他业务（按持有期汇总金额和占比）",
-      "result": "用户了解资产期限分布",
-      "boundary": "支持理财+公募基金+资管计划+信托计划"
+      "name": "查看产品推荐",
+      "input": "系统根据诊断结果生成推荐",
+      "process": "从企业财富+获取推荐产品列表",
+      "output": "展示推荐产品及理由",
+      "result": "客户看到针对当前情况的产品建议"
     },
     {
-      "name": "持仓诊断",
-      "input": "选定账号",
-      "process": "执行诊断规则（集中度≥60%、到期两周内、持仓超期）",
-      "output": "集中度诊断、到期诊断、持仓时间过长诊断结果",
-      "result": "用户了解持仓问题",
-      "boundary": "仅支持理财"
+      "name": "购买产品",
+      "input": "点击产品购买按钮",
+      "process": "跳转购买页",
+      "output": "进入购买流程",
+      "result": "客户可完成产品购买"
     },
     {
-      "name": "产品推荐",
-      "input": "选定账号",
-      "process": "取企业财富+推荐数据，过滤不可购买和额度不足产品",
-      "output": "建议持有类型、产品信息、收益率、最大回撤、推荐理由",
-      "result": "用户获得优化建议",
-      "boundary": "仅支持理财"
+      "name": "批量购买产品",
+      "input": "勾选多个产品",
+      "process": "跳转购物车",
+      "output": "进入购物车流程",
+      "result": "客户可批量结算"
     },
     {
-      "name": "建议书下载",
-      "input": "用户点击下载",
-      "process": "生成PDF或PNG文件",
+      "name": "下载建议书",
+      "input": "点击下载按钮",
+      "process": "生成全量内容的 PDF 或 PNG 文件",
       "output": "下载文件",
-      "result": "用户获得可保存/分享的建议书",
-      "boundary": "支持PDF和PNG格式"
+      "result": "客户获得可保存/分享的建议书文件"
     }
   ],
   "business_rules": [
     {
-      "rule": "持仓集中度诊断",
-      "trigger": "活钱管理持仓占比≥60%",
-      "result": "展示诊断结果和详情",
-      "fallback": "不展示该诊断模块"
+      "rule": "入口可见性",
+      "trigger": "用户持有有权限的有效账号",
+      "result": "用户可在菜单和持仓列表看到资产配置入口",
+      "fallback": "入口不可见"
+    },
+    {
+      "rule": "活钱集中度诊断",
+      "trigger": "活钱管理持仓占比 ≥ 60%",
+      "result": "展示持仓集中度过高诊断结果",
+      "fallback": "集中度过高模块不展示"
     },
     {
       "rule": "产品到期诊断",
-      "trigger": "产品在未来两周内到期",
-      "result": "展示到期产品列表",
-      "fallback": "不展示该诊断模块"
+      "trigger": "存在未来两周内到期的封闭式产品",
+      "result": "展示产品到期诊断结果",
+      "fallback": "该诊断模块不展示"
     },
     {
       "rule": "持仓时间过长诊断",
-      "trigger": "灵活产品持仓>2个月或短期产品持仓>3个月",
-      "result": "展示对应产品列表",
-      "fallback": "不展示该诊断模块"
+      "trigger": "产品期限为0且连续持仓 > 2个月，或产品期限≤31天且连续持仓 > 3个月",
+      "result": "展示持仓时间过长诊断结果",
+      "fallback": "该诊断模块不展示"
     },
     {
       "rule": "产品推荐过滤",
-      "trigger": "产品不可购买或额度不足",
-      "result": "从推荐列表中移除",
-      "fallback": "仅显示可购买产品"
+      "trigger": "调用企业财富+产品推荐接口",
+      "result": "过滤不可购买/额度不足产品，展示可购买推荐列表",
+      "fallback": "无推荐产品时推荐模块不展示"
+    },
+    {
+      "rule": "接口异常降级",
+      "trigger": "企业财富+接口超时/报错/无响应",
+      "result": "按异常类型执行降级策略",
+      "fallback": "记录日志并触发告警"
     },
     {
       "rule": "金额单位换算",
-      "trigger": "金额达到对应阈值",
-      "result": "按元/万元/亿元换算展示",
-      "fallback": "按当前金额范围选择合适单位"
+      "trigger": "展示金额数据",
+      "result": "按数值范围自动换算为元/万元/亿元，保留2位小数",
+      "fallback": "无数据时展示 --"
     },
     {
-      "rule": "空值处理",
-      "trigger": "数据为空或缺失",
-      "result": "展示'--'",
-      "fallback": "文本类字段不展示"
+      "rule": "区间年化收益率计算",
+      "trigger": "用户选择自定义时间区间",
+      "result": "(区间收益 / 区间平均持仓市值) × (365 / 区间天数) × 100%",
+      "fallback": "天数为0或持仓市值为0时展示 --"
     }
   ],
   "states": [
     {
-      "state": "初始加载",
-      "meaning": "用户进入资产配置页面",
-      "system_result": "加载账号列表和默认数据",
+      "state": "数据加载中",
+      "meaning": "首次进入或切换账号，数据请求中",
+      "system_result": "展示加载状态（按模块）",
       "user_next_step": "等待加载完成"
     },
     {
       "state": "数据加载完成",
-      "meaning": "所有模块数据就绪",
-      "system_result": "展示完整体验蓝图",
-      "user_next_step": "浏览各模块"
+      "meaning": "所有数据正常返回",
+      "system_result": "展示完整资产配置建议书",
+      "user_next_step": "浏览各模块信息"
+    },
+    {
+      "state": "部分数据缺失",
+      "meaning": "部分模块接口异常，部分正常",
+      "system_result": "正常模块展示数据，异常模块展示空状态或缓存",
+      "user_next_step": "查看可用数据，异常模块暂无操作"
+    },
+    {
+      "state": "全部数据异常",
+      "meaning": "核心数据接口全部不可用",
+      "system_result": "展示系统繁忙提示",
+      "user_next_step": "稍后重试或联系客服"
     },
     {
       "state": "无持仓数据",
-      "meaning": "账号下没有持仓",
+      "meaning": "用户账号下无持仓",
       "system_result": "展示空状态（图标+文案+去购买按钮）",
-      "user_next_step": "点击'去购买'跳转产品列表"
+      "user_next_step": "点击去购买跳转产品列表"
     },
     {
-      "state": "模块无数据",
-      "meaning": "某模块无可用数据",
-      "system_result": "展示对应空状态提示",
-      "user_next_step": "无引导操作"
+      "state": "文件下载中",
+      "meaning": "用户发起下载请求",
+      "system_result": "生成文件并触发下载",
+      "user_next_step": "等待下载完成"
     },
     {
-      "state": "无诊断问题",
-      "meaning": "诊断无异常",
-      "system_result": "不展示诊断模块",
-      "user_next_step": "无"
+      "state": "文件下载失败",
+      "meaning": "生成过程异常或网络中断",
+      "system_result": "提示下载失败原因",
+      "user_next_step": "根据提示重试或调整操作"
     }
   ],
   "exceptions": [
     {
       "name": "接口超时",
-      "trigger": "企业财富+接口响应>5秒",
-      "system_result": "自动重试3次，失败后展示缓存或空状态",
-      "user_next_step": "稍后重试",
-      "recovery": "自动重试"
+      "trigger": "企业财富+接口响应 > 5秒",
+      "system_result": "自动重试3次（间隔1秒），失败后展示缓存或空状态",
+      "user_next_step": "看到'数据加载中，请稍后重试'提示",
+      "recovery": "再次进入或等待自动恢复"
     },
     {
-      "name": "接口错误码",
-      "trigger": "接口返回500/503/401/403/404/999",
-      "system_result": "展示对应错误提示",
-      "user_next_step": "按提示处理",
-      "recovery": "记录日志，人工介入"
+      "name": "接口返回错误",
+      "trigger": "企业财富+返回错误码",
+      "system_result": "按错误码映射展示对应提示文案",
+      "user_next_step": "根据提示操作（重新登录/联系客服等）",
+      "recovery": "人工介入修复"
     },
     {
       "name": "接口无响应",
-      "trigger": "服务完全不可用",
-      "system_result": "展示'系统繁忙'",
-      "user_next_step": "稍后再试",
+      "trigger": "企业财富+服务不可用",
+      "system_result": "展示'系统繁忙，请稍后再试'",
+      "user_next_step": "稍后重试",
       "recovery": "健康检查恢复后自动恢复"
     },
     {
-      "name": "部分数据缺失",
-      "trigger": "某模块数据缺失",
-      "system_result": "展示可用数据，缺失字段显示'--'",
-      "user_next_step": "无",
-      "recovery": "后台异步补全"
+      "name": "文件生成失败",
+      "trigger": "下载时文件生成异常",
+      "system_result": "不下载，提示文件生成失败",
+      "user_next_step": "重新尝试下载",
+      "recovery": "下载功能修复后重试"
     },
     {
-      "name": "数据计算异常",
-      "trigger": "数据计算失败",
-      "system_result": "该模块展示'功能暂时不可用'",
-      "user_next_step": "无",
-      "recovery": "修复后重新计算"
+      "name": "网络中断（下载）",
+      "trigger": "下载过程中网络断开",
+      "system_result": "终止下载，提示网络异常",
+      "user_next_step": "网络恢复后重新下载",
+      "recovery": "用户手动重试"
     },
     {
-      "name": "下载失败",
-      "trigger": "文件生成失败/网络中断/存储不足/浏览器拦截",
-      "system_result": "展示对应错误提示",
-      "user_next_step": "按提示处理（重试、清理空间、允许下载等）",
-      "recovery": "失败重试"
+      "name": "存储空间不足（下载）",
+      "trigger": "设备存储空间不足",
+      "system_result": "提示存储空间不足",
+      "user_next_step": "清理存储空间后重试",
+      "recovery": "用户手动处理"
+    },
+    {
+      "name": "浏览器拦截下载",
+      "trigger": "浏览器阻止弹窗",
+      "system_result": "提示请允许浏览器下载文件",
+      "user_next_step": "允许浏览器下载",
+      "recovery": "用户手动允许"
+    },
+    {
+      "name": "登录过期",
+      "trigger": "会话超时或未登录",
+      "system_result": "跳转登录页或提示重新登录",
+      "user_next_step": "重新登录",
+      "recovery": "重新登录后恢复"
     }
   ],
   "experience_handoff_requirements": [
     {
-      "business_judgment": "六大模块同屏承载，信息密度高",
-      "experience_impact": "用户可能不知从哪看起，容易迷失",
-      "must_continue": "设计信息分层方案，区分概览级摘要和详情级内容的浏览节奏",
-      "forbidden_rejudge": "禁止不区分层级直接平铺所有模块"
+      "business_judgment": "五个信息模块的阅读顺序不是任意的",
+      "experience_impact": "信息密度高，客户需要主线引导才能高效理解配置建议",
+      "must_continue": "设计信息分层结构，区分主线阅读流和辅助参考；确定各模块的默认展开/收起状态；在布局上体现逻辑递进",
+      "forbidden_rejudge": "不允许将五个模块做无差别的平铺展示"
     },
     {
-      "business_judgment": "账号'全部'选项语义未定",
-      "experience_impact": "含义（汇总/逐个/对比）会完全改变各模块展示方式",
-      "must_continue": "在确定'全部'的展示方式前保持模块结构灵活性",
-      "forbidden_rejudge": "禁止假设'全部=汇总'直接固定设计"
+      "business_judgment": "诊断与推荐之间缺少因果衔接",
+      "experience_impact": "客户看到'有问题'但不知道'该怎么办'，体验断在诊断环节",
+      "must_continue": "建立'诊断问题→建议方向→对应产品'的关联表达；在视觉上体现诊断结果如何导向推荐模块",
+      "forbidden_rejudge": "不允许把诊断和推荐做成两个互不关联的独立模块"
     },
     {
-      "business_judgment": "诊断结果和推荐方案缺乏关联表达",
-      "experience_impact": "用户可能认为推荐与诊断无关，降低信任感",
-      "must_continue": "设计诊断发现到推荐方案的逻辑承接关系",
-      "forbidden_rejudge": "禁止诊断和推荐独立展示不做关联"
+      "business_judgment": "客户经理角色场景未确认",
+      "experience_impact": "如果客户经理仅查看，当前角色设计够用；如果需要主动推送或生成建议书，则需要新增独立流程",
+      "must_continue": "在体验方案中为客户经理角色预留扩展空间，但不投入完整流程设计；明确标识客户经理在当前设计中的操作边界",
+      "forbidden_rejudge": "不允许默认客户经理具备主动生成建议书的能力"
     },
     {
-      "business_judgment": "仅理财vs多业务的支持范围不一致",
-      "experience_impact": "用户可能困惑为什么某些模块看不到其他业务",
-      "must_continue": "在模块层面清晰表达业务覆盖范围",
-      "forbidden_rejudge": "禁止统一口径或隐藏差异"
+      "business_judgment": "数据全部依赖企业财富+接口",
+      "experience_impact": "每个模块都可能受接口状态影响，不能假设数据永远可用",
+      "must_continue": "设计模块级加载状态和降级展示方案；明确接口异常时各模块的独立降级策略；定义'部分数据缺失'时页面的整体外观",
+      "forbidden_rejudge": "不允许统一使用全屏 loading 或全屏 error 来覆盖模块级异常"
     },
     {
-      "business_judgment": "产品推荐到购买的链路长度影响转化率",
-      "experience_impact": "跳转步骤越多，购买转化越低",
-      "must_continue": "最小化推荐到购买的路径，保持购买意图连续性",
-      "forbidden_rejudge": "禁止设计超过两步的跳转链路"
+      "business_judgment": "批量购买的购物车流程已规划",
+      "experience_impact": "勾选多个产品→购物车→结算的链路上，部分产品可能购买失败或额度不足",
+      "must_continue": "设计批量操作中部分成功/部分失败的反馈路径；定义用户在购物车中调整产品组合的交互方式",
+      "forbidden_rejudge": "不允许假设批量购买全部成功或全部失败"
     },
     {
-      "business_judgment": "下载需全部平铺但页面含交互筛选",
-      "experience_impact": "下载数据快照范围不明确",
-      "must_continue": "明确下载按当前筛选条件还是全量数据",
-      "forbidden_rejudge": "禁止在未确定快照范围前设计下载交互"
-    },
-    {
-      "business_judgment": "两个入口的账号上下文继承",
-      "experience_impact": "从持仓列表进入应自动选中当前账号，菜单进入默认全部",
-      "must_continue": "处理好两个入口的账号选中状态差异",
-      "forbidden_rejudge": "禁止两个入口使用完全相同的初始状态"
+      "business_judgment": "建议书下载需平铺所有内容",
+      "experience_impact": "分页和分 Tab 的内容需要合并为一份完整文档，影响 PDF/PNG 渲染的页面组织方式",
+      "must_continue": "定义下载内容的组织结构和排版规则；确定各模块在下载文件中的排列顺序和分页逻辑",
+      "forbidden_rejudge": "不允许只下载当前可见区域的内容或只下载单一 Tab"
     }
   ],
   "constraints": [
-    "所有源数据由企业财富+资产配置提供，前端不做自主计算",
-    "数据计算≤5秒，页面加载≤3秒",
-    "支持同时1000用户在线",
-    "需要验证用户对银行账号的访问权限",
-    "收益率数据仅供测算参考，不影响客户实际收益",
-    "不做持仓概览、历史建议书保存、其他业务细分类（本版本）",
-    "不改变账户/持仓/产品等业务对象关系",
-    "不新增外部回写链路"
+    "所有资产配置数据来自企业财富+资产配置，前端不做独立计算",
+    "持仓表现、持仓诊断、产品推荐仅支持理财业务",
+    "金额展示按范围自动换算（元/万元/亿元），保留2位小数",
+    "本版本不做历史建议书保存和管理",
+    "本版本不做持仓概览模块",
+    "不展示不可购买或额度不足的产品",
+    "收益率数据仅作测算参考，不影响客户实际收益"
   ],
   "gaps": [
     {
-      "question": "账号选择'全部'时数据是按汇总展示还是逐账号列出？",
-      "impact": "决定了所有模块的基础展示方式，是页面设计的起点",
-      "suggested_owner": "产品经理 + 后端"
+      "question": "客户经理是否仅作为查看者，还是需要主动生成/推送建议书的能力？",
+      "impact": "决定角色侧是否需要独立流程，直接影响蓝图设计范围",
+      "suggested_owner": "产品负责人"
     },
     {
-      "question": "下载建议书按当前筛选条件还是全量数据生成？",
-      "impact": "影响下载方案的技术实现和用户体验",
-      "suggested_owner": "产品经理"
+      "question": "三类诊断结果是否需要按严重程度或紧急度排序展示？",
+      "impact": "影响诊断模块的信息层次和行动引导方式",
+      "suggested_owner": "设计 + 业务"
     },
     {
-      "question": "诊断结果与产品推荐是否建立定向关联？",
-      "impact": "影响推荐展示逻辑和用户信任感",
-      "suggested_owner": "产品经理 + 资产配置团队"
+      "question": "产品推荐列表与诊断结果的对应关系是否需要在页面上显式表达？",
+      "impact": "影响推荐模块与诊断模块的视觉关联方式",
+      "suggested_owner": "设计师"
     },
     {
-      "question": "客户经理角色的具体使用场景和入口是什么？",
-      "impact": "影响角色权限设计和可能的独立视图",
-      "suggested_owner": "产品经理"
+      "question": "按银行账号切换时，是否保留上次查看账号的记忆？",
+      "impact": "影响切换交互的默认行为和页面刷新策略",
+      "suggested_owner": "产品 + 设计"
     },
     {
-      "question": "推荐到购物车的跳转方式（浮层还是新页面）？",
-      "impact": "影响购买链路的流畅度设计",
-      "suggested_owner": "交互设计"
+      "question": "下载 PDF/PNG 时，是否需要支持选择性导出？",
+      "impact": "影响下载功能的交互设计和文件生成逻辑",
+      "suggested_owner": "产品负责人"
     }
   ],
   "knowledge_trace": [
     {
-      "knowledge_source": "knowledge-wiki index",
-      "supported_judgment": "知识库无财富管理/资产配置业务域，本次分析未使用项目既有业务知识",
+      "knowledge_source": "knowledge-wiki/knowledge/wiki/index.md",
+      "supported_judgment": "确认本次需求不在现有业务知识库覆盖范围内（财富管理领域未收录）",
       "unconfirmed_part": "无"
     },
     {
-      "knowledge_source": "需求文档（input/【财富专区】资产配置面客版/）",
-      "supported_judgment": "所有事实性结论来源于需求文档",
-      "unconfirmed_part": "账号'全部'数据含义、下载快照范围、诊断推荐关联"
+      "knowledge_source": "UXB references/complexity/00_core_complexity_judgment.md",
+      "supported_judgment": "本次为中等复杂度：既有能力扩展，不改底层业务骨架",
+      "unconfirmed_part": "客户经理角色场景未确认可能推高复杂度"
+    },
+    {
+      "knowledge_source": "UXB references/demand_type_judgment_guide.md",
+      "supported_judgment": "属于'既有能力扩展'类型，信息密度高是主要体验压力",
+      "unconfirmed_part": "无"
     }
   ]
 }

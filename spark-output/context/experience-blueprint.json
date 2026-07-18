@@ -1,70 +1,86 @@
 {
   "skill": "experience-blueprint",
   "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "资产配置面客版",
+  "generated_at": "2026-07-18",
+  "project_name": "财富专区-资产配置面客版",
   "artifact_md": "spark-output/experience_blueprint.md",
   "source_refs": [
     "spark-output/context/uxb.json",
     "spark-output/uxb_output.md"
   ],
   "read_sections": [
-    "knowledge-wiki index → 无匹配财富管理业务域",
-    "设计准则：IA-02 分块、U-01 状态可见性、U-03 用户控制",
-    "交互模式：容器与工作区（上下堆叠工作区）、状态反馈与恢复"
+    "knowledge-wiki/knowledge/wiki/index.md",
+    "knowledge-wiki/knowledge/raw/设计准则/设计准则.md (IA-02, U-08, U-01, U-09, C-03, C-04)"
   ],
   "source_mode": "uxb-mode",
   "source_usability_check": {
-    "usable": "true",
-    "reason": "UXB 正式产物齐全，包含完整的业务边界、规则、状态和异常定义",
-    "missing_inputs": []
+    "usable": "usable",
+    "reason": "uxb-mode: 一级正式来源为 uxb，不执行 3+1 门槛判断，按现有主链规则直接展开",
+    "missing_inputs": [
+      "journey-analysis（§1 旅程消费摘要基于 UXB 推测）",
+      "stories（当前未经过用户故事深化）"
+    ]
   },
   "expansion_mode": "full",
   "critical_design_judgments": [
     {
-      "judgment": "资产配置页面采用摘要导航+纵向分段的信息架构，将六大模块按浏览优先级分为概览摘要区和详情分段区",
-      "major_impact": "影响整个页面的布局骨架、模块间浏览顺序和信息密度感知节奏",
-      "recommended_solution": "顶部摘要卡片栏，下方按表现→分布→期限→诊断→推荐的决策链顺序纵向排列；账号和时间筛选固定在顶部",
-      "not_recommended_solution": "不推荐所有模块平铺不做优先级区分；不推荐投资/期限分布做成独立页面跳转；不推荐诊断和推荐拆成分离的Tab页",
-      "key_open_question": "账号全部选项的数据含义、下载快照范围、诊断与推荐的关联逻辑"
+      "judgment": "资产配置页面采用'总览 + 焦点头屏 + 次要模块延后'的信息分层策略，按阅读流排列模块",
+      "major_impact": "影响整个页面的模块排序、首屏信息密度、展开折叠策略",
+      "recommended_solution": "首屏上方展示核心总览卡片，中间是可折叠分析模块区，底部是推荐和操作区；分析模块默认折叠",
+      "not_recommended_solution": "不建议把所有模块以同等尺寸铺满首屏",
+      "key_open_question": "三类诊断结果是否需要按严重程度排序"
+    },
+    {
+      "judgment": "诊断结果与推荐产品之间用'问题→建议→产品'的关联卡片组建立因果链",
+      "major_impact": "影响诊断模块和推荐模块的布局关系及交互联动",
+      "recommended_solution": "取消诊断模块和推荐模块的物理隔离，使用'诊断×推荐'联合卡片区承载",
+      "not_recommended_solution": "不建议在诊断模块只展示问题文字，让客户自己翻到推荐区找对应产品",
+      "key_open_question": "企业财富+的推荐策略是否按诊断输入生成推荐"
+    },
+    {
+      "judgment": "采用模块级加载 + 独立降级，避免全屏 loading 阻塞",
+      "major_impact": "影响页面加载策略、骨架屏设计、降级展示方式",
+      "recommended_solution": "页面框架先渲染，各模块按优先级队列依次加载，失败时模块级降级",
+      "not_recommended_solution": "不建议使用全屏 loading 等待所有接口返回",
+      "key_open_question": "各模块接口的实际调用方式（独立接口 vs 统一大接口）"
     }
   ],
   "uxb_mapping": [
     {
-      "upstream_judgment": "六大模块同屏承载，信息密度高",
-      "experience_meaning": "用户可能迷失，需要浏览优先级引导",
-      "blueprint_decision": "摘要卡片区+纵向分段，按决策链顺序排列",
-      "target_section": "§6 页面结构"
+      "upstream_judgment": "五个信息模块的阅读顺序不是任意的",
+      "experience_meaning": "客户需要主线引导，不能平铺展示",
+      "blueprint_decision": "页面按'总览→持仓表现→分布→诊断×推荐'排列，区分默认展开/折叠",
+      "target_section": "§3 节点一~七 / §6"
     },
     {
-      "upstream_judgment": "账号全部选项语义未定",
-      "experience_meaning": "影响摘要卡展示方式",
-      "blueprint_decision": "暂按汇总方案推进，标注待确认",
-      "target_section": "§6 摘要卡片 + §8 待确认"
+      "upstream_judgment": "诊断与推荐之间缺少因果衔接",
+      "experience_meaning": "客户看到问题不知道怎么办",
+      "blueprint_decision": "诊断推荐联合卡片组，'问题→建议方向→产品'三层结构",
+      "target_section": "§3 节点五 / §6 页面一"
     },
     {
-      "upstream_judgment": "诊断和推荐应建立关联",
-      "experience_meaning": "用户需要感知推荐与诊断的关系",
-      "blueprint_decision": "诊断区块底部增加过渡文案，推荐区块紧接诊断下方",
-      "target_section": "§6 诊断+推荐区块"
+      "upstream_judgment": "客户经理角色场景未确认",
+      "experience_meaning": "角色侧设计范围不确定",
+      "blueprint_decision": "主方案仅覆盖企业客户自助场景，客户经理仅做查看定位",
+      "target_section": "§8 待确认问题"
     },
     {
-      "upstream_judgment": "仅理财vs多业务范围不一致",
-      "experience_meaning": "用户可能困惑差异",
-      "blueprint_decision": "Tab分离理财和其他业务，标注差异说明",
-      "target_section": "§6 投资/期限分布区块"
+      "upstream_judgment": "数据全部依赖企业财富+接口",
+      "experience_meaning": "每个模块都可能受接口状态影响",
+      "blueprint_decision": "模块级加载 + 独立降级策略，不统一全屏 loading/error",
+      "target_section": "§5 异常一~三 / §6 状态反馈区"
     },
     {
-      "upstream_judgment": "购买链路影响转化率",
-      "experience_meaning": "跳转步骤越多转化越低",
-      "blueprint_decision": "推荐列表行内直接展示购买按钮，一跳到购买页",
-      "target_section": "§4 次流程 D/E"
+      "upstream_judgment": "批量购买的购物车流程已规划",
+      "experience_meaning": "购物车链路上有局部异常",
+      "blueprint_decision": "结算结果页展示成功/失败混合状态，支持移除失败产品重新选择",
+      "target_section": "§5 异常六"
     },
     {
-      "upstream_judgment": "两个入口的账号上下文继承",
-      "experience_meaning": "入口状态不同",
-      "blueprint_decision": "菜单入口默认全部；持仓列表入口自动选中当前账号",
-      "target_section": "§6 进入条件 + §3 节点1"
+      "upstream_judgment": "建议书下载需平铺所有内容",
+      "experience_meaning": "分页和 Tab 内容需合并",
+      "blueprint_decision": "下载弹窗选择格式后全量生成，不区分当前 Tab",
+      "target_section": "§4 流程三"
     }
   ],
   "problem_framing_mapping": [],
@@ -77,475 +93,501 @@
     "confidence_lows": [
       {
         "role": "企业客户",
-        "stage": "诊断→推荐",
-        "reason": "诊断与推荐脱节，用户不确定推荐是否针对自己的问题",
-        "blueprint_impact": "§5 异常阻断 + §6 诊断/推荐区块设计"
-      },
-      {
-        "role": "企业客户",
-        "stage": "账号切换等待",
-        "reason": "多账号数据量不确定，加载时间可能超出预期",
-        "blueprint_impact": "§7 加载态反馈"
+        "stage": "了解诊断问题",
+        "reason": "担心看到不好的结果，但也想了解风险",
+        "blueprint_impact": "§5 异常流程中强化诊断模块的降级和恢复策略"
       }
     ],
     "key_transitions": [
       {
-        "from_stage": "浏览持仓表现",
-        "to_stage": "分析投资分布",
-        "trigger": "向下滚动",
-        "blueprint_impact": "§3 主流程—前置说明滚动节奏"
-      },
-      {
-        "from_stage": "发现诊断问题",
-        "to_stage": "查看推荐方案",
-        "trigger": "诊断模块标记问题",
-        "blueprint_impact": "§3 诊断→推荐的承接设计"
-      },
-      {
-        "from_stage": "浏览推荐产品",
-        "to_stage": "执行购买",
-        "trigger": "选中产品点击购买",
-        "blueprint_impact": "§4 购买跳转次流程"
+        "from_stage": "了解诊断问题",
+        "to_stage": "获取产品推荐",
+        "trigger": "诊断结果明确告诉客户有何问题",
+        "blueprint_impact": "§3 节点五中设计诊断×推荐联合卡片组"
       }
     ],
     "dropout_risks": [
       {
         "role": "企业客户",
-        "stage": "浏览六大模块",
-        "risk": "信息过载导致放弃深入",
-        "blueprint_impact": "§3 信息分层策略"
+        "stage": "进入页面",
+        "risk": "入口名模糊时客户可能不点击",
+        "blueprint_impact": "§6 页面设计中强调入口命名和加载优先级"
       },
       {
         "role": "企业客户",
-        "stage": "诊断→推荐",
-        "risk": "方案不信任导致流失",
-        "blueprint_impact": "§6 诊断→推荐的关联文案"
+        "stage": "分析持仓表现",
+        "risk": "图表太多看不懂时跳过",
+        "blueprint_impact": "§6 页面设计中采用模块级折叠展开策略"
       },
       {
         "role": "企业客户",
-        "stage": "推荐→购买",
-        "risk": "跳转步骤过多导致意图衰减",
-        "blueprint_impact": "§4 最小化购买路径"
+        "stage": "了解诊断问题",
+        "risk": "只有问题没有建议时失去信心",
+        "blueprint_impact": "§3 节点五中诊断卡片嵌入建议方向字段"
       }
     ]
   },
   "interaction_overview": {
-    "pages": ["资产配置主页面"],
-    "modals": ["下载格式选择弹窗"],
+    "pages": [
+      "资产配置建议书主页面",
+      "产品详情页（复用）",
+      "购物车（复用）"
+    ],
+    "modals": [
+      "下载格式选择弹窗",
+      "批量购买确认弹窗"
+    ],
     "drawers": [],
     "user_actions": [
       "选择/切换银行账号",
-      "选择时间区间",
-      "切换投资分布/期限分布 Tab",
-      "点击诊断条目查看详情",
-      "点击购买按钮",
-      "勾选批量购买",
-      "点击下载建议书",
-      "选择下载格式",
-      "查看产品详情"
+      "筛选时间区间",
+      "查看持仓表现",
+      "查看投资/期限分布",
+      "查看诊断与推荐",
+      "购买单件产品",
+      "批量勾选购买",
+      "查看产品详情",
+      "下载建议书"
     ],
     "system_feedback": [
-      "各模块加载态",
-      "数据刷新展示",
-      "下载文件生成",
+      "模块级骨架屏加载",
+      "KPI 卡片数据展示",
+      "图表展示",
+      "诊断推荐卡片展示",
       "空状态展示",
-      "错误提示展示"
+      "异常降级展示",
+      "文件下载"
     ],
     "state_changes": [
-      "账号切换→全模块数据刷新",
-      "时间区间变更→持仓表现数据刷新",
-      "诊断无问题→诊断模块不展示"
+      "加载中 → 加载完成",
+      "加载中 → 模块异常",
+      "加载中 → 全部异常",
+      "正常展示 → 切换账号刷新",
+      "正常展示 → 区间筛选更新",
+      "无持仓 → 空状态"
     ],
     "toast": [
-      "下载完成",
-      "下载失败",
-      "网络异常"
+      "正在生成文件，请稍候...",
+      "文件生成失败，请稍后重试",
+      "网络异常，下载已中断",
+      "部分产品未成功购买，请查看明细"
     ],
-    "inline_error": [],
+    "inline_error": [
+      "暂无数据（字段级）"
+    ],
     "empty_state": [
-      "无持仓数据全页空状态",
-      "模块无数据空状态",
-      "推荐为空空状态"
+      "暂无持仓数据（全页空态 + 去购买按钮）",
+      "暂无持仓表现数据（模块级）",
+      "暂无投资分布数据（模块级）",
+      "暂无期限分布数据（模块级）",
+      "暂无模块名数据（模块级降级）"
     ],
     "loading_state": [
-      "全页骨架屏加载",
-      "模块级骨架屏加载"
+      "模块级骨架屏",
+      "全页骨架框架"
     ]
   },
   "main_flow": [
     {
-      "node_id": "F01",
+      "node_id": "node-1",
       "node_name": "进入资产配置页面",
-      "user_action": "点击资产配置菜单或持仓列表入口",
-      "system_feedback": "页面加载，顶部账号选择器默认选中，各模块加载态",
-      "pre_explanation": "持仓列表入口进入时自动切换到对应账号",
-      "copy_suggestion": "页面标题「资产配置建议书」",
-      "state_change": "进入页面初始态",
-      "next_step": "选择账号或直接浏览"
+      "user_action": "从菜单或持仓列表入口进入",
+      "system_feedback": "页面框架渲染，各模块按优先级发起数据请求",
+      "pre_explanation": "从持仓列表进入则自动选中该账号",
+      "copy_suggestion": "页面标题：资产配置建议书",
+      "state_change": "加载中→加载完成",
+      "next_step": "查看总览或切换账号"
     },
     {
-      "node_id": "F02",
-      "node_name": "选择/切换银行账号",
-      "user_action": "从下拉列表中选择账号",
-      "system_feedback": "所有模块刷新为对应账号数据",
-      "pre_explanation": "选全部时为所有账号综合概况（待确认）",
-      "copy_suggestion": "账号名称+尾号，如「{企业名称}—****1234」",
-      "state_change": "账号切换→全模块数据刷新",
-      "next_step": "浏览各模块数据"
-    },
-    {
-      "node_id": "F03",
-      "node_name": "浏览摘要区",
-      "user_action": "浏览顶部指标卡片",
-      "system_feedback": "展示时点资产和核心指标",
-      "pre_explanation": "摘要卡数字为一眼结论，详情在下方分段区块",
-      "copy_suggestion": "「总资产 1,234.56 万元」+ 数据时间点标注",
+      "node_id": "node-2",
+      "node_name": "查看总览信息",
+      "user_action": "浏览顶部总览卡片区",
+      "system_feedback": "展示时点资产和诊断状态摘要",
+      "pre_explanation": "时点资产是最新持仓市值，诊断摘要为简化信号",
+      "copy_suggestion": "时点资产（{日期}）\n{N}项持仓待关注",
       "state_change": "无",
-      "next_step": "向下滚动查看详情"
+      "next_step": "查看持仓表现或诊断"
     },
     {
-      "node_id": "F04",
+      "node_id": "node-3",
       "node_name": "查看持仓表现",
-      "user_action": "滚动到持仓表现区块/切换时间区间",
-      "system_feedback": "展示区间筛选器+指标数据+走势图+收益排行",
-      "pre_explanation": "默认近一个月，支持近两年；仅支持理财",
-      "copy_suggestion": "时间筛选预置「近1月」「近3月」「近6月」「近1年」+自定义",
-      "state_change": "时间区间变更→持仓表现刷新",
-      "next_step": "继续下滚"
+      "user_action": "浏览 KPI 卡片和图表",
+      "system_feedback": "展示区间筛选器、4个KPI卡、购买赎回统计、趋势图、收益排行",
+      "pre_explanation": "较期初期初为0时显示'-'；年化收益率由净值测算",
+      "copy_suggestion": "较期初：{增长率}",
+      "state_change": "区间筛选时数据更新",
+      "next_step": "查看分布或诊断"
     },
     {
-      "node_id": "F05",
-      "node_name": "查看投资分布",
-      "user_action": "滚动到投资分布区块/切换Tab",
-      "system_feedback": "默认理财分布，Tab切换其他业务",
-      "pre_explanation": "标注仅理财展示年化收益率及排名",
-      "copy_suggestion": "区块标题「投资分布」，Tab标签「理财」「其他业务」",
+      "node_id": "node-4",
+      "node_name": "查看投资分布与期限分布",
+      "user_action": "浏览 Tab 内容",
+      "system_feedback": "展示各业务类型持仓金额、占比、饼图",
+      "pre_explanation": "投资分布看资产结构，期限分布看到期时间",
+      "copy_suggestion": "无",
       "state_change": "无",
-      "next_step": "继续下滚"
+      "next_step": "查看诊断与推荐"
     },
     {
-      "node_id": "F06",
-      "node_name": "查看期限分布",
-      "user_action": "滚动到期限分布区块/切换Tab",
-      "system_feedback": "默认理财期限分布，Tab切换其他业务持有期分布",
-      "pre_explanation": "标注仅理财展示年化收益率",
-      "copy_suggestion": "区块标题「期限分布」",
+      "node_id": "node-5",
+      "node_name": "查看诊断与推荐（核心转折）",
+      "user_action": "浏览诊断×推荐联合卡片区",
+      "system_feedback": "按诊断类型展示关联卡片组，含问题描述、建议方向、推荐产品",
+      "pre_explanation": "每条诊断对应一组建议方向",
+      "copy_suggestion": "基于您的持仓情况推荐",
       "state_change": "无",
-      "next_step": "继续下滚到诊断"
+      "next_step": "购买/批量购买/产品详情/下载"
     },
     {
-      "node_id": "F07",
-      "node_name": "阅读持仓诊断",
-      "user_action": "滚动到诊断区块/点击诊断条目查看详情",
-      "system_feedback": "展示诊断列表，无问题则不展示",
-      "pre_explanation": "仅支持理财",
-      "copy_suggestion": "区块标题「持仓诊断」，诊断条目标注类型和严重程度",
-      "state_change": "无诊断问题→模块不展示",
-      "next_step": "继续下滚到推荐"
-    },
-    {
-      "node_id": "F08",
-      "node_name": "查看产品推荐",
-      "user_action": "滚动到推荐区块/点击购买/勾选批量",
-      "system_feedback": "展示推荐产品列表+购买操作",
-      "pre_explanation": "仅支持理财；基于规则推荐",
-      "copy_suggestion": "「基于您的持仓情况推荐以下产品」",
+      "node_id": "node-6",
+      "node_name": "购买产品",
+      "user_action": "点击推荐产品中的购买按钮",
+      "system_feedback": "跳转产品购买页（复用）",
+      "pre_explanation": "无",
+      "copy_suggestion": "无",
       "state_change": "无",
-      "next_step": "购买或下载"
+      "next_step": "完成交易"
     },
     {
-      "node_id": "F09",
-      "node_name": "执行下载",
-      "user_action": "点击悬浮下载按钮→选择格式→确认",
-      "system_feedback": "弹窗选择格式→文件生成→下载完成/失败",
-      "pre_explanation": "下载内容为当前状态静态快照",
-      "copy_suggestion": "按钮「下载建议书」，弹窗「PDF（适合打印分享）/PNG（适合图片查看）」",
-      "state_change": "下载进行中→下载完成/失败",
-      "next_step": "打开文件或重试"
+      "node_id": "node-7",
+      "node_name": "批量购买",
+      "user_action": "勾选多个产品，点击批量购买",
+      "system_feedback": "跳转购物车（复用），已勾选产品预填",
+      "pre_explanation": "无",
+      "copy_suggestion": "无",
+      "state_change": "无",
+      "next_step": "完成批量结算"
     }
   ],
   "sub_flows": [
     {
-      "flow_id": "S01",
+      "flow_id": "sub-1",
+      "flow_name": "切换银行账号",
+      "trigger_condition": "客户需要查看其他账号的资产配置",
+      "user_action": "点击账号选择器，选择目标账号",
+      "system_feedback": "以新账号重新请求所有模块数据",
+      "pre_explanation": "全部账号汇总所有持仓数据；切换后筛选条件重置",
+      "copy_suggestion": "银行账号：全部账号",
+      "next_step": "浏览新账号配置"
+    },
+    {
+      "flow_id": "sub-2",
+      "flow_name": "筛选时间区间",
+      "trigger_condition": "客户需要查看特定时间段表现",
+      "user_action": "从筛选器选择预设或自定义区间",
+      "system_feedback": "持仓表现模块刷新，其他模块不受影响",
+      "pre_explanation": "支持近两年范围，自定义最小粒度为天",
+      "copy_suggestion": "时间区间：近一个月（默认）",
+      "next_step": "查看更新后的数据"
+    },
+    {
+      "flow_id": "sub-3",
       "flow_name": "下载建议书",
-      "trigger_condition": "用户点击右下角悬浮下载按钮",
-      "user_action": "选择下载格式→确认下载",
-      "system_feedback": "弹窗→文件生成中→下载完成/失败",
-      "pre_explanation": "需确认下载快照范围，暂按当前账号+当前时间区间推进",
-      "copy_suggestion": "弹窗标题「下载建议书」，确认按钮「开始下载」",
-      "next_step": "下载成功后打开文件"
+      "trigger_condition": "客户需要保存或分享建议书",
+      "user_action": "点击下载悬浮按钮，选择格式",
+      "system_feedback": "生成文件并触发下载",
+      "pre_explanation": "下载包含所有内容和 Tab，全量平铺",
+      "copy_suggestion": "选择下载格式→PDF适合打印/PNG适合截图",
+      "next_step": "查看已下载的文件"
     },
     {
-      "flow_id": "S02",
-      "flow_name": "查看诊断详情",
-      "trigger_condition": "诊断区块存在可点击的诊断条目",
-      "user_action": "点击诊断条目",
-      "system_feedback": "展开详情区域，展示问题产品列表",
+      "flow_id": "sub-4",
+      "flow_name": "无持仓数据",
+      "trigger_condition": "客户名下账号无持仓",
+      "user_action": "进入资产配置页面",
+      "system_feedback": "展示空状态页面",
       "pre_explanation": "无",
-      "copy_suggestion": "详情标题对应诊断条目名称，「共{N}只产品」",
-      "next_step": "关闭详情返回诊断区块"
-    },
-    {
-      "flow_id": "S03",
-      "flow_name": "查看产品详情",
-      "trigger_condition": "用户点击推荐产品名称或代码",
-      "user_action": "点击产品名称链接",
-      "system_feedback": "跳转产品详情页（外部）",
-      "pre_explanation": "跳转后将离开资产配置页面，可返回",
-      "copy_suggestion": "产品名称使用链接样式+跳转图标",
-      "next_step": "查看详情后返回推荐列表"
-    },
-    {
-      "flow_id": "S04",
-      "flow_name": "单个购买",
-      "trigger_condition": "用户点击推荐产品后的购买按钮",
-      "user_action": "点击购买按钮",
-      "system_feedback": "直接跳转购买页（外部）",
-      "pre_explanation": "无",
-      "copy_suggestion": "按钮文字「购买」",
-      "next_step": "在购买页完成交易"
-    },
-    {
-      "flow_id": "S05",
-      "flow_name": "批量购买",
-      "trigger_condition": "用户需购买多个推荐产品",
-      "user_action": "勾选产品→点击批量购买按钮",
-      "system_feedback": "跳转购物车（外部）",
-      "pre_explanation": "无",
-      "copy_suggestion": "底部固定栏「加入购物车（{N}件）」",
-      "next_step": "在购物车完成结算"
+      "copy_suggestion": "暂无持仓数据\n购买理财产品，开启投资之旅",
+      "next_step": "点击去购买跳转产品列表"
     }
   ],
   "exceptions": [
     {
-      "exception_id": "E01",
-      "name": "页面整体数据加载失败",
-      "timing": "进入资产配置页面时",
-      "trigger_condition": "企业财富+接口超时或返回错误",
-      "basis": "接口响应超过5秒或返回错误码",
-      "feedback_form": "全页空状态",
-      "system_feedback": "自动重试3次，全部失败后展示全页空状态",
-      "user_next_step": "点击「重新加载」重试",
-      "recovery_path": "重新加载回到初始流程，无信息丢失"
+      "exception_id": "exc-1",
+      "name": "企业财富+接口超时",
+      "timing": "任一模块数据请求时",
+      "trigger_condition": "接口响应超过5秒",
+      "basis": "前端超时设置",
+      "feedback_form": "模块级降级，骨架占位",
+      "system_feedback": "自动重试3次，失败后展示空状态卡片+提示",
+      "user_next_step": "无需操作，浏览其他模块",
+      "recovery_path": "接口恢复后刷新页面或重进入"
     },
     {
-      "exception_id": "E02",
-      "name": "某模块数据加载失败",
-      "timing": "浏览页面时",
-      "trigger_condition": "该模块接口超时或返回错误",
-      "basis": "模块级接口响应异常",
-      "feedback_form": "模块空状态",
-      "system_feedback": "仅失败模块展示「功能暂时不可用」，其他模块正常",
-      "user_next_step": "无操作，后台自动恢复",
-      "recovery_path": "刷新页面或切换条件重新加载，无信息丢失"
+      "exception_id": "exc-2",
+      "name": "企业财富+服务无响应",
+      "timing": "核心接口同时不可用时",
+      "trigger_condition": "多个关键接口连续失败",
+      "basis": "综合判断——过半数核心接口失败",
+      "feedback_form": "页面级阻断页",
+      "system_feedback": "展示系统繁忙全屏阻断页，记录日志",
+      "user_next_step": "等待1-2分钟后重试或联系客服",
+      "recovery_path": "原路返回无信息丢失"
     },
     {
-      "exception_id": "E03",
-      "name": "下载失败",
-      "timing": "用户点击下载后",
-      "trigger_condition": "文件生成失败/网络中断/存储不足/浏览器拦截",
-      "basis": "各环节错误类型",
-      "feedback_form": "Toast提示+弹窗（存储不足时）",
-      "system_feedback": "根据失败类型展示对应提示",
-      "user_next_step": "重试/清理空间/允许下载",
-      "recovery_path": "解决障碍后重新点击下载，需重新确认格式"
+      "exception_id": "exc-3",
+      "name": "部分模块数据缺失",
+      "timing": "个别模块接口异常时",
+      "trigger_condition": "某模块接口报错或返回空",
+      "basis": "按模块独立判断",
+      "feedback_form": "模块级空状态卡片",
+      "system_feedback": "失败模块展示空状态，其他模块正常",
+      "user_next_step": "使用其他正常模块",
+      "recovery_path": "后台异步补全，下次进入更新"
     },
     {
-      "exception_id": "E04",
-      "name": "用户无可选账号",
-      "timing": "进入页面时",
-      "trigger_condition": "当前用户名下没有有权限的有效账号",
-      "basis": "账号列表API返回空",
-      "feedback_form": "全页空状态，账号选择器禁用",
-      "system_feedback": "展示「暂无可用账号」",
-      "user_next_step": "联系管理员或切换账号",
-      "recovery_path": "获得权限后重新进入，无信息丢失"
+      "exception_id": "exc-4",
+      "name": "文件生成失败",
+      "timing": "点击下载后文件生成时",
+      "trigger_condition": "企业财富+文件生成接口异常",
+      "basis": "接口异常",
+      "feedback_form": "弹窗提示",
+      "system_feedback": "弹窗提示文件生成失败",
+      "user_next_step": "点击重试或稍后重试",
+      "recovery_path": "原路恢复，无信息丢失"
+    },
+    {
+      "exception_id": "exc-5",
+      "name": "下载网络中断",
+      "timing": "下载过程中",
+      "trigger_condition": "下载中网络断开",
+      "basis": "浏览器下载状态",
+      "feedback_form": "toast 提示",
+      "system_feedback": "toast 提示网络异常",
+      "user_next_step": "网络恢复后重新下载",
+      "recovery_path": "原路恢复，无信息丢失"
+    },
+    {
+      "exception_id": "exc-6",
+      "name": "批量购买部分失败",
+      "timing": "批量购买结算时",
+      "trigger_condition": "部分产品因额度不足或已售罄失败",
+      "basis": "后端逐笔返回结果",
+      "feedback_form": "结算结果页混合展示",
+      "system_feedback": "汇总成功/失败笔数，展示明细",
+      "user_next_step": "移除失败产品后重新选择替代产品",
+      "recovery_path": "成功产品不受影响，客户可重新选择"
     }
   ],
   "pages": [
     {
-      "page_id": "P01",
-      "page_name": "资产配置主页面",
-      "page_goal": "一站式了解资产配置情况，发现优化机会并执行操作",
-      "entry_condition": "菜单入口（默认全部账号）或持仓列表入口（自动选中当前账号）",
-      "structure_ascii": "顶部标题栏+账号选择器→摘要卡片区→持仓表现区块→投资分布区块(Tab)→期限分布区块(Tab)→持仓诊断区块→产品推荐区块→底部风险提示",
+      "page_id": "page-1",
+      "page_name": "资产配置建议书主页面",
+      "page_goal": "企业客户在一页内完成查看资产→分析问题→获取建议→采取行动的完整链路",
+      "entry_condition": "从菜单或持仓列表入口进入",
+      "structure_ascii": "首屏：银行账号选择器 + 时点资产 + 诊断摘要 | 中段：持仓表现（可折叠）含KPI+图表+排行榜 | 分布区：投资分布/期限分布 Tab | 底部：诊断×推荐联合卡片区 | 悬浮下载按钮",
       "regions": [
-        "顶部标题栏+悬浮下载按钮",
-        "账号选择器",
-        "摘要卡片区（4个指标卡）",
-        "持仓表现区块（含时间筛选器）",
-        "投资分布区块（Tab切换理财/其他业务）",
-        "期限分布区块（Tab切换理财/其他业务）",
-        "持仓诊断区块（诊断列表+详情展开）",
-        "产品推荐区块（产品列表+购买操作）",
-        "底部风险提示区"
+        "顶部导航区：页面标题 + 操作按钮",
+        "账号选择区：银行账号下拉选择",
+        "总览卡片区：时点资产 + 诊断摘要",
+        "持仓表现区：区间筛选 + KPI卡片 + 图表 + 排行",
+        "投资分布区：Tab 切换饼图 + 数据列表",
+        "期限分布区：Tab 切换数据列表",
+        "诊断×推荐区：联合卡片组",
+        "底部合规区：风险提示文案",
+        "悬浮操作区：下载按钮"
       ],
       "buttons": [
-        "下载建议书（悬浮按钮）",
-        "购买（行内按钮）",
-        "加入购物车（批量按钮）",
-        "查看/详情（诊断条目按钮）"
+        "下载（右下角悬浮）",
+        "购买（每件推荐产品旁）",
+        "批量购买（推荐区底部）",
+        "产品名称（跳转详情）"
       ],
-      "success_feedback": "所有模块数据正常展示",
-      "failure_feedback": "全页空状态或模块级功能不可用提示"
+      "success_feedback": "各模块按优先级完成渲染；下载时 toast 提示",
+      "failure_feedback": "模块级展示空状态卡片；全页级展示阻断页；字段级展示 --"
     }
   ],
   "modals": [
     {
-      "modal_id": "M01",
+      "modal_id": "modal-1",
       "modal_name": "下载格式选择弹窗",
-      "goal": "让用户选择建议书下载格式",
-      "trigger_condition": "点击右下角下载建议书按钮",
-      "structure_ascii": "标题→格式单选选项(PDF/PNG)→范围提示→取消/开始下载按钮",
+      "goal": "让客户选择建议书的下载格式",
+      "trigger_condition": "点击下载悬浮按钮",
+      "structure_ascii": "标题：选择下载格式 | 选项：PDF 格式 + PNG 图片 | 底部：[取消] [下载]",
       "copy": [
-        "标题：下载建议书",
-        "PDF选项：PDF（适合打印分享）",
-        "PNG选项：PNG（适合图片查看）",
-        "范围提示：将下载当前账号下所有模块内容",
-        "取消按钮：取消",
-        "确认按钮：开始下载"
+        "选择下载格式",
+        "适合打印和分享",
+        "适合快速截图查看"
       ],
       "buttons": [
         "取消",
-        "开始下载"
+        "下载"
       ],
-      "success_feedback": "弹窗关闭，下载完成后Toast提示「下载完成」",
-      "failure_feedback": "弹窗关闭，Toast提示失败原因，可重试"
+      "success_feedback": "弹窗关闭，文件开始下载",
+      "failure_feedback": "弹窗内提示文件生成失败"
+    },
+    {
+      "modal_id": "modal-2",
+      "modal_name": "批量购买确认弹窗",
+      "goal": "让客户确认批量购买产品列表后跳转购物车",
+      "trigger_condition": "勾选至少一个产品后点击批量购买",
+      "structure_ascii": "标题：确认批量购买产品 | 列表：已选产品清单 + 预计总金额 | 底部：[取消] [加入购物车]",
+      "copy": [
+        "确认批量购买产品",
+        "已选择{N}件产品",
+        "预计总金额：{总金额}元"
+      ],
+      "buttons": [
+        "取消",
+        "加入购物车"
+      ],
+      "success_feedback": "弹窗关闭，跳转购物车",
+      "failure_feedback": "弹窗内产品售罄状态自动更新，客户可继续操作"
     }
   ],
   "drawers": [],
   "states": [
     {
-      "state": "页面加载中",
-      "meaning": "页面数据正在请求",
-      "applies_to": "资产配置页面",
-      "user_action_available": "无",
-      "feedback_standard": "骨架屏加载"
+      "state": "加载中",
+      "meaning": "数据请求处理中",
+      "applies_to": "所有模块",
+      "user_action_available": "等待",
+      "feedback_standard": "骨架屏或模块级 loading"
     },
     {
-      "state": "模块加载中",
-      "meaning": "某模块数据正在请求",
-      "applies_to": "持仓表现/投资分布/期限分布/诊断/推荐",
-      "user_action_available": "无",
-      "feedback_standard": "模块内加载骨架"
+      "state": "加载成功",
+      "meaning": "数据正常展示",
+      "applies_to": "所有模块",
+      "user_action_available": "浏览/操作",
+      "feedback_standard": "正常展示内容"
     },
     {
-      "state": "无持仓数据",
+      "state": "部分缺失",
+      "meaning": "个别字段无数据",
+      "applies_to": "各模块内字段",
+      "user_action_available": "查看其他字段",
+      "feedback_standard": "缺失字段展示 --"
+    },
+    {
+      "state": "模块异常",
+      "meaning": "该模块接口失败",
+      "applies_to": "单个模块",
+      "user_action_available": "浏览其他模块",
+      "feedback_standard": "暂无{模块名}数据"
+    },
+    {
+      "state": "全页异常",
+      "meaning": "核心接口全失败",
+      "applies_to": "整页",
+      "user_action_available": "等待或重试",
+      "feedback_standard": "系统繁忙，请稍后再试"
+    },
+    {
+      "state": "无持仓",
       "meaning": "账号下无持仓",
-      "applies_to": "资产配置页面",
-      "user_action_available": "点击去购买",
-      "feedback_standard": "「暂无持仓数据」+「购买理财产品，开启投资之旅」+【去购买】"
+      "applies_to": "整页",
+      "user_action_available": "去购买",
+      "feedback_standard": "暂无持仓数据 + 去购买按钮"
     },
     {
-      "state": "模块无数据",
-      "meaning": "该模块无可用数据",
-      "applies_to": "分布/走势图等模块",
+      "state": "无诊断",
+      "meaning": "无诊断问题",
+      "applies_to": "诊断模块",
       "user_action_available": "无",
-      "feedback_standard": "图标+「暂无{模块名}数据」"
+      "feedback_standard": "诊断模块不展示"
     },
     {
-      "state": "无诊断问题",
-      "meaning": "诊断无异常",
-      "applies_to": "持仓诊断模块",
+      "state": "无推荐",
+      "meaning": "无可推荐产品",
+      "applies_to": "推荐模块",
       "user_action_available": "无",
-      "feedback_standard": "不展示该模块"
+      "feedback_standard": "推荐模块不展示"
     },
     {
-      "state": "推荐为空",
-      "meaning": "无符合条件的推荐产品",
-      "applies_to": "产品推荐模块",
-      "user_action_available": "切换账号/补充持仓",
-      "feedback_standard": "「暂无推荐产品」"
-    },
-    {
-      "state": "功能不可用",
-      "meaning": "数据计算异常",
-      "applies_to": "出问题的模块",
-      "user_action_available": "稍后重试",
-      "feedback_standard": "「{模块名}暂时不可用」"
-    },
-    {
-      "state": "下载进行中",
+      "state": "下载中",
       "meaning": "文件生成中",
       "applies_to": "下载操作",
       "user_action_available": "等待",
-      "feedback_standard": "「文件生成中，请稍候」"
+      "feedback_standard": "正在生成文件，请稍候..."
+    },
+    {
+      "state": "下载失败",
+      "meaning": "文件生成异常",
+      "applies_to": "下载操作",
+      "user_action_available": "重试",
+      "feedback_standard": "文件生成失败，请稍后重试"
     }
   ],
   "open_questions": [
     {
-      "question": "账号全部的数据含义（汇总/逐个/对比）——基于汇总方案推进",
-      "impact": "决定摘要卡片和所有模块的基础展示方式",
-      "suggested_owner": "产品经理 + 后端"
+      "question": "客户经理是否仅作为查看者，还是需要主动生成/推送建议书？",
+      "impact": "决定是否需要为客户经理角色设计独立流程，当前基于'客户经理仅查看'推进",
+      "suggested_owner": "产品负责人"
     },
     {
-      "question": "下载快照的数据范围（按当前筛选/全量）——基于当前账号+当前筛选推进",
-      "impact": "影响下载弹窗中的范围提示文案和下载实现",
-      "suggested_owner": "产品经理"
+      "question": "三类诊断结果是否需要按严重程度排序？",
+      "impact": "影响诊断推荐卡片区在页面中的排列顺序和视觉权重",
+      "suggested_owner": "设计 + 业务"
     },
     {
-      "question": "诊断与推荐的关联逻辑（是否定向关联）——基于推荐关联方案推进",
-      "impact": "影响推荐区块的展示逻辑和用户信任感",
-      "suggested_owner": "产品经理 + 资产配置团队"
+      "question": "各模块调用企业财富+接口的方式是独立接口还是统一大接口？",
+      "impact": "影响模块级加载的实现方案，当前基于模块间独立调用推进",
+      "suggested_owner": "开发"
     },
     {
-      "question": "客户经理具体使用场景",
-      "impact": "影响角色权限设计",
-      "suggested_owner": "产品经理"
+      "question": "产品推荐是否基于诊断结果生成？",
+      "impact": "影响诊断与推荐的关联方式，当前基于按诊断输入产出推荐推进",
+      "suggested_owner": "企业财富+"
     },
     {
-      "question": "推荐到购物车的跳转方式——基于新页面跳转推进",
-      "impact": "影响批量购买的操作流程",
-      "suggested_owner": "交互设计"
+      "question": "按银行账号切换时是否保留上次查看账号的记忆？",
+      "impact": "影响切换交互的默认行为，当前按每次进入默认全部推进",
+      "suggested_owner": "产品 + 设计"
+    },
+    {
+      "question": "下载是否需要支持选择性导出部分模块？",
+      "impact": "影响下载弹窗的交互设计，当前按全量平铺推进",
+      "suggested_owner": "产品负责人"
+    },
+    {
+      "question": "批量购买的购物车与现有购物车是否完全复用？",
+      "impact": "影响批量购买流程是否需要扩展，当前按复用购物车推进",
+      "suggested_owner": "产品 + 开发"
     }
   ],
   "knowledge_consumption": {
     "design_guidelines_used": [
-      "IA-02 分块（Chunking）——页面按决策链纵向分块",
-      "U-01 状态、进展与结果可见——模块级加载态+全页空状态区分",
-      "U-03 用户控制与自由——垂直滚动非强制分页",
-      "异常修正可执行——下载失败按类型区分提示"
+      "IA-02 分块",
+      "U-08 极简与聚焦",
+      "C-04 渐进披露",
+      "C-03 减少无关认知负荷",
+      "U-09 可行动的恢复路径",
+      "U-01 状态可见"
     ],
     "business_knowledge_used": [],
     "knowledge_gaps": [
-      "项目知识库不覆盖银行财富管理业务，无可用业务知识"
+      "财富管理领域业务知识不在现有知识库中，体验方案基于 UXB 结论和需求文档推导"
     ],
     "upstream_trace": [
       {
-        "upstream_judgment": "六大模块同屏承载，信息密度高",
-        "experience_meaning": "用户可能迷失，需要浏览优先级引导",
-        "blueprint_decision": "摘要卡片区+纵向分段，按决策链顺序排列",
-        "target_section": "§6"
+        "upstream": "UXB §7: 五个信息模块阅读顺序不是任意的",
+        "blueprint_decision": "页面按总览→持仓表现→分布→诊断×推荐排列，区分默认展开/折叠",
+        "section": "§3 / §6"
       },
       {
-        "upstream_judgment": "账号全部选项语义未定",
-        "experience_meaning": "影响摘要卡展示方式",
-        "blueprint_decision": "暂按汇总方案推进，标注待确认",
-        "target_section": "§6 + §8"
+        "upstream": "UXB §7: 诊断与推荐缺少因果衔接",
+        "blueprint_decision": "诊断推荐联合卡片组，问题→建议方向→产品三层结构",
+        "section": "§3 节点五 / §6"
       },
       {
-        "upstream_judgment": "诊断和推荐应建立关联",
-        "experience_meaning": "用户需要感知推荐与诊断的关系",
-        "blueprint_decision": "诊断区块底部增加过渡文案，推荐区块紧接诊断下方",
-        "target_section": "§6"
+        "upstream": "UXB §7: 客户经理角色场景未确认",
+        "blueprint_decision": "主方案仅覆盖企业客户自助场景",
+        "section": "§8"
       },
       {
-        "upstream_judgment": "仅理财vs多业务范围不一致",
-        "experience_meaning": "用户可能困惑差异",
-        "blueprint_decision": "Tab分离理财和其他业务，标注差异说明",
-        "target_section": "§6"
+        "upstream": "UXB §7: 数据全部依赖企业财富+接口",
+        "blueprint_decision": "模块级加载 + 独立降级策略",
+        "section": "§5 / §6"
       },
       {
-        "upstream_judgment": "购买链路影响转化率",
-        "experience_meaning": "跳转步骤越多转化越低",
-        "blueprint_decision": "推荐列表行内直接展示购买按钮，一跳到购买页",
-        "target_section": "§4"
+        "upstream": "UXB §7: 批量购买部分失败",
+        "blueprint_decision": "结算结果页展示成功/失败混合状态",
+        "section": "§5 异常六"
       },
       {
-        "upstream_judgment": "两个入口的账号上下文继承",
-        "experience_meaning": "入口状态不同",
-        "blueprint_decision": "菜单入口默认全部；持仓列表入口自动选中当前账号",
-        "target_section": "§6 + §3"
+        "upstream": "UXB §7: 建议书下载需平铺所有内容",
+        "blueprint_decision": "下载弹窗选择格式后全量生成",
+        "section": "§4 流程三"
       }
     ]
   }

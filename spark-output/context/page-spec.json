@@ -1,97 +1,295 @@
 {
   "skill": "page-spec",
   "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "资产配置面客版",
+  "generated_at": "2026-07-18",
+  "project_name": "财富专区-资产配置面客版",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
+    "spark-output/context/experience-blueprint.json",
     "spark-output/experience_blueprint.md",
     "spark-output/context/page-generation-handoff.md"
   ],
   "read_sections": [
-    "体验蓝图 §3 主流程、§4 次流程、§5 异常、§6 页面设计、§7 状态与反馈",
-    "页面生成事实交接 FACT-P*, FACT-F*, FACT-I*, FACT-S*, FACT-O*, DROP-*, GAP-*"
+    "knowledge-wiki/knowledge/wiki/index.md"
   ],
   "page_summary": {
     "product_domain": "财富专区 — 资产配置",
-    "page_type": "信息展示页 + 弹窗",
+    "page_type": "单页信息展示 + 弹窗（下载格式选择 / 批量购买确认）",
     "user_role": "企业客户",
-    "core_task": "查看资产配置建议书，了解持仓情况，发现配置问题，获取产品推荐并执行购买"
+    "core_task": "查看资产配置建议书，了解持仓情况、诊断结果和产品推荐，并执行购买操作"
   },
   "generation_scope": {
-    "generate": ["资产配置主页面", "下载格式选择弹窗"],
-    "reference_only": ["产品详情页", "购买页", "购物车"],
-    "do_not_generate": ["持仓概览模块", "历史建议书保存/列表/删除", "其他业务投资分布细分类", "其他业务期限分布细分类", "到期诊断中开放期/可赎回产品"]
+    "generate": [
+      "资产配置建议书主页面",
+      "下载格式选择弹窗",
+      "批量购买确认弹窗"
+    ],
+    "reference_only": [
+      "产品详情页：复用现有产品详情页",
+      "购物车：复用现有购物车流程",
+      "产品列表页：无持仓时跳转，复用现有页面"
+    ],
+    "do_not_generate": []
   },
   "entity_relationships": [
     {
-      "entity": "资产配置主页面",
+      "entity": "资产配置建议书主页面",
       "type": "Page",
-      "relation": "顶级页面，通过菜单或持仓列表入口进入"
+      "relation": "顶级页面，有独立菜单入口"
     },
     {
       "entity": "下载格式选择弹窗",
       "type": "Modal",
-      "relation": "依附于资产配置主页面，点击右下角悬浮下载按钮触发"
+      "relation": "从主页面右下角悬浮按钮触发"
+    },
+    {
+      "entity": "批量购买确认弹窗",
+      "type": "Modal",
+      "relation": "从主页面推荐区底部批量购买按钮触发"
+    },
+    {
+      "entity": "产品详情页",
+      "type": "Page",
+      "relation": "从主页面推荐区产品名称跳转进入（复用）"
+    },
+    {
+      "entity": "购物车",
+      "type": "Page",
+      "relation": "从主页面推荐区批量勾选后跳转进入（复用）"
+    },
+    {
+      "entity": "产品列表页",
+      "type": "Page",
+      "relation": "从主页面空状态去购买按钮跳转进入（复用）"
     }
   ],
   "entities": [
-    {"name": "资产配置主页面", "type": "Page"},
-    {"name": "下载格式选择弹窗", "type": "Modal"}
+    {
+      "name": "资产配置建议书主页面",
+      "type": "Page"
+    },
+    {
+      "name": "下载格式选择弹窗",
+      "type": "Modal"
+    },
+    {
+      "name": "批量购买确认弹窗",
+      "type": "Modal"
+    },
+    {
+      "name": "产品详情页",
+      "type": "Page（复用）"
+    },
+    {
+      "name": "购物车",
+      "type": "Page（复用）"
+    },
+    {
+      "name": "产品列表页",
+      "type": "Page（复用）"
+    }
   ],
   "extraction_summary": {
-    "entities_count": 2,
-    "states_count": 17,
-    "copy_count": 28,
-    "exceptions_count": 7
+    "entities_count": 6,
+    "states_count": 10,
+    "copy_count": 42,
+    "exceptions_count": 6
   },
   "pages": [
     {
-      "page_id": "P01",
-      "page_name": "资产配置主页面",
-      "page_goal": "让企业客户一站式了解资产配置情况，发现优化机会并执行操作",
-      "structure_ascii": "顶部标题栏+R2账号选择器+R3摘要卡片区+R4持仓表现区块(时间筛选器+指标+走势图+收益排行)+R5投资分布区块(Tabs+饼图+Table)+R6期限分布区块(Tabs+Table)+R7持仓诊断区块(诊断列表)+R8产品推荐区块(Table+购买按钮+批量操作)+R9底部风险提示",
+      "page_id": "page-1",
+      "page_name": "资产配置建议书主页面",
+      "page_goal": "企业客户在一页内完成查看总览→分析表现→了解诊断→获取推荐→采取行动的完整链路",
+      "structure_ascii": "参见 page_spec.md §4 ASCII 线框",
       "regions": [
-        {"region_id": "R1", "name": "顶部标题栏", "purpose": "展示页面标题和下载按钮入口", "content": ["Text: 资产配置建议书", "Button: 下载建议书(悬浮右下角)"]},
-        {"region_id": "R2", "name": "账号选择器", "purpose": "选择/切换银行账号", "content": ["Select: 银行账号下拉列表(默认全部或选中账号)"]},
-        {"region_id": "R3", "name": "摘要卡片区", "purpose": "一眼掌握核心资产指标", "content": ["StatCard: 总资产{金额}", "StatCard: 区间收益{金额}", "StatCard: 年化收益率{%}", "StatCard: 持仓产品数{N}只"]},
-        {"region_id": "R4", "name": "持仓表现区块", "purpose": "展示选定时间区间的持仓表现", "content": ["时间区间筛选器(Select快捷选项+DatePicker)", "指标行: 持仓金额/较期初/区间收益/年化收益率", "指标行: 购买笔数/购买金额/赎回笔数/赎回金额", "趋势图: 持仓变动趋势图", "趋势图: 收益金额趋势图", "Table: 产品收益排行(排名/产品名称/持仓金额/持仓收益)"]},
-        {"region_id": "R5", "name": "投资分布区块", "purpose": "展示资产按产品类型的分布", "content": ["Tabs: 理财/其他业务", "饼图/环形图", "Table: 产品类型/持仓金额/占比/年化收益率/排名", "Text: 说明标注"]},
-        {"region_id": "R6", "name": "期限分布区块", "purpose": "展示资产按产品期限的分布", "content": ["Tabs: 理财/其他业务", "Table: 产品期限/持仓金额/占比/年化收益率", "Text: 说明标注"]},
-        {"region_id": "R7", "name": "持仓诊断区块", "purpose": "展示持仓问题诊断", "content": ["List: 诊断条目(含图标+问题说明+金额+链接按钮)", "Text: 诊断→推荐过渡文案"]},
-        {"region_id": "R8", "name": "产品推荐区块", "purpose": "展示推荐产品和购买入口", "content": ["Table: 产品名称/代码/交易时间/期限/收益率/最大回撤/推荐理由", "Button: 购买(行内)", "Checkbox: 全选", "Button: 加入购物车({N}件)"]},
-        {"region_id": "R9", "name": "底部风险提示区", "purpose": "展示法定风险提示文案", "content": ["Text: 风险提示文案×2"]}
+        {
+          "region_id": "R1",
+          "name": "顶部导航区",
+          "purpose": "显示页面标题",
+          "content": [
+            "Text：资产配置建议书"
+          ]
+        },
+        {
+          "region_id": "R2",
+          "name": "账号选择区",
+          "purpose": "切换银行账号",
+          "content": [
+            "Select：银行账号（默认全部账号）"
+          ]
+        },
+        {
+          "region_id": "R3",
+          "name": "总览卡片区",
+          "purpose": "显示时点资产和诊断摘要",
+          "content": [
+            "StatCard：时点资产 {金额}{单位}",
+            "Tag：诊断摘要 {N}项待关注 / 持仓状态良好"
+          ]
+        },
+        {
+          "region_id": "R4",
+          "name": "持仓表现区（可折叠）",
+          "purpose": "展示区间内持仓表现数据",
+          "content": [
+            "Select：时间区间筛选器",
+            "KPI 卡片组：持仓金额、较期初、区间收益、年化收益率",
+            "Statistics：购买/赎回统计",
+            "Chart：持仓变动趋势折线图、收益金额趋势折线图",
+            "List：产品收益排行（降序）"
+          ]
+        },
+        {
+          "region_id": "R5",
+          "name": "投资分布区（Tab）",
+          "purpose": "展示资产类型分布",
+          "content": [
+            "Tab：投资分布 / 期限分布",
+            "Chart：饼图",
+            "List：按业务类型汇总的金额、占比、年化收益率及排名"
+          ]
+        },
+        {
+          "region_id": "R6",
+          "name": "期限分布区（Tab）",
+          "purpose": "展示产品期限分布",
+          "content": [
+            "List：按产品期限/持有期汇总的金额、占比、年化收益率及排名"
+          ]
+        },
+        {
+          "region_id": "R7",
+          "name": "诊断×推荐区（可折叠）",
+          "purpose": "展示诊断结果和关联产品推荐",
+          "content": [
+            "联合卡片组：诊断标签 + 问题描述 + 建议方向 + 推荐产品列表 + 购买按钮"
+          ]
+        },
+        {
+          "region_id": "R8",
+          "name": "底部合规区",
+          "purpose": "风险提示",
+          "content": [
+            "Text：理财非存款，产品有风险，投资需谨慎"
+          ]
+        },
+        {
+          "region_id": "R9",
+          "name": "悬浮操作区",
+          "purpose": "触发下载",
+          "content": [
+            "Button：下载（右下角悬浮）"
+          ]
+        }
       ],
       "extraction_notes": [
-        "FACT-P001-P006 已装配至页面结构",
-        "FACT-F001-F021 已装配至摘要卡片和各列表字段",
-        "FACT-I001-I009 已装配至关键操作和交互联动",
-        "FACT-S001-S012 已装配至状态表现",
-        "FACT-O001-O004 已装配至关键操作和下载交互"
+        "主页面为顶级页面（有独立菜单入口），无需查找父页面",
+        "知识库中财富管理领域无对应载体语义文件，页面结构来自体验蓝图 §6",
+        "保存按钮位保留但本版本不做"
       ],
       "list_fields": [
-        {"field": "排名", "meaning": "持仓收益降序序号", "source": "计算"},
-        {"field": "产品名称", "meaning": "持仓产品名称", "source": "企业财富+"},
-        {"field": "持仓金额", "meaning": "持仓余额(自动单位换算)", "source": "企业财富+"},
-        {"field": "持仓收益", "meaning": "区间内持仓收益", "source": "企业财富+"},
-        {"field": "产品类型", "meaning": "按产品特点分类", "source": "企业财富+"},
-        {"field": "占比", "meaning": "占总资产比例", "source": "计算"},
-        {"field": "年化收益率", "meaning": "年化收益率(保留2位小数)", "source": "企业财富+"},
-        {"field": "产品期限/持有期", "meaning": "产品期限或持有期", "source": "企业财富+"},
-        {"field": "交易时间", "meaning": "开放时间+赎回清算效率", "source": "企业财富+"},
-        {"field": "收益率或业绩比较基准", "meaning": "收益率/基准及描述", "source": "企业财富+"},
-        {"field": "近一月最大回撤", "meaning": "近一月最大回撤值(活钱不展示)", "source": "企业财富+"},
-        {"field": "推荐理由", "meaning": "推荐原因描述", "source": "企业财富+"}
+        {
+          "field": "产品名称",
+          "meaning": "持仓产品简称/代码",
+          "source": "企业财富+"
+        },
+        {
+          "field": "持仓收益",
+          "meaning": "区间内该产品的持仓收益金额",
+          "source": "企业财富+"
+        },
+        {
+          "field": "收益率",
+          "meaning": "区间内该产品的收益率",
+          "source": "企业财富+"
+        },
+        {
+          "field": "建议持有类型",
+          "meaning": "推荐配置方向",
+          "source": "企业财富+"
+        },
+        {
+          "field": "交易时间",
+          "meaning": "开放时间+赎回清算效率",
+          "source": "企业财富+"
+        },
+        {
+          "field": "产品期限",
+          "meaning": "产品持有期限",
+          "source": "企业财富+"
+        },
+        {
+          "field": "近一月最大回撤",
+          "meaning": "回撤率（活钱管理类不展示）",
+          "source": "企业财富+"
+        },
+        {
+          "field": "推荐理由",
+          "meaning": "推荐原因描述",
+          "source": "企业财富+"
+        },
+        {
+          "field": "业务类型",
+          "meaning": "理财/公募基金/资管计划/信托计划",
+          "source": "企业财富+"
+        },
+        {
+          "field": "持仓金额",
+          "meaning": "该类型持仓总金额",
+          "source": "企业财富+"
+        },
+        {
+          "field": "占比",
+          "meaning": "该类型占总资产比例",
+          "source": "企业财富+"
+        },
+        {
+          "field": "年化收益率",
+          "meaning": "理财行展示年化收益率及排名",
+          "source": "企业财富+"
+        },
+        {
+          "field": "产品到期日",
+          "meaning": "到期诊断专用",
+          "source": "企业财富+"
+        },
+        {
+          "field": "持仓时长",
+          "meaning": "时间过长诊断专用（按卡中最大连续持有天数）",
+          "source": "企业财富+"
+        }
       ],
       "key_actions": [
-        {"action": "切换账号", "trigger": "Select变更", "result": "所有模块联动刷新"},
-        {"action": "选择时间区间", "trigger": "快捷选项或DatePicker变更", "result": "持仓表现刷新"},
-        {"action": "切换Tab", "trigger": "点击Tab标签", "result": "切换理财/其他业务视图"},
-        {"action": "查看诊断详情", "trigger": "点击[查看]", "result": "展开详情"},
-        {"action": "查看产品详情", "trigger": "点击产品名称/代码", "result": "跳转产品详情页"},
-        {"action": "单个购买", "trigger": "点击[购买]", "result": "跳转购买页"},
-        {"action": "批量购买", "trigger": "勾选→点击[加入购物车]", "result": "跳转购物车"},
-        {"action": "下载建议书", "trigger": "点击[下载建议书]", "result": "打开下载弹窗"}
+        {
+          "action": "切换银行账号",
+          "trigger": "Select：银行账号下拉选择",
+          "result": "以新账号重新请求所有模块数据"
+        },
+        {
+          "action": "筛选时间区间",
+          "trigger": "Select：时间区间筛选器",
+          "result": "持仓表现模块全部刷新"
+        },
+        {
+          "action": "购买单件产品",
+          "trigger": "Button：购买（推荐产品旁）",
+          "result": "跳转产品购买页"
+        },
+        {
+          "action": "批量购买",
+          "trigger": "CheckboxGroup + Button",
+          "result": "弹出批量购买确认弹窗"
+        },
+        {
+          "action": "查看产品详情",
+          "trigger": "Link：产品名称/代码",
+          "result": "跳转产品详情页"
+        },
+        {
+          "action": "下载建议书",
+          "trigger": "Button：右下角悬浮下载",
+          "result": "弹出下载格式选择弹窗"
+        }
       ]
     }
   ],
@@ -99,132 +297,442 @@
     {
       "entity_name": "下载格式选择弹窗",
       "surface_type": "Modal",
-      "goal": "让用户选择建议书的下载格式",
-      "structure_ascii": "R1标题'下载建议书'+R2说明文字+R3格式单选(Radio:PDF/PNG)+R4范围提示+R5操作按钮(取消/开始下载)",
+      "goal": "让客户选择建议书的下载格式（PDF/PNG）",
+      "structure_ascii": "参见 page_spec.md §5 ASCII 框图",
       "regions": [
-        {"region_id": "R1", "name": "弹窗标题", "purpose": "标题", "content": ["Text: 下载建议书"]},
-        {"region_id": "R2", "name": "说明文字", "purpose": "引导用户选择", "content": ["Text: 请选择下载格式："]},
-        {"region_id": "R3", "name": "格式选项", "purpose": "选择下载格式", "content": ["RadioGroup: PDF（适合打印分享）", "RadioGroup: PNG（适合图片查看）"]},
-        {"region_id": "R4", "name": "范围提示", "purpose": "告知下载内容范围", "content": ["Text: 将下载当前账号下所有模块内容"]},
-        {"region_id": "R5", "name": "操作按钮", "purpose": "确认或取消", "content": ["Button: 取消(次)", "Button: 开始下载(主)"]}
+        {
+          "region_id": "M1-R1",
+          "name": "标题区",
+          "purpose": "弹窗标题",
+          "content": ["Text：选择下载格式"]
+        },
+        {
+          "region_id": "M1-R2",
+          "name": "格式选项区",
+          "purpose": "选择下载格式",
+          "content": ["RadioGroup：PDF 格式 / PNG 图片"]
+        },
+        {
+          "region_id": "M1-R3",
+          "name": "操作区",
+          "purpose": "确认或取消",
+          "content": ["Button：取消 / 下载"]
+        }
+      ],
+      "validation_blocking_state_changes": [],
+      "non_compliance_confirm_area": {
+        "structure": "unknown",
+        "copy": [],
+        "actions": []
+      }
+    },
+    {
+      "entity_name": "批量购买确认弹窗",
+      "surface_type": "Modal",
+      "goal": "让客户确认要批量购买的产品列表后跳转购物车",
+      "structure_ascii": "参见 page_spec.md §6 ASCII 框图",
+      "regions": [
+        {
+          "region_id": "M2-R1",
+          "name": "标题区",
+          "purpose": "弹窗标题",
+          "content": ["Text：确认批量购买产品"]
+        },
+        {
+          "region_id": "M2-R2",
+          "name": "产品清单区",
+          "purpose": "展示已勾选产品",
+          "content": ["CheckboxGroup：产品列表（产品名 + 金额）"]
+        },
+        {
+          "region_id": "M2-R3",
+          "name": "金额汇总区",
+          "purpose": "显示预计总金额",
+          "content": ["Text：预计总金额 {总金额} 元"]
+        },
+        {
+          "region_id": "M2-R4",
+          "name": "操作区",
+          "purpose": "确认或取消",
+          "content": ["Button：取消 / 加入购物车"]
+        }
       ],
       "validation_blocking_state_changes": [
-        "未选择格式时，开始下载按钮置灰"
+        {
+          "condition": "产品确认过程中售罄/额度不足",
+          "state_change": "自动移除该产品，金额重新计算"
+        },
+        {
+          "condition": "全部产品售罄",
+          "state_change": "提示所选产品均已售罄，加入购物车按钮置灰"
+        }
       ],
       "non_compliance_confirm_area": {
-        "structure": "无",
+        "structure": "unknown",
         "copy": [],
         "actions": []
       }
     }
   ],
   "main_interaction_flow": [
-    {"step_id": "1", "trigger": "点击入口链接", "user_action": "点击资产配置菜单或持仓列表入口", "system_response": "页面加载，账号选择器默认选中，各模块LoadingState", "state_change": "页面加载中", "next_step": "选择账号或浏览"},
-    {"step_id": "2", "trigger": "Select下拉选择", "user_action": "选择/切换银行账号", "system_response": "所有模块LoadingState→数据加载完成展示", "state_change": "数据刷新中→数据加载完成", "next_step": "浏览各模块"},
-    {"step_id": "3", "trigger": "时间选择器变更", "user_action": "选择时间区间", "system_response": "持仓表现模块LoadingState→数据更新", "state_change": "数据刷新中→数据加载完成", "next_step": "浏览持仓表现"},
-    {"step_id": "4", "trigger": "向下滚动", "user_action": "滚动页面", "system_response": "各区块依次进入视口展示内容", "state_change": "无", "next_step": "继续滚动"},
-    {"step_id": "5", "trigger": "点击Tab标签", "user_action": "切换Tab", "system_response": "切换展示理财或其他业务数据", "state_change": "无", "next_step": "浏览对应数据"},
-    {"step_id": "6", "trigger": "点击诊断[查看]", "user_action": "点击诊断条目链接", "system_response": "展开详情或跳转详情", "state_change": "无", "next_step": "查看详情后返回"},
-    {"step_id": "7", "trigger": "点击[购买]", "user_action": "点击产品行内按钮", "system_response": "跳转购买页", "state_change": "无", "next_step": "在购买页交易"},
-    {"step_id": "8", "trigger": "勾选+点击[加入购物车]", "user_action": "勾选Checkbox→点击批量按钮", "system_response": "跳转购物车", "state_change": "无", "next_step": "在购物车结算"},
-    {"step_id": "9", "trigger": "点击[下载建议书]", "user_action": "点击悬浮按钮", "system_response": "打开下载格式选择弹窗", "state_change": "无", "next_step": "选择格式下载"},
-    {"step_id": "10", "trigger": "选择格式+确认", "user_action": "Radio选择→点击[开始下载]", "system_response": "下载进行中→下载完成Toast", "state_change": "下载进行中→下载完成", "next_step": "打开文件/重试"}
+    {
+      "step_id": "flow-1",
+      "trigger": "从菜单或持仓列表进入",
+      "user_action": "点击入口",
+      "system_response": "页面框架渲染，各模块按优先级发起数据请求",
+      "state_change": "各模块进入加载中",
+      "next_step": "等待数据返回"
+    },
+    {
+      "step_id": "flow-2",
+      "trigger": "数据返回",
+      "user_action": "浏览总览卡片区",
+      "system_response": "展示时点资产和诊断摘要",
+      "state_change": "加载中→加载成功",
+      "next_step": "查看持仓表现或切换账号"
+    },
+    {
+      "step_id": "flow-3",
+      "trigger": "浏览持仓表现区",
+      "user_action": "查看 KPI 和图表或筛选时间区间",
+      "system_response": "展示 4 个 KPI 卡片、统计、趋势图、排行；筛选时刷新数据",
+      "state_change": "区间筛选时模块数据更新",
+      "next_step": "查看分布或诊断"
+    },
+    {
+      "step_id": "flow-4",
+      "trigger": "展开诊断×推荐区",
+      "user_action": "浏览联合卡片组",
+      "system_response": "展示诊断问题→建议方向→推荐产品",
+      "state_change": "无",
+      "next_step": "购买/批量购买/详情/下载"
+    },
+    {
+      "step_id": "flow-5",
+      "trigger": "点击购买",
+      "user_action": "点击推荐产品旁的购买按钮",
+      "system_response": "跳转产品购买页（复用）",
+      "state_change": "页面跳转",
+      "next_step": "完成交易"
+    },
+    {
+      "step_id": "flow-6",
+      "trigger": "点击批量购买",
+      "user_action": "勾选产品后点击批量购买",
+      "system_response": "弹出批量购买确认弹窗",
+      "state_change": "弹窗打开",
+      "next_step": "确认或取消"
+    },
+    {
+      "step_id": "flow-7",
+      "trigger": "点击下载",
+      "user_action": "点击右下角下载按钮",
+      "system_response": "弹出下载格式选择弹窗",
+      "state_change": "弹窗打开",
+      "next_step": "选择格式并下载"
+    },
+    {
+      "step_id": "flow-8",
+      "trigger": "切换银行账号",
+      "user_action": "从账号选择器选择目标账号",
+      "system_response": "以新账号重新请求所有模块数据",
+      "state_change": "正常→加载中→加载成功",
+      "next_step": "浏览新账号数据"
+    }
   ],
-  "validation_rules": [],
+  "validation_rules": [
+    {
+      "rule_id": "val-1",
+      "object": "批量购买按钮",
+      "condition": "未勾选任何产品",
+      "blocking": "是",
+      "message_key": ""
+    },
+    {
+      "rule_id": "val-2",
+      "object": "批量购买确认弹窗",
+      "condition": "产品在确认过程中售罄",
+      "blocking": "否",
+      "message_key": ""
+    }
+  ],
   "states": [
-    {"state": "页面加载中", "trigger_condition": "进入页面/刷新", "ui_behavior": "全页骨架屏加载", "copy_key": "—"},
-    {"state": "模块加载中", "trigger_condition": "某模块数据请求中", "ui_behavior": "模块内加载骨架", "copy_key": "—"},
-    {"state": "数据刷新中", "trigger_condition": "切换账号/时间区间", "ui_behavior": "模块展示加载态", "copy_key": "—"},
-    {"state": "数据加载完成", "trigger_condition": "所有数据就绪", "ui_behavior": "正常展示数据", "copy_key": "—"},
-    {"state": "无持仓数据", "trigger_condition": "账号下无持仓", "ui_behavior": "空状态(图标+文案+按钮)", "copy_key": "empty.no_holdings"},
-    {"state": "模块无数据", "trigger_condition": "某模块无可用数据", "ui_behavior": "空状态", "copy_key": "empty.no_*"},
-    {"state": "无诊断问题", "trigger_condition": "诊断无异常", "ui_behavior": "不展示持仓诊断模块", "copy_key": "—"},
-    {"state": "推荐为空", "trigger_condition": "无符合条件的推荐产品", "ui_behavior": "空状态", "copy_key": "empty.no_recommendation"},
-    {"state": "功能不可用", "trigger_condition": "数据计算异常", "ui_behavior": "模块内暂时不可用提示", "copy_key": "error.module_unavailable"},
-    {"state": "下载进行中", "trigger_condition": "文件生成中", "ui_behavior": "加载提示+进度", "copy_key": "download.in_progress"},
-    {"state": "下载完成", "trigger_condition": "文件已下载", "ui_behavior": "Toast提示", "copy_key": "download.complete"},
-    {"state": "下载失败", "trigger_condition": "文件生成失败", "ui_behavior": "Toast提示", "copy_key": "download.failed"},
-    {"state": "网络中断", "trigger_condition": "下载过程中断网", "ui_behavior": "Toast提示", "copy_key": "download.network_error"},
-    {"state": "存储空间不足", "trigger_condition": "设备空间不足", "ui_behavior": "弹窗提示", "copy_key": "download.storage_insufficient"},
-    {"state": "浏览器拦截下载", "trigger_condition": "浏览器阻止下载", "ui_behavior": "引导提示", "copy_key": "download.browser_blocked"}
+    {
+      "state": "加载中",
+      "trigger_condition": "首次进入或切换账号",
+      "ui_behavior": "各模块独立骨架屏加载占位",
+      "copy_key": ""
+    },
+    {
+      "state": "加载成功",
+      "trigger_condition": "所有数据正常返回",
+      "ui_behavior": "正常展示所有模块",
+      "copy_key": ""
+    },
+    {
+      "state": "部分缺失",
+      "trigger_condition": "个别字段无数据",
+      "ui_behavior": "缺失字段展示 --",
+      "copy_key": "label.empty"
+    },
+    {
+      "state": "模块异常",
+      "trigger_condition": "单个模块接口失败",
+      "ui_behavior": "该模块展示空状态卡片",
+      "copy_key": "label.module_empty"
+    },
+    {
+      "state": "全页异常",
+      "trigger_condition": "核心接口全失败",
+      "ui_behavior": "全屏阻断页",
+      "copy_key": "error.system_busy"
+    },
+    {
+      "state": "无持仓",
+      "trigger_condition": "账号下无持仓记录",
+      "ui_behavior": "全页空态 + 去购买按钮",
+      "copy_key": "empty.no_position"
+    },
+    {
+      "state": "无诊断",
+      "trigger_condition": "无合格诊断问题",
+      "ui_behavior": "诊断模块不展示",
+      "copy_key": ""
+    },
+    {
+      "state": "无推荐",
+      "trigger_condition": "无合格推荐产品",
+      "ui_behavior": "推荐模块不展示",
+      "copy_key": ""
+    },
+    {
+      "state": "下载中",
+      "trigger_condition": "文件生成中",
+      "ui_behavior": "Toast 提示",
+      "copy_key": "toast.downloading"
+    },
+    {
+      "state": "下载失败",
+      "trigger_condition": "文件生成异常",
+      "ui_behavior": "Toast 提示",
+      "copy_key": "toast.download_failed"
+    }
   ],
   "exception_recovery": [
-    {"exception": "页面整体数据加载失败", "trigger": "接口超时/返回错误，重试3次失败", "ui_behavior": "全页EmptyState+【重新加载】按钮", "recovery_path": "点击重新加载回到初始流程，无信息丢失"},
-    {"exception": "某模块数据加载失败", "trigger": "模块级接口异常", "ui_behavior": "该模块展示'功能暂时不可用'", "recovery_path": "后台恢复后刷新页面或切换条件重试，无信息丢失"},
-    {"exception": "下载失败", "trigger": "文件生成失败", "ui_behavior": "Toast提示", "recovery_path": "重试→重新打开弹窗→选择格式→下载"},
-    {"exception": "网络中断", "trigger": "下载过程中网络断开", "ui_behavior": "Toast提示", "recovery_path": "检查网络后重新下载"},
-    {"exception": "存储空间不足", "trigger": "设备空间不足", "ui_behavior": "Modal提示", "recovery_path": "清理空间后重新下载"},
-    {"exception": "浏览器拦截下载", "trigger": "浏览器阻止弹出下载", "ui_behavior": "引导提示", "recovery_path": "允许浏览器下载后重新点击下载"},
-    {"exception": "用户无可选账号", "trigger": "账号列表API返回空", "ui_behavior": "全页EmptyState+账号选择器禁用", "recovery_path": "联系管理员或切换账号后重新进入"}
+    {
+      "exception": "企业财富+接口超时",
+      "trigger": "任一模块接口响应 > 5秒",
+      "ui_behavior": "模块骨架保留，重试3次，失败后空状态卡片",
+      "recovery_path": "下拉刷新或重进入；筛选条件保留"
+    },
+    {
+      "exception": "企业财富+服务无响应",
+      "trigger": "核心接口过半数连续失败",
+      "ui_behavior": "全屏阻断页",
+      "recovery_path": "1-2分钟后重试；原路返回无信息丢失"
+    },
+    {
+      "exception": "部分模块数据缺失",
+      "trigger": "个别模块接口报错或返回空",
+      "ui_behavior": "失败模块空状态，其他模块正常",
+      "recovery_path": "后台异步补全，下次进入更新；手动切换账号再切回"
+    },
+    {
+      "exception": "文件生成失败",
+      "trigger": "文件生成接口异常",
+      "ui_behavior": "弹窗内提示，保留重试",
+      "recovery_path": "点击重试；原路返回无信息丢失"
+    },
+    {
+      "exception": "下载网络中断",
+      "trigger": "下载过程中网络断开",
+      "ui_behavior": "浏览器下载失败 + Toast",
+      "recovery_path": "网络恢复后重新下载；原路返回"
+    },
+    {
+      "exception": "批量购买部分失败",
+      "trigger": "部分产品额度不足/已售罄",
+      "ui_behavior": "结算结果页混合展示成功/失败",
+      "recovery_path": "移除失败产品后重新选择；成功产品不受影响"
+    }
   ],
   "result_states": [
-    {"state": "全部成功", "condition": "所有模块数据加载完成", "ui_behavior": "正常展示所有模块", "copy_key": "—"},
-    {"state": "部分成功", "condition": "某模块失败其他成功", "ui_behavior": "失败模块显示功能不可用，其他正常", "copy_key": "error.module_unavailable"}
+    {
+      "state": "全部加载成功",
+      "condition": "所有模块数据正常返回",
+      "ui_behavior": "各模块按优先级完成渲染",
+      "copy_key": ""
+    },
+    {
+      "state": "下载成功",
+      "condition": "文件生成后触发浏览器下载",
+      "ui_behavior": "文件进入浏览器下载管理",
+      "copy_key": ""
+    },
+    {
+      "state": "批量购买全部成功",
+      "condition": "购物车中所有产品购买成功",
+      "ui_behavior": "展示成功结果（复用购物车逻辑）",
+      "copy_key": ""
+    },
+    {
+      "state": "批量购买部分成功",
+      "condition": "部分产品购买成功、部分失败",
+      "ui_behavior": "结算结果页展示成功/失败混合条目",
+      "copy_key": "toast.batch_partial_success"
+    }
   ],
   "copy_pool": {
     "modal": [
-      {"key": "modal.download.title", "value": "下载建议书", "source": "弹窗标题"},
-      {"key": "modal.download.prompt", "value": "请选择下载格式：", "source": "弹窗说明"},
-      {"key": "modal.download.option_pdf", "value": "PDF（适合打印分享）", "source": "格式选项"},
-      {"key": "modal.download.option_png", "value": "PNG（适合图片查看）", "source": "格式选项"},
-      {"key": "modal.download.scope_hint", "value": "将下载当前账号下所有模块内容", "source": "范围提示"}
+      "选择下载格式",
+      "适合打印和分享",
+      "适合快速截图查看",
+      "确认批量购买产品",
+      "已选择 {N} 件产品",
+      "预计总金额：{总金额} 元"
     ],
-    "object_selection": [],
-    "validation_and_execution": [],
+    "object_selection": [
+      "银行账号",
+      "全部账号",
+      "时间区间",
+      "近一个月",
+      "选择时间区间"
+    ],
+    "validation_and_execution": [
+      ""
+    ],
     "result_and_feedback": [
-      {"key": "download.in_progress", "value": "文件生成中，请稍候", "source": "下载反馈"},
-      {"key": "download.complete", "value": "下载完成", "source": "Toast"},
-      {"key": "download.failed", "value": "文件生成失败，请稍后重试", "source": "Toast"},
-      {"key": "download.network_error", "value": "网络异常，下载已中断", "source": "Toast"},
-      {"key": "download.storage_insufficient", "value": "存储空间不足，请清理后重试", "source": "Modal提示"},
-      {"key": "download.browser_blocked", "value": "请允许浏览器下载文件", "source": "引导提示"},
-      {"key": "error.module_unavailable", "value": "{模块名}暂时不可用", "source": "模块空态"},
-      {"key": "error.500", "value": "系统繁忙，请稍后再试", "source": "错误反馈"},
-      {"key": "error.503", "value": "系统维护中，请稍后再试", "source": "错误反馈"},
-      {"key": "error.401", "value": "登录已过期，请重新登录", "source": "错误反馈"},
-      {"key": "error.403", "value": "您暂无权限访问该功能", "source": "错误反馈"},
-      {"key": "error.404", "value": "暂无数据", "source": "错误反馈"},
-      {"key": "error.999", "value": "系统异常，请稍后再试", "source": "错误反馈"},
-      {"key": "empty.no_holdings", "value": "暂无持仓数据", "source": "全页空态"},
-      {"key": "empty.no_holdings_desc", "value": "购买理财产品，开启投资之旅", "source": "全页空态"},
-      {"key": "empty.no_performance", "value": "暂无持仓表现数据", "source": "持仓表现空态"},
-      {"key": "empty.no_investment_dist", "value": "暂无投资分布数据", "source": "投资分布空态"},
-      {"key": "empty.no_term_dist", "value": "暂无期限分布数据", "source": "期限分布空态"},
-      {"key": "empty.no_recommendation", "value": "暂无推荐产品", "source": "产品推荐空态"},
-      {"key": "empty.no_account", "value": "暂无可用账号", "source": "账号空态"}
+      "时点资产（{日期}）",
+      "{N} 项持仓待关注",
+      "持仓状态良好",
+      "持仓集中度过高",
+      "活钱管理占比 {P}%，偏高",
+      "建议：增配{产品类型}，降低活钱占比",
+      "产品即将到期",
+      "有 {N} 只产品近两周到期",
+      "建议：关注到期产品续期或转投",
+      "持仓时间过长",
+      "建议：评估是否继续持有",
+      "基于您的持仓情况推荐",
+      "--",
+      "暂无{模块名}数据",
+      "系统繁忙，请稍后再试",
+      "登录已过期，请重新登录",
+      "您暂无权限访问该功能",
+      "暂无数据",
+      "系统异常，请稍后再试",
+      "暂无持仓数据",
+      "购买理财产品，开启投资之旅",
+      "正在生成文件，请稍候...",
+      "文件生成失败，请稍后重试",
+      "网络异常，下载已中断",
+      "部分产品未成功购买，请查看明细",
+      "较期初：{增长率}",
+      "较期初：-",
+      "数据由管理机构提供的最新净值测算，仅供参考",
+      "理财非存款，产品有风险，投资需谨慎",
+      "本报告持仓市值、平均持仓成本、持仓天数、收益、持仓年化收益率等数据均由管理机构提供的最新净值测算，由于管理机构净值下发可能会延迟，为提升数据准确性，当发生净值下发延迟时，系统会对相关日期的数据做重算处理，所以可能会存在着相同生成条件下在不同时间生成的结果不一致的情况。本报告中收益率数据使用产品最新净值测算，因管理机构提供的产品净值精度有限，故计算结果仅供参考。该测算不会影响您的实际收益，实际收益请以管理机构确认金额为准。"
     ],
     "buttons": [
-      {"key": "btn.download", "value": "下载建议书", "source": "悬浮按钮"},
-      {"key": "btn.download_confirm", "value": "开始下载", "source": "弹窗确认"},
-      {"key": "btn.cancel", "value": "取消", "source": "弹窗取消"},
-      {"key": "btn.view_detail", "value": "查看", "source": "诊断条目"},
-      {"key": "btn.buy", "value": "购买", "source": "推荐行内"},
-      {"key": "btn.add_to_cart", "value": "加入购物车({N}件)", "source": "推荐底部"},
-      {"key": "btn.select_all", "value": "全选", "source": "推荐底部"},
-      {"key": "btn.retry", "value": "重新加载", "source": "空态/错误态"},
-      {"key": "btn.go_buy", "value": "去购买", "source": "空态引导"}
+      "取消",
+      "下载",
+      "加入购物车",
+      "购买",
+      "批量购买",
+      "去购买",
+      "重试"
     ]
   },
   "template_variables": [
-    {"variable": "{金额}", "meaning": "资产金额值（自动单位换算）", "value_range": "数值+元/万元/亿元"},
-    {"variable": "{占比}", "meaning": "百分比占比", "value_range": "如45.67%"},
-    {"variable": "{+/-%}", "meaning": "收益率（带正负号）", "value_range": "如+5.23%/-2.15%"},
-    {"variable": "{N}", "meaning": "数量计数", "value_range": "正整数"},
-    {"variable": "{N}只", "meaning": "产品数量", "value_range": "如3只"},
-    {"variable": "{产品名}", "meaning": "产品名称", "value_range": "字符串"},
-    {"variable": "{代码}", "meaning": "产品代码", "value_range": "字符串"},
-    {"variable": "{期限}", "meaning": "产品期限", "value_range": "字符串"},
-    {"variable": "{收益率}", "meaning": "收益率/业绩比较基准", "value_range": "百分比"},
-    {"variable": "{回撤}", "meaning": "近一月最大回撤值", "value_range": "百分比"},
-    {"variable": "{推荐理由}", "meaning": "推荐原因", "value_range": "字符串"},
-    {"variable": "{模块名}", "meaning": "模块名称", "value_range": "字符串"}
+    {
+      "variable": "{金额}",
+      "meaning": "各类持仓/收益金额",
+      "value_range": "数字，自动按元/万元/亿元换算"
+    },
+    {
+      "variable": "{单位}",
+      "meaning": "金额换算后的单位",
+      "value_range": "元 / 万元 / 亿元"
+    },
+    {
+      "variable": "{率}",
+      "meaning": "各类比率（增长率/收益率）",
+      "value_range": "带 +/- 号的百分比，保留2位小数"
+    },
+    {
+      "variable": "{日期}",
+      "meaning": "数据日期或区间日期",
+      "value_range": "YYYY-MM-DD"
+    },
+    {
+      "variable": "{N}",
+      "meaning": "数量（笔数、产品数、排名等）",
+      "value_range": "正整数"
+    },
+    {
+      "variable": "{M}",
+      "meaning": "数量（最大回撤率等）",
+      "value_range": "百分比数字"
+    },
+    {
+      "variable": "{P}",
+      "meaning": "占比（百分比）",
+      "value_range": "百分比，保留2位小数"
+    },
+    {
+      "variable": "{产品类型}",
+      "meaning": "推荐配置的产品类别",
+      "value_range": "文本"
+    },
+    {
+      "variable": "{模块名}",
+      "meaning": "异常模块的名称",
+      "value_range": "文本"
+    },
+    {
+      "variable": "{总金额}",
+      "meaning": "批量购买预计总金额",
+      "value_range": "数字，按元展示"
+    },
+    {
+      "variable": "{YYYYMMDDHHmmss}",
+      "meaning": "文件命名时间戳",
+      "value_range": "14位数字"
+    }
   ],
   "open_questions": [
-    {"question": "账号选择全部时数据是汇总展示还是逐账号列出（GAP-001）", "impact": "影响摘要卡片和所有模块的基础展示方式"},
-    {"question": "下载建议书按当前筛选条件还是全量数据生成（GAP-002）", "impact": "影响下载弹窗范围提示文案和实现"},
-    {"question": "诊断结果与产品推荐是否建立定向关联（GAP-003）", "impact": "影响推荐区块展示逻辑"},
-    {"question": "客户经理角色是否有独立使用场景和入口（GAP-004）", "impact": "影响角色权限设计"},
-    {"question": "推荐到购物车的跳转方式（浮层/新页面）（GAP-005）", "impact": "影响批量购买操作流程"}
+    {
+      "question": "客户经理是否仅作为查看者，还是需要主动生成/推送建议书？",
+      "impact": "如需客户经理独立流程，需新增角色侧实体"
+    },
+    {
+      "question": "三类诊断结果是否需要按严重程度排序？",
+      "impact": "影响诊断推荐卡片区在页面中的排列顺序"
+    },
+    {
+      "question": "各模块调用企业财富+接口的方式是独立接口还是统一大接口？",
+      "impact": "影响模块级加载的实现方案"
+    },
+    {
+      "question": "产品推荐是否基于诊断结果生成？",
+      "impact": "影响诊断与推荐的关联方式和推荐产品数据来源"
+    },
+    {
+      "question": "按银行账号切换时是否保留上次查看账号的记忆？",
+      "impact": "影响账号选择器的默认行为和页面刷新策略"
+    },
+    {
+      "question": "下载是否需要支持选择性导出部分模块？",
+      "impact": "影响下载弹窗是否需要增加模块筛选"
+    },
+    {
+      "question": "批量购买的购物车与现有购物车是否完全复用？",
+      "impact": "影响批量购买流程是否需要扩展"
+    },
+    {
+      "question": "保存按钮保留位（本版本不做）",
+      "impact": "页面右上角预留保存按钮位，当前不展示"
+    }
   ],
   "edge_consumed": false,
   "edge_trace": []
