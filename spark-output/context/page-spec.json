@@ -1,738 +1,205 @@
 {
   "skill": "page-spec",
   "version": "1.0",
-  "generated_at": "2026-07-18",
-  "project_name": "财富专区-资产配置面客版",
+  "generated_at": "2026-07-19",
+  "project_name": "子管理员复制",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
-    "spark-output/context/experience-blueprint.json",
     "spark-output/experience_blueprint.md",
+    "spark-output/context/experience-blueprint.json",
     "spark-output/context/page-generation-handoff.md"
   ],
   "read_sections": [
-    "knowledge-wiki/knowledge/wiki/index.md"
+    "体验蓝图 §3 主交互流程",
+    "体验蓝图 §4 次交互流程",
+    "体验蓝图 §5 异常与阻断流程",
+    "体验蓝图 §6.1 子管理员列表页",
+    "体验蓝图 §6.2 复制弹窗",
+    "体验蓝图 §6.3 员工选择弹窗",
+    "体验蓝图 §7 状态与反馈文案",
+    "page-generation-handoff.md 页面生成事实补充"
   ],
   "page_summary": {
-    "product_domain": "财富专区 — 资产配置",
-    "page_type": "单页信息展示 + 弹窗（下载格式选择 / 批量购买确认）",
-    "user_role": "企业客户",
-    "core_task": "查看资产配置建议书，了解持仓情况、诊断结果和产品推荐，并执行购买操作"
+    "product_domain": "通用权限管理 — 子管理员模式",
+    "page_type": "列表页、弹窗",
+    "user_role": "权限管理员",
+    "core_task": "将已有子管理员的权限配置（可授权组织/可授权功能）批量复制给其他用户"
   },
   "generation_scope": {
     "generate": [
-      "资产配置建议书主页面",
-      "下载格式选择弹窗",
-      "批量购买确认弹窗"
+      "子管理员列表页（实体 0）",
+      "复制弹窗（实体 1）"
     ],
     "reference_only": [
-      "产品详情页：复用现有产品详情页",
-      "购物车：复用现有购物车流程",
-      "产品列表页：无持仓时跳转，复用现有页面"
+      "员工选择弹窗 — 复用现有添加子管理员弹窗，仅新增当前身份列"
     ],
-    "do_not_generate": []
+    "do_not_generate": [
+      "操作记录列表页 — 已有系统页面",
+      "审批系统页面 — 已有系统页面"
+    ]
   },
   "entity_relationships": [
-    {
-      "entity": "资产配置建议书主页面",
-      "type": "Page",
-      "relation": "顶级页面，有独立菜单入口"
-    },
-    {
-      "entity": "下载格式选择弹窗",
-      "type": "Modal",
-      "relation": "从主页面右下角悬浮按钮触发"
-    },
-    {
-      "entity": "批量购买确认弹窗",
-      "type": "Modal",
-      "relation": "从主页面推荐区底部批量购买按钮触发"
-    },
-    {
-      "entity": "产品详情页",
-      "type": "Page",
-      "relation": "从主页面推荐区产品名称跳转进入（复用）"
-    },
-    {
-      "entity": "购物车",
-      "type": "Page",
-      "relation": "从主页面推荐区批量勾选后跳转进入（复用）"
-    },
-    {
-      "entity": "产品列表页",
-      "type": "Page",
-      "relation": "从主页面空状态去购买按钮跳转进入（复用）"
-    }
+    { "entity": "子管理员列表页", "type": "承载页", "relation": "操作列「复制」→ 打开复制弹窗" },
+    { "entity": "复制弹窗", "type": "弹窗", "relation": "从子管理员列表页操作列触发" },
+    { "entity": "员工选择弹窗", "type": "弹窗（引用）", "relation": "从复制弹窗复制对象选择器触发" }
   ],
   "entities": [
-    {
-      "name": "资产配置建议书主页面",
-      "type": "Page"
-    },
-    {
-      "name": "下载格式选择弹窗",
-      "type": "Modal"
-    },
-    {
-      "name": "批量购买确认弹窗",
-      "type": "Modal"
-    },
-    {
-      "name": "产品详情页",
-      "type": "Page（复用）"
-    },
-    {
-      "name": "购物车",
-      "type": "Page（复用）"
-    },
-    {
-      "name": "产品列表页",
-      "type": "Page（复用）"
-    }
+    { "name": "子管理员列表页", "type": "Page" },
+    { "name": "复制弹窗", "type": "Modal" },
+    { "name": "员工选择弹窗（引用）", "type": "Modal" }
   ],
   "extraction_summary": {
-    "entities_count": 6,
-    "states_count": 10,
-    "copy_count": 42,
-    "exceptions_count": 6
+    "entities_count": 2,
+    "states_count": 8,
+    "copy_count": 23,
+    "exceptions_count": 7
   },
   "pages": [
     {
-      "page_id": "page-1",
-      "page_name": "资产配置建议书主页面",
-      "page_goal": "企业客户在一页内完成查看总览→分析表现→了解诊断→获取推荐→采取行动的完整链路",
-      "structure_ascii": "参见 page_spec.md §4 ASCII 线框",
+      "page_id": "entity-0",
+      "page_name": "子管理员列表页",
+      "page_goal": "查看、检索和管理已配置的子管理员，支持增删改查及复制操作",
+      "structure_ascii": "顶部全局Tab切换区 → 提示信息与状态控制区 → 筛选查询区 → 工具栏与操作区 → 数据列表表格区（含操作列：复制|编辑|移除）→ 底部分页区",
       "regions": [
-        {
-          "region_id": "R1",
-          "name": "顶部导航区",
-          "purpose": "显示页面标题",
-          "content": [
-            "Text：资产配置建议书"
-          ]
-        },
-        {
-          "region_id": "R2",
-          "name": "账号选择区",
-          "purpose": "切换银行账号",
-          "content": [
-            "Select：银行账号（默认全部账号）"
-          ]
-        },
-        {
-          "region_id": "R3",
-          "name": "总览卡片区",
-          "purpose": "显示时点资产和诊断摘要",
-          "content": [
-            "StatCard：时点资产 {金额}{单位}",
-            "Tag：诊断摘要 {N}项待关注 / 持仓状态良好"
-          ]
-        },
-        {
-          "region_id": "R4",
-          "name": "持仓表现区（可折叠）",
-          "purpose": "展示区间内持仓表现数据",
-          "content": [
-            "Select：时间区间筛选器",
-            "KPI 卡片组：持仓金额、较期初、区间收益、年化收益率",
-            "Statistics：购买/赎回统计",
-            "Chart：持仓变动趋势折线图、收益金额趋势折线图",
-            "List：产品收益排行（降序）"
-          ]
-        },
-        {
-          "region_id": "R5",
-          "name": "投资分布区（Tab）",
-          "purpose": "展示资产类型分布",
-          "content": [
-            "Tab：投资分布 / 期限分布",
-            "Chart：饼图",
-            "List：按业务类型汇总的金额、占比、年化收益率及排名"
-          ]
-        },
-        {
-          "region_id": "R6",
-          "name": "期限分布区（Tab）",
-          "purpose": "展示产品期限分布",
-          "content": [
-            "List：按产品期限/持有期汇总的金额、占比、年化收益率及排名"
-          ]
-        },
-        {
-          "region_id": "R7",
-          "name": "诊断×推荐区（可折叠）",
-          "purpose": "展示诊断结果和关联产品推荐",
-          "content": [
-            "联合卡片组：诊断标签 + 问题描述 + 建议方向 + 推荐产品列表 + 购买按钮"
-          ]
-        },
-        {
-          "region_id": "R8",
-          "name": "底部合规区",
-          "purpose": "风险提示",
-          "content": [
-            "Text：理财非存款，产品有风险，投资需谨慎"
-          ]
-        },
-        {
-          "region_id": "R9",
-          "name": "悬浮操作区",
-          "purpose": "触发下载",
-          "content": [
-            "Button：下载（右下角悬浮）"
-          ]
-        }
+        { "region_id": "r0-1", "name": "顶部Tab切换区", "purpose": "切换治理模式视图", "content": ["Tabs: 子管理员模式/双管理员互审模式/权限变更审批模式"] },
+        { "region_id": "r0-2", "name": "提示与状态控制区", "purpose": "业务介绍与模式控制", "content": ["Text: 业务介绍", "Link: 帮助文档", "Link: 关闭子管理员模式"] },
+        { "region_id": "r0-3", "name": "筛选查询区", "purpose": "按条件检索子管理员", "content": ["Input: 姓名", "Input: 手机号", "Select: 部门", "Button: 重置", "Button: 查询"] },
+        { "region_id": "r0-4", "name": "工具栏与操作区", "purpose": "批量操作入口", "content": ["Button: + 添加子管理员"] },
+        { "region_id": "r0-5", "name": "数据列表表格区", "purpose": "展示子管理员数据", "content": ["Table: 姓名/手机号/部门/可授权组织/可授权功能/操作", "Tag: 审批中（状态标签）"] },
+        { "region_id": "r0-6", "name": "底部分页区", "purpose": "分页控制", "content": ["Text: 共{N}条", "Pagination", "Select: 每页条数"] }
       ],
       "extraction_notes": [
-        "主页面为顶级页面（有独立菜单入口），无需查找父页面",
-        "知识库中财富管理领域无对应载体语义文件，页面结构来自体验蓝图 §6",
-        "保存按钮位保留但本版本不做"
+        "页面结构来自知识库 15_页面载体语义.md §4.2",
+        "操作列新增「复制」按钮（体验蓝图 §6.1）",
+        "审批中状态标签（体验蓝图 §6.1 状态反馈区）"
       ],
       "list_fields": [
-        {
-          "field": "产品名称",
-          "meaning": "持仓产品简称/代码",
-          "source": "企业财富+"
-        },
-        {
-          "field": "持仓收益",
-          "meaning": "区间内该产品的持仓收益金额",
-          "source": "企业财富+"
-        },
-        {
-          "field": "收益率",
-          "meaning": "区间内该产品的收益率",
-          "source": "企业财富+"
-        },
-        {
-          "field": "建议持有类型",
-          "meaning": "推荐配置方向",
-          "source": "企业财富+"
-        },
-        {
-          "field": "交易时间",
-          "meaning": "开放时间+赎回清算效率",
-          "source": "企业财富+"
-        },
-        {
-          "field": "产品期限",
-          "meaning": "产品持有期限",
-          "source": "企业财富+"
-        },
-        {
-          "field": "近一月最大回撤",
-          "meaning": "回撤率（活钱管理类不展示）",
-          "source": "企业财富+"
-        },
-        {
-          "field": "推荐理由",
-          "meaning": "推荐原因描述",
-          "source": "企业财富+"
-        },
-        {
-          "field": "业务类型",
-          "meaning": "理财/公募基金/资管计划/信托计划",
-          "source": "企业财富+"
-        },
-        {
-          "field": "持仓金额",
-          "meaning": "该类型持仓总金额",
-          "source": "企业财富+"
-        },
-        {
-          "field": "占比",
-          "meaning": "该类型占总资产比例",
-          "source": "企业财富+"
-        },
-        {
-          "field": "年化收益率",
-          "meaning": "理财行展示年化收益率及排名",
-          "source": "企业财富+"
-        },
-        {
-          "field": "产品到期日",
-          "meaning": "到期诊断专用",
-          "source": "企业财富+"
-        },
-        {
-          "field": "持仓时长",
-          "meaning": "时间过长诊断专用（按卡中最大连续持有天数）",
-          "source": "企业财富+"
-        }
+        { "field": "姓名", "meaning": "子管理员姓名", "source": "已有字段" },
+        { "field": "手机号", "meaning": "子管理员手机号（脱敏）", "source": "已有字段" },
+        { "field": "部门", "meaning": "子管理员所属部门", "source": "已有字段" },
+        { "field": "可授权组织", "meaning": "子管理员可管辖的组织范围概览", "source": "已有字段" },
+        { "field": "可授权功能", "meaning": "子管理员可授予的功能概览", "source": "已有字段" },
+        { "field": "操作", "meaning": "操作按钮列（复制/编辑/移除）", "source": "复制为新增" }
       ],
       "key_actions": [
-        {
-          "action": "切换银行账号",
-          "trigger": "Select：银行账号下拉选择",
-          "result": "以新账号重新请求所有模块数据"
-        },
-        {
-          "action": "筛选时间区间",
-          "trigger": "Select：时间区间筛选器",
-          "result": "持仓表现模块全部刷新"
-        },
-        {
-          "action": "购买单件产品",
-          "trigger": "Button：购买（推荐产品旁）",
-          "result": "跳转产品购买页"
-        },
-        {
-          "action": "批量购买",
-          "trigger": "CheckboxGroup + Button",
-          "result": "弹出批量购买确认弹窗"
-        },
-        {
-          "action": "查看产品详情",
-          "trigger": "Link：产品名称/代码",
-          "result": "跳转产品详情页"
-        },
-        {
-          "action": "下载建议书",
-          "trigger": "Button：右下角悬浮下载",
-          "result": "弹出下载格式选择弹窗"
-        }
+        { "action": "复制", "trigger": "点击操作列「复制」", "result": "打开复制弹窗" },
+        { "action": "编辑", "trigger": "点击操作列「编辑」", "result": "跳转子管理员配置页" },
+        { "action": "移除", "trigger": "点击操作列「移除」", "result": "确认后移除" },
+        { "action": "添加子管理员", "trigger": "点击工具栏按钮", "result": "跳转子管理员配置页" }
       ]
     }
   ],
   "entity_specs": [
     {
-      "entity_name": "下载格式选择弹窗",
+      "entity_name": "复制弹窗",
       "surface_type": "Modal",
-      "goal": "让客户选择建议书的下载格式（PDF/PNG）",
-      "structure_ascii": "参见 page_spec.md §5 ASCII 框图",
+      "goal": "选择复制内容和复制对象，确认后提交复制",
+      "structure_ascii": "弹窗标题区「复制」→ 提示信息区 → 复制信息区（可授权组织/可授权功能复选框，默认全选）→ 复制对象区（已选人数+选择按钮+已选Tag列表+身份分布提示）→ 底部操作栏（取消/确认）",
       "regions": [
-        {
-          "region_id": "M1-R1",
-          "name": "标题区",
-          "purpose": "弹窗标题",
-          "content": ["Text：选择下载格式"]
-        },
-        {
-          "region_id": "M1-R2",
-          "name": "格式选项区",
-          "purpose": "选择下载格式",
-          "content": ["RadioGroup：PDF 格式 / PNG 图片"]
-        },
-        {
-          "region_id": "M1-R3",
-          "name": "操作区",
-          "purpose": "确认或取消",
-          "content": ["Button：取消 / 下载"]
-        }
-      ],
-      "validation_blocking_state_changes": [],
-      "non_compliance_confirm_area": {
-        "structure": "unknown",
-        "copy": [],
-        "actions": []
-      }
-    },
-    {
-      "entity_name": "批量购买确认弹窗",
-      "surface_type": "Modal",
-      "goal": "让客户确认要批量购买的产品列表后跳转购物车",
-      "structure_ascii": "参见 page_spec.md §6 ASCII 框图",
-      "regions": [
-        {
-          "region_id": "M2-R1",
-          "name": "标题区",
-          "purpose": "弹窗标题",
-          "content": ["Text：确认批量购买产品"]
-        },
-        {
-          "region_id": "M2-R2",
-          "name": "产品清单区",
-          "purpose": "展示已勾选产品",
-          "content": ["CheckboxGroup：产品列表（产品名 + 金额）"]
-        },
-        {
-          "region_id": "M2-R3",
-          "name": "金额汇总区",
-          "purpose": "显示预计总金额",
-          "content": ["Text：预计总金额 {总金额} 元"]
-        },
-        {
-          "region_id": "M2-R4",
-          "name": "操作区",
-          "purpose": "确认或取消",
-          "content": ["Button：取消 / 加入购物车"]
-        }
+        { "region_id": "r1-1", "name": "弹窗标题区", "purpose": "标题与关闭", "content": ["Text: 复制", "Button: X 关闭"] },
+        { "region_id": "r1-2", "name": "提示信息区", "purpose": "功能说明", "content": ["Text: 复制该子管理员的可授权组织和/或可授权功能给其他用户"] },
+        { "region_id": "r1-3", "name": "复制信息区", "purpose": "选择复制内容", "content": ["Checkbox: 可授权组织", "Checkbox: 可授权功能", "默认全选，至少一项"] },
+        { "region_id": "r1-4", "name": "复制对象区", "purpose": "选择和管理复制目标", "content": ["Text: 已选{N}人(最多200人)", "Button: 选择", "Tag: {姓名}/{手机号}/{部门}/身份:{类型}[x]", "Text: 身份分布提示"] },
+        { "region_id": "r1-5", "name": "底部操作栏", "purpose": "提交或取消", "content": ["Button: 取消", "Button: 确认（默认禁用，条件满足激活）"] }
       ],
       "validation_blocking_state_changes": [
-        {
-          "condition": "产品确认过程中售罄/额度不足",
-          "state_change": "自动移除该产品，金额重新计算"
-        },
-        {
-          "condition": "全部产品售罄",
-          "state_change": "提示所选产品均已售罄，加入购物车按钮置灰"
-        }
+        "复制内容未选 → Toast 阻断，弹窗保留",
+        "复制对象未选 → Toast 阻断，弹窗保留",
+        "目标用户未加入 → Toast + Tag 标红「未加入」",
+        "目标用户未认证 → Toast + Tag 标红「未认证」"
       ],
       "non_compliance_confirm_area": {
-        "structure": "unknown",
+        "structure": "不涉及不合规确认区",
         "copy": [],
         "actions": []
       }
     }
   ],
   "main_interaction_flow": [
-    {
-      "step_id": "flow-1",
-      "trigger": "从菜单或持仓列表进入",
-      "user_action": "点击入口",
-      "system_response": "页面框架渲染，各模块按优先级发起数据请求",
-      "state_change": "各模块进入加载中",
-      "next_step": "等待数据返回"
-    },
-    {
-      "step_id": "flow-2",
-      "trigger": "数据返回",
-      "user_action": "浏览总览卡片区",
-      "system_response": "展示时点资产和诊断摘要",
-      "state_change": "加载中→加载成功",
-      "next_step": "查看持仓表现或切换账号"
-    },
-    {
-      "step_id": "flow-3",
-      "trigger": "浏览持仓表现区",
-      "user_action": "查看 KPI 和图表或筛选时间区间",
-      "system_response": "展示 4 个 KPI 卡片、统计、趋势图、排行；筛选时刷新数据",
-      "state_change": "区间筛选时模块数据更新",
-      "next_step": "查看分布或诊断"
-    },
-    {
-      "step_id": "flow-4",
-      "trigger": "展开诊断×推荐区",
-      "user_action": "浏览联合卡片组",
-      "system_response": "展示诊断问题→建议方向→推荐产品",
-      "state_change": "无",
-      "next_step": "购买/批量购买/详情/下载"
-    },
-    {
-      "step_id": "flow-5",
-      "trigger": "点击购买",
-      "user_action": "点击推荐产品旁的购买按钮",
-      "system_response": "跳转产品购买页（复用）",
-      "state_change": "页面跳转",
-      "next_step": "完成交易"
-    },
-    {
-      "step_id": "flow-6",
-      "trigger": "点击批量购买",
-      "user_action": "勾选产品后点击批量购买",
-      "system_response": "弹出批量购买确认弹窗",
-      "state_change": "弹窗打开",
-      "next_step": "确认或取消"
-    },
-    {
-      "step_id": "flow-7",
-      "trigger": "点击下载",
-      "user_action": "点击右下角下载按钮",
-      "system_response": "弹出下载格式选择弹窗",
-      "state_change": "弹窗打开",
-      "next_step": "选择格式并下载"
-    },
-    {
-      "step_id": "flow-8",
-      "trigger": "切换银行账号",
-      "user_action": "从账号选择器选择目标账号",
-      "system_response": "以新账号重新请求所有模块数据",
-      "state_change": "正常→加载中→加载成功",
-      "next_step": "浏览新账号数据"
-    }
+    { "step_id": "S1", "trigger": "用户定位来源子管理员", "user_action": "进入列表页，搜索找到来源子管理员", "system_response": "列表正常展示", "state_change": "无", "next_step": "点击「复制」" },
+    { "step_id": "S2", "trigger": "点击操作列「复制」", "user_action": "点击「复制」按钮", "system_response": "打开复制弹窗，内容默认全选，对象区为空", "state_change": "弹窗打开", "next_step": "勾选内容或选择目标" },
+    { "step_id": "S3", "trigger": "选择复制对象", "user_action": "点击「选择」→ 选择用户 → 确认", "system_response": "员工弹窗关闭，用户以Tag展示并标注身份", "state_change": "对象区填充", "next_step": "点击「确认」" },
+    { "step_id": "S4", "trigger": "点击「确认」", "user_action": "点击确认", "system_response": "四项顺序校验，通过后执行", "state_change": "校验中", "next_step": "等待结果" },
+    { "step_id": "S5a", "trigger": "校验通过（非互审）", "user_action": "等待", "system_response": "写入权限 → Toast「复制成功」→ 弹窗关闭", "state_change": "权限写入完成", "next_step": "在列表中确认" },
+    { "step_id": "S5b", "trigger": "校验通过（互审）", "user_action": "等待", "system_response": "生成审批 → Toast「已提交审批」→ 弹窗关闭", "state_change": "审批提交", "next_step": "等待审批" }
   ],
   "validation_rules": [
-    {
-      "rule_id": "val-1",
-      "object": "批量购买按钮",
-      "condition": "未勾选任何产品",
-      "blocking": "是",
-      "message_key": ""
-    },
-    {
-      "rule_id": "val-2",
-      "object": "批量购买确认弹窗",
-      "condition": "产品在确认过程中售罄",
-      "blocking": "否",
-      "message_key": ""
-    }
+    { "rule_id": "V-01", "object": "复制信息区", "condition": "至少勾选一项", "blocking": true, "message_key": "error_content_empty" },
+    { "rule_id": "V-02", "object": "复制对象区", "condition": "至少选择一名目标用户", "blocking": true, "message_key": "error_target_empty" },
+    { "rule_id": "V-03", "object": "所有目标用户", "condition": "加入状态均为已加入", "blocking": true, "message_key": "error_not_joined" },
+    { "rule_id": "V-04", "object": "所有目标用户", "condition": "认证状态均为已认证", "blocking": true, "message_key": "error_not_certified" }
   ],
   "states": [
-    {
-      "state": "加载中",
-      "trigger_condition": "首次进入或切换账号",
-      "ui_behavior": "各模块独立骨架屏加载占位",
-      "copy_key": ""
-    },
-    {
-      "state": "加载成功",
-      "trigger_condition": "所有数据正常返回",
-      "ui_behavior": "正常展示所有模块",
-      "copy_key": ""
-    },
-    {
-      "state": "部分缺失",
-      "trigger_condition": "个别字段无数据",
-      "ui_behavior": "缺失字段展示 --",
-      "copy_key": "label.empty"
-    },
-    {
-      "state": "模块异常",
-      "trigger_condition": "单个模块接口失败",
-      "ui_behavior": "该模块展示空状态卡片",
-      "copy_key": "label.module_empty"
-    },
-    {
-      "state": "全页异常",
-      "trigger_condition": "核心接口全失败",
-      "ui_behavior": "全屏阻断页",
-      "copy_key": "error.system_busy"
-    },
-    {
-      "state": "无持仓",
-      "trigger_condition": "账号下无持仓记录",
-      "ui_behavior": "全页空态 + 去购买按钮",
-      "copy_key": "empty.no_position"
-    },
-    {
-      "state": "无诊断",
-      "trigger_condition": "无合格诊断问题",
-      "ui_behavior": "诊断模块不展示",
-      "copy_key": ""
-    },
-    {
-      "state": "无推荐",
-      "trigger_condition": "无合格推荐产品",
-      "ui_behavior": "推荐模块不展示",
-      "copy_key": ""
-    },
-    {
-      "state": "下载中",
-      "trigger_condition": "文件生成中",
-      "ui_behavior": "Toast 提示",
-      "copy_key": "toast.downloading"
-    },
-    {
-      "state": "下载失败",
-      "trigger_condition": "文件生成异常",
-      "ui_behavior": "Toast 提示",
-      "copy_key": "toast.download_failed"
-    }
+    { "state": "复制弹窗打开", "trigger_condition": "点击「复制」", "ui_behavior": "弹窗打开，默认全选，对象区为空", "copy_key": "copy_modal_title" },
+    { "state": "校验中", "trigger_condition": "点击「确认」", "ui_behavior": "确认按钮加载态，不可重复点击", "copy_key": "unknown" },
+    { "state": "校验不通过", "trigger_condition": "校验失败", "ui_behavior": "弹窗保留，Toast 提示，异常 Tag 标红", "copy_key": "error_content_empty" },
+    { "state": "校验通过（非互审）", "trigger_condition": "所有校验通过", "ui_behavior": "Toast 提示，弹窗关闭", "copy_key": "copy_toast_success" },
+    { "state": "校验通过（互审）", "trigger_condition": "所有校验通过", "ui_behavior": "Toast 提示，弹窗关闭", "copy_key": "copy_toast_pending_approval" },
+    { "state": "审批中", "trigger_condition": "互审审批已提交", "ui_behavior": "列表行显示「审批中」Tag", "copy_key": "tag_approval_pending" },
+    { "state": "审批通过", "trigger_condition": "互审管理员批准", "ui_behavior": "系统通知", "copy_key": "notif_approval_passed" },
+    { "state": "审批驳回", "trigger_condition": "互审管理员拒绝", "ui_behavior": "系统通知，不写入权限", "copy_key": "notif_approval_rejected" }
   ],
   "exception_recovery": [
-    {
-      "exception": "企业财富+接口超时",
-      "trigger": "任一模块接口响应 > 5秒",
-      "ui_behavior": "模块骨架保留，重试3次，失败后空状态卡片",
-      "recovery_path": "下拉刷新或重进入；筛选条件保留"
-    },
-    {
-      "exception": "企业财富+服务无响应",
-      "trigger": "核心接口过半数连续失败",
-      "ui_behavior": "全屏阻断页",
-      "recovery_path": "1-2分钟后重试；原路返回无信息丢失"
-    },
-    {
-      "exception": "部分模块数据缺失",
-      "trigger": "个别模块接口报错或返回空",
-      "ui_behavior": "失败模块空状态，其他模块正常",
-      "recovery_path": "后台异步补全，下次进入更新；手动切换账号再切回"
-    },
-    {
-      "exception": "文件生成失败",
-      "trigger": "文件生成接口异常",
-      "ui_behavior": "弹窗内提示，保留重试",
-      "recovery_path": "点击重试；原路返回无信息丢失"
-    },
-    {
-      "exception": "下载网络中断",
-      "trigger": "下载过程中网络断开",
-      "ui_behavior": "浏览器下载失败 + Toast",
-      "recovery_path": "网络恢复后重新下载；原路返回"
-    },
-    {
-      "exception": "批量购买部分失败",
-      "trigger": "部分产品额度不足/已售罄",
-      "ui_behavior": "结算结果页混合展示成功/失败",
-      "recovery_path": "移除失败产品后重新选择；成功产品不受影响"
-    }
+    { "exception": "复制内容未选", "trigger": "点击确认时无勾选", "ui_behavior": "Toast 阻断，弹窗保留", "recovery_path": "勾选至少一项后重新确认。无信息丢失" },
+    { "exception": "复制对象未选", "trigger": "点击确认时无目标", "ui_behavior": "Toast 阻断，弹窗保留", "recovery_path": "选择至少一名后重新确认。无信息丢失" },
+    { "exception": "目标用户未加入", "trigger": "校验到未加入用户", "ui_behavior": "Toast + Tag 标红「未加入」", "recovery_path": "移除未加入Tag后重新确认" },
+    { "exception": "目标用户未认证", "trigger": "校验到未认证用户", "ui_behavior": "Toast + Tag 标红「未认证」", "recovery_path": "移除未认证Tag后重新确认" },
+    { "exception": "多重校验不通过", "trigger": "同时命中多个异常", "ui_behavior": "按顺序阻断", "recovery_path": "逐次修改后重新确认" },
+    { "exception": "审批驳回", "trigger": "互审管理员拒绝", "ui_behavior": "系统通知", "recovery_path": "查看原因，重新发起完整复制" },
+    { "exception": "审批超时", "trigger": "审批人长期未处理", "ui_behavior": "依赖审批系统超时机制", "recovery_path": "联系审批人或视系统能力撤回" }
   ],
   "result_states": [
-    {
-      "state": "全部加载成功",
-      "condition": "所有模块数据正常返回",
-      "ui_behavior": "各模块按优先级完成渲染",
-      "copy_key": ""
-    },
-    {
-      "state": "下载成功",
-      "condition": "文件生成后触发浏览器下载",
-      "ui_behavior": "文件进入浏览器下载管理",
-      "copy_key": ""
-    },
-    {
-      "state": "批量购买全部成功",
-      "condition": "购物车中所有产品购买成功",
-      "ui_behavior": "展示成功结果（复用购物车逻辑）",
-      "copy_key": ""
-    },
-    {
-      "state": "批量购买部分成功",
-      "condition": "部分产品购买成功、部分失败",
-      "ui_behavior": "结算结果页展示成功/失败混合条目",
-      "copy_key": "toast.batch_partial_success"
-    }
+    { "state": "全部成功（非互审）", "condition": "校验通过，非互审模式，权限写入完成", "ui_behavior": "Toast 提示，弹窗关闭，操作记录写入，列表更新", "copy_key": "copy_toast_success" },
+    { "state": "审批提交成功（互审）", "condition": "校验通过，互审模式，审批已提交", "ui_behavior": "Toast 提示，弹窗关闭，操作记录写入，列表出现审批中标签", "copy_key": "copy_toast_pending_approval" }
   ],
   "copy_pool": {
     "modal": [
-      "选择下载格式",
-      "适合打印和分享",
-      "适合快速截图查看",
-      "确认批量购买产品",
-      "已选择 {N} 件产品",
-      "预计总金额：{总金额} 元"
+      { "key": "copy_modal_title", "value": "复制", "variables": [], "location": "弹窗标题区" },
+      { "key": "copy_modal_hint", "value": "复制该子管理员的可授权组织和/或可授权功能给其他用户", "variables": [], "location": "弹窗提示信息区" },
+      { "key": "copy_modal_checkbox_org", "value": "可授权组织", "variables": [], "location": "复制信息区" },
+      { "key": "copy_modal_checkbox_func", "value": "可授权功能", "variables": [], "location": "复制信息区" }
     ],
     "object_selection": [
-      "银行账号",
-      "全部账号",
-      "时间区间",
-      "近一个月",
-      "选择时间区间"
+      { "key": "select_employee_title", "value": "选择员工", "variables": [], "location": "员工选择弹窗标题" },
+      { "key": "select_target_count", "value": "已选 {N} 人（最多 200 人）", "variables": ["N"], "location": "复制对象区计数" },
+      { "key": "select_identity_hint", "value": "已选 {N} 人，其中 {M} 名已有子管理员将叠加权限，{K} 名普通用户将成为子管理员", "variables": ["N","M","K"], "location": "复制对象区身份分布提示" }
     ],
     "validation_and_execution": [
-      ""
+      { "key": "error_content_empty", "value": "请选择复制信息", "variables": [], "location": "Toast" },
+      { "key": "error_target_empty", "value": "请选择至少一名复制对象", "variables": [], "location": "Toast" },
+      { "key": "error_not_joined", "value": "{名单} 加入状态不是已加入，不能成为子管理员", "variables": ["名单"], "location": "Toast" },
+      { "key": "error_not_certified", "value": "{名单} 未完成实名认证，不能成为子管理员", "variables": ["名单"], "location": "Toast" }
     ],
     "result_and_feedback": [
-      "时点资产（{日期}）",
-      "{N} 项持仓待关注",
-      "持仓状态良好",
-      "持仓集中度过高",
-      "活钱管理占比 {P}%，偏高",
-      "建议：增配{产品类型}，降低活钱占比",
-      "产品即将到期",
-      "有 {N} 只产品近两周到期",
-      "建议：关注到期产品续期或转投",
-      "持仓时间过长",
-      "建议：评估是否继续持有",
-      "基于您的持仓情况推荐",
-      "--",
-      "暂无{模块名}数据",
-      "系统繁忙，请稍后再试",
-      "登录已过期，请重新登录",
-      "您暂无权限访问该功能",
-      "暂无数据",
-      "系统异常，请稍后再试",
-      "暂无持仓数据",
-      "购买理财产品，开启投资之旅",
-      "正在生成文件，请稍候...",
-      "文件生成失败，请稍后重试",
-      "网络异常，下载已中断",
-      "部分产品未成功购买，请查看明细",
-      "较期初：{增长率}",
-      "较期初：-",
-      "数据由管理机构提供的最新净值测算，仅供参考",
-      "理财非存款，产品有风险，投资需谨慎",
-      "本报告持仓市值、平均持仓成本、持仓天数、收益、持仓年化收益率等数据均由管理机构提供的最新净值测算，由于管理机构净值下发可能会延迟，为提升数据准确性，当发生净值下发延迟时，系统会对相关日期的数据做重算处理，所以可能会存在着相同生成条件下在不同时间生成的结果不一致的情况。本报告中收益率数据使用产品最新净值测算，因管理机构提供的产品净值精度有限，故计算结果仅供参考。该测算不会影响您的实际收益，实际收益请以管理机构确认金额为准。"
+      { "key": "copy_toast_success", "value": "复制成功", "variables": [], "location": "Toast（非互审）" },
+      { "key": "copy_toast_pending_approval", "value": "已提交审批，等待另一位管理员确认后生效", "variables": [], "location": "Toast（互审）" },
+      { "key": "tag_approval_pending", "value": "审批中", "variables": [], "location": "列表行 Tag" },
+      { "key": "notif_approval_passed", "value": "子管理员复制审批已通过", "variables": [], "location": "系统通知" },
+      { "key": "notif_approval_rejected", "value": "子管理员复制申请已被驳回：{驳回原因}", "variables": ["驳回原因"], "location": "系统通知" }
     ],
     "buttons": [
-      "取消",
-      "下载",
-      "加入购物车",
-      "购买",
-      "批量购买",
-      "去购买",
-      "重试"
+      { "key": "btn_copy_open", "value": "复制", "location": "列表操作列" },
+      { "key": "btn_confirm", "value": "确认", "location": "复制弹窗底部" },
+      { "key": "btn_cancel", "value": "取消", "location": "复制弹窗底部" },
+      { "key": "btn_select", "value": "选择", "location": "复制弹窗复制对象区" }
     ]
   },
   "template_variables": [
-    {
-      "variable": "{金额}",
-      "meaning": "各类持仓/收益金额",
-      "value_range": "数字，自动按元/万元/亿元换算"
-    },
-    {
-      "variable": "{单位}",
-      "meaning": "金额换算后的单位",
-      "value_range": "元 / 万元 / 亿元"
-    },
-    {
-      "variable": "{率}",
-      "meaning": "各类比率（增长率/收益率）",
-      "value_range": "带 +/- 号的百分比，保留2位小数"
-    },
-    {
-      "variable": "{日期}",
-      "meaning": "数据日期或区间日期",
-      "value_range": "YYYY-MM-DD"
-    },
-    {
-      "variable": "{N}",
-      "meaning": "数量（笔数、产品数、排名等）",
-      "value_range": "正整数"
-    },
-    {
-      "variable": "{M}",
-      "meaning": "数量（最大回撤率等）",
-      "value_range": "百分比数字"
-    },
-    {
-      "variable": "{P}",
-      "meaning": "占比（百分比）",
-      "value_range": "百分比，保留2位小数"
-    },
-    {
-      "variable": "{产品类型}",
-      "meaning": "推荐配置的产品类别",
-      "value_range": "文本"
-    },
-    {
-      "variable": "{模块名}",
-      "meaning": "异常模块的名称",
-      "value_range": "文本"
-    },
-    {
-      "variable": "{总金额}",
-      "meaning": "批量购买预计总金额",
-      "value_range": "数字，按元展示"
-    },
-    {
-      "variable": "{YYYYMMDDHHmmss}",
-      "meaning": "文件命名时间戳",
-      "value_range": "14位数字"
-    }
+    { "variable": "{N}", "meaning": "已选目标用户数量", "value_range": "1~200" },
+    { "variable": "{M}", "meaning": "已有子管理员身份的目标数量", "value_range": "0~{N}" },
+    { "variable": "{K}", "meaning": "普通用户身份的目标数量", "value_range": "0~{N}" },
+    { "variable": "{名单}", "meaning": "校验不通过的用户姓名列表", "value_range": "逗号分隔的姓名" },
+    { "variable": "{驳回原因}", "meaning": "互审管理员填写的驳回原因", "value_range": "文本" },
+    { "variable": "{姓名}", "meaning": "子管理员姓名", "value_range": "文本（脱敏）" },
+    { "variable": "{手机号}", "meaning": "子管理员手机号", "value_range": "文本（脱敏）" },
+    { "variable": "{部门}", "meaning": "子管理员所属部门", "value_range": "文本" },
+    { "variable": "{X}", "meaning": "每页显示条数", "value_range": "10/20/50/100" }
   ],
   "open_questions": [
-    {
-      "question": "客户经理是否仅作为查看者，还是需要主动生成/推送建议书？",
-      "impact": "如需客户经理独立流程，需新增角色侧实体"
-    },
-    {
-      "question": "三类诊断结果是否需要按严重程度排序？",
-      "impact": "影响诊断推荐卡片区在页面中的排列顺序"
-    },
-    {
-      "question": "各模块调用企业财富+接口的方式是独立接口还是统一大接口？",
-      "impact": "影响模块级加载的实现方案"
-    },
-    {
-      "question": "产品推荐是否基于诊断结果生成？",
-      "impact": "影响诊断与推荐的关联方式和推荐产品数据来源"
-    },
-    {
-      "question": "按银行账号切换时是否保留上次查看账号的记忆？",
-      "impact": "影响账号选择器的默认行为和页面刷新策略"
-    },
-    {
-      "question": "下载是否需要支持选择性导出部分模块？",
-      "impact": "影响下载弹窗是否需要增加模块筛选"
-    },
-    {
-      "question": "批量购买的购物车与现有购物车是否完全复用？",
-      "impact": "影响批量购买流程是否需要扩展"
-    },
-    {
-      "question": "保存按钮保留位（本版本不做）",
-      "impact": "页面右上角预留保存按钮位，当前不展示"
-    }
+    { "question": "200名目标中部分校验不通过时，是「全部退回」还是「通过部分」？", "impact": "影响部分成功场景的结果反馈设计" },
+    { "question": "审批中的复制申请是否支持权限管理员自行撤销？", "impact": "影响是否需要撤销入口" },
+    { "question": "「加入状态」的目标状态口径是「已启用」还是「已加入」？", "impact": "影响校验文案和校验逻辑" },
+    { "question": "操作记录是否需要按复制操作聚合展示？", "impact": "影响操作记录的展示设计" }
   ],
   "edge_consumed": false,
   "edge_trace": []

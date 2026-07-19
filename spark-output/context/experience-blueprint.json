@@ -1,86 +1,76 @@
 {
   "skill": "experience-blueprint",
   "version": "1.0",
-  "generated_at": "2026-07-18",
-  "project_name": "财富专区-资产配置面客版",
+  "generated_at": "2026-07-19",
+  "project_name": "子管理员复制",
   "artifact_md": "spark-output/experience_blueprint.md",
   "source_refs": [
     "spark-output/context/uxb.json",
-    "spark-output/uxb_output.md"
+    "spark-output/uxb_output.md",
+    "spark-output/context/journey-analysis.json",
+    "spark-output/journey_analysis.md"
   ],
   "read_sections": [
-    "knowledge-wiki/knowledge/wiki/index.md",
-    "knowledge-wiki/knowledge/raw/设计准则/设计准则.md (IA-02, U-08, U-01, U-09, C-03, C-04)"
+    "UXB context JSON (全部结构化字段)",
+    "UXB uxb_output.md (§0-§9 + 附录)",
+    "Journey-analysis context JSON (全部结构化字段)",
+    "Journey-analysis journey_analysis.md (5阶段旅程分析)",
+    "设计准则.md (U-01、U-05、U-06、U-09、IA-03)",
+    "交互模式 容器与工作区.md (弹窗适用条件、工作区模式)",
+    "交互模式 状态、反馈与恢复.md (状态前置可见、驳回不是普通编辑、高风险动作反馈闭环)"
   ],
   "source_mode": "uxb-mode",
   "source_usability_check": {
-    "usable": "usable",
-    "reason": "uxb-mode: 一级正式来源为 uxb，不执行 3+1 门槛判断，按现有主链规则直接展开",
-    "missing_inputs": [
-      "journey-analysis（§1 旅程消费摘要基于 UXB 推测）",
-      "stories（当前未经过用户故事深化）"
-    ]
+    "usable": true,
+    "reason": "UXB 正式产物完整（JSON + MD），来源稳定。附加 journey-analysis 深化旅程信息",
+    "missing_inputs": []
   },
   "expansion_mode": "full",
   "critical_design_judgments": [
     {
-      "judgment": "资产配置页面采用'总览 + 焦点头屏 + 次要模块延后'的信息分层策略，按阅读流排列模块",
-      "major_impact": "影响整个页面的模块排序、首屏信息密度、展开折叠策略",
-      "recommended_solution": "首屏上方展示核心总览卡片，中间是可折叠分析模块区，底部是推荐和操作区；分析模块默认折叠",
-      "not_recommended_solution": "不建议把所有模块以同等尺寸铺满首屏",
-      "key_open_question": "三类诊断结果是否需要按严重程度排序"
-    },
-    {
-      "judgment": "诊断结果与推荐产品之间用'问题→建议→产品'的关联卡片组建立因果链",
-      "major_impact": "影响诊断模块和推荐模块的布局关系及交互联动",
-      "recommended_solution": "取消诊断模块和推荐模块的物理隔离，使用'诊断×推荐'联合卡片区承载",
-      "not_recommended_solution": "不建议在诊断模块只展示问题文字，让客户自己翻到推荐区找对应产品",
-      "key_open_question": "企业财富+的推荐策略是否按诊断输入生成推荐"
-    },
-    {
-      "judgment": "采用模块级加载 + 独立降级，避免全屏 loading 阻塞",
-      "major_impact": "影响页面加载策略、骨架屏设计、降级展示方式",
-      "recommended_solution": "页面框架先渲染，各模块按优先级队列依次加载，失败时模块级降级",
-      "not_recommended_solution": "不建议使用全屏 loading 等待所有接口返回",
-      "key_open_question": "各模块接口的实际调用方式（独立接口 vs 统一大接口）"
+      "judgment": "复制弹窗采用「浮层确认 + 结果反馈」模式，不做分步向导",
+      "major_impact": "弹窗以单层浮层承载内容选择和目标选择两个区域；员工选择器复用现有弹窗",
+      "recommended_solution": "弹窗分为上下两区（复制信息 + 复制对象），默认全选。确认后Toast反馈，校验失败用InlineError。互审模式下Toast改为「已提交审批」，审批状态在来源子管理员行上标注「审批中」标签",
+      "not_recommended_solution": "不使用步骤条分步向导；不为复制结果单独新建结果页；不在非互审模式下也加审批状态标签",
+      "key_open_question": "部分校验不通过时的策略（全部退回/部分提交）会影响异常反馈设计方向，当前基于最严策略（全部退回）推进"
     }
   ],
   "uxb_mapping": [
     {
-      "upstream_judgment": "五个信息模块的阅读顺序不是任意的",
-      "experience_meaning": "客户需要主线引导，不能平铺展示",
-      "blueprint_decision": "页面按'总览→持仓表现→分布→诊断×推荐'排列，区分默认展开/折叠",
-      "target_section": "§3 节点一~七 / §6"
+      "upstream_judgment": "复制入口放在操作列最左侧，是一条与编辑、移除并列的操作路径",
+      "experience_meaning": "入口位置突出但不得降低其他操作的可发现性",
+      "blueprint_decision": "操作列按钮按「复制—编辑—移除」排列",
+      "target_section": "§6.1"
     },
     {
-      "upstream_judgment": "诊断与推荐之间缺少因果衔接",
-      "experience_meaning": "客户看到问题不知道怎么办",
-      "blueprint_decision": "诊断推荐联合卡片组，'问题→建议方向→产品'三层结构",
-      "target_section": "§3 节点五 / §6 页面一"
+      "upstream_judgment": "批量复制需按用户维度提供结果反馈",
+      "experience_meaning": "单一Toast不够，需要分层反馈",
+      "blueprint_decision": "校验失败时Toast + 弹窗内标签标红；成功后Toast + 列表更新",
+      "target_section": "§3.5、§5、§6.2"
     },
     {
-      "upstream_judgment": "客户经理角色场景未确认",
-      "experience_meaning": "角色侧设计范围不确定",
-      "blueprint_decision": "主方案仅覆盖企业客户自助场景，客户经理仅做查看定位",
-      "target_section": "§8 待确认问题"
+      "upstream_judgment": "互审模式下「复制成功」与「已生效」语义分离",
+      "experience_meaning": "Toast需区分互审与非互审场景，不能统一表述",
+      "blueprint_decision": "互审Toast「已提交审批」，非互审Toast「复制成功」",
+      "target_section": "§3.5、§7"
     },
     {
-      "upstream_judgment": "数据全部依赖企业财富+接口",
-      "experience_meaning": "每个模块都可能受接口状态影响",
-      "blueprint_decision": "模块级加载 + 独立降级策略，不统一全屏 loading/error",
-      "target_section": "§5 异常一~三 / §6 状态反馈区"
+      "upstream_judgment": "混合目标用户的规则差异需前置提示",
+      "experience_meaning": "确认前要让用户知道谁走什么规则",
+      "blueprint_decision": "弹窗内身份标签 + 身份分布轻提示",
+      "target_section": "§3.3、§6.2"
     },
     {
-      "upstream_judgment": "批量购买的购物车流程已规划",
-      "experience_meaning": "购物车链路上有局部异常",
-      "blueprint_decision": "结算结果页展示成功/失败混合状态，支持移除失败产品重新选择",
-      "target_section": "§5 异常六"
+      "upstream_judgment": "操作记录需按操作聚合展示",
+      "experience_meaning": "两条记录应默认合并，可展开",
+      "blueprint_decision": "操作记录列表中合并展示，展开查看明细",
+      "target_section": "§4.1"
     },
     {
-      "upstream_judgment": "建议书下载需平铺所有内容",
-      "experience_meaning": "分页和 Tab 内容需合并",
-      "blueprint_decision": "下载弹窗选择格式后全量生成，不区分当前 Tab",
-      "target_section": "§4 流程三"
+      "upstream_judgment": "互审模式下审批状态在子管理员列表中可见",
+      "experience_meaning": "列表行需要审批中状态展示",
+      "blueprint_decision": "子管理员姓名旁「审批中」标签",
+      "target_section": "§6.1"
     }
   ],
   "problem_framing_mapping": [],
@@ -92,502 +82,476 @@
   "journey_consumption": {
     "confidence_lows": [
       {
-        "role": "企业客户",
-        "stage": "了解诊断问题",
-        "reason": "担心看到不好的结果，但也想了解风险",
-        "blueprint_impact": "§5 异常流程中强化诊断模块的降级和恢复策略"
+        "role": "权限管理员",
+        "stage": "跟进生效结果",
+        "reason": "互审模式下审批状态不可见，操作者需离开页面查询",
+        "blueprint_impact": "驱动 §5 异常流程设计优先级，特别是审批超时场景"
+      },
+      {
+        "role": "权限管理员",
+        "stage": "确认并提交复制",
+        "reason": "部分校验不通过的策略未明确",
+        "blueprint_impact": "驱动 §5 部分校验不通过场景设计"
       }
     ],
     "key_transitions": [
       {
-        "from_stage": "了解诊断问题",
-        "to_stage": "获取产品推荐",
-        "trigger": "诊断结果明确告诉客户有何问题",
-        "blueprint_impact": "§3 节点五中设计诊断×推荐联合卡片组"
+        "from_stage": "确定复制目标",
+        "to_stage": "确认并提交复制",
+        "trigger": "点击「确认」",
+        "blueprint_impact": "在确认前增加身份分布轻提示（§3.4）"
+      },
+      {
+        "from_stage": "确认并提交复制",
+        "to_stage": "跟进生效结果",
+        "trigger": "复制执行成功",
+        "blueprint_impact": "互审模式下Toast区分表述（§6.2）"
       }
     ],
     "dropout_risks": [
       {
-        "role": "企业客户",
-        "stage": "进入页面",
-        "risk": "入口名模糊时客户可能不点击",
-        "blueprint_impact": "§6 页面设计中强调入口命名和加载优先级"
-      },
-      {
-        "role": "企业客户",
-        "stage": "分析持仓表现",
-        "risk": "图表太多看不懂时跳过",
-        "blueprint_impact": "§6 页面设计中采用模块级折叠展开策略"
-      },
-      {
-        "role": "企业客户",
-        "stage": "了解诊断问题",
-        "risk": "只有问题没有建议时失去信心",
-        "blueprint_impact": "§3 节点五中诊断卡片嵌入建议方向字段"
+        "role": "权限管理员",
+        "stage": "跟进生效结果",
+        "risk": "互审模式下不知审批进度，可能重复操作或误以为已生效",
+        "blueprint_impact": "子管理员列表行内「审批中」标签（§6.1）"
       }
     ]
   },
   "interaction_overview": {
     "pages": [
-      "资产配置建议书主页面",
-      "产品详情页（复用）",
-      "购物车（复用）"
+      "子管理员列表页",
+      "操作记录列表页（已有，展示聚合后的复制记录）"
     ],
     "modals": [
-      "下载格式选择弹窗",
-      "批量购买确认弹窗"
+      "复制弹窗（新增）",
+      "员工选择弹窗（复用现有，增加「当前身份」列）"
     ],
     "drawers": [],
     "user_actions": [
-      "选择/切换银行账号",
-      "筛选时间区间",
-      "查看持仓表现",
-      "查看投资/期限分布",
-      "查看诊断与推荐",
-      "购买单件产品",
-      "批量勾选购买",
-      "查看产品详情",
-      "下载建议书"
+      "点击操作列「复制」",
+      "勾选复制内容",
+      "点击选择器",
+      "选择目标用户",
+      "点击「确认」",
+      "查看Toast反馈",
+      "查看操作记录",
+      "审批或驳回复制申请"
     ],
     "system_feedback": [
-      "模块级骨架屏加载",
-      "KPI 卡片数据展示",
-      "图表展示",
-      "诊断推荐卡片展示",
-      "空状态展示",
-      "异常降级展示",
-      "文件下载"
+      "打开复制弹窗（默认全选）",
+      "打开员工选择弹窗",
+      "四项顺序校验",
+      "写入权限或提交审批",
+      "生成操作记录",
+      "发送审批通知"
     ],
     "state_changes": [
-      "加载中 → 加载完成",
-      "加载中 → 模块异常",
-      "加载中 → 全部异常",
-      "正常展示 → 切换账号刷新",
-      "正常展示 → 区间筛选更新",
-      "无持仓 → 空状态"
+      "复制弹窗打开→选择中→校验中→执行中→完成",
+      "子管理员列表行出现「审批中」标签",
+      "审批通过后：目标用户成为子管理员或叠加权限",
+      "审批驳回后：目标无变化"
     ],
     "toast": [
-      "正在生成文件，请稍候...",
-      "文件生成失败，请稍后重试",
-      "网络异常，下载已中断",
-      "部分产品未成功购买，请查看明细"
+      "复制成功",
+      "已提交审批，等待另一位管理员确认后生效",
+      "请选择复制信息",
+      "请选择至少一名复制对象",
+      "XXX、XXX 加入状态不是已加入，不能成为子管理员",
+      "XXX、XXX 未完成实名认证，不能成为子管理员"
     ],
     "inline_error": [
-      "暂无数据（字段级）"
+      "复制弹窗内目标用户标签标红，旁注「未加入」或「未认证」"
     ],
     "empty_state": [
-      "暂无持仓数据（全页空态 + 去购买按钮）",
-      "暂无持仓表现数据（模块级）",
-      "暂无投资分布数据（模块级）",
-      "暂无期限分布数据（模块级）",
-      "暂无模块名数据（模块级降级）"
+      "复制弹窗初始状态——复制对象区为空，显示「请选择复制对象」占位文本"
     ],
     "loading_state": [
-      "模块级骨架屏",
-      "全页骨架框架"
+      "复制校验中或执行中——确认按钮变为加载态，不可重复点击"
     ]
   },
   "main_flow": [
     {
-      "node_id": "node-1",
-      "node_name": "进入资产配置页面",
-      "user_action": "从菜单或持仓列表入口进入",
-      "system_feedback": "页面框架渲染，各模块按优先级发起数据请求",
-      "pre_explanation": "从持仓列表进入则自动选中该账号",
-      "copy_suggestion": "页面标题：资产配置建议书",
-      "state_change": "加载中→加载完成",
-      "next_step": "查看总览或切换账号"
-    },
-    {
-      "node_id": "node-2",
-      "node_name": "查看总览信息",
-      "user_action": "浏览顶部总览卡片区",
-      "system_feedback": "展示时点资产和诊断状态摘要",
-      "pre_explanation": "时点资产是最新持仓市值，诊断摘要为简化信号",
-      "copy_suggestion": "时点资产（{日期}）\n{N}项持仓待关注",
-      "state_change": "无",
-      "next_step": "查看持仓表现或诊断"
-    },
-    {
-      "node_id": "node-3",
-      "node_name": "查看持仓表现",
-      "user_action": "浏览 KPI 卡片和图表",
-      "system_feedback": "展示区间筛选器、4个KPI卡、购买赎回统计、趋势图、收益排行",
-      "pre_explanation": "较期初期初为0时显示'-'；年化收益率由净值测算",
-      "copy_suggestion": "较期初：{增长率}",
-      "state_change": "区间筛选时数据更新",
-      "next_step": "查看分布或诊断"
-    },
-    {
-      "node_id": "node-4",
-      "node_name": "查看投资分布与期限分布",
-      "user_action": "浏览 Tab 内容",
-      "system_feedback": "展示各业务类型持仓金额、占比、饼图",
-      "pre_explanation": "投资分布看资产结构，期限分布看到期时间",
+      "node_id": "mf-1",
+      "node_name": "定位并选中来源子管理员",
+      "user_action": "进入子管理员列表，搜索或浏览，找到作为复制来源的子管理员",
+      "system_feedback": "列表正常展示子管理员数据",
+      "pre_explanation": "无（已有操作）",
       "copy_suggestion": "无",
       "state_change": "无",
-      "next_step": "查看诊断与推荐"
+      "next_step": "点击操作列「复制」"
     },
     {
-      "node_id": "node-5",
-      "node_name": "查看诊断与推荐（核心转折）",
-      "user_action": "浏览诊断×推荐联合卡片区",
-      "system_feedback": "按诊断类型展示关联卡片组，含问题描述、建议方向、推荐产品",
-      "pre_explanation": "每条诊断对应一组建议方向",
-      "copy_suggestion": "基于您的持仓情况推荐",
-      "state_change": "无",
-      "next_step": "购买/批量购买/产品详情/下载"
+      "node_id": "mf-2",
+      "node_name": "打开复制弹窗",
+      "user_action": "点击操作列「复制」",
+      "system_feedback": "打开复制弹窗，复制信息默认全选，复制对象为空",
+      "pre_explanation": "弹窗标题和区域标题已说明用途",
+      "copy_suggestion": "弹窗标题：「复制」；提示：「复制该子管理员的可授权组织和/或可授权功能给其他用户」",
+      "state_change": "弹窗打开",
+      "next_step": "勾选复制内容或选择复制对象"
     },
     {
-      "node_id": "node-6",
-      "node_name": "购买产品",
-      "user_action": "点击推荐产品中的购买按钮",
-      "system_feedback": "跳转产品购买页（复用）",
+      "node_id": "mf-3",
+      "node_name": "选择复制对象",
+      "user_action": "点击选择器→员工选择弹窗→选择用户→确认",
+      "system_feedback": "员工选择弹窗关闭，已选用户以标签展示，标注当前身份",
+      "pre_explanation": "身份标签说明：普通用户→成为子管理员；子管理员→叠加权限",
+      "copy_suggestion": "身份分布提示：「已选{N}人，其中{M}名已有子管理员将叠加权限，{K}名普通用户将成为子管理员」",
+      "state_change": "复制对象区从空变为有标签",
+      "next_step": "点击「确认」提交复制"
+    },
+    {
+      "node_id": "mf-4",
+      "node_name": "确认并提交复制",
+      "user_action": "点击「确认」",
+      "system_feedback": "四项顺序校验：复制信息→复制对象→加入状态→认证状态",
+      "pre_explanation": "无（校验为静默执行）",
+      "copy_suggestion": "无",
+      "state_change": "校验中",
+      "next_step": "等待校验结果"
+    },
+    {
+      "node_id": "mf-5a",
+      "node_name": "执行复制（非互审）",
+      "user_action": "等待系统处理",
+      "system_feedback": "写入权限→Toast「复制成功」→弹窗关闭",
       "pre_explanation": "无",
-      "copy_suggestion": "无",
-      "state_change": "无",
-      "next_step": "完成交易"
+      "copy_suggestion": "Toast：「复制成功」",
+      "state_change": "目标用户权限变化",
+      "next_step": "可在列表中确认或在操作记录中查看"
     },
     {
-      "node_id": "node-7",
-      "node_name": "批量购买",
-      "user_action": "勾选多个产品，点击批量购买",
-      "system_feedback": "跳转购物车（复用），已勾选产品预填",
-      "pre_explanation": "无",
-      "copy_suggestion": "无",
-      "state_change": "无",
-      "next_step": "完成批量结算"
+      "node_id": "mf-5b",
+      "node_name": "执行复制（互审）",
+      "user_action": "等待系统处理",
+      "system_feedback": "生成审批实例→Toast「已提交审批」→弹窗关闭",
+      "pre_explanation": "复制操作已提交审批，另一位管理员审批通过后权限才会写入",
+      "copy_suggestion": "Toast：「已提交审批，等待另一位管理员确认后生效」",
+      "state_change": "子管理员列表行出现「审批中」标签",
+      "next_step": "等待另一位管理员审批"
     }
   ],
   "sub_flows": [
     {
-      "flow_id": "sub-1",
-      "flow_name": "切换银行账号",
-      "trigger_condition": "客户需要查看其他账号的资产配置",
-      "user_action": "点击账号选择器，选择目标账号",
-      "system_feedback": "以新账号重新请求所有模块数据",
-      "pre_explanation": "全部账号汇总所有持仓数据；切换后筛选条件重置",
-      "copy_suggestion": "银行账号：全部账号",
-      "next_step": "浏览新账号配置"
+      "flow_id": "sf-1",
+      "flow_name": "查看复制操作记录",
+      "trigger_condition": "权限管理员希望追溯某次复制操作的结果",
+      "user_action": "进入操作记录列表页，筛选查看复制相关记录",
+      "system_feedback": "按操作聚合展示，同一复制的两条记录合并为一条，可展开",
+      "pre_explanation": "合并记录中同时显示复制了哪些内容",
+      "copy_suggestion": "记录标题：「将子管理员【XXX】权限复制给N名用户」",
+      "next_step": "查看完后返回列表或关闭"
     },
     {
-      "flow_id": "sub-2",
-      "flow_name": "筛选时间区间",
-      "trigger_condition": "客户需要查看特定时间段表现",
-      "user_action": "从筛选器选择预设或自定义区间",
-      "system_feedback": "持仓表现模块刷新，其他模块不受影响",
-      "pre_explanation": "支持近两年范围，自定义最小粒度为天",
-      "copy_suggestion": "时间区间：近一个月（默认）",
-      "next_step": "查看更新后的数据"
+      "flow_id": "sf-2",
+      "flow_name": "审批复制申请（互审管理员）",
+      "trigger_condition": "系统处于互审模式，复制申请已提交",
+      "user_action": "互审管理员在审批列表中查看待审批复制申请，点击查看详情",
+      "system_feedback": "展示复制申请的完整信息：来源、内容、目标",
+      "pre_explanation": "展示内容预览和目标清单，帮助互审管理员判断",
+      "copy_suggestion": "审批详情标题：「子管理员复制审批」",
+      "next_step": "审批通过或驳回"
     },
     {
-      "flow_id": "sub-3",
-      "flow_name": "下载建议书",
-      "trigger_condition": "客户需要保存或分享建议书",
-      "user_action": "点击下载悬浮按钮，选择格式",
-      "system_feedback": "生成文件并触发下载",
-      "pre_explanation": "下载包含所有内容和 Tab，全量平铺",
-      "copy_suggestion": "选择下载格式→PDF适合打印/PNG适合截图",
-      "next_step": "查看已下载的文件"
-    },
-    {
-      "flow_id": "sub-4",
-      "flow_name": "无持仓数据",
-      "trigger_condition": "客户名下账号无持仓",
-      "user_action": "进入资产配置页面",
-      "system_feedback": "展示空状态页面",
-      "pre_explanation": "无",
-      "copy_suggestion": "暂无持仓数据\n购买理财产品，开启投资之旅",
-      "next_step": "点击去购买跳转产品列表"
+      "flow_id": "sf-3",
+      "flow_name": "审批驳回后通知权限管理员",
+      "trigger_condition": "互审管理员驳回复制申请",
+      "user_action": "权限管理员收到通知，查看驳回原因",
+      "system_feedback": "通知展示驳回原因、内容摘要和驳回时间",
+      "pre_explanation": "驳回后不会写入任何权限，需要重新发起",
+      "copy_suggestion": "通知标题：「您的子管理员复制申请已被驳回」；副文本显示驳回原因",
+      "next_step": "根据原因修正后重新发起或放弃"
     }
   ],
   "exceptions": [
     {
-      "exception_id": "exc-1",
-      "name": "企业财富+接口超时",
-      "timing": "任一模块数据请求时",
-      "trigger_condition": "接口响应超过5秒",
-      "basis": "前端超时设置",
-      "feedback_form": "模块级降级，骨架占位",
-      "system_feedback": "自动重试3次，失败后展示空状态卡片+提示",
-      "user_next_step": "无需操作，浏览其他模块",
-      "recovery_path": "接口恢复后刷新页面或重进入"
-    },
-    {
-      "exception_id": "exc-2",
-      "name": "企业财富+服务无响应",
-      "timing": "核心接口同时不可用时",
-      "trigger_condition": "多个关键接口连续失败",
-      "basis": "综合判断——过半数核心接口失败",
-      "feedback_form": "页面级阻断页",
-      "system_feedback": "展示系统繁忙全屏阻断页，记录日志",
-      "user_next_step": "等待1-2分钟后重试或联系客服",
-      "recovery_path": "原路返回无信息丢失"
-    },
-    {
-      "exception_id": "exc-3",
-      "name": "部分模块数据缺失",
-      "timing": "个别模块接口异常时",
-      "trigger_condition": "某模块接口报错或返回空",
-      "basis": "按模块独立判断",
-      "feedback_form": "模块级空状态卡片",
-      "system_feedback": "失败模块展示空状态，其他模块正常",
-      "user_next_step": "使用其他正常模块",
-      "recovery_path": "后台异步补全，下次进入更新"
-    },
-    {
-      "exception_id": "exc-4",
-      "name": "文件生成失败",
-      "timing": "点击下载后文件生成时",
-      "trigger_condition": "企业财富+文件生成接口异常",
-      "basis": "接口异常",
-      "feedback_form": "弹窗提示",
-      "system_feedback": "弹窗提示文件生成失败",
-      "user_next_step": "点击重试或稍后重试",
+      "exception_id": "ex-1",
+      "name": "复制内容未选",
+      "timing": "用户点击确认后",
+      "trigger_condition": "可授权组织和可授权功能均未勾选",
+      "basis": "需求文档：复制信息至少选择一项",
+      "feedback_form": "Toast",
+      "system_feedback": "阻断确认，Toast「请选择复制信息」",
+      "user_next_step": "勾选至少一项后重新确认",
       "recovery_path": "原路恢复，无信息丢失"
     },
     {
-      "exception_id": "exc-5",
-      "name": "下载网络中断",
-      "timing": "下载过程中",
-      "trigger_condition": "下载中网络断开",
-      "basis": "浏览器下载状态",
-      "feedback_form": "toast 提示",
-      "system_feedback": "toast 提示网络异常",
-      "user_next_step": "网络恢复后重新下载",
+      "exception_id": "ex-2",
+      "name": "复制对象未选",
+      "timing": "用户点击确认后",
+      "trigger_condition": "复制对象列表为空",
+      "basis": "需求文档：复制对象至少选择一名",
+      "feedback_form": "Toast",
+      "system_feedback": "阻断确认，Toast「请选择至少一名复制对象」",
+      "user_next_step": "添加目标用户后重新确认",
       "recovery_path": "原路恢复，无信息丢失"
     },
     {
-      "exception_id": "exc-6",
-      "name": "批量购买部分失败",
-      "timing": "批量购买结算时",
-      "trigger_condition": "部分产品因额度不足或已售罄失败",
-      "basis": "后端逐笔返回结果",
-      "feedback_form": "结算结果页混合展示",
-      "system_feedback": "汇总成功/失败笔数，展示明细",
-      "user_next_step": "移除失败产品后重新选择替代产品",
-      "recovery_path": "成功产品不受影响，客户可重新选择"
+      "exception_id": "ex-3",
+      "name": "目标用户未加入",
+      "timing": "用户点击确认后",
+      "trigger_condition": "已选目标中存在加入状态≠已加入的用户",
+      "basis": "需求文档：复制对象必须已加入",
+      "feedback_form": "Toast + 弹窗内错误提示",
+      "system_feedback": "Toast列出未加入用户；弹窗中对应标签标红，旁注「未加入」",
+      "user_next_step": "移除未加入用户或确认该用户已加入后重新操作",
+      "recovery_path": "移除无效用户后直接重新确认，弹窗不关闭，已填不丢失"
+    },
+    {
+      "exception_id": "ex-4",
+      "name": "目标用户未认证",
+      "timing": "用户点击确认后",
+      "trigger_condition": "已选目标中存在未完成实名认证的用户",
+      "basis": "需求文档：复制对象必须已认证",
+      "feedback_form": "Toast + 弹窗内错误提示",
+      "system_feedback": "Toast列出未认证用户；弹窗中对应标签标红，旁注「未认证」",
+      "user_next_step": "移除未认证用户或确认该用户已完成认证后重新操作",
+      "recovery_path": "移除无效用户后直接重新确认，弹窗不关闭，已填不丢失"
+    },
+    {
+      "exception_id": "ex-5",
+      "name": "多重校验不通过",
+      "timing": "用户点击确认后",
+      "trigger_condition": "同时命中多个异常",
+      "basis": "需求文档：校验按顺序执行",
+      "feedback_form": "Toast + 弹窗内错误提示",
+      "system_feedback": "按顺序优先阻断最先不通过的校验；修正后再次提交时继续检查后续校验",
+      "user_next_step": "按提示顺序依次修正每个校验问题",
+      "recovery_path": "逐次修改后重新确认，每次修正后已填信息不丢失"
+    },
+    {
+      "exception_id": "ex-6",
+      "name": "部分校验不通过",
+      "timing": "用户点击确认后，批量中部分用户异常",
+      "trigger_condition": "200名目标中部分用户校验不通过",
+      "basis": "当前按「全部退回」策略推进",
+      "feedback_form": "Toast + 弹窗内错误提示",
+      "system_feedback": "阻断确认，Toast列出所有不通过用户及原因；弹窗中不通过用户标签标红",
+      "user_next_step": "移除不通过用户，保留通过用户后重新确认",
+      "recovery_path": "移除异常用户后直接重新确认，已通过用户校验不重做"
+    },
+    {
+      "exception_id": "ex-7",
+      "name": "审批驳回",
+      "timing": "互审模式下审批阶段",
+      "trigger_condition": "互审管理员驳回复制申请",
+      "basis": "UXB：审批驳回后不写入权限",
+      "feedback_form": "系统通知",
+      "system_feedback": "权限管理员收到驳回通知，显示驳回原因",
+      "user_next_step": "查看原因，调整后重新发起复制",
+      "recovery_path": "重新发起需要走完整流程，无法在原申请上修改后再次提交"
+    },
+    {
+      "exception_id": "ex-8",
+      "name": "审批超时",
+      "timing": "互审模式下，复制申请提交后审批人长期未处理",
+      "trigger_condition": "审批在系统超时阈值内未获得处理",
+      "basis": "依赖审批系统的超时机制",
+      "feedback_form": "无独立反馈，依赖审批系统既有规则",
+      "system_feedback": "按审批系统既有超时规则处理",
+      "user_next_step": "联系互审管理员处理，或视系统是否支持自行撤回",
+      "recovery_path": "依赖于审批系统的超时机制和撤回能力"
     }
   ],
   "pages": [
     {
       "page_id": "page-1",
-      "page_name": "资产配置建议书主页面",
-      "page_goal": "企业客户在一页内完成查看资产→分析问题→获取建议→采取行动的完整链路",
-      "entry_condition": "从菜单或持仓列表入口进入",
-      "structure_ascii": "首屏：银行账号选择器 + 时点资产 + 诊断摘要 | 中段：持仓表现（可折叠）含KPI+图表+排行榜 | 分布区：投资分布/期限分布 Tab | 底部：诊断×推荐联合卡片区 | 悬浮下载按钮",
+      "page_name": "子管理员列表页",
+      "page_goal": "查看、检索和管理已配置的子管理员，支持复制操作",
+      "entry_condition": "开启「子管理员模式」后进入",
+      "structure_ascii": "顶部全局Tab切换区 → 提示信息与状态控制区 → 筛选查询区 → 工具栏与操作区 → 数据列表表格区（含操作列：复制|编辑|移除）→ 底部分页区",
       "regions": [
-        "顶部导航区：页面标题 + 操作按钮",
-        "账号选择区：银行账号下拉选择",
-        "总览卡片区：时点资产 + 诊断摘要",
-        "持仓表现区：区间筛选 + KPI卡片 + 图表 + 排行",
-        "投资分布区：Tab 切换饼图 + 数据列表",
-        "期限分布区：Tab 切换数据列表",
-        "诊断×推荐区：联合卡片组",
-        "底部合规区：风险提示文案",
-        "悬浮操作区：下载按钮"
+        "顶部全局Tab切换区：子管理员模式 / 双管理员互审模式 / 权限变更审批模式",
+        "提示信息与状态控制区：业务提示文本 + 帮助文档链接 + 关闭模式链接",
+        "筛选查询区：姓名、手机号、部门筛选 + 重置/查询按钮",
+        "工具栏与操作区：+ 添加子管理员主按钮",
+        "数据列表表格区：姓名 | 手机号 | 部门 | 可授权组织 | 可授权功能 | 操作",
+        "底部分页区：总数 + 页码 + 每页条数选择"
       ],
       "buttons": [
-        "下载（右下角悬浮）",
-        "购买（每件推荐产品旁）",
-        "批量购买（推荐区底部）",
-        "产品名称（跳转详情）"
+        "+ 添加子管理员（工具栏）",
+        "复制（操作列，新增）",
+        "编辑（操作列，已有）",
+        "移除（操作列，已有）"
       ],
-      "success_feedback": "各模块按优先级完成渲染；下载时 toast 提示",
-      "failure_feedback": "模块级展示空状态卡片；全页级展示阻断页；字段级展示 --"
+      "success_feedback": "复制成功后Toast反馈（非互审：「复制成功」；互审：「已提交审批」）",
+      "failure_feedback": "复制失败通过Toast反馈（见§5各异常场景）"
     }
   ],
   "modals": [
     {
       "modal_id": "modal-1",
-      "modal_name": "下载格式选择弹窗",
-      "goal": "让客户选择建议书的下载格式",
-      "trigger_condition": "点击下载悬浮按钮",
-      "structure_ascii": "标题：选择下载格式 | 选项：PDF 格式 + PNG 图片 | 底部：[取消] [下载]",
+      "modal_name": "复制弹窗",
+      "goal": "选择复制内容和复制对象，确认后提交复制",
+      "trigger_condition": "在子管理员列表操作列点击「复制」",
+      "structure_ascii": "弹窗标题区：「复制」→ 提示文本 → 复制信息区（可授权组织+可授权功能复选框，默认全选）→ 复制对象区（选择器+已选用户标签区+身份分布轻提示）→ 底部操作栏（取消+确认）",
       "copy": [
-        "选择下载格式",
-        "适合打印和分享",
-        "适合快速截图查看"
+        "弹窗标题：「复制」",
+        "提示文本：「复制该子管理员的可授权组织和/或可授权功能给其他用户」",
+        "复选框：「可授权组织」「可授权功能」",
+        "选择器按钮：「选择」",
+        "身份分布提示：「已选{N}人，其中{M}名已有子管理员将叠加权限，{K}名普通用户将成为子管理员」",
+        "确认按钮：「确认」",
+        "取消按钮：「取消」"
       ],
       "buttons": [
-        "取消",
-        "下载"
+        "确认：默认禁用，至少一项内容且至少一人时激活。点击后执行校验",
+        "取消：始终可用，关闭弹窗不保存选择"
       ],
-      "success_feedback": "弹窗关闭，文件开始下载",
-      "failure_feedback": "弹窗内提示文件生成失败"
+      "success_feedback": "非互审：Toast「复制成功」（弹窗关闭）；互审：Toast「已提交审批，等待另一位管理员确认后生效」（弹窗关闭）",
+      "failure_feedback": "见§5各异常场景：Toast + 弹窗内错误标注"
     },
     {
       "modal_id": "modal-2",
-      "modal_name": "批量购买确认弹窗",
-      "goal": "让客户确认批量购买产品列表后跳转购物车",
-      "trigger_condition": "勾选至少一个产品后点击批量购买",
-      "structure_ascii": "标题：确认批量购买产品 | 列表：已选产品清单 + 预计总金额 | 底部：[取消] [加入购物车]",
+      "modal_name": "员工选择弹窗",
+      "goal": "选择需要接收复制的目标用户",
+      "trigger_condition": "在复制弹窗中点击「选择」",
+      "structure_ascii": "弹窗标题区：「选择员工」→ 筛选查询区（姓名/手机号/部门）→ 数据列表表格区（含「当前身份」列）→ 底部操作栏（已选人数 + 取消/确认）",
       "copy": [
-        "确认批量购买产品",
-        "已选择{N}件产品",
-        "预计总金额：{总金额}元"
+        "弹窗标题：「选择员工」（复用现有）",
+        "新增列标题：「当前身份」",
+        "身份值：「子管理员（将叠加权限）」或「普通用户（将成为子管理员）」"
       ],
       "buttons": [
-        "取消",
-        "加入购物车"
+        "确认：将选中用户传回复制弹窗",
+        "取消：不选中任何用户，弹窗关闭"
       ],
-      "success_feedback": "弹窗关闭，跳转购物车",
-      "failure_feedback": "弹窗内产品售罄状态自动更新，客户可继续操作"
+      "success_feedback": "选中用户传递回复制弹窗，本弹窗关闭",
+      "failure_feedback": "无"
     }
   ],
   "drawers": [],
   "states": [
     {
-      "state": "加载中",
-      "meaning": "数据请求处理中",
-      "applies_to": "所有模块",
-      "user_action_available": "等待",
-      "feedback_standard": "骨架屏或模块级 loading"
+      "state": "复制弹窗打开",
+      "meaning": "用户进入复制流程，已加载来源配置",
+      "applies_to": "权限管理员",
+      "user_action_available": "勾选内容、选择目标、取消关闭",
+      "feedback_standard": "弹窗标题「复制」+ 提示文本"
     },
     {
-      "state": "加载成功",
-      "meaning": "数据正常展示",
-      "applies_to": "所有模块",
-      "user_action_available": "浏览/操作",
-      "feedback_standard": "正常展示内容"
+      "state": "校验通过（非互审）",
+      "meaning": "所有校验通过，权限已写入",
+      "applies_to": "权限管理员",
+      "user_action_available": "查看列表确认、查看操作记录",
+      "feedback_standard": "Toast「复制成功」"
     },
     {
-      "state": "部分缺失",
-      "meaning": "个别字段无数据",
-      "applies_to": "各模块内字段",
-      "user_action_available": "查看其他字段",
-      "feedback_standard": "缺失字段展示 --"
+      "state": "校验通过（互审中）",
+      "meaning": "所有校验通过，已提交审批",
+      "applies_to": "权限管理员",
+      "user_action_available": "等待审批",
+      "feedback_standard": "Toast「已提交审批，等待另一位管理员确认后生效」"
     },
     {
-      "state": "模块异常",
-      "meaning": "该模块接口失败",
-      "applies_to": "单个模块",
-      "user_action_available": "浏览其他模块",
-      "feedback_standard": "暂无{模块名}数据"
+      "state": "校验不通过",
+      "meaning": "某项校验失败，未执行复制",
+      "applies_to": "权限管理员",
+      "user_action_available": "根据提示修正后重新确认",
+      "feedback_standard": "Toast + 弹窗内错误标注"
     },
     {
-      "state": "全页异常",
-      "meaning": "核心接口全失败",
-      "applies_to": "整页",
-      "user_action_available": "等待或重试",
-      "feedback_standard": "系统繁忙，请稍后再试"
+      "state": "审批中",
+      "meaning": "复制申请已提交，等待审批",
+      "applies_to": "权限管理员、互审管理员",
+      "user_action_available": "等待审批、联系审批人",
+      "feedback_standard": "子管理员列表行内标签「审批中」"
     },
     {
-      "state": "无持仓",
-      "meaning": "账号下无持仓",
-      "applies_to": "整页",
-      "user_action_available": "去购买",
-      "feedback_standard": "暂无持仓数据 + 去购买按钮"
+      "state": "审批通过",
+      "meaning": "另一位管理员通过审批，权限已写入",
+      "applies_to": "权限管理员",
+      "user_action_available": "确认生效",
+      "feedback_standard": "系统通知「子管理员复制审批已通过」"
     },
     {
-      "state": "无诊断",
-      "meaning": "无诊断问题",
-      "applies_to": "诊断模块",
-      "user_action_available": "无",
-      "feedback_standard": "诊断模块不展示"
-    },
-    {
-      "state": "无推荐",
-      "meaning": "无可推荐产品",
-      "applies_to": "推荐模块",
-      "user_action_available": "无",
-      "feedback_standard": "推荐模块不展示"
-    },
-    {
-      "state": "下载中",
-      "meaning": "文件生成中",
-      "applies_to": "下载操作",
-      "user_action_available": "等待",
-      "feedback_standard": "正在生成文件，请稍候..."
-    },
-    {
-      "state": "下载失败",
-      "meaning": "文件生成异常",
-      "applies_to": "下载操作",
-      "user_action_available": "重试",
-      "feedback_standard": "文件生成失败，请稍后重试"
+      "state": "审批驳回",
+      "meaning": "另一位管理员驳回申请，权限未写入",
+      "applies_to": "权限管理员",
+      "user_action_available": "查看原因、重新发起",
+      "feedback_standard": "系统通知「子管理员复制申请已被驳回」+ 驳回原因"
     }
   ],
   "open_questions": [
     {
-      "question": "客户经理是否仅作为查看者，还是需要主动生成/推送建议书？",
-      "impact": "决定是否需要为客户经理角色设计独立流程，当前基于'客户经理仅查看'推进",
-      "suggested_owner": "产品负责人"
+      "question": "200名目标中部分校验不通过时，是「全部退回」还是「通过部分」？",
+      "impact": "影响§5.6异常交互设计方向",
+      "suggested_owner": "产品"
     },
     {
-      "question": "三类诊断结果是否需要按严重程度排序？",
-      "impact": "影响诊断推荐卡片区在页面中的排列顺序和视觉权重",
-      "suggested_owner": "设计 + 业务"
+      "question": "审批中的复制申请是否支持权限管理员自行撤销？",
+      "impact": "影响是否在审批中状态上增加「撤销」操作",
+      "suggested_owner": "产品"
     },
     {
-      "question": "各模块调用企业财富+接口的方式是独立接口还是统一大接口？",
-      "impact": "影响模块级加载的实现方案，当前基于模块间独立调用推进",
-      "suggested_owner": "开发"
+      "question": "「加入状态」的目标状态口径是「已启用」还是「已加入」？",
+      "impact": "影响校验文案和校验逻辑",
+      "suggested_owner": "产品"
     },
     {
-      "question": "产品推荐是否基于诊断结果生成？",
-      "impact": "影响诊断与推荐的关联方式，当前基于按诊断输入产出推荐推进",
-      "suggested_owner": "企业财富+"
-    },
-    {
-      "question": "按银行账号切换时是否保留上次查看账号的记忆？",
-      "impact": "影响切换交互的默认行为，当前按每次进入默认全部推进",
-      "suggested_owner": "产品 + 设计"
-    },
-    {
-      "question": "下载是否需要支持选择性导出部分模块？",
-      "impact": "影响下载弹窗的交互设计，当前按全量平铺推进",
-      "suggested_owner": "产品负责人"
-    },
-    {
-      "question": "批量购买的购物车与现有购物车是否完全复用？",
-      "impact": "影响批量购买流程是否需要扩展，当前按复用购物车推进",
-      "suggested_owner": "产品 + 开发"
+      "question": "操作记录是否支持按复制操作聚合展示？",
+      "impact": "影响§4.1的操作记录展示设计",
+      "suggested_owner": "产品"
     }
   ],
   "knowledge_consumption": {
     "design_guidelines_used": [
-      "IA-02 分块",
-      "U-08 极简与聚焦",
-      "C-04 渐进披露",
-      "C-03 减少无关认知负荷",
-      "U-09 可行动的恢复路径",
-      "U-01 状态可见"
+      "U-01 状态、进展与结果可见：批量复制后需展示每人的处理结果；互审模式下需展示审批进度",
+      "U-05 错误预防与前置约束：校验顺序前置执行，阻断时明确提示原因和修正路径",
+      "U-06 识别优于回忆：弹窗内身份分布轻提示，标注各目标用户的处理规则",
+      "U-09 可行动的恢复路径：复制成功后说明结果并给出下一步；审批驳回后展示原因和重新发起路径",
+      "IA-03 语义、术语与行为一致：操作记录按复制操作聚合展示；Toast区分互审/非互审表述",
+      "弹窗适用条件（容器与工作区.md）：选择弹窗而非抽屉或独立页面——任务轻量、需强制响应、表单极短",
+      "高风险动作反馈闭环（状态、反馈与恢复.md）：批量复制完成后需Toast+标签更新，说明影响范围和结果",
+      "状态前置可见（状态、反馈与恢复.md）：互审模式下在列表行标注「审批中」标签"
     ],
-    "business_knowledge_used": [],
+    "business_knowledge_used": [
+      "14_角色边界.md：子管理员/普通管理员/超管的视角和边界",
+      "15_页面载体语义.md §4.2：子管理员列表页结构参考",
+      "23_规则契约.md R-007/R-008/R-009：治理影响生效、子管理员边界限制、模式互斥",
+      "24_治理状态模型.md：draft→pending→approved→effective→revoked 状态流转",
+      "25_审计契约.md：最低审计字段集合"
+    ],
     "knowledge_gaps": [
-      "财富管理领域业务知识不在现有知识库中，体验方案基于 UXB 结论和需求文档推导"
+      "审批系统超时机制细节：超时阈值和自动处理策略未明确",
+      "部分校验不通过策略：全部退回还是通过部分未明确"
     ],
     "upstream_trace": [
       {
-        "upstream": "UXB §7: 五个信息模块阅读顺序不是任意的",
-        "blueprint_decision": "页面按总览→持仓表现→分布→诊断×推荐排列，区分默认展开/折叠",
-        "section": "§3 / §6"
+        "upstream_judgment": "UXB：复制入口放在操作列最左侧",
+        "experience_meaning": "入口位置突出但不得降低其他操作可发现性",
+        "blueprint_decision": "操作列按钮「复制—编辑—移除」排列",
+        "target_section": "§6.1"
       },
       {
-        "upstream": "UXB §7: 诊断与推荐缺少因果衔接",
-        "blueprint_decision": "诊断推荐联合卡片组，问题→建议方向→产品三层结构",
-        "section": "§3 节点五 / §6"
+        "upstream_judgment": "UXB：批量复制需按用户维度提供结果反馈",
+        "experience_meaning": "单一Toast不够",
+        "blueprint_decision": "校验失败时Toast+弹窗内标签标红；成功后Toast+列表更新",
+        "target_section": "§3.5、§5、§6.2"
       },
       {
-        "upstream": "UXB §7: 客户经理角色场景未确认",
-        "blueprint_decision": "主方案仅覆盖企业客户自助场景",
-        "section": "§8"
+        "upstream_judgment": "UXB：互审模式下Toast需区分表述",
+        "experience_meaning": "互审与非互审不可混用",
+        "blueprint_decision": "互审Toast「已提交审批」",
+        "target_section": "§3.5、§7"
       },
       {
-        "upstream": "UXB §7: 数据全部依赖企业财富+接口",
-        "blueprint_decision": "模块级加载 + 独立降级策略",
-        "section": "§5 / §6"
+        "upstream_judgment": "UXB：混合目标用户身份差异前置提示",
+        "experience_meaning": "确认前让用户知道规则差异",
+        "blueprint_decision": "身份标签+分布轻提示",
+        "target_section": "§3.3、§6.2"
       },
       {
-        "upstream": "UXB §7: 批量购买部分失败",
-        "blueprint_decision": "结算结果页展示成功/失败混合状态",
-        "section": "§5 异常六"
+        "upstream_judgment": "UXB：操作记录需按操作聚合展示",
+        "experience_meaning": "两条记录默认合并",
+        "blueprint_decision": "列表合并展示，可展开明细",
+        "target_section": "§4.1"
       },
       {
-        "upstream": "UXB §7: 建议书下载需平铺所有内容",
-        "blueprint_decision": "下载弹窗选择格式后全量生成",
-        "section": "§4 流程三"
+        "upstream_judgment": "UXB：互审模式下审批状态在子管理员列表中可见",
+        "experience_meaning": "列表行需状态展示",
+        "blueprint_decision": "姓名旁「审批中」标签",
+        "target_section": "§6.1"
       }
     ]
   }

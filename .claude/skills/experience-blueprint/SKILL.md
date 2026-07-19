@@ -735,6 +735,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
 推荐项产物映射：
+- 方案协同图：`spark-output/solution-swimlane/solution_swimlane.html`
 - 页面规格：`spark-output/page_spec.md` 或 `spark-output/context/page-spec.json`
 - 异常态：`spark-output/edge_output.md` 或 `spark-output/context/edge.json`
 - 视觉情绪板：`spark-output/board_output.md` 或 `spark-output/context/board.json`
@@ -752,10 +753,11 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 ```text
 体验蓝图已完成。你可以继续：
-1. 页面规格
-2. 异常态
-3. 视觉情绪板
-4. 旅程埋点与度量需求
+1. 方案协同图
+2. 页面规格
+3. 异常态
+4. 视觉情绪板
+5. 旅程埋点与度量需求
 
 你回复对应名称即可。
 ```

@@ -97,12 +97,30 @@
       "required": [],
       "next_hint": {
         "preferred": [
+          "solution-swimlane",
           "page-spec",
           "edge",
           "board",
           "journey-metrics"
         ],
-        "reason": "体验蓝图完成后，可进入设计文档提取页面规格，也可按需要补异常态、视觉风格或旅程埋点与度量需求。",
+        "reason": "体验蓝图完成后，优先生成面向产品与开发宣讲的方案协同图；也可按需要进入页面规格、异常态、视觉风格或旅程埋点与度量需求。",
+        "alternatives": []
+      }
+    },
+    {
+      "id": "solution-swimlane",
+      "_comment": "只承接正式体验蓝图 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在体验蓝图完成后优先展示本节点；required 仍保证它不会提前就绪。",
+      "name_zh": "方案协同图",
+      "phase": 2.4,
+      "reads": [
+        "experience-blueprint"
+      ],
+      "required": [
+        "experience-blueprint"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "方案协同图已完成，当前无固定下一步推荐。",
         "alternatives": []
       }
     },

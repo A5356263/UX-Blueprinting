@@ -23,11 +23,12 @@
 
 ### 1.1 done 集合
 
-扫描 `spark-output/context/` 目录下的所有 `.json` 文件，取文件名（去掉 `.json` 后缀）组成已完成集合。
+通常扫描 `spark-output/context/` 目录下的正式 Context JSON 判定完成状态。只输出单文件 HTML 的 `solution-swimlane` 是明确例外：以 `spark-output/solution-swimlane/solution_swimlane.html` 存在作为完成信号。
 
 示例：
 
 - 若目录下存在 `uxb.json`，则 `done = { "uxb" }`
+- 若存在 `spark-output/solution-swimlane/solution_swimlane.html`，则 `done` 包含 `"solution-swimlane"`
 - 首次运行时，`done` 为空集合
 
 ### 1.2 ready 判定
@@ -52,7 +53,7 @@
 
 补充说明：
 
-- `done` 集合只以 `spark-output/context/` 下的 JSON 文件为依据，MD 文件存在与否不影响 `ready` 判定。
+- 除 `solution-swimlane` 的固定 HTML 产物外，`done` 集合只以 `spark-output/context/` 下的 JSON 文件为依据；MD 文件存在与否不影响 `ready` 判定。
 - 如果用户在 Skill 不就绪时仍然强制执行，行为由该 Skill 的 `SKILL.md` 降级规则定义，例如回退读取、柔和引导或输出骨架版结果。
 - 本文件只负责“推荐什么”，不负责“拦截什么”。
 
@@ -83,7 +84,7 @@ uxb -> journey-analysis / stories / experience-blueprint
 problem-framing -> stories / journey-analysis
 stories -> journey-analysis / experience-blueprint
 journey-analysis -> experience-blueprint
-experience-blueprint -> page-spec / edge / board / journey-metrics
+experience-blueprint -> solution-swimlane / page-spec / edge / board / journey-metrics
 product-analysis -> uxb
 interface-audit -> uxb / journey-analysis / product-analysis
 ```
@@ -99,6 +100,7 @@ interface-audit -> uxb / journey-analysis / product-analysis
 
 当前终点节点：
 
+- `solution-swimlane`
 - `page-spec`
 - `edge`
 - `board`
@@ -171,6 +173,7 @@ skill-graph.json 中 next_hint.preferred + next_hint.alternatives
 ### 2.3 特殊节点
 
 - `knowledge-wiki`、`preview-renderer` 是公共能力，不参与主链固定 Handoff。
+- `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown 与 JSON，不固定推荐后续 Skill。
 - `product-analysis` 是 UXB 纠偏回流节点，固定下一步只有 `uxb`。
 - `design-strategy` 是独立终点，当前无固定下一步。
 - `interface-audit` 是独立增强节点，固定关系为 `uxb`、`journey-analysis`、`product-analysis`。

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="swimlane-source-hash" content="__SWIMLANE_SOURCE_HASH__">
+  <meta name="swimlane-model-hash" content="__SWIMLANE_MODEL_HASH__">
+  <title>__SWIMLANE_TITLE__</title>
+  <style>
+    :root {
+      --ink: #10233f;
+      --muted: #607089;
+      --line: #c8d3e1;
+      --line-strong: #8ea2ba;
+      --paper: #f4f7fb;
+      --panel: #ffffff;
+      --lane-human: #f7fbff;
+      --lane-team: #fffaf2;
+      --lane-system: #f3faf7;
+      --action: #1677ff;
+      --system: #00875a;
+      --decision: #b76e00;
+      --result: #6f42c1;
+      --exception: #c43d4b;
+      --flow-main: #165dff;
+      --flow-secondary: #0b8f78;
+      --flow-exception: #d33e50;
+      --shadow: 0 10px 30px rgba(26, 54, 93, .09);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      line-height: 1.5;
+    }
+    button { font: inherit; }
+    .toolbar {
+      position: relative;
+      flex: 0 0 auto;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      padding: 5px;
+      border: 1px solid rgba(142,162,186,.72);
+      border-width: 0 0 1px;
+      background: #fff;
+      box-shadow: 0 2px 7px rgba(26,54,93,.09);
+    }
+    .toolbar-content {
+      display: flex;
+      flex: 1;
+      gap: 6px;
+      align-items: center;
+      min-width: 0;
+    }
+    .toolbar.is-collapsed {
+      justify-content: flex-end;
+      width: 100%;
+    }
+    .toolbar.is-collapsed .toolbar-content { display: none; }
+    .toolbar.is-collapsed #toggle-toolbar { width: 100%; padding-inline: 4px; }
+    .toolbar-group {
+      display: flex;
+      flex: none;
+      flex-wrap: nowrap;
+      gap: 5px;
+      align-items: center;
+    }
+    .flow-group {
+      flex: 1;
+      min-width: 120px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      overscroll-behavior-x: contain;
+    }
+    .view-group { flex: none; }
+    .toolbar-separator { flex: 0 0 1px; width: 1px; height: 24px; background: var(--line); }
+    .control {
+      flex: none;
+      min-height: 30px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .control:hover { border-color: var(--action); color: var(--action); }
+    .control:focus-visible { outline: 3px solid rgba(22,119,255,.24); outline-offset: 2px; }
+    .flow-filter[data-flow-type="main"] { border-color: var(--flow-main); color: #124dcc; }
+    .flow-filter[data-flow-type="secondary"] { border-color: var(--flow-secondary); color: #08715f; }
+    .flow-filter[data-flow-type="exception"] { border-color: var(--flow-exception); color: #ad2738; }
+    .flow-filter[data-flow-type="all"] { border-color: #71839a; color: #506177; }
+    .flow-filter[data-flow-type="main"].is-selected { border-color: var(--flow-main); color: #fff; background: var(--flow-main); }
+    .flow-filter[data-flow-type="secondary"].is-selected { border-color: var(--flow-secondary); color: #fff; background: var(--flow-secondary); }
+    .flow-filter[data-flow-type="exception"].is-selected { border-color: var(--flow-exception); color: #fff; background: var(--flow-exception); }
+    .flow-filter[data-flow-type="all"].is-selected { border-color: #506177; color: #fff; background: #506177; }
+    .zoom-value { min-width: 44px; color: var(--muted); font-size: 12px; text-align: center; font-variant-numeric: tabular-nums; }
+    main {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+    }
+    .diagram-shell {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .diagram-scroll {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: #fff;
+      scrollbar-gutter: stable;
+    }
+    #swimlane-svg { display: block; transform-origin: top left; }
+    .info-drawer {
+      position: fixed;
+      top: 58px;
+      right: 8px;
+      bottom: 8px;
+      z-index: 25;
+      width: min(430px, calc(100vw - 16px));
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.98);
+      box-shadow: 0 14px 40px rgba(26,54,93,.2);
+      backdrop-filter: blur(12px);
+    }
+    .info-drawer[hidden] { display: none; }
+    .drawer-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.98);
+    }
+    .drawer-head h2 { margin: 0; font-size: 16px; }
+    .drawer-body { padding: 4px 14px 16px; }
+    .drawer-section { padding: 12px 0; border-bottom: 1px solid #e7edf4; }
+    .drawer-section:last-child { border-bottom: 0; }
+    .drawer-section h3 { margin: 0 0 8px; font-size: 14px; }
+    .drawer-section p { margin: 5px 0; color: var(--muted); font-size: 13px; }
+    .drawer-subtitle { color: var(--muted); font-size: 12px; }
+    .detail-label { color: var(--ink); font-weight: 700; }
+    .question-list { margin: 0; padding-left: 18px; font-size: 13px; }
+    .question-list li + li { margin-top: 8px; }
+    .validation-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .metric { min-width: 0; padding: 7px 6px; border-radius: 8px; background: #f3f7fb; font-size: 11px; }
+    .metric strong { display: block; font-size: 16px; }
+    .hashes { overflow-wrap: anywhere; color: var(--muted); font-size: 11px; }
+    @media (max-width: 760px) {
+      .view-group .control:not(#info-toggle) { display: none; }
+      .toolbar-separator { display: none; }
+      .info-drawer { top: 50px; right: 4px; bottom: 4px; width: calc(100vw - 8px); }
+    }
+    @media print {
+      @page { size: landscape; margin: 10mm; }
+      body { background: #fff; }
+      html, body { width: auto; height: auto; overflow: visible; }
+      .toolbar, .info-drawer { display: none !important; }
+      main { position: static; display: block; }
+      .diagram-shell { overflow: visible; }
+      .diagram-scroll { width: auto; height: auto; overflow: visible; }
+      #swimlane-svg { width: 100% !important; height: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="toolbar" aria-label="方案协同图控制栏">
+    <div class="toolbar-content">
+      <div class="toolbar-group flow-group" aria-label="流程选择">
+        <button class="control flow-filter" type="button" data-flow-filter="__all__" data-flow-type="all">全部</button>
+        __SWIMLANE_FLOW_BUTTONS__
+      </div>
+      <span class="toolbar-separator" aria-hidden="true"></span>
+      <div class="toolbar-group view-group" aria-label="视图控制">
+        <button class="control" id="zoom-out" type="button" aria-label="缩小">−</button>
+        <span class="zoom-value" id="zoom-value">100%</span>
+        <button class="control" id="zoom-in" type="button" aria-label="放大">＋</button>
+        <button class="control" id="fit-width" type="button">适宽</button>
+        <button class="control" id="reset-view" type="button">重置</button>
+        <button class="control" id="info-toggle" type="button" aria-controls="info-drawer" aria-expanded="false">信息</button>
+        <button class="control" id="export-svg" type="button">SVG</button>
+        <button class="control" id="print-page" type="button">打印</button>
+      </div>
+    </div>
+    <button class="control" id="toggle-toolbar" type="button" aria-expanded="true" aria-label="收起工具栏">收起</button>
+  </nav>
+
+  <main>
+    <section class="diagram-shell" aria-label="方案协同泳道图">
+      <div class="diagram-scroll" id="diagram-scroll">
+        __SWIMLANE_SVG__
+      </div>
+    </section>
+
+  </main>
+
+  <aside class="info-drawer" id="info-drawer" hidden aria-label="方案协同图信息">
+    <div class="drawer-head">
+      <h2>图示信息</h2>
+      <button class="control" id="close-info" type="button" aria-label="关闭信息抽屉">关闭</button>
+    </div>
+    <div class="drawer-body">
+      <section class="drawer-section">
+        <h3>__SWIMLANE_TITLE__</h3>
+        <p class="drawer-subtitle">__SWIMLANE_SUBTITLE__</p>
+      </section>
+      <section class="drawer-section" aria-live="polite">
+        <h3>节点详情</h3>
+        <p><span class="detail-label">名称：</span><span id="detail-name">点击图中节点查看</span></p>
+        <p><span class="detail-label">说明：</span><span id="detail-summary">当前默认展示主流程，次流程和异常可在浮动工具栏切换。</span></p>
+        <p><span class="detail-label">所属流程：</span><span id="detail-flows">—</span></p>
+        <p><span class="detail-label">来源项：</span><span id="detail-sources">—</span></p>
+      </section>
+      <section class="drawer-section">
+        <h3>待确认项</h3>
+        __SWIMLANE_QUESTIONS__
+      </section>
+      <section class="drawer-section">
+        <h3>完整性校验</h3>
+        <div class="validation-grid">
+          __SWIMLANE_VALIDATION_METRICS__
+        </div>
+      </section>
+      <p class="hashes">正式输入：experience_blueprint.md + experience-blueprint.json<br>来源哈希：__SWIMLANE_SOURCE_HASH_SHORT__ · 模型哈希：__SWIMLANE_MODEL_HASH_SHORT__</p>
+    </div>
+  </aside>
+
+  <script type="application/json" id="swimlane-source-inventory">__SWIMLANE_INVENTORY_JSON__</script>
+  <script type="application/json" id="swimlane-diagram-model">__SWIMLANE_MODEL_JSON__</script>
+  <script type="application/json" id="swimlane-validation-report">__SWIMLANE_REPORT_JSON__</script>
+  <script>
+    "use strict";
+    (() => {
+      const svg = document.getElementById("swimlane-svg");
+      const scroll = document.getElementById("diagram-scroll");
+      const zoomValue = document.getElementById("zoom-value");
+      const toolbar = document.querySelector(".toolbar");
+      const toggleToolbar = document.getElementById("toggle-toolbar");
+      const infoDrawer = document.getElementById("info-drawer");
+      const infoToggle = document.getElementById("info-toggle");
+      const baseWidth = Number(svg.dataset.baseWidth);
+      const baseHeight = Number(svg.dataset.baseHeight);
+      const initialZoom = scroll.clientWidth >= 1440 ? .92 : 1;
+      let zoom = initialZoom;
+
+      function setZoom(value) {
+        zoom = Math.max(.35, Math.min(1.8, value));
+        svg.style.width = `${Math.round(baseWidth * zoom)}px`;
+        svg.style.height = `${Math.round(baseHeight * zoom)}px`;
+        zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+      }
+
+      function setFlow(flowId) {
+        clearHoverFlowFocus();
+        let activeFlowType = "all";
+        document.querySelectorAll("[data-flow-filter]").forEach((button) => {
+          const selected = button.dataset.flowFilter === flowId;
+          button.classList.toggle("is-selected", selected);
+          if (selected) activeFlowType = button.dataset.flowType || "all";
+        });
+        document.body.dataset.activeFlowType = activeFlowType;
+        document.querySelectorAll("[data-flow-ids]").forEach((element) => {
+          const ids = element.dataset.flowIds.split(",").filter(Boolean);
+          element.classList.toggle("is-muted", flowId !== "__all__" && !ids.includes(flowId));
+        });
+      }
+
+      function clearHoverFlowFocus() {
+        document.querySelectorAll(".is-hover-focus, .is-hover-muted").forEach((element) => {
+          element.classList.remove("is-hover-focus", "is-hover-muted");
+        });
+      }
+
+      function setHoverFlowFocus(edge, active) {
+        clearHoverFlowFocus();
+        if (!active || document.body.dataset.activeFlowType !== "all") return;
+        const activeIds = edge.dataset.flowIds.split(",").filter(Boolean);
+        document.querySelectorAll("[data-flow-ids]").forEach((element) => {
+          const ids = element.dataset.flowIds.split(",").filter(Boolean);
+          const related = ids.some((id) => activeIds.includes(id));
+          element.classList.add(related ? "is-hover-focus" : "is-hover-muted");
+        });
+      }
+
+      document.querySelectorAll("[data-flow-filter]").forEach((button) => {
+        button.addEventListener("click", () => setFlow(button.dataset.flowFilter));
+      });
+      document.querySelectorAll(".swim-edge").forEach((edge) => {
+        edge.addEventListener("mouseenter", () => setHoverFlowFocus(edge, true));
+        edge.addEventListener("mouseleave", clearHoverFlowFocus);
+        edge.addEventListener("focusin", () => setHoverFlowFocus(edge, true));
+        edge.addEventListener("focusout", clearHoverFlowFocus);
+      });
+      document.getElementById("zoom-out").addEventListener("click", () => setZoom(zoom - .1));
+      document.getElementById("zoom-in").addEventListener("click", () => setZoom(zoom + .1));
+      document.getElementById("reset-view").addEventListener("click", () => {
+        setZoom(initialZoom);
+        scroll.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+      });
+      document.getElementById("fit-width").addEventListener("click", () => {
+        setZoom(Math.min(1, (scroll.clientWidth - 8) / baseWidth));
+        scroll.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+      });
+      document.getElementById("print-page").addEventListener("click", () => window.print());
+
+      function setInfoOpen(open) {
+        infoDrawer.hidden = !open;
+        infoToggle.setAttribute("aria-expanded", String(open));
+      }
+
+      infoToggle.addEventListener("click", () => setInfoOpen(infoDrawer.hidden));
+      document.getElementById("close-info").addEventListener("click", () => setInfoOpen(false));
+
+      toggleToolbar.addEventListener("click", () => {
+        const collapsed = toolbar.classList.toggle("is-collapsed");
+        toggleToolbar.textContent = collapsed ? "工具" : "收起";
+        toggleToolbar.setAttribute("aria-expanded", String(!collapsed));
+        toggleToolbar.setAttribute("aria-label", collapsed ? "展开工具栏" : "收起工具栏");
+      });
+
+      function showNodeDetail(node) {
+        document.getElementById("detail-name").textContent = node.dataset.nodeLabel;
+        document.getElementById("detail-summary").textContent = node.dataset.nodeSummary;
+        document.getElementById("detail-flows").textContent = node.dataset.flowNames || "—";
+        document.getElementById("detail-sources").textContent = `${node.dataset.sourceCount} 项正式来源`;
+        setInfoOpen(true);
+      }
+      document.querySelectorAll("[data-node-id]").forEach((node) => {
+        node.addEventListener("click", () => showNodeDetail(node));
+        node.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            showNodeDetail(node);
+          }
+        });
+      });
+
+      document.getElementById("export-svg").addEventListener("click", () => {
+        const clone = svg.cloneNode(true);
+        clone.querySelectorAll(".is-muted, .is-hover-focus, .is-hover-muted").forEach((element) => {
+          element.classList.remove("is-muted", "is-hover-focus", "is-hover-muted");
+        });
+        clone.removeAttribute("style");
+        clone.setAttribute("width", String(baseWidth));
+        clone.setAttribute("height", String(baseHeight));
+        clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        const source = new XMLSerializer().serializeToString(clone);
+        const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "solution_swimlane.svg";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      });
+
+      const selected = document.querySelector("[data-flow-filter].is-selected");
+      setFlow(selected ? selected.dataset.flowFilter : "__all__");
+      setZoom(initialZoom);
+    })();
+  </script>
+</body>
+</html>
