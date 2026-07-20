@@ -107,7 +107,9 @@ function priorityClass(priority) {
 }
 
 function renderStoryCard(story) {
-  const assumption = story.critical_assumption || "";
+  const assumptions = asList(story.critical_assumptions || story.critical_assumption);
+  const assumption = assumptions.map(formatValue).join("\uff1b");
+  const risks = story.risks_or_validation || story.risks || story.risk;
   return `
     <article class="story-card">
       <div class="story-card-head">
@@ -115,7 +117,7 @@ function renderStoryCard(story) {
       </div>
       <div class="story-meta">
         <span class="story-pill ${priorityClass(story.priority)}">${escapeHtml(story.priority || TEXT.priorityMissing)}</span>
-        <span class="story-pill">${escapeHtml(story.size || story.type || "Story")}</span>
+        <span class="story-pill">${escapeHtml(story.granularity || story.size || story.type || "Story")}</span>
         ${assumption ? `<span class="story-pill assumption">${TEXT.assumption}</span>` : ""}
       </div>
       <p><strong>${TEXT.role}\uff1a</strong>${escapeHtml(story.persona || story.role || TEXT.missing)}</p>
@@ -135,8 +137,8 @@ function renderStoryCard(story) {
       </div>
       <div class="story-card-section">
         <h4>${TEXT.sourceRisk}</h4>
-        <p><strong>${TEXT.sourceBasis}\uff1a</strong>${escapeHtml(story.source_basis || TEXT.missing)}</p>
-        <p><strong>${TEXT.risk}\uff1a</strong>${escapeHtml(story.risk || TEXT.missing)}</p>
+        <p><strong>${TEXT.sourceBasis}\uff1a</strong>${escapeHtml(formatValue(story.source_basis || TEXT.missing))}</p>
+        <p><strong>${TEXT.risk}\uff1a</strong>${escapeHtml(formatValue(risks || TEXT.missing))}</p>
         ${assumption ? `<p><strong>${TEXT.assumption}\uff1a</strong>${escapeHtml(assumption)}</p>` : ""}
       </div>
     </article>
@@ -160,7 +162,7 @@ function buildContent(data) {
   }
 
   const p0Count = stories.filter((story) => String(story.priority || "").toUpperCase() === "P0").length;
-  const assumptionCount = stories.filter((story) => story.critical_assumption).length;
+  const assumptionCount = stories.filter((story) => asList(story.critical_assumptions || story.critical_assumption).length).length;
   const nav = [{ id: "stories-overview", title: TEXT.overview, level: 1 }];
 
   let html = `
@@ -173,7 +175,7 @@ function buildContent(data) {
         <div class="story-summary-card"><span>${TEXT.p0}</span><strong>${p0Count}</strong></div>
         <div class="story-summary-card"><span>${TEXT.assumption}</span><strong>${assumptionCount}</strong></div>
       </div>
-      <p>${escapeHtml(data.direction || data.summary || TEXT.summaryMissing)}</p>
+      <p>${escapeHtml(data.direction_summary || data.direction || data.summary || TEXT.summaryMissing)}</p>
     </section>
   `;
 
@@ -195,8 +197,8 @@ function buildContent(data) {
     .filter((story) => String(story.priority || "").toUpperCase() !== "P0")
     .map((story) => `${story.id || "Story"} ${story.title || ""}`.trim());
   const assumptions = stories
-    .filter((story) => story.critical_assumption)
-    .map((story) => `${story.id || "Story"}\uff1a${story.critical_assumption}`);
+    .filter((story) => asList(story.critical_assumptions || story.critical_assumption).length)
+    .map((story) => `${story.id || "Story"}\uff1a${asList(story.critical_assumptions || story.critical_assumption).map(formatValue).join("\uff1b")}`);
 
   nav.push({ id: "stories-lists", title: TEXT.mainAndAssumption, level: 1 });
   html += `

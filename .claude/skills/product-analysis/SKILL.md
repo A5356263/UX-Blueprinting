@@ -75,8 +75,8 @@ description: >
 
 1. 当前对话中的问题背景、当前争议点、用户新补充
 2. 当前 `uxb` 已形成的阶段性结论
-3. `spark-output/uxb_output.md`（如已生成，作为完整正式语义源）
-4. `spark-output/context/uxb.json`（如已生成，只用于快速定位范围、约束、已确认决定和待确认问题）
+3. `spark-output/context/uxb.json`（如已生成，读取 UXB `5.0` 结构化定案结论）
+4. `spark-output/uxb_output.md`（如已生成，读取完整论证、背景和章节语境）
 5. 如有必要，再读取原始 PRD / 文档
 
 在该模式下，`uxb` 已确认的事实和约束属于有效输入，不重新丢弃。
@@ -84,7 +84,7 @@ description: >
 上游读取硬门禁：
 
 - 只有当前模式实际消费既有 Skill 产物时才触发本门禁，不默认扫描历史产物。
-- 上游同时提供 JSON 与 Markdown 时，JSON 只用于快速定位，必须实际完整读取对应 Markdown。
+- UXB `5.0` JSON 可直接提供结构化定案结论；但本 Skill 需要判断方向为何成立或不成立，因此存在 `uxb_output.md` 时仍必须完整读取其论证。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次正式文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
 - JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
@@ -92,8 +92,8 @@ description: >
 
 UXB JSON 读取边界：
 
-- 只接受 UXB `4.0` 的 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
-- JSON 不是方案成立性论证，不得仅凭其摘要字段判断当前方向为何成立或不成立。
+- 只接受 UXB `5.0`。重点读取 `key_design_judgments`、`viability_judgment`、`business_boundary`、`roles`、`features`、`business_rules`、`constraints`、`open_questions`。
+- JSON 提供结构化定案结论，但不承载完整论证；不得仅凭 JSON 判断当前方向为何成立或不成立。
 - 详细判断优先使用当前 UXB 已形成的阶段性结论；已有正式 Markdown 时以 `uxb_output.md` 为准。
 - JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 视为交接错误；不得自行选择更合理的版本。
 

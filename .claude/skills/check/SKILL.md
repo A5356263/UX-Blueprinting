@@ -57,25 +57,25 @@ description: >
 
 上游读取硬门禁：
 
-- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 除 UXB `5.0` 外，JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接问题。
+- UXB JSON 与 Markdown 明显冲突时，停止使用冲突字段，回读 Markdown 核对并将 JSON 记为交接问题；不得自行选择或重判。
 - 只有 JSON 而没有对应 Markdown 时，不得宣称完成该上游的一致性检查。
 - 必需 Markdown 未读完前，不得进入检查清单或输出正式 findings。
 
 UXB 读取边界：
 
-- `uxb_output.md` 是完整检查基线；UXB `4.0` JSON 只用于核对合同、产物路径和 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
-- 规则、状态、异常、体验承接要求和待确认影响必须从 UXB Markdown 获取。
-- 不得因紧凑 JSON 没有旧版详细字段或某个数组为空，就判断 UXB Markdown 缺失对应内容。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将冲突记录为 UXB 交接问题；不得从 JSON 补全或重判事实。
+- UXB `5.0` JSON 是同一轮定案结论的结构化机器面。检查时消费完整结构，重点核对角色、功能、规则、状态、异常、体验承接要求、约束和待确认问题是否被下游遗漏。
+- `uxb_output.md` 用于检查 JSON 与 Markdown 的语义一致性及审计完整论证；只有 JSON 时仍可检查下游是否承接 JSON，但不得宣称完成 JSON/Markdown 一致性检查。
+- JSON 字段为 `unknown` 或 `[]` 时，不得从会话补齐，也不得直接判断 Markdown 缺失；需要核对时回读 Markdown。
+- JSON 与 Markdown 冲突时，将冲突记录为 UXB 交接问题；不得从任一侧自行补全或重判事实。
 
 降级规则：
 
 - 只要 `experience_blueprint.md` 可读，就可以按链路模式执行
 - Edge Markdown 缺失时，不阻断执行，只是不做基于异常态矩阵的对照加严；只有 `edge.json` 不算完整 Edge
-- `uxb_output.md` 缺失时，跳过 `uxb-consistency` 的强对照，并在结果里说明；只有紧凑 `uxb.json` 不算完整 UXB
+- `uxb_output.md` 缺失但有效 UXB `5.0` JSON 存在时，跳过 JSON/Markdown 一致性对照并说明，仍可执行 UXB 到下游的承接检查
 - 如果只有用户指定的文件或文本，也可以按独立模式执行
 
 ### Step 0.3 · 独立模式确认

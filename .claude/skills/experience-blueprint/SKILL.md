@@ -47,13 +47,13 @@ description: >
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身角色和输入边界
 2. 读取 `spark-output/context/uxb.json`
-3. 完整读取 `spark-output/uxb_output.md`
+3. UXB JSON 缺失、必需字段为 `unknown` 或 `[]`、与 Markdown 明显冲突，或需要审计完整论证时，再读取 `spark-output/uxb_output.md`
 4. 读取 `spark-output/context/problem-framing.json`
 5. 完整读取 `spark-output/problem_framing.md`
-6. 读取 `spark-output/context/stories.json`（如存在），只用于定位方向、角色和 Story 标题
-7. 完整读取 `spark-output/stories.md`（如存在），用于任务叙述与完整任务语义
-8. 读取 `spark-output/context/journey-analysis.json`（如存在），只用于定位旅程主题、阶段名称、低信心阶段、转折和缺口
-9. 完整读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要与完整旅程语义
+6. 读取 `spark-output/context/stories.json`；有效 `3.0` JSON 存在时作为用户故事正式机器输入
+7. Stories JSON 缺失、蓝图必需字段为 `unknown` 或 `[]`、与 Markdown 明显冲突，或需要审计完整任务叙述时，再完整读取 `spark-output/stories.md`
+8. 读取 `spark-output/context/journey-analysis.json`（如存在）；有效 `3.0` JSON 存在时作为旅程分析正式机器输入
+9. Journey JSON 缺失、蓝图必需字段为 `unknown` 或 `[]`、与 Markdown 明显冲突，或需要审计完整旅程叙述时，再完整读取 `spark-output/journey_analysis.md`
 10. 优先读取第一阶梯来源中的待确认问题，判断上游稳定性
 11. 执行知识补充消费（必须执行，不可跳过）
 
@@ -61,41 +61,47 @@ description: >
 
 双轨读取原因：
 
-- JSON 帮助快速定位结构化摘要
+- UXB `5.0` JSON 是同一轮需求定案的结构化机器面，可直接提供正式业务上下文
 - MD 负责完整业务语义、叙述性判断和策略
-- JSON 不得替代其对应 Markdown；UXB 的紧凑 JSON 尤其不承载详细规则、状态、异常和承接要求
+- 其他紧凑 JSON 仍只负责定位，其对应 Markdown 仍按本 Skill 现有规则读取
 
 上游读取硬门禁：
 
-- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 除 UXB `5.0`、Stories `3.0` 和 Journey `3.0` 外，JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- UXB JSON 与 Markdown 明显冲突时，停止使用冲突字段，回读 Markdown 核对并将 JSON 记为交接错误；不得自行选择或重判。
 - 只有 JSON 而没有对应 Markdown 时，不得宣称已完整消费该上游，也不得从 JSON 恢复详细流程、规则、状态或异常。
-- 未完成第一阶梯 Markdown 读取，以及存在时的 Stories、Journey Markdown 读取，不得进入模式判断、知识补充或体验蓝图生成。
+- 上一条不适用于结构完整且版本有效的 UXB `5.0`、Stories `3.0` 和 Journey `3.0` JSON；这些 JSON 可分别单独构成对应上游的正式机器输入。
+- 未完成当前实际必需的第一阶梯、Stories 和 Journey 正式输入读取，不得进入模式判断、知识补充或体验蓝图生成。
 
 UXB JSON 读取：
 
-- 只接受 UXB `4.0`，仅用于快速读取 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
-- `uxb_output.md` 是完整正式语义源；成立性论证、角色职责、功能、规则、状态、异常、边界和 `§7` 体验蓝图承接要求必须从 Markdown 获取。
-- 不得从紧凑 JSON 恢复详细业务结构，也不得把 JSON 空数组解释为 Markdown 没有对应内容。
-- 检测到非 `4.0` UXB JSON 且 `uxb_output.md` 可用时，忽略旧 JSON、基于 Markdown 继续并提示重新生成 JSON；不得在本 Skill 内转换旧结构。
-- UXB Markdown 不可用时，不得把任何版本的 UXB JSON 当作正式 UXB 输入。
+- 只接受 UXB `5.0`。重点消费 `key_design_judgments`、`business_boundary`、`roles`、`features`、`business_rules`、`states`、`exceptions`、`experience_handoff_requirements`、`constraints`、`open_questions`。
+- `experience_handoff_requirements[].must_address` 必须进入设计承接；`do_not_rejudge` 是本 Skill 不得突破的上游红线。
+- JSON 字段为 `unknown`、`[]`，且该字段是当前蓝图生成的必需信息时，必须回读 `uxb_output.md`；不得从会话上下文补齐。
+- 需要审计成立性论证、背景来源或完整章节语境时，回读 `uxb_output.md`。
+- 检测到非 `5.0` UXB JSON 且 `uxb_output.md` 可用时，忽略旧 JSON、基于 Markdown 继续并提示重新生成 JSON；不得在本 Skill 内转换旧结构。
+- 只有 `uxb_output.md` 时仍可作为正式 UXB 输入；只有结构完整的 UXB `5.0` JSON 时也可作为正式机器输入。
 
 其他上游 JSON 读取：
 
 - Problem Framing JSON 只接受 `2.0` 的核心判断、问题、角色、方向、承接、约束和信息分层定位字段。
-- Stories JSON 只接受 `2.0` 的方向、角色、Story 标题、关键假设、范围和待确认定位字段。
-- Journey JSON 只接受 `2.0` 的模式、结果等级、旅程摘要、角色、阶段名称、低信心阶段、转折、缺口和待确认定位字段。
-- 检测到上述旧版 JSON 且对应 Markdown 可用时，忽略旧 JSON、提示重新生成并完整消费 Markdown；不得做版本转换。
+- Stories JSON 只接受 `3.0`。必须完整消费 `stories[]` 中的角色、场景、目标、用户任务、优先级、来源依据、完成标准、设计触点、风险和明确假设，以及根级范围和待确认问题；结构完整时可单独作为正式机器输入。
+- Stories `3.0` 字段为 `unknown`、`[]` 且是当前蓝图必需信息，或需要审计完整任务叙述时，回读 `stories.md`；JSON 与 Markdown 冲突时停止使用冲突字段并报告交接错误。
+- 旧 Stories `2.0` 只提供标题级索引；对应 Markdown 可用时忽略旧 JSON 并完整读取 Markdown，只有旧 JSON 时不得据此恢复 Story 详情。
+- Journey JSON 只接受 `3.0`。必须完整消费 `journeys[]` 中的角色类型、角色摘要、全部阶段及其目标、动作、触点、用户心声、信心与依据、痛点、流失风险、机会和明确转折，以及根级来源说明和缺口。
+- Journey `3.0` 字段为 `unknown`、`[]` 且是当前蓝图必需信息，或需要审计完整旅程叙述时，回读 `journey_analysis.md`；JSON 与 Markdown 冲突时停止使用冲突字段并报告交接错误。
+- 旧 Journey `2.0` 只提供旅程摘要索引；对应 Markdown 可用时忽略旧 JSON 并完整读取 Markdown，只有旧 JSON 时不得据此恢复完整阶段语义。
+- 检测到其他旧版 JSON 且对应 Markdown 可用时，忽略旧 JSON、提示重新生成并完整消费 Markdown；不得做版本转换。
 
 ### Step 0.3 · 模式判断与降级
 
 模式判断：
 
-- `uxb-mode`：检测到 `uxb_output.md`，以 UXB Markdown 作为第一阶梯正式来源
-- `framing-mode`：未检测到 `uxb_output.md`，但检测到 `problem_framing.md`，以问题框定 Markdown 作为第一阶梯正式来源
-- `deepened-mode`：在 `uxb-mode` 或 `framing-mode` 基础上，同时检测到 `stories.md` 或 `journey_analysis.md`
+- `uxb-mode`：检测到有效 UXB `5.0` JSON 或 `uxb_output.md`，以 UXB 作为第一阶梯正式来源
+- `framing-mode`：未检测到有效 UXB `5.0` JSON 或 `uxb_output.md`，但检测到 `problem_framing.md`，以问题框定 Markdown 作为第一阶梯正式来源
+- `deepened-mode`：在 `uxb-mode` 或 `framing-mode` 基础上，同时检测到有效 Stories `3.0` JSON、`stories.md`、有效 Journey `3.0` JSON 或 `journey_analysis.md`
 
 硬规则：
 
@@ -105,13 +111,14 @@ UXB JSON 读取：
 降级规则：
 
 - 如果 `uxb.json` 未找到但 `uxb_output.md` 可用，正常基于 Markdown 进入 `uxb-mode`
-- 如果 `uxb.json` 存在但 `uxb_output.md` 未找到，不得进入 `uxb-mode`；如 `problem_framing.md` 可读则进入 `framing-mode`，否则报告缺少第一阶梯正式上游
-- 如果 `uxb_output.md` 不存在但 `problem_framing.md` 可读，进入 `framing-mode`，基于完整问题框定正文继续执行
-- 如果 `uxb_output.md` 和 `problem_framing.md` 均不存在，不进入正式蓝图生成，输出引导提示：
+- 如果有效 UXB `5.0` JSON 存在但 `uxb_output.md` 未找到，正常基于 JSON 进入 `uxb-mode`；遇到当前任务必需的空值时报告缺口，不得从会话补齐
+- 如果有效 UXB `5.0` JSON 和 `uxb_output.md` 均不存在，但 `problem_framing.md` 可读，进入 `framing-mode`，基于完整问题框定正文继续执行
+- 如果有效 UXB `5.0` JSON、`uxb_output.md` 和 `problem_framing.md` 均不存在，不进入正式蓝图生成，输出引导提示：
   "未找到第一阶梯正式上游结论。建议先完成 UXB 需求定案或问题框定，再进入体验蓝图。"
-- 如果 `stories.md` 不存在，允许继续，但必须在 `§9` 标注"当前未经过用户故事深化，主任务链基于第一阶梯结论推导"
-- 如果 `journey_analysis.md` 存在但 `journey-analysis.json` 不存在，仅基于 MD 继续
-- 如果 `journey-analysis.json` 存在但 `journey_analysis.md` 不存在，不把 JSON 当作完整 Journey；忽略该 Journey 摘要，按第一阶梯来源或 stories 推导简化旅程，并在 `§1` 标注“Journey 正文缺失，当前旅程为降级推导”
+- 如果有效 Stories `3.0` JSON 和 `stories.md` 均不存在，允许继续，但必须在 `§9` 标注"当前未经过用户故事深化，主任务链基于第一阶梯结论推导"
+- 如果 `journey_analysis.md` 存在但有效 Journey `3.0` JSON 不存在，仅基于 MD 继续
+- 如果有效 Journey `3.0` JSON 存在但 `journey_analysis.md` 不存在，正常基于 JSON 进入深化模式；遇到当前蓝图必需的空值时报告缺口，不得从会话补齐
+- 如果只有旧 Journey `2.0` JSON，不把它当作完整 Journey；按第一阶梯来源或 Stories 推导简化旅程，并在 `§1` 标注“Journey 正文缺失，当前旅程为降级推导”
 - 如果两者均未找到，`§1` 进入降级模式（从第一阶梯结论或 stories 推导简化旅程）
 - 如果 `knowledge-wiki` 当前不可用，在 `§9` 附录注明”知识库不可用”，继续后续设计，但不得伪造知识消费结果
 
@@ -289,7 +296,7 @@ UXB JSON 读取：
 
 每个提取项写明来源角色和阶段，以及在本蓝图中的具体落点。
 
-降级：如果 journey-analysis 未执行（`spark-output/journey_analysis.md` 和 `spark-output/context/journey-analysis.json` 均不存在），从第一阶梯正式来源和 stories 推导简化版旅程，并标注"基于上游结论推导，未经深度旅程分析"。
+降级：如果 journey-analysis 未执行（`spark-output/journey_analysis.md` 和 `spark-output/context/journey-analysis.json` 均不存在），从第一阶梯正式来源和有效 Stories `3.0` JSON 或 Stories Markdown 推导简化版旅程，并标注"基于上游结论推导，未经深度旅程分析"。
 
 ## `§2` 交互流程总览
 

@@ -6,6 +6,8 @@ __pycache__/
 Thumbs.db
 .playwright-mcp/
 .tmp/
+.claude/temp/
+.claude/worktrees/
 docs/
 input/
 test/

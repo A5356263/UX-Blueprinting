@@ -45,32 +45,33 @@ description: >
 启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
 
 1. `spark-output/context/uxb.json`
-2. `spark-output/uxb_output.md`
+2. UXB JSON 缺失、Story 必需字段为 `unknown` 或 `[]`、与 Markdown 明显冲突，或需要审计完整论证时，再读取 `spark-output/uxb_output.md`
 3. `spark-output/context/problem-framing.json`
 4. `spark-output/problem_framing.md`
 5. 用户当前对话中明确提供的方向、角色、任务背景
 
 上游读取硬门禁：
 
-- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 除 UXB `5.0` 外，JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- UXB JSON 与 Markdown 明显冲突时，停止使用冲突字段，回读 Markdown 核对并将 JSON 记为交接错误；不得自行选择或重判。
 - 只有 JSON 而没有对应 Markdown 时，不得据此生成 Story 详情、验收标准或设计触点。
-- 未读完正式 Markdown，不得进入正式来源判断或 Story 生成。
+- 上一条不适用于结构完整的 UXB `5.0` JSON；该 JSON 可单独构成 UXB 正式机器输入。
+- 未读完当前实际必需的正式输入，不得进入正式来源判断或 Story 生成。
 
 ### Step 0.3 · 正式来源判断
 
 读取规则：
 
-- `uxb_output.md` 是 UXB 的完整正式语义源；`uxb.json` 只用于快速识别项目、范围、主要角色、硬约束、已确认决定和待确认问题。
-- 只接受 UXB `4.0` 的 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`；不得从这些摘要字段推导角色职责、规则、状态、异常或验收标准。
-- 如果 `uxb_output.md` 与 `problem-framing` 同时存在，优先以 UXB Markdown 作为正式上游来源。
-- 如果只有 `uxb.json` 而没有 `uxb_output.md`，不得将 JSON 单独视为完整需求定案；继续判断 problem-framing 或当前对话是否构成合法正式输入。
+- UXB `5.0` JSON 是同一轮定案结论的结构化机器面。重点消费 `roles`、`features`、`business_rules`、`states`、`exceptions`、`constraints`、`open_questions`，不得只基于功能名生成 Story。
+- JSON 字段为 `unknown`、`[]`，且该字段是当前 Story 生成的必需信息时，必须回读 `uxb_output.md`；不得从会话上下文补齐。
+- 如果有效 UXB `5.0` JSON 或 `uxb_output.md` 与 problem-framing 同时存在，优先以 UXB 作为正式上游来源。
+- 如果只有结构完整的 UXB `5.0` JSON，可将其作为正式机器输入；需要完整论证、背景来源或章节语境时再回读 Markdown。
 - 如果只有 `problem_framing.md`，允许正式运行；只有 `problem-framing.json` 不构成完整正式输入。
 - 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
 - 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
-- P0 Story 的规则、状态、异常和验收条件必须来自完整正式来源，不得仅凭紧凑 UXB JSON 推导。
+- P0 Story 的规则、状态、异常和验收条件必须来自有效 UXB `5.0` JSON、UXB Markdown 或其他完整正式来源，不得自行推导。
 
 当正式来源为 `problem-framing` 时，先检查其信息分层：
 
@@ -145,7 +146,7 @@ description: >
 
 明确本次 Story 来源：
 
-- `uxb`（仅当 `uxb_output.md` 可用）
+- `uxb`（有效 UXB `5.0` JSON 或 `uxb_output.md` 可用）
 - `problem-framing`
 - `direct-input`
 
@@ -163,7 +164,7 @@ description: >
 该步骤只在以下条件全部满足时触发：
 
 - 正式来源为 `problem-framing`
-- `uxb_output.md` 不存在
+- 有效 UXB `5.0` JSON 与 `uxb_output.md` 均不存在
 - 当前输入仍是 `theme` 或 `epic`
 - 主角色、核心任务目标、或本轮明确不做什么 这三类关键信息之一缺失或明显不稳定
 
@@ -324,14 +325,16 @@ Markdown 固定结构：
 硬规则：
 
 1. 未完整读取 schema，禁止生成 Context JSON。
-2. JSON 阶段只以已完成的 `stories.md` 为内容来源；禁止回读上游、原始输入、知识库或会话补齐。
-3. JSON 只是少量固定结论的紧凑交接摘要，不是 Story 详情、验收标准或设计触点的镜像。
-4. 只允许摘取和原意不变的简写；禁止新增事实、任务、优先级、假设或待确认结论。
+2. JSON 阶段只以已完成并通过自检的 `stories.md` 为内容来源；禁止回读上游、原始输入、知识库或会话补充、纠正或重判 Markdown。
+3. Context JSON 是同一轮用户故事结论的结构化机器面，不是标题索引、Markdown 全文镜像或第二次 Story 分析；只允许结构化改写和原意不变的简写。
+4. 每个非 `unknown` 业务字符串都必须能直接指回 `stories.md` 的明确表述；禁止新增事实、Story、优先级、完成标准、设计触点、假设或待确认结论。
 5. 只能写入 schema 允许的字段；不得建立 Story ID 引用、章节映射、中间 JSON 或下游专用字段。
-6. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`。
-7. 写入后必须运行校验；失败时只修 JSON，不得反向修改 Markdown。
+6. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`；禁止为了填满字段进行推导。
+7. 生成 JSON 时必须执行 schema 规定的 Story 完整覆盖核对；不得遗漏、重复或新增 Story，不得挑选部分完成标准或设计触点。
+8. 写入后必须运行校验；失败时只修 JSON 并重跑，不得反向修改 Markdown。
+9. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
 
-严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+严格按 `references/context-schema.md` 的 `3.0` 合同写入：
 
 `spark-output/context/stories.json`
 

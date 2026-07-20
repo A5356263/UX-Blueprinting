@@ -5,8 +5,15 @@ const path = require("path");
 
 const ROOT_KEYS = [
   "skill", "version", "generated_at", "project_name", "artifact_md", "source_refs",
-  "source_mode", "direction_summary", "primary_roles", "story_titles",
-  "p0_story_titles", "critical_assumptions", "out_of_scope", "open_questions",
+  "source_mode", "direction_summary", "stories", "out_of_scope", "open_questions",
+];
+const STORY_KEYS = [
+  "title", "granularity", "persona", "scenario", "goal", "priority", "source_basis",
+  "user_story", "acceptance_criteria", "design_touchpoints", "risks_or_validation",
+  "critical_assumptions",
+];
+const TOUCHPOINT_KEYS = [
+  "pages_or_scenarios", "component_types", "states", "interaction_patterns",
 ];
 
 function isObject(value) {
@@ -40,22 +47,50 @@ function stringArray(value, field, errors) {
   value.forEach((item, index) => nonEmptyString(item, `${field}[${index}]`, errors));
 }
 
+function validateStory(story, index, errors) {
+  const field = `stories[${index}]`;
+  if (!exactObject(story, STORY_KEYS, field, errors)) return;
+
+  for (const key of [
+    "title", "granularity", "persona", "scenario", "goal", "priority", "user_story",
+  ]) {
+    nonEmptyString(story[key], `${field}.${key}`, errors);
+  }
+  for (const key of [
+    "source_basis", "acceptance_criteria", "risks_or_validation", "critical_assumptions",
+  ]) {
+    stringArray(story[key], `${field}.${key}`, errors);
+  }
+
+  const touchpointField = `${field}.design_touchpoints`;
+  if (exactObject(story.design_touchpoints, TOUCHPOINT_KEYS, touchpointField, errors)) {
+    for (const key of TOUCHPOINT_KEYS) {
+      stringArray(story.design_touchpoints[key], `${touchpointField}.${key}`, errors);
+    }
+  }
+}
+
 function validate(data) {
   const errors = [];
   if (!exactObject(data, ROOT_KEYS, "root", errors)) return errors;
+
   if (data.skill !== "stories") errors.push("skill 必须为 stories");
-  if (data.version !== "2.0") errors.push("version 必须为 2.0");
+  if (data.version !== "3.0") errors.push("version 必须为 3.0");
   if (data.artifact_md !== "spark-output/stories.md") {
     errors.push("artifact_md 必须为 spark-output/stories.md");
   }
   for (const field of ["generated_at", "project_name", "source_mode", "direction_summary"]) {
     nonEmptyString(data[field], field, errors);
   }
-  for (const field of [
-    "source_refs", "primary_roles", "story_titles", "p0_story_titles",
-    "critical_assumptions", "out_of_scope", "open_questions",
-  ]) {
+  for (const field of ["source_refs", "out_of_scope", "open_questions"]) {
     stringArray(data[field], field, errors);
+  }
+  if (!Array.isArray(data.stories)) {
+    errors.push("stories 必须是数组");
+  } else if (data.stories.length === 0) {
+    errors.push("stories 不得为空");
+  } else {
+    data.stories.forEach((story, index) => validateStory(story, index, errors));
   }
   return errors;
 }
