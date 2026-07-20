@@ -75,11 +75,27 @@ description: >
 
 1. 当前对话中的问题背景、当前争议点、用户新补充
 2. 当前 `uxb` 已形成的阶段性结论
-3. `spark-output/context/uxb.json`
-4. `spark-output/uxb_output.md`
+3. `spark-output/uxb_output.md`（如已生成，作为完整正式语义源）
+4. `spark-output/context/uxb.json`（如已生成，只用于快速定位范围、约束、已确认决定和待确认问题）
 5. 如有必要，再读取原始 PRD / 文档
 
 在该模式下，`uxb` 已确认的事实和约束属于有效输入，不重新丢弃。
+
+上游读取硬门禁：
+
+- 只有当前模式实际消费既有 Skill 产物时才触发本门禁，不默认扫描历史产物。
+- 上游同时提供 JSON 与 Markdown 时，JSON 只用于快速定位，必须实际完整读取对应 Markdown。
+- 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次正式文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 JSON 而没有对应 Markdown 时，不得据此判断当前方向为什么不成立，也不得进入正式产品分析。
+
+UXB JSON 读取边界：
+
+- 只接受 UXB `4.0` 的 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
+- JSON 不是方案成立性论证，不得仅凭其摘要字段判断当前方向为何成立或不成立。
+- 详细判断优先使用当前 UXB 已形成的阶段性结论；已有正式 Markdown 时以 `uxb_output.md` 为准。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 视为交接错误；不得自行选择更合理的版本。
 
 ### Step 0.4 · 进入门槛
 
@@ -207,87 +223,27 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按固定结构写入 `spark-output/context/product-analysis.json`。
-
-固定结构：
-
-```json
-{
-  "skill": "product-analysis",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/product_analysis.md",
-  "source_refs": [],
-  "read_sections": [],
-  "source_mode": "unknown",
-  "key_judgments": [
-    {
-      "judgment": "unknown",
-      "impact": "unknown",
-      "recommended_approach": "unknown",
-      "not_recommended": "unknown",
-      "open_question": "unknown"
-    }
-  ],
-  "input_summary": {
-    "raw_request": "unknown",
-    "confirmed_facts": [],
-    "explicit_constraints": [],
-    "missing_information": []
-  },
-  "current_direction_failure": {
-    "direction": "unknown",
-    "why_invalid": "unknown",
-    "evidence": []
-  },
-  "reframed_problem": {
-    "problem": "unknown",
-    "root_cause": "unknown",
-    "target_user": "unknown"
-  },
-  "skipped_premises": [
-    {
-      "premise": "unknown",
-      "impact": "unknown"
-    }
-  ],
-  "alternative_directions": [
-    {
-      "direction": "unknown",
-      "core_idea": "unknown",
-      "solves": "unknown",
-      "risk": "unknown",
-      "assumption": "unknown"
-    }
-  ],
-  "recommended_direction": {
-    "summary": "unknown",
-    "reason": "unknown",
-    "next_step": "unknown"
-  },
-  "next_step": "unknown",
-  "not_to_do": [],
-  "gaps": [
-    {
-      "question": "unknown",
-      "impact": "unknown"
-    }
-  ]
-}
-```
+写入前必须完整读取 `references/context-schema.md`。
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
-- 不得为了填满 JSON 编造信息。
-- `source_mode` 只允许 `direct-input`、`uxb-inflight` 或 `unknown`。
-- `current_direction_failure` 和 `reframed_problem` 必须同时保留。
-- `skipped_premises[]` 不得并入 `gaps[]`。
-- `recommended_direction` 必须是结构对象，不能只写标题。
-- `next_step` 只允许 `continue-product-analysis`、`return-to-uxb` 或 `unknown`。
-- JSON 不复制 Markdown 全文。
+1. 未完整读取 schema，禁止生成 Context JSON。
+2. JSON 阶段只以已完成的 `product_analysis.md` 为内容来源；禁止回读原始输入、UXB、知识库或会话补齐。
+3. JSON 是少量固定结论的紧凑交接摘要，不是替代方向或完整论证的镜像。
+4. 只允许摘取和原意不变的简写；禁止新增失败原因、问题、前提、方向或待确认结论。
+5. 只能写入 schema 允许的字段；不得建立章节映射、中间 JSON 或下游专用字段。
+6. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`。
+7. 写入后必须运行校验；失败时只修 JSON，不得反向修改 Markdown。
+
+严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+
+`spark-output/context/product-analysis.json`
+
+运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/product-analysis.json
+```
 
 ## Handoff · 固定下一步
 

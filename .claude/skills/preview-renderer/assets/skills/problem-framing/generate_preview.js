@@ -185,7 +185,14 @@ function main() {
     data = null;
   }
 
-  const rendered = data ? buildContent(data) : buildMarkdownFallback(markdown);
+  const hasDetailedContext = Boolean(data && (
+    data.problem_definition ||
+    data.target_roles ||
+    data.candidate_directions ||
+    data.handoff_contract ||
+    data.knowledge_anchoring
+  ));
+  const rendered = hasDetailedContext ? buildContent(data) : buildMarkdownFallback(markdown);
   const contentHtml = requiredReplace(templateRaw, "<!-- PROBLEM_FRAMING_CONTENT -->", rendered.html);
   const sidebarNav = rendered.nav.map((item) => `<a class="preview-nav-item level-${item.level}" href="#${item.id}" data-skill="problem-framing">${escapeHtml(item.title)}</a>`).join("\n");
   const bootstrapData = JSON.stringify({ activeSkill: "problem-framing", skills: ["problem-framing"] }, null, 2);

@@ -242,7 +242,8 @@ function main() {
     data = null;
   }
 
-  const rendered = data ? buildContent(data) : buildMarkdownFallback(markdown);
+  const hasDetailedStories = Boolean(data && storyArray(data).length);
+  const rendered = hasDetailedStories ? buildContent(data) : buildMarkdownFallback(markdown);
   const contentHtml = requiredReplace(templateRaw, "<!-- STORIES_CONTENT -->", rendered.html);
   const sidebarNav = rendered.nav.map((item) => `<a class="preview-nav-item level-${item.level}" href="#${item.id}" data-skill="stories">${escapeHtml(item.title)}</a>`).join("\n");
   const bootstrapData = JSON.stringify({ activeSkill: "stories", skills: ["stories"] }, null, 2);

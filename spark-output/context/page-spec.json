@@ -1,205 +1,102 @@
 {
   "skill": "page-spec",
-  "version": "1.0",
-  "generated_at": "2026-07-19",
+  "version": "2.0",
+  "generated_at": "2026-07-20",
   "project_name": "子管理员复制",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
     "spark-output/experience_blueprint.md",
-    "spark-output/context/experience-blueprint.json",
     "spark-output/context/page-generation-handoff.md"
   ],
-  "read_sections": [
-    "体验蓝图 §3 主交互流程",
-    "体验蓝图 §4 次交互流程",
-    "体验蓝图 §5 异常与阻断流程",
-    "体验蓝图 §6.1 子管理员列表页",
-    "体验蓝图 §6.2 复制弹窗",
-    "体验蓝图 §6.3 员工选择弹窗",
-    "体验蓝图 §7 状态与反馈文案",
-    "page-generation-handoff.md 页面生成事实补充"
-  ],
   "page_summary": {
-    "product_domain": "通用权限管理 — 子管理员模式",
-    "page_type": "列表页、弹窗",
+    "product_domain": "通用权限管理 — 子管理员分权治理",
+    "page_type": "列表页 / 弹窗 / 子弹窗",
     "user_role": "权限管理员",
-    "core_task": "将已有子管理员的权限配置（可授权组织/可授权功能）批量复制给其他用户"
+    "core_task": "将已配置子管理员的授权范围（可授权组织 / 可授权功能）批量复制给目标用户"
   },
   "generation_scope": {
-    "generate": [
-      "子管理员列表页（实体 0）",
-      "复制弹窗（实体 1）"
-    ],
-    "reference_only": [
-      "员工选择弹窗 — 复用现有添加子管理员弹窗，仅新增当前身份列"
-    ],
-    "do_not_generate": [
-      "操作记录列表页 — 已有系统页面",
-      "审批系统页面 — 已有系统页面"
-    ]
+    "generate": ["entity-copy-dialog", "entity-employee-picker"],
+    "reference_only": ["entity-carrying-page"],
+    "do_not_generate": ["entity-audit-detail"]
   },
-  "entity_relationships": [
-    { "entity": "子管理员列表页", "type": "承载页", "relation": "操作列「复制」→ 打开复制弹窗" },
-    { "entity": "复制弹窗", "type": "弹窗", "relation": "从子管理员列表页操作列触发" },
-    { "entity": "员工选择弹窗", "type": "弹窗（引用）", "relation": "从复制弹窗复制对象选择器触发" }
-  ],
   "entities": [
-    { "name": "子管理员列表页", "type": "Page" },
-    { "name": "复制弹窗", "type": "Modal" },
-    { "name": "员工选择弹窗（引用）", "type": "Modal" }
-  ],
-  "extraction_summary": {
-    "entities_count": 2,
-    "states_count": 8,
-    "copy_count": 23,
-    "exceptions_count": 7
-  },
-  "pages": [
     {
-      "page_id": "entity-0",
-      "page_name": "子管理员列表页",
-      "page_goal": "查看、检索和管理已配置的子管理员，支持增删改查及复制操作",
-      "structure_ascii": "顶部全局Tab切换区 → 提示信息与状态控制区 → 筛选查询区 → 工具栏与操作区 → 数据列表表格区（含操作列：复制|编辑|移除）→ 底部分页区",
-      "regions": [
-        { "region_id": "r0-1", "name": "顶部Tab切换区", "purpose": "切换治理模式视图", "content": ["Tabs: 子管理员模式/双管理员互审模式/权限变更审批模式"] },
-        { "region_id": "r0-2", "name": "提示与状态控制区", "purpose": "业务介绍与模式控制", "content": ["Text: 业务介绍", "Link: 帮助文档", "Link: 关闭子管理员模式"] },
-        { "region_id": "r0-3", "name": "筛选查询区", "purpose": "按条件检索子管理员", "content": ["Input: 姓名", "Input: 手机号", "Select: 部门", "Button: 重置", "Button: 查询"] },
-        { "region_id": "r0-4", "name": "工具栏与操作区", "purpose": "批量操作入口", "content": ["Button: + 添加子管理员"] },
-        { "region_id": "r0-5", "name": "数据列表表格区", "purpose": "展示子管理员数据", "content": ["Table: 姓名/手机号/部门/可授权组织/可授权功能/操作", "Tag: 审批中（状态标签）"] },
-        { "region_id": "r0-6", "name": "底部分页区", "purpose": "分页控制", "content": ["Text: 共{N}条", "Pagination", "Select: 每页条数"] }
-      ],
-      "extraction_notes": [
-        "页面结构来自知识库 15_页面载体语义.md §4.2",
-        "操作列新增「复制」按钮（体验蓝图 §6.1）",
-        "审批中状态标签（体验蓝图 §6.1 状态反馈区）"
-      ],
-      "list_fields": [
-        { "field": "姓名", "meaning": "子管理员姓名", "source": "已有字段" },
-        { "field": "手机号", "meaning": "子管理员手机号（脱敏）", "source": "已有字段" },
-        { "field": "部门", "meaning": "子管理员所属部门", "source": "已有字段" },
-        { "field": "可授权组织", "meaning": "子管理员可管辖的组织范围概览", "source": "已有字段" },
-        { "field": "可授权功能", "meaning": "子管理员可授予的功能概览", "source": "已有字段" },
-        { "field": "操作", "meaning": "操作按钮列（复制/编辑/移除）", "source": "复制为新增" }
-      ],
-      "key_actions": [
-        { "action": "复制", "trigger": "点击操作列「复制」", "result": "打开复制弹窗" },
-        { "action": "编辑", "trigger": "点击操作列「编辑」", "result": "跳转子管理员配置页" },
-        { "action": "移除", "trigger": "点击操作列「移除」", "result": "确认后移除" },
-        { "action": "添加子管理员", "trigger": "点击工具栏按钮", "result": "跳转子管理员配置页" }
-      ]
+      "entity_id": "entity-carrying-page",
+      "name": "子管理员模式列表页",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "§4"
+    },
+    {
+      "entity_id": "entity-copy-dialog",
+      "name": "复制弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "§5"
+    },
+    {
+      "entity_id": "entity-employee-picker",
+      "name": "选择员工弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "§6"
+    },
+    {
+      "entity_id": "entity-audit-detail",
+      "name": "操作记录详情",
+      "type": "page",
+      "generate_mode": "do_not_generate",
+      "md_anchor": "§2"
     }
   ],
-  "entity_specs": [
+  "entity_relationships": [
     {
-      "entity_name": "复制弹窗",
-      "surface_type": "Modal",
-      "goal": "选择复制内容和复制对象，确认后提交复制",
-      "structure_ascii": "弹窗标题区「复制」→ 提示信息区 → 复制信息区（可授权组织/可授权功能复选框，默认全选）→ 复制对象区（已选人数+选择按钮+已选Tag列表+身份分布提示）→ 底部操作栏（取消/确认）",
-      "regions": [
-        { "region_id": "r1-1", "name": "弹窗标题区", "purpose": "标题与关闭", "content": ["Text: 复制", "Button: X 关闭"] },
-        { "region_id": "r1-2", "name": "提示信息区", "purpose": "功能说明", "content": ["Text: 复制该子管理员的可授权组织和/或可授权功能给其他用户"] },
-        { "region_id": "r1-3", "name": "复制信息区", "purpose": "选择复制内容", "content": ["Checkbox: 可授权组织", "Checkbox: 可授权功能", "默认全选，至少一项"] },
-        { "region_id": "r1-4", "name": "复制对象区", "purpose": "选择和管理复制目标", "content": ["Text: 已选{N}人(最多200人)", "Button: 选择", "Tag: {姓名}/{手机号}/{部门}/身份:{类型}[x]", "Text: 身份分布提示"] },
-        { "region_id": "r1-5", "name": "底部操作栏", "purpose": "提交或取消", "content": ["Button: 取消", "Button: 确认（默认禁用，条件满足激活）"] }
-      ],
-      "validation_blocking_state_changes": [
-        "复制内容未选 → Toast 阻断，弹窗保留",
-        "复制对象未选 → Toast 阻断，弹窗保留",
-        "目标用户未加入 → Toast + Tag 标红「未加入」",
-        "目标用户未认证 → Toast + Tag 标红「未认证」"
-      ],
-      "non_compliance_confirm_area": {
-        "structure": "不涉及不合规确认区",
-        "copy": [],
-        "actions": []
-      }
+      "from_entity_id": "entity-copy-dialog",
+      "to_entity_id": "entity-carrying-page",
+      "relation": "触发自"
+    },
+    {
+      "from_entity_id": "entity-employee-picker",
+      "to_entity_id": "entity-copy-dialog",
+      "relation": "从"
     }
   ],
-  "main_interaction_flow": [
-    { "step_id": "S1", "trigger": "用户定位来源子管理员", "user_action": "进入列表页，搜索找到来源子管理员", "system_response": "列表正常展示", "state_change": "无", "next_step": "点击「复制」" },
-    { "step_id": "S2", "trigger": "点击操作列「复制」", "user_action": "点击「复制」按钮", "system_response": "打开复制弹窗，内容默认全选，对象区为空", "state_change": "弹窗打开", "next_step": "勾选内容或选择目标" },
-    { "step_id": "S3", "trigger": "选择复制对象", "user_action": "点击「选择」→ 选择用户 → 确认", "system_response": "员工弹窗关闭，用户以Tag展示并标注身份", "state_change": "对象区填充", "next_step": "点击「确认」" },
-    { "step_id": "S4", "trigger": "点击「确认」", "user_action": "点击确认", "system_response": "四项顺序校验，通过后执行", "state_change": "校验中", "next_step": "等待结果" },
-    { "step_id": "S5a", "trigger": "校验通过（非互审）", "user_action": "等待", "system_response": "写入权限 → Toast「复制成功」→ 弹窗关闭", "state_change": "权限写入完成", "next_step": "在列表中确认" },
-    { "step_id": "S5b", "trigger": "校验通过（互审）", "user_action": "等待", "system_response": "生成审批 → Toast「已提交审批」→ 弹窗关闭", "state_change": "审批提交", "next_step": "等待审批" }
-  ],
-  "validation_rules": [
-    { "rule_id": "V-01", "object": "复制信息区", "condition": "至少勾选一项", "blocking": true, "message_key": "error_content_empty" },
-    { "rule_id": "V-02", "object": "复制对象区", "condition": "至少选择一名目标用户", "blocking": true, "message_key": "error_target_empty" },
-    { "rule_id": "V-03", "object": "所有目标用户", "condition": "加入状态均为已加入", "blocking": true, "message_key": "error_not_joined" },
-    { "rule_id": "V-04", "object": "所有目标用户", "condition": "认证状态均为已认证", "blocking": true, "message_key": "error_not_certified" }
-  ],
-  "states": [
-    { "state": "复制弹窗打开", "trigger_condition": "点击「复制」", "ui_behavior": "弹窗打开，默认全选，对象区为空", "copy_key": "copy_modal_title" },
-    { "state": "校验中", "trigger_condition": "点击「确认」", "ui_behavior": "确认按钮加载态，不可重复点击", "copy_key": "unknown" },
-    { "state": "校验不通过", "trigger_condition": "校验失败", "ui_behavior": "弹窗保留，Toast 提示，异常 Tag 标红", "copy_key": "error_content_empty" },
-    { "state": "校验通过（非互审）", "trigger_condition": "所有校验通过", "ui_behavior": "Toast 提示，弹窗关闭", "copy_key": "copy_toast_success" },
-    { "state": "校验通过（互审）", "trigger_condition": "所有校验通过", "ui_behavior": "Toast 提示，弹窗关闭", "copy_key": "copy_toast_pending_approval" },
-    { "state": "审批中", "trigger_condition": "互审审批已提交", "ui_behavior": "列表行显示「审批中」Tag", "copy_key": "tag_approval_pending" },
-    { "state": "审批通过", "trigger_condition": "互审管理员批准", "ui_behavior": "系统通知", "copy_key": "notif_approval_passed" },
-    { "state": "审批驳回", "trigger_condition": "互审管理员拒绝", "ui_behavior": "系统通知，不写入权限", "copy_key": "notif_approval_rejected" }
-  ],
-  "exception_recovery": [
-    { "exception": "复制内容未选", "trigger": "点击确认时无勾选", "ui_behavior": "Toast 阻断，弹窗保留", "recovery_path": "勾选至少一项后重新确认。无信息丢失" },
-    { "exception": "复制对象未选", "trigger": "点击确认时无目标", "ui_behavior": "Toast 阻断，弹窗保留", "recovery_path": "选择至少一名后重新确认。无信息丢失" },
-    { "exception": "目标用户未加入", "trigger": "校验到未加入用户", "ui_behavior": "Toast + Tag 标红「未加入」", "recovery_path": "移除未加入Tag后重新确认" },
-    { "exception": "目标用户未认证", "trigger": "校验到未认证用户", "ui_behavior": "Toast + Tag 标红「未认证」", "recovery_path": "移除未认证Tag后重新确认" },
-    { "exception": "多重校验不通过", "trigger": "同时命中多个异常", "ui_behavior": "按顺序阻断", "recovery_path": "逐次修改后重新确认" },
-    { "exception": "审批驳回", "trigger": "互审管理员拒绝", "ui_behavior": "系统通知", "recovery_path": "查看原因，重新发起完整复制" },
-    { "exception": "审批超时", "trigger": "审批人长期未处理", "ui_behavior": "依赖审批系统超时机制", "recovery_path": "联系审批人或视系统能力撤回" }
-  ],
-  "result_states": [
-    { "state": "全部成功（非互审）", "condition": "校验通过，非互审模式，权限写入完成", "ui_behavior": "Toast 提示，弹窗关闭，操作记录写入，列表更新", "copy_key": "copy_toast_success" },
-    { "state": "审批提交成功（互审）", "condition": "校验通过，互审模式，审批已提交", "ui_behavior": "Toast 提示，弹窗关闭，操作记录写入，列表出现审批中标签", "copy_key": "copy_toast_pending_approval" }
-  ],
-  "copy_pool": {
-    "modal": [
-      { "key": "copy_modal_title", "value": "复制", "variables": [], "location": "弹窗标题区" },
-      { "key": "copy_modal_hint", "value": "复制该子管理员的可授权组织和/或可授权功能给其他用户", "variables": [], "location": "弹窗提示信息区" },
-      { "key": "copy_modal_checkbox_org", "value": "可授权组织", "variables": [], "location": "复制信息区" },
-      { "key": "copy_modal_checkbox_func", "value": "可授权功能", "variables": [], "location": "复制信息区" }
-    ],
-    "object_selection": [
-      { "key": "select_employee_title", "value": "选择员工", "variables": [], "location": "员工选择弹窗标题" },
-      { "key": "select_target_count", "value": "已选 {N} 人（最多 200 人）", "variables": ["N"], "location": "复制对象区计数" },
-      { "key": "select_identity_hint", "value": "已选 {N} 人，其中 {M} 名已有子管理员将叠加权限，{K} 名普通用户将成为子管理员", "variables": ["N","M","K"], "location": "复制对象区身份分布提示" }
-    ],
-    "validation_and_execution": [
-      { "key": "error_content_empty", "value": "请选择复制信息", "variables": [], "location": "Toast" },
-      { "key": "error_target_empty", "value": "请选择至少一名复制对象", "variables": [], "location": "Toast" },
-      { "key": "error_not_joined", "value": "{名单} 加入状态不是已加入，不能成为子管理员", "variables": ["名单"], "location": "Toast" },
-      { "key": "error_not_certified", "value": "{名单} 未完成实名认证，不能成为子管理员", "variables": ["名单"], "location": "Toast" }
-    ],
-    "result_and_feedback": [
-      { "key": "copy_toast_success", "value": "复制成功", "variables": [], "location": "Toast（非互审）" },
-      { "key": "copy_toast_pending_approval", "value": "已提交审批，等待另一位管理员确认后生效", "variables": [], "location": "Toast（互审）" },
-      { "key": "tag_approval_pending", "value": "审批中", "variables": [], "location": "列表行 Tag" },
-      { "key": "notif_approval_passed", "value": "子管理员复制审批已通过", "variables": [], "location": "系统通知" },
-      { "key": "notif_approval_rejected", "value": "子管理员复制申请已被驳回：{驳回原因}", "variables": ["驳回原因"], "location": "系统通知" }
-    ],
-    "buttons": [
-      { "key": "btn_copy_open", "value": "复制", "location": "列表操作列" },
-      { "key": "btn_confirm", "value": "确认", "location": "复制弹窗底部" },
-      { "key": "btn_cancel", "value": "取消", "location": "复制弹窗底部" },
-      { "key": "btn_select", "value": "选择", "location": "复制弹窗复制对象区" }
-    ]
+  "coverage": {
+    "pages": 1,
+    "entities": 4,
+    "flows": 1,
+    "validation_rules": 4,
+    "states": 9,
+    "exceptions": 5,
+    "result_states": 3,
+    "copy_items": 32,
+    "template_variables": 3
   },
-  "template_variables": [
-    { "variable": "{N}", "meaning": "已选目标用户数量", "value_range": "1~200" },
-    { "variable": "{M}", "meaning": "已有子管理员身份的目标数量", "value_range": "0~{N}" },
-    { "variable": "{K}", "meaning": "普通用户身份的目标数量", "value_range": "0~{N}" },
-    { "variable": "{名单}", "meaning": "校验不通过的用户姓名列表", "value_range": "逗号分隔的姓名" },
-    { "variable": "{驳回原因}", "meaning": "互审管理员填写的驳回原因", "value_range": "文本" },
-    { "variable": "{姓名}", "meaning": "子管理员姓名", "value_range": "文本（脱敏）" },
-    { "variable": "{手机号}", "meaning": "子管理员手机号", "value_range": "文本（脱敏）" },
-    { "variable": "{部门}", "meaning": "子管理员所属部门", "value_range": "文本" },
-    { "variable": "{X}", "meaning": "每页显示条数", "value_range": "10/20/50/100" }
-  ],
   "open_questions": [
-    { "question": "200名目标中部分校验不通过时，是「全部退回」还是「通过部分」？", "impact": "影响部分成功场景的结果反馈设计" },
-    { "question": "审批中的复制申请是否支持权限管理员自行撤销？", "impact": "影响是否需要撤销入口" },
-    { "question": "「加入状态」的目标状态口径是「已启用」还是「已加入」？", "impact": "影响校验文案和校验逻辑" },
-    { "question": "操作记录是否需要按复制操作聚合展示？", "impact": "影响操作记录的展示设计" }
+    {
+      "question": "员工选择弹窗是否前置标识未加入/未认证用户",
+      "impact": "影响员工选择弹窗的交互和列表列设计"
+    },
+    {
+      "question": "双管理员互审模式下审批通过后的通知方式",
+      "impact": "影响审批反馈的推送渠道设计"
+    },
+    {
+      "question": "操作记录详情字段的格式规范",
+      "impact": "影响详情展示的数据结构"
+    },
+    {
+      "question": "叠加去重的精确边界",
+      "impact": "影响复制执行逻辑"
+    },
+    {
+      "question": "加入状态统一口径——已启用/已加入",
+      "impact": "影响校验文案和状态标识"
+    },
+    {
+      "question": "重新复制（携带失败用户）按钮是否符合业务预期",
+      "impact": "影响结果态操作设计"
+    }
   ],
   "edge_consumed": false,
   "edge_trace": []

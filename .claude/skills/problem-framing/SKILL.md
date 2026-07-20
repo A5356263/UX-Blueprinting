@@ -47,6 +47,15 @@ description: >
 3. 不默认扫描工作区寻找 PRD。
 4. 不读取历史产物作为默认输入，除非用户明确要求“基于已有产物继续”。
 
+既有产物条件分支硬门禁：
+
+- 只有用户明确要求“基于已有产物继续”时，才识别用户指定的正式产物；不得自动扫描 `spark-output/`。
+- 上游同时提供 JSON 与 Markdown 时，JSON 只用于确认产物类型、范围和正文路径，必须实际完整读取对应 Markdown。
+- 即使该产物刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 JSON 而没有对应 Markdown 时，不得据此进入问题聚焦或方向判断。
+
 ### Step 0.3 · 输入校准
 
 如果用户输入已经明显属于其他 Skill，必须先说明，但不强制切走：
@@ -317,123 +326,28 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按固定结构写入 `spark-output/context/problem-framing.json`。
-
-固定结构：
-
-```json
-{
-  "skill": "problem-framing",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/problem_framing.md",
-  "source_refs": [],
-  "read_sections": [],
-  "key_judgments": [
-    {
-      "judgment": "unknown",
-      "impact": "unknown",
-      "recommended_approach": "unknown",
-      "not_recommended": "unknown",
-      "open_question": "unknown"
-    }
-  ],
-  "input_summary": {
-    "raw_request": "unknown",
-    "confirmed_facts": [],
-    "explicit_constraints": [],
-    "missing_information": []
-  },
-  "problem_definition": {
-    "problem": "unknown",
-    "why_it_matters": "unknown",
-    "not_the_problem": []
-  },
-  "target_roles": [
-    {
-      "role": "unknown",
-      "scenario": "unknown",
-      "goal": "unknown",
-      "pain": "unknown"
-    }
-  ],
-  "target_scenarios": [
-    {
-      "scenario": "unknown",
-      "trigger": "unknown",
-      "current_context": "unknown"
-    }
-  ],
-  "current_workarounds": [
-    {
-      "workaround": "unknown",
-      "limitation": "unknown",
-      "evidence": "unknown"
-    }
-  ],
-  "opportunities": [
-    {
-      "title": "unknown",
-      "user_value": "unknown",
-      "business_value": "unknown",
-      "risk": "unknown"
-    }
-  ],
-  "candidate_directions": [
-    {
-      "direction": "unknown",
-      "solves": "unknown",
-      "user_value": "unknown",
-      "risk": "unknown",
-      "assumption": "unknown"
-    }
-  ],
-  "recommended_direction": {
-    "summary": "unknown",
-    "reason": "unknown",
-    "experience_focus": "unknown",
-    "handoff_requirements": []
-  },
-  "experience_focus": "unknown",
-  "handoff_contract": [
-    {
-      "item": "unknown",
-      "requirement": "unknown",
-      "reason": "unknown"
-    }
-  ],
-  "constraints": [],
-  "not_to_do": [],
-  "confirmed_facts": [],
-  "working_assumptions": [],
-  "gaps": [
-    {
-      "question": "unknown",
-      "impact": "unknown",
-      "suggested_owner": "unknown"
-    }
-  ],
-  "knowledge_anchoring": {
-    "used_sources": [],
-    "supported_conclusions": [],
-    "unsupported_parts": []
-  }
-}
-```
+写入前必须完整读取 `references/context-schema.md`。
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
-- 不得为了填满 JSON 编造信息。
-- `recommended_direction` 必须是结构对象，不能只写标题。
-- `experience_focus` 与 `handoff_contract[]` 必须保留，用于承接 `§7` 推荐方向与承接要求。
-- `not_the_problem`、`not_to_do` 必须保留。
-- 未标记为假设的信息，不得进入 `confirmed_facts[]`。
-- `knowledge_anchoring` 不得复述知识原文。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+1. 未完整读取 schema，禁止生成 Context JSON。
+2. JSON 阶段只以已完成的 `problem_framing.md` 为内容来源；禁止回读原始输入、知识库或会话补齐。
+3. JSON 是少量固定结论的紧凑交接摘要，不是问题论证、机会分析或候选方向的镜像。
+4. 只允许摘取和原意不变的简写；禁止新增事实、假设、约束、方向或待确认结论。
+5. 只能写入 schema 允许的字段；不得建立章节映射、中间 JSON 或下游专用字段。
+6. `confirmed_facts`、`working_assumptions`、`open_questions` 必须保持原有信息层级，禁止相互改写。
+7. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`。
+8. 写入后必须运行校验；失败时只修 JSON，不得反向修改 Markdown。
+
+严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+
+`spark-output/context/problem-framing.json`
+
+运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/problem-framing.json
+```
 
 ## 预览交接
 

@@ -1,246 +1,41 @@
 {
   "skill": "journey-analysis",
-  "version": "1.0",
-  "generated_at": "2026-07-19",
+  "version": "2.0",
+  "generated_at": "2026-07-20",
   "project_name": "子管理员复制",
   "artifact_md": "spark-output/journey_analysis.md",
-  "source_refs": [
-    "spark-output/context/uxb.json",
-    "spark-output/uxb_output.md"
-  ],
-  "read_sections": [
-    "UXB context JSON (全部结构化字段)"
-  ],
+  "source_refs": ["spark-output/uxb_output.md"],
   "mode": "uxb-chain",
-  "completion_used": false,
-  "result_level": "full",
-  "journey_subject": {
-    "primary_role": "权限管理员",
-    "journey_scope": "从定位复制来源子管理员到确认复制结果生效的完整操作过程",
-    "journey_type": "end-to-end",
-    "start_condition": "权限管理员进入子管理员列表，定位到要作为复制来源的子管理员",
-    "end_condition": "复制操作完成，权限管理员确认复制结果已生效（非互审：直接生效；互审：审批通过后生效）"
-  },
-  "readiness": {
-    "role_clarity": "通过",
-    "scope_clarity": "通过",
-    "stage_divisibility": "通过",
-    "touchpoint_recoverability": "通过",
-    "painpoint_evidence": "通过"
-  },
-  "skeleton_result": {
-    "primary_role_candidates": [],
-    "journey_theme": "unknown",
-    "rough_stages": [],
-    "current_gaps": [],
-    "reason_full_journey_unavailable": "unknown",
-    "suggested_next_step": "unknown"
-  },
-  "stages": [
-    {
-      "stage_id": "stage-1",
-      "stage_name": "定位配置蓝本",
-      "user_goal": "找到配置最合适或最接近目标场景的子管理员作为复制来源",
-      "actions": [
-        "进入子管理员列表页",
-        "通过姓名、手机号、部门筛选检索目标",
-        "浏览列表中可授权组织和可授权功能概览，判断哪个来源最合适"
-      ],
-      "touchpoints": [
-        "子管理员列表页（筛选区）",
-        "子管理员列表页（数据表格区）",
-        "子管理员列表页（可授权范围概览列）"
-      ],
-      "user_voice": "得找个权限配得最全的当模板，省得到时候还得逐个补。",
-      "emotion": "neutral",
-      "confidence": "高",
-      "confidence_reason": "UXB 明确复制入口只在子管理员列表中；来源子管理员是复制的前置条件",
-      "pain_points": [
-        "如果多个子管理员配置不同，需要人工判断哪个最适合做蓝本——但这是已有操作，非复制新增"
-      ],
-      "dropout_risk": {
-        "level": "低",
-        "reason": "定位来源是管理员在列表中的日常操作，不存在不熟悉的流程"
-      },
-      "opportunities": [
-        "如果列表中的可授权组织/功能概览信息不够直观，改进后也能间接提升复制效率"
-      ],
-      "evidence": ["原文提取（UXB / 需求文档）"]
-    },
-    {
-      "stage_id": "stage-2",
-      "stage_name": "选定复制内容",
-      "user_goal": "确定要复制的信息范围",
-      "actions": [
-        "点击操作列「复制」按钮",
-        "在弹窗中查看默认全选的复制选项",
-        "根据需要勾选或取消：可授权组织、可授权功能",
-        "确认至少选择了一项"
-      ],
-      "touchpoints": [
-        "操作列「复制」按钮",
-        "复制弹窗（复制信息区复选框）"
-      ],
-      "user_voice": "组织和功能都勾上，省得漏。要是只想复制组织就把功能取消。",
-      "emotion": "neutral",
-      "confidence": "高",
-      "confidence_reason": "UXB 已明确默认全选、至少选一项的规则",
-      "pain_points": [
-        "几乎没有——这是一个清晰的复选操作，默认值安全合理"
-      ],
-      "dropout_risk": {
-        "level": "低",
-        "reason": "勾选工作简单直接"
-      },
-      "opportunities": [],
-      "evidence": ["原文提取（UXB / 需求文档）"]
-    },
-    {
-      "stage_id": "stage-3",
-      "stage_name": "确定复制目标",
-      "user_goal": "挑选需要接收权限的用户",
-      "actions": [
-        "点击复制对象选择器",
-        "在员工选择弹窗中按姓名、手机号、部门查找用户",
-        "选中目标用户",
-        "确认已选用户在弹窗中显示",
-        "检查选中用户数量（最多 200 名）"
-      ],
-      "touchpoints": [
-        "复制弹窗（复制对象选择器）",
-        "员工选择弹窗"
-      ],
-      "user_voice": "把新来的几个子管理员都选上，一次性搞定。",
-      "emotion": "neutral",
-      "confidence": "高",
-      "confidence_reason": "UXB 明确员工选择弹窗与添加子管理员弹窗一致，支持多选，最多 200 名",
-      "pain_points": [
-        "列表中混合了普通用户和已有子管理员，但弹窗中未标注其当前身份。用户可能未预期到有些人会成为子管理员、有些人会叠加权限——差异要到确认后才知道。"
-      ],
-      "dropout_risk": {
-        "level": "中",
-        "reason": "如果要选择的目标用户较多（如几十上百人），连续搜索添加容易产生疲劳"
-      },
-      "opportunities": [
-        "目标列表中在用户名称旁标注当前身份（普通用户/子管理员），用户确认前就能了解规则差异",
-        "对于高频场景，可支持从组织树批量选择"
-      ],
-      "evidence": ["原文提取（UXB / 需求文档）", "规则推导（UXB §7 要求 4）"]
-    },
-    {
-      "stage_id": "stage-4",
-      "stage_name": "确认并提交复制",
-      "user_goal": "完成最后确认，通过校验后执行复制",
-      "actions": [
-        "点击弹窗「确认」按钮",
-        "系统执行四项顺序校验（复制信息→复制对象→加入状态→认证状态）",
-        "校验通过后执行复制",
-        "查看系统反馈"
-      ],
-      "touchpoints": [
-        "复制弹窗（确认按钮）",
-        "校验错误提示",
-        "Toast 提示"
-      ],
-      "user_voice": "确认没问题，提交。",
-      "emotion": "neutral",
-      "confidence": "高",
-      "confidence_reason": "UXB 明确了校验顺序、失败处理和各场景下的反馈文案",
-      "pain_points": [
-        "批量 200 人中部分校验不通过时，「全部退回还是通过部分」尚未明确",
-        "用户确认前没有被告知哪些目标会「成为」子管理员、哪些会「叠加」权限——差异在确认后才知道，可能超出预期"
-      ],
-      "dropout_risk": {
-        "level": "中",
-        "reason": "如果校验反复不通过（如选到未认证用户），来回修正的过程拉长后可能中断操作"
-      },
-      "opportunities": [
-        "确认前增加一条轻提示，汇总目标用户身份分布：N 名用户将成为子管理员，M 名已有子管理员将叠加权限",
-        "部分校验不通过的策略明确后，体验设计方案才能闭合"
-      ],
-      "evidence": ["原文提取（需求文档）", "规则推导（UXB §7 要求 4）"]
-    },
-    {
-      "stage_id": "stage-5",
-      "stage_name": "跟进生效结果",
-      "user_goal": "确认复制结果，确保权限按预期生效",
-      "actions": [
-        "非互审：收到 Toast「复制成功」→ 查看操作记录确认详情 → 回到子管理员列表确认生效",
-        "互审：收到 Toast「已提交审批」→ 等待另一位管理员审批 → 审批通过后权限自动写入 → 到列表确认"
-      ],
-      "touchpoints": [
-        "Toast",
-        "操作记录",
-        "子管理员列表",
-        "审批系统"
-      ],
-      "user_voice": "非互审：好了，一次搞定。互审：提交了，等另一位确认。久久没动时：那边批了没有？是不是得去提醒一下？",
-      "emotion": "neutral",
-      "confidence": "中",
-      "confidence_reason": "UXB 确认了两种模式的机制差异，但「审批中不可见」的具体体验影响需要实际设计才能验证",
-      "pain_points": [
-        "非互审下 Toast 消失后缺少可回顾的复制结果详情",
-        "互审下审批状态在子管理员列表中不可见，需离开页面去审批系统查询",
-        "操作记录按组织和功能分条存储，追溯一次完整复制需要手动关联两条记录"
-      ],
-      "dropout_risk": {
-        "level": "中高",
-        "reason": "互审模式下审批流程不透明：(1) 管理员不确定审批进度，可能重复操作；(2) 审批通过后没有主动通知，管理员可能以为还没生效"
-      },
-      "opportunities": [
-        "复制完成后给结果汇总（非互审：谁成功/谁失败；互审：已提交、待谁审批），而非只有一句话",
-        "审批状态在子管理员相关页面的可见性——在来源子管理员或目标用户上标注「复制审批中」",
-        "操作记录聚合展示：同一复制操作的两条记录默认合并为一条"
-      ],
-      "evidence": ["原文提取（UXB / 需求文档）", "规则推导（UXB §7 要求 3、5、6）"]
-    }
+  "result_level": "完整旅程",
+  "journey_summary": "将已配置好的子管理员授权范围作为模板，快速复制给多个目标用户",
+  "primary_roles": ["权限管理员"],
+  "stage_names": [
+    "定位来源与发起复制",
+    "确定复制范围",
+    "圈选复制目标",
+    "提交与等待处理",
+    "核对结果与操作追溯"
   ],
-  "key_transitions": [
-    {
-      "from_stage": "定位配置蓝本",
-      "to_stage": "选定复制内容",
-      "trigger": "点击操作列「复制」按钮",
-      "risk": "低"
-    },
-    {
-      "from_stage": "选定复制内容",
-      "to_stage": "确定复制目标",
-      "trigger": "完成复制内容勾选",
-      "risk": "低"
-    },
-    {
-      "from_stage": "确定复制目标",
-      "to_stage": "确认并提交复制",
-      "trigger": "确认目标选择完毕",
-      "risk": "用户未意识到混合身份（普通/已有子管理员）的处理差异"
-    },
-    {
-      "from_stage": "确认并提交复制",
-      "to_stage": "跟进生效结果",
-      "trigger": "复制执行成功",
-      "risk": "非互审→低；互审→审批状态不透明，用户可能重复操作或误以为已生效"
-    }
+  "lowest_confidence_stages": [
+    "圈选复制目标",
+    "提交与等待处理",
+    "核对结果与操作追溯"
   ],
-  "gaps": [
-    {
-      "gap": "部分校验不通过的策略（全部退回/部分提交）未明确",
-      "impact": "影响阶段四「确认并提交」的结果反馈设计",
-      "needed_input": "产品确认"
-    },
-    {
-      "gap": "审批中复制申请是否支持撤销未明确",
-      "impact": "影响阶段五「跟进生效结果」的操作路径",
-      "needed_input": "产品确认"
-    }
+  "key_transition_summaries": [
+    "点击复制按钮打开弹窗",
+    "确认复制信息进入选人",
+    "确认复制对象开始校验",
+    "校验与复制执行结束",
+    "查看结果并结束操作"
   ],
-  "user_completion": {
-    "primary_role": "unknown",
-    "journey_scope": "unknown",
-    "journey_type": "unknown",
-    "start_condition": "unknown",
-    "end_condition": "unknown",
-    "suspected_breakpoints": [],
-    "evidence_sources": [],
-    "notes": "未使用补问，user_completion 不适用"
-  }
+  "critical_gaps": [
+    "员工选择弹窗是否前置标识未加入/未认证用户",
+    "双管理员互审模式下审批通知方式",
+    "操作记录详情字段格式"
+  ],
+  "open_questions": [
+    "员工选择弹窗是否前置标识未加入/未认证用户",
+    "双管理员互审模式下审批通知方式",
+    "操作记录详情字段格式"
+  ]
 }

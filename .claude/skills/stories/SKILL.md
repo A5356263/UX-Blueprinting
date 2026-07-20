@@ -50,17 +50,31 @@ description: >
 4. `spark-output/problem_framing.md`
 5. 用户当前对话中明确提供的方向、角色、任务背景
 
+上游读取硬门禁：
+
+- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 JSON 而没有对应 Markdown 时，不得据此生成 Story 详情、验收标准或设计触点。
+- 未读完正式 Markdown，不得进入正式来源判断或 Story 生成。
+
 ### Step 0.3 · 正式来源判断
 
 读取规则：
 
-- 如果 `uxb` 与 `problem-framing` 同时存在，优先以 `uxb` 作为正式上游来源。
-- 如果只有 `problem-framing`，允许正式运行。
+- `uxb_output.md` 是 UXB 的完整正式语义源；`uxb.json` 只用于快速识别项目、范围、主要角色、硬约束、已确认决定和待确认问题。
+- 只接受 UXB `4.0` 的 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`；不得从这些摘要字段推导角色职责、规则、状态、异常或验收标准。
+- 如果 `uxb_output.md` 与 `problem-framing` 同时存在，优先以 UXB Markdown 作为正式上游来源。
+- 如果只有 `uxb.json` 而没有 `uxb_output.md`，不得将 JSON 单独视为完整需求定案；继续判断 problem-framing 或当前对话是否构成合法正式输入。
+- 如果只有 `problem_framing.md`，允许正式运行；只有 `problem-framing.json` 不构成完整正式输入。
 - 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
 - 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
+- P0 Story 的规则、状态、异常和验收条件必须来自完整正式来源，不得仅凭紧凑 UXB JSON 推导。
 
 当正式来源为 `problem-framing` 时，先检查其信息分层：
 
+- Problem Framing JSON 只接受 `2.0` 的紧凑定位字段；非 `2.0` 且 Markdown 可用时忽略旧 JSON，不做版本转换。
 - `confirmed_facts` 可直接消费
 - `working_assumptions` 可有限消费，但必须显式标记
 - `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
@@ -131,7 +145,7 @@ description: >
 
 明确本次 Story 来源：
 
-- `uxb`
+- `uxb`（仅当 `uxb_output.md` 可用）
 - `problem-framing`
 - `direct-input`
 
@@ -149,7 +163,7 @@ description: >
 该步骤只在以下条件全部满足时触发：
 
 - 正式来源为 `problem-framing`
-- `uxb` 不存在
+- `uxb_output.md` 不存在
 - 当前输入仍是 `theme` 或 `epic`
 - 主角色、核心任务目标、或本轮明确不做什么 这三类关键信息之一缺失或明显不稳定
 
@@ -305,84 +319,27 @@ Markdown 固定结构：
 
 ## Context JSON 写入
 
-文档生成后，按固定结构写入 `spark-output/context/stories.json`。
-
-固定结构：
-
-```json
-{
-  "skill": "stories",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/stories.md",
-  "source_refs": [],
-  "read_sections": [],
-  "source_mode": "unknown",
-  "source_and_direction": {
-    "source_summary": "unknown",
-    "product_direction": "unknown",
-    "scope_boundary": "unknown"
-  },
-  "direction": "unknown",
-  "persona": "unknown",
-  "story_index": [
-    {
-      "story_id": "unknown",
-      "title": "unknown",
-      "priority": "unknown",
-      "persona": "unknown",
-      "scenario": "unknown"
-    }
-  ],
-  "stories": [
-    {
-      "story_id": "unknown",
-      "title": "unknown",
-      "persona": "unknown",
-      "scenario": "unknown",
-      "goal": "unknown",
-      "priority": "unknown",
-      "source_basis": [],
-      "story_text": "unknown",
-      "acceptance_criteria": [],
-      "design_touchpoints": {
-        "pages_or_scenarios": [],
-        "component_types": [],
-        "states": [],
-        "interaction_patterns": []
-      },
-      "risks": [],
-      "critical_assumptions": []
-    }
-  ],
-  "excluded_items": [
-    {
-      "item": "unknown",
-      "reason": "unknown"
-    }
-  ],
-  "gaps": [
-    {
-      "question": "unknown",
-      "impact": "unknown"
-    }
-  ]
-}
-```
+写入前必须完整读取 `references/context-schema.md`。
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
-- 不得为了填满 JSON 编造信息。
-- `stories[]` 不得为空。
-- `acceptance_criteria[]` 每个 Story 至少 2 条。
-- `design_touchpoints` 必须按固定对象填写，不得写成自由文本数组。
-- P0 Story 必须能追溯到已确认事实、UXB 定案或 problem-framing 承接契约。
-- 辅助能力或可选增强不得伪装成主线 Story。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+1. 未完整读取 schema，禁止生成 Context JSON。
+2. JSON 阶段只以已完成的 `stories.md` 为内容来源；禁止回读上游、原始输入、知识库或会话补齐。
+3. JSON 只是少量固定结论的紧凑交接摘要，不是 Story 详情、验收标准或设计触点的镜像。
+4. 只允许摘取和原意不变的简写；禁止新增事实、任务、优先级、假设或待确认结论。
+5. 只能写入 schema 允许的字段；不得建立 Story ID 引用、章节映射、中间 JSON 或下游专用字段。
+6. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`。
+7. 写入后必须运行校验；失败时只修 JSON，不得反向修改 Markdown。
+
+严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+
+`spark-output/context/stories.json`
+
+运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
+```
 
 ## 预览交接
 

@@ -33,6 +33,15 @@ Prefer inputs in this order:
 2. Background materials: derive a role/path skeleton from scenario background.
 3. Requirement materials: derive a minimal journey and mark inferred context explicitly.
 
+当用户确认范围并选择 Experience Blueprint 作为正式输入时，执行以下硬门禁：
+
+- 必须实际完整读取蓝图 Markdown；JSON 如存在，只用于快速定位，不是正式语义源。
+- 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并记录交接错误。
+- 只有 JSON、Markdown 缺失或 Markdown 未读完时，不得生成旅程节点、埋点需求或异常追踪需求。
+- 本门禁不改变先由用户确认任务或场景范围的现有入口规则。
+
 如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，按实际入口进入必要 README 或单一 raw，只读命中的埋点方法、业务对象或状态章节。不得预设目录层级或 README 必然存在。两者都不存在时，在定案参数与 API 细节前先索取或形成明确假设。
 
 ## Outputs

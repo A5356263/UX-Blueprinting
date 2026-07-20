@@ -47,13 +47,13 @@ description: >
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身角色和输入边界
 2. 读取 `spark-output/context/uxb.json`
-3. 读取 `spark-output/uxb_output.md`
+3. 完整读取 `spark-output/uxb_output.md`
 4. 读取 `spark-output/context/problem-framing.json`
-5. 读取 `spark-output/problem_framing.md`
-6. 读取 `spark-output/context/stories.json`（如存在），用于 `§2-§4` 的任务单元深化
-7. 读取 `spark-output/stories.md`（如存在），用于任务叙述补充
-8. 读取 `spark-output/context/journey-analysis.json`（如存在），用于 `§1` 旅程消费摘要的结构化数据
-9. 读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要的叙述性分析
+5. 完整读取 `spark-output/problem_framing.md`
+6. 读取 `spark-output/context/stories.json`（如存在），只用于定位方向、角色和 Story 标题
+7. 完整读取 `spark-output/stories.md`（如存在），用于任务叙述与完整任务语义
+8. 读取 `spark-output/context/journey-analysis.json`（如存在），只用于定位旅程主题、阶段名称、低信心阶段、转折和缺口
+9. 完整读取 `spark-output/journey_analysis.md`（如存在），用于 `§1` 旅程消费摘要与完整旅程语义
 10. 优先读取第一阶梯来源中的待确认问题，判断上游稳定性
 11. 执行知识补充消费（必须执行，不可跳过）
 
@@ -61,17 +61,41 @@ description: >
 
 双轨读取原因：
 
-- JSON 负责结构化数据骨架
-- MD 负责叙述性判断和策略
-- 两者一起用，比只读长文档更稳
+- JSON 帮助快速定位结构化摘要
+- MD 负责完整业务语义、叙述性判断和策略
+- JSON 不得替代其对应 Markdown；UXB 的紧凑 JSON 尤其不承载详细规则、状态、异常和承接要求
+
+上游读取硬门禁：
+
+- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 JSON 而没有对应 Markdown 时，不得宣称已完整消费该上游，也不得从 JSON 恢复详细流程、规则、状态或异常。
+- 未完成第一阶梯 Markdown 读取，以及存在时的 Stories、Journey Markdown 读取，不得进入模式判断、知识补充或体验蓝图生成。
+
+UXB JSON 读取：
+
+- 只接受 UXB `4.0`，仅用于快速读取 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
+- `uxb_output.md` 是完整正式语义源；成立性论证、角色职责、功能、规则、状态、异常、边界和 `§7` 体验蓝图承接要求必须从 Markdown 获取。
+- 不得从紧凑 JSON 恢复详细业务结构，也不得把 JSON 空数组解释为 Markdown 没有对应内容。
+- 检测到非 `4.0` UXB JSON 且 `uxb_output.md` 可用时，忽略旧 JSON、基于 Markdown 继续并提示重新生成 JSON；不得在本 Skill 内转换旧结构。
+- UXB Markdown 不可用时，不得把任何版本的 UXB JSON 当作正式 UXB 输入。
+
+其他上游 JSON 读取：
+
+- Problem Framing JSON 只接受 `2.0` 的核心判断、问题、角色、方向、承接、约束和信息分层定位字段。
+- Stories JSON 只接受 `2.0` 的方向、角色、Story 标题、关键假设、范围和待确认定位字段。
+- Journey JSON 只接受 `2.0` 的模式、结果等级、旅程摘要、角色、阶段名称、低信心阶段、转折、缺口和待确认定位字段。
+- 检测到上述旧版 JSON 且对应 Markdown 可用时，忽略旧 JSON、提示重新生成并完整消费 Markdown；不得做版本转换。
 
 ### Step 0.3 · 模式判断与降级
 
 模式判断：
 
-- `uxb-mode`：检测到 `uxb.json` 或 `uxb_output.md`，以 UXB 作为第一阶梯正式来源
-- `framing-mode`：未检测到 UXB，但检测到 `problem-framing.json` 或 `problem_framing.md`，以问题框定作为第一阶梯正式来源
-- `deepened-mode`：在 `uxb-mode` 或 `framing-mode` 基础上，同时检测到 `stories` 或 `journey-analysis`
+- `uxb-mode`：检测到 `uxb_output.md`，以 UXB Markdown 作为第一阶梯正式来源
+- `framing-mode`：未检测到 `uxb_output.md`，但检测到 `problem_framing.md`，以问题框定 Markdown 作为第一阶梯正式来源
+- `deepened-mode`：在 `uxb-mode` 或 `framing-mode` 基础上，同时检测到 `stories.md` 或 `journey_analysis.md`
 
 硬规则：
 
@@ -80,14 +104,14 @@ description: >
 
 降级规则：
 
-- 如果 `uxb.json` 未找到，回退到只读 `uxb_output.md`
-- 如果 `uxb.json` 存在但 `uxb_output.md` 未找到，仅基于 JSON 结构化数据继续执行，在 `§0` 中标注"叙述性分析缺失，仅基于结构化数据推导"
-- 如果 UXB 不存在但 `problem-framing` 存在，进入 `framing-mode`，基于问题定义、推荐方向和承接要求继续执行
-- 如果 UXB 和 `problem-framing` 均不存在，不进入正式蓝图生成，输出引导提示：
+- 如果 `uxb.json` 未找到但 `uxb_output.md` 可用，正常基于 Markdown 进入 `uxb-mode`
+- 如果 `uxb.json` 存在但 `uxb_output.md` 未找到，不得进入 `uxb-mode`；如 `problem_framing.md` 可读则进入 `framing-mode`，否则报告缺少第一阶梯正式上游
+- 如果 `uxb_output.md` 不存在但 `problem_framing.md` 可读，进入 `framing-mode`，基于完整问题框定正文继续执行
+- 如果 `uxb_output.md` 和 `problem_framing.md` 均不存在，不进入正式蓝图生成，输出引导提示：
   "未找到第一阶梯正式上游结论。建议先完成 UXB 需求定案或问题框定，再进入体验蓝图。"
-- 如果 `stories` 不存在，允许继续，但必须在 `§9` 标注"当前未经过用户故事深化，主任务链基于第一阶梯结论推导"
+- 如果 `stories.md` 不存在，允许继续，但必须在 `§9` 标注"当前未经过用户故事深化，主任务链基于第一阶梯结论推导"
 - 如果 `journey_analysis.md` 存在但 `journey-analysis.json` 不存在，仅基于 MD 继续
-- 如果 `journey-analysis.json` 存在但 `journey_analysis.md` 不存在，仅基于 JSON 继续，在 `§1` 标注"叙述性分析缺失"
+- 如果 `journey-analysis.json` 存在但 `journey_analysis.md` 不存在，不把 JSON 当作完整 Journey；忽略该 Journey 摘要，按第一阶梯来源或 stories 推导简化旅程，并在 `§1` 标注“Journey 正文缺失，当前旅程为降级推导”
 - 如果两者均未找到，`§1` 进入降级模式（从第一阶梯结论或 stories 推导简化旅程）
 - 如果 `knowledge-wiki` 当前不可用，在 `§9` 附录注明”知识库不可用”，继续后续设计，但不得伪造知识消费结果
 
@@ -214,7 +238,7 @@ description: >
 - `§0` 仍只写体验蓝图自己的关键设计判断
 - `§8` 汇总会影响流程、页面、状态或文案的待确认问题
 - `§9` 用最小篇幅记录 `上游承接检查`，只写大白话，不写内部字段名
-- Context JSON 可记录机器侧字段，但用户侧 Markdown 正文不得直接展示 `source_usability_check`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited`
+- Context JSON 可记录机器侧字段，但用户侧 Markdown 正文不得直接展示 `source_status`、`source_mode`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited`
 
 ## 正文承载规则
 
@@ -481,7 +505,7 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 
 | 上游判断 | 对体验意味着什么 | 体验设计决策 | 落点章节 |
 |---|---|---|---|
-| [来自 UXB §7 / uxb.json.experience_handoff_requirements / problem-framing.handoff_contract] | [体验影响] | [本次体验蓝图的具体设计决策] | [§3 / §5 / §6 / §7 等] |
+| [来自 UXB §7 / Problem Framing §7 承接要求] | [体验影响] | [本次体验蓝图的具体设计决策] | [§3 / §5 / §6 / §7 等] |
 
 ## 自检清单
 
@@ -511,209 +535,36 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - 当来源为 `uxb` 时，不执行 `3+1` 的完整性拦截
 - 当来源为 `problem-framing` 时，如 `3+1` 未通过，不得输出假完整方案
 
-## Context JSON 写入
+## ⛔ Context JSON 生成门禁
 
-文档生成并自检通过后，按固定结构写入 `spark-output/context/experience-blueprint.json`。
+写入 Context JSON 前，必须完整读取：
 
-固定结构：
-
-```json
-{
-  "skill": "experience-blueprint",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/experience_blueprint.md",
-  "source_refs": [],
-  "read_sections": [],
-  "source_mode": "unknown",
-  "source_usability_check": {
-    "usable": "unknown",
-    "reason": "unknown",
-    "missing_inputs": []
-  },
-  "expansion_mode": "unknown",
-  "critical_design_judgments": [
-    {
-      "judgment": "unknown",
-      "major_impact": "unknown",
-      "recommended_solution": "unknown",
-      "not_recommended_solution": "unknown",
-      "key_open_question": "unknown"
-    }
-  ],
-  "uxb_mapping": [
-    {
-      "upstream_judgment": "unknown",
-      "experience_meaning": "unknown",
-      "blueprint_decision": "unknown",
-      "target_section": "unknown"
-    }
-  ],
-  "problem_framing_mapping": [
-    {
-      "upstream_judgment": "unknown",
-      "experience_meaning": "unknown",
-      "blueprint_decision": "unknown",
-      "target_section": "unknown"
-    }
-  ],
-  "stories_consumption": {
-    "used_stories": [],
-    "excluded_stories": [],
-    "story_to_flow_mapping": []
-  },
-  "journey_consumption": {
-    "confidence_lows": [
-      {
-        "role": "unknown",
-        "stage": "unknown",
-        "reason": "unknown",
-        "blueprint_impact": "unknown"
-      }
-    ],
-    "key_transitions": [
-      {
-        "from_stage": "unknown",
-        "to_stage": "unknown",
-        "trigger": "unknown",
-        "blueprint_impact": "unknown"
-      }
-    ],
-    "dropout_risks": [
-      {
-        "role": "unknown",
-        "stage": "unknown",
-        "risk": "unknown",
-        "blueprint_impact": "unknown"
-      }
-    ]
-  },
-  "interaction_overview": {
-    "pages": [],
-    "modals": [],
-    "drawers": [],
-    "user_actions": [],
-    "system_feedback": [],
-    "state_changes": [],
-    "toast": [],
-    "inline_error": [],
-    "empty_state": [],
-    "loading_state": []
-  },
-  "main_flow": [
-    {
-      "node_id": "unknown",
-      "node_name": "unknown",
-      "user_action": "unknown",
-      "system_feedback": "unknown",
-      "pre_explanation": "unknown",
-      "copy_suggestion": "unknown",
-      "state_change": "unknown",
-      "next_step": "unknown"
-    }
-  ],
-  "sub_flows": [
-    {
-      "flow_id": "unknown",
-      "flow_name": "unknown",
-      "trigger_condition": "unknown",
-      "user_action": "unknown",
-      "system_feedback": "unknown",
-      "pre_explanation": "unknown",
-      "copy_suggestion": "unknown",
-      "next_step": "unknown"
-    }
-  ],
-  "exceptions": [
-    {
-      "exception_id": "unknown",
-      "name": "unknown",
-      "timing": "unknown",
-      "trigger_condition": "unknown",
-      "basis": "unknown",
-      "feedback_form": "unknown",
-      "system_feedback": "unknown",
-      "user_next_step": "unknown",
-      "recovery_path": "unknown"
-    }
-  ],
-  "pages": [
-    {
-      "page_id": "unknown",
-      "page_name": "unknown",
-      "page_goal": "unknown",
-      "entry_condition": "unknown",
-      "structure_ascii": "unknown",
-      "regions": [],
-      "buttons": [],
-      "success_feedback": "unknown",
-      "failure_feedback": "unknown"
-    }
-  ],
-  "modals": [
-    {
-      "modal_id": "unknown",
-      "modal_name": "unknown",
-      "goal": "unknown",
-      "trigger_condition": "unknown",
-      "structure_ascii": "unknown",
-      "copy": [],
-      "buttons": [],
-      "success_feedback": "unknown",
-      "failure_feedback": "unknown"
-    }
-  ],
-  "drawers": [
-    {
-      "drawer_id": "unknown",
-      "drawer_name": "unknown",
-      "goal": "unknown",
-      "entry_condition": "unknown",
-      "structure_ascii": "unknown",
-      "copy": [],
-      "buttons": [],
-      "success_feedback": "unknown",
-      "failure_feedback": "unknown"
-    }
-  ],
-  "states": [
-    {
-      "state": "unknown",
-      "meaning": "unknown",
-      "applies_to": "unknown",
-      "user_action_available": "unknown",
-      "feedback_standard": "unknown"
-    }
-  ],
-  "open_questions": [
-    {
-      "question": "unknown",
-      "impact": "unknown",
-      "suggested_owner": "unknown"
-    }
-  ],
-  "knowledge_consumption": {
-    "design_guidelines_used": [],
-    "business_knowledge_used": [],
-    "knowledge_gaps": [],
-    "upstream_trace": []
-  }
-}
-```
+`references/context-schema.md`
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
-- 不得为了填满 JSON 编造信息。
-- `expansion_mode` 只能是 `full`、`limited` 或 `unknown`。
-- `interaction_overview` 必须保留 `toast`、`inline_error`、`empty_state`、`loading_state`。
-- `pages[]`、`modals[]`、`drawers[]` 不得合并成无类型数组。
-- `structure_ascii` 必须来自 Markdown 中的结构草图；未输出则写 `unknown`。
-- `source_usability_check`、`expansion_mode`、`full`、`limited` 属于机器侧承接记录，不得作为用户侧 Markdown 正文字段名直接展示。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+1. 未完整读取该文件，禁止开始生成 Context JSON。
+2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0` JSON 结构。
+3. 禁止从 Markdown 机械复制整段正文填充 JSON。
+4. 只能写入 schema 明确允许的字段；不得新增、删除、改名或改变字段类型。
+5. Markdown 必须先完成并通过本 Skill 自检，再从已确认内容映射 JSON。
+6. 不得为了填满 JSON 编造信息；缺失值按 schema 的可空规则处理。
+7. 禁止增加泳道、图节点、关系边、坐标、连线或 coverage 字段。
+8. 写盘后必须运行指定校验脚本。
+9. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
+10. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
+
+## Context JSON 写入
+
+文档生成并自检通过后，严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+
+`spark-output/context/experience-blueprint.json`
+
+写入后必须运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blueprint.json
+```
 
 ## 预览交接
 

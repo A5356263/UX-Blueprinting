@@ -61,6 +61,15 @@ description: >
 - 用户明确要求“基于 product-analysis 继续”时，允许将 `product-analysis` 的正式产物作为重构后的需求输入
 - 不得把任何用户私有临时目录当作默认来源
 
+当正式输入来自 `product-analysis` 时：
+
+- JSON 只用于快速定位，不是正式语义源；必须实际完整读取 `product_analysis.md`。
+- 即使 Product Analysis 刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 JSON 而没有 Markdown 时，不得将其作为重构后的正式需求输入。
+- Product Analysis Markdown 未读完前，不得进入 UXB `Step 1`。
+
 禁止：
 
 - 不得假设某一种来源是标准来源
@@ -217,9 +226,11 @@ UXB 的正常顺序固定为：
 处理方式：
 
 1. 读取 `spark-output/context/product-analysis.json`
-2. 读取 `spark-output/product_analysis.md`
+2. 完整读取 `spark-output/product_analysis.md`
 3. 将其视为“重构后的需求输入”
 4. 如同时存在原始 PRD，原始 PRD 只作为背景材料，不默认沿用其中已被推翻的方案判断
+
+Product Analysis JSON 只接受 `2.0` 的 `source_mode`、`decision_summary`、`failure_summary`、`reframed_problem`、`skipped_premises`、`recommended_direction`、`next_step`、`out_of_scope`、`open_questions`。检测到旧版 JSON 且 Markdown 可用时，忽略旧 JSON 并提示重新生成，不得转换旧结构。
 
 ### 模式 B：内部回流
 
@@ -232,7 +243,7 @@ UXB 的正常顺序固定为：
 处理方式：
 
 1. 恢复当前 `uxb` 已确认事实
-2. 读取 `product-analysis` 的纠偏产物
+2. 实际完整读取 `product-analysis` 的纠偏 Markdown；配套 JSON 只用于快速定位
 3. 合并有效信息
 4. 废弃已失效的旧方向判断
 5. 从“方向已重构后的状态”继续，而不是从头重新开始
@@ -613,7 +624,7 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 ## 自检清单
 
-生成 `uxb_output.md` 前，逐项检查：
+`uxb_output.md` 草稿写入后、生成 Context JSON 前，逐项回读并检查：
 
 ### 维度一：结构完整性
 
@@ -655,140 +666,46 @@ Step 2 中标记为"设计判断"且涉及体验维度的内容，单独列出�
 
 自检结果处理：
 
-- 自检只检查自己的输出，不检查上游
+- 自检只检查输出结构、表达和承接完整性，不检查上游
+- 禁止在自检阶段重新判断业务事实、方案结论或 `[GAP]` 归属
 - 自检结果不导出为独立章节
 - 发现问题，自己能修的直接修
-- 修不了的推进到 `§9` 对应层级
 
-## Context JSON 写入
+## ⛔ Context JSON 生成门禁
 
-文档生成并自检通过后，按固定结构写入 `spark-output/context/uxb.json`。
+写入 Context JSON 前，必须完整读取：
 
-固定结构：
-
-```json
-{
-  "skill": "uxb",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/uxb_output.md",
-  "source_refs": [],
-  "read_sections": [],
-  "key_design_judgments": [
-    {
-      "judgment": "unknown",
-      "impact": "unknown",
-      "recommended_approach": "unknown",
-      "not_recommended": "unknown",
-      "open_question": "unknown"
-    }
-  ],
-  "input_summary": {
-    "raw_request": "unknown",
-    "confirmed_facts": [],
-    "explicit_constraints": [],
-    "missing_information": []
-  },
-  "business_scenario_judgment": {
-    "scenario": "unknown",
-    "role": "unknown",
-    "task": "unknown",
-    "value": "unknown"
-  },
-  "viability_judgment": {
-    "is_valid": "unknown",
-    "reason": "unknown",
-    "blocking_issues": [],
-    "assumptions": []
-  },
-  "business_boundary": {
-    "in_scope": [],
-    "out_of_scope": [],
-    "boundary_reason": []
-  },
-  "roles": [
-    {
-      "name": "unknown",
-      "type": "unknown",
-      "responsibility": "unknown",
-      "needs": []
-    }
-  ],
-  "features": [
-    {
-      "name": "unknown",
-      "input": "unknown",
-      "process": "unknown",
-      "output": "unknown",
-      "result": "unknown",
-      "boundary": "unknown"
-    }
-  ],
-  "business_rules": [
-    {
-      "rule": "unknown",
-      "trigger": "unknown",
-      "result": "unknown",
-      "fallback": "unknown"
-    }
-  ],
-  "states": [
-    {
-      "state": "unknown",
-      "meaning": "unknown",
-      "system_result": "unknown",
-      "user_next_step": "unknown"
-    }
-  ],
-  "exceptions": [
-    {
-      "name": "unknown",
-      "trigger": "unknown",
-      "system_result": "unknown",
-      "user_next_step": "unknown",
-      "recovery": "unknown"
-    }
-  ],
-  "experience_handoff_requirements": [
-    {
-      "business_judgment": "unknown",
-      "experience_impact": "unknown",
-      "must_continue": "unknown",
-      "forbidden_rejudge": "unknown"
-    }
-  ],
-  "constraints": [],
-  "gaps": [
-    {
-      "question": "unknown",
-      "impact": "unknown",
-      "suggested_owner": "unknown"
-    }
-  ],
-  "knowledge_trace": [
-    {
-      "knowledge_source": "unknown",
-      "supported_judgment": "unknown",
-      "unconfirmed_part": "unknown"
-    }
-  ]
-}
-```
+`references/context-schema.md`
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `gaps[]`。
-- 不得为了填满 JSON 编造信息。
-- `features[]` 不得只写功能名，必须保留输入、处理、输出、结果、边界。
-- `experience_handoff_requirements[]` 不得压缩成一句话。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+1. 未完整读取该文件，禁止开始生成 Context JSON。
+2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0`、`2.0` 或 `3.0` JSON 结构。
+3. JSON 阶段只以已冻结的 `uxb_output.md` 为内容来源；禁止依据原始需求、业务知识或会话上下文补充、纠正或重判 Markdown。
+4. JSON 是已冻结 Markdown 中少量固定结论的紧凑交接摘要，不是逐章投影，也不是第二次分析；只允许摘取和原意不变的简写，禁止新增任何事实、边界、因果、状态、异常或处理方式。
+5. 除 schema 固定元数据外，每个非 `unknown` 业务字符串都必须能直接指回 `uxb_output.md` 中的明确表述；无需输出映射，也不得建立 ID、引用、关系表或中间 JSON。
+6. 只能写入 schema 明确允许的字段；不得新增、删除、改名或改变字段类型。
+7. Markdown 没有明确内容时，按 schema 写 `unknown` 或 `[]`；禁止为了填满字段进行合理猜测。
+8. `§9` 或 `[GAP]` 中的事项不得在 JSON 中改写为确定规则、状态、异常或处理结果。
+9. 写盘后必须运行指定校验脚本。
+10. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
+11. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
+
+## Context JSON 写入
+
+文档生成并自检通过后，严格按 `references/context-schema.md` 的 `4.0` 合同写入：
+
+`spark-output/context/uxb.json`
+
+写入后必须运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/uxb.json
+```
 
 ## 核心定案冻结后的页面事实补充
 
-`uxb_output.md` 完成自检且 `uxb.json` 写入后，核心定案即冻结。此时才读取 `references/page_generation_handoff.md`，回看本轮正式需求并生成 `spark-output/context/page-generation-handoff.md`。该步骤不得修改或重新分析已冻结的 UXB 产物。
+`uxb_output.md` 完成自检且 `uxb.json` 写入后，核心定案即冻结。此时才读取 `references/page_generation_handoff.md`，按白名单回看本轮正式需求并生成 `spark-output/context/page-generation-handoff.md`。该步骤不得修改或重新分析已冻结的 UXB 产物。
 
 ## 预览交接
 

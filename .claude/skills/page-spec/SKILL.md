@@ -45,10 +45,20 @@ description: >
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 检查 `spark-output/context/experience-blueprint.json` 与 `spark-output/experience_blueprint.md` 是否存在
-3. 若体验蓝图产物存在，优先读取 JSON，再读取 Markdown 正文
+3. 若体验蓝图产物存在，优先读取 JSON 建立索引，再完整读取 Markdown 正文
 4. 若体验蓝图产物存在，再检查 `spark-output/context/page-generation-handoff.md` 是否存在，待蓝图提取完成后读取
 5. 可选检查并读取 `spark-output/context/edge.json` 与 `spark-output/edge_output.md`
 6. 识别用户当前明确提供的文档、截图、交互稿或其他设计材料
+
+上游读取硬门禁：
+
+- JSON 只用于快速定位，不是正式语义源；链路模式必须实际完整读取 `experience_blueprint.md`。
+- 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 蓝图重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- 只有 Experience Blueprint JSON 而没有 Markdown 时，不得进入链路模式，不得据此生成页面、交互、状态或规则。
+- 蓝图未读完前不得读取页面事实补充，也不得进入正式页面规格提取。
+- Edge 同时提供 JSON 与 Markdown 时，JSON 只用于定位；必须完整读取 Edge Markdown 后才能作为状态补丁层消费。
 
 ### Step 0.3 · 模式判断与降级
 
@@ -63,7 +73,16 @@ description: >
 
 以 Step 0.2 已读取的体验蓝图双轨产物作为正式设计输入；如存在页面生成事实补充，在蓝图提取完成后用于补充非重叠的确定性页面事实；如存在异常态产物，将其作为可选补强输入。
 
-如果 JSON 存在但 MD 不完整（缺少 §3/§5/§6/§7 中的任一章节），在输出开头标注缺失项，继续提取已有部分。
+Experience Blueprint JSON 兼容读取：
+
+- 必须接受 `1.0` 与 `2.0`；新旧版本只改变结构索引组织，不改变正式蓝图语义。
+- `1.0.source_mode`、`source_usability_check`、`expansion_mode` 对应 `2.0.source_status`。
+- `main_flow`、`sub_flows`、`exceptions` 两版均为流程索引；`2.0` 额外使用稳定 ID、结束类型、回接目标和 Markdown 锚点。
+- `1.0.pages`、`modals`、`drawers` 对应 `2.0.surfaces.pages`、`surfaces.modals`、`surfaces.drawers`。
+- `states`、`open_questions` 两版均必须消费；`2.0` 的 ID 与锚点用于稳定定位。
+- 版本不是 `1.0` 或 `2.0` 时停止结构化消费并报告，不得静默生成空页面、空流程、空状态或空异常集合。
+
+如果 JSON 存在但 MD 不完整（缺少 §3/§5/§6/§7 中的任一章节），在输出开头标注缺失项，只提取现有 Markdown 能证明的内容。紧凑 JSON 只能帮助定位，不得被当作缺失页面细节的替代事实源。
 
 对用户的固定说明应表达为：
 
@@ -513,182 +532,38 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 - 当前材料不足时，通过 `knowledge-wiki` 补足父页面结构的规则必须保留
 - 本轮优化只补充和收紧输出结构，不重写父页面恢复、知识补充或链路识别能力
 
-## Context JSON 写入
+## ⛔ Context JSON 生成门禁
 
-文档生成后，按固定结构写入 `spark-output/context/page-spec.json`。
+写入 Context JSON 前，必须完整读取：
 
-固定结构：
-
-```json
-{
-  "skill": "page-spec",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/page_spec.md",
-  "source_refs": [],
-  "read_sections": [],
-  "page_summary": {
-    "product_domain": "unknown",
-    "page_type": "unknown",
-    "user_role": "unknown",
-    "core_task": "unknown"
-  },
-  "generation_scope": {
-    "generate": [],
-    "reference_only": [],
-    "do_not_generate": []
-  },
-  "entity_relationships": [
-    {
-      "entity": "unknown",
-      "type": "unknown",
-      "relation": "unknown"
-    }
-  ],
-  "entities": [
-    {
-      "name": "unknown",
-      "type": "unknown"
-    }
-  ],
-  "extraction_summary": {
-    "entities_count": 0,
-    "states_count": 0,
-    "copy_count": 0,
-    "exceptions_count": 0
-  },
-  "pages": [
-    {
-      "page_id": "unknown",
-      "page_name": "unknown",
-      "page_goal": "unknown",
-      "structure_ascii": "unknown",
-      "regions": [
-        {
-          "region_id": "unknown",
-          "name": "unknown",
-          "purpose": "unknown",
-          "content": []
-        }
-      ],
-      "extraction_notes": [],
-      "list_fields": [
-        {
-          "field": "unknown",
-          "meaning": "unknown",
-          "source": "unknown"
-        }
-      ],
-      "key_actions": [
-        {
-          "action": "unknown",
-          "trigger": "unknown",
-          "result": "unknown"
-        }
-      ]
-    }
-  ],
-  "entity_specs": [
-    {
-      "entity_name": "unknown",
-      "surface_type": "unknown",
-      "goal": "unknown",
-      "structure_ascii": "unknown",
-      "regions": [],
-      "validation_blocking_state_changes": [],
-      "non_compliance_confirm_area": {
-        "structure": "unknown",
-        "copy": [],
-        "actions": []
-      }
-    }
-  ],
-  "main_interaction_flow": [
-    {
-      "step_id": "unknown",
-      "trigger": "unknown",
-      "user_action": "unknown",
-      "system_response": "unknown",
-      "state_change": "unknown",
-      "next_step": "unknown"
-    }
-  ],
-  "validation_rules": [
-    {
-      "rule_id": "unknown",
-      "object": "unknown",
-      "condition": "unknown",
-      "blocking": "unknown",
-      "message_key": "unknown"
-    }
-  ],
-  "states": [
-    {
-      "state": "unknown",
-      "trigger_condition": "unknown",
-      "ui_behavior": "unknown",
-      "copy_key": "unknown"
-    }
-  ],
-  "exception_recovery": [
-    {
-      "exception": "unknown",
-      "trigger": "unknown",
-      "ui_behavior": "unknown",
-      "recovery_path": "unknown"
-    }
-  ],
-  "result_states": [
-    {
-      "state": "unknown",
-      "condition": "unknown",
-      "ui_behavior": "unknown",
-      "copy_key": "unknown"
-    }
-  ],
-  "copy_pool": {
-    "modal": [],
-    "object_selection": [],
-    "validation_and_execution": [],
-    "result_and_feedback": [],
-    "buttons": []
-  },
-  "template_variables": [
-    {
-      "variable": "unknown",
-      "meaning": "unknown",
-      "value_range": "unknown"
-    }
-  ],
-  "open_questions": [
-    {
-      "question": "unknown",
-      "impact": "unknown"
-    }
-  ],
-  "edge_consumed": false,
-  "edge_trace": [
-    {
-      "screen_id": "unknown",
-      "state_type": "unknown",
-      "target_section": "unknown"
-    }
-  ]
-}
-```
+`references/context-schema.md`
 
 硬规则：
 
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
-- 不得为了填满 JSON 编造信息。
-- 不得只保留实体和统计数；页面结构、流程、校验、状态、异常恢复、结果态、文案池必须同步写入。
-- `copy_pool` 必须保留五类文案池。
-- 未读取或未吸收 `edge` 时，`edge_consumed = false` 且 `edge_trace = []`。
-- 吸收 `edge` 时，`edge_trace[]` 只记录来源锚点，不复制整段状态描述。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+1. 未完整读取该文件，禁止开始生成 Context JSON。
+2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0` JSON 结构。
+3. 禁止从 Markdown 机械复制整段正文填充 JSON。
+4. 只能写入 schema 明确允许的字段；不得新增、删除、改名或改变字段类型。
+5. Markdown 必须先完成并通过本 Skill 自检，再从已确认内容映射 JSON。
+6. `page_spec.md` 继续保留页面、流程、校验、状态、异常、结果态和文案的完整事实；不得为了精简 JSON 同步删减 Markdown。
+7. 不得为了填满 JSON 编造信息；缺失值按 schema 的可空规则处理。
+8. 写盘后必须运行指定校验脚本。
+9. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
+10. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
+
+## Context JSON 写入
+
+文档生成后，严格按 `references/context-schema.md` 的 `2.0` 索引合同写入：
+
+`spark-output/context/page-spec.json`
+
+页面生成 Agent 必须读取完整 `page_spec.md`；本 JSON 只用于范围定位与覆盖检查。
+
+写入后必须运行：
+
+```bash
+node {skill_dir}/scripts/validate-context.js spark-output/context/page-spec.json
+```
 
 ## Handoff · 固定下一步
 

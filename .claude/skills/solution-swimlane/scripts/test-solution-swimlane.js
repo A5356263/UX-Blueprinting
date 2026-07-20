@@ -186,7 +186,7 @@ function run() {
   assert(!toolbarCss.includes("position: fixed"), "操作栏不得浮动覆盖画布");
   assert(!toolbarCss.includes("z-index"), "操作栏不得依赖高层级覆盖画布");
   assert(result.html.includes("flex-direction: column"), "页面必须使用纵向 flex 分配真实空间");
-  assert(result.html.includes("main {\n      position: relative;\n      flex: 1;"), "画布主区必须占用操作栏之外的剩余高度");
+  assert(/main\s*\{\s*position:\s*relative;\s*flex:\s*1;/.test(result.html), "画布主区必须占用操作栏之外的剩余高度");
   assert(result.html.includes("height: 100%;"), "画布滚动区必须填满主区");
   assert(result.html.includes('id="toggle-toolbar"'), "紧凑工具栏必须可收起");
   assert(result.html.includes('id="info-drawer" hidden'), "辅助信息必须放入默认关闭的抽屉");

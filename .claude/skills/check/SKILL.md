@@ -50,15 +50,32 @@ description: >
 4. 读取 `spark-output/context/experience-blueprint.json`
 5. 读取 `spark-output/experience_blueprint.md`
 6. 如存在，再读取 `spark-output/context/edge.json`
-7. 如需补读设计准则，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入原则集，只读与当前检查项直接相关的章节；不得整份默认读取或遍历 raw
+7. 如存在，再完整读取 `spark-output/edge_output.md`
+8. 如需补读设计准则，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入原则集，只读与当前检查项直接相关的章节；不得整份默认读取或遍历 raw
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
 
+上游读取硬门禁：
+
+- JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 重点章节只决定二次核对优先级，不是正文白名单。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接问题。
+- 只有 JSON 而没有对应 Markdown 时，不得宣称完成该上游的一致性检查。
+- 必需 Markdown 未读完前，不得进入检查清单或输出正式 findings。
+
+UXB 读取边界：
+
+- `uxb_output.md` 是完整检查基线；UXB `4.0` JSON 只用于核对合同、产物路径和 `decision_summary`、`primary_roles`、`in_scope`、`out_of_scope`、`hard_constraints`、`confirmed_decisions`、`open_questions`。
+- 规则、状态、异常、体验承接要求和待确认影响必须从 UXB Markdown 获取。
+- 不得因紧凑 JSON 没有旧版详细字段或某个数组为空，就判断 UXB Markdown 缺失对应内容。
+- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将冲突记录为 UXB 交接问题；不得从 JSON 补全或重判事实。
+
 降级规则：
 
-- 只要有 `experience-blueprint` 产出，就可以执行
-- `edge.json` 缺失时，不阻断执行，只是不做基于异常态矩阵的对照加严
-- `uxb` 缺失时，跳过 `uxb-consistency` 的强对照，并在结果里说明
+- 只要 `experience_blueprint.md` 可读，就可以按链路模式执行
+- Edge Markdown 缺失时，不阻断执行，只是不做基于异常态矩阵的对照加严；只有 `edge.json` 不算完整 Edge
+- `uxb_output.md` 缺失时，跳过 `uxb-consistency` 的强对照，并在结果里说明；只有紧凑 `uxb.json` 不算完整 UXB
 - 如果只有用户指定的文件或文本，也可以按独立模式执行
 
 ### Step 0.3 · 独立模式确认
