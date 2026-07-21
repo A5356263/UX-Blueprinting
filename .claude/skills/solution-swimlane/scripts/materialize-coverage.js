@@ -82,7 +82,7 @@ function defaultDisposition(item) {
     };
   }
   if (
-    /#\$\.(pages|modals|drawers|interaction_overview)(?:\[|\.|$)/.test(ref)
+    /#\$\.(surfaces|feedbacks|interaction_overview)(?:\[|\.|$)/.test(ref)
     || /§[67]\b/.test(context)
   ) {
     return {
@@ -94,7 +94,7 @@ function defaultDisposition(item) {
     };
   }
   if (
-    /#\$\.(journey_consumption|critical_design_judgments|uxb_mapping|problem_framing_mapping|stories_consumption|knowledge_consumption)(?:\[|\.|$)/.test(ref)
+    /#\$\.(journey_consumption|critical_design_judgments|upstream_trace|uxb_mapping|problem_framing_mapping|stories_consumption|knowledge_consumption)(?:\[|\.|$)/.test(ref)
     || /§[019]\b/.test(context)
   ) {
     return {

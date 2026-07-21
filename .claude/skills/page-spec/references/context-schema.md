@@ -68,15 +68,18 @@
 ## 3. 字段来源与约束
 
 - `generation_scope.generate/reference_only/do_not_generate` 必须为互斥的实体 ID 数组，并覆盖 `entities` 全集。
+- `generation_scope` 必须与 `page_spec.md` 的 `## 2. 生成范围` 三段完全一致；Markdown 中出现的 `生成`、`只引用不生成`、`不生成` 实体都必须在 JSON 中有对应实体和归类。
 - `entities.entity_id` 必须为非空 kebab-case 且唯一。
 - `entities.generate_mode` 只允许 `generate`、`reference_only`、`do_not_generate`，并与 `generation_scope` 中的归属一致。
 - `entities.type` 使用 Markdown 中的真实载体类型；不得为了通过校验统一伪写为 `page`。
 - `entities.md_anchor` 必须指向 `page_spec.md` 中真实存在的章节或标题。
 - `entity_relationships` 的 `from_entity_id`、`to_entity_id` 必须引用已有实体。没有关系时可为空数组。
+- `entity_relationships` 只记录真实实体之间的关系；外部入口、历史页面、未纳入实体清单的对象不得强行挂到无关实体。需要保留入口上下文时，应先在 Markdown 中归入 `只引用不生成`，再写入 JSON。
 - `coverage` 九个字段必须为大于或等于 `0` 的整数，并由 Markdown 的实际条目计数生成。
 - 完整页面规格中，`entities` 和 `generation_scope.generate` 不得为空。
 - `edge_consumed=false` 时必须有 `edge_trace=[]`；为 `true` 时，每条追踪记录必须保留来源锚点，但不得复制完整状态正文。
 - `open_questions`、`edge_trace` 允许使用对象数组；对象内容来自 Markdown 和 Edge 的实际信息，不得虚构。
+- `open_questions` 必须来自 `page_spec.md` 的 `不参与本次生成的待确认项`；凡影响页面结构、入口、组件显示、字段、按钮、文案、状态、校验或异常反馈的待确认项，不得在 JSON 中遗漏。
 
 ## 4. 禁止写入
 

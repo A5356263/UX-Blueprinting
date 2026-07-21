@@ -61,10 +61,12 @@ description: >
 
 上游读取硬门禁：
 
-- JSON 只用于快速定位，不是正式语义源；链路模式必须实际完整读取 `experience_blueprint.md`。
+- Blueprint `3.0` JSON 是结构化设计事实的机器面；重点消费目标载体相关的 `exceptions`、`states`、`feedbacks`、流程和页面状态事实。
+- JSON 不包含 ASCII 和完整设计叙述，链路模式仍必须实际完整读取 `experience_blueprint.md`。
+- `interaction_overview`、关键判断、旅程消费和上游追踪不用于替代本 Skill 现有状态矩阵分析。
 - 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
+- JSON 与 Markdown 冲突时停止使用冲突字段并报告交接错误；不得静默选择任一侧或自行修复。
 - 只有 JSON 而没有 Markdown 时，不得进入链路模式或据此补齐状态、异常、恢复和文案。
 - 蓝图未读完前，不得进入状态矩阵分析或生成正式 Edge 产物。
 
@@ -72,7 +74,7 @@ description: >
 
 降级规则：
 
-- 如果 JSON 与 Markdown 同时存在，先用 JSON 定位，再以完整 Markdown 提取页面、流程、状态和异常
+- 如果 Blueprint `3.0` JSON 与 Markdown 同时存在，先从 JSON 读取结构化状态、异常和反馈，再以完整 Markdown 补充语境并核对一致性
 - 如果 JSON 缺失但 `experience_blueprint.md` 存在，则从 Markdown 中提取目标页面、主流程和异常段落
 - 如果只有 JSON 或两个文件都缺失，不进入链路模式，转为独立模式并向用户确认目标范围
 - 如果知识库不可用，继续执行，但不要伪造知识消费结果

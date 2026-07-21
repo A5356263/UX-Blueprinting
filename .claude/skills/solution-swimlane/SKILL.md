@@ -31,14 +31,16 @@ spark-output/solution-swimlane/solution_swimlane.html
 
 ### 1. 检查输入
 
-确认两个正式输入均存在。读取 JSON 建立结构索引，读取 Markdown 补充角色、条件、先后关系、系统处理和不确定性。
+确认两个正式输入均存在。读取 Blueprint `3.0` JSON 中的主流程、次流程、异常和状态，读取 Markdown 补充角色、条件、先后关系、系统处理和不确定性。
 
 上游读取硬门禁：
 
-- JSON 只用于结构索引，不是正式语义源；必须实际完整读取 `experience_blueprint.md`。
+- Blueprint `3.0` JSON 是结构化设计事实的机器面；必须接受无 ID、无 anchor、无 `end_target` 的字段结构，不得生成版本转换文件。
+- 主图语义重点消费 `main_flow`、`sub_flows`、`exceptions`、`states`；`interaction_overview` 只作重复总览排除，页面载体、文案、反馈和分析追踪不提升为主图元素。
+- JSON 不能替代 Markdown 中的角色、条件语境、系统处理语境和完整叙述；必须实际完整读取 `experience_blueprint.md`。
 - 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并停止生成，报告 JSON 交接错误。
+- JSON 与 Markdown 冲突时停止生成并报告交接错误；不得静默选择任一侧或自行修复。
 - 只有 JSON、Markdown 缺失或 Markdown 未读完时，不得建立源清单、图模型或正式 HTML。
 - Agent 实际读取 Markdown 与确定性脚本解析源清单是两道独立门禁，不能相互替代。
 

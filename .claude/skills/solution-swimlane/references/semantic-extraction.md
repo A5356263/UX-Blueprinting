@@ -183,7 +183,7 @@
 ```json
 {
   "selector": {
-    "source_ref_prefix": "spark-output/context/experience-blueprint.json#$.main_flow[0].copy_suggestion"
+    "source_ref_prefix": "spark-output/context/experience-blueprint.json#$.main_flow[0].copy_suggestions"
   },
   "semantic_kind": "detail",
   "required_in_diagram": false,

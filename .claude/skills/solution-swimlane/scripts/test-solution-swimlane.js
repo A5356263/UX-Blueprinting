@@ -2,6 +2,7 @@
 
 const assert = require("assert");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { buildInventory } = require("./build-source-inventory");
 const { buildHtml, computeLayout, renderSvg } = require("./render-solution-swimlane");
@@ -282,16 +283,19 @@ function run() {
   const externalDependency = result.html.replace("</head>", '<script src="https://example.com/x.js"></script></head>');
   expectFailure("外部依赖", inventory, model, externalDependency, /外部 script src|远程资源/);
 
-  const inventoryA = buildInventory(
-    path.resolve(__dirname, "../references/semantic-extraction.md"),
-    path.resolve(process.cwd(), "spark-output/context/experience-blueprint.json"),
-  );
-  const inventoryB = buildInventory(
-    path.resolve(__dirname, "../references/semantic-extraction.md"),
-    path.resolve(process.cwd(), "spark-output/context/experience-blueprint.json"),
-  );
+  const sourceFixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), "solution-swimlane-source-"));
+  const sourceFixtureMd = path.join(sourceFixtureDir, "experience_blueprint.md");
+  const sourceFixtureJson = path.join(sourceFixtureDir, "experience-blueprint.json");
+  fs.writeFileSync(sourceFixtureMd, "# 体验蓝图\n\n## §3 主交互流程\n\n提交申请。\n", "utf8");
+  fs.writeFileSync(sourceFixtureJson, JSON.stringify({
+    version: "3.0",
+    main_flow: [{ name: "提交申请" }],
+  }), "utf8");
+  const inventoryA = buildInventory(sourceFixtureMd, sourceFixtureJson);
+  const inventoryB = buildInventory(sourceFixtureMd, sourceFixtureJson);
   assert.strictEqual(inventoryA.source_hash, inventoryB.source_hash, "相同输入应产生相同来源哈希");
   assert.deepStrictEqual(inventoryA.items, inventoryB.items, "相同输入应产生稳定源清单");
+  fs.rmSync(sourceFixtureDir, { recursive: true, force: true });
 
   const draft = clone(model);
   delete draft.coverage_manifest;
@@ -303,7 +307,43 @@ function run() {
     "已完整映射的草稿不应产生阻断项",
   );
 
-  console.log("solution-swimlane 回归测试通过：11 项");
+  const blueprintV3Inventory = {
+    schema_version: "1.0",
+    source_hash: "blueprint-v3-source-hash",
+    files: [],
+    source_items_total: 4,
+    items: [
+      { ...sourceItem("v3-main"), source_ref: "spark-output/context/experience-blueprint.json#$.main_flow[0].name" },
+      { ...sourceItem("v3-surface"), source_ref: "spark-output/context/experience-blueprint.json#$.surfaces.pages[0].name" },
+      { ...sourceItem("v3-overview"), source_ref: "spark-output/context/experience-blueprint.json#$.interaction_overview[0].name" },
+      { ...sourceItem("v3-trace"), source_ref: "spark-output/context/experience-blueprint.json#$.upstream_trace[0].design_decision" },
+    ],
+  };
+  const blueprintV3Draft = {
+    schema_version: "1.0",
+    title: "Blueprint 3.0 输入兼容",
+    subtitle: "只验证上游字段分类",
+    lanes: [],
+    nodes: [],
+    edges: [],
+    flows: [],
+    open_questions: [],
+  };
+  const blueprintV3Coverage = materializeCoverage(blueprintV3Inventory, blueprintV3Draft).coverage_manifest;
+  assert.strictEqual(
+    blueprintV3Coverage.find((item) => item.source_item_id === "v3-main").disposition,
+    "blocked",
+    "Blueprint 3.0 主流程语义未映射时必须阻断",
+  );
+  for (const id of ["v3-surface", "v3-overview", "v3-trace"]) {
+    assert.strictEqual(
+      blueprintV3Coverage.find((item) => item.source_item_id === id).disposition,
+      "excluded_by_rule",
+      `Blueprint 3.0 非主图字段必须按规则排除：${id}`,
+    );
+  }
+
+  console.log("solution-swimlane 回归测试通过：12 项");
 }
 
 try {

@@ -245,7 +245,7 @@ UXB JSON 读取：
 - `§0` 仍只写体验蓝图自己的关键设计判断
 - `§8` 汇总会影响流程、页面、状态或文案的待确认问题
 - `§9` 用最小篇幅记录 `上游承接检查`，只写大白话，不写内部字段名
-- Context JSON 可记录机器侧字段，但用户侧 Markdown 正文不得直接展示 `source_status`、`source_mode`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited`
+- 用户侧 Markdown 正文不得直接展示 `source_status`、`source_mode`、`expansion_mode`、`confirmed_facts`、`working_assumptions`、`full`、`limited` 等内部运行字段或术语
 
 ## 正文承载规则
 
@@ -551,19 +551,23 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 硬规则：
 
 1. 未完整读取该文件，禁止开始生成 Context JSON。
-2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0` JSON 结构。
-3. 禁止从 Markdown 机械复制整段正文填充 JSON。
+2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0` / `2.0` JSON 结构。
+3. JSON 是冻结 Markdown 中结构化设计事实的机器面，不是摘要、索引或第二次推理。
 4. 只能写入 schema 明确允许的字段；不得新增、删除、改名或改变字段类型。
-5. Markdown 必须先完成并通过本 Skill 自检，再从已确认内容映射 JSON。
-6. 不得为了填满 JSON 编造信息；缺失值按 schema 的可空规则处理。
-7. 禁止增加泳道、图节点、关系边、坐标、连线或 coverage 字段。
-8. 写盘后必须运行指定校验脚本。
-9. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
-10. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
+5. Markdown 必须先完成并通过本 Skill 自检；JSON 阶段只读取这份冻结 Markdown，禁止回读上游、知识库、原始需求或会话补充。
+6. 只做字段归位和显式列表拆分；不得概括、改写、压缩、合并、补全或重新判断业务语义。
+7. `§0-§8` 中会影响流程、页面、交互、状态、反馈、文案、异常或待确认边界的结构化事实必须逐项承接；`§9` 只承接上游承接追踪。
+8. ASCII 页面图本体只保留在 Markdown `§6`；JSON 仅保留对应 surface 的 `markdown_heading` 和非 ASCII 设计事实。
+9. 不得为了填满 JSON 编造信息；单值缺失写 `unknown`，集合缺失写 `[]`。
+10. 写入后逐章核对 Markdown 正式条目数与 JSON 对应对象数；数量不一致时只修正投影遗漏，不得返回正文重新推理。
+11. 禁止增加 ID、anchor 引用图、回接映射、泳道、图节点、关系边、坐标、连线或 coverage 字段。
+12. 写盘后必须运行指定校验脚本。
+13. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
+14. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
 
 ## Context JSON 写入
 
-文档生成并自检通过后，严格按 `references/context-schema.md` 的 `2.0` 合同写入：
+文档生成并自检通过后，严格按 `references/context-schema.md` 的 `3.0` 合同写入：
 
 `spark-output/context/experience-blueprint.json`
 

@@ -45,18 +45,22 @@ description: >
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 检查 `spark-output/context/experience-blueprint.json` 与 `spark-output/experience_blueprint.md` 是否存在
-3. 若体验蓝图产物存在，优先读取 JSON 建立索引，再完整读取 Markdown 正文
-4. 若体验蓝图产物存在，再检查 `spark-output/context/page-generation-handoff.md` 是否存在，待蓝图提取完成后读取
-5. 可选检查并读取 `spark-output/context/edge.json` 与 `spark-output/edge_output.md`
-6. 识别用户当前明确提供的文档、截图、交互稿或其他设计材料
+3. 若体验蓝图双轨产物存在，读取 JSON 识别页面实体并提取页面生成所需的结构化事实
+4. 实际读取 Markdown `§6`，按每个目标实体的 `markdown_heading` 读取对应 ASCII、结构说明和空间关系
+5. 若体验蓝图产物存在，再检查 `spark-output/context/page-generation-handoff.md` 是否存在，待蓝图提取完成后读取
+6. 可选检查并读取 `spark-output/context/edge.json` 与 `spark-output/edge_output.md`
+7. 识别用户当前明确提供的文档、截图、交互稿或其他设计材料
 
 上游读取硬门禁：
 
-- JSON 只用于快速定位，不是正式语义源；链路模式必须实际完整读取 `experience_blueprint.md`。
+- Blueprint `3.0` JSON 是结构化设计事实的机器面，不是摘要或第二次推理；Page Spec 只消费页面生成需要的字段，不遍历无关集合。
+- 必须完整读取 `surfaces`，并只读取与目标页面实体相关的 `main_flow`、`sub_flows`、`exceptions`、`states`、`feedbacks`、`open_questions`。
+- `interaction_overview` 不进入 Page Spec；`critical_design_judgments`、`journey_consumption`、`upstream_trace` 只在现有页面摘要或父页面恢复规则明确需要时按需读取。
+- 有效 JSON 不能替代 Markdown `§6` 的 ASCII 读取；没有读取全部目标实体对应的 ASCII，不得生成 Page Spec。
 - 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
-- 蓝图重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并将 JSON 记为交接错误。
-- 只有 Experience Blueprint JSON 而没有 Markdown 时，不得进入链路模式，不得据此生成页面、交互、状态或规则。
+- JSON 与 Markdown `§6` 的页面名称、结构说明、字段、校验、按钮、文案、状态或反馈冲突时，停止生成并报告交接错误；不得静默选择任一侧或自行修复。
+- 只有 Experience Blueprint JSON 而没有 Markdown 时，无法取得 ASCII，不得进入链路模式。
+- 只有 Markdown 而没有 Blueprint JSON 时，不得把它当作完整双轨蓝图进入链路模式；可按用户直接提供设计材料的独立模式处理。
 - 蓝图未读完前不得读取页面事实补充，也不得进入正式页面规格提取。
 - Edge 同时提供 JSON 与 Markdown 时，JSON 只用于定位；必须完整读取 Edge Markdown 后才能作为状态补丁层消费。
 
@@ -75,14 +79,17 @@ description: >
 
 Experience Blueprint JSON 兼容读取：
 
-- 必须接受 `1.0` 与 `2.0`；新旧版本只改变结构索引组织，不改变正式蓝图语义。
+- 必须接受 `1.0`、`2.0` 与 `3.0`；不得生成中间转换文件。
 - `1.0.source_mode`、`source_usability_check`、`expansion_mode` 对应 `2.0.source_status`。
 - `main_flow`、`sub_flows`、`exceptions` 两版均为流程索引；`2.0` 额外使用稳定 ID、结束类型、回接目标和 Markdown 锚点。
 - `1.0.pages`、`modals`、`drawers` 对应 `2.0.surfaces.pages`、`surfaces.modals`、`surfaces.drawers`。
 - `states`、`open_questions` 两版均必须消费；`2.0` 的 ID 与锚点用于稳定定位。
-- 版本不是 `1.0` 或 `2.0` 时停止结构化消费并报告，不得静默生成空页面、空流程、空状态或空异常集合。
+- `3.0` 不含 `source_status`、ID、anchor 和回接字段；流程名称读取 `name`，载体读取 `surfaces`，ASCII 标题读取 `markdown_heading`。
+- `3.0.surfaces` 完整消费；流程、异常、状态、反馈和待确认问题按目标实体精准消费。
+- `3.0.interaction_overview` 不进入 Page Spec；`critical_design_judgments`、`journey_consumption`、`upstream_trace` 只按现有规则在必要时读取。
+- 版本不是 `1.0`、`2.0` 或 `3.0` 时停止结构化消费并报告，不得静默生成空页面、空流程、空状态或空异常集合。
 
-如果 JSON 存在但 MD 不完整（缺少 §3/§5/§6/§7 中的任一章节），在输出开头标注缺失项，只提取现有 Markdown 能证明的内容。紧凑 JSON 只能帮助定位，不得被当作缺失页面细节的替代事实源。
+如果 JSON 存在但 Markdown 缺少 `§6` 或目标实体对应的 ASCII，停止链路模式页面规格生成并报告缺失项。JSON 中的结构化页面事实不能替代 ASCII 空间结构。
 
 对用户的固定说明应表达为：
 
@@ -526,6 +533,13 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 - 每个实体只能归入一个范围
 - `只引用不生成` / `不生成` 最多写一句原因
 
+输出后自检：
+
+1. 生成范围一致性：`## 2. 生成范围` 中的 `生成`、`只引用不生成`、`不生成` 三段必须互斥且覆盖所有实体；后续 Context JSON 的 `generation_scope` 与 `entities.generate_mode` 必须与这三段一致。MD 中出现的 `不生成` 实体不得在 JSON 中遗漏。
+2. 实体关系真实性：`## 3. 页面实体关系` 只能连接真实存在且语义相关的实体。若来源是外部系统、历史页面、入口说明或未纳入实体清单的材料，只能写成上下文说明或先纳入 `只引用不生成` 实体；不得为了填关系字段强行挂到无关实体。
+3. 校验规则因果闭环：`校验规则` 每一行必须属于同一个业务场景，且 `触发时机 / 校验内容 / 阻断条件 / 失败反馈` 四列能组成完整因果链。不得把不同流程的触发、条件和反馈错位拼接成一行。
+4. 页面相关待确认项保留：凡影响本次页面结构、入口、组件显示、字段、按钮、文案、状态、校验或异常反馈的待确认项，必须进入 `不参与本次生成的待确认项`；纯策略、长期演进或不影响页面生成的讨论可不进入。
+
 保留能力提醒：
 
 - 当前 skill 中已有的父级页面 / 承载页恢复逻辑属于正式提取能力，本轮不得改写、弱化或删除
@@ -547,9 +561,12 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 5. Markdown 必须先完成并通过本 Skill 自检，再从已确认内容映射 JSON。
 6. `page_spec.md` 继续保留页面、流程、校验、状态、异常、结果态和文案的完整事实；不得为了精简 JSON 同步删减 Markdown。
 7. 不得为了填满 JSON 编造信息；缺失值按 schema 的可空规则处理。
-8. 写盘后必须运行指定校验脚本。
-9. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
-10. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
+8. 写入 `generation_scope` 与 `entities` 前，必须回看 `page_spec.md` 的 `## 2. 生成范围`，确保三段分类完全一致，不得遗漏 `不生成` 实体。
+9. 写入 `entity_relationships` 前，必须回看 `page_spec.md` 的 `## 3. 页面实体关系`，只写真实实体之间的关系；外部入口或未纳入实体清单的对象不得借用无关实体承接。
+10. 写入 `open_questions` 前，必须回看 `page_spec.md` 的 `不参与本次生成的待确认项`，确保页面相关待确认项不遗漏、不新增。
+11. 写盘后必须运行指定校验脚本。
+12. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
+13. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
 
 ## Context JSON 写入
 
