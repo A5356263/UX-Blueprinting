@@ -707,7 +707,15 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/uxb.json
 
 ## 核心定案冻结后的页面事实补充
 
-`uxb_output.md` 完成自检且 `uxb.json` 写入后，核心定案即冻结。此时才读取 `references/page_generation_handoff.md`，按白名单回看本轮正式需求并生成 `spark-output/context/page-generation-handoff.md`。该步骤不得修改或重新分析已冻结的 UXB 产物。
+`uxb_output.md` 完成自检且 `uxb.json` 写入并校验通过后，核心定案即冻结。此时才读取 `references/page_generation_handoff.md`，按白名单回看本轮正式需求并生成 `spark-output/context/page-generation-handoff.md`。
+
+该步骤是与 UXB 主分析职责隔离的后置事实提取：
+
+- 只允许读取本轮正式需求和 `references/page_generation_handoff.md`。
+- 禁止读取、摘要、比较或修正 `uxb_output.md` 与 `uxb.json`。
+- 禁止判断 UXB 或下游是否已经承接某项事实，只按事实类型生成候选消费索引。
+- 禁止修改已冻结产物、重新进入 Step 1 / Step 2、补充分析结论或改变固定 Handoff。
+- 页面事实补充生成失败时，报告失败，但不得反向修改或判定 UXB 主产物失败。
 
 ## 预览交接
 

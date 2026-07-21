@@ -1,152 +1,180 @@
 {
   "skill": "page-spec",
   "version": "2.0",
-  "generated_at": "2026-07-20",
-  "project_name": "员工自助申请权限",
+  "generated_at": "2026-07-21",
+  "project_name": "财富小助Skill管理",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
-    "spark-output/context/experience-blueprint.json",
-    "spark-output/context/page-generation-handoff.md"
+    "体验蓝图 §6（spark-output/experience_blueprint.md）"
   ],
   "page_summary": {
-    "product_domain": "权限管理 — 自助申请权限",
-    "page_type": "Page、Drawer、Modal",
-    "user_role": "超级管理员、员工（申请人）、审批人",
-    "core_task": "员工自助申请角色/功能权限，超管配置管控模式，审批人审批申请"
+    "product_domain": "企业财富+ — 智能化配置 / 财富小助",
+    "page_type": "列表页（Skill 广场）、详情页（Skill 详情）、编辑页（Skill 编辑）、弹窗（创建方式选择、取消订阅确认、删除确认）",
+    "user_role": "分行产品经理、总行产品经理、客户经理、开发人员",
+    "core_task": "创建并管理提示词模板（Skill），在财富小助中浏览、订阅和调用可用 Skill"
   },
   "generation_scope": {
     "generate": [
-      "entity-settings-page",
-      "entity-my-permissions-page",
-      "entity-apply-permission-drawer",
-      "entity-approval-detail-page",
-      "entity-application-records-page",
-      "entity-close-confirm-modal"
+      "entity-skill-square",
+      "entity-create-method-modal",
+      "entity-edit-page",
+      "entity-detail-page",
+      "entity-suggestion-dropdown",
+      "entity-unsubscribe-modal",
+      "entity-delete-modal",
+      "entity-restore-modal"
     ],
     "reference_only": [
-      "entity-permission-mode-page"
+      "entity-assistant-chat"
     ],
-    "do_not_generate": []
+    "do_not_generate": [
+      "entity-optimization-report-modal"
+    ]
   },
   "entities": [
     {
-      "entity_id": "entity-permission-mode-page",
-      "name": "权限管理模式选择页",
-      "type": "page",
-      "generate_mode": "reference_only",
-      "md_anchor": "§4"
-    },
-    {
-      "entity_id": "entity-settings-page",
-      "name": "自助申请模式设置页",
+      "entity_id": "entity-skill-square",
+      "name": "Skill 广场页面",
       "type": "page",
       "generate_mode": "generate",
-      "md_anchor": "§5"
+      "md_anchor": "4. Skill 广场页面"
     },
     {
-      "entity_id": "entity-my-permissions-page",
-      "name": "我的权限页",
-      "type": "page",
-      "generate_mode": "generate",
-      "md_anchor": "§6"
-    },
-    {
-      "entity_id": "entity-apply-permission-drawer",
-      "name": "申请权限 Drawer",
-      "type": "drawer",
-      "generate_mode": "generate",
-      "md_anchor": "§7"
-    },
-    {
-      "entity_id": "entity-approval-detail-page",
-      "name": "审批详情页",
-      "type": "page",
-      "generate_mode": "generate",
-      "md_anchor": "§8"
-    },
-    {
-      "entity_id": "entity-application-records-page",
-      "name": "申请记录列表页",
-      "type": "page",
-      "generate_mode": "generate",
-      "md_anchor": "§9"
-    },
-    {
-      "entity_id": "entity-close-confirm-modal",
-      "name": "关闭模式确认弹窗",
+      "entity_id": "entity-create-method-modal",
+      "name": "创建方式选择弹窗",
       "type": "modal",
       "generate_mode": "generate",
-      "md_anchor": "§10"
+      "md_anchor": "5. 创建方式选择弹窗"
+    },
+    {
+      "entity_id": "entity-edit-page",
+      "name": "Skill 编辑页面",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "6. Skill 编辑页面"
+    },
+    {
+      "entity_id": "entity-detail-page",
+      "name": "Skill 详情页",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "7. Skill 详情页"
+    },
+    {
+      "entity_id": "entity-suggestion-dropdown",
+      "name": "智能联想下拉列表",
+      "type": "dropdown_overlay",
+      "generate_mode": "generate",
+      "md_anchor": "8. 智能联想下拉列表"
+    },
+    {
+      "entity_id": "entity-unsubscribe-modal",
+      "name": "取消订阅确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "9. 取消订阅确认弹窗"
+    },
+    {
+      "entity_id": "entity-delete-modal",
+      "name": "删除确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "10. 删除确认弹窗"
+    },
+    {
+      "entity_id": "entity-restore-modal",
+      "name": "版本恢复确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "11. 版本恢复确认弹窗"
+    },
+    {
+      "entity_id": "entity-assistant-chat",
+      "name": "财富小助对话界面",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "2. 生成范围"
+    },
+    {
+      "entity_id": "entity-optimization-report-modal",
+      "name": "优化报告弹窗",
+      "type": "modal",
+      "generate_mode": "do_not_generate",
+      "md_anchor": "2. 生成范围"
     }
   ],
   "entity_relationships": [
     {
-      "from_entity_id": "entity-settings-page",
-      "to_entity_id": "entity-permission-mode-page",
-      "relation": "从权限管理模式选择页点击立即启用后，互斥校验通过后进入"
+      "from_entity_id": "entity-skill-square",
+      "to_entity_id": "entity-create-method-modal",
+      "relation": "触发"
     },
     {
-      "from_entity_id": "entity-apply-permission-drawer",
-      "to_entity_id": "entity-my-permissions-page",
-      "relation": "从我的权限页点击申请权限触发"
+      "from_entity_id": "entity-create-method-modal",
+      "to_entity_id": "entity-edit-page",
+      "relation": "跳转（选择创建方式后）"
     },
     {
-      "from_entity_id": "entity-application-records-page",
-      "to_entity_id": "entity-my-permissions-page",
-      "relation": "我的权限页内的Tab切换进入"
+      "from_entity_id": "entity-skill-square",
+      "to_entity_id": "entity-unsubscribe-modal",
+      "relation": "触发（取消订阅时）"
     },
     {
-      "from_entity_id": "entity-approval-detail-page",
-      "to_entity_id": "entity-permission-mode-page",
-      "relation": "从外部OA审批待办列表点击条目进入"
+      "from_entity_id": "entity-skill-square",
+      "to_entity_id": "entity-detail-page",
+      "relation": "跳转（点击卡片时）"
     },
     {
-      "from_entity_id": "entity-close-confirm-modal",
-      "to_entity_id": "entity-settings-page",
-      "relation": "从自助申请模式设置页（已开启状态）点击关闭模式触发"
+      "from_entity_id": "entity-detail-page",
+      "to_entity_id": "entity-delete-modal",
+      "relation": "触发（点击删除时）"
+    },
+    {
+      "from_entity_id": "entity-detail-page",
+      "to_entity_id": "entity-edit-page",
+      "relation": "跳转（点击编辑时）"
+    },
+    {
+      "from_entity_id": "entity-detail-page",
+      "to_entity_id": "entity-restore-modal",
+      "relation": "触发（点击恢复版本时）"
     }
   ],
   "coverage": {
-    "pages": 5,
-    "entities": 7,
-    "flows": 3,
-    "validation_rules": 10,
-    "states": 5,
-    "exceptions": 7,
-    "result_states": 2,
-    "copy_items": 32,
-    "template_variables": 12
+    "pages": 3,
+    "entities": 8,
+    "flows": 5,
+    "validation_rules": 9,
+    "states": 19,
+    "exceptions": 9,
+    "result_states": 3,
+    "copy_items": 41,
+    "template_variables": 8
   },
   "open_questions": [
     {
-      "question": "审批人是否需要看到申请人当前已有权限概览？",
-      "impact": "影响审批详情页的信息密度",
-      "owner": "产品/业务方"
+      "question": "分行级取消订阅是否需要审批保护（当前方案：二次确认弹窗）",
+      "impact": "影响取消订阅弹窗的交互流程和权限判断"
     },
     {
-      "question": "自动分配权限失败时的处理机制",
-      "impact": "影响审批通过后的系统行为",
-      "owner": "后端/产品"
+      "question": "Skill 业务场景分类维度由谁定义、MVP 阶段是否引入",
+      "impact": "影响广场页筛选区的分类维度和卡片场景标签"
     },
     {
-      "question": "否决时审批人是否必须填写原因？",
-      "impact": "影响审批页的否决流程",
-      "owner": "产品/业务方"
+      "question": "审核时效预期（自动审核目标完成时间）",
+      "impact": "影响审核进度条的节奏设计和不通过通知策略"
     },
     {
-      "question": "申请撤销的时间限制",
-      "impact": "影响撤销按钮的可用性逻辑",
-      "owner": "产品/后端"
+      "question": "同步延迟文案表达",
+      "impact": "影响创建/编辑成功提示文案"
     },
     {
-      "question": "编辑配置时对在途申请的影响",
-      "impact": "影响编辑功能的边界",
-      "owner": "产品/后端"
+      "question": "「我发布的」Tab 名称是否需要调整",
+      "impact": "影响广场页 Tab 命名"
     },
     {
-      "question": "超时催办的阈值定义",
-      "impact": "影响催办通知的触发逻辑",
-      "owner": "产品/业务方"
+      "question": "优化报告「一键替换」后是否重新触发审核",
+      "impact": "影响编辑流程和优化报告弹窗交互"
     }
   ],
   "edge_consumed": false,
