@@ -2,780 +2,573 @@
   "skill": "experience-blueprint",
   "version": "3.0",
   "generated_at": "2026-07-21",
-  "project_name": "财富小助Skill管理",
+  "project_name": "员工自助申请权限",
   "artifact_md": "spark-output/experience_blueprint.md",
-  "source_refs": [
-    "UXB 5.0（spark-output/uxb_output.md）",
-    "Journey 3.0（spark-output/journey_analysis.md）"
-  ],
+  "source_refs": ["input/自助权限申请/需求文档_员工自助申请权限2.md"],
   "critical_design_judgments": [
     {
-      "judgment": "Skill 广场按「内容分发市场」而非「管理后台列表」定位——共享广场 Tab 面向发现，我发布的 Tab 面向管理",
-      "impacts": [
-        "影响 Skill 广场的页面结构、卡片信息密度、筛选排序策略"
-      ],
-      "recommended_approach": "共享广场 Tab 强化发现效率：卡片增加场景标签行、热门标记、简短效果指标；我发布的 Tab 强化管理效率：列表视图，增加共享状态、订阅数、编辑/删除操作列",
-      "not_recommended": "两 Tab 共用同一套卡片布局和操作入口",
-      "open_question": "共享广场是否需要额外的业务场景分类维度"
+      "judgment": "超管配置阶段采用选择引导+分步设置模式，在第一步就帮超管选对方向",
+      "impacts": ["配置页第一步的文案和引导结构"],
+      "recommended_approach": "第一步以对比卡片形式展示两种方式，每张卡片包含适用场景、典型企业特征、推荐标注",
+      "not_recommended": "两个radio加一段说明文字，超管需要自己判断",
+      "open_question": "OA审批预设流程的复核人节点是否去除（影响预设流程的配置复杂度）"
     },
     {
-      "judgment": "分行级订阅用「二次确认 + 分行内通知」兜住操作风险",
-      "impacts": [
-        "影响订阅开关交互、取消确认弹窗内容和通知策略"
-      ],
-      "recommended_approach": "点击已订阅开关 → 弹出确认弹窗说明取消后全分行不可用 → 确认后 Toast 提示 → 分行内其他用户以 Banner 提示订阅变更",
-      "not_recommended": "开关点击即时取消，无二次确认；或不做分行内其他人感知",
-      "open_question": "分行级取消是否还需要分行管理员审批确认"
+      "judgment": "员工申请入口放在我的权限页面右上角，而不是个人中心直接放一个申请权限按钮",
+      "impacts": ["我的权限页面结构和按钮位置"],
+      "recommended_approach": "我的权限页面右上角放置申请权限按钮，从查看到申请的路径一步可达",
+      "not_recommended": "个人中心直接放两个并列入口（我的权限、申请权限），增加认知负担",
+      "open_question": "unknown"
     },
     {
-      "judgment": "审核流程采用「进度条前置 + 不通过精确定位」解决黑盒问题",
-      "impacts": [
-        "影响 Skill 详情页的状态展示区域、审核不通过后的交互流程"
-      ],
-      "recommended_approach": "在「我发布的」列表和详情页顶部展示审核进度（待检测→检测中→已完成）；不通过时高亮具体问题内容并给出修改指引",
-      "not_recommended": "只给 Toast「审核不通过」或「内容不合规」；或审核成功后才通知",
-      "open_question": "审核预期时长"
+      "judgment": "审批人收到的不是简单待办，而是一份带决策上下文的权限申请审查卡片",
+      "impacts": ["OA审批待办的卡片设计"],
+      "recommended_approach": "审批待办卡片包含申请人姓名/组织、申请类型（角色/功能权限）、申请内容摘要、申请原因",
+      "not_recommended": "待办只有XXX提交了权限申请，点进去才看详情",
+      "open_question": "unknown"
     },
     {
-      "judgment": "消费者发现通过「分行通知 + 场景分类 + 联想排序优化」三层递进解决",
-      "impacts": [
-        "影响分行订阅成功后的通知机制、Skill 广场的分类维度和智能联想的排序策略"
-      ],
-      "recommended_approach": "分行新订阅 Skill 时通知全员；广场引入业务场景分类标签；联想排序优先个人近期使用过的 Skill",
-      "not_recommended": "不做任何通知完全依赖主动浏览；不处理联想排序",
-      "open_question": "业务场景分类的维度由谁定义"
+      "judgment": "从审批通过到权限已生效之间需要明确过渡状态",
+      "impacts": ["申请记录的状态机设计"],
+      "recommended_approach": "在已通过和已生效之间增加生效中状态，分配完成后变为已生效",
+      "not_recommended": "审批通过直接跳到已生效",
+      "open_question": "权限分配的耗时范围（秒级还是分钟级），影响生效中状态的展示方式"
     }
   ],
   "journey_consumption": [
     {
       "type": "信心最低点",
-      "finding": "提交与等待审核阶段信心为「中」，审核流程不透明",
-      "source_stage": "分行产品经理 / 提交与等待审核",
-      "blueprint_target": "§5 审核不通过、§6 Skill 详情页审核状态区"
+      "finding": "员工发现查询入口和发起申请的信心最低",
+      "source_stage": "员工 / 发现入口",
+      "blueprint_target": "§6.2 我的权限页面——入口在'我的企业'下方，可发现性偏弱"
+    },
+    {
+      "type": "关键转折",
+      "finding": "员工从查看权限到发起申请需要清晰的操作入口",
+      "source_stage": "员工 / 发起申请",
+      "blueprint_target": "§6.2 我的权限页面右上角申请权限按钮"
+    },
+    {
+      "type": "流失风险",
+      "finding": "审批等待期长时员工可能反复询问超管，失去自助意义",
+      "source_stage": "员工 / 等待结果",
+      "blueprint_target": "§7 状态反馈——申请记录状态可见"
     },
     {
       "type": "信心最低点",
-      "finding": "发现可用 Skill 阶段信心为「中」，不知道分行订了什么",
-      "source_stage": "客户经理 / 发现可用 Skill",
-      "blueprint_target": "§5 智能联想无匹配、§4 分行通知机制"
+      "finding": "超管选择申请方式的信心最低",
+      "source_stage": "超管 / 选择方式",
+      "blueprint_target": "§3 主流程——场景比对引导"
     },
     {
       "type": "关键转折",
-      "finding": "从提交阶段进入运营阶段需要明确同步延迟说明",
-      "source_stage": "分行产品经理 / 提交→运营",
-      "blueprint_target": "§3 创建提交流程"
-    },
-    {
-      "type": "关键转折",
-      "finding": "从发现阶段进入选择阶段需要知道 Skill 适用场景",
-      "source_stage": "客户经理 / 发现→选择",
-      "blueprint_target": "§4 分行通知机制"
-    },
-    {
-      "type": "流失风险",
-      "finding": "不熟悉提示词模板时可能放弃创建",
-      "source_stage": "分行产品经理 / 创建与编写",
-      "blueprint_target": "§6 Skill 编辑页面"
-    },
-    {
-      "type": "流失风险",
-      "finding": "找不到合适的 Skill 时回到老路或关闭广场",
-      "source_stage": "客户经理 / 发现可用 Skill",
-      "blueprint_target": "§4 分行通知、§6 Skill 广场"
-    },
-    {
-      "type": "流失风险",
-      "finding": "列表太长找不到目标时放弃联想",
-      "source_stage": "客户经理 / 选择与调用",
-      "blueprint_target": "§3 智能联想"
+      "finding": "超管从宣传到了解配置细节需要平滑过渡",
+      "source_stage": "超管 / 了解模式",
+      "blueprint_target": "§6.1 模式宣传页"
     }
   ],
   "interaction_overview": [
     {
-      "name": "分行产品经理创建并发布 Skill",
+      "name": "P1：超管配置自助申请模式",
       "path_type": "主路径",
       "steps": [
-        "Skill 广场 → 点击发布技能 → 选择创建方式弹窗 → 选择手动创建或上传文件 → 进入编辑页面 → 填写/修改内容 → 点击保存 → 前端校验 → 提交成功 → Toast 提示 → 跳转至详情页 → 展示审核进度 → 审核通过 → 状态更新为已发布"
+        "权限管理模式Page → 点击立即启用",
+        "校验互斥模式 → 通过 → 进入自助申请模式配置页（3步设置）",
+        "第一步：选择申请方式（角色/功能权限）",
+        "第二步：设置范围（角色范围或应用范围）",
+        "第三步：设置审批流程（预设/修改）",
+        "点击启用 → 再次校验互斥模式 → 通过 → Toast开启成功",
+        "个人中心增加我的权限入口 → 页面刷新为已开启状态"
       ],
       "branches": [
-        "上传文件格式错误 → 弹窗提示，不进入编辑页",
-        "必填字段未填 → 保存置灰，字段下方 Inline 提示",
-        "审核不通过 → 详情页顶部展示不通过原因，可编辑后重新提交"
+        "互斥模式已开启 → 弹窗提示，阻止进入，引导去关闭互斥模式",
+        "第二步选择部分角色/部分应用 → 打开选择弹窗"
       ]
     },
     {
-      "name": "客户经理通过智能联想调用 Skill",
+      "name": "P2：员工查看我的权限并发起申请",
       "path_type": "主路径",
       "steps": [
-        "财富小助输入框 → 输入/ → 触发联想下拉列表 → 继续输入关键字缩小范围 → 浏览列表 → 键盘选择或点击 → 回车确认 → 输入框填充/Skill名称 → 发送消息 → 跳过意图识别 → 加载提示词 → 执行 AI 交互 → 展示结果"
+        "个人中心 → 点击我的权限",
+        "我的权限Page（默认功能权限tab）→ 浏览当前权限",
+        "点击申请权限 → 打开申请权限Drawer",
+        "查看可申请的角色（或功能权限树）→ 选择目标角色/功能",
+        "输入申请原因 → 点击提交申请 → 校验通过",
+        "Drawer关闭 → Toast提交成功 → 申请记录新增一条审批中记录"
       ],
       "branches": [
-        "输入/后无可用 Skill → 联想列表为空，展示暂无可用 Skill 说明",
-        "执行超时 → 输入框上方提示 AI 处理超时"
+        "未选择角色/功能 → 提交申请置灰",
+        "申请原因为空 → 原因输入框提示必填",
+        "校验不通过（资金用户/子管理员/实名）→ Drawer不关闭，显示对应错误提示"
       ]
     },
     {
-      "name": "分行级订阅/取消订阅",
+      "name": "P3：审批人处理权限申请",
       "path_type": "主路径",
       "steps": [
-        "Skill 广场 → 点击卡片订阅开关（未订阅→订阅）→ Toast → 开关变已订阅",
-        "Skill 广场 → 点击卡片已订阅开关 → 确认弹窗 → 确认取消 → Toast → 开关变订阅"
+        "审批人收到OA待办 → 点击待办",
+        "打开审批详情页 → 查看申请人、申请内容、申请原因",
+        "点击同意或拒绝 → 如拒绝需填写拒绝理由",
+        "确认提交 → 系统自动分配权限（同意时）→ 申请人收到结果通知"
       ],
       "branches": [
-        "分行已订阅时再次点击订阅→提示该 Skill 已在本分行订阅",
-        "取消确认中选择再想想→弹窗关闭，开关保持已订阅"
+        "审批人缺失 → 系统自动按降级规则查找上级组织负责人",
+        "同意但分配权限失败 → 系统通知超管人工处理"
       ]
-    },
-    {
-      "name": "编辑 Skill",
-      "path_type": "次路径",
-      "steps": [
-        "我发布的 Tab → 点击卡片/行 → 进入详情页 → 点击编辑 → 进入编辑页面 → 修改 → 保存 → 提交审核"
-      ],
-      "branches": []
-    },
-    {
-      "name": "删除 Skill",
-      "path_type": "次路径",
-      "steps": [
-        "Skill 详情页 → 点击删除 → 二次确认弹窗 → 确认 → 移除"
-      ],
-      "branches": []
-    },
-    {
-      "name": "查看版本记录与恢复",
-      "path_type": "次路径",
-      "steps": [
-        "Skill 详情页 → 版本记录 Tab → 浏览列表 → 查看详情 → 恢复此版本 → 二次确认 → 进入编辑页载入历史版本"
-      ],
-      "branches": []
     }
   ],
   "main_flow": [
     {
-      "name": "发起创建",
-      "user_action": "在 Skill 广场右上角点击「发布技能」按钮",
-      "system_feedback": "弹出创建方式选择弹窗：手动创建、上传文件",
-      "pre_explanations": [
-        "仅产品经理和开发人员角色可见发布技能按钮",
-        "总行用户默认开启共享，分行用户默认关闭共享"
-      ],
-      "copy_suggestions": [
-        "弹窗标题：「创建 Skill」",
-        "选项说明：「按模板填写提示词内容」「上传 .md 格式文件自动解析」"
-      ],
-      "next_step": "选择创建方式后进入编辑页或文件上传"
+      "name": "P1-1：超管了解自助申请模式",
+      "user_action": "进入权限管理模式页，看到自助申请权限模式卡片",
+      "system_feedback": "展示模式宣传卡片、说明文案",
+      "pre_explanations": ["该模式与其他三种模式的定位差异——自助模式是让员工发起，其他模式是管理员之间制衡"],
+      "copy_suggestions": ["卡片标题：自助申请权限模式", "卡片说明：员工可自助申请权限，工作流审批通过后，系统将自动分配权限。适合需要将权限分配压力分散到员工自服务的企业。"],
+      "next_step": "超管点击立即启用"
     },
     {
-      "name": "填写 Skill 内容",
-      "user_action": "手动模式下填写名称（必填，50字内）、描述（必填，200字内）、提示词内容（必填，文本域）；上传模式下选择 .md 文件后自动解析填充",
-      "system_feedback": "字数实时计数器；文本域支持 Markdown 语法；共享开关按角色设置默认值",
+      "name": "P1-2：互斥模式校验",
+      "user_action": "点击立即启用",
+      "system_feedback": "校验双管理员互审模式、权限变更审批模式是否已开启",
       "pre_explanations": [],
-      "copy_suggestions": [
-        "名称上方：「为 Skill 起一个简洁的名称」",
-        "描述上方：「一句话描述这个 Skill 的功能」",
-        "共享开关旁：「开启后全行用户可见」"
-      ],
-      "next_step": "填写完成后点击保存"
+      "copy_suggestions": ["异常弹窗标题：无法启用", "异常弹窗内容：企业已开启「双管理员互审模式」（或「权限变更审批模式」），与自助申请权限模式互斥，不能同时开启。如需启用自助申请模式，请先关闭互斥模式。"],
+      "next_step": "正常流转→进入配置页；异常→弹窗提示"
     },
     {
-      "name": "提交审核",
-      "user_action": "点击保存按钮",
-      "system_feedback": "前端校验必填字段和字数限制→校验通过→保存成功→Toast→页面跳转至详情页→展示审核进度（待检测→检测中→已完成）",
-      "pre_explanations": [
-        "审核通过后有秒级同步延迟",
-        "审核期间旧版本继续可用（编辑场景）"
-      ],
-      "copy_suggestions": [
-        "Toast：「创建成功，正在提交审核」",
-        "审核进度区标题：「审核进度」（通过后变为「审核已通过」）",
-        "发布成功时提示：「审核通过后稍等片刻即可在财富小助中使用」"
-      ],
-      "next_step": "等待审核结果"
+      "name": "P1-3：第一步——选择申请方式",
+      "user_action": "在两种申请方式中选择一种",
+      "system_feedback": "以对比卡片展示两种方式，默认选中申请角色",
+      "pre_explanations": ["如果企业已经建好了角色体系，选申请角色；如果企业习惯按应用直接给人授权，选申请功能权限"],
+      "copy_suggestions": ["卡片A标题：员工申请角色", "卡片A适用场景：适用于已建立角色体系的企业", "卡片B标题：员工申请功能权限", "卡片B适用场景：适用于按应用直接授权企业的企业"],
+      "next_step": "进入第二步（根据选择展示不同内容）"
     },
     {
-      "name": "触发联想",
-      "user_action": "在财富小助输入框输入 /",
-      "system_feedback": "弹出下拉联想列表，排序：个人常用→本分行热门→其余；最多 10 条；关键字高亮匹配",
-      "pre_explanations": [
-        "仅展示当前用户所在分行可用的 Skill",
-        "触发条件：光标在开头或紧接在空格后"
-      ],
-      "copy_suggestions": [
-        "列表为空时显示：「暂无可用 Skill，请联系分行产品经理订阅」"
-      ],
-      "next_step": "继续输入关键字或直接选择"
+      "name": "P1-4a：第二步——设置角色范围（申请角色模式）",
+      "user_action": "选择全部角色或部分角色",
+      "system_feedback": "展示角色范围选择项，部分角色弹窗含搜索和角色列表",
+      "pre_explanations": ["这里设置的是员工能看到哪些角色并申请，不是给员工直接关联角色"],
+      "copy_suggestions": ["提示语：请选择允许员工自助申请的角色", "设置项：后续新增角色自动加入员工可申请的范围（默认开启）"],
+      "next_step": "进入第三步——设置审批流程"
     },
     {
-      "name": "选择并执行",
-      "user_action": "键盘上下键选择或鼠标点击；回车确认",
-      "system_feedback": "输入框自动填充 /Skill名称；发送消息后跳过意图识别直接加载提示词执行 AI 交互",
+      "name": "P1-4b：第二步——设置应用范围（申请功能权限模式）",
+      "user_action": "选择全部应用或部分应用",
+      "system_feedback": "展示应用范围选择项，部分应用弹窗含搜索和应用列表",
       "pre_explanations": [],
-      "copy_suggestions": [
-        "列表项展示格式：Skill名称 + 一行简短描述",
-        "匹配关键字高亮"
-      ],
-      "next_step": "展示 AI 返回结果"
+      "copy_suggestions": ["提示语：请选择允许员工自助申请权限的应用", "设置项：后续新添加的应用自动加入员工可申请的范围（默认开启）"],
+      "next_step": "进入第三步——设置审批流程"
     },
     {
-      "name": "发起订阅",
-      "user_action": "在 Skill 广场点击卡片上的灰色「订阅」开关",
-      "system_feedback": "Toast → 开关切换为红色已订阅 → 订阅分行数 +1",
-      "pre_explanations": [
-        "所有企业财富+用户均可订阅",
-        "订阅主体为分行级，不是个人级"
-      ],
-      "copy_suggestions": [
-        "Toast：「已订阅，本分行所有用户均可用」"
-      ],
-      "next_step": "分行内其他用户进入广场时将看到已订阅状态"
+      "name": "P1-5：第三步——设置审批流程",
+      "user_action": "查看预设审批流程，决定是否修改",
+      "system_feedback": "展示预设审批流程摘要",
+      "pre_explanations": ["预设审批人为员工所在组织的组织负责人。如果组织没有负责人，系统会自动向上查找上级组织的负责人。"],
+      "copy_suggestions": ["提示：系统已预设了员工申请权限时的审批流程，预设审批人为员工所在组织的组织负责人。如需调整，可点击修改审批流程。"],
+      "next_step": "点击启用或取消"
     },
     {
-      "name": "取消订阅",
-      "user_action": "点击卡片上的红色「已订阅」开关",
-      "system_feedback": "弹出确认弹窗→用户确认→Toast→开关切换为灰色订阅→订阅分行数-1",
-      "pre_explanations": [
-        "取消订阅影响全分行",
-        "本分行所有用户将无法使用"
-      ],
-      "copy_suggestions": [
-        "弹窗标题：「取消订阅」",
-        "弹窗正文：「本分行共 {N} 人，取消后所有人均无法使用此 Skill。确定取消吗？」",
-        "按钮：「确认取消」（次按钮）、「再想想」（主按钮）",
-        "取消后 Toast：「已取消订阅」"
-      ],
-      "next_step": "取消后可随时重新订阅"
+      "name": "P1-6：启用模式",
+      "user_action": "点击启用",
+      "system_feedback": "再次校验互斥模式→Toast开启成功→个人中心增加我的权限入口→页面刷新为已开启状态",
+      "pre_explanations": ["启用后员工将立即看到我的权限入口，可以开始查看和申请权限"],
+      "copy_suggestions": ["Toast：开启成功"],
+      "next_step": "完成配置"
+    },
+    {
+      "name": "P2-1：员工进入我的权限",
+      "user_action": "个人中心→点击我的权限入口",
+      "system_feedback": "加载用户权限数据，默认选中功能权限tab",
+      "pre_explanations": [],
+      "copy_suggestions": [],
+      "next_step": "浏览权限或点击右上角申请权限"
+    },
+    {
+      "name": "P2-2：员工发起权限申请",
+      "user_action": "点击申请权限按钮",
+      "system_feedback": "打开申请权限Drawer，展示申请人、申请原因输入框、申请内容区域",
+      "pre_explanations": ["Drawer展示的内容由超管配置决定——如果超管选了申请角色，Drawer显示角色列表；如果选了申请功能权限，Drawer显示功能权限树"],
+      "copy_suggestions": ["Drawer标题：申请权限", "申请人：当前用户姓名（不可编辑）", "申请原因placeholder：请填写申请原因，限500字", "提示文案：提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。"],
+      "next_step": "员工选择申请内容、填写原因、点击提交"
+    },
+    {
+      "name": "P2-3：提交申请",
+      "user_action": "点击提交申请",
+      "system_feedback": "前端校验→后端校验→通过后提交OA审批→Drawer关闭→Toast提交成功→申请记录新增审批中记录",
+      "pre_explanations": [],
+      "copy_suggestions": ["Toast：提交成功", "InlineError：请填写申请原因", "置灰提示：请选择要申请的角色或功能"],
+      "next_step": "等待审批结果"
+    },
+    {
+      "name": "P3-1：审批人收到待办",
+      "user_action": "审批人在OA待办列表中看到新的权限申请",
+      "system_feedback": "展示待办卡片",
+      "pre_explanations": ["审批待办卡片需要展示足够的决策上下文"],
+      "copy_suggestions": ["标题：权限申请 - {申请人姓名}", "摘要：申请{角色名称}/申请{应用名称}的功能权限", "详情：申请人组织、申请原因，状态：待处理"],
+      "next_step": "点击待办进入审批详情"
+    },
+    {
+      "name": "P3-2：审批人处理申请",
+      "user_action": "查看申请详情，决定同意或拒绝",
+      "system_feedback": "展示申请人信息、申请内容、申请原因、申请时间；同意直接提交，拒绝需填写理由",
+      "pre_explanations": [],
+      "copy_suggestions": ["拒绝理由placeholder：请说明拒绝原因，以便员工了解并调整"],
+      "next_step": "同意→系统自动分配权限→申请人收到通知；拒绝→申请人收到拒绝理由"
     }
   ],
   "sub_flows": [
     {
-      "name": "分行订阅新 Skill 通知",
-      "trigger_condition": "分行任一用户成功订阅 Skill",
-      "user_action": "无需用户操作",
-      "system_feedback": "以企业内部消息/公告形式通知全分行用户",
+      "name": "S1：超管编辑已开启的模式",
+      "trigger_condition": "超管在已开启状态页点击编辑",
+      "user_action": "点击编辑→页面变为可编辑→修改内容→点击确认编辑",
+      "system_feedback": "Toast：编辑成功，页面回到不可编辑状态",
+      "pre_explanations": ["编辑已开启的模式不会影响已发起的在途申请，只会影响后续的新申请"],
+      "copy_suggestions": ["Toast：编辑成功"],
+      "next_step": "页面回到不可编辑状态"
+    },
+    {
+      "name": "S2：超管关闭自助申请模式",
+      "trigger_condition": "超管在已开启状态页点击关闭模式",
+      "user_action": "弹出二次确认→点击确认关闭→校验在途流程→关闭成功或失败",
+      "system_feedback": "无在途流程→关闭成功→Toast关闭成功；有在途流程→关闭失败→弹窗提示",
+      "pre_explanations": ["关闭模式后员工不能再发起新申请，但已有权限不受影响，已发起的申请继续流转"],
+      "copy_suggestions": ["弹窗标题：关闭模式", "弹窗文案：关闭模式后，员工将无法自助查询和申请权限，已有权限不受影响，当前未完成的申请将继续流转。请确认是否关闭自助申请模式？", "关闭失败弹窗标题：关闭失败", "关闭失败弹窗文案：当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。"],
+      "next_step": "关闭成功→模式关闭；关闭失败→处理在途申请后再操作"
+    },
+    {
+      "name": "S3：员工撤销正在审批中的申请",
+      "trigger_condition": "员工在申请记录列表看到审批中的记录",
+      "user_action": "点击撤销→二次确认→确认撤销",
+      "system_feedback": "申请单状态更新为已撤销→Toast已撤销→审批人收到通知",
       "pre_explanations": [],
-      "copy_suggestions": [
-        "消息标题：「新 Skill 上架：{Skill名称}」",
-        "正文：「{发布者} 已为分行订阅了 {Skill名称}，可快速 {功能描述}。打开财富小助输入 / 即可使用。」",
-        "底部链接：「去看看」→ 跳转至 Skill 详情页"
-      ],
-      "next_step": "客户经理可立即在财富小助中使用"
+      "copy_suggestions": ["确认弹窗标题：撤销申请", "确认弹窗文案：确定要撤销该申请吗？撤销后不可恢复。"],
+      "next_step": "申请已撤销"
     },
     {
-      "name": "编辑 Skill",
-      "trigger_condition": "Skill 所属分行用户在详情页点击编辑",
-      "user_action": "进入编辑页修改名称/描述/提示词 → 点击保存",
-      "system_feedback": "保存成功 → Toast → 进入待审核 → 审核通过后新版本生效 → 版本号自动递增",
-      "pre_explanations": [
-        "编辑后需重新审核，审核期间旧版本继续可用"
-      ],
-      "copy_suggestions": [
-        "Toast：「更新成功，正在提交审核」"
-      ],
-      "next_step": "等待审核"
-    },
-    {
-      "name": "删除 Skill",
-      "trigger_condition": "创建者或管理员在详情页点击删除",
-      "user_action": "确认删除弹窗中点击确认",
-      "system_feedback": "从广场移除 → 所有订阅关系解除 → 沙盒缓存删除 → Toast",
-      "pre_explanations": [
-        "删除操作不可恢复",
-        "如已被订阅则弹窗追加说明影响范围"
-      ],
-      "copy_suggestions": [
-        "弹窗标题：「删除 Skill」",
-        "正文：「删除后不可恢复。」",
-        "有订阅时追加：「该 Skill 已被 {N} 家分行订阅，删除后将解除所有订阅关系」",
-        "按钮：「确认删除」（红色次按钮）、「取消」（主按钮）",
-        "Toast：「删除成功」"
-      ],
-      "next_step": "删除不可逆，无返回路径"
-    },
-    {
-      "name": "恢复历史版本",
-      "trigger_condition": "用户在版本记录 Tab 中点击恢复此版本",
-      "user_action": "在二次确认弹框中点击确认",
-      "system_feedback": "进入编辑页，载入历史版本内容覆盖当前编辑区域",
+      "name": "S4：员工查看申请记录",
+      "trigger_condition": "员工进入申请记录列表",
+      "user_action": "筛选申请日期和审批状态，查看申请列表",
+      "system_feedback": "展示筛选区和申请记录列表（申请时间、申请原因、申请内容、审批状态、操作）",
       "pre_explanations": [],
-      "copy_suggestions": [
-        "弹窗：「确认恢复至 {版本号} 版本？当前内容将被覆盖。」"
-      ],
-      "next_step": "进入编辑流程"
+      "copy_suggestions": [],
+      "next_step": "查看申请详情或撤销审批中的申请"
     }
   ],
   "exceptions": [
     {
-      "name": "审核不通过",
-      "timing": "Skill 提交审核后",
-      "trigger_condition": "内容含敏感词/注入攻击/格式不符/超长",
-      "basis": "系统自动检测 + 人工兜底",
-      "feedback_type": "Banner + Message",
-      "system_feedback": "详情页顶部 Banner 展示审核不通过原因，列出具体问题位置",
-      "user_next_step": "点击去修改→进入编辑页，问题区域自动定位高亮→修改后重新提交",
-      "recovery_path": "编辑页已填内容保留，只调整问题区域→保存后重新进入等待队列。中途离开不丢失已修改内容。"
+      "name": "E1：互斥模式已开启",
+      "timing": "超管点击立即启用或启用时",
+      "trigger_condition": "双管理员互审模式或权限变更审批模式已开启",
+      "basis": "系统实时校验互斥模式的开关状态",
+      "feedback_type": "居中弹窗",
+      "system_feedback": "弹窗提示，阻止进入配置页或阻止启用",
+      "user_next_step": "关闭互斥模式后重新操作",
+      "recovery_path": "原路返回，无信息丢失"
     },
     {
-      "name": "取消订阅影响全分行",
-      "timing": "用户点击已订阅开关时",
-      "trigger_condition": "用户确认取消订阅",
-      "basis": "当前分行已订阅此 Skill",
-      "feedback_type": "Modal",
-      "system_feedback": "弹窗提示影响范围（分行总人数），确认后才执行取消",
-      "user_next_step": "确认取消→立即生效；选择再想想→回到原状态",
-      "recovery_path": "原路返回，无信息丢失。可随时重新订阅。"
+      "name": "E2：审批人缺失",
+      "timing": "员工提交申请后，系统查找审批人时",
+      "trigger_condition": "员工所在组织的组织负责人不存在，且递归上级组织也没有负责人",
+      "basis": "遍历组织链后仍找不到任何一级组织的负责人",
+      "feedback_type": "Toast",
+      "system_feedback": "递归查找上级组织的组织负责人；到企业顶层都没有负责人时，申请单标记为待管理员处理，通知超管手动指派审批人",
+      "user_next_step": "员工看到审批人待指定后联系超管确认审批人",
+      "recovery_path": "超管收到通知→手动指定审批人→申请继续流转；员工不需要重新提交"
     },
     {
-      "name": "沙盒增量同步失败",
-      "timing": "Skill 创建/编辑/删除/订阅后",
-      "trigger_condition": "MQ 消费失败或沙盒异常",
-      "basis": "后端检测同步状态",
-      "feedback_type": "后台告警",
-      "system_feedback": "自动重试 3 次（1min/5min/30min），仍失败则告警运维",
-      "user_next_step": "用户无需处理，Skill 数据已保存",
-      "recovery_path": "运维介入恢复，或等待每周全量同步自动修复"
+      "name": "E3：审批人等于申请人",
+      "timing": "系统查找审批人时",
+      "trigger_condition": "员工所在组织的组织负责人就是员工本人",
+      "basis": "审批人ID与申请人ID相同",
+      "feedback_type": "系统自动跳过",
+      "system_feedback": "自动递归到上级组织的负责人作为审批人",
+      "user_next_step": "无感知，系统自动处理",
+      "recovery_path": "自动降级，无需用户干预"
     },
     {
-      "name": "上传文件异常",
-      "timing": "选择文件后、解析前",
-      "trigger_condition": "格式非 .md/文件超过 1MB/编码非 UTF-8",
-      "basis": "前端上传前校验",
-      "feedback_type": "InlineError",
-      "system_feedback": "格式错误提示、大小超限提示或编码错误提示",
-      "user_next_step": "更换文件后重新上传",
-      "recovery_path": "上传区重置，无信息丢失"
+      "name": "E4：申请校验失败",
+      "timing": "员工点击提交申请后",
+      "trigger_condition": "资金用户校验、子管理员模式校验、实名校验不通过",
+      "basis": "后端依次执行校验规则",
+      "feedback_type": "Drawer内InlineError或Toast",
+      "system_feedback": "根据校验类型展示对应错误提示",
+      "user_next_step": "根据提示调整申请内容或完成前置条件后重新提交",
+      "recovery_path": "Drawer不关闭，用户修正后重新提交；已填写信息不丢失"
     },
     {
-      "name": "智能联想无匹配",
-      "timing": "用户输入 / 或 /关键字后",
-      "trigger_condition": "当前分行没有可用匹配 Skill",
-      "basis": "后端查询可用 Skill 列表为空",
-      "feedback_type": "EmptyState",
-      "system_feedback": "列表下方显示暂无可用 Skill 说明",
-      "user_next_step": "联系分行产品经理创建或订阅相关 Skill",
-      "recovery_path": "原路退出，继续使用财富小助普通会话"
+      "name": "E5：权限分配失败",
+      "timing": "审批通过后，系统自动分配权限时",
+      "trigger_condition": "系统内部权限分配异常（如角色已被删除、应用已停用、系统错误）",
+      "basis": "权限分配接口返回失败",
+      "feedback_type": "系统通知超管",
+      "system_feedback": "申请单状态更新为已通过（权限分配失败）；通知超管人工处理",
+      "user_next_step": "员工联系超管；超管人工处理权限分配",
+      "recovery_path": "超管在用户授权页手动给员工分配对应权限"
     },
     {
-      "name": "Skill 执行异常",
-      "timing": "用户选择 Skill 后",
-      "trigger_condition": "Skill 加载超时/AI 处理超时/内容异常",
-      "basis": "系统检测执行状态",
-      "feedback_type": "Inline",
-      "system_feedback": "区分展示加载超时、处理超时或内容异常提示",
-      "user_next_step": "根据提示选择重试或切换其他 Skill",
-      "recovery_path": "当前输入保留在输入框中，可删除 Skill 调用后继续普通会话"
+      "name": "E6：员工提交申请后角色/应用状态变更",
+      "timing": "申请提交后、审批人处理前",
+      "trigger_condition": "员工申请的角色在审批期间被超管停用，或应用被停用",
+      "basis": "审批人打开审批单时系统重新校验角色/应用状态",
+      "feedback_type": "审批时提示",
+      "system_feedback": "审批人打开审批单时看到提示：申请的角色/应用当前已停用，无法继续分配",
+      "user_next_step": "收到拒绝通知，了解原因后重新申请可用角色",
+      "recovery_path": "员工重新提交新的申请"
     },
     {
-      "name": "删除已订阅的 Skill",
-      "timing": "创建者或管理员点击删除",
-      "trigger_condition": "该 Skill 已被其他分行订阅",
-      "basis": "后端查询订阅分行数 > 0",
-      "feedback_type": "Modal",
-      "system_feedback": "弹窗在原有确认内容基础上追加订阅分行数影响说明",
-      "user_next_step": "确认删除→立即移除不可恢复；取消→回到原页",
-      "recovery_path": "删除不可逆。如需重新上架必须重新创建并提交审核。"
+      "name": "E7：已停用角色申请",
+      "timing": "员工查看可申请的角色列表时",
+      "trigger_condition": "超管配置角色范围为全部角色（包括已停用的）",
+      "basis": "展示层过滤已停用角色",
+      "feedback_type": "无需反馈（展示层已过滤）",
+      "system_feedback": "员工在申请角色tab中只能看到已启用的角色；如果角色在打开列表后被停用，提交时会校验并提示",
+      "user_next_step": "超管重新启用该角色，或员工选择其他已启用角色",
+      "recovery_path": "原路返回，重新选择"
     }
   ],
   "surfaces": {
     "pages": [
       {
-        "name": "Skill 广场页面",
-        "goal": "让用户浏览、搜索、筛选和订阅可用的 Skill，并管理自己发布的 Skill",
-        "entry_condition": "企业财富+ → 智能化配置 → Skill 广场",
-        "markdown_heading": "6.1 Skill 广场页面",
-        "structure_notes": [
-          "顶部：页面标题 + 右上角发布技能按钮",
-          "搜索栏：搜索框 + 所属分行/订阅状态/排序三个筛选下拉",
-          "两个 Tab：Skill 共享广场（面向发现）和我发布的 Skill（面向管理）",
-          "共享广场 Tab：卡片列表展示，含场景标签、描述、订阅数、发布者、更新时间、订阅开关",
-          "我发布的 Tab：列表视图展示，含共享状态、订阅数、编辑/删除操作列"
-        ],
-        "fields": [
-          "Skill 名称",
-          "场景标签（共享广场 Tab 适用）",
-          "简要描述",
-          "订阅分行数",
-          "发布者姓名/分行",
-          "更新时间"
-        ],
-        "validation_rules": [],
-        "state_feedback": [
-          "订阅/取消订阅后即时 Toast 提示",
-          "网络异常时 Toast「操作失败，请重试」"
-        ],
-        "exception_structure_changes": [
-          "发布技能按钮仅产品经理和开发人员可见",
-          "共享广场 Tab 筛选区含所属分行和订阅状态；我发布的 Tab 含共享状态"
-        ],
-        "copy_items": [
-          "页面标题：「企业财富·Skill广场」",
-          "Tab 标题：「Skill 共享广场」「我发布的 Skill」"
-        ],
-        "buttons": [
-          "右上角「发布技能」（主按钮）",
-          "订阅开关（灰色=未订阅/红色=已订阅）",
-          "我发布的 Tab 行内编辑/删除操作按钮"
-        ],
-        "success_feedback": [
-          "订阅成功 Toast：「已订阅，本分行所有用户均可用」",
-          "取消订阅 Toast：「已取消订阅」"
-        ],
-        "failure_feedback": [
-          "网络异常 Toast：「操作失败，请重试」"
-        ]
+        "name": "自助申请模式配置页（超管端）",
+        "goal": "让超管分步配置自助申请模式的核心参数",
+        "entry_condition": "超管在权限管理模式页点击自助申请模式的立即启用，且互斥模式校验通过",
+        "markdown_heading": "6.1 自助申请模式配置页（超管端）",
+        "structure_notes": ["分步结构：步骤条包含三步（选择申请方式→设置范围→审批流程）", "第一步以对比卡片展示两种申请方式", "第二步根据第一步选择展示角色范围或应用范围", "已启用状态页为只读展示模式"],
+        "fields": ["申请方式（角色/功能权限，单选）", "角色范围（全部/部分，单选）", "应用范围（全部/部分，单选）", "审批流程（预设/修改）"],
+        "validation_rules": ["每一步完成才能进入下一步", "启用时校验互斥模式是否已开启"],
+        "state_feedback": ["未启用→配置态", "已启用→只读展示态"],
+        "exception_structure_changes": ["互斥模式已开启→弹窗阻止启用"],
+        "copy_items": ["自助申请权限模式", "员工可自助申请权限，工作流审批通过后，系统将自动分配权限", "开启成功"],
+        "buttons": ["立即启用", "启用", "取消", "上一步", "下一步", "编辑", "关闭模式", "修改审批流程", "取消编辑", "确认编辑"],
+        "success_feedback": ["Toast：开启成功", "页面刷新为已开启状态"],
+        "failure_feedback": ["弹窗：无法启用——互斥模式已开启"]
       },
       {
-        "name": "Skill 编辑页面",
-        "goal": "让产品经理填写或修改 Skill 的全部内容",
-        "entry_condition": "新建 Skill（选择创建方式后）或编辑已有 Skill",
-        "markdown_heading": "6.3 Skill 编辑页面",
-        "structure_notes": [
-          "顶部：返回 Skill 广场链接 + 保存/取消按钮",
-          "Skill 名称字段（必填，最长50字符）带字数计数器",
-          "Skill 描述字段（必填，最长200字符）带字数计数器",
-          "提示词内容文本域（必填，支持 Markdown，最长10000字符）",
-          "共享设置开关（按角色默认值）",
-          "新建场景预载编写模板，模板各章节可折叠收起"
-        ],
-        "fields": [
-          "Skill 名称（必填，50字内）",
-          "Skill 描述（必填，200字内）",
-          "提示词内容（必填，Markdown 文本域，10000字内）",
-          "共享设置（开关）"
-        ],
-        "validation_rules": [
-          "必填字段为空时保存按钮置灰",
-          "字数超限时 Inline 提示具体限制",
-          "上传文件校验格式/大小/编码"
-        ],
-        "state_feedback": [
-          "字数实时计数器显示"
-        ],
+        "name": "我的权限页面（员工端）",
+        "goal": "让员工查看自己当前拥有的权限",
+        "entry_condition": "企业已开启自助申请模式；用户不是服务人员；入口在个人中心我的企业下方",
+        "markdown_heading": "6.2 我的权限页面（员工端）",
+        "structure_notes": ["三级Tab：功能权限、数据权限、角色", "默认选中功能权限tab", "右上角申请权限按钮"],
+        "fields": ["应用名称", "功能权限列表"],
+        "validation_rules": [],
+        "state_feedback": ["空状态：您没有功能权限/您没有数据权限/您没有关联的角色 + 占位图"],
         "exception_structure_changes": [],
-        "copy_items": [
-          "名称上方：「为 Skill 起一个简洁的名称，用户将在联想列表中看到」",
-          "描述上方：「一句话描述这个 Skill 的功能」",
-          "共享开关旁：「开启后全行用户可见」"
-        ],
-        "buttons": [
-          "保存（提交审核）",
-          "取消（返回广场，不保留内容）"
-        ],
-        "success_feedback": [
-          "Toast：「创建成功，正在提交审核」→ 跳转至详情页",
-          "Toast：「更新成功，正在提交审核」"
-        ],
-        "failure_feedback": [
-          "必填字段空时保存置灰",
-          "字数超限 Inline 提示"
-        ]
+        "copy_items": ["我的权限", "申请权限", "您没有功能权限", "您没有数据权限", "您没有关联的角色"],
+        "buttons": ["申请权限"],
+        "success_feedback": [],
+        "failure_feedback": []
       },
       {
-        "name": "Skill 详情页",
-        "goal": "集中展示 Skill 的完整信息、审核状态、评分和版本历史",
-        "entry_condition": "在 Skill 广场或我发布的 Tab 中点击 Skill 卡片",
-        "markdown_heading": "6.4 Skill 详情页",
-        "structure_notes": [
-          "顶部：返回链接 + 编辑/删除按钮（取决于权限）+ 订阅开关",
-          "标题区：Skill 名称、发布人、所属分行、发布时间、更新时间、订阅分行数",
-          "审核进度区（仅在待审核/不通过时显示）",
-          "三个 Tab：Skill评分（仅所属分行可见）、Skill详情、版本记录"
-        ],
-        "fields": [
-          "Skill 名称",
-          "发布人姓名/分行",
-          "发布时间/更新时间",
-          "订阅分行数"
-        ],
+        "name": "申请记录列表",
+        "goal": "让员工查看历史申请及状态",
+        "entry_condition": "员工在我的权限页面切换到申请记录tab",
+        "markdown_heading": "6.4 申请记录列表",
+        "structure_notes": ["筛选区：申请日期（日期选择）、审批状态（下拉：全部/已通过/已拒绝/审批中/已撤销）", "列表区：申请时间、申请原因、申请内容、审批状态、操作（撤销）", "底部分页"],
+        "fields": ["申请时间", "申请原因", "申请内容（角色名称或查看详情链接）", "审批状态", "操作（撤销）"],
         "validation_rules": [],
-        "state_feedback": [
-          "审核进度：待检测/检测中/已完成",
-          "审核不通过状态：Banner 展示原因"
-        ],
-        "exception_structure_changes": [
-          "Skill评分 Tab 仅所属分行用户可见",
-          "编辑按钮仅所属分行可见",
-          "删除按钮仅创建者和管理员可见"
-        ],
-        "copy_items": [
-          "审核进度区标题：「审核进度」（通过后变为「审核已通过」）",
-          "审核不通过：「审核未通过」+ 具体原因 + 修改指引"
-        ],
-        "buttons": [
-          "编辑（所属分行可见）",
-          "删除（创建者/管理员可见）",
-          "订阅开关（所有用户可见）",
-          "手工优化、自动优化、获取优化报告（评分 Tab）"
-        ],
+        "state_feedback": ["空状态：暂无申请记录 + 占位图"],
+        "exception_structure_changes": ["撤销按钮仅审批中状态可点击"],
+        "copy_items": ["申请记录", "暂无申请记录"],
+        "buttons": ["撤销"],
         "success_feedback": [],
         "failure_feedback": []
       }
     ],
     "modals": [
       {
-        "name": "创建方式选择弹窗",
-        "goal": "让用户选择 Skill 创建方式",
-        "entry_condition": "点击发布技能按钮",
-        "markdown_heading": "6.2 创建方式选择弹窗",
-        "structure_notes": [
-          "弹窗标题：创建 Skill",
-          "两个选项卡片：手动创建、上传文件",
-          "取消按钮关闭弹窗"
-        ],
-        "fields": [
-          "手动创建（按模板填写提示词内容）",
-          "上传文件（上传 .md 格式文件自动解析）"
-        ],
+        "name": "关闭模式二次确认弹窗",
+        "goal": "确认超管是否要关闭自助申请模式",
+        "entry_condition": "超管在已开启状态页点击关闭模式",
+        "markdown_heading": "6.1 自助申请模式配置页（超管端）",
+        "structure_notes": ["居中弹窗，包含标题、文案和两个按钮"],
+        "fields": [],
+        "validation_rules": ["点击确认关闭时校验是否有在途流程"],
+        "state_feedback": ["有在途流程→关闭失败弹窗"],
+        "exception_structure_changes": [],
+        "copy_items": ["弹窗标题：关闭模式", "弹窗文案：关闭模式后，员工将无法自助查询和申请权限，已有权限不受影响，当前未完成的申请将继续流转。请确认是否关闭自助申请模式？", "关闭失败弹窗标题：关闭失败", "关闭失败弹窗文案：当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。"],
+        "buttons": ["不关闭", "确认关闭", "知道了"],
+        "success_feedback": ["Toast：关闭自助申请权限模式成功"],
+        "failure_feedback": ["弹窗：关闭失败——有在途流程"]
+      },
+      {
+        "name": "撤销申请确认弹窗",
+        "goal": "确认员工是否要撤销正在审批中的申请",
+        "entry_condition": "员工在申请记录列表点击撤销",
+        "markdown_heading": "6.4 申请记录列表",
+        "structure_notes": ["居中弹窗，包含标题、文案和两个按钮"],
+        "fields": [],
         "validation_rules": [],
         "state_feedback": [],
         "exception_structure_changes": [],
-        "copy_items": [
-          "弹窗标题：「创建 Skill」",
-          "手动创建说明：「按模板填写提示词内容」",
-          "上传文件说明：「上传 .md 格式文件自动解析」"
-        ],
-        "buttons": [
-          "手动创建（点击进入编辑页）",
-          "上传文件（点击触发文件选择）",
-          "取消"
-        ],
-        "success_feedback": [],
+        "copy_items": ["弹窗标题：撤销申请", "弹窗文案：确定要撤销该申请吗？撤销后不可恢复。"],
+        "buttons": ["取消", "确认撤销"],
+        "success_feedback": ["Toast：已撤销"],
         "failure_feedback": []
       }
     ],
-    "drawers": []
+    "drawers": [
+      {
+        "name": "申请权限抽屉",
+        "goal": "让员工提交权限申请",
+        "entry_condition": "员工在我的权限页面点击申请权限",
+        "markdown_heading": "6.3 申请权限抽屉（员工端）",
+        "structure_notes": ["顶部标题和关闭按钮", "申请人（不可编辑）", "申请原因（必填，500字限制）", "申请内容区域（根据超管配置动态变化：角色列表或功能权限树）", "底部操作栏"],
+        "fields": ["申请人（默认当前用户姓名，不可编辑）", "申请原因（必填，最多500字）", "角色列表（复选框、角色名称、角色说明）"],
+        "validation_rules": ["申请原因必填，为空时InlineError提示", "必须选择至少一个角色/功能，未选择时提交按钮置灰"],
+        "state_feedback": [],
+        "exception_structure_changes": ["资金用户校验失败→Drawer内提示", "子管理员模式冲突→Drawer内提示", "实名未通过→Drawer内提示"],
+        "copy_items": ["Drawer标题：申请权限", "申请人：{当前用户姓名}", "申请原因placeholder：请填写申请原因", "提交申请后，默认申请功能的所有数据权限。如需申请部分数据权限，请联系企业管理员授权。"],
+        "buttons": ["提交", "取消"],
+        "success_feedback": ["Drawer关闭", "Toast：提交成功"],
+        "failure_feedback": ["Drawer不关闭，在相应区域显示错误信息"]
+      }
+    ]
   },
   "states": [
     {
-      "state": "草稿",
-      "meaning": "Skill 创建中尚未提交",
-      "applies_to": "创建者",
-      "user_actions": ["继续编辑", "提交审核"],
-      "feedback": "不对外展示"
+      "state": "审批中",
+      "meaning": "申请已提交，等待审批人处理",
+      "applies_to": "员工、审批人",
+      "user_actions": ["员工可撤销"],
+      "feedback": "申请已提交，等待审批人处理"
     },
     {
-      "state": "待审核",
-      "meaning": "已提交等待审核",
-      "applies_to": "创建者",
-      "user_actions": ["等待审核结果"],
-      "feedback": "审核中，请稍候"
-    },
-    {
-      "state": "已发布",
-      "meaning": "审核通过，广场可展示",
-      "applies_to": "所有用户",
-      "user_actions": ["订阅", "调用"],
-      "feedback": "正常展示"
-    },
-    {
-      "state": "已下架",
-      "meaning": "创建者删除或手动下架",
-      "applies_to": "-",
+      "state": "已通过",
+      "meaning": "审批人已同意，等待系统分配权限",
+      "applies_to": "员工",
       "user_actions": [],
-      "feedback": "不对外展示"
+      "feedback": "审批已通过，权限正在生效中"
     },
     {
-      "state": "未订阅",
-      "meaning": "本分行未订阅此 Skill",
-      "applies_to": "分行内用户",
-      "user_actions": ["订阅"],
-      "feedback": "灰色「订阅」"
-    },
-    {
-      "state": "已订阅",
-      "meaning": "本分行已订阅此 Skill",
-      "applies_to": "分行内用户",
-      "user_actions": ["取消订阅（需二次确认）"],
-      "feedback": "红色「已订阅」"
-    },
-    {
-      "state": "审核中-待检测",
-      "meaning": "提交审核后进入队列",
-      "applies_to": "创建者",
+      "state": "生效中",
+      "meaning": "系统正在分配权限",
+      "applies_to": "员工",
       "user_actions": [],
-      "feedback": "检测排队中，请稍候"
+      "feedback": "权限正在生效中，请稍候"
     },
     {
-      "state": "审核中-检测中",
-      "meaning": "系统正在检测",
-      "applies_to": "创建者",
+      "state": "已生效",
+      "meaning": "权限分配已完成",
+      "applies_to": "员工",
       "user_actions": [],
-      "feedback": "正在检测内容合规性"
+      "feedback": "权限已生效，可前往我的权限查看"
     },
     {
-      "state": "审核通过",
-      "meaning": "审核已通过",
-      "applies_to": "创建者",
+      "state": "已拒绝",
+      "meaning": "审批人拒绝申请",
+      "applies_to": "员工",
+      "user_actions": ["可重新申请"],
+      "feedback": "申请未通过：{审批人拒绝理由}"
+    },
+    {
+      "state": "已撤销",
+      "meaning": "员工主动撤销",
+      "applies_to": "员工",
       "user_actions": [],
-      "feedback": "审核已通过 ✓"
+      "feedback": "申请已撤销"
     },
     {
-      "state": "审核不通过",
-      "meaning": "审核未通过",
-      "applies_to": "创建者",
-      "user_actions": ["查看原因", "修改后重新提交"],
-      "feedback": "审核未通过，展示具体原因"
+      "state": "审批人待指定",
+      "meaning": "系统找不到审批人，待超管处理",
+      "applies_to": "员工",
+      "user_actions": ["联系超管"],
+      "feedback": "审批人待指定，请联系企业管理员"
     }
   ],
   "feedbacks": [
     {
-      "scenario": "创建 Skill 成功",
-      "type": "Toast",
-      "copy": "创建成功，正在提交审核"
+      "scenario": "新申请待审批",
+      "type": "通知",
+      "copy": "{员工姓名} 申请了 {角色名称/功能权限}，请及时处理"
     },
     {
-      "scenario": "编辑 Skill 成功",
-      "type": "Toast",
-      "copy": "更新成功，正在提交审核"
+      "scenario": "申请已通过",
+      "type": "通知",
+      "copy": "您申请的 {角色名称/功能权限} 审批已通过，权限正在生效中"
     },
     {
-      "scenario": "订阅 Skill 成功",
-      "type": "Toast",
-      "copy": "已订阅，本分行所有用户均可用"
+      "scenario": "权限已生效",
+      "type": "通知",
+      "copy": "您申请的 {角色名称/功能权限} 已生效，可前往我的权限查看"
     },
     {
-      "scenario": "取消订阅成功",
-      "type": "Toast",
-      "copy": "已取消订阅，本分行所有用户将无法使用"
+      "scenario": "申请被拒绝",
+      "type": "通知",
+      "copy": "您申请的 {角色名称/功能权限} 未通过审批，原因：{拒绝理由}"
     },
     {
-      "scenario": "删除 Skill 成功",
-      "type": "Toast",
-      "copy": "删除成功"
+      "scenario": "申请被撤销（通知审批人）",
+      "type": "通知",
+      "copy": "{员工姓名} 已撤销了 {角色名称/功能权限} 的申请"
     },
     {
-      "scenario": "上传文件格式错误",
-      "type": "InlineError",
-      "copy": "仅支持 .md 格式"
-    },
-    {
-      "scenario": "上传文件超限",
-      "type": "InlineError",
-      "copy": "文件大小不能超过 1MB"
-    },
-    {
-      "scenario": "智能联想无匹配",
-      "type": "EmptyState",
-      "copy": "暂无可用 Skill，请联系分行产品经理订阅"
-    },
-    {
-      "scenario": "Skill 加载超时",
-      "type": "Inline",
-      "copy": "Skill 加载超时，请稍后重试"
-    },
-    {
-      "scenario": "AI 处理超时",
-      "type": "Inline",
-      "copy": "AI 处理超时，请稍后重试"
-    },
-    {
-      "scenario": "Skill 内容异常",
-      "type": "Inline",
-      "copy": "当前 Skill 内容异常，请联系发布者"
-    },
-    {
-      "scenario": "创建/编辑失败",
-      "type": "Toast",
-      "copy": "创建失败，请重试"
-    },
-    {
-      "scenario": "订阅/取消失败",
-      "type": "Toast",
-      "copy": "订阅失败，请重试"
+      "scenario": "权限分配失败（通知超管）",
+      "type": "通知",
+      "copy": "{员工姓名} 的权限申请已通过但因系统异常分配失败，请人工处理"
     }
   ],
   "open_questions": [
     {
-      "question": "分行级取消订阅是否需要审批保护——当前方案为二次确认弹窗，是否需要升级为需分行管理员审批？",
-      "impact": "影响取消订阅流程和订阅交互设计",
-      "owner": "业务方"
+      "question": "审批人缺失的降级方案",
+      "impact": "影响E2异常流程的设计",
+      "owner": "产品经理 + 实施团队"
     },
     {
-      "question": "Skill 业务场景分类维度——谁定义（总行统一还是分行自定义）？MVP 阶段是否需要引入？",
-      "impact": "影响 Skill 广场筛选区设计",
-      "owner": "业务方 + 交互设计"
+      "question": "默认复核人员风险",
+      "impact": "影响P1-5审批流程预设的复杂度",
+      "owner": "产品经理"
     },
     {
-      "question": "审核时效预期——自动审核的目标完成时间是多少？超过多久需通知创建者？",
-      "impact": "影响审核进度展示策略和异常处理",
-      "owner": "运营"
+      "question": "生效中状态的展示时长阈值",
+      "impact": "如果权限分配是秒级完成，不需要独立的生效中状态；如果是分钟级则需要",
+      "owner": "后端开发"
     },
     {
-      "question": "同步延迟的文案表达——沙盒同步有秒级延迟，文案如何表达才能既准确又不让用户困惑？",
-      "impact": "影响创建成功后的提示文案",
-      "owner": "交互设计"
+      "question": "申请记录入口位置",
+      "impact": "申请记录可以放在我的权限页面内作为一个tab，也可以独立成一个入口",
+      "owner": "unknown"
     },
     {
-      "question": "我发布的 Tab 名称——该 Tab 展示所属分行所有 Skill 非个人创建，Tab 名称是否需要调整？",
-      "impact": "影响 Skill 广场的 Tab 命名",
-      "owner": "交互设计"
-    },
-    {
-      "question": "优化报告一键替换后是否重新触发审核？是否需要告知用户替换后需重新审核？",
-      "impact": "影响编辑流程和优化报告弹窗",
-      "owner": "交互设计"
+      "question": "通知渠道确认",
+      "impact": "影响通知文案的展示形式和长度限制",
+      "owner": "unknown"
     }
   ],
   "upstream_trace": [
     {
-      "upstream_judgment": "UXB: 分行级订阅，个人操作影响全分行",
-      "experience_meaning": "取消订阅需要安全设计兜底",
-      "design_decision": "二次确认弹窗 + 分行内通知",
-      "blueprint_target": "§3.3 / §5.2"
+      "upstream_judgment": "超管需要理解两种申请方式的差异才能正确配置",
+      "experience_meaning": "配置页第一步不能只是radio",
+      "design_decision": "采用场景对比卡片，每张标明适用场景",
+      "blueprint_target": "§3 P1-3, §6.1"
     },
     {
-      "upstream_judgment": "UXB: 消费端发现是核心设计压力",
-      "experience_meaning": "客户经理需要更强的发现引导",
-      "design_decision": "分行通知 + 场景分类 + 联想排序优化",
-      "blueprint_target": "§4.1 / §6.1 / §3.2"
+      "upstream_judgment": "员工不一定理解角色和功能权限的概念差异",
+      "experience_meaning": "申请页不能直接用权限术语",
+      "design_decision": "申请页展示角色名称和说明，不用角色/功能权限做标题",
+      "blueprint_target": "§6.3"
     },
     {
-      "upstream_judgment": "UXB: 审核流程缺乏透明度",
-      "experience_meaning": "提交后需让创建者感知进度",
-      "design_decision": "审核进度区 + 不通过精确标注",
-      "blueprint_target": "§6.4 / §5.1"
+      "upstream_judgment": "审批人处理申请时缺乏决策上下文",
+      "experience_meaning": "待办卡片不能只有申请人姓名",
+      "design_decision": "待办卡片包含申请原因、申请内容、申请人组织",
+      "blueprint_target": "§3 P3-1"
     },
     {
-      "upstream_judgment": "UXB: 生产者缺少效果数据",
-      "experience_meaning": "需提供基础效果指标",
-      "design_decision": "详情页展示订阅分行数 + 调用量趋势",
-      "blueprint_target": "§6.4"
+      "upstream_judgment": "申请被拒绝后员工不知道原因和下一步",
+      "experience_meaning": "拒绝需要展示理由和下一步",
+      "design_decision": "拒绝时审批人必须填写理由，结果通知展示完整原因",
+      "blueprint_target": "§3 P3-2, §7"
     },
     {
-      "upstream_judgment": "UXB: 智能联想仅按名称匹配",
-      "experience_meaning": "名称匹配随 Skill 增长精度下降",
-      "design_decision": "引入个人常用优先排序",
-      "blueprint_target": "§3.2"
+      "upstream_judgment": "员工需要知道权限是否已生效而不只是审批通过",
+      "experience_meaning": "需要过渡状态",
+      "design_decision": "增加生效中状态，区分已通过→生效中→已生效",
+      "blueprint_target": "§7"
     },
     {
-      "upstream_judgment": "UXB: 沙盒同步非实时",
-      "experience_meaning": "用户可能误以为发布后可立即使用",
-      "design_decision": "发布成功文案中提示稍后可用",
-      "blueprint_target": "§3.1 节点三"
-    },
-    {
-      "upstream_judgment": "UXB: 同步状态不对外展示",
-      "experience_meaning": "用户无需感知同步过程",
-      "design_decision": "不增加同步状态展示",
-      "blueprint_target": "§5.3"
-    },
-    {
-      "upstream_judgment": "Journey: 审核等待是生产者信心最低点",
-      "experience_meaning": "审核流程透明化设计优先级最高",
-      "design_decision": "审核进度前置可见 + 不通过精确引导",
-      "blueprint_target": "§6.4 / §5.1"
-    },
-    {
-      "upstream_judgment": "Journey: 消费者不知道分行订了什么",
-      "experience_meaning": "发现不能仅靠主动浏览",
-      "design_decision": "分行订阅通知机制",
-      "blueprint_target": "§4.1"
-    },
-    {
-      "upstream_judgment": "Journey: 取消订阅风险影响生产者信心",
-      "experience_meaning": "取消流程需要明确影响范围和恢复路径",
-      "design_decision": "二次确认弹窗 + 可随时重新订阅",
-      "blueprint_target": "§3.3 / §5.2"
+      "upstream_judgment": "超管关闭模式时可能没意识到影响范围",
+      "experience_meaning": "关闭确认不能只做二次确认",
+      "design_decision": "关闭弹窗说明关闭后果",
+      "blueprint_target": "§4 S2"
     }
   ]
 }

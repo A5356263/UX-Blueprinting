@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>员工自助申请权限 - 页面原型</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0F172A;
+    --on-primary: #FFFFFF;
+    --secondary: #334155;
+    --accent: #0369A1;
+    --accent-light: #E0F2FE;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --foreground: #020617;
+    --muted-text: #64748B;
+    --border: #E2E8F0;
+    --destructive: #DC2626;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);
+    --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+    --shadow-lg: 0 8px 24px rgba(15,23,42,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--foreground);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  /* ===== Nav ===== */
+  .top-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-nav .brand {
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--primary);
+    margin-right: 32px;
+    white-space: nowrap;
+  }
+  .top-nav .nav-tabs {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    flex: 1;
+  }
+  .top-nav .nav-tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-text);
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .top-nav .nav-tab:hover { color: var(--foreground); background: var(--bg); }
+  .top-nav .nav-tab.active { color: var(--accent); background: var(--accent-light); }
+
+  /* ===== Pages ===== */
+  .page { display: none; padding: 24px; max-width: 960px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  /* ===== Steps ===== */
+  .steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 28px;
+    padding: 0 4px;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-text);
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    border: 2px solid var(--border);
+    color: var(--muted-text);
+    flex-shrink: 0;
+  }
+  .step-item.active .step-num {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .step-item.done .step-num {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+    font-size: 14px;
+  }
+  .step-item.active { color: var(--accent); }
+  .step-item.done { color: var(--success); }
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 12px;
+    min-width: 32px;
+  }
+  .step-line.done { background: var(--success); }
+
+  /* ===== Forms ===== */
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 6px;
+  }
+  .form-label .required { color: var(--destructive); margin-left: 2px; }
+  .form-hint {
+    font-size: 12px;
+    color: var(--muted-text);
+    margin-top: 4px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--foreground);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(3,105,161,0.1);
+  }
+  .form-input::placeholder { color: #94A3B8; }
+  textarea.form-input { min-height: 80px; resize: vertical; }
+  .form-input-error {
+    border-color: var(--destructive);
+  }
+  .inline-error {
+    font-size: 12px; color: var(--destructive); margin-top: 4px;
+  }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 8px 20px; font-size: 14px; font-weight: 600;
+    font-family: var(--font); border: 1px solid transparent;
+    border-radius: var(--radius-md); cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--accent); color: white;
+  }
+  .btn-primary:hover { background: #0284C7; }
+  .btn-secondary {
+    background: var(--surface); color: var(--foreground); border-color: var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-ghost {
+    background: none; color: var(--muted-text); border: none;
+  }
+  .btn-ghost:hover { color: var(--foreground); background: var(--bg); }
+  .btn-danger {
+    background: var(--destructive); color: white;
+  }
+  .btn-danger:hover { background: #B91C1C; }
+  .btn-sm { padding: 4px 12px; font-size: 13px; }
+  .btn-lg { padding: 10px 28px; font-size: 15px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-group { display: flex; gap: 8px; align-items: center; }
+  .btn-group-right { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+
+  /* ===== Radio Cards ===== */
+  .radio-card-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .radio-card {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .radio-card:hover { border-color: #94A3B8; }
+  .radio-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .radio-card .recommend {
+    position: absolute; top: -8px; left: 16px;
+    background: var(--accent); color: white;
+    font-size: 11px; font-weight: 700; padding: 2px 10px;
+    border-radius: 99px;
+  }
+  .radio-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
+  .radio-card p { font-size: 13px; color: var(--muted-text); line-height: 1.6; }
+  .radio-card .radio-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 12px;
+  }
+  .radio-card.selected .radio-dot { border-color: var(--accent); }
+  .radio-card.selected .radio-dot::after {
+    content: ''; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ===== Tables ===== */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; padding: 10px 14px; font-weight: 600;
+    color: var(--secondary); background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #F1F5F9; }
+
+  /* ===== Tabs ===== */
+  .tab-bar {
+    display: flex; gap: 0; border-bottom: 2px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 10px 20px; font-size: 14px; font-weight: 600;
+    color: var(--muted-text); cursor: pointer; border: none; background: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--foreground); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ===== Tags / Badges ===== */
+  .tag {
+    display: inline-flex; align-items: center;
+    padding: 2px 10px; border-radius: 99px;
+    font-size: 12px; font-weight: 600;
+  }
+  .tag-pending { background: #FEF3C7; color: #92400E; }
+  .tag-approved { background: #D1FAE5; color: #065F46; }
+  .tag-effective { background: #DBEAFE; color: #1E40AF; }
+  .tag-rejected { background: #FEE2E2; color: #991B1B; }
+  .tag-revoked { background: #F1F5F9; color: #475569; }
+  .tag-warning { background: #FFF7ED; color: #9A3412; }
+
+  /* ===== Filter bar ===== */
+  .filter-bar {
+    display: flex; gap: 12px; align-items: flex-end;
+    flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 4px; }
+  .filter-group label { font-size: 12px; font-weight: 600; color: var(--muted-text); }
+  .filter-group select, .filter-group input {
+    padding: 6px 12px; font-size: 13px; font-family: var(--font);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--foreground);
+  }
+
+  /* ===== Drawer ===== */
+  .drawer-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.4);
+    z-index: 200; animation: fadeIn 0.2s;
+  }
+  .drawer-overlay.open { display: block; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100vw;
+    background: var(--surface); box-shadow: var(--shadow-lg);
+    z-index: 201; display: none;
+    flex-direction: column;
+    animation: slideIn 0.25s ease-out;
+  }
+  .drawer.open { display: flex; }
+  .drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+  }
+  .drawer-header h3 { font-size: 18px; font-weight: 700; color: var(--primary); }
+  .drawer-close {
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    border: none; background: none; cursor: pointer; border-radius: var(--radius-sm);
+    color: var(--muted-text); font-size: 18px;
+  }
+  .drawer-close:hover { background: var(--bg); color: var(--foreground); }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
+  .drawer-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+    z-index: 300; align-items: center; justify-content: center;
+    animation: fadeIn 0.2s;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg); width: 420px; max-width: 90vw;
+    animation: scaleIn 0.2s ease-out;
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 0;
+  }
+  .modal-header h3 { font-size: 17px; font-weight: 700; color: var(--primary); }
+  .modal-body { padding: 16px 24px 24px; font-size: 14px; color: var(--secondary); line-height: 1.7; }
+  .modal-footer {
+    padding: 0 24px 20px; display: flex; justify-content: flex-end; gap: 8px;
+  }
+
+  /* ===== Toast ===== */
+  .toast-container {
+    position: fixed; top: 72px; right: 24px; z-index: 500;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .toast {
+    background: var(--primary); color: white;
+    padding: 12px 20px; border-radius: var(--radius-md);
+    font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; gap: 8px;
+    animation: toastIn 0.3s ease-out;
+  }
+  .toast.success { background: var(--success); }
+  .toast .toast-icon { font-size: 18px; }
+
+  /* ===== Banner ===== */
+  .banner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: var(--accent-light);
+    border-radius: var(--radius-md); margin-bottom: 16px;
+    font-size: 13px; color: var(--secondary);
+  }
+  .banner a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .banner a:hover { text-decoration: underline; }
+
+  /* ===== Empty State ===== */
+  .empty-state {
+    text-align: center; padding: 48px 24px; color: var(--muted-text);
+  }
+  .empty-state .empty-icon {
+    font-size: 48px; margin-bottom: 12px; opacity: 0.3;
+  }
+  .empty-state p { font-size: 14px; }
+
+  /* ===== Checkbox ===== */
+  .checkbox-group { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+  .checkbox-group input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;
+  }
+
+  /* ===== Status Page ===== */
+  .info-grid {
+    display: grid; grid-template-columns: auto 1fr; gap: 12px 24px;
+    font-size: 14px;
+  }
+  .info-grid .label { color: var(--muted-text); font-weight: 500; }
+  .info-grid .value { color: var(--foreground); }
+
+  /* ===== Pagination ===== */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px; font-size: 13px; color: var(--muted-text);
+  }
+  .pagination .pages {
+    display: flex; gap: 4px;
+  }
+  .pagination .pages button {
+    width: 28px; height: 28px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface);
+    color: var(--foreground); cursor: pointer; font-size: 13px;
+  }
+  .pagination .pages button.active {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+
+  /* ===== Animations ===== */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes toastIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .page { padding: 16px; }
+    .radio-card-group { grid-template-columns: 1fr; }
+    .top-nav { padding: 0 12px; }
+    .top-nav .brand { font-size: 14px; margin-right: 16px; }
+    .drawer { width: 100vw; }
+    .filter-bar { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Top Navigation ===== -->
+<nav class="top-nav">
+  <span class="brand">权限管理</span>
+  <div class="nav-tabs">
+    <button class="nav-tab" data-page="page-mode">管理模式</button>
+    <button class="nav-tab" data-page="page-config">配置向导</button>
+    <button class="nav-tab" data-page="page-enabled">已开启状态</button>
+    <button class="nav-tab" data-page="page-my-perms">我的权限</button>
+    <button class="nav-tab" data-page="page-records">申请记录</button>
+  </div>
+</nav>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============================================================ -->
+<!-- PAGE 1: 权限管理模式页 (承载页面) -->
+<!-- ============================================================ -->
+<div class="page" id="page-mode">
+  <div class="card" style="text-align:center;padding:40px 24px;">
+    <h2 style="font-size:22px;font-weight:800;color:var(--primary);margin-bottom:8px;">请选择权限管理模式</h2>
+    <p style="color:var(--muted-text);font-size:14px;">选择适合企业的权限治理方式，不同模式可组合使用</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+    <!-- Card: 子管理员 -->
+    <div class="card" style="text-align:center;padding:24px;">
+      <div style="font-size:36px;margin-bottom:12px;opacity:0.5;">🔐</div>
+      <h4 style="font-weight:700;font-size:15px;margin-bottom:8px;">子管理员模式</h4>
+      <p style="font-size:13px;color:var(--muted-text);line-height:1.6;margin-bottom:16px;">将管理权限下放给指定人员，分级授权管理</p>
+      <button class="btn btn-primary">立即启用</button>
+      <a href="#" style="display:block;margin-top:8px;font-size:13px;color:var(--accent);">了解更多</a>
+    </div>
+
+    <!-- Card: 双管理员互审 -->
+    <div class="card" style="text-align:center;padding:24px;">
+      <div style="font-size:36px;margin-bottom:12px;opacity:0.5;">🛡️</div>
+      <h4 style="font-weight:700;font-size:15px;margin-bottom:8px;">双管理员互审模式</h4>
+      <p style="font-size:13px;color:var(--muted-text);line-height:1.6;margin-bottom:16px;">高危操作需两位管理员互相审核确认</p>
+      <button class="btn btn-primary">立即启用</button>
+      <a href="#" style="display:block;margin-top:8px;font-size:13px;color:var(--accent);">了解更多</a>
+    </div>
+
+    <!-- Card: 权限变更审批 -->
+    <div class="card" style="text-align:center;padding:24px;">
+      <div style="font-size:36px;margin-bottom:12px;opacity:0.5;">📋</div>
+      <h4 style="font-weight:700;font-size:15px;margin-bottom:8px;">权限变更审批模式</h4>
+      <p style="font-size:13px;color:var(--muted-text);line-height:1.6;margin-bottom:16px;">权限变更纳入审批流程与审计链路</p>
+      <button class="btn btn-primary">立即启用</button>
+      <a href="#" style="display:block;margin-top:8px;font-size:13px;color:var(--accent);">了解更多</a>
+    </div>
+
+    <!-- Card: 自助申请权限 (新增) -->
+    <div class="card" style="text-align:center;padding:24px;border:2px solid var(--accent);background:var(--accent-light);">
+      <div style="font-size:36px;margin-bottom:12px;">🙋</div>
+      <h4 style="font-weight:700;font-size:15px;margin-bottom:8px;color:var(--accent);">自助申请权限模式</h4>
+      <p style="font-size:13px;color:var(--muted-text);line-height:1.6;margin-bottom:16px;">员工可自助申请权限，审批通过后系统自动分配</p>
+      <button class="btn btn-primary" onclick="switchPage('page-config')" style="background:var(--accent);">立即启用</button>
+      <a href="#" style="display:block;margin-top:8px;font-size:13px;color:var(--accent);">了解更多</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PAGE 2: 配置向导 - 第一步 -->
+<!-- ============================================================ -->
+<div class="page" id="page-config">
+  <div class="card">
+    <div class="card-header"><span class="card-title">自助申请权限模式</span></div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step-item active" id="step1-label">
+        <span class="step-num">1</span>
+        <span>选择申请方式</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-item" id="step2-label">
+        <span class="step-num">2</span>
+        <span>设置范围</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-item" id="step3-label">
+        <span class="step-num">3</span>
+        <span>审批流程</span>
+      </div>
+    </div>
+
+    <!-- Step 1 Content -->
+    <div class="step-content" id="step1">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">第一步：选择员工申请权限的方式</h3>
+
+      <div class="radio-card-group">
+        <div class="radio-card selected" onclick="selectCard(this,'role')">
+          <span class="recommend">推荐</span>
+          <h4>员工申请角色</h4>
+          <p>适用于已建立角色体系的企业。员工申请某个角色后，自动获得该角色关联的所有权限。建议已启用常用角色进行授权的企业采用。</p>
+          <div class="radio-dot"></div>
+        </div>
+        <div class="radio-card" onclick="selectCard(this,'func')">
+          <h4>员工申请功能权限</h4>
+          <p>适用于按应用直接授权企业的企业。员工申请某个应用的功能权限后，系统直接授权对应功能。建议常用用户直接授权的企业采用。</p>
+          <div class="radio-dot"></div>
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:var(--muted-text);">如不确定，建议先选择"申请角色"，大部分有角色体系的企业都适用</p>
+
+      <div class="btn-group-right">
+        <button class="btn btn-secondary" onclick="switchPage('page-mode')">取消</button>
+        <button class="btn btn-primary" onclick="goStep(2)">下一步</button>
+      </div>
+    </div>
+
+    <!-- Step 2 Content -->
+    <div class="step-content" id="step2" style="display:none;">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:4px;" id="step2-title">第二步：设置角色范围</h3>
+      <p style="font-size:13px;color:var(--muted-text);margin-bottom:16px;" id="step2-prompt">请选择允许员工自助申请的角色</p>
+
+      <div class="form-group">
+        <div class="radio-card-group" style="grid-template-columns:1fr;">
+          <label class="radio-card selected" style="display:flex;align-items:center;gap:12px;padding:14px 20px;" onclick="selectScope(this,'all')">
+            <div class="radio-dot" style="margin:0;"></div>
+            <div><strong id="allScopeTitle">全部角色</strong><span id="allScopeDesc" style="color:var(--muted-text);font-size:13px;margin-left:8px;">企业内所有已启用和已停用的角色</span></div>
+          </label>
+          <label class="radio-card" style="display:flex;align-items:center;gap:12px;padding:14px 20px;" onclick="selectScope(this,'partial')">
+            <div class="radio-dot" style="margin:0;"></div>
+            <div><strong id="partialScopeTitle">部分角色</strong><span id="partialScopeDesc" style="color:var(--muted-text);font-size:13px;margin-left:8px;">手动选择允许申请的角色</span></div>
+          </label>
+        </div>
+      </div>
+
+      <div id="partialSelection" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg);border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <strong id="selectionTitle">已选角色</strong>
+            <div id="selectionTags" style="margin-top:8px;color:var(--muted-text);font-size:13px;">尚未选择</div>
+          </div>
+          <button id="openSelectionButton" class="btn btn-secondary btn-sm" type="button" onclick="openSelectionModal()">选择角色</button>
+        </div>
+      </div>
+
+      <div class="checkbox-group" style="margin-bottom:20px;">
+        <input type="checkbox" id="autoNew" checked>
+        <label for="autoNew" id="autoNewLabel">后续新增角色自动加入员工可申请的范围</label>
+      </div>
+
+      <div class="btn-group-right">
+        <button class="btn btn-secondary" onclick="goStep(1)">上一步</button>
+        <button class="btn btn-primary" onclick="goStep(3)">下一步</button>
+      </div>
+    </div>
+
+    <!-- Step 3 Content -->
+    <div class="step-content" id="step3" style="display:none;">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">第三步：设置审批流程</h3>
+
+      <div class="card" style="background:var(--bg);border:1px solid var(--border);">
+        <p style="font-size:14px;color:var(--secondary);margin-bottom:16px;line-height:1.7;">
+          系统已预设了员工申请权限时的审批流程，预设审批人为员工所在组织的组织负责人。如需调整，可点击修改审批流程。
+        </p>
+
+        <div class="info-grid" style="margin-bottom:16px;">
+          <span class="label">预设审批人</span>
+          <span class="value">员工所在组织的组织负责人</span>
+          <span class="label">降级规则</span>
+          <span class="value">如组织负责人不存在，自动向上查找上级组织负责人</span>
+          <span class="label">审批层级</span>
+          <span class="value">一级审批</span>
+        </div>
+
+        <button class="btn btn-secondary btn-sm" onclick="showToast('info','编辑审批流程页面')">修改审批流程 &gt;</button>
+      </div>
+
+      <div class="btn-group-right">
+        <button class="btn btn-secondary" onclick="goStep(2)">上一步</button>
+        <button class="btn btn-secondary" onclick="switchPage('page-mode')">取消</button>
+        <button class="btn btn-primary" onclick="enableMode()">启用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 选择角色弹窗 -->
+  <div class="modal-overlay" id="roleModal">
+    <div class="modal" style="width:560px;">
+      <div class="modal-header"><h3>选择角色</h3>
+        <button class="drawer-close" onclick="closeModal('roleModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding-bottom:0;">
+        <input class="form-input" placeholder="搜索角色名称" style="margin-bottom:16px;" oninput="filterSelectionRows('role',this.value)">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:36px;"><input type="checkbox"></th><th>角色名称</th><th>角色说明</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr data-select-row="role"><td><input type="checkbox" checked></td><td>系统管理员</td><td>管理全部系统</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="role"><td><input type="checkbox"></td><td>考勤管理员</td><td>管理考勤规则和排班</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="role"><td><input type="checkbox"></td><td>HR 管理员</td><td>人事流程管理</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="role"><td><input type="checkbox"></td><td>审批管理员</td><td>OA 审批管理</td><td><span class="tag tag-rejected">已停用</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" style="padding-top:8px;">
+          <span>共 12 条</span>
+          <div class="pages"><button class="active">1</button><button>2</button></div>
+          <span>10 条/页</span>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('roleModal')">取消</button><button class="btn btn-primary" onclick="confirmSelection('role')">确认</button></div>
+    </div>
+  </div>
+
+  <!-- 选择应用弹窗 -->
+  <div class="modal-overlay" id="appModal">
+    <div class="modal" style="width:560px;">
+      <div class="modal-header"><h3>选择应用</h3>
+        <button class="drawer-close" onclick="closeModal('appModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding-bottom:0;">
+        <input class="form-input" placeholder="搜索应用名称" style="margin-bottom:16px;" oninput="filterSelectionRows('app',this.value)">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:36px;"><input type="checkbox"></th><th>应用名称</th><th>应用终端</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr data-select-row="app"><td><input type="checkbox" checked></td><td>智能薪酬</td><td>电脑端 / 移动端</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="app"><td><input type="checkbox"></td><td>智能招聘</td><td>电脑端</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="app"><td><input type="checkbox"></td><td>协同审批</td><td>电脑端 / 移动端</td><td><span class="tag tag-effective">已启用</span></td></tr>
+              <tr data-select-row="app"><td><input type="checkbox"></td><td>旧版考勤</td><td>电脑端</td><td><span class="tag tag-rejected">已停用</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" style="padding-top:8px;">
+          <span>共 12 条</span>
+          <div class="pages"><button class="active">1</button><button>2</button></div>
+          <span>10 条/页</span>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('appModal')">取消</button><button class="btn btn-primary" onclick="confirmSelection('app')">确认</button></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PAGE 3: 已开启状态页 -->
+<!-- ============================================================ -->
+<div class="page" id="page-enabled">
+  <div class="banner">
+    <span>此模式已开启，员工可以自助查询和申请个人权限。申请通过后，系统自动分配权限。</span>
+    <a href="#" onclick="showToast('info','打开帮助文档')">帮助文档</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">自助申请权限模式 <span style="font-size:12px;font-weight:500;color:var(--muted-text);margin-left:8px;">（只读模式）</span></span>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-sm" onclick="showToast('info','编辑模式')">编辑</button>
+        <button class="btn btn-danger btn-sm" onclick="openModal('closeModal')">关闭模式</button>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <span class="label">申请方式</span><span class="value">申请角色</span>
+      <span class="label">角色范围</span><span class="value">全部角色</span>
+      <span class="label">审批流程</span><span class="value">预设（组织负责人）— 一级审批</span>
+      <span class="label">后续新增自动加入</span><span class="value">已开启</span>
+    </div>
+  </div>
+
+  <!-- 关闭模式确认弹窗 -->
+  <div class="modal-overlay" id="closeModal">
+    <div class="modal">
+      <div class="modal-header"><h3>关闭模式</h3><button class="drawer-close" onclick="closeModal('closeModal')">✕</button></div>
+      <div class="modal-body">
+        关闭模式后，员工将无法自助查询和申请权限，已有权限不受影响，当前未完成的申请将继续流转。请确认是否关闭自助申请模式？
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('closeModal')">不关闭</button>
+        <button class="btn btn-danger" onclick="closeWithCheck()">确认关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关闭失败弹窗 -->
+  <div class="modal-overlay" id="closeFailModal">
+    <div class="modal">
+      <div class="modal-header"><h3>关闭失败</h3><button class="drawer-close" onclick="closeModal('closeFailModal')">✕</button></div>
+      <div class="modal-body">
+        当前有申请流程未完成审批，请联系审批人审批完成，再关闭模式。
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('closeFailModal')">知道了</button></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PAGE 4: 我的权限页面 (员工端) -->
+<!-- ============================================================ -->
+<div class="page" id="page-my-perms">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">我的权限</span>
+      <button class="btn btn-primary btn-sm" onclick="openDrawer('applyDrawer')">申请权限</button>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchPermTab(this,'func')">功能权限</button>
+      <button class="tab" onclick="switchPermTab(this,'data')">数据权限</button>
+      <button class="tab" onclick="switchPermTab(this,'role')">角色</button>
+      <button class="tab" onclick="switchPermTab(this,'records')">申请记录</button>
+    </div>
+
+    <!-- 功能权限 Tab -->
+    <div class="perm-tab" id="tab-func">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>应用名称</th><th>功能权限</th></tr></thead>
+          <tbody>
+            <tr><td>智能薪酬</td><td>查看、导出报表、编辑配置</td></tr>
+            <tr><td>智能招聘</td><td>查看职位、简历管理、面试安排</td></tr>
+            <tr><td>假勤管理</td><td>查看考勤、排班管理</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 数据权限 Tab -->
+    <div class="perm-tab" id="tab-data" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <p>您没有数据权限</p>
+      </div>
+    </div>
+
+    <!-- 角色 Tab -->
+    <div class="perm-tab" id="tab-role" style="display:none;">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>角色名称</th><th>角色说明</th></tr></thead>
+          <tbody>
+            <tr><td>考勤管理员</td><td>可管理考勤规则和排班</td></tr>
+            <tr><td>薪资查看员</td><td>可查看薪资报表</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 申请记录 Tab -->
+    <div class="perm-tab" id="tab-records" style="display:none;">
+      <p style="font-size:13px;color:var(--muted-text);margin-bottom:12px;">切换到「申请记录」页面查看完整列表</p>
+      <button class="btn btn-secondary btn-sm" onclick="switchPage('page-records')">查看完整申请记录</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PAGE 5: 申请记录列表 -->
+<!-- ============================================================ -->
+<div class="page" id="page-records">
+  <div class="card">
+    <div class="card-header"><span class="card-title">申请记录</span></div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>申请日期</label>
+        <input type="date" placeholder="开始日期">
+      </div>
+      <div class="filter-group">
+        <label>~</label>
+        <input type="date" placeholder="结束日期">
+      </div>
+      <div class="filter-group">
+        <label>审批状态</label>
+        <select>
+          <option>全部</option>
+          <option>已通过</option>
+          <option>已拒绝</option>
+          <option>审批中</option>
+          <option>已撤销</option>
+        </select>
+      </div>
+      <button class="btn btn-secondary btn-sm">查询</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>申请时间</th><th>申请原因</th><th>申请内容</th><th>状态</th><th style="width:80px;">操作</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-07-21 14:30</td>
+            <td>需要管理考勤排班</td>
+            <td>考勤管理员</td>
+            <td><span class="tag tag-approved">已通过</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>2026-07-20 09:15</td>
+            <td>需要查看薪资数据</td>
+            <td>薪资查看员</td>
+            <td><span class="tag tag-pending">审批中</span></td>
+            <td><button class="btn btn-ghost btn-sm" onclick="openModal('revokeModal')">撤销</button></td>
+          </tr>
+          <tr>
+            <td>2026-07-18 16:45</td>
+            <td>审批流程优化</td>
+            <td>审批管理员</td>
+            <td><span class="tag tag-rejected">已拒绝</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>2026-07-15 11:20</td>
+            <td>人事管理需要</td>
+            <td>HR 管理员</td>
+            <td><span class="tag tag-revoked">已撤销</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>2026-07-14 08:30</td>
+            <td>需要系统管理权限</td>
+            <td>系统管理员</td>
+            <td><span class="tag tag-effective">已生效</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <span>共 5 条</span>
+      <div class="pages"><button class="active">1</button></div>
+      <span>10 条/页</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- DRAWER: 申请权限抽屉 -->
+<!-- ============================================================ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="applyDrawer">
+  <div class="drawer-header">
+    <h3>申请权限</h3>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="form-group">
+      <label class="form-label">申请人</label>
+      <input class="form-input" value="张明" readonly style="background:var(--bg);color:var(--muted-text);cursor:not-allowed;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">申请原因 <span class="required">*</span></label>
+      <textarea class="form-input" placeholder="请填写申请原因，限500字" id="applyReason"></textarea>
+      <div class="form-hint">限500字</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">申请角色</label>
+      <div class="card" style="padding:12px;background:var(--bg);">
+        <div class="checkbox-group" style="margin-bottom:8px;"><input type="checkbox" checked><span>考勤管理员</span><span style="color:var(--muted-text);font-size:13px;">— 可管理考勤规则和排班</span></div>
+        <div class="checkbox-group" style="margin-bottom:8px;"><input type="checkbox"><span>薪资查看员</span><span style="color:var(--muted-text);font-size:13px;">— 可查看薪资报表</span></div>
+        <div class="checkbox-group"><input type="checkbox"><span>HR 管理员</span><span style="color:var(--muted-text);font-size:13px;">— 人事流程管理</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" onclick="closeDrawer()">取消</button>
+    <button class="btn btn-primary" onclick="submitApplication()">提交</button>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: 撤销申请确认弹窗 -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="revokeModal">
+  <div class="modal">
+    <div class="modal-header"><h3>撤销申请</h3><button class="drawer-close" onclick="closeModal('revokeModal')">✕</button></div>
+    <div class="modal-body">确定要撤销该申请吗？撤销后不可恢复。</div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('revokeModal')">取消</button>
+      <button class="btn btn-danger" onclick="closeModal('revokeModal');showToast('success','已撤销')">确认撤销</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 无法启用弹窗 (互斥) -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="conflictModal">
+  <div class="modal">
+    <div class="modal-header"><h3>无法启用</h3><button class="drawer-close" onclick="closeModal('conflictModal')">✕</button></div>
+    <div class="modal-body">
+      企业已开启「双管理员互审模式」，与自助申请权限模式互斥，不能同时开启。如需启用自助申请模式，请先关闭互斥模式。
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('conflictModal')">知道了</button></div>
+  </div>
+</div>
+
+
+<script>
+// ===== Page Navigation =====
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tab = document.querySelector(`.nav-tab[data-page="${id}"]`);
+  if (tab) tab.classList.add('active');
+}
+
+// ===== Step Navigation =====
+let currentStep = 1;
+function goStep(n) {
+  currentStep = n;
+  [1,2,3].forEach(i => {
+    document.getElementById('step'+i).style.display = i === n ? 'block' : 'none';
+    const lbl = document.getElementById('step'+i+'-label');
+    lbl.className = 'step-item';
+    if (i < n) { lbl.classList.add('done'); lbl.querySelector('.step-num').textContent = '✓'; }
+    if (i === n) lbl.classList.add('active');
+    const line = document.getElementById('line'+i);
+    if (line) line.className = 'step-line' + (i < n ? ' done' : '');
+  });
+}
+
+// ===== Radio Card Select =====
+let selectedMode = 'role';
+function selectCard(el, mode) {
+  el.closest('.radio-card-group').querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedMode = mode;
+  const t2 = document.getElementById('step2-title');
+  const p2 = document.getElementById('step2-prompt');
+  if (mode === 'role') {
+    t2.textContent = '第二步：设置角色范围';
+    p2.textContent = '请选择允许员工自助申请的角色';
+    document.getElementById('allScopeTitle').textContent = '全部角色';
+    document.getElementById('allScopeDesc').textContent = '企业内所有已启用和已停用的角色';
+    document.getElementById('partialScopeTitle').textContent = '部分角色';
+    document.getElementById('partialScopeDesc').textContent = '手动选择允许申请的角色';
+    document.getElementById('selectionTitle').textContent = '已选角色';
+    document.getElementById('openSelectionButton').textContent = '选择角色';
+    document.getElementById('autoNewLabel').textContent = '后续新增角色自动加入员工可申请的范围';
+  } else {
+    t2.textContent = '第二步：设置应用范围';
+    p2.textContent = '请选择允许员工自助申请权限的应用';
+    document.getElementById('allScopeTitle').textContent = '全部应用';
+    document.getElementById('allScopeDesc').textContent = '企业内已添加的全部应用，包括已启用和已停用';
+    document.getElementById('partialScopeTitle').textContent = '部分应用';
+    document.getElementById('partialScopeDesc').textContent = '手动选择允许申请权限的应用';
+    document.getElementById('selectionTitle').textContent = '已选应用';
+    document.getElementById('openSelectionButton').textContent = '选择应用';
+    document.getElementById('autoNewLabel').textContent = '后续新增应用自动加入员工可申请的范围';
+  }
+  document.getElementById('selectionTags').textContent = '尚未选择';
+  const scopeCards = document.querySelectorAll('#step2 .radio-card');
+  scopeCards.forEach((card, index) => card.classList.toggle('selected', index === 0));
+  document.getElementById('partialSelection').style.display = 'none';
+}
+
+function selectScope(el, scope) {
+  el.closest('.radio-card-group').querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('partialSelection').style.display = scope === 'partial' ? 'block' : 'none';
+}
+
+function openSelectionModal() {
+  openModal(selectedMode === 'role' ? 'roleModal' : 'appModal');
+}
+
+function filterSelectionRows(type, query) {
+  const keyword = query.trim().toLowerCase();
+  document.querySelectorAll(`[data-select-row="${type}"]`).forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
+  });
+}
+
+function confirmSelection(type) {
+  const names = Array.from(document.querySelectorAll(`[data-select-row="${type}"]`))
+    .filter(row => row.querySelector('input[type="checkbox"]').checked)
+    .map(row => row.cells[1].textContent.trim());
+  const visibleNames = names.slice(0, 3);
+  document.getElementById('selectionTags').textContent = names.length
+    ? visibleNames.join('、') + (names.length > 3 ? ` +${names.length - 3}` : '')
+    : '尚未选择';
+  closeModal(type === 'role' ? 'roleModal' : 'appModal');
+}
+
+// ===== Enable Mode =====
+function enableMode() {
+  const conflict = false; // toggle for demo
+  if (conflict) {
+    openModal('conflictModal');
+  } else {
+    showToast('success', '开启成功');
+    setTimeout(() => switchPage('page-enabled'), 800);
+  }
+}
+
+// ===== Close Modal with Check =====
+function closeWithCheck() {
+  closeModal('closeModal');
+  const hasPending = true;
+  if (hasPending) {
+    setTimeout(() => openModal('closeFailModal'), 300);
+  } else {
+    showToast('success', '关闭「自助申请权限模式」成功');
+  }
+}
+
+// ===== Modal Utils =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ===== Drawer =====
+function openDrawer(id) {
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById(id).classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+}
+
+// ===== Submit Application =====
+function submitApplication() {
+  const reason = document.getElementById('applyReason').value;
+  if (!reason.trim()) {
+    showToast('error', '请填写申请原因');
+    return;
+  }
+  closeDrawer();
+  showToast('success', '提交成功');
+}
+
+// ===== Toast =====
+function showToast(type, msg) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + (type === 'success' ? 'success' : '');
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toast.innerHTML = `<span class="toast-icon">${icon}</span> ${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
+}
+
+// ===== Perm Tab Switch =====
+function switchPermTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.perm-tab').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-'+tab).style.display = 'block';
+}
+
+// ===== Init =====
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchPage(tab.dataset.page));
+});
+switchPage('page-mode');
+</script>
+</body>
+</html>

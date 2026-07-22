@@ -126,7 +126,7 @@
     },
     {
       "id": "page-spec",
-      "_comment": "以 experience-blueprint 作为体验设计权威；完整消费蓝图后，再读取 UXB 后置产出的 page-generation-handoff.md 补充非重叠的确定性页面事实。蓝图明确取舍时保持蓝图，未解释的直接矛盾进入待确认，不得静默覆盖。edge 仍为可选状态补强，该后置补充不改变 required 与 next_hint。",
+      "_comment": "以 experience-blueprint 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
       "name_zh": "页面规格",
       "phase": 2.5,
       "reads": [
