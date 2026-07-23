@@ -132,6 +132,63 @@ function defaultDisposition(item) {
   };
 }
 
+function summarizeDraftCoverageIssues(items, mappings, ruleBySource, explicitCoverage) {
+  const conflicts = [];
+  const unresolved = [];
+
+  for (const item of items) {
+    const mapping = mappings.get(item.source_item_id);
+    const mappedTypes = ["lane", "node", "edge", "flow"].filter((type) => mapping[type].length);
+    if (mappedTypes.length > 1) {
+      conflicts.push({
+        source_item_id: item.source_item_id,
+        source_ref: item.source_ref,
+        mapped_types: mappedTypes,
+      });
+    }
+
+    const hasMapping = mappedTypes.length > 0 || mapping.question.length > 0;
+    const hasOverride = explicitCoverage.has(item.source_item_id) || ruleBySource.has(item.source_item_id);
+    if (!hasMapping && !hasOverride && defaultDisposition(item).disposition === "blocked") {
+      unresolved.push(item);
+    }
+  }
+
+  return { conflicts, unresolved };
+}
+
+function formatDraftCoverageIssues({ conflicts, unresolved }) {
+  const lines = ["草稿覆盖预检失败："];
+
+  if (conflicts.length) {
+    lines.push(`- 跨图元素类型冲突 ${conflicts.length} 项：`);
+    for (const item of conflicts) {
+      lines.push(`  ${item.source_item_id} -> ${item.mapped_types.join(",")} (${item.source_ref})`);
+    }
+  }
+
+  if (unresolved.length) {
+    const groups = new Map();
+    for (const item of unresolved) {
+      const jsonGroup = item.source_ref.match(/#\$\.(main_flow|sub_flows|exceptions|states)(?:\[|\.|$)/)?.[1];
+      const markdownGroup = (item.context || "").match(/§([2345])\b/)?.[1];
+      const group = jsonGroup || (markdownGroup ? `Markdown §${markdownGroup}` : "其他");
+      groups.set(group, (groups.get(group) || 0) + 1);
+    }
+    const groupSummary = [...groups.entries()]
+      .map(([group, count]) => `${group}=${count}`)
+      .join("，");
+    lines.push(`- 未显式处置流程源项 ${unresolved.length} 项：${groupSummary}`);
+    lines.push("- 前 12 项：");
+    for (const item of unresolved.slice(0, 12)) {
+      lines.push(`  ${item.source_item_id} (${item.source_ref})`);
+    }
+  }
+
+  lines.push("请一次性修正选择器重叠并补齐流程覆盖后重试，不要逐项试错。");
+  return lines.join("\n");
+}
+
 function materializeCoverage(inventory, draft) {
   const items = asArray(inventory.items);
   const model = {
@@ -187,12 +244,14 @@ function materializeCoverage(inventory, draft) {
     }
   }
 
+  const draftIssues = summarizeDraftCoverageIssues(items, mappings, ruleBySource, explicitCoverage);
+  if (draftIssues.conflicts.length) {
+    throw new Error(formatDraftCoverageIssues(draftIssues));
+  }
+
   model.coverage_manifest = items.map((item) => {
     const mapping = mappings.get(item.source_item_id);
     const mappedTypes = ["lane", "node", "edge", "flow"].filter((type) => mapping[type].length);
-    if (mappedTypes.length > 1) {
-      throw new Error(`源项跨多种图元素类型映射，请拆分证据：${item.source_item_id} -> ${mappedTypes.join(",")}`);
-    }
     if (mappedTypes.length === 1) {
       const semanticKind = mappedTypes[0];
       const mappedCount = mapping[semanticKind].length;
@@ -274,6 +333,8 @@ function main() {
 if (require.main === module) main();
 
 module.exports = {
+  formatDraftCoverageIssues,
   materializeCoverage,
   matchesSelector,
+  summarizeDraftCoverageIssues,
 };

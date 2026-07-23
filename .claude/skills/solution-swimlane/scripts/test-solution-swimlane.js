@@ -343,7 +343,58 @@ function run() {
     );
   }
 
-  console.log("solution-swimlane 回归测试通过：12 项");
+  const conflictInventory = {
+    schema_version: "1.0",
+    source_hash: "conflict-source-hash",
+    files: [],
+    source_items_total: 2,
+    items: [
+      {
+        ...sourceItem("conflict"),
+        source_ref: "spark-output/context/experience-blueprint.json#$.main_flow[0].name",
+      },
+      {
+        ...sourceItem("unresolved"),
+        source_ref: "spark-output/context/experience-blueprint.json#$.exceptions[0].name",
+      },
+    ],
+  };
+  const conflictDraft = {
+    schema_version: "1.0",
+    title: "冲突预检",
+    subtitle: "一次报告全部草稿覆盖问题",
+    lanes: [{
+      id: "lane-conflict",
+      name: "冲突泳道",
+      lane_type: "human",
+      order: 1,
+      source_item_ids: ["conflict"],
+    }],
+    nodes: [{
+      id: "node-conflict",
+      lane_id: "lane-conflict",
+      label: "冲突节点",
+      node_type: "action",
+      summary: "同一证据被错误复用",
+      certainty: "confirmed",
+      source_item_ids: ["conflict"],
+      flow_ids: [],
+    }],
+    edges: [],
+    flows: [],
+    open_questions: [],
+  };
+  assert.throws(
+    () => materializeCoverage(conflictInventory, conflictDraft),
+    (error) => (
+      /跨图元素类型冲突 1 项/.test(error.message)
+      && /未显式处置流程源项 1 项：exceptions=1/.test(error.message)
+      && /不要逐项试错/.test(error.message)
+    ),
+    "草稿预检必须一次报告跨类型冲突和未处置流程源项",
+  );
+
+  console.log("solution-swimlane 回归测试通过：13 项");
 }
 
 try {
