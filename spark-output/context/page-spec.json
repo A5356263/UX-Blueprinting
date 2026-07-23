@@ -1,165 +1,240 @@
 {
   "skill": "page-spec",
   "version": "2.0",
-  "generated_at": "2026-07-21",
-  "project_name": "员工自助申请权限",
+  "generated_at": "2026-07-23",
+  "project_name": "财富小助Skill广场",
   "artifact_md": "spark-output/page_spec.md",
   "source_refs": [
-    "spark-output/context/experience-blueprint.json",
     "spark-output/experience_blueprint.md",
-    "spark-output/context/page-generation-handoff.md",
-    ".claude/skills/knowledge-wiki/knowledge/raw/业务/权限管理/15_页面载体语义.md"
+    "spark-output/context/experience-blueprint.json",
+    "input/【财富专区】资产配置面客版/财富小助手skill广场.md"
   ],
   "page_summary": {
-    "product_domain": "权限管理 — 权限治理模式扩展（自助申请）",
-    "page_type": "配置页（分步向导）、列表页、抽屉、弹窗",
-    "user_role": "超级管理员（超管）、普通员工、审批人（组织负责人）",
-    "core_task": "超管配置自助申请模式 → 员工查看/申请权限 → 审批人处理申请"
+    "product_domain": "企业财富+ — Skill 资产管理与分发",
+    "page_type": "列表页 / 详情页 / 编辑页 / 弹窗 / 联想面板",
+    "user_role": "Skill 创建者（总分行产品经理、开发人员）、分行普通用户与客户经理、总行管理者",
+    "core_task": "创建、共享、浏览、订阅并调用 AI 提示词模板（Skill）"
   },
   "generation_scope": {
     "generate": [
-      "entity-config-page",
-      "entity-close-modal",
-      "entity-my-permissions",
-      "entity-apply-drawer",
-      "entity-apply-records",
-      "entity-revoke-modal"
+      "skill-square-page",
+      "my-skills-view",
+      "create-method-dialog",
+      "skill-edit-page",
+      "skill-detail-page",
+      "branch-subscribe-dialog",
+      "copy-skill-dialog",
+      "history-restore-dialog",
+      "unshare-dialog",
+      "delete-skill-dialog",
+      "assistant-skill-panel",
+      "optimization-report-dialog"
     ],
     "reference_only": [
-      "entity-carrier-permission-mode-page",
-      "entity-personal-center",
-      "entity-oa-approval"
+      "assistant-chat-page"
     ],
     "do_not_generate": []
   },
   "entities": [
     {
-      "entity_id": "entity-carrier-permission-mode-page",
-      "name": "权限管理模式页",
+      "entity_id": "skill-square-page",
+      "name": "Skill 广场 Page",
       "type": "page",
-      "generate_mode": "reference_only",
+      "generate_mode": "generate",
       "md_anchor": "§4"
     },
     {
-      "entity_id": "entity-config-page",
-      "name": "自助申请模式配置页（超管端）",
+      "entity_id": "my-skills-view",
+      "name": "我的 Skill 视图",
       "type": "page",
       "generate_mode": "generate",
       "md_anchor": "§5"
     },
     {
-      "entity_id": "entity-close-modal",
-      "name": "关闭模式二次确认弹窗",
-      "type": "modal",
+      "entity_id": "create-method-dialog",
+      "name": "创建方式 Dialog",
+      "type": "dialog",
       "generate_mode": "generate",
       "md_anchor": "§6"
     },
     {
-      "entity_id": "entity-my-permissions",
-      "name": "我的权限页面（员工端）",
+      "entity_id": "skill-edit-page",
+      "name": "Skill 编辑 Page",
       "type": "page",
       "generate_mode": "generate",
       "md_anchor": "§7"
     },
     {
-      "entity_id": "entity-apply-drawer",
-      "name": "申请权限抽屉（员工端）",
-      "type": "drawer",
+      "entity_id": "skill-detail-page",
+      "name": "Skill 详情 Page",
+      "type": "page",
       "generate_mode": "generate",
       "md_anchor": "§8"
     },
     {
-      "entity_id": "entity-apply-records",
-      "name": "申请记录列表",
-      "type": "page",
+      "entity_id": "branch-subscribe-dialog",
+      "name": "分行订阅确认 Dialog",
+      "type": "dialog",
       "generate_mode": "generate",
       "md_anchor": "§9"
     },
     {
-      "entity_id": "entity-revoke-modal",
-      "name": "撤销申请确认弹窗",
-      "type": "modal",
+      "entity_id": "copy-skill-dialog",
+      "name": "复制 Skill Dialog",
+      "type": "dialog",
       "generate_mode": "generate",
       "md_anchor": "§10"
     },
     {
-      "entity_id": "entity-personal-center",
-      "name": "个人中心",
-      "type": "page",
-      "generate_mode": "reference_only",
-      "md_anchor": "§3"
+      "entity_id": "history-restore-dialog",
+      "name": "历史版本还原 Dialog",
+      "type": "dialog",
+      "generate_mode": "generate",
+      "md_anchor": "§11"
     },
     {
-      "entity_id": "entity-oa-approval",
-      "name": "OA审批详情页/待办卡片",
+      "entity_id": "unshare-dialog",
+      "name": "取消共享 Dialog",
+      "type": "dialog",
+      "generate_mode": "generate",
+      "md_anchor": "§12"
+    },
+    {
+      "entity_id": "delete-skill-dialog",
+      "name": "删除 Skill Dialog",
+      "type": "dialog",
+      "generate_mode": "generate",
+      "md_anchor": "§13"
+    },
+    {
+      "entity_id": "assistant-skill-panel",
+      "name": "财富小助联想面板",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "§14"
+    },
+    {
+      "entity_id": "optimization-report-dialog",
+      "name": "优化报告弹窗",
+      "type": "dialog",
+      "generate_mode": "generate",
+      "md_anchor": "§8 > 嵌套实体：优化报告弹窗"
+    },
+    {
+      "entity_id": "assistant-chat-page",
+      "name": "财富小助对话 Page",
       "type": "page",
       "generate_mode": "reference_only",
-      "md_anchor": "§11"
+      "md_anchor": "§2 > 只引用不生成"
     }
   ],
   "entity_relationships": [
     {
-      "from_entity_id": "entity-carrier-permission-mode-page",
-      "to_entity_id": "entity-config-page",
-      "relation": "触发入口"
-    },
-    {
-      "from_entity_id": "entity-config-page",
-      "to_entity_id": "entity-close-modal",
-      "relation": "嵌套弹窗"
-    },
-    {
-      "from_entity_id": "entity-personal-center",
-      "to_entity_id": "entity-my-permissions",
-      "relation": "触发入口"
-    },
-    {
-      "from_entity_id": "entity-my-permissions",
-      "to_entity_id": "entity-apply-drawer",
-      "relation": "打开抽屉"
-    },
-    {
-      "from_entity_id": "entity-my-permissions",
-      "to_entity_id": "entity-apply-records",
+      "from_entity_id": "skill-square-page",
+      "to_entity_id": "my-skills-view",
       "relation": "Tab 切换"
     },
     {
-      "from_entity_id": "entity-apply-records",
-      "to_entity_id": "entity-revoke-modal",
-      "relation": "操作触发弹窗"
+      "from_entity_id": "skill-square-page",
+      "to_entity_id": "create-method-dialog",
+      "relation": "[发布 Skill] 触发"
+    },
+    {
+      "from_entity_id": "my-skills-view",
+      "to_entity_id": "create-method-dialog",
+      "relation": "[发布 Skill] 触发"
+    },
+    {
+      "from_entity_id": "create-method-dialog",
+      "to_entity_id": "skill-edit-page",
+      "relation": "[手动创建/上传] 进入"
+    },
+    {
+      "from_entity_id": "skill-edit-page",
+      "to_entity_id": "skill-detail-page",
+      "relation": "[保存并发布] 跳转"
+    },
+    {
+      "from_entity_id": "skill-square-page",
+      "to_entity_id": "skill-detail-page",
+      "relation": "[查看详情] 跳转"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "branch-subscribe-dialog",
+      "relation": "[为本分行开通] 触发"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "copy-skill-dialog",
+      "relation": "[复制] 触发"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "history-restore-dialog",
+      "relation": "[还原为新版本] 触发"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "unshare-dialog",
+      "relation": "[取消共享] 触发"
+    },
+    {
+      "from_entity_id": "my-skills-view",
+      "to_entity_id": "delete-skill-dialog",
+      "relation": "[删除] 触发"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "delete-skill-dialog",
+      "relation": "[删除] 触发"
+    },
+    {
+      "from_entity_id": "assistant-chat-page",
+      "to_entity_id": "assistant-skill-panel",
+      "relation": "[/] 触发"
+    },
+    {
+      "from_entity_id": "skill-detail-page",
+      "to_entity_id": "optimization-report-dialog",
+      "relation": "[获取优化报告] 触发"
     }
   ],
   "coverage": {
-    "pages": 2,
-    "entities": 6,
-    "flows": 7,
-    "validation_rules": 9,
-    "states": 7,
-    "exceptions": 7,
+    "pages": 5,
+    "entities": 13,
+    "flows": 4,
+    "validation_rules": 11,
+    "states": 16,
+    "exceptions": 11,
     "result_states": 2,
-    "copy_items": 58,
+    "copy_items": 69,
     "template_variables": 15
   },
   "open_questions": [
     {
-      "question": "审批人缺失的降级方案待确认",
-      "impact": "影响 E2 异常流程的精确设计；当前采用递归上级→升级超管方案推进"
+      "question": "取消共享对既有外部分行订阅的影响",
+      "impact": "决定取消共享 Dialog 文案中'暂时继续可用'是否为最终规则；若规则变化，取消共享 Dialog 的影响说明需重写"
     },
     {
-      "question": "OA 审批预设流程的默认复核人员风险",
-      "impact": "影响 P1-5 审批流程预设复杂度；当前采用一级审批（组织负责人）方案推进"
+      "question": "新版本未就绪时的回退行为",
+      "impact": "决定 Banner 文案和是否应提供上一可用版本；若业务方要求不可用则阻塞，则 Banner 文案和用户下一步需调整"
     },
     {
-      "question": "生效中状态的展示时长阈值",
-      "impact": "若分配为秒级则无需独立状态；当前保留生效中状态按需展示"
+      "question": "个人退出后的恢复方式",
+      "impact": "影响恢复操作的交互路径和文案；目前已在卡片和详情提供'恢复使用'按钮，但恢复后是否需额外确认未定"
     },
     {
-      "question": "申请记录入口位置",
-      "impact": "影响页面结构布局；当前方案放在我的权限页面内 Tab"
+      "question": "所属分行自动可用是否计入订阅分行数",
+      "impact": "决定卡片和详情中'订阅分行数'的统计口径，影响价值指标对齐"
     },
     {
-      "question": "通知渠道确认",
-      "impact": "影响通知文案展示形式和长度限制；当前复用 OA 审批通知机制"
+      "question": "Skill 名称唯一性范围",
+      "impact": "决定创建、复制时名称冲突校验的覆盖范围；目前暂按'同一创建者范围内唯一'推进"
+    },
+    {
+      "question": "评分触发与失败边界",
+      "impact": "决定新版本创建后评分是否阻断使用；目前蓝图方案为评分失败不阻断保存和使用"
     }
   ],
   "edge_consumed": false,
