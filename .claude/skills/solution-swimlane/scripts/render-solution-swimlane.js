@@ -6,7 +6,7 @@ const {
   computedModelHash,
   parseArgs,
   validateModel,
-} = require("./validate-solution-swimlane");
+} = require("./validate-semantic-model");
 
 const NODE_WIDTH = 180;
 const COLUMN_GAP = 88;
@@ -39,6 +39,10 @@ function jsonForScript(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c").replaceAll(">", "\\u003e");
 }
 
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
 function estimateNodeHeight(node) {
   const labelLines = Math.max(1, Math.ceil([...node.label].length / 10));
   const summaryLines = Math.max(1, Math.ceil([...node.summary].length / 18));
@@ -49,7 +53,7 @@ function computeRanks(model) {
   const ranks = new Map();
   const orderedFlows = [...model.flows].sort((a, b) => {
     const weight = { main: 0, secondary: 1, exception: 2 };
-    return weight[a.flow_type] - weight[b.flow_type] || a.id.localeCompare(b.id);
+    return weight[a.type] - weight[b.type] || a.id.localeCompare(b.id);
   });
   let tail = 0;
   for (const flow of orderedFlows) {
@@ -147,7 +151,7 @@ function flowNames(model, ids) {
 }
 
 function flowTypes(model, ids) {
-  const typeById = new Map(model.flows.map((flow) => [flow.id, flow.flow_type]));
+  const typeById = new Map(model.flows.map((flow) => [flow.id, flow.type]));
   const weight = { main: 0, secondary: 1, exception: 2 };
   return [...new Set(ids.map((id) => typeById.get(id)).filter(Boolean))]
     .sort((a, b) => weight[a] - weight[b]);
@@ -364,25 +368,29 @@ function buildEdgeRoutes(model, layout) {
 
 function renderNode(node, model) {
   const typeLabels = {
+    start: "流程开始",
     action: "角色任务",
     system_process: "系统处理",
     decision: "条件判断",
     result: "业务结果",
+    end: "流程结束",
+    pending: "待确认",
   };
   const types = flowTypes(model, node.flow_ids);
   const primaryType = primaryFlowType(model, node.flow_ids);
   return `
-    <g class="swim-node node-${node.node_type} flow-primary-${primaryType}" data-node-id="${escapeAttr(node.id)}"
+    <g class="swim-node node-${node.type} flow-primary-${primaryType}" data-node-id="${escapeAttr(node.id)}"
+       data-node-type="${escapeAttr(node.type)}" data-certainty="${escapeAttr(node.certainty)}"
        data-flow-ids="${escapeAttr(node.flow_ids.join(","))}" data-flow-types="${escapeAttr(types.join(","))}"
        data-primary-flow-type="${escapeAttr(primaryType)}" role="button" tabindex="0"
        data-node-label="${escapeAttr(node.label)}" data-node-summary="${escapeAttr(node.summary)}"
        data-flow-names="${escapeAttr(flowNames(model, node.flow_ids))}"
-       data-source-count="${node.source_item_ids.length}" data-x="${node.x}" data-y="${node.y}"
+       data-source-count="${asArray(node.source_refs).length}" data-x="${node.x}" data-y="${node.y}"
        data-width="${node.width}" data-height="${node.height}" aria-label="${escapeAttr(node.label)}">
       <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="10"></rect>
       <foreignObject x="${node.x + 9}" y="${node.y + 8}" width="${node.width - 18}" height="${node.height - 16}">
         <div xmlns="http://www.w3.org/1999/xhtml" class="node-copy">
-          <span class="node-kind">${typeLabels[node.node_type]}</span>
+          <span class="node-kind">${typeLabels[node.type]}</span>
           <strong>${escapeHtml(node.label)}</strong>
           <span>${escapeHtml(node.summary)}</span>
         </div>
@@ -394,7 +402,7 @@ function renderEdge(edge, route, model) {
   const types = flowTypes(model, edge.flow_ids);
   const primaryType = primaryFlowType(model, edge.flow_ids);
   return `
-    <g class="swim-edge edge-${edge.edge_type} flow-primary-${primaryType}" data-edge-id="${escapeAttr(edge.id)}"
+    <g class="swim-edge edge-${edge.type} certainty-${edge.certainty} flow-primary-${primaryType}" data-edge-id="${escapeAttr(edge.id)}"
        data-flow-ids="${escapeAttr(edge.flow_ids.join(","))}" data-flow-types="${escapeAttr(types.join(","))}"
        data-primary-flow-type="${escapeAttr(primaryType)}" data-route-channel="${route.offset}"
        role="button" tabindex="0" aria-label="${escapeAttr(edge.label)}">
@@ -411,16 +419,16 @@ function renderEdge(edge, route, model) {
 function renderSvg(model, layout) {
   const laneFills = { human: "#f7fbff", team: "#fffaf2", system: "#f3faf7" };
   const lanes = layout.lanes.map((lane, index) => `
-    <g class="swim-lane lane-${lane.lane_type}" data-lane-id="${escapeAttr(lane.id)}"
+    <g class="swim-lane lane-${lane.type}" data-lane-id="${escapeAttr(lane.id)}"
        data-y="${lane.y}" data-height="${lane.height}">
-      <rect x="0" y="${lane.y}" width="${layout.width}" height="${lane.height}" fill="${laneFills[lane.lane_type]}"></rect>
+      <rect x="0" y="${lane.y}" width="${layout.width}" height="${lane.height}" fill="${laneFills[lane.type]}"></rect>
       <line x1="0" x2="${layout.width}" y1="${lane.y + lane.height}" y2="${lane.y + lane.height}"></line>
       <rect class="lane-head" x="0" y="${lane.y}" width="${HEADER_WIDTH}" height="${lane.height}"></rect>
       <text class="lane-order" x="18" y="${lane.y + 24}">${String(index + 1).padStart(2, "0")}</text>
       <foreignObject x="16" y="${lane.y + 32}" width="${HEADER_WIDTH - 28}" height="${lane.height - 38}">
         <div xmlns="http://www.w3.org/1999/xhtml" class="lane-title">
           <strong>${escapeHtml(lane.name)}</strong>
-          <span>${lane.lane_type === "system" ? "系统自动处理" : "参与方职责"}</span>
+          <span>${escapeHtml(lane.responsibility)}</span>
         </div>
       </foreignObject>
     </g>`).join("");
@@ -433,7 +441,7 @@ function renderSvg(model, layout) {
     data-base-width="${layout.width}" data-base-height="${layout.height}" role="img"
     aria-labelledby="svg-title svg-desc">
     <title id="svg-title">${escapeHtml(model.title)}</title>
-    <desc id="svg-desc">${escapeHtml(model.subtitle)}。严格横向泳道，流程从左到右。</desc>
+    <desc id="svg-desc">${escapeHtml(model.scope)}。严格横向泳道，流程从左到右。</desc>
     <style>
       .swim-lane > line { stroke: #c8d3e1; stroke-width: 1; }
       .lane-head { fill: rgba(255,255,255,.8); stroke: #aab9ca; }
@@ -469,6 +477,10 @@ function renderSvg(model, layout) {
       .edge-conditional .edge-line { stroke-dasharray:7 5; }
       .edge-return .edge-line { stroke-dasharray:3 5; }
       .edge-exception .edge-line { stroke-dasharray:9 5; }
+      .edge-handoff .edge-line { stroke-dasharray:12 3; }
+      .edge-terminate .edge-line { stroke-dasharray:2 4; }
+      .certainty-uncertain .edge-line { stroke-dasharray:5 5; }
+      .node-pending > rect { stroke-dasharray:6 4; }
       .swim-edge .edge-hit { fill:none; stroke:transparent !important; stroke-width:12; stroke-dasharray:none !important; marker-end:none !important; pointer-events:stroke; }
       body[data-active-flow-type="all"] .swim-edge { opacity:.36; }
       body[data-active-flow-type="all"] .swim-edge.flow-primary-main { opacity:.88; }
@@ -495,7 +507,7 @@ function renderSvg(model, layout) {
 function renderFlowButtons(model) {
   return model.flows.map((flow) => {
     const selected = flow.default_visible ? " is-selected" : "";
-    return `<button class="control flow-filter${selected}" type="button" data-flow-filter="${escapeAttr(flow.id)}" data-flow-type="${escapeAttr(flow.flow_type)}">${escapeHtml(flow.name)}</button>`;
+    return `<button class="control flow-filter${selected}" type="button" data-flow-filter="${escapeAttr(flow.id)}" data-flow-type="${escapeAttr(flow.type)}">${escapeHtml(flow.name)}</button>`;
   }).join("\n");
 }
 
@@ -509,10 +521,10 @@ function renderQuestions(model) {
 
 function renderMetrics(report) {
   const metrics = [
-    ["源项", report.summary.source_items_total],
-    ["必画节点", report.summary.required_nodes_total],
-    ["必画关系", report.summary.required_edges_total],
-    ["阻断项", report.summary.blocked_total],
+    ["泳道", report.summary.lanes_total],
+    ["节点", report.summary.nodes_total],
+    ["关系", report.summary.edges_total],
+    ["待确认", report.summary.pending_total + report.summary.open_questions_total],
   ];
   return metrics.map(([label, value]) => (
     `<div class="metric"><strong>${Number(value) || 0}</strong><span>${escapeHtml(label)}</span></div>`
@@ -524,24 +536,21 @@ function replaceRequired(template, marker, value) {
   return template.replaceAll(marker, value);
 }
 
-function buildHtml(inventory, model, template) {
-  const modelReport = validateModel(inventory, model);
+function buildHtml(model, template) {
+  const modelReport = validateModel(model);
   if (!modelReport.ok) {
     throw new Error(`模型校验失败：\n${modelReport.errors.join("\n")}`);
   }
   const layout = computeLayout(model);
   const replacements = {
     "__SWIMLANE_TITLE__": escapeHtml(model.title),
-    "__SWIMLANE_SUBTITLE__": escapeHtml(model.subtitle),
-    "__SWIMLANE_SOURCE_HASH__": inventory.source_hash,
-    "__SWIMLANE_SOURCE_HASH_SHORT__": inventory.source_hash.slice(0, 12),
+    "__SWIMLANE_SUBTITLE__": escapeHtml(model.scope),
     "__SWIMLANE_MODEL_HASH__": modelReport.model_hash,
     "__SWIMLANE_MODEL_HASH_SHORT__": modelReport.model_hash.slice(0, 12),
     "__SWIMLANE_FLOW_BUTTONS__": renderFlowButtons(model),
     "__SWIMLANE_SVG__": renderSvg(model, layout),
     "__SWIMLANE_QUESTIONS__": renderQuestions(model),
     "__SWIMLANE_VALIDATION_METRICS__": renderMetrics(modelReport),
-    "__SWIMLANE_INVENTORY_JSON__": jsonForScript(inventory),
     "__SWIMLANE_MODEL_JSON__": jsonForScript(model),
     "__SWIMLANE_REPORT_JSON__": jsonForScript(modelReport),
   };
@@ -549,7 +558,7 @@ function buildHtml(inventory, model, template) {
   for (const [marker, value] of Object.entries(replacements)) {
     html = replaceRequired(html, marker, value);
   }
-  const htmlReport = validateModel(inventory, model, html);
+  const htmlReport = validateModel(model, html);
   if (!htmlReport.ok) {
     throw new Error(`HTML 校验失败：\n${htmlReport.errors.join("\n")}`);
   }
@@ -582,15 +591,14 @@ function readJson(filePath) {
 function main() {
   try {
     const args = parseArgs(process.argv.slice(2));
-    if (!args.inventory || !args.model || !args.template || !args.out) {
+    if (!args.model || !args.template || !args.out) {
       throw new Error(
-        "用法：node render-solution-swimlane.js --inventory <file> --model <file> --template <file> --out <file>",
+        "用法：node render-solution-swimlane.js --model <file> --template <file> --out <file>",
       );
     }
-    const inventory = readJson(args.inventory);
     const model = readJson(args.model);
     const template = fs.readFileSync(path.resolve(args.template), "utf8");
-    const result = buildHtml(inventory, model, template);
+    const result = buildHtml(model, template);
     const outputPath = path.resolve(args.out);
     commitAtomically(outputPath, result.html);
     console.log(`方案协同图已生成：${outputPath}`);

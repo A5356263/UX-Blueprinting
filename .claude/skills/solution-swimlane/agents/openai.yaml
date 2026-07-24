@@ -1,4 +1,4 @@
 interface:
   display_name: "方案协同图"
-  short_description: "将正式体验蓝图编译为可追踪、零静默遗漏的方案协同泳道图"
-  default_prompt: "使用 $solution-swimlane 将正式体验蓝图 MD 与 JSON 生成经过完整性校验的单文件 HTML 方案协同图。"
+  short_description: "从体验蓝图抽取关键流程并稳定生成方案协同泳道图"
+  default_prompt: "使用 $solution-swimlane 从正式体验蓝图抽取泳道语义并生成单文件 HTML 方案协同图。"

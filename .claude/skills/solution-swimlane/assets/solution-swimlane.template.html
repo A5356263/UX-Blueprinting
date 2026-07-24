@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="swimlane-source-hash" content="__SWIMLANE_SOURCE_HASH__">
   <meta name="swimlane-model-hash" content="__SWIMLANE_MODEL_HASH__">
   <title>__SWIMLANE_TITLE__</title>
   <style>
@@ -239,7 +238,7 @@
         <p><span class="detail-label">名称：</span><span id="detail-name">点击图中节点查看</span></p>
         <p><span class="detail-label">说明：</span><span id="detail-summary">当前默认展示主流程，次流程和异常可在浮动工具栏切换。</span></p>
         <p><span class="detail-label">所属流程：</span><span id="detail-flows">—</span></p>
-        <p><span class="detail-label">来源项：</span><span id="detail-sources">—</span></p>
+        <p><span class="detail-label">来源定位：</span><span id="detail-sources">—</span></p>
       </section>
       <section class="drawer-section">
         <h3>待确认项</h3>
@@ -251,12 +250,11 @@
           __SWIMLANE_VALIDATION_METRICS__
         </div>
       </section>
-      <p class="hashes">正式输入：experience_blueprint.md + experience-blueprint.json<br>来源哈希：__SWIMLANE_SOURCE_HASH_SHORT__ · 模型哈希：__SWIMLANE_MODEL_HASH_SHORT__</p>
+      <p class="hashes">语义模型版本：2.0<br>模型哈希：__SWIMLANE_MODEL_HASH_SHORT__</p>
     </div>
   </aside>
 
-  <script type="application/json" id="swimlane-source-inventory">__SWIMLANE_INVENTORY_JSON__</script>
-  <script type="application/json" id="swimlane-diagram-model">__SWIMLANE_MODEL_JSON__</script>
+  <script type="application/json" id="swimlane-semantic-model">__SWIMLANE_MODEL_JSON__</script>
   <script type="application/json" id="swimlane-validation-report">__SWIMLANE_REPORT_JSON__</script>
   <script>
     "use strict";
@@ -352,7 +350,9 @@
         document.getElementById("detail-name").textContent = node.dataset.nodeLabel;
         document.getElementById("detail-summary").textContent = node.dataset.nodeSummary;
         document.getElementById("detail-flows").textContent = node.dataset.flowNames || "—";
-        document.getElementById("detail-sources").textContent = `${node.dataset.sourceCount} 项正式来源`;
+        document.getElementById("detail-sources").textContent = node.dataset.sourceCount === "0"
+          ? "未提供"
+          : `${node.dataset.sourceCount} 处定位`;
         setInfoOpen(true);
       }
       document.querySelectorAll("[data-node-id]").forEach((node) => {
