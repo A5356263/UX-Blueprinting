@@ -157,17 +157,13 @@ def main() -> int:
             long_without_navigation += 1
             issues.append(f"long_raw_without_navigation:{file.relative_to(root).as_posix()}")
 
-    duplicate_numeric_prefixes = 0
-    for directory in sorted({path.parent for path in raw_files}):
-        seen: set[str] = set()
-        for file in sorted(directory.glob("*.md")):
-            match = NUMBERED_PATTERN.match(file.name)
-            if not match:
-                continue
-            if match.group(1) in seen:
-                duplicate_numeric_prefixes += 1
-                issues.append(f"duplicate_numeric_prefix:{directory.relative_to(root).as_posix()}:{match.group(1)}")
-            seen.add(match.group(1))
+    business_root = raw_root / "业务"
+    numbered_business_files = [
+        file for file in raw_files
+        if business_root in file.parents and NUMBERED_PATTERN.match(file.name)
+    ]
+    for file in numbered_business_files:
+        issues.append(f"numbered_business_file:{file.relative_to(root).as_posix()}")
 
     forbidden_summary_references = 0
     for scan_root in [repo_root / ".claude" / "skills"]:
@@ -203,7 +199,7 @@ def main() -> int:
         "duplicate_route_target_count": duplicate_route_targets,
         "long_raw_without_navigation_count": long_without_navigation,
         "forbidden_summary_reference_count": forbidden_summary_references,
-        "duplicate_numeric_prefix_count": duplicate_numeric_prefixes,
+        "numbered_business_file_count": len(numbered_business_files),
         "encoding_issue_count": encoding_issues,
         "issue_total": len(issues),
     }

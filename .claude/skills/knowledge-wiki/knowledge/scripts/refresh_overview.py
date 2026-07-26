@@ -62,7 +62,7 @@ def main() -> int:
         "duplicate_route_target_count",
         "long_raw_without_navigation_count",
         "forbidden_summary_reference_count",
-        "duplicate_numeric_prefix_count",
+        "numbered_business_file_count",
         "encoding_issue_count",
     ]
     lines = [

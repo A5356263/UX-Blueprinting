@@ -183,19 +183,23 @@ function fixture() {
 function draftFixture() {
   const draft = clone(fixture());
   delete draft.schema_version;
-  draft.draft_version = "1.0";
-  draft.lanes[0].source_refs = undefined;
+  draft.draft_version = "1.1";
+  for (const lane of draft.lanes) delete lane.source_refs;
   for (const node of draft.nodes) {
     delete node.flow_ids;
+    delete node.source_refs;
     if (node.certainty === "confirmed") delete node.certainty;
   }
-  draft.nodes[0].source_refs = undefined;
+  delete draft.nodes[0].summary;
   for (const edge of draft.edges) {
     delete edge.flow_ids;
+    delete edge.source_refs;
     if (edge.certainty === "confirmed") delete edge.certainty;
   }
-  draft.edges[0].source_refs = undefined;
-  for (const flow of draft.flows) delete flow.default_visible;
+  for (const flow of draft.flows) {
+    delete flow.node_ids;
+    delete flow.default_visible;
+  }
   return JSON.parse(JSON.stringify(draft));
 }
 
@@ -217,6 +221,7 @@ function run() {
   assert.strictEqual(model.schema_version, "2.0");
   assert.strictEqual(model.draft_version, undefined);
   assert.deepStrictEqual(model.lanes[0].source_refs, []);
+  assert.strictEqual(model.nodes[0].summary, model.nodes[0].label);
   assert.strictEqual(model.nodes[0].certainty, "confirmed");
   assert.deepStrictEqual(model.nodes[0].source_refs, []);
   assert.strictEqual(model.edges[0].certainty, "confirmed");
@@ -227,6 +232,13 @@ function run() {
   ]);
   assert.deepStrictEqual(model.edges.find((edge) => edge.id === "check-pending").flow_ids, [
     "exception-return",
+  ]);
+  assert.deepStrictEqual(model.flows.find((flow) => flow.id === "main").node_ids, [
+    "start",
+    "submit",
+    "check",
+    "grant",
+    "done",
   ]);
   assert.strictEqual(model.flows.find((flow) => flow.id === "main").default_visible, true);
   assert.strictEqual(
@@ -243,6 +255,14 @@ function run() {
   nodeWithFlowIds.nodes[0].flow_ids = ["main"];
   assert.throws(() => normalizeDraft(nodeWithFlowIds), /禁止字段.*flow_ids/);
 
+  const laneWithSourceRefs = draftFixture();
+  laneWithSourceRefs.lanes[0].source_refs = ["§3"];
+  assert.throws(() => normalizeDraft(laneWithSourceRefs), /禁止字段.*source_refs/);
+
+  const flowWithNodeIds = draftFixture();
+  flowWithNodeIds.flows[0].node_ids = ["start", "submit"];
+  assert.throws(() => normalizeDraft(flowWithNodeIds), /禁止字段.*node_ids/);
+
   const flowWithDefault = draftFixture();
   flowWithDefault.flows[0].default_visible = true;
   assert.throws(() => normalizeDraft(flowWithDefault), /禁止字段.*default_visible/);
@@ -252,12 +272,55 @@ function run() {
   assert.throws(() => normalizeDraft(unknownField), /未知字段.*unplanned/);
 
   const missingNodeReference = draftFixture();
-  missingNodeReference.flows[0].node_ids[0] = "missing-node";
-  assert.throws(() => normalizeDraft(missingNodeReference), /node_ids.*missing-node/);
+  missingNodeReference.edges[0].from = "missing-node";
+  assert.throws(() => normalizeDraft(missingNodeReference), /from.*missing-node/);
 
   const missingEdgeReference = draftFixture();
   missingEdgeReference.flows[0].edge_ids[0] = "missing-edge";
   assert.throws(() => normalizeDraft(missingEdgeReference), /edge_ids.*missing-edge/);
+
+  const disconnected = draftFixture();
+  disconnected.flows[0].edge_ids = ["need-submit", "check-grant"];
+  assert.throws(() => normalizeDraft(disconnected), /流程 main 关系不连续/);
+
+  const middleEnd = draftFixture();
+  middleEnd.nodes.find((node) => node.id === "submit").type = "end";
+  assert.throws(() => normalizeDraft(middleEnd), /流程 main.*end.*最后/);
+
+  const edgeFromEnd = draftFixture();
+  edgeFromEnd.nodes.find((node) => node.id === "submit").type = "end";
+  assert.throws(() => normalizeDraft(edgeFromEnd), /关系 submit-check.*end.*发出/);
+
+  const invalidSecondary = draftFixture();
+  invalidSecondary.flows.push({
+    id: "secondary-review",
+    name: "次流程：查看校验",
+    type: "secondary",
+    edge_ids: ["submit-check"],
+  });
+  assert.throws(() => normalizeDraft(invalidSecondary), /次流程 secondary-review.*出口/);
+
+  const invalidException = draftFixture();
+  invalidException.edges.push({
+    id: "pending-to-submit",
+    from: "pending-return",
+    to: "submit",
+    label: "继续处理",
+    type: "normal",
+  });
+  invalidException.flows[1].edge_ids.push("pending-to-submit");
+  assert.throws(() => normalizeDraft(invalidException), /异常流程 exception-return.*出口/);
+
+  const duplicateEndpoints = draftFixture();
+  duplicateEndpoints.edges.push({
+    id: "grant-done-duplicate",
+    from: "grant",
+    to: "done",
+    label: "重复完成",
+    type: "terminate",
+  });
+  duplicateEndpoints.flows[0].edge_ids.push("grant-done-duplicate");
+  assert.throws(() => normalizeDraft(duplicateEndpoints), /流程 main.*重复端点.*grant.*done/);
 
   const report = validateModel(model);
   assert.strictEqual(report.ok, true, report.errors.join("\n"));
@@ -294,6 +357,14 @@ function run() {
   brokenException.flows[1].node_ids = ["check"];
   brokenException.flows[1].edge_ids = [];
   expectFailure("异常无出口", brokenException, /异常流程.*出口/);
+
+  const modelWithMiddleEnd = clone(model);
+  modelWithMiddleEnd.nodes.find((node) => node.id === "submit").type = "end";
+  expectFailure("主流程中途结束", modelWithMiddleEnd, /流程 main.*end.*最后/);
+
+  const modelWithDisconnectedFlow = clone(model);
+  modelWithDisconnectedFlow.flows[0].edge_ids = ["need-submit", "check-grant"];
+  expectFailure("规范模型关系不连续", modelWithDisconnectedFlow, /流程 main 关系不连续/);
 
   const wrongDefault = clone(model);
   wrongDefault.flows[0].default_visible = false;

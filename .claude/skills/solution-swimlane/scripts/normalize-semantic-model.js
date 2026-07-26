@@ -23,14 +23,19 @@ const FIELDS = {
     "flows",
     "open_questions",
   ]),
-  lane: new Set(["id", "name", "type", "order", "responsibility", "source_refs"]),
-  node: new Set(["id", "lane_id", "label", "type", "summary", "certainty", "source_refs"]),
-  edge: new Set(["id", "from", "to", "label", "type", "certainty", "source_refs"]),
-  flow: new Set(["id", "name", "type", "node_ids", "edge_ids"]),
+  lane: new Set(["id", "name", "type", "order", "responsibility"]),
+  node: new Set(["id", "lane_id", "label", "type", "summary", "certainty"]),
+  edge: new Set(["id", "from", "to", "label", "type", "certainty"]),
+  flow: new Set(["id", "name", "type", "edge_ids"]),
   question: new Set(["id", "question", "impact", "related_element_ids", "fallback"]),
 };
 
-const FORBIDDEN_DRAFT_FIELDS = new Set(["flow_ids", "default_visible"]);
+const FORBIDDEN_DRAFT_FIELDS = new Set([
+  "source_refs",
+  "node_ids",
+  "flow_ids",
+  "default_visible",
+]);
 
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -64,11 +69,6 @@ function requireStringArray(value, field, minimum = 0) {
   return items;
 }
 
-function optionalSourceRefs(value, field) {
-  if (value === undefined) return [];
-  return [...requireStringArray(value, field)];
-}
-
 function requireEnum(value, choices, field) {
   if (!choices.has(value)) throw new Error(`${field} 非法：${value}`);
 }
@@ -85,7 +85,7 @@ function requireUniqueIds(items, field) {
 
 function validateDraft(draft) {
   assertAllowedFields(draft, FIELDS.draft, "draft");
-  if (draft.draft_version !== "1.0") throw new Error("draft.draft_version 必须为 1.0");
+  if (draft.draft_version !== "1.1") throw new Error("draft.draft_version 必须为 1.1");
   requireString(draft.title, "draft.title");
   requireString(draft.scope, "draft.scope");
   requireString(draft.start_condition, "draft.start_condition");
@@ -108,7 +108,6 @@ function validateDraft(draft) {
     requireEnum(lane.type, LANE_TYPES, `${field}.type`);
     if (!Number.isInteger(lane.order)) throw new Error(`${field}.order 必须是整数`);
     requireString(lane.responsibility, `${field}.responsibility`);
-    if (lane.source_refs !== undefined) requireStringArray(lane.source_refs, `${field}.source_refs`);
   }
 
   for (const [index, node] of nodes.entries()) {
@@ -118,9 +117,8 @@ function validateDraft(draft) {
     requireString(node.lane_id, `${field}.lane_id`);
     requireString(node.label, `${field}.label`);
     requireEnum(node.type, NODE_TYPES, `${field}.type`);
-    requireString(node.summary, `${field}.summary`);
+    if (node.summary !== undefined) requireString(node.summary, `${field}.summary`);
     if (node.certainty !== undefined) requireEnum(node.certainty, CERTAINTIES, `${field}.certainty`);
-    if (node.source_refs !== undefined) requireStringArray(node.source_refs, `${field}.source_refs`);
   }
 
   for (const [index, edge] of edges.entries()) {
@@ -132,7 +130,6 @@ function validateDraft(draft) {
     requireString(edge.label, `${field}.label`);
     requireEnum(edge.type, EDGE_TYPES, `${field}.type`);
     if (edge.certainty !== undefined) requireEnum(edge.certainty, CERTAINTIES, `${field}.certainty`);
-    if (edge.source_refs !== undefined) requireStringArray(edge.source_refs, `${field}.source_refs`);
   }
 
   for (const [index, flow] of flows.entries()) {
@@ -141,8 +138,7 @@ function validateDraft(draft) {
     requireString(flow.id, `${field}.id`);
     requireString(flow.name, `${field}.name`);
     requireEnum(flow.type, FLOW_TYPES, `${field}.type`);
-    requireStringArray(flow.node_ids, `${field}.node_ids`);
-    requireStringArray(flow.edge_ids, `${field}.edge_ids`);
+    requireStringArray(flow.edge_ids, `${field}.edge_ids`, 1);
   }
 
   for (const [index, question] of questions.entries()) {
@@ -175,11 +171,6 @@ function validateDraft(draft) {
     }
   }
   for (const [index, flow] of flows.entries()) {
-    for (const nodeId of flow.node_ids) {
-      if (!nodeIds.has(nodeId)) {
-        throw new Error(`draft.flows[${index}].node_ids 引用不存在节点：${nodeId}`);
-      }
-    }
     for (const edgeId of flow.edge_ids) {
       if (!edgeIds.has(edgeId)) {
         throw new Error(`draft.flows[${index}].edge_ids 引用不存在关系：${edgeId}`);
@@ -199,6 +190,37 @@ function validateDraft(draft) {
   }
 }
 
+function deriveFlowNodes(flows, edgeById) {
+  const errors = [];
+  const result = new Map();
+  for (const flow of flows) {
+    const edges = flow.edge_ids.map((edgeId) => edgeById.get(edgeId)).filter(Boolean);
+    const endpointPairs = new Set();
+    const nodeIds = [];
+    for (const [index, edge] of edges.entries()) {
+      const pair = `${edge.from}\u0000${edge.to}`;
+      if (endpointPairs.has(pair)) {
+        errors.push(`流程 ${flow.id} 存在重复端点：${edge.from} → ${edge.to}`);
+      }
+      endpointPairs.add(pair);
+      if (index === 0) {
+        nodeIds.push(edge.from, edge.to);
+      } else {
+        const previous = edges[index - 1];
+        if (edge.from !== previous.to) {
+          errors.push(
+            `流程 ${flow.id} 关系不连续：${previous.id} 的终点 ${previous.to} 与 ${edge.id} 的起点 ${edge.from} 不一致`,
+          );
+        }
+        nodeIds.push(edge.to);
+      }
+    }
+    result.set(flow.id, nodeIds);
+  }
+  if (errors.length) throw new Error(`草稿流程结构失败：\n${errors.join("\n")}`);
+  return result;
+}
+
 function memberships(flows, key) {
   const result = new Map();
   for (const flow of flows) {
@@ -213,8 +235,18 @@ function memberships(flows, key) {
 
 function normalizeDraft(draft) {
   validateDraft(draft);
-  const nodeFlowIds = memberships(draft.flows, "node_ids");
-  const edgeFlowIds = memberships(draft.flows, "edge_ids");
+  const edgeById = new Map(draft.edges.map((edge) => [edge.id, edge]));
+  const flowNodeIds = deriveFlowNodes(draft.flows, edgeById);
+  const normalizedFlows = draft.flows.map((flow) => ({
+    id: flow.id,
+    name: flow.name,
+    type: flow.type,
+    node_ids: flowNodeIds.get(flow.id),
+    edge_ids: [...flow.edge_ids],
+    default_visible: flow.type === "main",
+  }));
+  const nodeFlowIds = memberships(normalizedFlows, "node_ids");
+  const edgeFlowIds = memberships(normalizedFlows, "edge_ids");
   const model = {
     schema_version: "2.0",
     title: draft.title,
@@ -227,16 +259,16 @@ function normalizeDraft(draft) {
       type: lane.type,
       order: lane.order,
       responsibility: lane.responsibility,
-      source_refs: optionalSourceRefs(lane.source_refs, `lane ${lane.id}.source_refs`),
+      source_refs: [],
     })),
     nodes: draft.nodes.map((node) => ({
       id: node.id,
       lane_id: node.lane_id,
       label: node.label,
       type: node.type,
-      summary: node.summary,
+      summary: node.summary || node.label,
       certainty: node.certainty || "confirmed",
-      source_refs: optionalSourceRefs(node.source_refs, `node ${node.id}.source_refs`),
+      source_refs: [],
       flow_ids: nodeFlowIds.get(node.id) || [],
     })),
     edges: draft.edges.map((edge) => ({
@@ -246,17 +278,10 @@ function normalizeDraft(draft) {
       label: edge.label,
       type: edge.type,
       certainty: edge.certainty || "confirmed",
-      source_refs: optionalSourceRefs(edge.source_refs, `edge ${edge.id}.source_refs`),
+      source_refs: [],
       flow_ids: edgeFlowIds.get(edge.id) || [],
     })),
-    flows: draft.flows.map((flow) => ({
-      id: flow.id,
-      name: flow.name,
-      type: flow.type,
-      node_ids: [...flow.node_ids],
-      edge_ids: [...flow.edge_ids],
-      default_visible: flow.type === "main",
-    })),
+    flows: normalizedFlows,
     open_questions: draft.open_questions.map((question) => ({
       id: question.id,
       question: question.question,
@@ -333,6 +358,7 @@ function main() {
 if (require.main === module) main();
 
 module.exports = {
+  deriveFlowNodes,
   normalizeDraft,
   parseArgs,
   validateDraft,

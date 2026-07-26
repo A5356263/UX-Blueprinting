@@ -4,13 +4,13 @@ from pathlib import Path
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[1]
-    candidates_root = root / "candidates" / "未入库"
+    skill_root = Path(__file__).resolve().parents[2]
+    candidates_root = skill_root / "candidates" / "未入库"
     files = sorted(path for path in candidates_root.rglob("*.md") if path.is_file())
 
     print(f"unimported_candidate_count={len(files)}")
     for file in files:
-        print(f"- knowledge/{file.relative_to(root).as_posix()}")
+        print(f"- {file.relative_to(skill_root).as_posix()}")
     return 0
 
 

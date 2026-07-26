@@ -20,7 +20,7 @@ python knowledge/scripts/update_wiki.py --strict
 - `duplicate_route_target_count=0`
 - `long_raw_without_navigation_count=0`
 - `forbidden_summary_reference_count=0`
-- `duplicate_numeric_prefix_count=0`
+- `numbered_business_file_count=0`
 - `encoding_issue_count=0`
 - `unimported_candidate_count` 符合本次预期
 - `git diff --check` 通过
@@ -35,6 +35,7 @@ python knowledge/scripts/update_wiki.py --strict
 - 文件拆分是否基于不同责任、适用范围、独立消费或变更风险，而不是行数。
 - README 是否能明显缩小范围；单一大文件已可直接路由时是否避免新建 README。
 - index 是否只路由顶层知识类型、业务集合、可直接消费的领域或大文件，而没有膨胀为逐文件目录。
+- 业务 raw 文件是否全部使用语义文件名，没有数字前缀。
 - 没有新建空目录、空文件、第二语义镜像、registry、catalog、mapping table 或额外状态字段。
 
 ## 语义复核
@@ -52,11 +53,12 @@ python knowledge/scripts/update_wiki.py --strict
 
 ## 候选复核
 
-- 候选是否位于 `candidates/未入库/`，来源类型是否写在文件内而不是再建子目录。
+- 候选是否位于 Skill 根目录的 `candidates/未入库/`，来源类型是否写在文件内而不是再建子目录。
 - 已确认事实与待确认事实是否分开。
 - 冲突、缺口和问题是否具体。
 - 建议知识集合、主域和落点是否仍被视为线索，而不是已确认结论。
-- 促进后是否记录正式落点并自动移入 `candidates/已入库/`。
+- 促进后是否记录正式落点并自动移入 Skill 根目录的 `candidates/已入库/`。
+- `knowledge/` 内是否没有 candidates、inbox 或其他候选副本。
 
 ## 一次性路由抽查
 

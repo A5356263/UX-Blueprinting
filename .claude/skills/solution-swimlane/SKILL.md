@@ -6,7 +6,7 @@ description: >
 
 # Solution Swimlane
 
-把体验蓝图转换为最小语义草稿，由脚本补全机械字段并稳定输出 HTML。不要建立来源清单、覆盖清单或逐字段对账。
+把体验蓝图转换为最小语义草稿，由脚本补全机械字段并稳定输出 HTML。不要建立来源清单或逐字段对账；只允许在当次执行记录中建立一次紧凑 P/S/E 覆盖清单。
 
 ## 文件边界
 
@@ -32,21 +32,28 @@ spark-output/solution-swimlane/.work/validation.json
 ## 执行门禁
 
 - 自动生成总耗时达到 180 秒时停止并报告超时。
+- 只使用本次读取的正式输入，忽略历史对话中的项目、角色和流程。
+- Markdown 只完整读取一次，同时记录原文明示的 P/S/E 编号和标题；不得为了确认历史印象重新读取。
 - 语义草稿只完整生成一次。
-- 规范化失败时只允许依据完整错误列表修正一次 JSON 语法、字段、ID 或引用，不得重新读取和抽取全文。
+- 规范化失败时只允许依据完整错误列表修正一次 JSON 语法、字段、ID、引用或关系顺序，不得重新读取和抽取全文。
+- 修正不得创建原文没有的业务关系；出口不明确时使用 `pending` 和 `open_questions`。
 - 第二次规范化仍失败时立即停止。
 - 模型通过后只渲染一次；渲染或 HTML 校验失败时不得重新抽取语义。
 - 局部信息不完整时使用 `pending` 和 `open_questions`，不得阻断其余已确认流程。
 - 默认不得启动浏览器、HTTP 服务、`npx serve` 或安装依赖。
+- 覆盖门禁通过后不得重新讨论主流程定义、为同一路径提出多个候选方案或重新生成整份草稿。
+- 禁止使用“再想一下”“重新考虑”“也许可以跳过”等开放式反思循环；发现漏项时只补对应路径。
 
 必须按以下顺序执行，不得跳过、调换或返回上一步重新生成：
 
 ```text
 选择输入
-→ 完整读取
-→ 第一遍语义抽取
-→ 第二遍语义复核
+→ 完整读取一次并记录 P/S/E 编号
+→ 直接建立最小语义模型
+→ 输出一次紧凑 P/S/E 覆盖清单
+→ 执行覆盖门禁
 → 写入最小语义草稿
+→ 执行一次草稿必填项检查
 → 规范化语义模型
 → 模型校验
 → HTML 渲染
@@ -91,15 +98,18 @@ spark-output/solution-swimlane/.work/validation.json
 - 同一任务中的角色动作与系统处理必须拆开。
 - 角色别名语义和责任均相同时必须合并；责任不同则分开。
 - 系统自动行为必须进入系统泳道，不得归给人工角色。
-- `source_refs` 只用于可选定位，不得扩展为来源覆盖清单。
+- 节点 `summary` 只有在补充 `label` 未表达的业务信息时才写；否则省略。
+- 草稿不得写 `source_refs`。
 
 ### 2.3 流程分类
 
 - `main`：从明确开始到主要业务结果的核心成功路径，必须且只能有一条。
 - `secondary`：编辑、查看、撤销、关闭等非核心任务，必须结束或回到主流程。
 - `exception`：失败、超时、驳回、无权限或其他异常，必须具有恢复、终止或 `pending` 出口。
-- 只在 `flows[].node_ids` 和 `flows[].edge_ids` 中维护流程归属；不得在草稿节点或关系中写 `flow_ids`。
+- 只在 `flows[].edge_ids` 中维护流程归属和关系顺序；脚本推导 `node_ids` 与反向 `flow_ids`。
+- 每条流程的后一条关系必须从前一条关系的终点继续，不得跳跃、并排或重复端点。
 - 只有主流程创建显式 `start` 和 `end`。次流程与异常流程复用真实触发节点，以真实结果、恢复、终止或 `pending` 结束。
+- 总业务仍继续时使用 `result`，不得在流程中途使用 `end`。
 - 不得只画异常提示而遗漏恢复、回流或终止方式。
 
 ### 2.4 不确定信息
@@ -107,7 +117,10 @@ spark-output/solution-swimlane/.work/validation.json
 - 角色、关系端点或恢复方式无法由原文确认时不得猜测。
 - 已知存在但细节不清的步骤必须使用 `pending` 节点。
 - 不确定节点或关系必须使用 `certainty: "uncertain"`。
-- 具体问题、影响范围、关联元素和临时表达必须写入 `open_questions`。
+- 只有答案会改变泳道、节点、关系端点或方向、流程归属、条件分支、恢复、回流、终止或 `pending` 出口时，才写入 `open_questions`。
+- 页面文案、字段展示、视觉样式、按钮、Toast、提示语、秒级或分钟级耗时，以及不改变节点和关系的交互细节不得进入 `open_questions`。
+- 不确定内容可以在节点 `summary` 中完整表达时，不得同时创建 `open_questions`。
+- 合法待确认项必须同时写明具体问题、结构影响、关联元素和临时表达。
 - 局部不确定不得阻断其他已确认流程。
 
 ### 2.5 排除内容
@@ -116,23 +129,39 @@ spark-output/solution-swimlane/.work/validation.json
 
 章节名不是过滤依据。如果上述章节包含真实角色、动作、条件、交接、结果或异常，只抽取有效语义。
 
-### 2.6 两遍检查
+### 2.6 P/S/E 覆盖门禁
 
-第一遍建立模型。第二遍必须按以下顺序复核全文：
+完整读取 Markdown 时，只记录原文明示的 P/S/E 编号和标题，不得自行创造编号。建立模型后，在当次执行记录中输出一次紧凑清单；清单不得写入文件、模型或 HTML。
 
-1. 是否遗漏责任主体；
-2. 是否遗漏业务动作或系统处理；
-3. 是否遗漏顺序、条件或跨角色交接；
-4. 是否遗漏次流程、异常、恢复、回流或终止；
-5. 所有不确定关系是否已进入 `pending` 或 `open_questions`。
+每个编号必须且只能使用以下一种格式：
 
-第二遍发现的每条有效信息必须已经：
+```text
+S4｜已制图｜secondary-records
+X1｜因无结构变化跳过｜仅描述按钮颜色，不产生动作、处理、状态、分支、交接或出口
+```
 
-1. 映射为泳道、节点、关系或流程；或
-2. 与语义等价的现有元素合并；或
-3. 因原文不足进入 `pending` 或 `open_questions`。
+“已制图”后必须填写已存在或即将写入草稿的 `flow.id`。多个编号合并到同一流程时可以填写同一个 `flow.id`。
 
-第二遍只回答“是否已表达”，不得创建逐段、逐句或逐字段清单。
+只有同时满足以下全部条件，才能标记为“因无结构变化跳过”：
+
+1. 没有新增或改变角色任务；
+2. 没有新增或改变系统处理；
+3. 没有新增或改变业务状态或结果；
+4. 没有新增或改变条件或分支；
+5. 没有新增或改变跨角色交接；
+6. 没有新增或改变异常、恢复、回流、终止或待处理出口。
+
+任意一项不满足都必须标记为“已制图”。不得使用“不是主流程”“只是查看信息”“没有修改数据”“发生频率低”“可以写进摘要”或“对主图价值不高”作为跳过理由。
+
+覆盖门禁必须确认：
+
+1. 每个原文明示编号恰好出现一次；
+2. 每条“已制图”路径引用的 `flow.id` 存在于待写入草稿的流程中；
+3. 每条跳过理由明确说明六项结构均未变化；
+4. 查看类路径只要包含角色动作或系统展示结果，就不得跳过；
+5. 异常路径不得停在提示或通知，原文明示恢复、回流、人工处理或终止时必须完整表达。
+
+门禁发现漏项时，只补该路径的节点、关系和流程映射，不得重新读取 Markdown、重新分析已完成路径或重建整份模型。
 
 ## 3. 写入最小语义草稿
 
@@ -142,14 +171,25 @@ spark-output/solution-swimlane/.work/validation.json
 
 硬规则：
 
-- 使用草稿版本 `1.0`。
+- 使用草稿版本 `1.1`。
 - 只写草稿契约定义的业务语义字段。
-- 不得在节点、关系中写 `flow_ids`，不得在流程中写 `default_visible`。
+- 不得写 `source_refs`。
+- 不得在节点、关系中写 `flow_ids`，不得在流程中写 `node_ids` 或 `default_visible`。
+- 流程只写按实际行进顺序排列的 `edge_ids`。
+- 节点 `summary` 没有补充信息时省略，由脚本逐字复制 `label`。
 - 已确认节点和关系省略 `certainty`；只有不确定元素显式写 `certainty: "uncertain"`。
-- `source_refs` 没有值时可以省略。
 - 不得出现 `coverage_manifest`、`coverage_rules`、`source_inventory`、`source_item_ids` 或 `source_selectors`。
 - 端点或恢复方式不明确时使用 `certainty: "uncertain"` 并补充待确认项；不得猜测。
 - 相同语义使用稳定、简短的英文小写连字符 ID。
+
+草稿完成后只执行一次以下检查，修正发现的确定性缺项后立即进入规范化，不得继续业务讨论：
+
+1. 每个 `edge.label` 是非空字符串；
+2. 每个 P/S/E 编号在覆盖清单中恰好出现一次；
+3. 每条“已制图”路径引用的 `flow.id` 存在；
+4. 每条流程至少包含一条关系；
+5. 每条关系的 `from`、`to` 节点存在；
+6. 每条 `open_questions` 均通过第 2.4 节的结构影响门禁。
 
 ## 4. 规范化并校验模型
 
@@ -159,7 +199,7 @@ spark-output/solution-swimlane/.work/validation.json
 node <skill-root>/scripts/normalize-semantic-model.js --draft spark-output/solution-swimlane/.work/semantic-draft.json --out spark-output/solution-swimlane/.work/semantic-model.json
 ```
 
-规范化脚本负责补全 `source_refs`、`certainty`、`flow_ids` 和 `default_visible`。Agent 不得手工补全这些机械字段。
+规范化脚本负责补全 `summary`、`source_refs: []`、`certainty`、`node_ids`、`flow_ids` 和 `default_visible`。Agent 不得手工补全这些机械字段。
 
 再执行：
 
@@ -201,8 +241,9 @@ node <skill-root>/scripts/validate-semantic-model.js --model spark-output/soluti
 
 ## 完成
 
-只有模型校验和 HTML 校验均通过才删除
-`spark-output/solution-swimlane/.work/`、报告完成并返回：
+只有模型校验和 HTML 校验均通过，才逐个删除 `.work` 中的
+`semantic-draft.json`、`semantic-model.json`、`validation.json`，再删除空的 `.work` 目录。禁止递归删除
+`spark-output/solution-swimlane/`。清理后确认正式 HTML 存在，再报告完成并返回：
 
 ```text
 spark-output/solution-swimlane/solution_swimlane.html

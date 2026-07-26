@@ -30,7 +30,7 @@
 - `duplicate_route_target_count`
 - `long_raw_without_navigation_count`
 - `forbidden_summary_reference_count`
-- `duplicate_numeric_prefix_count`
+- `numbered_business_file_count`
 - `encoding_issue_count`
 - `unimported_candidate_count`
 - `gap_count`
@@ -41,8 +41,9 @@
 
 维护时还必须确认：
 
-- `candidates/未入库/` 是唯一待确认区，raw 中不再保留 inbox。
-- `candidates/已入库/` 不参与正式知识消费和同步。
+- Skill 根目录的 `candidates/未入库/` 是唯一待确认区，raw 中不再保留 inbox。
+- Skill 根目录的 `candidates/已入库/` 不参与正式知识消费和同步。
+- `knowledge/` 内不得保留 candidates、inbox 或其他候选副本。
 - 用户直接放入 raw 的未整理材料没有因文件位置被自动视为正式事实。
 
 ## 推荐执行

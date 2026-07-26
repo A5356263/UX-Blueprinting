@@ -210,6 +210,9 @@ function validateModel(model, html = null) {
     requireString(edge.id, `${field}.id`, errors);
     if (!nodeById.has(edge.from)) errors.push(`${field}.from 不存在：${edge.from}`);
     if (!nodeById.has(edge.to)) errors.push(`${field}.to 不存在：${edge.to}`);
+    if (nodeById.get(edge.from)?.type === "end") {
+      errors.push(`关系 ${edge.id || index} 不得从 end 节点 ${edge.from} 发出`);
+    }
     if (!EDGE_TYPES.has(edge.type)) errors.push(`${field}.type 非法`);
     if (!CERTAINTIES.has(edge.certainty)) errors.push(`${field}.certainty 非法`);
     if (edge.type === "conditional" && (typeof edge.label !== "string" || !edge.label.trim())) {
@@ -248,6 +251,54 @@ function validateModel(model, html = null) {
         errors.push(`${field} 未包含关系 ${edgeId} 的两个端点`);
       }
     }
+
+    const flowEdges = asArray(flow.edge_ids).map((edgeId) => edgeById.get(edgeId)).filter(Boolean);
+    const derivedNodeIds = [];
+    const endpointPairs = new Set();
+    for (const [edgeIndex, edge] of flowEdges.entries()) {
+      const pair = `${edge.from}\u0000${edge.to}`;
+      if (endpointPairs.has(pair)) {
+        errors.push(`流程 ${flow.id} 存在重复端点：${edge.from} → ${edge.to}`);
+      }
+      endpointPairs.add(pair);
+      if (edgeIndex === 0) {
+        derivedNodeIds.push(edge.from, edge.to);
+      } else {
+        const previous = flowEdges[edgeIndex - 1];
+        if (edge.from !== previous.to) {
+          errors.push(
+            `流程 ${flow.id} 关系不连续：${previous.id} 的终点 ${previous.to} 与 ${edge.id} 的起点 ${edge.from} 不一致`,
+          );
+        }
+        derivedNodeIds.push(edge.to);
+      }
+    }
+    if (
+      flowEdges.length === asArray(flow.edge_ids).length
+      && JSON.stringify(derivedNodeIds) !== JSON.stringify(asArray(flow.node_ids))
+    ) {
+      errors.push(`流程 ${flow.id} 的 node_ids 与有序 edge_ids 推导结果不一致`);
+    }
+
+    const interiorEnds = asArray(flow.node_ids)
+      .slice(0, -1)
+      .filter((nodeId) => nodeById.get(nodeId)?.type === "end");
+    for (const nodeId of interiorEnds) {
+      errors.push(`流程 ${flow.id} 的 end 节点 ${nodeId} 只能位于最后`);
+    }
+
+    const lastNode = nodeById.get(asArray(flow.node_ids).at(-1));
+    const lastEdge = flowEdges.at(-1);
+    if (flow.type === "secondary") {
+      const hasExit = ["result", "end", "pending"].includes(lastNode?.type)
+        || ["return", "terminate"].includes(lastEdge?.type);
+      if (!hasExit) errors.push(`次流程 ${flow.id} 缺少有效出口`);
+    }
+    if (flow.type === "exception") {
+      const hasExit = ["pending", "result", "end"].includes(lastNode?.type)
+        || ["return", "terminate"].includes(lastEdge?.type);
+      if (!hasExit) errors.push(`异常流程 ${flow.id} 缺少恢复、终止或待确认出口`);
+    }
   }
 
   const mainFlows = flows.filter((flow) => flow.type === "main");
@@ -262,18 +313,6 @@ function validateModel(model, html = null) {
     const last = nodeById.get(asArray(main.node_ids).at(-1));
     if (first?.type !== "start") errors.push("main 流程首节点必须为 start");
     if (last?.type !== "end") errors.push("main 流程末节点必须为 end");
-  }
-
-  for (const flow of flows.filter((item) => item.type === "exception")) {
-    const hasExit = asArray(flow.edge_ids).some((edgeId) => {
-      const edge = edgeById.get(edgeId);
-      const target = edge && nodeById.get(edge.to);
-      return edge && (
-        ["return", "terminate"].includes(edge.type)
-        || ["pending", "end", "result"].includes(target?.type)
-      );
-    });
-    if (!hasExit) errors.push(`异常流程 ${flow.id} 缺少恢复、终止或待确认出口`);
   }
 
   for (const node of nodes) {

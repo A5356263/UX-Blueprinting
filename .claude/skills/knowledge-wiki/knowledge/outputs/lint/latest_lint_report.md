@@ -10,7 +10,7 @@
 - duplicate_route_target_count: 0
 - long_raw_without_navigation_count: 0
 - forbidden_summary_reference_count: 0
-- duplicate_numeric_prefix_count: 0
+- numbered_business_file_count: 0
 - encoding_issue_count: 0
 - issue_total: 0
 
