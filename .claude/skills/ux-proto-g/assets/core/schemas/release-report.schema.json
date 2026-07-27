@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/release-report-v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "version", "coreVersion", "layoutVersion", "pack", "commonInstructionDigest", "runtimeLockDigest", "distributions"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ux-proto-release-report" },
+    "version": { "const": "1.0.0" },
+    "coreVersion": { "const": "1.0.0" },
+    "layoutVersion": { "const": "1.0" },
+    "pack": { "type": "object" },
+    "commonInstructionDigest": { "type": "string" },
+    "runtimeLockDigest": { "type": "string" },
+    "distributions": {
+      "type": "object",
+      "required": ["ux-proto", "ux-proto-g"],
+      "additionalProperties": false,
+      "properties": {
+        "ux-proto": { "type": "object" },
+        "ux-proto-g": { "type": "object" }
+      }
+    }
+  }
+}

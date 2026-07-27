@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "id": "template.single-page-business-form",
+  "kind": "Template",
+  "lifecycle": "active",
+  "name": "Single-page Business Form",
+  "summary": "Continuous grouped form with section navigation for work that does not have real stage boundaries.",
+  "selection": {
+    "useWhen": [
+      "one continuous business form can be completed without stage ownership changes"
+    ],
+    "avoidWhen": [
+      "later inputs depend on validated earlier stages or work must resume by stage"
+    ]
+  },
+  "relations": [
+    {
+      "type": "recommended-for",
+      "target": "pattern.business-document-form"
+    },
+    {
+      "type": "distinguishes-from",
+      "target": "template.wizard-business-form"
+    }
+  ],
+  "requires": [],
+  "entry": "SinglePageBusinessForm.tsx",
+  "artifacts": [
+    "SinglePageBusinessForm.tsx",
+    "SinglePageBusinessForm.css"
+  ],
+  "authoring": {
+    "mainExport": "SinglePageBusinessForm",
+    "customizationSurfaces": []
+  }
+}

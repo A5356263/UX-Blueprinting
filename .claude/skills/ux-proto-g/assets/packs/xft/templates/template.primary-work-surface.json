@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "id": "template.primary-work-surface",
+  "kind": "Template",
+  "lifecycle": "active",
+  "name": "XFT Primary Work Surface",
+  "summary": "Page-owned primary bright surface for a standard XFT work page on the muted workspace canvas.",
+  "selection": {
+    "useWhen": [
+      "a standard form, query, single-list, configuration, or other page has one primary work area"
+    ],
+    "avoidWhen": [
+      "the page has at least two main layout columns and multiple independent content regions"
+    ]
+  },
+  "relations": [],
+  "requires": [],
+  "entry": "XftPrimaryWorkSurface.tsx",
+  "artifacts": [
+    "XftPrimaryWorkSurface.tsx",
+    "XftPrimaryWorkSurface.css"
+  ],
+  "authoring": {
+    "mainExport": "XftPrimaryWorkSurface",
+    "customizationSurfaces": [
+      {
+        "id": "primary-content",
+        "purpose": "承载消费方拥有的主要工作内容。",
+        "binding": {
+          "type": "prop",
+          "name": "children"
+        }
+      }
+    ]
+  }
+}

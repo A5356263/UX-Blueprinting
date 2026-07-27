@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/asset-descriptor-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "kind", "lifecycle", "summary", "selection", "relations", "requires"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "pattern": "^(knowledge|pattern|template|component)\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "kind": { "enum": ["Knowledge", "Pattern", "Template", "Pack Component"] },
+    "lifecycle": { "enum": ["draft", "active", "deprecated"] },
+    "name": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1 },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["useWhen", "avoidWhen"],
+      "properties": {
+        "useWhen": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "avoidWhen": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "target"],
+        "properties": {
+          "type": { "enum": ["requires", "supports", "recommended-for", "distinguishes-from"] },
+          "target": { "type": "string" }
+        }
+      }
+    },
+    "requires": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "content": { "type": "object" },
+    "entry": { "type": "string", "minLength": 1 },
+    "artifacts": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "authoring": { "type": "object" },
+    "api": { "type": "object" },
+    "usage": { "type": "object" }
+  }
+}

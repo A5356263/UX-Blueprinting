@@ -44,6 +44,10 @@ Prefer inputs in this order:
 
 如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，按实际入口进入必要 README 或单一 raw，只读命中的埋点方法、业务对象或状态章节。不得预设目录层级或 README 必然存在。两者都不存在时，在定案参数与 API 细节前先索取或形成明确假设。
 
+- 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出。
+- 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集。
+- 输出边界：以上仅作内部检查，不展示读取过程或检查项；证据不足影响正确性时，只说明必要边界。
+
 ## Outputs
 
 Write all generated artifacts under the host-agreed journey-metrics output directory, for example:

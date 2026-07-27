@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "knowledge.form-presentation-mode",
+  "kind": "Knowledge",
+  "lifecycle": "active",
+  "name": "Single-page versus Staged Form",
+  "summary": "Choose a staged form from meaningful task boundaries, not size alone.",
+  "selection": {
+    "useWhen": [
+      "choosing how to present a business document form"
+    ],
+    "avoidWhen": [
+      "the interaction is not a form"
+    ]
+  },
+  "relations": [],
+  "requires": [],
+  "content": {
+    "decision": "Does this form need a single continuous page or explicit stages?",
+    "guidance": "Default to a grouped single page. Use stages when users can understand real dependency, validation, handoff, irreversibility, or risk boundaries. Size, duration, and resumption only support that decision.",
+    "required": [
+      "Identify meaningful stage boundaries before choosing Steps"
+    ],
+    "optional": [
+      "Use anchors, drafts, recovery, and error location for long continuous forms"
+    ],
+    "forbidden": [
+      "Choose Steps only because the form has many fields"
+    ],
+    "distinctions": [
+      "Strong signals create stages; supporting signals only increase cognitive load"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "template.application-frame",
+  "kind": "Template",
+  "lifecycle": "active",
+  "name": "XFT Application Frame",
+  "summary": "Recognizable XFT prototype framing around a page without owning routing, permissions, or page decisions.",
+  "selection": {
+    "useWhen": [
+      "the prototype should use the frame defined by this Pack"
+    ],
+    "avoidWhen": [
+      "the project or task explicitly requests an unframed design surface"
+    ]
+  },
+  "relations": [],
+  "requires": [],
+  "entry": "XftApplicationFrame.tsx",
+  "artifacts": [
+    "XftApplicationFrame.tsx",
+    "XftApplicationFrame.css"
+  ],
+  "authoring": {
+    "mainExport": "XftApplicationFrame",
+    "customizationSurfaces": [
+      {
+        "id": "workspace-content",
+        "purpose": "承载消费方拥有的主要工作内容。",
+        "binding": {
+          "type": "prop",
+          "name": "children"
+        }
+      },
+      {
+        "id": "workspace-bottom-dock",
+        "purpose": "承载消费方拥有的页面级底部操作区域。",
+        "binding": {
+          "type": "prop",
+          "name": "workspaceBottomDock"
+        }
+      }
+    ]
+  }
+}

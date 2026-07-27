@@ -1,0 +1,366 @@
+{
+  "commonInstructionDigest": "sha256:6bb0155694fa890c75944179afffb89490853e5712dd4980b090f687c519f9f3",
+  "contentDigest": "sha256:e5fc46485a676bc02cf96269a6f41976223cd1e2a6b2d7c9334f65cf0154d78e",
+  "files": [
+    {
+      "bytes": 5420,
+      "path": "SKILL.md",
+      "sha256": "30a57b8aeb3c13c396d21b2ec03bdf842896761030770324023a83f6a76a7868"
+    },
+    {
+      "bytes": 13151,
+      "path": "assets/core/build-workspace.mjs",
+      "sha256": "0918d8853f93974a21c656910faba2b7bd5bec10d30c5edd120c618072b44c90"
+    },
+    {
+      "bytes": 25874,
+      "path": "assets/core/cli.mjs",
+      "sha256": "5a1b8789e4e426f8d269c2721a7f8b44de77f6c3dc012defa670087c8b35667e"
+    },
+    {
+      "bytes": 3033,
+      "path": "assets/core/common.mjs",
+      "sha256": "d59a252cf859cf6d18ef04e04ca77f62834f81471a91296b3228fda8aa7ea028"
+    },
+    {
+      "bytes": 12092,
+      "path": "assets/core/contracts.mjs",
+      "sha256": "c46dd7266440b43e16498d4ca328706b5c8af5243d79b2c4a539613cec341903"
+    },
+    {
+      "bytes": 1741,
+      "path": "assets/core/reconcile-artifact.mjs",
+      "sha256": "c773fe89529fc02115b3ff9ba6fc568d0bffc304f577cf3959f72aff5e14d5f0"
+    },
+    {
+      "bytes": 1833,
+      "path": "assets/core/schemas/asset-descriptor.schema.json",
+      "sha256": "f6923dffa0881126e9f32751cf29e473556f8b63e04edc0d72414d15dc70da57"
+    },
+    {
+      "bytes": 636,
+      "path": "assets/core/schemas/cli-envelope.schema.json",
+      "sha256": "e5ee2abfe28a5a99e91d9579a4e962bde901cbe027bd086d00c54f59360b45ad"
+    },
+    {
+      "bytes": 1511,
+      "path": "assets/core/schemas/distribution-receipt.schema.json",
+      "sha256": "b61305c30f4bce3aacbcd94bfb71653dea19c4b916c90bba0cecb75121fc0ae5"
+    },
+    {
+      "bytes": 956,
+      "path": "assets/core/schemas/release-report.schema.json",
+      "sha256": "356e9245b0733eac943d243c223eaaa999b3029d38c564a9252ba6caafa35b80"
+    },
+    {
+      "bytes": 525,
+      "path": "assets/core/schemas/resolver-report.schema.json",
+      "sha256": "e053b543dffd579df3794fcfc0f91bcc716084eee3a9ab16c1cedd32b266d40f"
+    },
+    {
+      "bytes": 1019,
+      "path": "assets/core/schemas/snapshot.schema.json",
+      "sha256": "786440725f330f564ff72a3b613c23085b5c61d4e7c89b41d6d233f741e2f991"
+    },
+    {
+      "bytes": 2141,
+      "path": "assets/core/schemas/source-manifest.schema.json",
+      "sha256": "f780f0b63ab322f31386e1d2d86926d9483cf76b53139af68df26a6fe53ff44b"
+    },
+    {
+      "bytes": 10971,
+      "path": "assets/core/snapshot.mjs",
+      "sha256": "569df4a54d954b8828d57fcfec121e18b763b62e0a44e33afba95e3d74b1b8a6"
+    },
+    {
+      "bytes": 27670,
+      "path": "assets/core/source-resolver.mjs",
+      "sha256": "2ab24164d44ed78a7393aa9995e0181eb4d5f3782c1528d5374d86352a54be69"
+    },
+    {
+      "bytes": 17490,
+      "path": "assets/core/typescript-public-contract.mjs",
+      "sha256": "7114d28cbb66831bd47bac99660fc64b95891cdf109b2e85ad590cf9f2bdb0bb"
+    },
+    {
+      "bytes": 86,
+      "path": "assets/core/version.json",
+      "sha256": "7bd407edc208b33d62ccfd0ec2f300dddc0d2768ecf3d5cae2ee04a840e4506f"
+    },
+    {
+      "bytes": 16126,
+      "path": "assets/core/workflow.mjs",
+      "sha256": "134d97e00c60912bdb924db4151ab9c83d241ef33704ef0de9accae0df61cd0f"
+    },
+    {
+      "bytes": 229,
+      "path": "assets/packs/xft/components/XftContentActionBar.css",
+      "sha256": "b7fee22997a7b6b8b73d0cfe2fd4eacfc4e4523f338af5af0c7427099722d10e"
+    },
+    {
+      "bytes": 364,
+      "path": "assets/packs/xft/components/XftContentActionBar.tsx",
+      "sha256": "9aeb541aac8bc41a16cccac033a1e288e7d29c49647a4f5cad9d4ddf8dbf27fe"
+    },
+    {
+      "bytes": 1347,
+      "path": "assets/packs/xft/components/XftFilterConfiguration.css",
+      "sha256": "c90654c4f7f9e403855a849dbe1c7ab9d84a3e0f929ca60bacfbb2b1a2ed7536"
+    },
+    {
+      "bytes": 280,
+      "path": "assets/packs/xft/components/XftFilterConfiguration.model.ts",
+      "sha256": "103dc89496ade8e90d9f818d56d4e0f9ef0b9999d6448d64c802d20ef09fa7bf"
+    },
+    {
+      "bytes": 3243,
+      "path": "assets/packs/xft/components/XftFilterConfiguration.tsx",
+      "sha256": "c1ac118f556824c8ef8563d5842696ff27a27b40a458759db917026a1ca5ec2b"
+    },
+    {
+      "bytes": 1758,
+      "path": "assets/packs/xft/components/component.content-action-bar.json",
+      "sha256": "d5b236b93b9c523dc403f119952a263521830c2742f41a9550043ac696790106"
+    },
+    {
+      "bytes": 3121,
+      "path": "assets/packs/xft/components/component.filter-configuration.json",
+      "sha256": "2fddc1b2886f7dc28c5d53ee05f85046ed9ec0adcf4934df1bca5e8afad5db9f"
+    },
+    {
+      "bytes": 4277,
+      "path": "assets/packs/xft/design-language.md",
+      "sha256": "0e3deed245f5a6216554a0cb2984e9b856ef7d6de5996c2e6ee9facca98a93e8"
+    },
+    {
+      "bytes": 1723,
+      "path": "assets/packs/xft/knowledge/knowledge.action-emphasis-by-intent.json",
+      "sha256": "1867b84fa0e4f62ff1d1ee92e260f01c338d447a7995dd7e76575a0198a17575"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/packs/xft/knowledge/knowledge.bulk-vs-row-actions.json",
+      "sha256": "f366d099b9342409e558a667204888978f22a77a302f35cc44246b933a051eca"
+    },
+    {
+      "bytes": 1066,
+      "path": "assets/packs/xft/knowledge/knowledge.column-settings-vs-filters.json",
+      "sha256": "0da1464b2abc0eb1cf1eb53c6f8817e22af57ebb619864d5238e5ee51873c00e"
+    },
+    {
+      "bytes": 1020,
+      "path": "assets/packs/xft/knowledge/knowledge.filter-defaults.json",
+      "sha256": "c4160f6401347540f508c998c2c53690d79eb011bca0d1057cd55ee24bedb88d"
+    },
+    {
+      "bytes": 1178,
+      "path": "assets/packs/xft/knowledge/knowledge.form-presentation-mode.json",
+      "sha256": "7e1b71b1ecd67f06cf4d9c7daac11a864cb32cac329255a131dc65d0c920b3e6"
+    },
+    {
+      "bytes": 839,
+      "path": "assets/packs/xft/manifest.json",
+      "sha256": "44cafa4a6282e9f36a56ba0b30dd8ade3b95e7cb873a4394552525d1b120a143"
+    },
+    {
+      "bytes": 2057,
+      "path": "assets/packs/xft/patterns/pattern.business-document-form.json",
+      "sha256": "852c3faf6cf407c2530b2a17db771dc18946b6a76c1f6698168de2a12e2ecc2e"
+    },
+    {
+      "bytes": 2121,
+      "path": "assets/packs/xft/patterns/pattern.list-operations.json",
+      "sha256": "66815dd3f01f7f1e1ea32412d26f2950182f5a5754a37036e4851e5e460224a0"
+    },
+    {
+      "bytes": 1577,
+      "path": "assets/packs/xft/patterns/pattern.search-filter-configuration.json",
+      "sha256": "d161e93b3fbdf4fd444f39b11ef5fb7d313785f72a4d37c51e6ae4d3dfc96a09"
+    },
+    {
+      "bytes": 1714,
+      "path": "assets/packs/xft/templates/SinglePageBusinessForm.css",
+      "sha256": "63db351414c2be3f0bd5559a94992ac0ce10daebc1a703779699d6000be8a711"
+    },
+    {
+      "bytes": 1824,
+      "path": "assets/packs/xft/templates/SinglePageBusinessForm.tsx",
+      "sha256": "ab918502df4d561a150759ac75df686e4272372f7c7842a75a2a88a20628d3f7"
+    },
+    {
+      "bytes": 840,
+      "path": "assets/packs/xft/templates/WizardBusinessForm.css",
+      "sha256": "c9d37f5a1924ee3dad3cc5fa36b31dd035f5aa627ed62369ad6d4c77db549d73"
+    },
+    {
+      "bytes": 1798,
+      "path": "assets/packs/xft/templates/WizardBusinessForm.tsx",
+      "sha256": "916955e2a1ff01d5e6b8ab72e59a8e9bc473af9f1da9e4d26e32906845f9ca88"
+    },
+    {
+      "bytes": 1466,
+      "path": "assets/packs/xft/templates/XftApplicationFrame.css",
+      "sha256": "a6b228e70cbfd8aa89ec6a0643ca18c99ded662e00fe17cb382fac58e39b25a8"
+    },
+    {
+      "bytes": 1784,
+      "path": "assets/packs/xft/templates/XftApplicationFrame.tsx",
+      "sha256": "23bfce7b80cf8eba2abdf6aeca9bf53c9098c88da33fcf34fd43506ce6b8ad35"
+    },
+    {
+      "bytes": 550,
+      "path": "assets/packs/xft/templates/XftPrimaryWorkSurface.css",
+      "sha256": "9ad0aca4580573afbcf613e8ec4dee048803f2effda3dcb9e0d2f651fcc2d774"
+    },
+    {
+      "bytes": 306,
+      "path": "assets/packs/xft/templates/XftPrimaryWorkSurface.tsx",
+      "sha256": "0f254ba3d0326070b2860d16842a64e8d08a07c22e9039d5c2439f81891f94e0"
+    },
+    {
+      "bytes": 1169,
+      "path": "assets/packs/xft/templates/template.application-frame.json",
+      "sha256": "11fd0b6e10b6d6665970467efed7bd780baba156de0c7edfb9db0a832136ac92"
+    },
+    {
+      "bytes": 996,
+      "path": "assets/packs/xft/templates/template.primary-work-surface.json",
+      "sha256": "1c117d3bbfcf4b0e8b6c5825cfffb0d399843d0e17a2c1b54a79d367654af079"
+    },
+    {
+      "bytes": 973,
+      "path": "assets/packs/xft/templates/template.single-page-business-form.json",
+      "sha256": "7da869d115773870558104cf69227c97938c37b13b9ca84b069da8899c51ee75"
+    },
+    {
+      "bytes": 812,
+      "path": "assets/packs/xft/templates/template.wizard-business-form.json",
+      "sha256": "833f22ad527ee5dd2aeca84c89fbed5897d01b891d15499811d32f3833655c97"
+    },
+    {
+      "bytes": 2730,
+      "path": "assets/packs/xft/theme/presets/default/alias-vars.generated.css",
+      "sha256": "e5929a89073434b8d32303381efe10bc5b919932f3967d9c9f17175eff5c257a"
+    },
+    {
+      "bytes": 804466,
+      "path": "assets/packs/xft/theme/presets/default/antd.generated.css",
+      "sha256": "1b981e28369318913d226a34fd36dccb45fae4fb313fc95c54a850bc1f86d4f7"
+    },
+    {
+      "bytes": 613,
+      "path": "assets/packs/xft/theme/presets/default/theme-config.generated.mjs",
+      "sha256": "3907bb712a812219317422b961b51f7a0b92df780fdb9cec2399995e793b158b"
+    },
+    {
+      "bytes": 383,
+      "path": "assets/runtime/runtime-dependencies.json",
+      "sha256": "124318f603173806c58cd52b2556e30432c18386621d4264f49993ce0967f7f2"
+    },
+    {
+      "bytes": 52517,
+      "path": "assets/runtime/runtime-lock.json",
+      "sha256": "a63fc5748f5e82c6eb25e2835d7cf54d3e75548c961c6bfe7e267733c8d1fc3e"
+    },
+    {
+      "bytes": 1581,
+      "path": "assets/scripts/bootstrap-core.mjs",
+      "sha256": "273819d9b2af39a102232bf70bf4ccc900398651e82fbdae9cc09e3a634fb8b9"
+    },
+    {
+      "bytes": 24195,
+      "path": "assets/scripts/bootstrap-workspace.mjs",
+      "sha256": "aa70ca011c99260f79fb6cf9c930e90361eebdbc58e7701a5224b7ce44cf873f"
+    },
+    {
+      "bytes": 5671,
+      "path": "assets/scripts/install-runtime-theme.mjs",
+      "sha256": "4038c3a0f7db9c4a51dd2f39721e32cfb07d3a9df05ebb05a16948e6355fe741"
+    },
+    {
+      "bytes": 53,
+      "path": "assets/workspace-template/.gitignore",
+      "sha256": "0419fd775bf56ebd3e87ab650dd98dc6dddc06aa383bc02c9b8dc811918cc1e4"
+    },
+    {
+      "bytes": 16,
+      "path": "assets/workspace-template/.npmrc",
+      "sha256": "889cd30e5bd539ecaf1db6ef91c7a4fdd59e69a2fcc238dab29919da2985b5ef"
+    },
+    {
+      "bytes": 3254,
+      "path": "assets/workspace-template/AGENTS.md",
+      "sha256": "69449869414d121adcbaaf5adfaa6d06f8db913294a22a90b4ac6db16ee40b72"
+    },
+    {
+      "bytes": 3053,
+      "path": "assets/workspace-template/README.md",
+      "sha256": "b4d1429a30a9bc1c283a976606b8726b15c61aee6d473c720a211d76e9b6edeb"
+    },
+    {
+      "bytes": 542,
+      "path": "assets/workspace-template/index.html",
+      "sha256": "fa5609c7e09e7931cc4ab346305c550730e7ccdb4f70227fc7aa3bef43e327bb"
+    },
+    {
+      "bytes": 367,
+      "path": "assets/workspace-template/package.json",
+      "sha256": "6a80c3788d2af4eaa5f5ccaa7348a678b5a47a254038b2d2ec3afa73f63dc3ed"
+    },
+    {
+      "bytes": 4471,
+      "path": "assets/workspace-template/page.tsx",
+      "sha256": "8c1e5552ee33555d4e0f912ed93c672a9d63e1443f89dc1733ae2e4448fc1df5"
+    },
+    {
+      "bytes": 2814,
+      "path": "assets/workspace-template/scripts/antd-boundary.mjs",
+      "sha256": "586bad295b29c1eedc756f14eeb60434efdfe913baca33c6c3d01879b33f7cef"
+    },
+    {
+      "bytes": 170,
+      "path": "assets/workspace-template/scripts/build-preview.mjs",
+      "sha256": "906db223766dcc81b50e2ea2f2f7e173db06733e94a131c55f52a10fce46ac81"
+    },
+    {
+      "bytes": 3649,
+      "path": "assets/workspace-template/scripts/build-static-preview.mjs",
+      "sha256": "6fbf193fe0685b70fc685d56d9b1b81ec0701a8b06720c08524300877b72ae52"
+    },
+    {
+      "bytes": 3257,
+      "path": "assets/workspace-template/scripts/runtime.mjs",
+      "sha256": "93f4da81213db157416b23c1ea6b55f9c04f6dac7f8b7cce0bcc9ffc0ce66739"
+    },
+    {
+      "bytes": 106,
+      "path": "assets/workspace-template/scripts/ux-proto.mjs",
+      "sha256": "cb918d8acfe0082b6eb749e4246c84a7bb941f9f842c158f34f29a89bccc8f22"
+    },
+    {
+      "bytes": 451,
+      "path": "assets/workspace-template/styles.css",
+      "sha256": "4d10271dfeaaf9bfd569bc0b7e6a119796b81ccc2fbf19d46bfc6f5ef9e1523f"
+    },
+    {
+      "bytes": 387,
+      "path": "bin/ux-proto-g-bootstrap.mjs",
+      "sha256": "7044a6dc42ecb7b21b352312eaeb14337275e5b8a16503d544b5056ceb6b8bc9"
+    },
+    {
+      "bytes": 2565,
+      "path": "distribution-contract.json",
+      "sha256": "094b9a3ce8d8a01599946de693d938e7b587b37105bb16f252222a614682360f"
+    }
+  ],
+  "kind": "ux-proto-distribution-receipt",
+  "name": "ux-proto-g",
+  "pack": {
+    "contentDigest": "sha256:7f6fa23cf2cbd00aa70bbc4cdb02aea35955595c40336bd8eaffed71b3da3094",
+    "id": "xft",
+    "version": "0.7.0"
+  },
+  "runtimeLockDigest": "sha256:a63fc5748f5e82c6eb25e2835d7cf54d3e75548c961c6bfe7e267733c8d1fc3e",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

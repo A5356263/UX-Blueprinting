@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 2,
+  "id": "pattern.business-document-form",
+  "kind": "Pattern",
+  "lifecycle": "active",
+  "name": "Business Document Form",
+  "summary": "Create or edit one business document with meaningful grouping, recovery, validation, and a clear completion action.",
+  "selection": {
+    "useWhen": [
+      "creating or editing one business document"
+    ],
+    "avoidWhen": [
+      "read-only detail or list management"
+    ]
+  },
+  "relations": [
+    {
+      "type": "requires",
+      "target": "knowledge.form-presentation-mode"
+    },
+    {
+      "type": "requires",
+      "target": "knowledge.action-emphasis-by-intent"
+    }
+  ],
+  "requires": [],
+  "content": {
+    "task": "Create or edit one business document and commit the intended change.",
+    "requiredRegions": [
+      {
+        "id": "document-context",
+        "responsibility": "Identify the document, mode, and consequential state."
+      },
+      {
+        "id": "semantic-form-groups",
+        "responsibility": "Collect business information in understandable groups or stages."
+      },
+      {
+        "id": "decision-actions",
+        "responsibility": "Expose recovery and the action that completes the current intent."
+      }
+    ],
+    "optionalRegions": [
+      {
+        "id": "detail-lines",
+        "responsibility": "Edit repeatable business line items when the document requires them."
+      },
+      {
+        "id": "section-navigation",
+        "responsibility": "Navigate a long continuous form without turning it into false stages."
+      }
+    ],
+    "defaultOrder": [
+      "document-context",
+      "section-navigation",
+      "semantic-form-groups",
+      "detail-lines",
+      "decision-actions"
+    ],
+    "forbiddenCombinations": [
+      "Materialize both single-page and wizard Templates into the same form"
+    ],
+    "pageOwns": [
+      "business fields",
+      "form state",
+      "validation",
+      "draft and submit handlers",
+      "business copy"
+    ],
+    "referenceRefs": [],
+    "styleUses": [
+      "main-container-bright"
+    ]
+  }
+}

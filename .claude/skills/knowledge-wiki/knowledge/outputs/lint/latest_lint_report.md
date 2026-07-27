@@ -1,6 +1,6 @@
 # Wiki Lint Report
 
-- raw_total: 122
+- raw_total: 123
 - domain_readme_total: 25
 - domain_readme_missing_count: 0
 - unindexed_domain_count: 0

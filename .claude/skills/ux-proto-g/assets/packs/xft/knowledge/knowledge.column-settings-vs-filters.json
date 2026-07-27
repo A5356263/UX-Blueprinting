@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "knowledge.column-settings-vs-filters",
+  "kind": "Knowledge",
+  "lifecycle": "active",
+  "name": "Column Settings versus Filters",
+  "summary": "Separate table presentation configuration from query configuration.",
+  "selection": {
+    "useWhen": [
+      "distinguish column display from search criteria"
+    ],
+    "avoidWhen": [
+      "simple fixed table"
+    ]
+  },
+  "relations": [],
+  "requires": [],
+  "content": {
+    "decision": "Does this setting alter what the Table displays or which records the query returns?",
+    "distinctions": [
+      "Tree/Checkbox may serve column hierarchy; TreeSelect may choose filter values but does not define ownership"
+    ],
+    "forbidden": [
+      "Store query values in column metadata"
+    ],
+    "guidance": "Visibility, fixed position, and order belong to column settings; field enablement, operators, and defaults belong to filter configuration.",
+    "optional": [
+      "Preview resulting table or query"
+    ],
+    "required": [
+      "Identify affected state owner"
+    ]
+  }
+}

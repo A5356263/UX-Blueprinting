@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "id": "pattern.list-operations",
+  "kind": "Pattern",
+  "lifecycle": "active",
+  "name": "List and Row Operations",
+  "summary": "Present global list tools and actions scoped to an individual row without implying multi-selection.",
+  "selection": {
+    "useWhen": [
+      "list toolbar and row actions"
+    ],
+    "avoidWhen": [
+      "multi-row selected action"
+    ]
+  },
+  "relations": [
+    {
+      "type": "requires",
+      "target": "knowledge.bulk-vs-row-actions"
+    },
+    {
+      "type": "requires",
+      "target": "knowledge.action-emphasis-by-intent"
+    },
+    {
+      "type": "supports",
+      "target": "pattern.search-filter-configuration"
+    }
+  ],
+  "requires": [],
+  "content": {
+    "defaultOrder": [
+      "filter-summary",
+      "list-toolbar",
+      "data-table",
+      "selection-actions",
+      "pagination",
+      "row-confirmation"
+    ],
+    "forbiddenCombinations": [
+      "Render a bulk selection bar when no selection exists"
+    ],
+    "optionalRegions": [
+      {
+        "id": "filter-summary",
+        "responsibility": "Expose the current query and an entry to configure filters without displacing the list task."
+      },
+      {
+        "id": "selection-actions",
+        "responsibility": "Expose selection-scoped actions only while rows are selected."
+      },
+      {
+        "id": "row-confirmation",
+        "responsibility": "Confirm a destructive action for one row."
+      }
+    ],
+    "pageOwns": [
+      "rows",
+      "global handlers",
+      "row handlers",
+      "confirmation target",
+      "query and pagination state"
+    ],
+    "referenceRefs": [],
+    "requiredRegions": [
+      {
+        "id": "list-toolbar",
+        "responsibility": "Own global list actions such as create and refresh."
+      },
+      {
+        "id": "data-table",
+        "responsibility": "Present rows and row-scoped actions."
+      },
+      {
+        "id": "pagination",
+        "responsibility": "Navigate the current result set without changing action ownership."
+      }
+    ],
+    "styleUses": [],
+    "task": "Operate on a list or one row at a time."
+  }
+}
