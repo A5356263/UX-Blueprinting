@@ -10,6 +10,16 @@ from _write_if_changed import write_text_if_changed
 
 LINK_PATTERN = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 NUMBERED_PATTERN = re.compile(r"^(\d+)_")
+ALLOWED_BUSINESS_FILES = {
+    "README.md",
+    "业务对象与术语.md",
+    "功能与操作清单.md",
+    "任务与路径.md",
+    "规则与权限.md",
+    "状态与异常.md",
+    "页面与字段.md",
+    "问答与差异.md",
+}
 FORBIDDEN_SUMMARY_MARKERS = ("wiki/summaries", "summary-first", "先读 summary", "优先命中 `summary`")
 STABLE_DESIGN_DIRS = {"设计准则", "交互模式"}
 REQUIRED_ROUTE_HEADINGS = ("## 任务触发索引", "## 停止条件", "## 正式知识清单")
@@ -165,6 +175,13 @@ def main() -> int:
     for file in numbered_business_files:
         issues.append(f"numbered_business_file:{file.relative_to(root).as_posix()}")
 
+    nonstandard_business_files = [
+        file for file in raw_files
+        if business_root in file.parents and file.name not in ALLOWED_BUSINESS_FILES
+    ]
+    for file in nonstandard_business_files:
+        issues.append(f"nonstandard_business_file:{file.relative_to(root).as_posix()}")
+
     forbidden_summary_references = 0
     for scan_root in [repo_root / ".claude" / "skills"]:
         for file in markdown_files(scan_root):
@@ -200,6 +217,7 @@ def main() -> int:
         "long_raw_without_navigation_count": long_without_navigation,
         "forbidden_summary_reference_count": forbidden_summary_references,
         "numbered_business_file_count": len(numbered_business_files),
+        "nonstandard_business_file_count": len(nonstandard_business_files),
         "encoding_issue_count": encoding_issues,
         "issue_total": len(issues),
     }

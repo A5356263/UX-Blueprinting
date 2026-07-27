@@ -47,7 +47,7 @@ description: >
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
 2. 读取 `spark-output/context/experience-blueprint.json`
 3. 读取 `spark-output/experience_blueprint.md`
-4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入必要 README 或单一 raw，只读命中的设计规范、品牌约束或视觉准则章节；不得预设目录层级或遍历 raw
+4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中章节；不得预设目录层级或遍历 raw
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
 

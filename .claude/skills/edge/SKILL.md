@@ -55,7 +55,7 @@ description: >
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身位置和输入边界
 2. 读取 `spark-output/context/experience-blueprint.json`
 3. 读取 `spark-output/experience_blueprint.md`
-4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 按实际入口进入必要 README 或单一 raw，只读命中的反馈、报错、异常、恢复或状态章节；不得预设目录层级或遍历 raw
+4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中的反馈、报错、异常、恢复或状态章节；不得预设目录层级或遍历 raw
 
 - 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出
 - 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集

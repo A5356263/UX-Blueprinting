@@ -31,6 +31,7 @@
 - `long_raw_without_navigation_count`
 - `forbidden_summary_reference_count`
 - `numbered_business_file_count`
+- `nonstandard_business_file_count`
 - `encoding_issue_count`
 - `unimported_candidate_count`
 - `gap_count`

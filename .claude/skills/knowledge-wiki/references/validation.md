@@ -21,6 +21,7 @@ python knowledge/scripts/update_wiki.py --strict
 - `long_raw_without_navigation_count=0`
 - `forbidden_summary_reference_count=0`
 - `numbered_business_file_count=0`
+- `nonstandard_business_file_count=0`
 - `encoding_issue_count=0`
 - `unimported_candidate_count` 符合本次预期
 - `git diff --check` 通过
@@ -31,11 +32,13 @@ python knowledge/scripts/update_wiki.py --strict
 
 - 新知识是否符合 `knowledge/LLM.md` 定义的当前本地结构。
 - 是否先判断知识集合和最终结果所有权，而不是按文件名或关键词归类。
-- 新建大文件是否具备稳定定位、适用范围、场景路由、快速导航、正式章节、未决项和维护边界。
+- 新建大文件是否具备稳定定位、适用范围、快速导航、正式章节、未决项和维护边界。
 - 文件拆分是否基于不同责任、适用范围、独立消费或变更风险，而不是行数。
-- README 是否能明显缩小范围；单一大文件已可直接路由时是否避免新建 README。
+- 每个业务领域及独立子域是否有 README；README 是否只做文件级路由，没有复制正文或章节目录。
+- 业务领域是否只使用八类固定载体、同层同类型单文件且没有为凑结构建立空文件。
+- 新增第九类是否满足七项门槛并有用户明确确认；否则是否进入候选。
 - index 是否只路由顶层知识类型、业务集合、可直接消费的领域或大文件，而没有膨胀为逐文件目录。
-- 业务 raw 文件是否全部使用语义文件名，没有数字前缀。
+- 业务 raw 是否只使用八类固定文件名，没有数字前缀或自定义类型文件。
 - 没有新建空目录、空文件、第二语义镜像、registry、catalog、mapping table 或额外状态字段。
 
 ## 语义复核
@@ -71,8 +74,9 @@ python knowledge/scripts/update_wiki.py --strict
 
 ```text
 index
-→ 必要的知识集合 README / 领域 README / 单一大文件
-→ 命中 raw 或章节
+→ 必要的知识集合 README / 领域 README
+→ 命中固定 raw 文件
+→ 按顶部快速导航命中章节
 → 条件依赖
 → 回主域
 → 停止
