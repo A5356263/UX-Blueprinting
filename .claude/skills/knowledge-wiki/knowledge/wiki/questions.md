@@ -1023,201 +1023,173 @@
 
 - question_id: Q-0146
 - source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: QUESTION
-- text: 各子域之间的费用政策、预算方案是否统一配置入口，需结合通用配置域持续校验
+- question_type: GAP
+- text: 日常报销仍有管理员操作指引、员工操作指引和常见问题待采集
 
 ### Q-0147
 
 - question_id: Q-0147
-- source_path: knowledge/raw/业务/费用管理/任务与路径.md
+- source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: GAP
-- text: 费用管理各子域之间的统一任务入口与跨端差异仍需结合产品页面继续核验。
+- text: 差旅服务仍有管理员操作指引、员工操作指引、常见问题和产品动态待采集
 
 ### Q-0148
 
 - question_id: Q-0148
-- source_path: knowledge/raw/业务/费用管理/任务与路径.md
-- question_type: QUESTION
-- text: “数据报表 → 对相关单据”的后续动作在来源中未继续定义，不补写推断流程。
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 企业支付仍有管理员操作指引、员工操作指引和常见问题待采集
 
 ### Q-0149
 
 - question_id: Q-0149
-- source_path: knowledge/raw/业务/费用管理/企业支付/README.md
+- source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: GAP
-- text: 管理员操作指引（11 篇）、员工操作指引（7 篇）、常见问题（7 条）均待采集
+- text: 通用配置仍有操作指引和常见问题正文待采集
 
 ### Q-0150
 
 - question_id: Q-0150
-- source_path: knowledge/raw/业务/费用管理/企业支付/README.md
+- source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: QUESTION
-- text: 4 种付款业务场景的边界条件是否已完全清晰，需持续校验
+- text: 费用政策、预算方案是否统一配置入口，需结合各业务主题持续校验
 
 ### Q-0151
 
 - question_id: Q-0151
-- source_path: knowledge/raw/业务/费用管理/企业支付/功能与操作清单.md
-- question_type: GAP
-- text: 对公报账常见问题7条未采集
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: QUESTION
+- text: 企业支付四种付款业务场景的边界条件仍需持续校验
 
 ### Q-0152
 
 - question_id: Q-0152
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: `INV-COMMON-01` 的“全票种”具体票种范围需要随产品支持范围持续校验。
+- source_path: knowledge/raw/业务/费用管理/任务与路径.md
+- question_type: GAP
+- text: 费用管理各子域之间的统一任务入口与跨端差异仍需结合产品页面继续核验。
 
 ### Q-0153
 
 - question_id: Q-0153
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/费用管理/任务与路径.md
 - question_type: QUESTION
-- text: “对公支付与对私支付操作基本一致”的具体差异未由源材料展开。
+- text: “数据报表 → 对相关单据”的后续动作在来源中未继续定义，不补写推断流程。
 
 ### Q-0154
 
 - question_id: Q-0154
 - source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: QUESTION
-- text: 各设置项的角色权限、生效范围和变更审计需要按对应规则真源继续核对。
+- text: `INV-COMMON-01` 的“全票种”具体票种范围需要随产品支持范围持续校验。
 
 ### Q-0155
 
 - question_id: Q-0155
 - source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: QUESTION
-- text: 第三方平台的实际开通范围与各平台可同步的订单字段，需要结合企业配置和接入协议确认。
+- text: “对公支付与对私支付操作基本一致”的具体差异未由源材料展开。
 
 ### Q-0156
 
 - question_id: Q-0156
 - source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: QUESTION
-- text: 各报表的筛选条件、字段口径、数据刷新频率和导出范围未在本来源中定义。
+- text: 各设置项的角色权限、生效范围和变更审计需要按对应规则真源继续核对。
 
 ### Q-0157
 
 - question_id: Q-0157
 - source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: QUESTION
-- text: 对公报账与现有 `企业支付/` 子域之间的边界需要继续核对，当前先按费用管理整体能力记录。
+- text: 第三方平台的实际开通范围与各平台可同步的订单字段，需要结合企业配置和接入协议确认。
 
 ### Q-0158
 
 - question_id: Q-0158
-- source_path: knowledge/raw/业务/费用管理/差旅服务/README.md
-- question_type: GAP
-- text: 管理员操作指引（14 篇）、员工操作指引（5 篇）、常见问题（14 条）、产品动态均待采集
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
+- question_type: QUESTION
+- text: 各报表的筛选条件、字段口径、数据刷新频率和导出范围未在本来源中定义。
 
 ### Q-0159
 
 - question_id: Q-0159
-- source_path: knowledge/raw/业务/费用管理/差旅服务/README.md
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: QUESTION
-- text: 差标政策与预算方案的管控边界是否已完全稳定，需结合通用配置域持续校验
+- text: 对公报账与企业支付业务主题之间的边界需要继续核对，当前先按费用管理整体能力记录。
 
 ### Q-0160
 
 - question_id: Q-0160
-- source_path: knowledge/raw/业务/费用管理/差旅服务/功能与操作清单.md
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: GAP
-- text: 差旅服务常见问题14条未采集
+- text: 日常报销常见问题12条未采集
 
 ### Q-0161
 
 - question_id: Q-0161
-- source_path: knowledge/raw/业务/费用管理/差旅服务/功能与操作清单.md
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: GAP
-- text: 产品动态未采集
+- text: 差旅服务常见问题14条未采集
 
 ### Q-0162
 
 - question_id: Q-0162
-- source_path: knowledge/raw/业务/费用管理/日常报销/README.md
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: GAP
-- text: 管理员操作指引（3 篇）、员工操作指引（2 篇）、常见问题（12 条）均待采集
+- text: 产品动态未采集
 
 ### Q-0163
 
 - question_id: Q-0163
-- source_path: knowledge/raw/业务/费用管理/日常报销/README.md
-- question_type: QUESTION
-- text: 费用政策与预算方案是否与差旅服务共享配置，需结合通用配置域校验
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
+- question_type: GAP
+- text: 对公报账常见问题7条未采集
 
 ### Q-0164
 
 - question_id: Q-0164
-- source_path: knowledge/raw/业务/费用管理/日常报销/功能与操作清单.md
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
 - question_type: GAP
-- text: 日常报销常见问题12条未采集
+- text: 费用管理56条常见问题未采集
 
 ### Q-0165
 
 - question_id: Q-0165
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: QUESTION
-- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
+- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
+- question_type: GAP
+- text: 支付管理-云直联移动端经办和付款账户权限指引仅有图片无文字
 
 ### Q-0166
 
 - question_id: Q-0166
-- source_path: knowledge/raw/业务/费用管理/规则与权限.md
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: QUESTION
-- text: “对公报账”与企业支付、采购系统、应付账款之间的职责边界需结合后续真源继续校验。
+- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
 
 ### Q-0167
 
 - question_id: Q-0167
-- source_path: knowledge/raw/业务/费用管理/通用配置/README.md
-- question_type: GAP
-- text: 全部 27 篇操作指引正文和 56 条常见问题正文均未采集
+- source_path: knowledge/raw/业务/费用管理/规则与权限.md
+- question_type: QUESTION
+- text: “对公报账”与企业支付、采购系统、应付账款之间的职责边界需结合后续真源继续校验。
 
 ### Q-0168
 
 - question_id: Q-0168
-- source_path: knowledge/raw/业务/费用管理/通用配置/README.md
-- question_type: GAP
-- text: 当前仅有目录结构，无详细配置说明
-
-### Q-0169
-
-- question_id: Q-0169
-- source_path: knowledge/raw/业务/费用管理/通用配置/README.md
-- question_type: QUESTION
-- text: 通用配置与各子域（差旅、报销、企业支付）之间的配置关联关系是否已完全清晰，需结合各子域持续校验
-
-### Q-0170
-
-- question_id: Q-0170
-- source_path: knowledge/raw/业务/费用管理/通用配置/功能与操作清单.md
-- question_type: GAP
-- text: 费用管理56条常见问题未采集
-
-### Q-0171
-
-- question_id: Q-0171
-- source_path: knowledge/raw/业务/费用管理/通用配置/功能与操作清单.md
-- question_type: GAP
-- text: 支付管理-云直联移动端经办和付款账户权限指引仅有图片无文字
-
-### Q-0172
-
-- question_id: Q-0172
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 产品能力版图是否随产品迭代保持更新，需持续关注
 
-### Q-0173
+### Q-0169
 
-- question_id: Q-0173
+- question_id: Q-0169
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 平台角色与终端分类是否已完全覆盖当前产品状态，需持续校验
 
-### Q-0174
+### Q-0170
 
-- question_id: Q-0174
+- question_id: Q-0170
 - source_path: knowledge/raw/业务/项目背景/业务对象与术语.md
 - question_type: QUESTION
 - text: API 数量、报表数量、图表数量等具体数字需要以最新官方材料复核后再作为稳定指标使用。
