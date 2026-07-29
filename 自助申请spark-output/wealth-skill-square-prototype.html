@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>财富小助 Skill 广场原型</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --line: #dfe5ef;
+      --text: #172033;
+      --muted: #667085;
+      --primary: #176b87;
+      --primary-dark: #0f4d63;
+      --green: #147a5c;
+      --amber: #a15c05;
+      --red: #b42318;
+      --blue-soft: #e8f4f8;
+      --green-soft: #e8f6f0;
+      --amber-soft: #fff3dc;
+      --red-soft: #ffeceb;
+      --shadow: 0 18px 45px rgba(16, 24, 40, .12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      font-size: 14px;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 228px 1fr; }
+    .sidebar {
+      background: #102a43;
+      color: #d8e2ef;
+      padding: 20px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 22px; }
+    .nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #d8e2ef;
+      text-align: left;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+    .nav button.active, .nav button:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .main { padding: 24px; min-width: 0; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0 0 8px; font-size: 24px; letter-spacing: 0; }
+    h2 { margin: 0 0 14px; font-size: 18px; }
+    h3 { margin: 0 0 8px; font-size: 15px; }
+    p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .toolbar, .panel, .card, .modal-card, .popover {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) 170px 170px 170px auto;
+      gap: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .panel { padding: 16px; margin-bottom: 14px; }
+    .list-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .stack { display: grid; gap: 12px; }
+    .card { padding: 16px; }
+    .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+    .title { font-size: 16px; font-weight: 700; color: var(--text); }
+    .meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 12px;
+      min-height: 34px;
+    }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn.primary:hover { background: var(--primary-dark); }
+    .btn.danger { color: var(--red); border-color: #ffb4ad; background: var(--red-soft); }
+    .btn.ghost { background: transparent; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--text);
+    }
+    textarea { resize: vertical; min-height: 96px; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 12px;
+      background: #eef2f7;
+      color: #344054;
+      white-space: nowrap;
+    }
+    .tag.green { background: var(--green-soft); color: var(--green); }
+    .tag.amber { background: var(--amber-soft); color: var(--amber); }
+    .tag.red { background: var(--red-soft); color: var(--red); }
+    .tag.blue { background: var(--blue-soft); color: var(--primary); }
+    .pagination { display: flex; justify-content: center; gap: 8px; padding: 10px; }
+    .empty, .loading {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      background: #fbfcfe;
+    }
+    .skeleton { height: 14px; background: linear-gradient(90deg,#eef2f7,#f8fafc,#eef2f7); border-radius: 4px; margin: 8px 0; }
+    .banner {
+      border-left: 4px solid var(--primary);
+      background: var(--blue-soft);
+      padding: 12px 14px;
+      border-radius: 6px;
+      color: #16465a;
+      margin-bottom: 14px;
+    }
+    .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+    .tab { border: 0; background: transparent; padding: 11px 14px; color: var(--muted); border-bottom: 2px solid transparent; }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .form-grid { display: grid; gap: 14px; }
+    .field label { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; }
+    .error { color: var(--red); margin-top: 6px; font-size: 13px; }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, .45);
+      z-index: 20;
+      padding: 18px;
+    }
+    .modal-mask.show { display: flex; }
+    .modal-card { width: min(620px, 100%); box-shadow: var(--shadow); }
+    .modal-head, .modal-foot { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .modal-foot { border-top: 1px solid var(--line); border-bottom: 0; justify-content: flex-end; gap: 8px; }
+    .modal-body { padding: 18px; }
+    .option-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0; }
+    .option { border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #102a43;
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 30;
+    }
+    .toast.show { display: block; }
+    .chat-shell { max-width: 820px; }
+    .chat-box { min-height: 360px; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; }
+    .bubble { max-width: 74%; padding: 12px 14px; border-radius: 8px; background: #eef2f7; }
+    .bubble.me { margin-left: auto; background: var(--blue-soft); color: #16465a; }
+    .composer { display: grid; grid-template-columns: 1fr auto; gap: 8px; position: relative; }
+    .popover {
+      position: absolute;
+      left: 0;
+      right: 70px;
+      bottom: 48px;
+      display: none;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      z-index: 10;
+    }
+    .popover.show { display: block; }
+    .suggest-item { padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; gap: 12px; }
+    .suggest-item:hover, .suggest-item.active { background: var(--blue-soft); }
+    .danger-zone { border-color: #ffb4ad; background: #fffafa; }
+
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .toolbar { grid-template-columns: 1fr; }
+      .grid, .option-grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; }
+      .main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">企业财富+ 智能化配置</div>
+      <nav class="nav">
+        <button class="active" data-page="square">Skill 广场</button>
+        <button data-page="mine">我的 Skill</button>
+        <button data-page="editor">Skill 编辑</button>
+        <button data-page="detail">Skill 详情</button>
+        <button data-page="chat">财富小助联想</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section id="square" class="page active">
+        <div class="topbar">
+          <div>
+            <h1>企业财富+ · Skill 广场</h1>
+            <p>发现全行共享的 Skill；开通按分行生效，个人可按需停用。</p>
+          </div>
+          <button class="btn primary" data-modal="create">发布 Skill</button>
+        </div>
+        <div class="toolbar">
+          <input id="squareSearch" placeholder="搜索 Skill 名称" />
+          <select><option>全部所属分行</option><option>上海分行</option><option>深圳分行</option></select>
+          <select><option>全部分行状态</option><option>本分行未开通</option><option>本分行已开通</option></select>
+          <select><option>最近更新</option><option>订阅分行数</option><option>评分最高</option></select>
+          <button class="btn" data-clear="squareSearch">重置</button>
+        </div>
+        <div class="panel">
+          <div class="list-head"><span>6 个共享 Skill</span><span>页面加载完成</span></div>
+          <div class="grid">
+            <article class="card">
+              <div class="card-head"><span class="title">高净值客户资产复盘</span><span class="tag blue">其他分行共享</span></div>
+              <p>汇总客户资产配置、收益变动和风险敞口，生成客户经理复盘提纲。</p>
+              <div class="meta">王宁 / 上海分行 · 18 个分行已开通 · 更新于 2026-07-18</div>
+              <div class="actions"><span class="tag amber">本分行未开通</span><span class="tag">个人可用待开通</span></div>
+              <div class="actions"><button class="btn" data-page-link="detail">查看详情</button><button class="btn" data-modal="copy">复制</button><button class="btn primary" data-modal="branch">为本分行开通</button></div>
+            </article>
+            <article class="card">
+              <div class="card-head"><span class="title">理财到期客户跟进</span><span class="tag green">本分行共享</span></div>
+              <p>按产品到期日筛选客户，输出电话沟通重点和下一步建议。</p>
+              <div class="meta">李敏 / 深圳分行 · 9 个分行已开通 · 更新于 2026-07-15</div>
+              <div class="actions"><span class="tag green">本分行已开通</span><span class="tag green">我正在使用</span></div>
+              <div class="actions"><button class="btn" data-page-link="detail">查看详情</button><button class="btn" data-modal="copy">复制</button></div>
+            </article>
+          </div>
+        </div>
+        <div class="panel loading"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton" style="width:65%;margin-left:auto;margin-right:auto"></div>列表加载骨架状态</div>
+        <div class="panel empty">暂无匹配 Skill <button class="btn" data-clear="squareSearch">清空筛选</button></div>
+        <div class="pagination"><button class="btn">‹</button><button class="btn primary">1</button><button class="btn">2</button><button class="btn">3</button><button class="btn">›</button></div>
+      </section>
+
+      <section id="mine" class="page">
+        <div class="topbar">
+          <div><h1>我的 Skill</h1><p>仅展示你创建的 Skill；未共享内容只有你可见。</p></div>
+          <button class="btn primary" data-modal="create">发布 Skill</button>
+        </div>
+        <div class="toolbar">
+          <input id="mineSearch" placeholder="搜索 Skill 名称" />
+          <select><option>全部共享状态</option><option>已共享</option><option>未共享</option></select>
+          <select><option>全部运行状态</option><option>可使用</option><option>正在准备</option><option>准备失败</option></select>
+          <select><option>最近更新</option><option>评分最高</option></select>
+          <button class="btn" data-clear="mineSearch">重置</button>
+        </div>
+        <div class="panel stack">
+          <div class="list-head"><span>3 个 Skill</span><span>分页：每页 10 条</span></div>
+          <article class="card">
+            <div class="card-head"><span class="title">私行客户周报生成</span><span><span class="tag green">已共享</span> <span class="tag green">可使用</span></span></div>
+            <p>面向客户经理生成客户资产周报摘要，包含异常波动提示。</p>
+            <div class="meta">当前版本 v2.3 · 更新于 2026-07-20 · 评分 92 · 12 个分行已开通</div>
+            <div class="actions"><button class="btn" data-page-link="detail">查看详情</button><button class="btn" data-page-link="editor">编辑</button><button class="btn">取消共享</button><button class="btn" data-modal="copy">复制</button><button class="btn danger" data-modal="delete">删除</button></div>
+          </article>
+          <article class="card">
+            <div class="card-head"><span class="title">基金组合诊断草稿</span><span><span class="tag">未共享</span> <span class="tag amber">正在准备</span></span></div>
+            <p>根据持仓结构输出组合诊断草稿，等待运行版本准备完成。</p>
+            <div class="meta">当前版本 v0.8 · 更新于 2026-07-19 · 评分生成中 · 0 个分行已开通</div>
+            <div class="actions"><button class="btn" data-page-link="detail">查看详情</button><button class="btn" data-page-link="editor">编辑</button><button class="btn primary">共享到广场</button><button class="btn" data-modal="copy">复制</button></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="editor" class="page">
+        <div class="topbar">
+          <div><h1>新建 Skill</h1><p>保存会生成 v1.0，不会自动共享；当前可用版本为空。</p></div>
+          <div class="actions"><button class="btn" data-page-link="mine">取消</button><button id="saveSkill" class="btn primary">保存并发布</button></div>
+        </div>
+        <div class="banner">正式版本保存后进入“正在准备使用”状态；评分生成不阻断版本内容展示。</div>
+        <div class="panel form-grid">
+          <h2>基本信息</h2>
+          <div class="field"><label>Skill 名称 * <span id="nameCount">0/50</span></label><input id="skillName" maxlength="50" placeholder="例如：高净值客户资产复盘" /></div>
+          <div class="field"><label>Skill 描述 * <span id="descCount">0/200</span></label><textarea id="skillDesc" maxlength="200" placeholder="说明 Skill 的适用场景、输入和输出"></textarea></div>
+          <div class="field"><label>提示词内容 * <span id="promptCount">0/10000</span></label><textarea id="skillPrompt" style="min-height:220px" maxlength="10000" placeholder="输入 Markdown 格式提示词"></textarea></div>
+          <div id="editorError" class="error"></div>
+          <div class="actions"><button class="btn">查看编写规范</button><button class="btn primary" id="saveSkillBottom">保存并发布</button></div>
+        </div>
+      </section>
+
+      <section id="detail" class="page">
+        <div class="topbar">
+          <div>
+            <h1><button class="btn ghost" data-page-link="square">返回</button> 高净值客户资产复盘 <span class="tag green">已共享</span> <span class="tag green">可使用</span></h1>
+            <p>汇总客户资产配置、收益变动和风险敞口，生成客户经理复盘提纲。</p>
+            <div class="meta">创建者 王宁 · 所属分行 上海分行 · 当前版本 v2.3 · 18 个分行已开通</div>
+          </div>
+        </div>
+        <div class="actions panel">
+          <span class="tag amber">本分行未开通</span>
+          <button class="btn" data-page-link="editor">编辑</button>
+          <button class="btn">共享到广场</button>
+          <button class="btn primary" data-modal="branch">为本分行开通</button>
+          <button class="btn" data-modal="copy">复制</button>
+          <button class="btn danger" data-modal="delete">删除</button>
+        </div>
+        <div class="banner">已保存，当前版本可在财富小助中使用；如新版本正在准备，会保留当前可用版本。</div>
+        <div class="panel">
+          <div class="tabs">
+            <button class="tab active" data-tab="info">Skill 详情</button>
+            <button class="tab" data-tab="versions">版本记录</button>
+            <button class="tab" data-tab="score">Skill 评分</button>
+          </div>
+          <div id="tab-info" class="tab-panel active"><p>你是财富业务客户经理助手。请基于客户资产、风险偏好、产品到期信息，输出结构化复盘摘要、风险提示和下一步沟通建议。</p></div>
+          <div id="tab-versions" class="tab-panel stack">
+            <article class="card"><b>v2.3</b> · 2026-07-20 · 王宁 · <span class="tag green">可使用</span> <button class="btn">查看</button></article>
+            <article class="card"><b>v2.2</b> · 2026-07-10 · 王宁 · <span class="tag">历史版本</span> <button class="btn">查看</button> <button class="btn" data-modal="restore">还原为新版本</button></article>
+          </div>
+          <div id="tab-score" class="tab-panel">
+            <div class="card"><h3>v2.3 综合评分 92</h3><p>结论：结构完整、边界清晰。建议补充异常市场情况下的客户安抚话术。</p></div>
+            <div class="empty" style="margin-top:12px">正在生成 v2.4 的评分</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="chat" class="page">
+        <div class="topbar"><div><h1>财富小助 Skill 联想 Popover</h1><p>在输入框开头或空格后输入 / 触发，最多展示 10 条可运行且未停用的 Skill。</p></div></div>
+        <div class="panel chat-shell">
+          <div class="chat-box">
+            <div class="bubble">需要我帮你处理哪类财富业务任务？</div>
+            <div class="bubble me">/高净值客户资产复盘 请生成本周沟通提纲</div>
+          </div>
+          <div class="composer">
+            <div class="popover" id="suggestPopover">
+              <div class="suggest-item active"><span><b>高净值客户资产复盘</b><br><small>18 个分行已开通</small></span><span class="tag green">可执行</span></div>
+              <div class="suggest-item"><span><b>理财到期客户跟进</b><br><small>9 个分行已开通</small></span><span class="tag green">可执行</span></div>
+              <div class="empty">未找到匹配结果 <button class="btn">去 Skill 广场</button></div>
+            </div>
+            <input id="chatInput" placeholder="输入 / 选择 Skill" />
+            <button class="btn primary">发送</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-mask" id="modalMask">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="modalTitle">创建 Skill</h2><button class="btn ghost" data-close>×</button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot" id="modalFoot"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const navButtons = document.querySelectorAll('.nav button');
+    const mask = document.getElementById('modalMask');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalFoot = document.getElementById('modalFoot');
+    const toast = document.getElementById('toast');
+
+    function showPage(id) {
+      pages.forEach(page => page.classList.toggle('active', page.id === id));
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.page === id));
+      window.scrollTo({ top: 0 });
+    }
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    const modalMap = {
+      create: {
+        title: '创建 Skill',
+        body: `<p>选择一种创建方式。</p><div class="option-grid"><div class="option"><h3>手动创建</h3><p>使用编写模板开始。</p><div class="actions"><button class="btn primary" data-create-manual>选择</button></div></div><div class="option"><h3>上传 Markdown</h3><p>解析文件后进入编辑页。</p><input type="file" accept=".md" /><div class="error">仅支持 .md，文件不超过 1MB。</div></div></div><p>新 Skill 默认仅你可见，保存后可再共享到广场。</p>`,
+        foot: `<button class="btn" data-close>取消</button>`
+      },
+      branch: {
+        title: '为本分行开通 高净值客户资产复盘',
+        body: `<p>确认后，深圳分行全体用户都可在财富小助使用此 Skill。</p><div class="banner">个人后续可以停用自己的使用，但不会撤销分行开通。</div>`,
+        foot: `<button class="btn" data-close>取消</button><button class="btn primary" data-confirm="已为深圳分行开通，分行用户均可使用。">确认开通</button>`
+      },
+      copy: {
+        title: '复制 高净值客户资产复盘',
+        body: `<div class="field"><label>副本名称</label><input value="高净值客户资产复盘-副本" /></div><p class="meta">副本将成为你的独立 Skill，不继承订阅、调用记录、历史版本和评分。</p>`,
+        foot: `<button class="btn" data-close>取消</button><button class="btn primary" data-confirm="副本已创建。">创建副本</button>`
+      },
+      restore: {
+        title: '将 v2.2 还原为新版本',
+        body: `<p>将基于 v2.2 的内容生成 v2.4，当前版本与其他历史版本都会保留。</p><div class="banner">新版本不沿用历史评分，评分会重新生成。</div>`,
+        foot: `<button class="btn" data-close>取消</button><button class="btn primary" data-confirm="已基于 v2.2 生成 v2.4。">确认还原</button>`
+      },
+      delete: {
+        title: '删除 高净值客户资产复盘',
+        body: `<div class="panel danger-zone"><p>删除后，所属分行及 18 个订阅分行将无法继续使用，历史版本不可恢复。</p></div><div class="field"><label>输入完整 Skill 名称确认删除</label><input id="deleteName" placeholder="高净值客户资产复盘" /><div class="error">请输入完整的 Skill 名称以确认删除。</div></div>`,
+        foot: `<button class="btn" data-close>取消</button><button class="btn danger" id="deleteConfirm" disabled data-confirm="Skill 已删除。">删除 Skill</button>`
+      }
+    };
+
+    function openModal(type) {
+      const modal = modalMap[type];
+      modalTitle.textContent = modal.title;
+      modalBody.innerHTML = modal.body;
+      modalFoot.innerHTML = modal.foot;
+      mask.classList.add('show');
+      const deleteName = document.getElementById('deleteName');
+      if (deleteName) {
+        deleteName.addEventListener('input', () => {
+          document.getElementById('deleteConfirm').disabled = deleteName.value !== '高净值客户资产复盘';
+        });
+      }
+    }
+
+    document.addEventListener('click', event => {
+      const target = event.target;
+      if (target.matches('[data-page]')) showPage(target.dataset.page);
+      if (target.matches('[data-page-link]')) showPage(target.dataset.pageLink);
+      if (target.matches('[data-modal]')) openModal(target.dataset.modal);
+      if (target.matches('[data-close]') || target === mask) mask.classList.remove('show');
+      if (target.matches('[data-confirm]')) { mask.classList.remove('show'); showToast(target.dataset.confirm); }
+      if (target.matches('[data-create-manual]')) { mask.classList.remove('show'); showPage('editor'); }
+      if (target.matches('[data-clear]')) document.getElementById(target.dataset.clear).value = '';
+      if (target.matches('.tab')) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === target));
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === `tab-${target.dataset.tab}`));
+      }
+    });
+
+    function bindCount(inputId, countId, max) {
+      const input = document.getElementById(inputId);
+      const count = document.getElementById(countId);
+      input.addEventListener('input', () => count.textContent = `${input.value.length}/${max}`);
+    }
+    bindCount('skillName', 'nameCount', 50);
+    bindCount('skillDesc', 'descCount', 200);
+    bindCount('skillPrompt', 'promptCount', 10000);
+
+    function validateEditor() {
+      const fields = [
+        ['skillName', '请输入 Skill 名称。'],
+        ['skillDesc', '请输入 Skill 描述。'],
+        ['skillPrompt', '请输入提示词内容。']
+      ];
+      const failed = fields.find(([id]) => !document.getElementById(id).value.trim());
+      document.getElementById('editorError').textContent = failed ? failed[1] : '';
+      if (!failed) { showPage('detail'); showToast('Skill 已创建，正在准备财富小助使用。'); }
+    }
+    document.getElementById('saveSkill').addEventListener('click', validateEditor);
+    document.getElementById('saveSkillBottom').addEventListener('click', validateEditor);
+
+    document.getElementById('chatInput').addEventListener('input', event => {
+      document.getElementById('suggestPopover').classList.toggle('show', /(^|\\s)\\/.test(event.target.value));
+    });
+  </script>
+</body>
+</html>

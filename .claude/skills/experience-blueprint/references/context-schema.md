@@ -4,7 +4,7 @@
 
 - 产物：`spark-output/context/experience-blueprint.json`
 - `skill`：固定为 `experience-blueprint`
-- `version`：固定为 `3.0`
+- `version`：固定为 `4.0`
 - `experience_blueprint.md` 是给人阅读的完整体验设计文档。
 - 本 JSON 是同一轮蓝图结论的结构化机器面，不是摘要、索引或第二次推理。
 - ASCII 页面图只保留在 Markdown `§6`；JSON 通过 `markdown_heading` 指向对应标题。
@@ -15,11 +15,22 @@
 ```json
 {
   "skill": "experience-blueprint",
-  "version": "3.0",
+  "version": "4.0",
   "generated_at": "unknown",
   "project_name": "unknown",
   "artifact_md": "spark-output/experience_blueprint.md",
   "source_refs": [],
+  "upstream_contract": {
+    "mode": "uxb-mode",
+    "requirements_baseline_refs": [
+      "spark-output/requirements_baseline.md",
+      "spark-output/context/requirements-baseline.json"
+    ],
+    "uxb_refs": [
+      "spark-output/uxb_output.md",
+      "spark-output/context/uxb.json"
+    ]
+  },
   "critical_design_judgments": [
     {
       "judgment": "示例判断",
@@ -144,6 +155,32 @@
 7. `source_refs[]` 只写 Markdown 头部明确列出的真实来源；未列出时写 `[]`。
 8. 写入前按章节建立当次核对清单；清单不落盘，不生成 ID 或映射文件。
 9. 写入后核对 Markdown 正式条目数与 JSON 对应对象数；数量不一致时只修正投影遗漏，不返回正文重新推理。
+
+### 3.1 上游合同
+
+`mode` 只允许：
+
+- `baseline-mode`
+- `uxb-mode`
+- `framing-mode`
+
+`baseline-mode`：
+
+- `requirements_baseline_refs` 固定包含需求基线 Markdown 与 JSON。
+- `uxb_refs` 使用空数组。
+
+`uxb-mode`：
+
+- `requirements_baseline_refs` 固定包含需求基线 Markdown 与 JSON。
+- `uxb_refs` 固定包含 UXB Markdown 与 JSON。
+
+独立 `framing-mode`：
+
+- 只在用户明确选择 Problem Framing 独立入口时使用。
+- `requirements_baseline_refs` 和 `uxb_refs` 使用空数组。
+- Problem Framing 正式路径写入 `source_refs`。
+
+不得用旧 UXB `5.0` 路径组合冒充 `uxb-mode`。
 
 ## 4. 逐章承接
 

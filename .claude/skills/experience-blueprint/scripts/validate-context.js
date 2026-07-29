@@ -5,6 +5,7 @@ const path = require("path");
 
 const ROOT_KEYS = [
   "skill", "version", "generated_at", "project_name", "artifact_md", "source_refs",
+  "upstream_contract",
   "critical_design_judgments", "journey_consumption", "interaction_overview",
   "main_flow", "sub_flows", "exceptions", "surfaces", "states", "feedbacks",
   "open_questions", "upstream_trace",
@@ -77,13 +78,67 @@ function validate(data) {
   rejectForbiddenKeys(data, "root", errors);
 
   if (data.skill !== "experience-blueprint") errors.push("skill 必须为 experience-blueprint");
-  if (data.version !== "3.0") errors.push("version 必须为 3.0");
+  if (data.version !== "4.0") errors.push("version 必须为 4.0");
   if (data.artifact_md !== "spark-output/experience_blueprint.md") {
     errors.push("artifact_md 必须为 spark-output/experience_blueprint.md");
   }
   string(data.generated_at, "generated_at", errors);
   string(data.project_name, "project_name", errors);
   strings(data.source_refs, "source_refs", errors);
+
+  if (exact(
+    data.upstream_contract,
+    ["mode", "requirements_baseline_refs", "uxb_refs"],
+    "upstream_contract",
+    errors,
+  )) {
+    string(data.upstream_contract.mode, "upstream_contract.mode", errors);
+    strings(
+      data.upstream_contract.requirements_baseline_refs,
+      "upstream_contract.requirements_baseline_refs",
+      errors,
+    );
+    strings(data.upstream_contract.uxb_refs, "upstream_contract.uxb_refs", errors);
+
+    const modes = new Set(["baseline-mode", "uxb-mode", "framing-mode"]);
+    if (!modes.has(data.upstream_contract.mode)) {
+      errors.push("upstream_contract.mode 不是允许的模式");
+    }
+
+    const baselineRefs = [
+      "spark-output/requirements_baseline.md",
+      "spark-output/context/requirements-baseline.json",
+    ];
+    const uxbRefs = [
+      "spark-output/uxb_output.md",
+      "spark-output/context/uxb.json",
+    ];
+    const sameRefs = (actual, expected) =>
+      Array.isArray(actual) &&
+      actual.length === expected.length &&
+      expected.every((item) => actual.includes(item));
+
+    if (["baseline-mode", "uxb-mode"].includes(data.upstream_contract.mode) &&
+        !sameRefs(data.upstream_contract.requirements_baseline_refs, baselineRefs)) {
+      errors.push("主链模式必须包含完整需求基线引用");
+    }
+    if (data.upstream_contract.mode === "baseline-mode" &&
+        (!Array.isArray(data.upstream_contract.uxb_refs) ||
+         data.upstream_contract.uxb_refs.length !== 0)) {
+      errors.push("baseline-mode 的 uxb_refs 必须为空数组");
+    }
+    if (data.upstream_contract.mode === "uxb-mode" &&
+        !sameRefs(data.upstream_contract.uxb_refs, uxbRefs)) {
+      errors.push("uxb-mode 必须包含完整 UXB 引用");
+    }
+    if (data.upstream_contract.mode === "framing-mode" &&
+        ((!Array.isArray(data.upstream_contract.requirements_baseline_refs) ||
+          data.upstream_contract.requirements_baseline_refs.length !== 0) ||
+         (!Array.isArray(data.upstream_contract.uxb_refs) ||
+          data.upstream_contract.uxb_refs.length !== 0))) {
+      errors.push("framing-mode 不得写入需求基线或 UXB 引用");
+    }
+  }
 
   collection(
     data.critical_design_judgments, "critical_design_judgments",

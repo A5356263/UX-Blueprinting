@@ -5,11 +5,27 @@ const { validate } = require("./validate-context");
 function fixture() {
   return {
     skill: "experience-blueprint",
-    version: "3.0",
+    version: "4.0",
     generated_at: "2026-07-20T00:00:00+08:00",
     project_name: "测试项目",
     artifact_md: "spark-output/experience_blueprint.md",
-    source_refs: ["spark-output/uxb_output.md"],
+    source_refs: [
+      "spark-output/requirements_baseline.md",
+      "spark-output/context/requirements-baseline.json",
+      "spark-output/uxb_output.md",
+      "spark-output/context/uxb.json",
+    ],
+    upstream_contract: {
+      mode: "uxb-mode",
+      requirements_baseline_refs: [
+        "spark-output/requirements_baseline.md",
+        "spark-output/context/requirements-baseline.json",
+      ],
+      uxb_refs: [
+        "spark-output/uxb_output.md",
+        "spark-output/context/uxb.json",
+      ],
+    },
     critical_design_judgments: [{
       judgment: "入口需可发现",
       impacts: ["申请页", "权限入口"],
@@ -116,12 +132,28 @@ const negatives = [
 
 const positiveErrors = validate(fixture());
 if (positiveErrors.length) throw new Error(`正向 fixture 失败：${positiveErrors.join("；")}`);
+
+const baselineMode = clone(fixture());
+baselineMode.upstream_contract.mode = "baseline-mode";
+baselineMode.upstream_contract.uxb_refs = [];
+baselineMode.source_refs = baselineMode.upstream_contract.requirements_baseline_refs;
+const baselineErrors = validate(baselineMode);
+if (baselineErrors.length) throw new Error(`baseline-mode 失败：${baselineErrors.join("；")}`);
+
 for (const [name, mutate] of negatives) {
   const data = clone(fixture());
   mutate(data);
   const errors = validate(data);
   if (!errors.length) throw new Error(`反向 fixture 未失败：${name}`);
 }
-console.log(`experience-blueprint context tests passed: 1 positive, ${negatives.length} negative`);
+const oldContract = clone(fixture());
+oldContract.version = "3.0";
+if (!validate(oldContract).length) throw new Error("旧 3.0 合同应失败");
+
+const incompleteUxbMode = clone(fixture());
+incompleteUxbMode.upstream_contract.uxb_refs = ["spark-output/uxb_output.md"];
+if (!validate(incompleteUxbMode).length) throw new Error("不完整 uxb-mode 应失败");
+
+console.log(`experience-blueprint context tests passed: 2 positive, ${negatives.length + 2} negative`);
 
 module.exports = { fixture };

@@ -1,0 +1,241 @@
+{
+  "skill": "page-spec",
+  "version": "2.0",
+  "generated_at": "2026-07-22",
+  "project_name": "员工自助申请权限",
+  "artifact_md": "spark-output/page_spec.md",
+  "source_refs": [
+    "spark-output/context/experience-blueprint.json",
+    "spark-output/experience_blueprint.md"
+  ],
+  "page_summary": {
+    "product_domain": "权限管理 — 权限治理模式与员工自助授权",
+    "page_type": "配置页、列表页、抽屉、弹窗",
+    "user_role": "超级管理员、普通员工、审批人（组织负责人）",
+    "core_task": "超管配置自助申请模式参数 → 员工查看权限并发起申请 → 审批人处理权限申请"
+  },
+  "generation_scope": {
+    "generate": [
+      "permission-management-mode-select",
+      "self-service-config-page",
+      "select-role-modal",
+      "select-app-modal",
+      "cannot-enable-modal",
+      "edit-approval-flow-page",
+      "close-mode-confirm-modal",
+      "close-fail-modal",
+      "my-permissions-page",
+      "apply-permission-drawer",
+      "application-records-page",
+      "revoke-confirm-modal"
+    ],
+    "reference_only": [
+      "approval-detail-page"
+    ],
+    "do_not_generate": [
+      "oa-approval-todo-card"
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "permission-management-mode-select",
+      "name": "权限管理模式选择页",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 4. 权限管理模式选择页（承载页面）"
+    },
+    {
+      "entity_id": "self-service-config-page",
+      "name": "自助申请模式配置页（超管端）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 5. 自助申请模式配置页（超管端）"
+    },
+    {
+      "entity_id": "select-role-modal",
+      "name": "选择角色弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 6. 选择角色弹窗"
+    },
+    {
+      "entity_id": "select-app-modal",
+      "name": "选择应用弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 7. 选择应用弹窗"
+    },
+    {
+      "entity_id": "cannot-enable-modal",
+      "name": "无法启用弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 8. 无法启用弹窗"
+    },
+    {
+      "entity_id": "edit-approval-flow-page",
+      "name": "修改审批流程子页面",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 9. 修改审批流程子页面"
+    },
+    {
+      "entity_id": "close-mode-confirm-modal",
+      "name": "关闭模式二次确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 10. 关闭模式二次确认弹窗"
+    },
+    {
+      "entity_id": "close-fail-modal",
+      "name": "关闭失败弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 11. 关闭失败弹窗"
+    },
+    {
+      "entity_id": "my-permissions-page",
+      "name": "我的权限页面（员工端）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 12. 我的权限页面（员工端）"
+    },
+    {
+      "entity_id": "apply-permission-drawer",
+      "name": "申请权限抽屉（员工端）",
+      "type": "drawer",
+      "generate_mode": "generate",
+      "md_anchor": "## 13. 申请权限抽屉（员工端）"
+    },
+    {
+      "entity_id": "application-records-page",
+      "name": "申请记录列表",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 14. 申请记录列表"
+    },
+    {
+      "entity_id": "revoke-confirm-modal",
+      "name": "撤销申请确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 15. 撤销申请确认弹窗"
+    },
+    {
+      "entity_id": "approval-detail-page",
+      "name": "审批详情页（OA 审批系统）",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "## 2. 生成范围"
+    },
+    {
+      "entity_id": "oa-approval-todo-card",
+      "name": "OA 审批待办卡片",
+      "type": "page",
+      "generate_mode": "do_not_generate",
+      "md_anchor": "## 2. 生成范围"
+    }
+  ],
+  "entity_relationships": [
+    {
+      "from_entity_id": "permission-management-mode-select",
+      "to_entity_id": "self-service-config-page",
+      "relation": "进入"
+    },
+    {
+      "from_entity_id": "self-service-config-page",
+      "to_entity_id": "select-role-modal",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "self-service-config-page",
+      "to_entity_id": "select-app-modal",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "self-service-config-page",
+      "to_entity_id": "cannot-enable-modal",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "self-service-config-page",
+      "to_entity_id": "edit-approval-flow-page",
+      "relation": "进入"
+    },
+    {
+      "from_entity_id": "self-service-config-page",
+      "to_entity_id": "close-mode-confirm-modal",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "close-mode-confirm-modal",
+      "to_entity_id": "close-fail-modal",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "my-permissions-page",
+      "to_entity_id": "apply-permission-drawer",
+      "relation": "打开"
+    },
+    {
+      "from_entity_id": "my-permissions-page",
+      "to_entity_id": "application-records-page",
+      "relation": "切换"
+    },
+    {
+      "from_entity_id": "application-records-page",
+      "to_entity_id": "revoke-confirm-modal",
+      "relation": "打开"
+    }
+  ],
+  "coverage": {
+    "pages": 5,
+    "entities": 14,
+    "flows": 7,
+    "validation_rules": 8,
+    "states": 7,
+    "exceptions": 9,
+    "result_states": 2,
+    "copy_items": 67,
+    "template_variables": 13
+  },
+  "open_questions": [
+    {
+      "question": "审批人缺失的降级方案",
+      "impact": "影响 E2 异常流程设计，当前按递归上级负责人→升级超管处理",
+      "status": "待确认"
+    },
+    {
+      "question": "OA 审批预设流程的复核人节点是否去除",
+      "impact": "影响预设审批流程的复杂度",
+      "status": "待确认"
+    },
+    {
+      "question": "\"生效中\"状态的展示时长阈值",
+      "impact": "秒级完成不需要独立\"生效中\"状态，分钟级则需要",
+      "status": "待确认"
+    },
+    {
+      "question": "申请记录入口位置",
+      "impact": "当前放在我的权限页面内作为 tab，需确认是否独立入口",
+      "status": "待确认"
+    },
+    {
+      "question": "通知渠道确认",
+      "impact": "影响通知文案展示形式和长度限制",
+      "status": "待确认"
+    },
+    {
+      "question": "修改审批流程子页面的详细结构",
+      "impact": "蓝图仅提供入口描述，未展开页面结构",
+      "status": "待确认"
+    },
+    {
+      "question": "个人中心页面结构（知识库不足）",
+      "impact": "我的权限页面入口位置在\"个人中心→我的企业下方\"，但个人中心页面结构未在知识库中展开",
+      "status": "待确认"
+    }
+  ],
+  "edge_consumed": false,
+  "edge_trace": []
+}
