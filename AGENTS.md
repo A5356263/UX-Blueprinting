@@ -50,9 +50,11 @@
 
 1. 正式主链路输出统一写入 `spark-output/`。
 2. 业务知识与设计准则统一从 `.Codex/skills/knowledge-wiki/knowledge/` 读取（项目根目录的 `knowledge/` 仅作备份保留，不再作为消费源）。
-3. 用户输入统一从 `input/` 读取。
-4. 跨 Skill 协调统一通过项目根目录下的 `shared-workflow/` 完成。
-5. Skill 定义统一位于 `.Codex/skills/`。
+3. `input/` 是用户输入材料的统一存放目录，不是自动选择入口。
+4. 只有用户明确提供具体文件路径、附件、粘贴正文，或明确要求查看目录时，才允许读取输入材料。
+5. 禁止仅因 `input/` 存在文件而自动扫描、枚举、排序、选择或推荐输入文件。
+6. 跨 Skill 协调统一通过项目根目录下的 `shared-workflow/` 完成。
+7. Skill 定义统一位于 `.Codex/skills/`。
 
 ## 跨系统稳定性原则
 
@@ -67,7 +69,7 @@
 2. `.Codex/skills/experience-blueprint/` 负责体验蓝图输出。
 3. `shared-workflow/` 存放跨 Skill 协调文件，包括流转关系、context schema 和交接模板。
 4. `.Codex/skills/knowledge-wiki/` 是业务知识的正式维护方，内嵌的 `knowledge/` 是唯一消费源。项目根目录的 `knowledge/` 仅作备份保留。
-5. `input/` 是用户输入层，`spark-output/` 是输出层。
+5. `input/` 是用户输入层，`spark-output/` 是输出层。输入层只定义存放位置，不代表 Agent 获得自动发现或选择文件的权限。
 6. Skill 之间通过 `shared-workflow/` 定义的协议交接，不直接调用对方。
 7. `packages/experience_preview/` 仅作为 HTML 预览参考实现保留，不再承担正式主链路入口职责。
 

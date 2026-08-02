@@ -1,15 +1,15 @@
 # Knowledge Wiki Overview
 
-- updated_at: 2026-07-28
+- updated_at: 2026-08-02
 
 ## 当前概况
 
 - raw_total: 81
 - domain_readme_total: 21
-- gap_count: 123
-- conflict_count: 2
-- question_marker_count: 49
-- questions_total: 170
+- gap_count: 116
+- conflict_count: 9
+- question_marker_count: 42
+- questions_total: 163
 
 ## 路由健康
 
@@ -27,8 +27,8 @@
 
 ## 最近更新的 Raw
 
-- raw/业务/费用管理/问答与差异.md
-- raw/业务/费用管理/功能与操作清单.md
-- raw/业务/费用管理/README.md
 - raw/业务/费用管理/任务与路径.md
-- raw/业务/成员管理/业务对象与术语.md
+- raw/业务/费用管理/问答与差异.md
+- raw/业务/费用管理/状态与异常.md
+- raw/业务/费用管理/规则与权限.md
+- raw/业务/费用管理/README.md

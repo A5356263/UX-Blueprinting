@@ -37,8 +37,8 @@ description: >
 ## 场景分流
 
 1. 知识问答：读取 `references/knowledge-consumption.md`。
-2. 生成或处理候选：读取 `references/candidate.md`；需要从材料提取证据时再读 `references/input-adaptation.md`。
-3. 整理并入库：必读 `references/ingestion.md`、`references/input-adaptation.md` 和 `references/validation.md`。
+2. 记录、查看或补充候选：读取 `references/candidate.md`；需要从材料提取证据时再读 `references/input-adaptation.md`。
+3. 直接入库、候选促进、覆盖修正、整包启动或大资料重构：先读 `references/ingestion.md` 作为唯一主流程；到证据读取节点读 `references/input-adaptation.md`，需要生成或促进候选时读 `references/candidate.md`，到发布节点读 `references/validation.md`。不得从任一参考文件中段直接启动流程。
 4. 知识维护：读取 `references/maintenance.md`。
 
 用户纠正知识、要求记录线索或材料不足以成为正式事实时，进入候选。用户明确要求入库时，仍先完成证据、来源、范围、归属、影响和冲突判断；任一直接入库门槛不满足时，默认进入候选。
@@ -48,6 +48,8 @@ description: >
 - 统一事实边界：知识问答、直接入库、候选促进和覆盖修正都必须保留对象、关系、适用范围、条件、例外和表达强度；不得互换角色或业务主体，不得把局部场景提升为全局规则，不得把“可配置、开启后、支持”改写为固定前提。
 - 问答双门禁：输出前必须在内部同时确认必要事实没有遗漏，且每条结论与正式证据的对象、关系、范围、条件和表达强度一致；未通过时只能删除、限定范围或明确未知，不向用户展示门禁过程。
 - 跨 Skill 边界：其他 Skill 只能交接必要上下文，不得直接写入候选或正式知识；由 `knowledge-wiki` 独立完成证据判断和入库分流。交接不得暴露内部脚本、检查过程或临时结构。`knowledge-wiki` 不推进 `uxb -> experience-blueprint` 主链路，超出知识事实范围时交回 UXB。
+- 入库范围与发布门禁：只处理用户明确提供或指定的材料；材料来源类型不决定事实落点。任何渠道均须通过 `ingestion.md` 第 12 项的逐单元语义验收后，才可写入正式 raw。
+- 语义与脚本边界：Agent 判断事实归属、语义等价和冲突；脚本只做路径、链接、编码、计数和结构等机械检查。
 
 ## 用户最小操作
 

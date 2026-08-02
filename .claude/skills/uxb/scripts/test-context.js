@@ -5,83 +5,82 @@ const { validate } = require("./validate-context");
 function fixture() {
   return {
     skill: "uxb",
-    version: "6.0",
-    generated_at: "2026-07-28T10:00:00+08:00",
+    version: "8.0",
+    generated_at: "2026-07-29T10:00:00+08:00",
     project_name: "订单作废",
     artifact_md: "spark-output/uxb_output.md",
-    baseline_ref: {
-      artifact_md: "spark-output/requirements_baseline.md",
-      status: "formal",
-    },
-    core_experience_decision: {
-      direction: "先建立不可逆影响认知，再完成作废任务",
-      primary_tradeoff: "风险解释优先于操作效率",
-      blueprint_principle: "始终让用户理解当前结果和下一步",
-    },
-    experience_impact_scope: {
-      tasks: ["订单作废"],
-      role_perspectives: ["管理员"],
-      key_nodes: ["发起作废", "作废结果"],
+    experience_scope: {
+      tasks: ["管理员作废订单"],
+      roles: ["管理员"],
+      business_objects: ["订单"],
+      key_nodes: ["确认作废资格", "提交作废", "确认作废结果"],
+      relevant_states: ["未结算", "已作废"],
+      relevant_results: ["作废成功", "不允许作废"],
       unaffected_scope: ["订单创建"],
     },
-    experience_goals: [{
-      id: "EG-001",
-      goal: "降低不可逆操作误判",
-      priority: "P0",
-      pressure: "用户需要理解作废后的业务影响",
-      conflict_principle: "风险认知优先于操作速度",
+    task_experience_decisions: [{
+      id: "TE-001",
+      task: "管理员作废订单",
+      roles: ["管理员"],
+      business_objects: ["订单"],
+      business_nodes: ["确认作废资格", "提交作废", "记录作废结果"],
+      perceived_stage: "确认影响并完成作废",
+      orchestration_actions: ["merge"],
+      orchestration_reason: "三个节点由同一角色连续完成，且共同服务于确认并完成作废的目标",
+      experience_breakpoint: "资格、影响和结果分散时，用户无法形成连续决策",
+      user_must_understand: ["当前订单是否允许作废", "作废不可恢复", "作废后的业务限制"],
+      experience_decision: "将资格确认、影响解释和结果确认组织为连续任务阶段",
+      information_order: ["作废资格", "不可逆影响", "作废原因", "最终结果"],
+      explanation_timing: {
+        before: ["解释作废条件和不可逆影响"],
+        during: ["反馈处理状态"],
+        after: ["说明最终状态和后续限制"],
+      },
+      state_result_requirements: ["区分处理中、已作废和不允许作废"],
+      continuity_requirements: ["全过程保持同一订单上下文"],
+      blueprint_requirements: ["按资格、影响、提交和结果的顺序落实任务"],
     }],
-    information_architecture_directions: [{
-      id: "IA-001",
-      scope: "作废信息",
-      direction: "按条件、影响和结果组织",
-      rationale: "符合决策顺序",
-      stable_relationships: ["原因与作废记录保持关联"],
+    cross_stage_decisions: [{
+      id: "CS-001",
+      task: "管理员作废订单",
+      from_stage: "确认影响并完成作废",
+      to_stage: "查看作废结果",
+      transition_trigger: "系统完成作废处理",
+      context_to_preserve: ["订单标识", "作废原因"],
+      transition_decision: "结果阶段承接原订单并明确交代状态变化",
+      blueprint_requirements: ["保留订单识别信息并说明后续限制"],
     }],
-    interaction_flow_directions: [{
-      id: "FL-001",
-      task: "标记订单作废",
-      direction: "先确认资格和影响，再提交不可逆操作",
-      sequence_principles: ["资格判断早于提交"],
-      exception_continuity: "失败后保留用户对当前订单状态的理解",
+    state_recovery_decisions: [{
+      id: "SR-001",
+      task: "管理员作废订单",
+      business_states: ["未结算", "已作废"],
+      user_visible_meaning: "订单已完成不可恢复的作废处理",
+      result_or_next_action: "查看作废记录，不再进入报销或结算",
+      experience_decision: "明确区分处理中、已作废和不允许作废",
+      blueprint_requirements: ["每类结果都给出明确行动认知"],
     }],
-    node_explanation_strategies: [{
-      id: "NE-001",
-      node: "提交作废",
-      before: ["解释不可逆影响"],
-      during: ["反馈处理状态"],
-      after: ["说明作废结果和后续限制"],
-      purpose: "避免误操作和结果误解",
-    }],
-    information_reading_strategies: [{
-      id: "IR-001",
-      scope: "作废决策信息",
-      reading_order: ["资格", "影响", "原因", "结果"],
-      clarity_principles: ["区分当前状态和操作后状态"],
-      concept_distinctions: ["作废不同于删除"],
-    }],
-    state_feedback_and_role_continuity: [{
-      id: "SF-001",
-      scenario: "订单作废成功",
-      feedback_strategy: "明确结果、影响和后续不可执行动作",
-      action_understanding: "用户知道无需继续报销或结算",
-      role_continuity: "不同角色对已作废含义保持一致",
-      cross_node_or_channel_continuity: "",
-    }],
-    experience_tradeoffs: [{
-      id: "TD-001",
-      topic: "风险解释与操作效率",
-      chosen_direction: "优先完成风险解释",
-      rejected_directions: ["直接提交后再说明"],
-      reason: "操作不可逆",
-      impact_scope: ["发起作废"],
-    }],
-    blueprint_handoff_requirements: [{
-      id: "BH-001",
+    blueprint_requirements: [{
+      id: "BR-001",
+      task: "管理员作废订单",
+      roles: ["管理员"],
+      perceived_stage: "确认影响并完成作废",
       requirement: "落实操作前、中、后的连续解释",
       purpose: "保证用户理解不可逆影响和最终结果",
       must_preserve: ["不可逆影响必须在提交前被理解"],
-      solution_space: "蓝图自行决定具体页面和交互载体",
+    }],
+    upstream_trace: [{
+      id: "UT-001",
+      source_type: "requirements_baseline",
+      source_name: "订单作废正式需求基线",
+      status: "formal",
+      source_path: "spark-output/requirements_baseline.md",
+      used_for: ["业务任务和目标状态"],
+    }, {
+      id: "UT-002",
+      source_type: "business_knowledge",
+      source_name: "订单业务知识",
+      status: "formal",
+      used_for: ["理解订单状态和业务约束"],
     }],
   };
 }
@@ -97,27 +96,27 @@ function assertInvalid(data, name) {
 
 assertValid(fixture(), "完整结构");
 
-const emptyArrays = fixture();
-for (const field of [
-  "experience_goals",
-  "information_architecture_directions",
-  "interaction_flow_directions",
-  "node_explanation_strategies",
-  "information_reading_strategies",
-  "state_feedback_and_role_continuity",
-  "experience_tradeoffs",
-  "blueprint_handoff_requirements",
-]) {
-  emptyArrays[field] = [];
-}
-assertValid(emptyArrays, "合法空数组");
+const noPressure = fixture();
+noPressure.task_experience_decisions = [];
+noPressure.cross_stage_decisions = [];
+noPressure.state_recovery_decisions = [];
+noPressure.blueprint_requirements = [{
+  id: "BR-001",
+  task: "现有任务",
+  roles: ["管理员"],
+  perceived_stage: "沿用现有任务",
+  requirement: "忠实落实需求基线",
+  purpose: "保持已确定业务事实",
+  must_preserve: ["需求基线中的任务结果"],
+}];
+assertValid(noPressure, "无体验压力的合法结构");
 
 const semanticBoundary = fixture();
-semanticBoundary.information_architecture_directions[0].direction = "页面顶部使用三张卡片";
+semanticBoundary.task_experience_decisions[0].experience_decision = "页面顶部使用三张卡片";
 assertValid(semanticBoundary, "脚本不执行语义越界判断");
 
 const missingField = fixture();
-delete missingField.experience_tradeoffs;
+delete missingField.cross_stage_decisions;
 assertInvalid(missingField, "缺少根字段");
 
 const extraField = fixture();
@@ -125,23 +124,35 @@ extraField.open_questions = [];
 assertInvalid(extraField, "多余根字段");
 
 const wrongVersion = fixture();
-wrongVersion.version = "5.0";
+wrongVersion.version = "7.0";
 assertInvalid(wrongVersion, "错误版本");
 
-const wrongPriority = fixture();
-wrongPriority.experience_goals[0].priority = "high";
-assertInvalid(wrongPriority, "错误优先级");
+const emptyRequiredArray = fixture();
+emptyRequiredArray.task_experience_decisions[0].roles = [];
+assertInvalid(emptyRequiredArray, "必填数组为空");
+
+const wrongAction = fixture();
+wrongAction.task_experience_decisions[0].orchestration_actions = ["combine"];
+assertInvalid(wrongAction, "错误编排枚举");
+
+const wrongTiming = fixture();
+wrongTiming.task_experience_decisions[0].explanation_timing = { unknown: ["说明"] };
+assertInvalid(wrongTiming, "错误解释时机字段");
+
+const wrongSourceStatus = fixture();
+wrongSourceStatus.upstream_trace[0].status = "draft";
+assertInvalid(wrongSourceStatus, "错误来源状态");
 
 const duplicateId = fixture();
-duplicateId.experience_tradeoffs.push({ ...duplicateId.experience_tradeoffs[0] });
+duplicateId.blueprint_requirements.push({ ...duplicateId.blueprint_requirements[0] });
 assertInvalid(duplicateId, "重复编号");
 
 const missingNestedField = fixture();
-delete missingNestedField.node_explanation_strategies[0].purpose;
+delete missingNestedField.task_experience_decisions[0].experience_decision;
 assertInvalid(missingNestedField, "缺少对象字段");
 
 const emptyString = fixture();
-emptyString.core_experience_decision.direction = "";
+emptyString.state_recovery_decisions[0].experience_decision = "";
 assertInvalid(emptyString, "空字符串");
 
-console.log("UXB Context 结构测试通过：3 个正向用例，7 个反向用例。");
+console.log("UXB Context 8.0 结构测试通过：3 个正向用例，10 个反向用例。");

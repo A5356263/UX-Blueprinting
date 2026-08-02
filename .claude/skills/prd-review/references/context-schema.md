@@ -25,7 +25,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 11. `exceptions_and_business_results`
 12. `data_system_and_audit`
 13. `constraints_and_out_of_scope`
-14. `acceptance_criteria`
+14. `completion_criteria`
 
 不得增加 `recommendation`、`next_step`、`uxb`、`blueprint` 等流程推荐字段。
 
@@ -33,7 +33,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "project_name": "项目名",
   "baseline_status": "formal",
   "source_trace": {
@@ -67,7 +67,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
     "explicitly_out_of_scope": [],
     "future_considerations": []
   },
-  "acceptance_criteria": []
+  "completion_criteria": []
 }
 ```
 
@@ -143,9 +143,20 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
   "success_results": [],
   "failure_or_rejection_results": [],
   "next_business_nodes": [],
+  "existing_task_location": "已确认的现有任务位置；没有正式来源时省略",
+  "existing_carriers": ["已确认的现有页面或载体；没有正式来源时省略"],
+  "existing_entry": "已确认的现有入口；没有正式来源时省略",
   "sources": []
 }
 ```
+
+`existing_task_location`、`existing_carriers` 和 `existing_entry` 是可选字段。
+
+它们只投影正式基线已经确认的现状事实。
+
+没有正式来源时省略，不写空字符串、空数组或猜测值。
+
+这些字段不能作为 UXB 条目或 Blueprint 页面条目的外键。
 
 ## 8. 业务规则
 
@@ -195,17 +206,22 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 }
 ```
 
-## 11. 验收条件
+## 11. 完成标准
 
 ```json
 {
   "id": "AC-001",
   "related_ids": ["FN-001"],
   "preconditions": [],
+  "actions": [],
   "observable_results": [],
   "sources": []
 }
 ```
+
+完成标准只把已确认事实改写为“前提—动作—可观察结果”。
+
+不得增加新规则、新阈值、新范围或技术实现。
 
 ## 12. 数组项规则
 

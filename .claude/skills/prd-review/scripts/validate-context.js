@@ -16,7 +16,7 @@ const REQUIRED_FIELDS = [
   "exceptions_and_business_results",
   "data_system_and_audit",
   "constraints_and_out_of_scope",
-  "acceptance_criteria",
+  "completion_criteria",
 ];
 
 const ROOT_FIELDS = new Set(REQUIRED_FIELDS);
@@ -127,8 +127,8 @@ function validate(data) {
 
   if ("schema_version" in data) {
     checkString(data.schema_version, "schema_version", errors);
-    if (typeof data.schema_version === "string" && data.schema_version !== "1.0") {
-      errors.push("schema_version 只允许 1.0");
+    if (typeof data.schema_version === "string" && data.schema_version !== "2.0") {
+      errors.push("schema_version 只允许 2.0");
     }
   }
   if ("project_name" in data) checkString(data.project_name, "project_name", errors);
@@ -208,6 +208,21 @@ function validate(data) {
       next_business_nodes: "array",
       sources: "sources",
     }, errors);
+    if (Array.isArray(data.functions_and_task_closure)) {
+      data.functions_and_task_closure.forEach((item, index) => {
+        if (!isObject(item)) return;
+        const itemPath = `functions_and_task_closure[${index}]`;
+        if (Object.prototype.hasOwnProperty.call(item, "existing_task_location")) {
+          checkString(item.existing_task_location, `${itemPath}.existing_task_location`, errors);
+        }
+        if (Object.prototype.hasOwnProperty.call(item, "existing_carriers")) {
+          checkStringArray(item.existing_carriers, `${itemPath}.existing_carriers`, errors);
+        }
+        if (Object.prototype.hasOwnProperty.call(item, "existing_entry")) {
+          checkString(item.existing_entry, `${itemPath}.existing_entry`, errors);
+        }
+      });
+    }
   }
 
   if ("business_rules" in data) {
@@ -267,10 +282,11 @@ function validate(data) {
     }
   }
 
-  if ("acceptance_criteria" in data) {
-    checkObjectArray(data.acceptance_criteria, "acceptance_criteria", "AC", {
+  if ("completion_criteria" in data) {
+    checkObjectArray(data.completion_criteria, "completion_criteria", "AC", {
       related_ids: "array",
       preconditions: "array",
+      actions: "array",
       observable_results: "array",
       sources: "sources",
     }, errors);
@@ -284,7 +300,7 @@ function validate(data) {
     "business_rules",
     "states_and_transitions",
     "exceptions_and_business_results",
-    "acceptance_criteria",
+    "completion_criteria",
   ]) {
     if (Array.isArray(data[field])) {
       data[field].forEach((item) => {
@@ -292,12 +308,12 @@ function validate(data) {
       });
     }
   }
-  if (Array.isArray(data.acceptance_criteria)) {
-    data.acceptance_criteria.forEach((item, index) => {
+  if (Array.isArray(data.completion_criteria)) {
+    data.completion_criteria.forEach((item, index) => {
       if (!isObject(item) || !Array.isArray(item.related_ids)) return;
       item.related_ids.forEach((id, refIndex) => {
         if (typeof id === "string" && !knownIds.has(id)) {
-          errors.push(`acceptance_criteria[${index}].related_ids[${refIndex}] 引用了不存在的编号`);
+          errors.push(`completion_criteria[${index}].related_ids[${refIndex}] 引用了不存在的编号`);
         }
       });
     });

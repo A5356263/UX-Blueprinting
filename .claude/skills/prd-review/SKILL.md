@@ -2,9 +2,9 @@
 name: prd-review
 description: >
   PRD 审查与需求基线 Skill。审查业务完整性和闭环性；存在阻断时输出一次性问题单，
-  产品逐项回复并全部关闭后生成正式需求基线；零阻断时直接生成基线。
-  仅在用户明确要求 PRD 审查、需求检查、需求闭环检查或生成需求基线时使用；
-  不得仅因工作区存在 PRD 或其他 Skill 需要需求材料而自动触发。
+  本期阻断项获得有效证据并全部关闭后生成正式需求基线；零阻断时直接生成基线。
+  当用户明确要求审查 PRD、检查需求完整度、梳理需求闭环或调用 PRD Review 时使用。
+  不得因工作区存在需求文件或其他 Skill 需要需求材料而自动触发。
   排除问题方向探索、体验策略定案和具体交互方案。
 ---
 
@@ -12,7 +12,63 @@ description: >
 
 这个 Skill 只负责审查 PRD、复核产品回复，并生成正式需求基线。
 
-## Step 0 · 运行入口
+## Step 0 · 启动与目标绑定
+
+### Step 0.1 · 固定启动提示
+
+每次新启动本 Skill，先固定输出：
+
+```text
+我是一个梳理需求完整度的 Skill。
+会结合 PRD 和相关业务知识，检查角色、任务、规则、状态、异常与业务闭环。
+然后输出需要与产品确认的问题。最后输出完善的PRD。
+```
+
+这是固定的能力说明，不是要求用户输入的触发口令。
+
+本 Skill 已进入 `WAIT_TARGET` 后，用户在同一任务中提供具体文件路径、附件或需求正文，视为当前流程继续，不重复输出固定启动提示。
+
+本 Skill 已进入 `WAIT_PRODUCT_RESPONSES` 后，用户在同一任务中直接回复问题编号，视为当前流程继续，不重复输出固定启动提示。
+
+### Step 0.2 · 目标绑定门禁
+
+只有以下任一输入可以绑定本轮审查目标：
+
+- 用户明确提供的具体文件路径。
+- 用户本轮上传的附件。
+- 用户本轮直接粘贴的需求正文。
+
+未绑定目标时，固定输出并停止：
+
+```text
+请提供需要审查的 PRD 文件路径、附件或需求正文。
+```
+
+目标未绑定时禁止：
+
+- 扫描或枚举 `input/`。
+- 搜索工作区中的 PRD。
+- 列出可选项目。
+- 按文件名、修改时间或版本号选择文件。
+- 读取历史对话中的文件路径。
+- 读取旧问题单、需求基线或其他产物推测目标。
+- 因目录中只有一个文件而自动选择。
+
+用户只提供目录时：
+
+- 只有用户同时明确要求查看该目录，才允许列出目录内容。
+- 目录包含多个文件时，等待用户指定具体文件。
+- 禁止自行选择最新版、名称最相近文件或修改时间最新文件。
+
+目标绑定成功后，输出：
+
+```text
+审查目标：{用户明确提供的文件路径、附件名或正文标识}
+```
+
+随后才允许判断运行模式。
+
+### Step 0.3 · 运行模式
 
 只根据本轮用户明确输入判断运行模式：
 
@@ -39,15 +95,13 @@ description: >
 
 ## 触发边界
 
-只有用户明确要求以下任务时执行：
-
-- PRD 审查。
-- 需求完整性检查。
-- 需求闭环检查。
-- 生成正式需求基线。
-- 基于产品回复关闭 PRD 问题。
+用户明确要求审查 PRD、检查需求完整度、梳理需求闭环或调用 PRD Review 时，可以启动本 Skill。
 
 用户明确要求 UXB、体验蓝图、问题框定或其他 Skill 时，不得抢占任务。
+
+仅提到 PRD、仅出现需求文件路径或工作区存在需求文件，不等于要求执行 PRD Review。
+
+无论本 Skill 如何启动，都不得自动扫描、枚举或选择输入文件。
 
 ## 项目名确定
 
@@ -57,70 +111,139 @@ description: >
 
 ```text
 INIT
-→ INPUT_READY
-→ KNOWLEDGE_COVERAGE
-→ SEMANTIC_MODELING
-→ REVIEW
-→ BLOCKER_CHECK
-   ├─ 零阻断：BASELINE_GATE
-   └─ 存在阻断：QUESTIONS_GENERATED
-                    → WAIT_PRODUCT_RESPONSES
-                    → RESPONSE_REVIEW
-                    → BASELINE_GATE
+→ ACTIVATION_PROMPT
+→ TARGET_BINDING
+   ├─ 未提供明确目标：WAIT_TARGET
+   │                  └─ 用户提供明确目标：INPUT_READY
+   └─ 已提供明确目标：INPUT_READY
+→ MODE_ROUTING
+   ├─ initial-review
+   │  → INPUT_READING
+   │  → SCOPE_MODELING
+   │  → KNOWLEDGE_COVERAGE
+   │  → TRANSACTION_MODELING
+   │  → CLOSURE_REVIEW
+   │  → CANDIDATE_BACKTRACKING
+   │  → ATOMIC_QUESTION_REVIEW
+   │  → BLOCKER_CHECK
+   │     ├─ 零阻断且无建议：BASELINE_GATE
+   │     ├─ 零阻断但有建议：REVIEW_RECORD → BASELINE_GATE
+   │     └─ 存在阻断：QUESTIONS_GENERATED
+   │                      → WAIT_PRODUCT_RESPONSES
+   └─ response-finalization
+      → INPUT_READING
+      → RESPONSE_REVIEW
+         ├─ 所有阻断关闭：BASELINE_GATE
+         ├─ 存在 open：WAIT_PRODUCT_RESPONSES
+         └─ 产生独立候选问题
+            → CANDIDATE_BACKTRACKING
+            → ATOMIC_QUESTION_REVIEW
+            → BLOCKER_CHECK
 → BASELINE_GENERATION
 → CONTEXT_VALIDATION
 → PAGE_FACT_PROJECTION
 → HANDOFF
 ```
 
-## 当前结构
+## 固定主流程与强制路由
 
-执行前按需读取：
+以下顺序是唯一执行顺序。当前节点未形成规定的内部结果时，不得进入下一节点。
 
-- `references/review_rules.md`
-- `references/knowledge_usage_guide.md`
-- `references/review_calibration_guide.md`
-- `references/output_structure_guide.md`
-- `references/context-schema.md`
-- `references/page_generation_handoff.md`
+### P0 · 启动与目标绑定
 
-结构校验脚本：
+执行本文件“Step 0”。未绑定具体 PRD、附件或正文时进入 `WAIT_TARGET` 并停止。
 
-- `scripts/validate-context.js`
-- `scripts/test-context.js`
+### P1 · 完整读取需求材料
 
-## 先读什么
+完整读取本轮绑定的 PRD 或需求正文，记录材料范围、版本、显式目标和显式外部依赖。无法完整读取时停止，不进入知识路由。
 
-### `initial-review`
+运行模式分支：
 
-1. 完整读取本轮 PRD 或正式需求描述。
-2. 读取 `references/review_rules.md`。
-3. 读取 `references/knowledge_usage_guide.md`。
-4. 按知识协议读取全部相关正式知识。
-5. 读取 `references/review_calibration_guide.md` 的通用部分和相关领域部分。
-6. 需要输出时读取 `references/output_structure_guide.md`。
+- `initial-review`：完成本节点后进入 P2。
+- `response-finalization`：必须重新完整读取原始 PRD、相关正式知识、`spark-output/prd_review_questions.md` 和本轮产品回复，不得只依赖上次运行结果恢复需求；完成必要重读后直接进入 P9，不得经过 P2 至 P8，也不得因旧问题单存在阻断而在 P8 提前停止。
 
-### `response-finalization`
+### P2 · 建立初步定界模型
 
-1. 重新完整读取原始 PRD。
-2. 重新读取相关正式知识。
-3. 完整读取 `spark-output/prd_review_questions.md`。
-4. 读取本轮产品回复。
-5. 读取 `references/review_rules.md` 和 `references/output_structure_guide.md`。
+读取 `references/knowledge_usage_guide.md` 的第 1 至 5 节。
 
-## 知识消费主协议
+只提取业务对象、关键动作、角色与适用范围、预期业务结果、当前与目标状态关系、PRD 明示依赖。该模型只用于知识路由，不判断完整业务闭环，不生成问题。
 
-按 `references/knowledge_usage_guide.md` 执行。
+完成主领域和实际依赖领域定位后，返回 P3。
 
-正式知识描述当前系统事实。PRD 与产品回复定义本期目标状态。不得因目标状态不同于当前知识而自动阻断。
+### P3 · 完成知识覆盖
 
-## 阶段 A · 需求语义建模与审查
+读取并执行 `references/knowledge_usage_guide.md` 第 6 至 16 节。
 
-按 `references/review_rules.md` 建立本次需求范围内的内部语义模型。
+内部必须形成每个任务场景的知识覆盖记录，并标记沿用、新增、修改、移除或无法确定。正式知识描述当前系统事实；PRD 与产品回复定义本期目标状态，不能因二者不同而自动阻断。
 
-使用 `references/review_calibration_guide.md` 反查业务骨架变化、跨域边界和常见误判。校准内容不能成为事实来源。
+同一知识主题命中多个责任文件时，必须读完全部命中章节。未满足该文件第 14 节停止条件时，不得返回。
 
-只审查业务闭环，不输出体验策略、页面方案、竞品或 UX 指标。
+先定位当前事务的直接正式事实，再按当前对象、动作和结果执行该文件第 7.1 节的动态补读判断。不得预设“业务动作 → 固定必读文件”映射；也不得把首先命中的章节视为完整知识覆盖。
+
+命中成熟基座时，完整执行第 10 节并形成第 10.3 节三类继承结论；未命中时不得使用输入、输出、配置三个边界过滤候选问题。成熟基座审查只是完整业务闭环中的条件子流程。
+
+知识覆盖完成后返回 P4。
+
+### P4 · 建立完整业务事务模型
+
+完整读取 `references/review_rules.md` 第 1 至 3 节。
+
+固定展开顺序：
+
+```text
+业务对象与对象关系
+→ 按角色还原真实任务场景
+→ 触发、进入渠道、前置条件和核心动作
+→ 成功、拒绝、中断、恢复、下一节点和最终结束
+→ 权限、规则、状态、数据、系统、审计和上下游影响
+```
+
+内部必须形成完整业务事务模型、闭环矩阵和业务骨架变化检查结果。问题必须归回具体业务对象和任务场景，不得先按权限、状态或异常等抽象维度列问题。
+
+本阶段只审查业务闭环，不输出体验策略、页面方案、竞品或 UX 指标。
+
+### P5 · 完成闭环判断
+
+按 `references/review_rules.md` 第 4 至 14 节检查实际触发的维度。每个维度必须得到 `已闭环`、`存在阻断` 或 `不适用`；`不适用`必须有明确内部依据。
+
+任一触发维度没有结论时，不得进入候选问题回查。不得以问题数量足够或主流程已经覆盖为理由提前停止。
+
+### P6 · 回查候选问题
+
+按 `references/review_rules.md` 第 3.9 节逐项执行事实回查。
+
+命中成熟基座时，复用 P3 已形成的第 10.3 节三类继承结论。只对仍未获得唯一答案、且属于基座内部细节的候选问题执行 `references/knowledge_usage_guide.md` 第 10.4 节移出判断。边界变化、P3 未形成继承结论或出现新的复用关系时，必须返回 P3；不得在 P6 重复执行第 10.1 至 10.3 节。
+
+完成事实回查和基座移出判断后，读取并执行 `references/review_rules.md` 第 15 节，再把每个保留候选问题定为待确认、建议修改或建议新增。第 15 节是三类问题的唯一语义定义；不得等到生成输出文件时才间接读取，也不得以输出结构替代该判断。
+
+只有来源唯一回答同一适用条件下的同一业务结论，或其他候选问题已经语义覆盖，才能删除重复问题。终态结论不能替代中间状态、对象关系或上下游影响。
+
+读取 `references/review_calibration_guide.md` 的相关跨域边界、领域启发和证据门禁案例做误删反查。校准内容不能成为事实来源，也不能覆盖正式规则。
+
+全部候选问题均有保留、删除或移出的证据后，返回 P7。
+
+### P7 · 原子化剩余阻断问题
+
+按 `references/review_rules.md` 第 3.8 节和第 16 节执行。
+
+先保留完整业务事务及问题间的前置、互斥和排除关系，再拆分真正缺失的业务决定。一个编号只对应一个完整触发条件、一个最小业务结论、一条回复记录和一个关闭状态。前一答案已经排除的分支不得继续询问。
+
+全部原子项通过后进入 P8。
+
+### P8 · 输出分支与严格停止
+
+- 零阻断且无建议：进入需求基线门禁。
+- 零阻断但有建议：生成审核记录，再进入需求基线门禁。
+- 存在阻断：读取 `references/output_structure_guide.md` 第 2 至 7 节生成问题单，随后严格停止。
+
+输出结构不能反向改变已经完成的语义结论。
+
+## 结构资源
+
+- Context 结构：`references/context-schema.md`
+- 页面事实交接：`references/page_generation_handoff.md`
+- 输出结构：`references/output_structure_guide.md`
+- 结构校验：`scripts/validate-context.js`、`scripts/test-context.js`
 
 ## 阻断问题分类
 
@@ -130,34 +253,77 @@ INIT
 - 建议修改。
 - 建议新增。
 
-三者都是处理标签，不是严重等级。第一版只输出阻断问题。
+只有“待确认”是阻断问题。
+
+“建议修改”和“建议新增”只处理已有唯一事实的文档表达问题，不要求产品回复，不阻断需求基线生成。
 
 ## 问题单生成
 
-存在阻断时，按 `references/output_structure_guide.md` 生成：
+存在阻断，或存在建议修改、建议新增时，按 `references/output_structure_guide.md` 生成：
 
 - `spark-output/prd_review_questions.md`
 
-问题单写入后立即停止，不生成需求基线，不推荐下游。
+存在阻断时，问题单写入后立即停止，不生成需求基线，不推荐下游。
 
-零阻断时不得生成空问题单，直接进入需求基线门禁。
+零阻断但存在建议时，记录建议后直接进入需求基线门禁。
 
-## 阶段 B · 回复吸收与复核
+零阻断且没有建议时，不生成空问题单，直接进入需求基线门禁。
 
-保留原问题，追加产品原始回复和关闭状态。
+## P9 · 产品回复复核
 
-任一问题未关闭，或回复产生新阻断时，更新同一问题文件并停止。
+`response-finalization` 进入本节点后，读取并执行 `references/review_rules.md` 第 17 节。回复关闭、问题移出和新候选问题的语义只以该节为准。
 
-## 正式需求基线生成
+使用 `references/output_structure_guide.md` 第 6 节更新原问题文件中的产品原话、列表项状态、关闭依据和问题组状态。输出文件只记录结论，不决定问题能否关闭。
 
-门禁通过后，按 `references/output_structure_guide.md` 生成：
+复核后必须返回本节点执行门禁：
+
+- 所有阻断项已获得有效证据：进入正式需求基线门禁。
+- 存在任一 `open`：更新同一问题文件，保持 `waiting_response`，严格停止。
+- 回复产生独立候选问题：返回 P6 完成事实回查，通过后按 P7 原子化并追加新编号。
+
+不得根据推进意图关闭问题，不得用一条回复推断未被明确回答的列表项。
+
+## P10 · 基线、Context、页面事实与 Handoff
+
+### 正式需求基线生成
+
+只有本期范围内不存在尚未获得有效证据的阻断事实，才按 `references/output_structure_guide.md` 生成：
 
 - `spark-output/requirements_baseline.md`
 - `spark-output/context/requirements-baseline.json`
 
 Markdown 是正式语义源。JSON 只能从冻结 Markdown 投影。
 
-## Context JSON 校验
+需求基线中的每条业务事实只能来自：
+
+- PRD 明确描述。
+- 正式知识证明。
+- 产品明确回复。
+
+写入前逐条确认来源能够唯一支持该结论，且没有增加来源中不存在的动作、角色、字段、条件、状态、异常、恢复路径或数据影响。
+
+任一事实无法通过来源反查时，不得写入基线；影响业务闭环时恢复为待确认阻断并严格停止。
+
+复用基座只记录当前任务需要理解的固定继承结论。不得复制基座全部规则，也不得把基座支持的可选能力写成本期事实。
+
+正式需求基线只记录被正式来源唯一证明的进入渠道。
+
+以下表达不是有效的进入渠道，不得用于关闭问题或写入需求基线：
+
+- 进入申请入口。
+- 进入配置入口。
+- 进入相关页面。
+- 使用系统入口。
+- 按现有方式进入。
+- 从对应模块发起。
+
+需求基线是下游唯一正式业务语义源，不是 PRD 摘要或审查报告。
+
+任务事实中只有在 PRD、正式知识、已确认现有系统结构或产品回复已经证明时，才记录现有任务位置、页面载体和入口。
+
+不得推测现有页面，也不得在基线中设计新页面。
+
+### Context JSON 校验
 
 读取 `references/context-schema.md`，生成 Context JSON 后执行：
 
@@ -167,7 +333,7 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 脚本通过不能替代 Agent 的语义验收。
 
-## 页面事实后置投影
+### 页面事实后置投影
 
 需求基线冻结后，读取 `references/page_generation_handoff.md`，生成：
 
@@ -175,16 +341,47 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或体验蓝图。
 
-## Handoff · 下一步建议
+### Handoff · 下一步建议
 
-需求基线完成后，给出一条下一步建议：
+需求基线完成后，始终展示两个主链入口：
 
-- UXB；或
+- UXB。
 - Experience Blueprint。
 
-按 `references/output_structure_guide.md` 的 Handoff 规则判断，并使用 `references/review_calibration_guide.md` 校准简单需求和复杂需求的反例。
+UXB 只能标记为“推荐”或“可选”。
 
-只写一句理由。推荐不是门禁。设计师可以采用、跳过或主动选择 UXB，不需要说明原因。
+Experience Blueprint 始终展示，不使用推荐标签。
+
+以下规则是 UXB 推荐判断的唯一完整定义。
+
+发现以下任一具体体验决策时，可以推荐 UXB：
+
+- 存在多个合理体验方向，需要比较和定案。
+- 信息解释的内容、位置或时机需要独立讨论。
+- 操作触发节点需要重新选择。
+- 任务顺序或流程编排需要调整。
+- 多角色、多节点或多渠道的体验关系需要统一。
+- 用户理解方式与业务结构存在明显差异。
+- 直接设计页面会被迫提前决定体验方向。
+- 需要先形成体验观点，再与产品讨论。
+- 直接进入具体方案容易产生方向性返工。
+
+业务链路长、角色或状态多、跨系统、高风险和页面数量只能作为辅助背景，不能单独决定是否推荐。需求大小、页面数量和规则数量都不是硬门槛。
+
+至少执行一次反例检查：
+
+- 简单需求是否仍存在需要独立定案的体验取舍。
+- 复杂需求是否已经具备明确体验方向，可以直接进入体验蓝图。
+
+没有发现具体体验取舍时，UXB 标记为“可选”。已发现具体体验取舍但影响程度不明确，或仍无法判断是否存在体验取舍时，推荐 UXB。不做评分，不设置数量阈值。
+
+读取 `references/review_calibration_guide.md` 的相关案例做误判校准。该文件不能改变以上结论规则。
+
+读取 `references/output_structure_guide.md` 第 10 节生成用户可见格式。输出格式不能重新判断推荐结论。
+
+推荐理由只写一句。
+
+设计师可以选择非推荐项，不需要说明原因。
 
 固定展示：
 
@@ -194,11 +391,17 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 下一步建议和可选增强不得写入需求基线及其 Context JSON。
 
+展示后严格停止。
+
+用户未明确选择时，不得自动执行 UXB 或 Experience Blueprint。
+
+不得根据会话上下文代替用户选择。
+
 ## 边界与红线
 
 - 不替产品补齐业务答案。
 - 不把当前知识当成新需求的限制条件。
-- 不输出非阻断项。
+- 建议新增和建议修改必须有唯一事实依据，不能包含产品决策。
 - 不输出体验策略。
 - 不输出页面、组件、布局或具体文案。
 - 不自动触发。

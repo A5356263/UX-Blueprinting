@@ -5,7 +5,7 @@ const { REQUIRED_FIELDS, validate } = require("./validate-context");
 
 function fixture() {
   return {
-    schema_version: "1.0",
+    schema_version: "2.0",
     project_name: "测试项目",
     baseline_status: "formal",
     source_trace: {
@@ -40,6 +40,9 @@ function fixture() {
       success_results: ["订单已作废"],
       failure_or_rejection_results: ["不满足条件时拒绝"],
       next_business_nodes: [],
+      existing_task_location: "消费平台 > 月结对账 > 公司授信订单",
+      existing_carriers: ["公司授信订单列表"],
+      existing_entry: "公司授信订单列表操作列",
       sources: [{ type: "product_response", reference: "Q-001", location: "产品回复" }],
     }],
     business_rules: [],
@@ -69,10 +72,11 @@ function fixture() {
       explicitly_out_of_scope: [],
       future_considerations: [],
     },
-    acceptance_criteria: [{
+    completion_criteria: [{
       id: "AC-001",
       related_ids: ["FN-001", "ST-001"],
       preconditions: ["订单满足作废条件"],
+      actions: ["管理员确认标记订单作废"],
       observable_results: ["订单状态更新为已作废"],
       sources: [{ type: "prd", reference: "prd.md", location: "订单作废功能" }],
     }],
@@ -98,8 +102,18 @@ duplicateId.states_and_transitions.push({ ...duplicateId.states_and_transitions[
 assert(validate(duplicateId).some((item) => item.includes("编号重复")));
 
 const unknownReference = fixture();
-unknownReference.acceptance_criteria[0].related_ids = ["FN-999"];
+unknownReference.completion_criteria[0].related_ids = ["FN-999"];
 assert(validate(unknownReference).some((item) => item.includes("不存在的编号")));
+
+const optionalExistingContext = fixture();
+delete optionalExistingContext.functions_and_task_closure[0].existing_task_location;
+delete optionalExistingContext.functions_and_task_closure[0].existing_carriers;
+delete optionalExistingContext.functions_and_task_closure[0].existing_entry;
+assert.deepStrictEqual(validate(optionalExistingContext), []);
+
+const invalidExistingCarriers = fixture();
+invalidExistingCarriers.functions_and_task_closure[0].existing_carriers = "公司授信订单列表";
+assert(validate(invalidExistingCarriers).some((item) => item.includes("existing_carriers")));
 
 const semanticText = fixture();
 semanticText.goal_and_scope.goals = ["待确认是否支持撤销"];

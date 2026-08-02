@@ -1,6 +1,6 @@
 # Knowledge Wiki Questions
 
-- updated_at: 2026-07-28
+- updated_at: 2026-08-02
 
 ## 显式未决项
 
@@ -1064,132 +1064,83 @@
 ### Q-0152
 
 - question_id: Q-0152
-- source_path: knowledge/raw/业务/费用管理/任务与路径.md
-- question_type: GAP
-- text: 费用管理各子域之间的统一任务入口与跨端差异仍需结合产品页面继续核验。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 在正式口径确认前，不得用任一时效回答全部订单同步问题。
 
 ### Q-0153
 
 - question_id: Q-0153
-- source_path: knowledge/raw/业务/费用管理/任务与路径.md
-- question_type: QUESTION
-- text: “数据报表 → 对相关单据”的后续动作在来源中未继续定义，不补写推断流程。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: `功能与操作清单.md / 差旅服务 / 里程补贴`记录多重里程补贴可按不同车型配置；`问答与差异.md` 的“能否根据不同车型设置不同的自驾里程补助”记录不支持。两者不能合并，等待正式来源确认。
 
 ### Q-0154
 
 - question_id: Q-0154
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: `INV-COMMON-01` 的“全票种”具体票种范围需要随产品支持范围持续校验。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 多条问答记录关联申请组件可配置为多选申请单；“关联申请单时可以设置关联多个申请单吗”又记录该组件只能选择一张单据。两者不能合并，等待正式来源确认。
 
 ### Q-0155
 
 - question_id: Q-0155
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: “对公支付与对私支付操作基本一致”的具体差异未由源材料展开。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: `规则与权限.md / 发票采集与查验`记录境外票据可按“其他票据”采集；“国外机票是否可以在薪福通中提单报销”记录国外机票不支持提单报销。票据采集与机票费用提单的对象边界未明确，不能互相扩展。
 
 ### Q-0156
 
 - question_id: Q-0156
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: 各设置项的角色权限、生效范围和变更审计需要按对应规则真源继续核对。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: “费控的行程组件是否可以添加自定义字段”记录支持一个自定义档案字段；“行程组件可以自定义字段吗”记录出差申请行程组件不支持自定义字段。适用单据范围未明确，等待正式来源确认。
 
 ### Q-0157
 
 - question_id: Q-0157
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: 第三方平台的实际开通范围与各平台可同步的订单字段，需要结合企业配置和接入协议确认。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: “为什么在单据台账中看不到已关闭的单据”记录单据台账不支持已关闭状态；“如何查找已关闭的出差申请单”记录管理员可在单据台账查看。两者直接冲突，等待正式来源确认。
 
 ### Q-0158
 
 - question_id: Q-0158
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: 各报表的筛选条件、字段口径、数据刷新频率和导出范围未在本来源中定义。
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: “差旅预定现付模式是否支持对公户支付”记录不支持；“第三方平台现付是否支持公司账户支付”记录由平台决定且通常允许。两者不能合并，等待平台与产品正式口径确认。
 
 ### Q-0159
 
 - question_id: Q-0159
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: QUESTION
-- text: 对公报账与企业支付业务主题之间的边界需要继续核对，当前先按费用管理整体能力记录。
-
-### Q-0160
-
-- question_id: Q-0160
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 日常报销常见问题12条未采集
-
-### Q-0161
-
-- question_id: Q-0161
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 差旅服务常见问题14条未采集
-
-### Q-0162
-
-- question_id: Q-0162
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 产品动态未采集
-
-### Q-0163
-
-- question_id: Q-0163
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 对公报账常见问题7条未采集
-
-### Q-0164
-
-- question_id: Q-0164
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 费用管理56条常见问题未采集
-
-### Q-0165
-
-- question_id: Q-0165
-- source_path: knowledge/raw/业务/费用管理/功能与操作清单.md
-- question_type: GAP
-- text: 支付管理-云直联移动端经办和付款账户权限指引仅有图片无文字
-
-### Q-0166
-
-- question_id: Q-0166
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: QUESTION
 - text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
 
-### Q-0167
+### Q-0160
 
-- question_id: Q-0167
+- question_id: Q-0160
 - source_path: knowledge/raw/业务/费用管理/规则与权限.md
 - question_type: QUESTION
 - text: “对公报账”与企业支付、采购系统、应付账款之间的职责边界需结合后续真源继续校验。
 
-### Q-0168
+### Q-0161
 
-- question_id: Q-0168
+- question_id: Q-0161
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 产品能力版图是否随产品迭代保持更新，需持续关注
 
-### Q-0169
+### Q-0162
 
-- question_id: Q-0169
+- question_id: Q-0162
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 平台角色与终端分类是否已完全覆盖当前产品状态，需持续校验
 
-### Q-0170
+### Q-0163
 
-- question_id: Q-0170
+- question_id: Q-0163
 - source_path: knowledge/raw/业务/项目背景/业务对象与术语.md
 - question_type: QUESTION
 - text: API 数量、报表数量、图表数量等具体数字需要以最新官方材料复核后再作为稳定指标使用。

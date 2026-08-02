@@ -9,93 +9,84 @@ const ROOT_FIELDS = [
   "generated_at",
   "project_name",
   "artifact_md",
-  "baseline_ref",
-  "core_experience_decision",
-  "experience_impact_scope",
-  "experience_goals",
-  "information_architecture_directions",
-  "interaction_flow_directions",
-  "node_explanation_strategies",
-  "information_reading_strategies",
-  "state_feedback_and_role_continuity",
-  "experience_tradeoffs",
-  "blueprint_handoff_requirements",
+  "experience_scope",
+  "task_experience_decisions",
+  "cross_stage_decisions",
+  "state_recovery_decisions",
+  "blueprint_requirements",
+  "upstream_trace",
 ];
 
 const ARRAY_SCHEMAS = {
-  experience_goals: {
-    prefix: "EG",
-    fields: {
-      goal: "string",
-      priority: "priority",
-      pressure: "string",
-      conflict_principle: "string",
-    },
-  },
-  information_architecture_directions: {
-    prefix: "IA",
-    fields: {
-      scope: "string",
-      direction: "string",
-      rationale: "string",
-      stable_relationships: "string-array",
-    },
-  },
-  interaction_flow_directions: {
-    prefix: "FL",
-    fields: {
+  task_experience_decisions: {
+    prefix: "TE",
+    required: {
       task: "string",
-      direction: "string",
-      sequence_principles: "string-array",
-      exception_continuity: "string",
+      roles: "nonempty-string-array",
+      business_objects: "nonempty-string-array",
+      business_nodes: "nonempty-string-array",
+      perceived_stage: "string",
+      orchestration_actions: "orchestration-array",
+      orchestration_reason: "string",
+      experience_breakpoint: "string",
+      user_must_understand: "nonempty-string-array",
+      experience_decision: "string",
+      blueprint_requirements: "nonempty-string-array",
+    },
+    optional: {
+      information_order: "nonempty-string-array",
+      explanation_timing: "explanation-timing",
+      state_result_requirements: "nonempty-string-array",
+      continuity_requirements: "nonempty-string-array",
     },
   },
-  node_explanation_strategies: {
-    prefix: "NE",
-    fields: {
-      node: "string",
-      before: "string-array",
-      during: "string-array",
-      after: "string-array",
-      purpose: "string",
+  cross_stage_decisions: {
+    prefix: "CS",
+    required: {
+      task: "string",
+      from_stage: "string",
+      to_stage: "string",
+      transition_trigger: "string",
+      context_to_preserve: "nonempty-string-array",
+      transition_decision: "string",
+      blueprint_requirements: "nonempty-string-array",
     },
+    optional: {},
   },
-  information_reading_strategies: {
-    prefix: "IR",
-    fields: {
-      scope: "string",
-      reading_order: "string-array",
-      clarity_principles: "string-array",
-      concept_distinctions: "string-array",
+  state_recovery_decisions: {
+    prefix: "SR",
+    required: {
+      task: "string",
+      business_states: "nonempty-string-array",
+      user_visible_meaning: "string",
+      result_or_next_action: "string",
+      experience_decision: "string",
+      blueprint_requirements: "nonempty-string-array",
     },
+    optional: {},
   },
-  state_feedback_and_role_continuity: {
-    prefix: "SF",
-    fields: {
-      scenario: "string",
-      feedback_strategy: "string",
-      action_understanding: "string",
-      role_continuity: "optional-string",
-      cross_node_or_channel_continuity: "optional-string",
-    },
-  },
-  experience_tradeoffs: {
-    prefix: "TD",
-    fields: {
-      topic: "string",
-      chosen_direction: "string",
-      rejected_directions: "string-array",
-      reason: "string",
-      impact_scope: "string-array",
-    },
-  },
-  blueprint_handoff_requirements: {
-    prefix: "BH",
-    fields: {
+  blueprint_requirements: {
+    prefix: "BR",
+    required: {
+      task: "string",
+      roles: "nonempty-string-array",
+      perceived_stage: "string",
       requirement: "string",
       purpose: "string",
-      must_preserve: "string-array",
-      solution_space: "string",
+      must_preserve: "nonempty-string-array",
+    },
+    optional: {},
+  },
+  upstream_trace: {
+    prefix: "UT",
+    required: {
+      source_type: "source-type",
+      source_name: "string",
+      status: "formal-status",
+      used_for: "string-array",
+    },
+    optional: {
+      source_path: "string",
     },
   },
 };
@@ -110,27 +101,51 @@ function validateString(value, field, errors, allowEmpty = false) {
   }
 }
 
-function validateStringArray(value, field, errors) {
+function validateStringArray(value, field, errors, requireNonEmpty = false) {
   if (!Array.isArray(value)) {
     errors.push(`${field} 必须是数组`);
     return;
   }
+  if (requireNonEmpty && value.length === 0) {
+    errors.push(`${field} 不得为空数组`);
+  }
   value.forEach((item, index) => validateString(item, `${field}[${index}]`, errors));
 }
 
-function validateExactObject(value, field, schema, errors) {
+function validateExplanationTiming(value, field, errors) {
+  if (!isObject(value)) {
+    errors.push(`${field} 必须是对象`);
+    return;
+  }
+  const allowed = new Set(["before", "during", "after"]);
+  if (Object.keys(value).length === 0) errors.push(`${field} 不得为空对象`);
+  for (const key of Object.keys(value)) {
+    if (!allowed.has(key)) {
+      errors.push(`${field}.${key} 不允许出现`);
+      continue;
+    }
+    validateStringArray(value[key], `${field}.${key}`, errors, true);
+  }
+}
+
+function validateStructuredObject(value, field, required, optional, errors) {
   if (!isObject(value)) {
     errors.push(`${field} 必须是对象`);
     return;
   }
 
-  const allowed = new Set(Object.keys(schema));
-  for (const key of Object.keys(schema)) {
+  const allowed = new Set([...Object.keys(required), ...Object.keys(optional)]);
+  for (const key of Object.keys(required)) {
     if (!Object.prototype.hasOwnProperty.call(value, key)) {
       errors.push(`${field}.${key} 缺失`);
       continue;
     }
-    validateType(value[key], `${field}.${key}`, schema[key], errors);
+    validateType(value[key], `${field}.${key}`, required[key], errors);
+  }
+  for (const key of Object.keys(optional)) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      validateType(value[key], `${field}.${key}`, optional[key], errors);
+    }
   }
   for (const key of Object.keys(value)) {
     if (!allowed.has(key)) errors.push(`${field}.${key} 不允许出现`);
@@ -139,13 +154,33 @@ function validateExactObject(value, field, schema, errors) {
 
 function validateType(value, field, type, errors) {
   if (type === "string") validateString(value, field, errors);
-  if (type === "optional-string") validateString(value, field, errors, true);
   if (type === "string-array") validateStringArray(value, field, errors);
-  if (type === "priority") {
-    validateString(value, field, errors);
-    if (typeof value === "string" && !["P0", "P1", "P2"].includes(value)) {
-      errors.push(`${field} 只允许 P0、P1、P2`);
+  if (type === "nonempty-string-array") validateStringArray(value, field, errors, true);
+  if (type === "explanation-timing") validateExplanationTiming(value, field, errors);
+  if (type === "orchestration-array") {
+    validateStringArray(value, field, errors, true);
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        if (typeof item === "string" && !["retain", "merge", "split", "reorder"].includes(item)) {
+          errors.push(`${field} 包含不允许的编排动作：${item}`);
+        }
+      }
     }
+  }
+  if (type === "source-type") {
+    validateString(value, field, errors);
+    if (typeof value === "string" && ![
+      "requirements_baseline",
+      "business_knowledge",
+      "design_guideline",
+      "interaction_pattern",
+    ].includes(value)) {
+      errors.push(`${field} 不是允许的来源类型`);
+    }
+  }
+  if (type === "formal-status") {
+    validateString(value, field, errors);
+    if (value !== "formal") errors.push(`${field} 必须为 formal`);
   }
 }
 
@@ -156,10 +191,10 @@ function validateObjectArray(value, field, config, errors) {
   }
 
   const ids = new Set();
-  const schema = { id: "string", ...config.fields };
+  const required = { id: "string", ...config.required };
   value.forEach((item, index) => {
     const itemField = `${field}[${index}]`;
-    validateExactObject(item, itemField, schema, errors);
+    validateStructuredObject(item, itemField, required, config.optional, errors);
     if (!isObject(item) || typeof item.id !== "string") return;
     if (!new RegExp(`^${config.prefix}-\\d{3}$`).test(item.id)) {
       errors.push(`${itemField}.id 必须使用 ${config.prefix}-001 格式`);
@@ -188,41 +223,18 @@ function validate(data) {
   }
 
   if (data.skill !== "uxb") errors.push("skill 必须为 uxb");
-  if (data.version !== "6.0") errors.push("version 必须为 6.0");
-  if (data.artifact_md !== "spark-output/uxb_output.md") {
-    errors.push("artifact_md 必须为 spark-output/uxb_output.md");
-  }
+  if (data.version !== "8.0") errors.push("version 必须为 8.0");
 
-  if ("baseline_ref" in data) {
-    validateExactObject(data.baseline_ref, "baseline_ref", {
-      artifact_md: "string",
-      status: "string",
-    }, errors);
-    if (isObject(data.baseline_ref)) {
-      if (data.baseline_ref.artifact_md !== "spark-output/requirements_baseline.md") {
-        errors.push("baseline_ref.artifact_md 路径不正确");
-      }
-      if (data.baseline_ref.status !== "formal") {
-        errors.push("baseline_ref.status 必须为 formal");
-      }
-    }
-  }
-
-  if ("core_experience_decision" in data) {
-    validateExactObject(data.core_experience_decision, "core_experience_decision", {
-      direction: "string",
-      primary_tradeoff: "string",
-      blueprint_principle: "string",
-    }, errors);
-  }
-
-  if ("experience_impact_scope" in data) {
-    validateExactObject(data.experience_impact_scope, "experience_impact_scope", {
+  if ("experience_scope" in data) {
+    validateStructuredObject(data.experience_scope, "experience_scope", {
       tasks: "string-array",
-      role_perspectives: "string-array",
+      roles: "string-array",
+      business_objects: "string-array",
       key_nodes: "string-array",
+      relevant_states: "string-array",
+      relevant_results: "string-array",
       unaffected_scope: "string-array",
-    }, errors);
+    }, {}, errors);
   }
 
   for (const [field, config] of Object.entries(ARRAY_SCHEMAS)) {
