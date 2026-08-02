@@ -4,12 +4,12 @@
 
 ## 当前概况
 
-- raw_total: 81
+- raw_total: 84
 - domain_readme_total: 21
-- gap_count: 116
+- gap_count: 123
 - conflict_count: 9
-- question_marker_count: 42
-- questions_total: 163
+- question_marker_count: 48
+- questions_total: 176
 
 ## 路由健康
 
@@ -27,8 +27,8 @@
 
 ## 最近更新的 Raw
 
-- raw/业务/费用管理/任务与路径.md
-- raw/业务/费用管理/问答与差异.md
-- raw/业务/费用管理/状态与异常.md
-- raw/业务/费用管理/规则与权限.md
-- raw/业务/费用管理/README.md
+- raw/业务/组织架构/任务与路径.md
+- raw/业务/人事服务/组织管理/业务对象与术语.md
+- raw/业务/人事服务/组织管理/规则与权限.md
+- raw/业务/协同办公/智能报表/规则与权限.md
+- raw/业务/协同办公/智能报表/页面与字段.md
