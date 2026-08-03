@@ -125,8 +125,8 @@ INIT
    │  → TRANSACTION_MODELING
    │  → CLOSURE_REVIEW
    │  → CANDIDATE_BACKTRACKING
-   │  → QUESTION_RECONCILIATION
    │  → ATOMIC_QUESTION_REVIEW
+   │  → FINAL_QUESTION_RECONCILIATION
    │  → REVIEW_RECORD
    │     ├─ 存在阻断：WAIT_PRODUCT_RESPONSES
    │     └─ 零阻断：BASELINE_GATE
@@ -138,6 +138,7 @@ INIT
          └─ 产生独立候选问题
             → CANDIDATE_BACKTRACKING
             → ATOMIC_QUESTION_REVIEW
+            → FINAL_QUESTION_RECONCILIATION
             → BLOCKER_CHECK
 → BASELINE_GENERATION
 → CONTEXT_VALIDATION
@@ -239,31 +240,37 @@ P1.5 不是事实审查、知识消费或体验定案。不得生成问题、建
 
 不得因为事项可能交由 UXB 而跳过业务影响判断。
 
-全部候选问题均有保留、删除或移出的证据后，进入 P6.5。
-
-### P6.5 · 待确认二次对账
-
-读取并执行 `references/review_rules.md` 第 3.12 节。
-
-只对准备输出的待确认进行轻量、定向对账。不得对全部知识、全部场景或全部内部事项执行两两比较。
-
-每个待确认必须依次检查：
-
-1. 是否已被 PRD、正式知识或业务事实补充唯一覆盖。
-2. 是否已被另一个待确认完整覆盖，且同一条产品回复即可关闭。
-3. 是否把已经明确的业务结果误问成系统内部实现。
-
-发现唯一覆盖、完全重叠或实现机制误问时，按第 3.12 节删除、合并或改写；无法证明覆盖时保留。需要重新验证事实时，返回 P6；需要拆分独立业务决定时，进入 P7。
-
-全部待确认通过对账后，进入 P7。
+全部候选问题均有保留、删除或移出的证据后，进入 P7。
 
 ### P7 · 原子化剩余阻断问题
 
 按 `references/review_rules.md` 第 3.8 节和第 16 节执行。
 
-先保留完整业务事务及问题间的前置、互斥和排除关系，再拆分真正缺失的业务决定。一个编号只对应一个完整触发条件、一个最小业务结论、一条回复记录和一个关闭状态。前一答案已经排除的分支不得继续询问。
+先保留完整业务事务及问题间的前置、互斥和排除关系，再拆分真正缺失的业务决定。Q 编号只表示一个业务主题的问题组；“需要确认”下的每个列表项才对应一个完整触发条件、一个最小业务结论、一条回复记录和一个关闭状态。前一答案已经排除的分支不得继续询问。
 
-全部原子项通过后进入 P8。
+同一场景、同一对象、连续步骤、同一机制或产品通常可一次回复，都不能作为不拆分理由。只要两个业务结论可以独立变化，必须拆为不同列表项；主题不同才拆为不同 Q 问题组。
+
+全部原子项通过后进入 P7.5。
+
+### P7.5 · 最终问题收口
+
+读取并执行 `references/review_rules.md` 第 3.12 节。
+
+只对 P7 原子化后的最终待确认列表项，以及其同场景的 F、E 和已定位的正式事实执行轻量、定向收口。不得重新读取全量知识、重建业务事务模型或对全部场景执行两两比较。
+
+每个最终待确认列表项必须检查：
+
+1. 是否已被 PRD、正式知识、有效产品回复或 F 在同一适用条件下唯一覆盖。
+2. 是否同时混入可形成 F 的固定事实与仍需产品决定的业务缺口。
+3. 是否可由另一个待确认列表项的同一条产品回复完整关闭。
+4. 是否仍混入多个可独立回答的业务决定。
+5. 是否把已经明确的业务结果误问成系统内部实现，或在问题、需要确认或括号中列出没有正式依据的候选条件、状态、示例或选项。
+
+每个 E 必须检查：保留的待确认列表项是否会改变该 E 直接依赖的角色、任务、目标或业务结果。只要会改变其中任一事实，暂不输出该 E；不得把该 E 转为待确认或补写体验方案。
+
+发现事实来源、适用范围或知识继承边界不清时，返回 P6；发现 Q 需要拆分时，返回 P7。其他事项按第 3.12 节删除、合并、保留或暂不输出。P7.5 不得自行生成新的业务问题、体验方案、状态或用户交互。
+
+全部最终 Q、E 已得到处理结果后进入 P8。
 
 ### P8 · 输出分支与严格停止
 
@@ -315,6 +322,8 @@ P1.5 不是事实审查、知识消费或体验定案。不得生成问题、建
 - 存在任一 `open`：更新同一问题文件，保持 `waiting_response`，严格停止。
 - 回复产生独立候选问题：返回 P6 完成事实回查，通过后按 P7 原子化并追加新编号。
 
+新候选问题完成 P7 原子化后，必须经过 P7.5 最终问题收口，才可追加到审核记录。
+
 不得根据推进意图关闭问题，不得用一条回复推断未被明确回答的列表项。
 
 ## P10 · 基线、Context、页面事实与 Handoff
@@ -327,6 +336,8 @@ P1.5 不是事实审查、知识消费或体验定案。不得生成问题、建
 - `spark-output/context/requirements-baseline.json`
 
 Markdown 是正式语义源。JSON 只能从冻结 Markdown 投影。
+
+生成前必须按 `references/output_structure_guide.md` 的“事实唯一主落点”规则完成章节去重检查。每条事实只能在一个章节完整展开；跨章节只允许必要引用，不得重复改写。
 
 需求基线中的每条业务事实只能来自：
 
@@ -362,7 +373,7 @@ Markdown 是正式语义源。JSON 只能从冻结 Markdown 投影。
 读取 `references/context-schema.md`，生成 Context JSON 后执行：
 
 ```text
-node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/requirements-baseline.json
+node <当前 Skill 目录>/scripts/validate-context.js spark-output/context/requirements-baseline.json
 ```
 
 脚本通过不能替代 Agent 的语义验收。
@@ -372,6 +383,12 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 需求基线冻结后，读取 `references/page_generation_handoff.md`，生成：
 
 - `spark-output/context/page-generation-handoff.md`
+
+必须先完成正式需求基线和 Context JSON 的生成与校验，再按该文件的 §2 至 §10 扫描矩阵逐条投影页面事实。不得按代表性摘录，也不得以 UXB、体验蓝图或 Page Spec 可能承接该事实为由省略。
+
+页面事实交接只能从冻结基线读取事实。生成失败时不修改或回写需求基线，不从原始 PRD、问题单、产品回复或其他 Skill 产物补事实。
+
+页面事实的白名单命中、遗漏和职责边界由 Agent 进行语义验收；脚本只能检查文件结构、编号连续和数量一致。
 
 该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或体验蓝图。
 

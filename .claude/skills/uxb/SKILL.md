@@ -334,7 +334,7 @@ Markdown 是正式语义源。Context JSON 只能从冻结 Markdown 投影，不
 写入后执行：
 
 ```text
-node .claude/skills/uxb/scripts/validate-context.js spark-output/context/uxb.json
+node <当前 Skill 目录>/scripts/validate-context.js spark-output/context/uxb.json
 ```
 
 校验失败时只修 JSON。不得反向修改已冻结 Markdown。

@@ -6,7 +6,7 @@
 
 正式消费根目录：
 
-- `.claude/skills/knowledge-wiki/knowledge/`
+- 当前 Skill 同级的 `knowledge-wiki/knowledge/`
 
 各类内容的作用：
 

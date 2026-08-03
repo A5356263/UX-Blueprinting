@@ -12,7 +12,7 @@
 
 ## 2. 正式知识源
 
-只从 `.claude/skills/knowledge-wiki/knowledge/` 读取正式知识。
+只从当前 Skill 同级的 `knowledge-wiki/knowledge/` 读取正式知识。
 
 必须读取：
 
