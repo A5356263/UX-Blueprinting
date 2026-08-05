@@ -156,8 +156,8 @@ INIT
 2. 读取 `references/review_rules.md`。
 3. 读取 `references/knowledge_usage_guide.md`。
 4. 按知识协议读取全部相关正式知识。
-5. 读取 `references/review_calibration_guide.md` 的通用部分和相关领域部分。
-6. 需要输出时读取 `references/output_structure_guide.md`。
+5. 完成候选问题的初步事实回查后，按当前领域和风险读取 `references/review_calibration_guide.md` 的相关章节。
+6. 准备写入问题单或需求基线时，读取 `references/output_structure_guide.md`。
 
 ### `response-finalization`
 
@@ -165,13 +165,29 @@ INIT
 2. 重新读取相关正式知识。
 3. 完整读取 `spark-output/prd_review_questions.md`。
 4. 读取本轮产品回复。
-5. 读取 `references/review_rules.md` 和 `references/output_structure_guide.md`。
+5. 读取 `references/review_rules.md`。
+6. 原问题、产品回复或新候选问题涉及复用基座、知识缺口、正式知识冲突、固定继承，或改变当前需求与已有能力的关系时，读取 `references/knowledge_usage_guide.md` 的对应章节。
+7. 需要反查跨域误判、领域风险、证据分流或 Handoff 反例时，读取 `references/review_calibration_guide.md` 的对应章节。
+8. 准备更新问题单或生成需求基线时，读取 `references/output_structure_guide.md`。
 
 ## 知识消费主协议
 
 按 `references/knowledge_usage_guide.md` 执行。
 
 正式知识描述当前系统事实。PRD 与产品回复定义本期目标状态。不得因目标状态不同于当前知识而自动阻断。
+
+## 最小判断闭环
+
+- 事实只来自 PRD、正式知识和产品明确回复。Agent 推理只能发现问题，不能成为需求事实。
+- 每个候选问题必须先回查 PRD、正式知识、其他候选问题和复用基座边界。
+- 缺少会影响业务闭环的业务决定，归为待确认。
+- 已有唯一事实、只需修正文档表达，归为建议修改或建议新增。
+- 只缺任务发现、理解、信息组织、顺序、状态解释或反馈交接，且不改变业务事实，归为体验定案事项。
+- 每个待确认项只承载一个可独立回复和关闭的业务决定。
+- 任一待确认项未关闭，或回复产生新阻断时，更新同一问题单后严格停止。
+- 不得用部分回复、相邻回复、回复数量或 Agent 推理关闭未明确回答的事项。
+
+完整条件、例外和场景分流以 `references/review_rules.md` 为准。
 
 ## 阶段 A · 需求语义建模与审查
 
@@ -199,7 +215,7 @@ INIT
 
 任一项成立且不存在本期差异时，删除该候选问题。
 
-使用 `references/review_calibration_guide.md` 反查业务骨架变化、跨域边界和常见误判。校准内容不能成为事实来源。
+候选问题完成初步事实回查后，按需使用 `references/review_calibration_guide.md` 反查业务骨架变化、跨域边界和常见误判。校准内容不能成为事实来源。
 
 只审查业务闭环，不输出体验策略、页面方案、竞品或 UX 指标。
 

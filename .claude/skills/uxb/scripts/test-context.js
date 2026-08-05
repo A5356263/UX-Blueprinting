@@ -2,157 +2,128 @@
 
 const { validate } = require("./validate-context");
 
-function fixture() {
+function minimalFixture() {
   return {
     skill: "uxb",
-    version: "8.0",
-    generated_at: "2026-07-29T10:00:00+08:00",
-    project_name: "订单作废",
+    version: "9.0",
+    generated_at: "2026-08-04T10:00:00+08:00",
+    project_name: "通用任务体验定案",
     artifact_md: "spark-output/uxb_output.md",
-    experience_scope: {
-      tasks: ["管理员作废订单"],
-      roles: ["管理员"],
-      business_objects: ["订单"],
-      key_nodes: ["确认作废资格", "提交作废", "确认作废结果"],
-      relevant_states: ["未结算", "已作废"],
-      relevant_results: ["作废成功", "不允许作废"],
-      unaffected_scope: ["订单创建"],
-    },
-    task_experience_decisions: [{
-      id: "TE-001",
-      task: "管理员作废订单",
-      roles: ["管理员"],
-      business_objects: ["订单"],
-      business_nodes: ["确认作废资格", "提交作废", "记录作废结果"],
-      perceived_stage: "确认影响并完成作废",
-      orchestration_actions: ["merge"],
-      orchestration_reason: "三个节点由同一角色连续完成，且共同服务于确认并完成作废的目标",
-      experience_breakpoint: "资格、影响和结果分散时，用户无法形成连续决策",
-      user_must_understand: ["当前订单是否允许作废", "作废不可恢复", "作废后的业务限制"],
-      experience_decision: "将资格确认、影响解释和结果确认组织为连续任务阶段",
-      information_order: ["作废资格", "不可逆影响", "作废原因", "最终结果"],
-      explanation_timing: {
-        before: ["解释作废条件和不可逆影响"],
-        during: ["反馈处理状态"],
-        after: ["说明最终状态和后续限制"],
-      },
-      state_result_requirements: ["区分处理中、已作废和不允许作废"],
-      continuity_requirements: ["全过程保持同一订单上下文"],
-      blueprint_requirements: ["按资格、影响、提交和结果的顺序落实任务"],
+    decisions: [{
+      id: "ED-001",
+      task: "用户继续受阻任务",
+      roles: ["用户"],
+      decision: "用户受阻时，先理解阻断原因和可继续方向，再进入正式输入已经支持的恢复任务。",
     }],
-    cross_stage_decisions: [{
-      id: "CS-001",
-      task: "管理员作废订单",
-      from_stage: "确认影响并完成作废",
-      to_stage: "查看作废结果",
-      transition_trigger: "系统完成作废处理",
-      context_to_preserve: ["订单标识", "作废原因"],
-      transition_decision: "结果阶段承接原订单并明确交代状态变化",
-      blueprint_requirements: ["保留订单识别信息并说明后续限制"],
-    }],
-    state_recovery_decisions: [{
-      id: "SR-001",
-      task: "管理员作废订单",
-      business_states: ["未结算", "已作废"],
-      user_visible_meaning: "订单已完成不可恢复的作废处理",
-      result_or_next_action: "查看作废记录，不再进入报销或结算",
-      experience_decision: "明确区分处理中、已作废和不允许作废",
-      blueprint_requirements: ["每类结果都给出明确行动认知"],
-    }],
-    blueprint_requirements: [{
-      id: "BR-001",
-      task: "管理员作废订单",
-      roles: ["管理员"],
-      perceived_stage: "确认影响并完成作废",
-      requirement: "落实操作前、中、后的连续解释",
-      purpose: "保证用户理解不可逆影响和最终结果",
-      must_preserve: ["不可逆影响必须在提交前被理解"],
-    }],
+    cross_cutting_constraints: [],
     upstream_trace: [{
       id: "UT-001",
-      source_type: "requirements_baseline",
-      source_name: "订单作废正式需求基线",
-      status: "formal",
-      source_path: "spark-output/requirements_baseline.md",
-      used_for: ["业务任务和目标状态"],
-    }, {
-      id: "UT-002",
-      source_type: "business_knowledge",
-      source_name: "订单业务知识",
-      status: "formal",
-      used_for: ["理解订单状态和业务约束"],
+      source_type: "正式输入",
+      source_name: "正式解决方案",
+      used_for: ["ED-001"],
     }],
   };
 }
 
+function fullFixture() {
+  const data = clone(minimalFixture());
+
+  data.decisions[0].business_objects = ["当前任务对象"];
+  data.decisions[0].states = ["受阻"];
+  data.decisions[0].conditions = ["正式输入已经支持恢复任务"];
+  data.decisions[0].additional_constraints = ["只有存在真实承接对象时才保留上下文"];
+  data.decisions[0].source_refs = ["UT-001", "UT-002"];
+
+  data.cross_cutting_constraints = [{
+    id: "CC-001",
+    constraint: "相关任务使用一致的对象和状态含义。",
+    applies_to: ["用户继续受阻任务", "处理人接手任务"],
+  }];
+
+  data.upstream_trace.push({
+    id: "UT-002",
+    source_type: "设计准则",
+    source_name: "任务恢复准则",
+    source_path: ".claude/skills/knowledge-wiki/knowledge/design/task-recovery.md",
+    used_for: ["ED-001", "CC-001"],
+  });
+
+  return data;
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 function assertValid(data, name) {
   const errors = validate(data);
-  if (errors.length > 0) throw new Error(`${name} 应通过：${errors.join("；")}`);
+  if (errors.length > 0) {
+    throw new Error(name + " 应通过：" + errors.join("；"));
+  }
 }
 
 function assertInvalid(data, name) {
-  if (validate(data).length === 0) throw new Error(`${name} 应失败`);
+  if (validate(data).length === 0) {
+    throw new Error(name + " 应失败");
+  }
 }
 
-assertValid(fixture(), "完整结构");
+assertValid(minimalFixture(), "最小合法结构");
+assertValid(fullFixture(), "完整可选字段结构");
 
-const noPressure = fixture();
-noPressure.task_experience_decisions = [];
-noPressure.cross_stage_decisions = [];
-noPressure.state_recovery_decisions = [];
-noPressure.blueprint_requirements = [{
-  id: "BR-001",
-  task: "现有任务",
-  roles: ["管理员"],
-  perceived_stage: "沿用现有任务",
-  requirement: "忠实落实需求基线",
-  purpose: "保持已确定业务事实",
-  must_preserve: ["需求基线中的任务结果"],
-}];
-assertValid(noPressure, "无体验压力的合法结构");
+const noDecisions = minimalFixture();
+noDecisions.decisions = [];
+noDecisions.upstream_trace[0].used_for = ["本轮正式输入"];
+assertValid(noDecisions, "无体验决定结构");
 
-const semanticBoundary = fixture();
-semanticBoundary.task_experience_decisions[0].experience_decision = "页面顶部使用三张卡片";
+const semanticBoundary = minimalFixture();
+semanticBoundary.decisions[0].decision = "页面顶部使用三个固定组件。";
 assertValid(semanticBoundary, "脚本不执行语义越界判断");
 
-const missingField = fixture();
-delete missingField.cross_stage_decisions;
-assertInvalid(missingField, "缺少根字段");
-
-const extraField = fixture();
-extraField.open_questions = [];
-assertInvalid(extraField, "多余根字段");
-
-const wrongVersion = fixture();
-wrongVersion.version = "7.0";
+const wrongVersion = minimalFixture();
+wrongVersion.version = "8.0";
 assertInvalid(wrongVersion, "错误版本");
 
-const emptyRequiredArray = fixture();
-emptyRequiredArray.task_experience_decisions[0].roles = [];
-assertInvalid(emptyRequiredArray, "必填数组为空");
+const missingRoot = minimalFixture();
+delete missingRoot.decisions;
+assertInvalid(missingRoot, "缺少根字段");
 
-const wrongAction = fixture();
-wrongAction.task_experience_decisions[0].orchestration_actions = ["combine"];
-assertInvalid(wrongAction, "错误编排枚举");
+const extraRoot = minimalFixture();
+extraRoot.open_questions = [];
+assertInvalid(extraRoot, "未知根字段");
 
-const wrongTiming = fixture();
-wrongTiming.task_experience_decisions[0].explanation_timing = { unknown: ["说明"] };
-assertInvalid(wrongTiming, "错误解释时机字段");
+const wrongId = minimalFixture();
+wrongId.decisions[0].id = "TE-001";
+assertInvalid(wrongId, "错误决定编号");
 
-const wrongSourceStatus = fixture();
-wrongSourceStatus.upstream_trace[0].status = "draft";
-assertInvalid(wrongSourceStatus, "错误来源状态");
+const duplicateDecisionId = fullFixture();
+duplicateDecisionId.decisions.push(clone(duplicateDecisionId.decisions[0]));
+assertInvalid(duplicateDecisionId, "重复决定编号");
 
-const duplicateId = fixture();
-duplicateId.blueprint_requirements.push({ ...duplicateId.blueprint_requirements[0] });
-assertInvalid(duplicateId, "重复编号");
+const emptyRoles = minimalFixture();
+emptyRoles.decisions[0].roles = [];
+assertInvalid(emptyRoles, "角色数组为空");
 
-const missingNestedField = fixture();
-delete missingNestedField.task_experience_decisions[0].experience_decision;
-assertInvalid(missingNestedField, "缺少对象字段");
+const emptyDecision = minimalFixture();
+emptyDecision.decisions[0].decision = "";
+assertInvalid(emptyDecision, "决定正文为空");
 
-const emptyString = fixture();
-emptyString.state_recovery_decisions[0].experience_decision = "";
-assertInvalid(emptyString, "空字符串");
+const emptyOptionalArray = fullFixture();
+emptyOptionalArray.decisions[0].conditions = [];
+assertInvalid(emptyOptionalArray, "可选数组为空");
 
-console.log("UXB Context 8.0 结构测试通过：3 个正向用例，10 个反向用例。");
+const duplicateConstraintId = fullFixture();
+duplicateConstraintId.cross_cutting_constraints.push(
+  clone(duplicateConstraintId.cross_cutting_constraints[0])
+);
+assertInvalid(duplicateConstraintId, "重复跨任务约束编号");
+
+const missingSourceField = minimalFixture();
+delete missingSourceField.upstream_trace[0].source_name;
+assertInvalid(missingSourceField, "来源字段缺失");
+
+const wrongGeneratedAt = minimalFixture();
+wrongGeneratedAt.generated_at = "2026/08/04";
+assertInvalid(wrongGeneratedAt, "错误时间格式");
+
+console.log("UXB Context 9.0 结构测试通过：4 个正向用例，11 个反向用例。");

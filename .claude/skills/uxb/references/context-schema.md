@@ -1,249 +1,187 @@
-# UXB Context JSON Schema
+# UXB Context 9.0 JSON Schema
+
+## 快速导航
+
+- [1. 定位](#1-定位)
+- [2. 生成顺序](#2-生成顺序)
+- [3. 固定根结构](#3-固定根结构)
+- [4. 体验决定](#4-体验决定)
+- [5. 跨任务体验约束](#5-跨任务体验约束)
+- [6. 来源承接](#6-来源承接)
+- [7. 投影规则](#7-投影规则)
+- [8. 结构校验边界](#8-结构校验边界)
 
 ## 1. 定位
 
-- 正式产物：`spark-output/context/uxb.json`
-- 人类阅读面：`spark-output/uxb_output.md`
-- `skill`：固定为 `uxb`
-- `version`：固定为 `8.0`
+- 正式 Markdown：spark-output/uxb_output.md
+- Context JSON：spark-output/context/uxb.json
+- skill：固定为 uxb
+- version：固定为 9.0
 
-JSON 只结构化已冻结的体验定案，不重复需求基线中的业务事实。
+Markdown 是唯一正式语义源。JSON 只投影已经确认并冻结的 Markdown。
 
-## 2. 生成红线
+## 2. 生成顺序
 
-- 只从已冻结的 `uxb_output.md` 投影。
-- 不回读需求基线补充 JSON。
-- 不新增 Markdown 没有的体验结论。
-- 不包含业务问题、待确认项或候选主方向。
-- 不包含页面、组件、布局和最终文案。
-- 不包含 Handoff 推荐。
-- 不使用基线编号、章节号、行号或固定位置建立跨文件关联。
-- `id` 只用于 UXB 单个集合内的稳定识别，不得作为下游绑定键。
+只有正式 Markdown 冻结后，才能读取本文件并生成 JSON。
 
-## 3. 固定结构
+生成时：
 
-```json
-{
-  "skill": "uxb",
-  "version": "8.0",
-  "generated_at": "2026-07-28T00:00:00+08:00",
-  "project_name": "项目名",
-  "artifact_md": "spark-output/uxb_output.md",
-  "experience_scope": {
-    "tasks": [],
-    "roles": [],
-    "business_objects": [],
-    "key_nodes": [],
-    "relevant_states": [],
-    "relevant_results": [],
-    "unaffected_scope": []
-  },
-  "task_experience_decisions": [],
-  "cross_stage_decisions": [],
-  "state_recovery_decisions": [],
-  "blueprint_requirements": [],
-  "upstream_trace": []
-}
-```
+1. 读取冻结后的 UXB Markdown。
+2. 从 §1 投影体验决定。
+3. 从真实存在的 §2 投影跨任务体验约束。
+4. 从 §3 投影来源承接。
+5. 运行结构校验。
+6. 由 Agent 核对 Markdown 与 JSON 的语义一致性。
 
-## 4. 任务体验定案
+禁止：
 
-```json
-{
-  "id": "TE-001",
-  "task": "需求基线中的具体任务",
-  "roles": ["涉及角色"],
-  "business_objects": ["相关业务对象"],
-  "business_nodes": ["该阶段承接的业务节点"],
-  "perceived_stage": "用户感知阶段",
-  "orchestration_actions": ["merge"],
-  "orchestration_reason": "为什么这样编排",
-  "experience_breakpoint": "需要解决的具体体验问题",
-  "user_must_understand": ["用户必须理解的内容"],
-  "experience_decision": "唯一体验决定",
-  "information_order": ["用户理解信息的顺序"],
-  "explanation_timing": {
-    "before": ["操作前需要解释的内容"],
-    "during": ["操作中需要反馈的内容"],
-    "after": ["操作后需要说明的内容"]
-  },
-  "state_result_requirements": ["状态和结果要求"],
-  "continuity_requirements": ["角色或系统连续性要求"],
-  "blueprint_requirements": ["蓝图必须落实的要求"]
-}
-```
+- 回读需求基线、知识库、聊天记录或内部任务覆盖结果补 JSON。
+- 用 schema 要求 Markdown 增加字段。
+- 在 JSON 中重新概括、改写或扩展体验决定。
+- 保存候选体验问题、未选择方向和内部比较过程。
+- 保存页面、组件、布局和最终文案。
+
+## 3. 固定根结构
+
+    {
+      "skill": "uxb",
+      "version": "9.0",
+      "generated_at": "2026-08-04T00:00:00+08:00",
+      "project_name": "项目名称",
+      "artifact_md": "spark-output/uxb_output.md",
+      "decisions": [],
+      "cross_cutting_constraints": [],
+      "upstream_trace": []
+    }
+
+根字段全部必填。不得新增其他根字段。
+
+字段规则：
+
+- skill：固定为 uxb。
+- version：固定为 9.0。
+- generated_at：非空 ISO 8601 时间字符串。
+- project_name：非空字符串。
+- artifact_md：固定为 spark-output/uxb_output.md。
+- decisions：体验决定数组，可以为空。
+- cross_cutting_constraints：跨任务体验约束数组，可以为空。
+- upstream_trace：来源数组，可以为空。
+
+## 4. 体验决定
+
+每个对象直接对应 Markdown §1 中的一条体验决定。
+
+### 4.1 最小对象
+
+    {
+      "id": "ED-001",
+      "task": "对应任务",
+      "roles": ["涉及角色"],
+      "decision": "Markdown 中已确认的体验决定"
+    }
 
 必填字段：
 
-- `id`
-- `task`
-- `roles`
-- `business_objects`
-- `business_nodes`
-- `perceived_stage`
-- `orchestration_actions`
-- `orchestration_reason`
-- `experience_breakpoint`
-- `user_must_understand`
-- `experience_decision`
-- `blueprint_requirements`
+- id：ED-001 格式，在 decisions 内唯一。
+- task：非空字符串，沿用 Markdown 中的任务名称。
+- roles：非空字符串数组。
+- decision：非空字符串，保持 Markdown 决定正文的语义和范围。
 
-必填数组不得为空。
+### 4.2 可选字段
 
-`orchestration_actions` 只允许：
+    {
+      "business_objects": ["Markdown 中直接出现的业务对象"],
+      "states": ["Markdown 中直接出现的状态"],
+      "conditions": ["Markdown 中直接出现的适用条件"],
+      "additional_constraints": ["Markdown 中直接出现的额外约束"],
+      "source_refs": ["Markdown 中直接关联的来源编号"]
+    }
 
-- `retain`
-- `merge`
-- `split`
-- `reorder`
+可选字段规则：
+
+- 字段出现时必须是非空字符串数组。
+- 数组不得为空，不得包含空字符串。
+- Markdown 没有直接内容时省略字段。
+- 不得从正式输入或知识库补充可选字段。
+
+一条 Markdown 决定只生成一个 decisions 对象。不要因为它同时涉及信息、状态和恢复而拆成多个 JSON 对象。
+
+## 5. 跨任务体验约束
+
+每个对象直接对应 Markdown §2 中的一条跨任务体验约束。
+
+    {
+      "id": "CC-001",
+      "constraint": "跨任务、跨角色或跨系统共同遵守的体验约束",
+      "applies_to": ["适用任务或角色"]
+    }
+
+字段全部必填：
+
+- id：CC-001 格式，在 cross_cutting_constraints 内唯一。
+- constraint：非空字符串。
+- applies_to：非空字符串数组。
+
+Markdown 没有 §2 时，cross_cutting_constraints 使用空数组。不要从 §1 再次提炼一套约束。
+
+## 6. 来源承接
+
+每个对象直接对应 Markdown §3 中的一项来源。
+
+    {
+      "id": "UT-001",
+      "source_type": "正式输入",
+      "source_name": "真实来源名称",
+      "source_path": "真实路径",
+      "used_for": ["ED-001"]
+    }
+
+必填字段：
+
+- id：UT-001 格式，在 upstream_trace 内唯一。
+- source_type：非空字符串。
+- source_name：非空字符串。
+- used_for：非空字符串数组。
 
 可选字段：
 
-- `information_order`
-- `explanation_timing`
-- `state_result_requirements`
-- `continuity_requirements`
+- source_path：真实路径存在时输出非空字符串。用户直接提供完整正文且没有路径时省略。
 
-可选字段没有真实内容时省略。不得使用空字符串、空数组或占位语句。
+source_type 不使用固定枚举。沿用 Markdown 对来源的真实分类，例如正式输入、业务知识、设计准则或交互模式。
 
-`explanation_timing` 只允许 `before`、`during`、`after`。没有内容的时机字段省略。
+used_for 只记录 Markdown 已写明的决定编号或判断范围。不得根据 JSON 对象关系补写来源用途。
 
-## 5. 跨阶段衔接
+## 7. 投影规则
 
-```json
-{
-  "id": "CS-001",
-  "task": "对应任务",
-  "from_stage": "上一用户感知阶段",
-  "to_stage": "下一用户感知阶段",
-  "transition_trigger": "阶段转换条件",
-  "context_to_preserve": ["必须保留的任务对象和上下文"],
-  "transition_decision": "唯一衔接决定",
-  "blueprint_requirements": ["蓝图必须落实的要求"]
-}
-```
+- JSON 数组顺序与 Markdown 对应内容顺序一致。
+- 角色、任务、对象和状态名称沿用 Markdown。
+- id 只用于 UXB 本轮 Context 内识别，不作为跨 Skill 固定外键。
+- 不使用章节号、行号或固定路径建立语义绑定。
+- 没有对应内容时使用空数组或省略可选字段。
+- 不生成空字符串、空可选数组和占位对象。
+- JSON 中每条非元数据内容都必须能在 Markdown 中找到直接来源。
+- JSON 校验失败时只修 JSON。
+- Markdown 结论错误时返回 UXB 体验决定阶段并重新确认。
 
-以上字段全部必填。数组不得为空。
-
-## 6. 状态与恢复
-
-```json
-{
-  "id": "SR-001",
-  "task": "对应任务",
-  "business_states": ["需求基线中的业务状态"],
-  "user_visible_meaning": "用户需要理解的状态或结果含义",
-  "result_or_next_action": "结果或下一步",
-  "experience_decision": "唯一状态或恢复决定",
-  "blueprint_requirements": ["蓝图必须落实的要求"]
-}
-```
-
-以上字段全部必填。数组不得为空。
-
-UXB 可以简化用户感知状态，但不得把不同业务结果错误合并。
-
-## 7. Experience Blueprint 落实要求
-
-```json
-{
-  "id": "BR-001",
-  "task": "落实要求对应的任务",
-  "roles": ["涉及角色"],
-  "perceived_stage": "对应用户感知阶段",
-  "requirement": "必须落实的体验要求",
-  "purpose": "用户需要获得的体验结果",
-  "must_preserve": ["必须保持的信息、顺序、衔接、反馈或连续性"]
-}
-```
-
-必填字段：
-
-- `id`
-- `task`
-- `roles`
-- `perceived_stage`
-- `requirement`
-- `purpose`
-- `must_preserve`
-
-必填数组不得为空。
-
-## 8. 来源追溯
-
-`upstream_trace` 使用编号前缀 `UT`。
-
-```json
-{
-  "id": "UT-001",
-  "source_type": "requirements_baseline",
-  "source_name": "正式需求基线",
-  "status": "formal",
-  "source_path": "spark-output/requirements_baseline.md",
-  "used_for": ["本次体验定案的用途"]
-}
-```
-
-`source_type` 只允许：
-
-- `requirements_baseline`
-- `business_knowledge`
-- `design_guideline`
-- `interaction_pattern`
-
-`status` 固定为 `formal`。`source_path` 可省略，只用于来源追溯，不能用于关联某条体验定案。
-
-## 9. 有体验压力与无体验压力
-
-存在真实体验压力时，Agent 必须确认：
-
-- `task_experience_decisions` 非空。
-- `blueprint_requirements` 非空。
-
-没有真实体验压力时，Agent 必须确认：
-
-- `task_experience_decisions` 为空。
-- `cross_stage_decisions` 为空。
-- `state_recovery_decisions` 为空。
-- `blueprint_requirements` 只保留“忠实落实需求基线”的要求。
-
-这是语义规则，只能由 Agent 验收，脚本不得推断。
-
-## 10. 结构规则
-
-- 所有根字段必须存在。
-- 根字段之外不得新增字段。
-- 稳定编号在所属数组内唯一。
-- 字符串不能为空。
-- 字符串数组不得包含空字符串。
-- 没有对应内容时使用空数组，不生成虚假占位对象。
-- 数组顺序与 Markdown 对应章节顺序一致。
-- 不建立业务角色、权限、规则、状态或异常全集字段。
-- 不建立需求基线外键。
-- Markdown 与 JSON 通过任务、角色、业务对象、状态和结果的自然语义保持对应。
-- 角色、任务、对象和状态名称沿用需求基线。
-- 使用用户表达时，必须同时保留对应业务节点。
-- 不保存未选择方向、候选方案或内部比较过程。
-
-## 11. 结构校验边界
+## 8. 结构校验边界
 
 脚本可以校验：
 
-- JSON 解析。
-- 字段存在和未知字段。
-- 类型。
-- 固定值和枚举。
-- 编号格式与数组内唯一性。
+- JSON 是否可解析。
+- 根字段和对象字段是否存在。
+- 是否包含未知字段。
+- 字段类型。
+- 固定值。
+- 字符串和数组是否为空。
+- id 格式及数组内唯一性。
 
-脚本不得校验：
+脚本不能校验：
 
-- 体验结论是否合理。
-- 体验取舍是否充分。
+- 体验问题是否真实。
+- 体验决定是否具体或合理。
 - 是否越界到页面方案。
 - Markdown 与 JSON 是否语义一致。
+- JSON 内容是否忠实投影 Markdown。
 - 是否应该执行 UXB。
-- 是否存在真实体验压力。
-- 体验定案是否能改变蓝图方案。
-- 与需求基线的自然语义对应是否准确。
 
-这些只能由 Agent 验收。
+这些内容由 Agent 验收。
