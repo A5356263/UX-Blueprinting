@@ -31,7 +31,6 @@ function fixture() {
       impacts: ["申请页", "权限入口"],
       recommended_approach: "无权限时展示申请入口",
       not_recommended: "不建议完全隐藏入口，用户无法理解下一步",
-      open_question: "unknown",
     }],
     journey_consumption: [{
       type: "关键转折",
@@ -99,7 +98,6 @@ function fixture() {
       feedback: "显示待审批",
     }],
     feedbacks: [{ scenario: "提交成功", type: "Toast", copy: "申请已提交" }],
-    open_questions: [],
     upstream_trace: [{
       upstream_judgment: "无权限用户需要申请出口",
       experience_meaning: "入口不能完全隐藏",
@@ -117,6 +115,8 @@ const negatives = [
   ["缺根字段", (data) => delete data.interaction_overview],
   ["多余字段", (data) => { data.lanes = []; }],
   ["错误类型", (data) => { data.states = "bad"; }],
+  ["已移除根字段", (data) => { data.open_questions = []; }],
+  ["已移除判断字段", (data) => { data.critical_design_judgments[0].open_question = "unknown"; }],
   ["旧 source_status", (data) => { data.source_status = {}; }],
   ["旧 ID", (data) => { data.main_flow[0].node_id = "node-request"; }],
   ["旧 anchor", (data) => { data.surfaces.pages[0].md_anchor = "§6"; }],

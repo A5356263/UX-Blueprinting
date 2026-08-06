@@ -8,7 +8,7 @@ const ROOT_KEYS = [
   "upstream_contract",
   "critical_design_judgments", "journey_consumption", "interaction_overview",
   "main_flow", "sub_flows", "exceptions", "surfaces", "states", "feedbacks",
-  "open_questions", "upstream_trace",
+  "upstream_trace",
 ];
 const FORBIDDEN_KEYS = new Set([
   "source_status", "source_anchor", "md_anchor", "end_type", "end_target",
@@ -142,12 +142,12 @@ function validate(data) {
 
   collection(
     data.critical_design_judgments, "critical_design_judgments",
-    ["judgment", "impacts", "recommended_approach", "not_recommended", "open_question"],
+    ["judgment", "impacts", "recommended_approach", "not_recommended"],
     errors,
     (item, itemPath) => {
       string(item.judgment, `${itemPath}.judgment`, errors);
       strings(item.impacts, `${itemPath}.impacts`, errors);
-      ["recommended_approach", "not_recommended", "open_question"].forEach((key) =>
+      ["recommended_approach", "not_recommended"].forEach((key) =>
         string(item[key], `${itemPath}.${key}`, errors));
     },
   );
@@ -228,11 +228,6 @@ function validate(data) {
   collection(
     data.feedbacks, "feedbacks", ["scenario", "type", "copy"], errors,
     (item, itemPath) => ["scenario", "type", "copy"].forEach((key) =>
-      string(item[key], `${itemPath}.${key}`, errors)),
-  );
-  collection(
-    data.open_questions, "open_questions", ["question", "impact", "owner"], errors,
-    (item, itemPath) => ["question", "impact", "owner"].forEach((key) =>
       string(item[key], `${itemPath}.${key}`, errors)),
   );
   collection(

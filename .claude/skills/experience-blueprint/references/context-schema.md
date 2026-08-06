@@ -36,8 +36,7 @@
       "judgment": "示例判断",
       "impacts": ["示例影响"],
       "recommended_approach": "示例确定方案",
-      "not_recommended": "示例禁止结果",
-      "open_question": "无"
+      "not_recommended": "示例禁止结果"
     }
   ],
   "journey_consumption": [
@@ -126,13 +125,6 @@
       "copy": "示例反馈文案"
     }
   ],
-  "open_questions": [
-    {
-      "question": "示例问题",
-      "impact": "示例影响",
-      "owner": "示例确认方"
-    }
-  ],
   "upstream_trace": [
     {
       "upstream_judgment": "示例上游判断",
@@ -186,7 +178,7 @@
 
 | Markdown | JSON | 承接要求 |
 |---|---|---|
-| `§0` | `critical_design_judgments[]` | 每条判断、影响、确定方案、禁止结果及“未决项：无”逐项保留 |
+| `§0` | `critical_design_judgments[]` | 每条判断、影响、确定方案和禁止结果逐项保留 |
 | `§1` | `journey_consumption[]` | 每个消费项、来源阶段和蓝图落点逐项保留 |
 | `§2` | `interaction_overview[]` | 每条路径、动作步骤和显式分支逐项保留 |
 | `§3` | `main_flow[]` | 每个节点及其五类信息逐项保留 |
@@ -194,10 +186,9 @@
 | `§5` | `exceptions[]` | 每个异常的发生、条件、依据、反馈、下一步和恢复逐项保留 |
 | `§6` | `surfaces.*[]` | 每个载体的全部非 ASCII 设计事实逐项保留；ASCII 本体留在 Markdown |
 | `§7` | `states[]`、`feedbacks[]` | 每行独立状态和反馈逐项保留 |
-| `§8` | `open_questions[]` | 只投影不改变当前方案的外部依赖、影响和确认方 |
-| `§9` | `upstream_trace[]` | 上游承接追踪逐项保留；知识读取日志不重复写入 |
+| `§8` | `upstream_trace[]` | 上游承接追踪逐项保留；知识读取日志不重复写入 |
 
-`§9` 中形成的设计决策必须已经落入 `§0-§8`；如果只存在于知识消费日志，Markdown 尚未收口，禁止进入 JSON 阶段。
+`§8` 中记录的设计决策必须已经落入 `§0-§7`；如果只存在于知识消费日志，Markdown 尚未收口，禁止进入 JSON 阶段。
 
 ## 5. 页面载体字段
 
