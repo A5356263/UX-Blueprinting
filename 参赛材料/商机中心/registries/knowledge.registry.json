@@ -1,0 +1,226 @@
+{
+  "kind": "ux-proto-knowledge-registry",
+  "records": [
+    {
+      "id": "knowledge.shared.action-emphasis-by-intent",
+      "kind": "knowledge",
+      "knowledge": {
+        "decision": "Which visible action should receive primary emphasis now?",
+        "distinctions": [
+          "A supporting responsibility is not automatically a separate action context",
+          "Danger communicates consequence; primary communicates current task emphasis"
+        ],
+        "forbidden": [
+          "Assign a primary action mechanically to every visual region",
+          "Determine emphasis from verbs such as create, query, save, or submit alone"
+        ],
+        "guidance": "Treat high emphasis as a scarce signal within the current action context. Use zero or one primary CTA when the brief and task state imply a clear next action; keep supporting actions lower emphasis. A clearly separated temporary task surface may have its own primary action. Infer emphasis from intent and consequences, never from the action verb alone.",
+        "optional": [
+          "Use no primary CTA when the task has no clearly dominant next action",
+          "Allow a clearly separated temporary task surface to have its own primary action"
+        ],
+        "required": [
+          "Identify the current action context before assigning primary emphasis",
+          "Ensure an emphasized action meaningfully advances or commits the current task"
+        ]
+      },
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.business-document-form",
+            "type": "requires"
+          },
+          {
+            "source": "pattern.shared.list-operations",
+            "type": "requires"
+          }
+        ],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the surface has no explicit action"
+        ],
+        "useWhen": [
+          "a page or region presents multiple possible actions"
+        ]
+      },
+      "summary": "Emphasize the action that advances the current primary intent without inventing rigid decision domains.",
+      "title": "Action Emphasis by Current Intent"
+    },
+    {
+      "id": "knowledge.shared.bulk-vs-row-actions",
+      "kind": "knowledge",
+      "knowledge": {
+        "decision": "Does the action target selected rows, one row, or the list itself?",
+        "distinctions": [
+          "Popconfirm confirms an action but does not define its scope"
+        ],
+        "forbidden": [
+          "Bulk semantics for create, refresh, or single-row edit"
+        ],
+        "guidance": "Use a bulk action surface only when a non-empty multi-row selection is the explicit target.",
+        "optional": [
+          "Clear selection"
+        ],
+        "required": [
+          "Visible action scope"
+        ]
+      },
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.list-operations",
+            "type": "requires"
+          }
+        ],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "no list actions"
+        ],
+        "useWhen": [
+          "distinguish multi-select action from row or global action"
+        ]
+      },
+      "summary": "Choose action scope from the current selection rather than visual proximity to a table.",
+      "title": "Bulk versus Row Actions"
+    },
+    {
+      "id": "knowledge.shared.column-settings-vs-filters",
+      "kind": "knowledge",
+      "knowledge": {
+        "decision": "Does this setting alter what the Table displays or which records the query returns?",
+        "distinctions": [
+          "Tree/Checkbox may serve column hierarchy; TreeSelect may choose filter values but does not define ownership"
+        ],
+        "forbidden": [
+          "Store query values in column metadata"
+        ],
+        "guidance": "Visibility, fixed position, and order belong to column settings; field enablement, operators, and defaults belong to filter configuration.",
+        "optional": [
+          "Preview resulting table or query"
+        ],
+        "required": [
+          "Identify affected state owner"
+        ]
+      },
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.search-filter-configuration",
+            "type": "requires"
+          }
+        ],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "simple fixed table"
+        ],
+        "useWhen": [
+          "distinguish column display from search criteria"
+        ]
+      },
+      "summary": "Separate table presentation configuration from query configuration.",
+      "title": "Column Settings versus Filters"
+    },
+    {
+      "id": "knowledge.shared.filter-defaults",
+      "kind": "knowledge",
+      "knowledge": {
+        "decision": "Which filters should be enabled and initialized?",
+        "distinctions": [
+          "Filter defaults affect returned records; column defaults affect presentation"
+        ],
+        "forbidden": [
+          "Implicit non-visible query constraints"
+        ],
+        "guidance": "Keep enabled fields, operators, and supplied defaults explicit and reversible. Prototype changes remain in memory unless the page provides a separately approved persistence flow.",
+        "optional": [
+          "Default value"
+        ],
+        "required": [
+          "Field key",
+          "Enabled state",
+          "Valid operator"
+        ]
+      },
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.search-filter-configuration",
+            "type": "requires"
+          }
+        ],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "column presentation"
+        ],
+        "useWhen": [
+          "configure search defaults"
+        ]
+      },
+      "summary": "Define enabled search fields, valid operators, and safe default values.",
+      "title": "Filter Defaults and Operators"
+    },
+    {
+      "id": "knowledge.shared.form-presentation-mode",
+      "kind": "knowledge",
+      "knowledge": {
+        "decision": "Does this form need a single continuous page or explicit stages?",
+        "distinctions": [
+          "Strong signals create stages; supporting signals only increase cognitive load"
+        ],
+        "forbidden": [
+          "Choose Steps only because the form has many fields"
+        ],
+        "guidance": "Default to a grouped single page. Use stages when users can understand real dependency, validation, handoff, irreversibility, or risk boundaries. Size, duration, and resumption only support that decision.",
+        "optional": [
+          "Use anchors, drafts, recovery, and error location for long continuous forms"
+        ],
+        "required": [
+          "Identify meaningful stage boundaries before choosing Steps"
+        ]
+      },
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.business-document-form",
+            "type": "requires"
+          }
+        ],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the interaction is not a form"
+        ],
+        "useWhen": [
+          "choosing how to present a business document form"
+        ]
+      },
+      "summary": "Choose a staged form from meaningful task boundaries, not size alone.",
+      "title": "Single-page versus Staged Form"
+    }
+  ],
+  "schemaVersion": 2
+}

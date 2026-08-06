@@ -1,0 +1,286 @@
+{
+  "kind": "ux-proto-pattern-registry",
+  "records": [
+    {
+      "id": "pattern.shared.business-document-form",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "pattern": {
+        "defaultOrder": [
+          "document-context",
+          "section-navigation",
+          "semantic-form-groups",
+          "detail-lines",
+          "decision-actions"
+        ],
+        "forbiddenCombinations": [
+          "Materialize both single-page and wizard Templates into the same form"
+        ],
+        "optionalRegions": [
+          {
+            "id": "detail-lines",
+            "responsibility": "Edit repeatable business line items when the document requires them."
+          },
+          {
+            "id": "section-navigation",
+            "responsibility": "Navigate a long continuous form without turning it into false stages."
+          }
+        ],
+        "pageOwns": [
+          "business fields",
+          "form state",
+          "validation",
+          "draft and submit handlers",
+          "business copy"
+        ],
+        "referenceRefs": [],
+        "requiredRegions": [
+          {
+            "id": "document-context",
+            "responsibility": "Identify the document, mode, and consequential state."
+          },
+          {
+            "id": "semantic-form-groups",
+            "responsibility": "Collect business information in understandable groups or stages."
+          },
+          {
+            "id": "decision-actions",
+            "responsibility": "Expose recovery and the action that completes the current intent."
+          }
+        ],
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "task": "Create or edit one business document and commit the intended change."
+      },
+      "relations": [
+        {
+          "target": "knowledge.shared.form-presentation-mode",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.action-emphasis-by-intent",
+          "type": "requires"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "template.xft.single-page-business-form",
+            "type": "recommended-for"
+          },
+          {
+            "source": "template.xft.wizard-business-form",
+            "type": "recommended-for"
+          }
+        ],
+        "outgoing": [
+          {
+            "target": "knowledge.shared.form-presentation-mode",
+            "type": "requires"
+          },
+          {
+            "target": "knowledge.shared.action-emphasis-by-intent",
+            "type": "requires"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "read-only detail or list management"
+        ],
+        "useWhen": [
+          "creating or editing one business document"
+        ]
+      },
+      "summary": "Create or edit one business document with meaningful grouping, recovery, validation, and a clear completion action.",
+      "title": "Business Document Form"
+    },
+    {
+      "id": "pattern.shared.list-operations",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "pattern": {
+        "defaultOrder": [
+          "filter-summary",
+          "list-toolbar",
+          "data-table",
+          "selection-actions",
+          "pagination",
+          "row-confirmation"
+        ],
+        "forbiddenCombinations": [
+          "Render a bulk selection bar when no selection exists"
+        ],
+        "optionalRegions": [
+          {
+            "id": "filter-summary",
+            "responsibility": "Expose the current query and an entry to configure filters without displacing the list task."
+          },
+          {
+            "id": "selection-actions",
+            "responsibility": "Expose selection-scoped actions only while rows are selected."
+          },
+          {
+            "id": "row-confirmation",
+            "responsibility": "Confirm a destructive action for one row."
+          }
+        ],
+        "pageOwns": [
+          "rows",
+          "global handlers",
+          "row handlers",
+          "confirmation target",
+          "query and pagination state"
+        ],
+        "referenceRefs": [],
+        "requiredRegions": [
+          {
+            "id": "list-toolbar",
+            "responsibility": "Own global list actions such as create and refresh."
+          },
+          {
+            "id": "data-table",
+            "responsibility": "Present rows and row-scoped actions."
+          },
+          {
+            "id": "pagination",
+            "responsibility": "Navigate the current result set without changing action ownership."
+          }
+        ],
+        "styleUses": [],
+        "task": "Operate on a list or one row at a time."
+      },
+      "relations": [
+        {
+          "target": "knowledge.shared.bulk-vs-row-actions",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.action-emphasis-by-intent",
+          "type": "requires"
+        },
+        {
+          "target": "pattern.shared.search-filter-configuration",
+          "type": "supports"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": [
+          {
+            "target": "knowledge.shared.bulk-vs-row-actions",
+            "type": "requires"
+          },
+          {
+            "target": "knowledge.shared.action-emphasis-by-intent",
+            "type": "requires"
+          },
+          {
+            "target": "pattern.shared.search-filter-configuration",
+            "type": "supports"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "multi-row selected action"
+        ],
+        "useWhen": [
+          "list toolbar and row actions"
+        ]
+      },
+      "summary": "Present global list tools and actions scoped to an individual row without implying multi-selection.",
+      "title": "List and Row Operations"
+    },
+    {
+      "id": "pattern.shared.search-filter-configuration",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "pattern": {
+        "defaultOrder": [
+          "filter-catalog",
+          "filter-editor",
+          "query-preview"
+        ],
+        "forbiddenCombinations": [
+          "Treat table column presentation as query configuration"
+        ],
+        "optionalRegions": [
+          {
+            "id": "query-preview",
+            "responsibility": "Explain the resulting query configuration."
+          }
+        ],
+        "pageOwns": [
+          "filter schema",
+          "operator choices",
+          "default values",
+          "query execution",
+          "optional persistence outside the prototype component"
+        ],
+        "referenceRefs": [],
+        "requiredRegions": [
+          {
+            "id": "filter-catalog",
+            "responsibility": "Choose available business fields."
+          },
+          {
+            "id": "filter-editor",
+            "responsibility": "Edit enabled state, operator, and default value."
+          }
+        ],
+        "styleUses": [
+          "outlined-container"
+        ],
+        "task": "Configure reusable search criteria."
+      },
+      "relations": [
+        {
+          "target": "knowledge.shared.column-settings-vs-filters",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.filter-defaults",
+          "type": "requires"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "pattern.shared.list-operations",
+            "type": "supports"
+          },
+          {
+            "source": "product.xft.filter-configuration",
+            "type": "recommended-for"
+          }
+        ],
+        "outgoing": [
+          {
+            "target": "knowledge.shared.column-settings-vs-filters",
+            "type": "requires"
+          },
+          {
+            "target": "knowledge.shared.filter-defaults",
+            "type": "requires"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "table column visibility"
+        ],
+        "useWhen": [
+          "search fields operators and default values"
+        ]
+      },
+      "summary": "Configure which search criteria are enabled and their operators and default values.",
+      "title": "Search Filter Configuration"
+    }
+  ],
+  "schemaVersion": 2
+}

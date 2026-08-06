@@ -1,0 +1,7 @@
+.xft-content-action-bar {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--alias-space-3) var(--alias-space-4);
+  background: var(--alias-surface-container-bright);
+  border-top: 1px solid var(--alias-border-neutral);
+}

@@ -1,0 +1,314 @@
+{
+  "kind": "ux-proto-template-registry",
+  "records": [
+    {
+      "id": "template.xft.application-frame",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the project or task explicitly requests an unframed design surface"
+        ],
+        "useWhen": [
+          "the active profile should make a prototype recognizable as XFT"
+        ]
+      },
+      "summary": "Recognizable XFT prototype framing around a page without owning routing, permissions, or page decisions.",
+      "template": {
+        "artifacts": [
+          {
+            "consumerPath": "templates/template.xft.application-frame/XftApplicationFrame.template.tsx",
+            "contentHash": "23bfce7b80cf8eba2abdf6aeca9bf53c9098c88da33fcf34fd43506ce6b8ad35",
+            "role": "tsx",
+            "target": "XftApplicationFrame.tsx"
+          },
+          {
+            "consumerPath": "templates/template.xft.application-frame/XftApplicationFrame.template.css",
+            "contentHash": "a6b228e70cbfd8aa89ec6a0643ca18c99ded662e00fe17cb382fac58e39b25a8",
+            "role": "css",
+            "target": "XftApplicationFrame.css"
+          }
+        ],
+        "capabilities": [
+          "structure",
+          "local-style"
+        ],
+        "limitations": [
+          "Prototype framing only; routing, permissions, and side-navigation state remain page-owned.",
+          "Side navigation contains stable module-level destinations in the workspace, such as Module page A / Module page B.",
+          "Page-local views, modes, filters, and content switching belong in children within the Primary Work Surface; the frame does not express product-level primary navigation.",
+          "workspaceTop and workspaceBottomDock are generic ReactNode positions; their content and business semantics remain page-owned.",
+          "The frame does not provide a permanent white page wrapper or choose a work-surface mode."
+        ],
+        "materializesAs": "local-component",
+        "ownershipAfterMaterialization": "page",
+        "sharedImport": false,
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "usesProductComponents": []
+      },
+      "title": "XFT Application Frame"
+    },
+    {
+      "id": "template.xft.primary-work-surface",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the page has at least two main layout columns and multiple independent content regions"
+        ],
+        "useWhen": [
+          "a standard form, query, single-list, configuration, or other page has one primary work area"
+        ]
+      },
+      "summary": "Page-owned primary bright surface for a standard XFT work page on the muted workspace canvas.",
+      "template": {
+        "artifacts": [
+          {
+            "consumerPath": "templates/template.xft.primary-work-surface/XftPrimaryWorkSurface.template.tsx",
+            "contentHash": "0f254ba3d0326070b2860d16842a64e8d08a07c22e9039d5c2439f81891f94e0",
+            "role": "tsx",
+            "target": "XftPrimaryWorkSurface.tsx"
+          },
+          {
+            "consumerPath": "templates/template.xft.primary-work-surface/XftPrimaryWorkSurface.template.css",
+            "contentHash": "9ad0aca4580573afbcf613e8ec4dee048803f2effda3dcb9e0d2f651fcc2d774",
+            "role": "css",
+            "target": "XftPrimaryWorkSurface.css"
+          }
+        ],
+        "capabilities": [
+          "structure",
+          "local-style"
+        ],
+        "limitations": [
+          "The page supplies all titles, navigation, forms, tables, actions, data, and handlers.",
+          "The template does not own workspace chrome, a bottom dock, or multi-region layout."
+        ],
+        "materializesAs": "local-component",
+        "ownershipAfterMaterialization": "page",
+        "sharedImport": false,
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "usesProductComponents": []
+      },
+      "title": "XFT Primary Work Surface"
+    },
+    {
+      "id": "template.xft.single-page-business-form",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "pattern.shared.business-document-form",
+          "type": "recommended-for"
+        },
+        {
+          "target": "template.xft.wizard-business-form",
+          "type": "distinguishes-from"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": [
+          {
+            "target": "pattern.shared.business-document-form",
+            "type": "recommended-for"
+          },
+          {
+            "target": "template.xft.wizard-business-form",
+            "type": "distinguishes-from"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "later inputs depend on validated earlier stages or work must resume by stage"
+        ],
+        "useWhen": [
+          "one continuous business form can be completed without stage ownership changes"
+        ]
+      },
+      "summary": "Continuous grouped form with section navigation for work that does not have real stage boundaries.",
+      "template": {
+        "artifacts": [
+          {
+            "consumerPath": "templates/template.xft.single-page-business-form/SinglePageBusinessForm.template.tsx",
+            "contentHash": "ab918502df4d561a150759ac75df686e4272372f7c7842a75a2a88a20628d3f7",
+            "role": "tsx",
+            "target": "SinglePageBusinessForm.tsx"
+          },
+          {
+            "consumerPath": "templates/template.xft.single-page-business-form/SinglePageBusinessForm.template.css",
+            "contentHash": "63db351414c2be3f0bd5559a94992ac0ce10daebc1a703779699d6000be8a711",
+            "role": "css",
+            "target": "SinglePageBusinessForm.css"
+          }
+        ],
+        "capabilities": [
+          "structure",
+          "handlers",
+          "local-style"
+        ],
+        "limitations": [
+          "Page supplies Form fields, validation, data, and handlers.",
+          "Draft persistence and error-summary content are page-provided prototype boundaries."
+        ],
+        "materializesAs": "local-component",
+        "ownershipAfterMaterialization": "page",
+        "sharedImport": false,
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "usesProductComponents": []
+      },
+      "title": "Single-page Business Form"
+    },
+    {
+      "id": "template.xft.wizard-business-form",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "pattern.shared.business-document-form",
+          "type": "recommended-for"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [
+          {
+            "source": "template.xft.single-page-business-form",
+            "type": "distinguishes-from"
+          }
+        ],
+        "outgoing": [
+          {
+            "target": "pattern.shared.business-document-form",
+            "type": "recommended-for"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "steps would only split a continuous form for visual convenience"
+        ],
+        "useWhen": [
+          "the business process has real stage boundaries"
+        ]
+      },
+      "summary": "Explicit stages for forms with validation dependencies, handoffs, recovery, or consequential completion.",
+      "template": {
+        "artifacts": [
+          {
+            "consumerPath": "templates/template.xft.wizard-business-form/WizardBusinessForm.template.tsx",
+            "contentHash": "916955e2a1ff01d5e6b8ab72e59a8e9bc473af9f1da9e4d26e32906845f9ca88",
+            "role": "tsx",
+            "target": "WizardBusinessForm.tsx"
+          },
+          {
+            "consumerPath": "templates/template.xft.wizard-business-form/WizardBusinessForm.template.css",
+            "contentHash": "c9d37f5a1924ee3dad3cc5fa36b31dd035f5aa627ed62369ad6d4c77db549d73",
+            "role": "css",
+            "target": "WizardBusinessForm.css"
+          }
+        ],
+        "capabilities": [
+          "structure",
+          "handlers",
+          "local-style"
+        ],
+        "limitations": [
+          "Page owns stage state, per-stage validation, draft persistence, and business side effects."
+        ],
+        "materializesAs": "local-component",
+        "ownershipAfterMaterialization": "page",
+        "sharedImport": false,
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "usesProductComponents": []
+      },
+      "title": "Staged Business Form"
+    },
+    {
+      "id": "template.wealth-plus.application-frame",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the task explicitly targets a product other than 企业财富+",
+          "the task explicitly requests an unframed design surface"
+        ],
+        "useWhen": [
+          "the active 财富+ token preset should produce a recognizable 企业财富+ desktop operations page"
+        ]
+      },
+      "summary": "企业财富+桌面应用框架：顶部一级菜单、无侧栏、18px 页面标题、40px 表头、50px 内容行、纵向表单、300–480px 录入控件及小圆角按钮。",
+      "template": {
+        "artifacts": [
+          {
+            "consumerPath": "templates/template.wealth-plus.application-frame/WealthPlusApplicationFrame.template.tsx",
+            "contentHash": "22b3a0b1d7f0c0bce5e965208709a2618fee334def3063ba12b2b220acdcadbf",
+            "role": "tsx",
+            "target": "WealthPlusApplicationFrame.tsx"
+          },
+          {
+            "consumerPath": "templates/template.wealth-plus.application-frame/WealthPlusApplicationFrame.template.css",
+            "contentHash": "563165cadd5161ec982cb8f8db7dced1e94a2f07d341c2e1356e5471a8961f94",
+            "role": "css",
+            "target": "WealthPlusApplicationFrame.css"
+          }
+        ],
+        "capabilities": [
+          "structure",
+          "handlers",
+          "local-style"
+        ],
+        "limitations": [
+          "Top navigation contains the page's first-level menu; do not add a left or right side navigation.",
+          "Render the page-level title at exactly 18px; omit it when tabs, breadcrumbs, or an object hero already provides the page identity.",
+          "For query and filter controls, do not render a preceding field name or Form.Item label. Put the criterion name inside the Input or Select placeholder, for example placeholder=\"管理机构\".",
+          "Keep every table header row at exactly 40px high.",
+          "Keep every table body row at exactly 50px high.",
+          "Use a vertical label-above-control structure for every data-entry form; never place form labels and controls side by side. Query and filter controls remain label-free as specified separately.",
+          "Keep Input, InputNumber, date input, and Select controls between 300px and 480px wide; use 300px as the minimum and 480px as the maximum.",
+          "Do not use a border radius smaller than 2px on rounded UI elements; use the staged small-radius token rather than a new literal value.",
+          "Use the small-radius token for every button, including primary navigation, primary, default, text, icon, and danger buttons.",
+          "The page supplies navigation labels, active state, global actions, filters, tables, content, data, and handlers.",
+          "The template is a desktop prototype frame; routing, permissions, and responsive mobile navigation remain page-owned or out of scope."
+        ],
+        "materializesAs": "local-component",
+        "ownershipAfterMaterialization": "page",
+        "sharedImport": false,
+        "styleUses": [
+          "main-container-bright"
+        ],
+        "usesProductComponents": []
+      },
+      "title": "企业财富+ Application Frame"
+    }
+  ],
+  "schemaVersion": 2
+}

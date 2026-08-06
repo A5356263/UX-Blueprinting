@@ -1,0 +1,192 @@
+{
+  "contentHash": "6766581708e49f82beadde2ab6479cf294b0ed6e89eb2af258cb29324621cafd",
+  "entries": [
+    {
+      "detailRef": "registries/knowledge.registry.json#knowledge.shared.action-emphasis-by-intent",
+      "id": "knowledge.shared.action-emphasis-by-intent",
+      "kind": "knowledge",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Emphasize the action that advances the current primary intent without inventing rigid decision domains.",
+      "title": "Action Emphasis by Current Intent"
+    },
+    {
+      "detailRef": "registries/knowledge.registry.json#knowledge.shared.bulk-vs-row-actions",
+      "id": "knowledge.shared.bulk-vs-row-actions",
+      "kind": "knowledge",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Choose action scope from the current selection rather than visual proximity to a table.",
+      "title": "Bulk versus Row Actions"
+    },
+    {
+      "detailRef": "registries/knowledge.registry.json#knowledge.shared.column-settings-vs-filters",
+      "id": "knowledge.shared.column-settings-vs-filters",
+      "kind": "knowledge",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Separate table presentation configuration from query configuration.",
+      "title": "Column Settings versus Filters"
+    },
+    {
+      "detailRef": "registries/knowledge.registry.json#knowledge.shared.filter-defaults",
+      "id": "knowledge.shared.filter-defaults",
+      "kind": "knowledge",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Define enabled search fields, valid operators, and safe default values.",
+      "title": "Filter Defaults and Operators"
+    },
+    {
+      "detailRef": "registries/knowledge.registry.json#knowledge.shared.form-presentation-mode",
+      "id": "knowledge.shared.form-presentation-mode",
+      "kind": "knowledge",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Choose a staged form from meaningful task boundaries, not size alone.",
+      "title": "Single-page versus Staged Form"
+    },
+    {
+      "detailRef": "registries/page-patterns.registry.json#pattern.shared.business-document-form",
+      "id": "pattern.shared.business-document-form",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "knowledge.shared.form-presentation-mode",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.action-emphasis-by-intent",
+          "type": "requires"
+        }
+      ],
+      "summary": "Create or edit one business document with meaningful grouping, recovery, validation, and a clear completion action.",
+      "title": "Business Document Form"
+    },
+    {
+      "detailRef": "registries/page-patterns.registry.json#pattern.shared.list-operations",
+      "id": "pattern.shared.list-operations",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "knowledge.shared.bulk-vs-row-actions",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.action-emphasis-by-intent",
+          "type": "requires"
+        },
+        {
+          "target": "pattern.shared.search-filter-configuration",
+          "type": "supports"
+        }
+      ],
+      "summary": "Present global list tools and actions scoped to an individual row without implying multi-selection.",
+      "title": "List and Row Operations"
+    },
+    {
+      "detailRef": "registries/page-patterns.registry.json#pattern.shared.search-filter-configuration",
+      "id": "pattern.shared.search-filter-configuration",
+      "kind": "pattern",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "knowledge.shared.column-settings-vs-filters",
+          "type": "requires"
+        },
+        {
+          "target": "knowledge.shared.filter-defaults",
+          "type": "requires"
+        }
+      ],
+      "summary": "Configure which search criteria are enabled and their operators and default values.",
+      "title": "Search Filter Configuration"
+    },
+    {
+      "detailRef": "registries/product-specific-components.registry.json#product.xft.content-action-bar",
+      "id": "product.xft.content-action-bar",
+      "kind": "product-specific-component",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Container-width XFT boundary and background for page-provided actions in a non-overlay workspace bottom dock.",
+      "title": "XFT Content Action Bar"
+    },
+    {
+      "detailRef": "registries/product-specific-components.registry.json#product.xft.filter-configuration",
+      "id": "product.xft.filter-configuration",
+      "kind": "product-specific-component",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "pattern.shared.search-filter-configuration",
+          "type": "recommended-for"
+        }
+      ],
+      "summary": "XFT-shaped prototype editor for enabling filters and setting operators and default values.",
+      "title": "XFT Filter Configuration"
+    },
+    {
+      "detailRef": "registries/templates.registry.json#template.xft.application-frame",
+      "id": "template.xft.application-frame",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Recognizable XFT prototype framing around a page without owning routing, permissions, or page decisions.",
+      "title": "XFT Application Frame"
+    },
+    {
+      "detailRef": "registries/templates.registry.json#template.xft.primary-work-surface",
+      "id": "template.xft.primary-work-surface",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "Page-owned primary bright surface for a standard XFT work page on the muted workspace canvas.",
+      "title": "XFT Primary Work Surface"
+    },
+    {
+      "detailRef": "registries/templates.registry.json#template.xft.single-page-business-form",
+      "id": "template.xft.single-page-business-form",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "pattern.shared.business-document-form",
+          "type": "recommended-for"
+        },
+        {
+          "target": "template.xft.wizard-business-form",
+          "type": "distinguishes-from"
+        }
+      ],
+      "summary": "Continuous grouped form with section navigation for work that does not have real stage boundaries.",
+      "title": "Single-page Business Form"
+    },
+    {
+      "detailRef": "registries/templates.registry.json#template.xft.wizard-business-form",
+      "id": "template.xft.wizard-business-form",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [
+        {
+          "target": "pattern.shared.business-document-form",
+          "type": "recommended-for"
+        }
+      ],
+      "summary": "Explicit stages for forms with validation dependencies, handoffs, recovery, or consequential completion.",
+      "title": "Staged Business Form"
+    },
+    {
+      "detailRef": "registries/templates.registry.json#template.wealth-plus.application-frame",
+      "id": "template.wealth-plus.application-frame",
+      "kind": "template",
+      "lifecycle": "active",
+      "relations": [],
+      "summary": "企业财富+桌面应用框架：顶部一级菜单、无侧栏、18px 页面标题、40px 表头、50px 内容行、纵向表单、300–480px 录入控件及小圆角按钮。",
+      "title": "企业财富+ Application Frame"
+    }
+  ],
+  "kind": "ux-proto-unified-catalog",
+  "schemaVersion": 2
+}

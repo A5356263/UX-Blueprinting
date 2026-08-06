@@ -12,3 +12,4 @@ docs/
 input/
 test/
 spark-output/
+spec/

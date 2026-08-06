@@ -1,0 +1,163 @@
+{
+  "kind": "ux-proto-product-specific-component-registry",
+  "records": [
+    {
+      "id": "product.xft.content-action-bar",
+      "kind": "product-specific-component",
+      "lifecycle": "active",
+      "productSpecificComponent": {
+        "dependencies": {
+          "localArtifacts": [
+            "XftContentActionBar.css"
+          ],
+          "productComponents": [],
+          "runtimePackages": [
+            "react"
+          ]
+        },
+        "implementation": {
+          "exportName": "XftContentActionBar",
+          "importPath": "components/product-specific/XftContentActionBar",
+          "propsType": "XftContentActionBarProps"
+        },
+        "limitations": [
+          "Only children and ariaLabel are public props.",
+          "The component must be composed in a non-overlay layout region supplied by its page."
+        ],
+        "maturity": "sketch",
+        "mockBoundaries": [
+          "The component contains no mock actions or business state"
+        ],
+        "protectedImplementation": true,
+        "semanticContract": {
+          "doesNotOwn": [
+            "viewport or dock positioning",
+            "dock host width or horizontal position",
+            "action alignment, order, or emphasis",
+            "business action semantics or state"
+          ],
+          "owns": [
+            "owning-container width",
+            "bright action-region background",
+            "full-width top boundary",
+            "compact action-region padding",
+            "toolbar semantics"
+          ],
+          "pageProvides": [
+            "accessible toolbar label",
+            "action children and their layout",
+            "business handlers, loading, and disabled state",
+            "page-private dock host"
+          ]
+        },
+        "states": [
+          "page-provided action content"
+        ],
+        "usageRef": "components/product-specific/XftContentActionBar.usage.md"
+      },
+      "relations": [],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": []
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "actions are global, selection-scoped, row-local, or do not need a persistent page-level region"
+        ],
+        "useWhen": [
+          "page-level actions should remain available while workspace content scrolls"
+        ]
+      },
+      "summary": "Container-width XFT boundary and background for page-provided actions in a non-overlay workspace bottom dock.",
+      "title": "XFT Content Action Bar"
+    },
+    {
+      "id": "product.xft.filter-configuration",
+      "kind": "product-specific-component",
+      "lifecycle": "active",
+      "productSpecificComponent": {
+        "dependencies": {
+          "localArtifacts": [
+            "XftFilterConfiguration.css",
+            "XftFilterConfiguration.model.ts",
+            "XftFilterConfiguration.mock.ts"
+          ],
+          "productComponents": [],
+          "runtimePackages": [
+            "react"
+          ]
+        },
+        "implementation": {
+          "exportName": "XftFilterConfiguration",
+          "importPath": "components/product-specific/XftFilterConfiguration",
+          "propsType": "XftFilterConfigurationProps"
+        },
+        "limitations": [
+          "Designed for design-generation prototypes; replacing it with a production library may require replacing its surrounding integration.",
+          "Saved templates, remote field schemas, complex grouping, and drag ordering are outside this sketch."
+        ],
+        "maturity": "sketch",
+        "mockBoundaries": [
+          "Bundled fields are illustrative only",
+          "Changes are emitted in memory and are not persisted"
+        ],
+        "protectedImplementation": true,
+        "semanticContract": {
+          "doesNotOwn": [
+            "backend field schema",
+            "query execution",
+            "persistence",
+            "permissions",
+            "production API compatibility"
+          ],
+          "owns": [
+            "prototype filter enablement presentation",
+            "operator selection presentation",
+            "default-value editing",
+            "local reset action"
+          ],
+          "pageProvides": [
+            "available field definitions",
+            "current prototype settings",
+            "change handler"
+          ]
+        },
+        "states": [
+          "default configuration",
+          "edited configuration",
+          "reset to supplied defaults",
+          "no available fields"
+        ],
+        "usageRef": "components/product-specific/XftFilterConfiguration.usage.md"
+      },
+      "relations": [
+        {
+          "target": "pattern.shared.search-filter-configuration",
+          "type": "recommended-for"
+        }
+      ],
+      "resolvedRelations": {
+        "incoming": [],
+        "outgoing": [
+          {
+            "target": "pattern.shared.search-filter-configuration",
+            "type": "recommended-for"
+          }
+        ]
+      },
+      "schemaVersion": 3,
+      "selection": {
+        "avoidWhen": [
+          "the task only needs an ordinary filter bar or production integration"
+        ],
+        "useWhen": [
+          "an XFT list prototype needs editable filter configuration"
+        ]
+      },
+      "summary": "XFT-shaped prototype editor for enabling filters and setting operators and default values.",
+      "title": "XFT Filter Configuration"
+    }
+  ],
+  "schemaVersion": 2
+}

@@ -1,0 +1,7 @@
+{
+  "name": "ux-proto-preview",
+  "private": true,
+  "scripts": {
+    "build:preview": "node ./scripts/build-preview.mjs"
+  }
+}

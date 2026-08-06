@@ -1,0 +1,19 @@
+{
+  "bindings": [
+    {
+      "activation": {
+        "defaultState": "on",
+        "mode": "profile-default"
+      },
+      "effect": {
+        "assetId": "template.wealth-plus.application-frame",
+        "type": "materialize-template"
+      },
+      "id": "application-frame",
+      "reason": "Provide the recognizable 企业财富+ application frame while allowing project or task opt-out."
+    }
+  ],
+  "id": "profile.wealth-plus",
+  "kind": "ux-proto-active-profile",
+  "schemaVersion": 1
+}

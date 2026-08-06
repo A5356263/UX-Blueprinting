@@ -1,0 +1,68 @@
+{
+  "entries": [
+    {
+      "avoidWhen": [
+        "the surface has no explicit action"
+      ],
+      "decision": "Which visible action should receive primary emphasis now?",
+      "id": "knowledge.shared.action-emphasis-by-intent",
+      "title": "Action Emphasis by Current Intent",
+      "useWhen": [
+        "a page or region presents multiple possible actions"
+      ]
+    },
+    {
+      "avoidWhen": [
+        "no list actions"
+      ],
+      "decision": "Does the action target selected rows, one row, or the list itself?",
+      "id": "knowledge.shared.bulk-vs-row-actions",
+      "title": "Bulk versus Row Actions",
+      "useWhen": [
+        "distinguish multi-select action from row or global action"
+      ]
+    },
+    {
+      "avoidWhen": [
+        "simple fixed table"
+      ],
+      "decision": "Does this setting alter what the Table displays or which records the query returns?",
+      "id": "knowledge.shared.column-settings-vs-filters",
+      "title": "Column Settings versus Filters",
+      "useWhen": [
+        "distinguish column display from search criteria"
+      ]
+    },
+    {
+      "avoidWhen": [
+        "column presentation"
+      ],
+      "decision": "Which filters should be enabled and initialized?",
+      "id": "knowledge.shared.filter-defaults",
+      "title": "Filter Defaults and Operators",
+      "useWhen": [
+        "configure search defaults"
+      ]
+    },
+    {
+      "avoidWhen": [
+        "the interaction is not a form"
+      ],
+      "decision": "Does this form need a single continuous page or explicit stages?",
+      "id": "knowledge.shared.form-presentation-mode",
+      "title": "Single-page versus Staged Form",
+      "useWhen": [
+        "choosing how to present a business document form"
+      ]
+    }
+  ],
+  "kind": "ux-proto-knowledge-discovery-index",
+  "schemaVersion": 1,
+  "sha256": "7ab0c22b12d046e196b3420d3b2ae91de63bc9095ddedda2f451c686ffac93e5",
+  "stats": {
+    "entryCount": 5,
+    "entryLimitBytes": 768,
+    "indexLimitBytes": 8192,
+    "utf8Bytes": 1334
+  }
+}

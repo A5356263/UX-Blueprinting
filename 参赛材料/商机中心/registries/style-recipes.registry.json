@@ -1,0 +1,136 @@
+{
+  "kind": "ux_proto_style_recipe_registry",
+  "recipes": [
+    {
+      "avoidWhen": [
+        "Styling a Card or local information panel."
+      ],
+      "declarations": {
+        "background": {
+          "alias": "surface.region.muted"
+        },
+        "padding": {
+          "alias": "space.7"
+        }
+      },
+      "id": "page-region-muted",
+      "owner": "page-or-region",
+      "status": "approved",
+      "useWhen": [
+        "A page or area band needs a stable muted background behind content surfaces."
+      ]
+    },
+    {
+      "avoidWhen": [
+        "The node is only a Flex, field wrapper, table, tabs, or descriptions host."
+      ],
+      "declarations": {
+        "background": {
+          "alias": "surface.container.bright"
+        },
+        "border": {
+          "literal": "none"
+        },
+        "border-radius": {
+          "alias": "radius.regular"
+        },
+        "box-shadow": {
+          "literal": "none"
+        },
+        "padding": {
+          "alias": "space.6"
+        }
+      },
+      "id": "main-container-bright",
+      "owner": "main-content-surface",
+      "status": "approved",
+      "useWhen": [
+        "Primary page content needs a bright bounded surface."
+      ]
+    },
+    {
+      "avoidWhen": [
+        "The parent background is unknown or the node is a transparent layout wrapper."
+      ],
+      "declarations": {
+        "background": {
+          "alias": "surface.container.muted"
+        },
+        "border": {
+          "literal": "none"
+        },
+        "border-radius": {
+          "alias": "radius.regular"
+        },
+        "box-shadow": {
+          "literal": "none"
+        },
+        "padding": {
+          "alias": "space.4"
+        }
+      },
+      "id": "supporting-container-muted",
+      "owner": "supporting-surface",
+      "status": "approved",
+      "useWhen": [
+        "Secondary content needs a locally distinguishable surface."
+      ]
+    },
+    {
+      "avoidWhen": [
+        "A divider or spacing alone provides sufficient grouping."
+      ],
+      "declarations": {
+        "background": {
+          "alias": "surface.container.bright"
+        },
+        "border": {
+          "alias": "border.neutral",
+          "template": "1px solid {alias}"
+        },
+        "border-radius": {
+          "alias": "radius.regular"
+        },
+        "box-shadow": {
+          "literal": "none"
+        },
+        "padding": {
+          "alias": "space.4"
+        }
+      },
+      "id": "outlined-container",
+      "owner": "bounded-content-surface",
+      "status": "approved",
+      "useWhen": [
+        "A local content surface needs a visible neutral boundary without elevation."
+      ]
+    },
+    {
+      "avoidWhen": [
+        "The boundary belongs to XftContentActionBar, workspaceTop, or another strong region edge."
+      ],
+      "declarations": {
+        "border-color": {
+          "alias": "border.neutral"
+        },
+        "margin-inline": {
+          "literal": "4px"
+        },
+        "min-width": {
+          "literal": "calc(100% - 8px)"
+        },
+        "width": {
+          "literal": "calc(100% - 8px)"
+        }
+      },
+      "id": "inset-divider",
+      "owner": "ordinary-content-divider",
+      "status": "approved",
+      "useWhen": [
+        "Adjacent content within one responsibility needs a light neutral division."
+      ]
+    }
+  ],
+  "status": "generated",
+  "variableEncoding": "Alias dots and underscores become hyphens after --alias-."
+}

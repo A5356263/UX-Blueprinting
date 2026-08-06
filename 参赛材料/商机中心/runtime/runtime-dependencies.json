@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "skillVersion": "0.5.0",
+  "name": "ux-proto-skill-runtime",
+  "dependencies": {
+    "@ant-design/static-style-extract": "2.1.0",
+    "antd": "6.5.0",
+    "esbuild": "0.25.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "reservedPackages": [
+    "@ant-design/static-style-extract",
+    "antd",
+    "esbuild",
+    "react",
+    "react-dom"
+  ]
+}

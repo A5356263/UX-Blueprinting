@@ -1,0 +1,19 @@
+.xft-primary-work-surface {
+  box-sizing: border-box;
+  width: min(calc(100% - (2 * var(--alias-space-4))), 1600px);
+  min-width: 0;
+  margin: var(--alias-space-4) auto;
+  padding: var(--alias-space-5);
+  overflow-x: hidden;
+  background: var(--alias-surface-container-bright);
+  border-radius: var(--alias-radius-regular);
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .xft-primary-work-surface {
+    width: min(calc(100% - (2 * var(--alias-space-3))), 1600px);
+    margin: var(--alias-space-3) auto;
+    padding: var(--alias-space-4);
+  }
+}
