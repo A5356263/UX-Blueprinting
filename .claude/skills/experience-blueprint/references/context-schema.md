@@ -7,7 +7,7 @@
 - `version`：固定为 `4.0`
 - `experience_blueprint.md` 是给人阅读的完整体验设计文档。
 - 本 JSON 是同一轮蓝图结论的结构化机器面，不是摘要、索引或第二次推理。
-- ASCII 页面图只保留在 Markdown `§6`；JSON 通过 `markdown_heading` 指向对应标题。
+- ASCII 页面图只保留在 Markdown `§7`；JSON 通过 `markdown_heading` 指向对应标题。
 - 禁止承担泳道图模型、坐标、关系边、覆盖清单或下游执行状态。
 
 ## 2. 完整结构
@@ -29,6 +29,34 @@
     "uxb_refs": [
       "spark-output/uxb_output.md",
       "spark-output/context/uxb.json"
+    ]
+  },
+  "information_architecture": {
+    "primary_navigation": [
+      {
+        "label": "示例导航项",
+        "route": "/example",
+        "icon_hint": "shield-check",
+        "access": "authenticated",
+        "children": []
+      }
+    ],
+    "site_tree": [
+      {
+        "label": "示例页面",
+        "route": "/example",
+        "access": "authenticated",
+        "surface_type": "page",
+        "children": [
+          {
+            "label": "示例抽屉",
+            "route": null,
+            "access": "authenticated",
+            "surface_type": "drawer",
+            "children": []
+          }
+        ]
+      }
     ]
   },
   "critical_design_judgments": [
@@ -147,6 +175,7 @@
 7. `source_refs[]` 只写 Markdown 头部明确列出的真实来源；未列出时写 `[]`。
 8. 写入前按章节建立当次核对清单；清单不落盘，不生成 ID 或映射文件。
 9. 写入后核对 Markdown 正式条目数与 JSON 对应对象数；数量不一致时只修正投影遗漏，不返回正文重新推理。
+10. `information_architecture` 从 Markdown §1 提取站点树和主导航；只做结构投影，不得添加 Markdown 未写出的节点或路由。
 
 ### 3.1 上游合同
 
@@ -179,16 +208,17 @@
 | Markdown | JSON | 承接要求 |
 |---|---|---|
 | `§0` | `critical_design_judgments[]` | 每条判断、影响、确定方案和禁止结果逐项保留 |
-| `§1` | `journey_consumption[]` | 每个消费项、来源阶段和蓝图落点逐项保留 |
-| `§2` | `interaction_overview[]` | 每条路径、动作步骤和显式分支逐项保留 |
-| `§3` | `main_flow[]` | 每个节点及其五类信息逐项保留 |
-| `§4` | `sub_flows[]` | 每个次流程及其显式信息逐项保留 |
-| `§5` | `exceptions[]` | 每个异常的发生、条件、依据、反馈、下一步和恢复逐项保留 |
-| `§6` | `surfaces.*[]` | 每个载体的全部非 ASCII 设计事实逐项保留；ASCII 本体留在 Markdown |
-| `§7` | `states[]`、`feedbacks[]` | 每行独立状态和反馈逐项保留 |
-| `§8` | `upstream_trace[]` | 上游承接追踪逐项保留；知识读取日志不重复写入 |
+| `§1` | `information_architecture` | 站点树和主导航从 Markdown §1 逐项投影；JSON 不得添加 Markdown 未写出的节点 |
+| `§2` | `journey_consumption[]` | 每个消费项、来源阶段和蓝图落点逐项保留 |
+| `§3` | `interaction_overview[]` | 每条路径、动作步骤和显式分支逐项保留 |
+| `§4` | `main_flow[]` | 每个节点及其五类信息逐项保留 |
+| `§5` | `sub_flows[]` | 每个次流程及其显式信息逐项保留 |
+| `§6` | `exceptions[]` | 每个异常的发生、条件、依据、反馈、下一步和恢复逐项保留 |
+| `§7` | `surfaces.*[]` | 每个载体的全部非 ASCII 设计事实逐项保留；ASCII 本体留在 Markdown |
+| `§8` | `states[]`、`feedbacks[]` | 每行独立状态和反馈逐项保留 |
+| `§9` | `upstream_trace[]` | 上游承接追踪逐项保留；知识读取日志不重复写入 |
 
-`§8` 中记录的设计决策必须已经落入 `§0-§7`；如果只存在于知识消费日志，Markdown 尚未收口，禁止进入 JSON 阶段。
+`§9` 中记录的设计决策必须已经落入 `§0-§8`；如果只存在于知识消费日志，Markdown 尚未收口，禁止进入 JSON 阶段。
 
 ## 5. 页面载体字段
 
@@ -211,6 +241,7 @@
 - ID 形式的 `applies_to`
 - ASCII 字符图及其转写布局树
 - `lanes`、`nodes`、`edges`、坐标、连线、`coverage_manifest`
+- `key_flows`、`page_table`
 - 下游消费状态或完成标记
 
 ## 7. 校验

@@ -6,6 +6,7 @@ const path = require("path");
 const ROOT_KEYS = [
   "skill", "version", "generated_at", "project_name", "artifact_md", "source_refs",
   "upstream_contract",
+  "information_architecture",
   "critical_design_judgments", "journey_consumption", "interaction_overview",
   "main_flow", "sub_flows", "exceptions", "surfaces", "states", "feedbacks",
   "upstream_trace",
@@ -137,6 +138,29 @@ function validate(data) {
          (!Array.isArray(data.upstream_contract.uxb_refs) ||
           data.upstream_contract.uxb_refs.length !== 0))) {
       errors.push("framing-mode 不得写入需求基线或 UXB 引用");
+    }
+  }
+
+  if (exact(data.information_architecture, ["primary_navigation", "site_tree"], "information_architecture", errors)) {
+    collection(
+      data.information_architecture.primary_navigation, "information_architecture.primary_navigation",
+      ["label", "route", "icon_hint", "access", "children"], errors,
+      (item, itemPath) => {
+        ["label", "route", "icon_hint", "access"].forEach((key) =>
+          string(item[key], `${itemPath}.${key}`, errors));
+        if (!Array.isArray(item.children)) errors.push(`${itemPath}.children 必须是数组`);
+      },
+    );
+    if (!Array.isArray(data.information_architecture.site_tree)) {
+      errors.push("information_architecture.site_tree 必须是数组");
+    } else {
+      data.information_architecture.site_tree.forEach((node, index) => {
+        const nodePath = `information_architecture.site_tree[${index}]`;
+        if (!exact(node, ["label", "route", "access", "surface_type", "children"], nodePath, errors)) return;
+        ["label", "access", "surface_type"].forEach((key) => string(node[key], `${nodePath}.${key}`, errors));
+        if (node.route !== null) string(node.route, `${nodePath}.route`, errors);
+        if (!Array.isArray(node.children)) errors.push(`${nodePath}.children 必须是数组`);
+      });
     }
   }
 
