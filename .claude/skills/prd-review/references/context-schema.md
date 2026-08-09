@@ -25,7 +25,8 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 11. `exceptions_and_business_results`
 12. `data_system_and_audit`
 13. `constraints_and_out_of_scope`
-14. `completion_criteria`
+14. `experience_decisions`
+15. `completion_criteria`
 
 不得增加 `recommendation`、`next_step`、`uxb`、`blueprint` 等流程推荐字段。
 
@@ -33,7 +34,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 
 ```json
 {
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "project_name": "项目名",
   "baseline_status": "formal",
   "source_trace": {
@@ -67,6 +68,10 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
     "explicitly_out_of_scope": [],
     "future_considerations": []
   },
+  "experience_decisions": {
+    "confirmed_constraints": [],
+    "pending_items": []
+  },
   "completion_criteria": []
 }
 ```
@@ -88,6 +93,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 - `prd`
 - `formal_knowledge`
 - `product_response`
+- `user_supplement`
 
 `source_trace` 中：
 
@@ -206,7 +212,52 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 }
 ```
 
-## 11. 完成标准
+## 11. 体验定案
+
+```json
+{
+  "confirmed_constraints": [{
+    "id": "EC-001",
+    "applicable_tasks": ["FN-001"],
+    "constraint": "选择确认后回到当前任务，并展示已选结果。",
+    "sources": [{
+      "type": "user_supplement",
+      "reference": "prd_review_questions.md",
+      "location": "你还需要补充什么吗？第 1 条"
+    }]
+  }],
+  "pending_items": [{
+    "id": "E-001",
+    "applicable_tasks": ["FN-001"],
+    "decision_topic": "任务入口的体验承载需要定案。",
+    "sources": [{
+      "type": "prd",
+      "reference": "prd.md",
+      "location": "功能说明"
+    }]
+  }]
+}
+```
+
+`confirmed_constraints` 对应 Markdown “体验定案 > 已确认体验约束”；`pending_items` 对应“体验定案 > 待定案事项”。
+
+每条已确认体验约束固定包含：
+
+- `id`：`EC-001` 格式。
+- `applicable_tasks`：需求基线中已有功能编号数组。
+- `constraint`：必须保留的体验关系。
+- `sources`：来源数组。`user_supplement` 只允许出现在该字段。
+
+每条待定案事项固定包含：
+
+- `id`：`E-001` 格式。
+- `applicable_tasks`：需求基线中已有功能编号数组。
+- `decision_topic`：需要完成的体验判断。
+- `sources`：来源数组，不使用 `user_supplement`。
+
+体验定案不增加业务事实。它不写候选方案、页面布局、视觉样式、未确认字段或具体文案。
+
+## 12. 完成标准
 
 ```json
 {
@@ -223,27 +274,29 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 
 不得增加新规则、新阈值、新范围或技术实现。
 
-## 12. 数组项规则
+## 13. 数组项规则
 
 - 事实列表使用字符串数组。
 - 字符串不能为空。
 - 对象数组按 Markdown 出现顺序投影。
 - `id` 在所属数组内唯一。
 - `related_ids` 只能引用基线中已有的稳定编号。
+- `experience_decisions` 的 `applicable_tasks` 只能引用基线中已有的 `FN-xxx` 编号。
 - Markdown 写“本期无”或“不适用”时，对应 JSON 数组使用空数组。
 - 不用 `null` 表示缺失事实。
 
-## 13. 投影规则
+## 14. 投影规则
 
 - Markdown 是正式语义源。
 - JSON 不复制问题单。
+- `experience_decisions` 只投影 Markdown `§10` 的分类结果，不复制问题单原始补充。
 - JSON 不包含 Handoff 建议。
 - JSON 不补充 Markdown 中没有的事实。
 - JSON 不进行二次业务推理。
 - JSON 与 Markdown 的事实顺序保持一致。
 - JSON 生成后，由 Agent 逐节对照 Markdown。
 
-## 14. 结构校验边界
+## 15. 结构校验边界
 
 脚本只校验 JSON 解析、字段存在、字段类型、格式和枚举，不判断业务语义。
 

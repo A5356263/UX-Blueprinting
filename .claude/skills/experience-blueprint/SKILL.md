@@ -48,7 +48,7 @@ PRD Review 主链固定按以下顺序读取：
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身角色和输入边界
 2. 完整读取 `spark-output/requirements_baseline.md`
-3. 读取 `spark-output/context/requirements-baseline.json`，只接受 `2.0`，核对结构化投影与 Markdown 是否一致
+3. 读取 `spark-output/context/requirements-baseline.json`，只接受 `2.1`，核对结构化投影与 Markdown 是否一致；完整读取 `experience_decisions`，核对每项与 Markdown `§10` 一致
 4. 检测到完整 UXB 正式产物时，完整读取 `spark-output/uxb_output.md`
 5. 读取 `spark-output/context/uxb.json`，只接受 `8.0`
 6. 读取 `spark-output/context/stories.json`；有效 `3.0` JSON 存在时作为用户故事正式机器输入
@@ -99,9 +99,12 @@ UXB JSON 读取：
 
 需求基线 JSON 读取：
 
-- 只接受 Requirements Baseline `2.0`。
+- 只接受 Requirements Baseline `2.1`。
 - JSON 用于结构定位，Markdown 仍是正式业务语义源。
 - 检测到旧合同或两者冲突时停止，不转换、不兼容。
+- 完整读取 Markdown `§10 体验定案` 与 JSON `experience_decisions`。`confirmed_constraints` 是必须承接的体验关系；`pending_items` 是本轮需要完成的体验判断。
+- 每条已确认体验约束按任务、角色和场景关联到对应流程、异常或承载对象。每条待定案事项使用命中的设计准则和交互模式完成定案。
+- `§10` 缺少任一分组时，按空数组处理；不读取问题单、原始 PRD、历史产物或聊天记录补回体验定案。
 
 其他上游 JSON 读取：
 
@@ -316,15 +319,13 @@ UXB JSON 读取：
 
 第四步补充，选择流程形态：
 
-使用 `Wizard + Steps` 前必须同时满足：
+当同一任务包含会改变后续内容的前序选择，或存在多个信息分组，需要判断它们是页面内联动还是独立阶段时，完整读取 `设计准则/设计准则.md` 的 `BFM-01 默认非步骤化` 与 `BFM-02 步骤条使用门禁`。
 
-1. 至少两个实质阶段。每个阶段包含多项必填信息或独立决策、复杂搜索筛选或多选、独立结果确认、阶段保存或阶段状态。
-2. 阶段之间存在强依赖、阶段校验、阶段提交，或不可逆、高风险确认。
-3. 分步能明显降低认知负荷，且用户不需要频繁跨阶段比较，返回修改不会丢失上下文和结果。
+先按 BFM-01 判断单页表单能否承载完整任务；再按 BFM-02 识别候选阶段并完成三重门禁判断。
 
-自动检查、只读说明、默认值展示、最终摘要和一次确认不算独立阶段。字段多、步骤名称多、低频或高风险不能单独支持 Steps。任一门禁不满足时，使用单页分组、局部任务窗口或连续操作。
+`Wizard + Steps` 只在三项同时成立时使用：存在至少两个候选阶段；后续阶段依赖前一阶段的独立结果；分步收益高于往返成本。
 
-选择任务只产生一组结果、返回主任务继续、不形成独立业务状态且无需阶段提交时，按结果回填型选择处理，不使用 Steps。
+候选阶段、阶段依赖和收益的完整定义，以 BFM-02 为准。
 
 第五步，分配正文落点：
 

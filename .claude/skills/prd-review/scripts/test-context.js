@@ -5,7 +5,7 @@ const { REQUIRED_FIELDS, validate } = require("./validate-context");
 
 function fixture() {
   return {
-    schema_version: "2.0",
+    schema_version: "2.1",
     project_name: "测试项目",
     baseline_status: "formal",
     source_trace: {
@@ -72,6 +72,20 @@ function fixture() {
       explicitly_out_of_scope: [],
       future_considerations: [],
     },
+    experience_decisions: {
+      confirmed_constraints: [{
+        id: "EC-001",
+        applicable_tasks: ["FN-001"],
+        constraint: "选择确认后回到当前任务，并展示已选结果。",
+        sources: [{ type: "user_supplement", reference: "prd_review_questions.md", location: "你还需要补充什么吗？第 1 条" }],
+      }],
+      pending_items: [{
+        id: "E-001",
+        applicable_tasks: ["FN-001"],
+        decision_topic: "任务入口的体验承载需要定案。",
+        sources: [{ type: "prd", reference: "prd.md", location: "功能说明" }],
+      }],
+    },
     completion_criteria: [{
       id: "AC-001",
       related_ids: ["FN-001", "ST-001"],
@@ -118,5 +132,29 @@ assert(validate(invalidExistingCarriers).some((item) => item.includes("existing_
 const semanticText = fixture();
 semanticText.goal_and_scope.goals = ["待确认是否支持撤销"];
 assert.deepStrictEqual(validate(semanticText), []);
+
+const emptyExperienceDecisions = fixture();
+emptyExperienceDecisions.experience_decisions = { confirmed_constraints: [], pending_items: [] };
+assert.deepStrictEqual(validate(emptyExperienceDecisions), []);
+
+const invalidExperienceId = fixture();
+invalidExperienceId.experience_decisions.confirmed_constraints[0].id = "EC-01";
+assert(validate(invalidExperienceId).some((item) => item.includes("EC-001 格式")));
+
+const missingExperienceField = fixture();
+delete missingExperienceField.experience_decisions.pending_items[0].decision_topic;
+assert(validate(missingExperienceField).some((item) => item.includes("decision_topic")));
+
+const invalidExperienceTask = fixture();
+invalidExperienceTask.experience_decisions.confirmed_constraints[0].applicable_tasks = ["FN-999"];
+assert(validate(invalidExperienceTask).some((item) => item.includes("applicable_tasks") && item.includes("FN 编号")));
+
+const invalidExperienceSource = fixture();
+invalidExperienceSource.experience_decisions.pending_items[0].sources[0].type = "user_supplement";
+assert(validate(invalidExperienceSource).some((item) => item.includes("不允许使用 user_supplement")));
+
+const invalidBusinessSource = fixture();
+invalidBusinessSource.business_objects[0].sources[0].type = "user_supplement";
+assert(validate(invalidBusinessSource).some((item) => item.includes("不是允许的来源类型")));
 
 console.log("PRD Review Context 结构测试通过。");

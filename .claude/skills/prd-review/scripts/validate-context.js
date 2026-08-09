@@ -16,11 +16,13 @@ const REQUIRED_FIELDS = [
   "exceptions_and_business_results",
   "data_system_and_audit",
   "constraints_and_out_of_scope",
+  "experience_decisions",
   "completion_criteria",
 ];
 
 const ROOT_FIELDS = new Set(REQUIRED_FIELDS);
 const SOURCE_TYPES = new Set(["prd", "formal_knowledge", "product_response"]);
+const EXPERIENCE_SOURCE_TYPES = new Set([...SOURCE_TYPES, "user_supplement"]);
 const CHANGE_TYPES = new Set(["keep", "add", "modify", "remove"]);
 
 function isObject(value) {
@@ -49,7 +51,7 @@ function checkStringArray(value, path, errors) {
   value.forEach((item, index) => checkString(item, `${path}[${index}]`, errors));
 }
 
-function checkSources(value, path, errors) {
+function checkSources(value, path, errors, allowedTypes = SOURCE_TYPES) {
   if (!Array.isArray(value)) {
     errors.push(`${path} 必须是数组`);
     return;
@@ -61,7 +63,7 @@ function checkSources(value, path, errors) {
       return;
     }
     checkString(source.type, `${itemPath}.type`, errors);
-    if (typeof source.type === "string" && !SOURCE_TYPES.has(source.type)) {
+    if (typeof source.type === "string" && !allowedTypes.has(source.type)) {
       errors.push(`${itemPath}.type 不是允许的来源类型`);
     }
     checkString(source.reference, `${itemPath}.reference`, errors);
@@ -104,6 +106,7 @@ function checkObjectArray(value, path, prefix, fields, errors) {
         errors.push(`${itemPath}.${field} 必须是布尔值`);
       }
       if (type === "sources") checkSources(item[field], `${itemPath}.${field}`, errors);
+      if (type === "experience-sources") checkSources(item[field], `${itemPath}.${field}`, errors, EXPERIENCE_SOURCE_TYPES);
     }
   });
 }
@@ -127,8 +130,8 @@ function validate(data) {
 
   if ("schema_version" in data) {
     checkString(data.schema_version, "schema_version", errors);
-    if (typeof data.schema_version === "string" && data.schema_version !== "2.0") {
-      errors.push("schema_version 只允许 2.0");
+    if (typeof data.schema_version === "string" && data.schema_version !== "2.1") {
+      errors.push("schema_version 只允许 2.1");
     }
   }
   if ("project_name" in data) checkString(data.project_name, "project_name", errors);
@@ -292,6 +295,32 @@ function validate(data) {
     }, errors);
   }
 
+  if ("experience_decisions" in data) {
+    checkObject(data.experience_decisions, "experience_decisions", errors);
+    if (isObject(data.experience_decisions)) {
+      checkObjectArray(data.experience_decisions.confirmed_constraints, "experience_decisions.confirmed_constraints", "EC", {
+        applicable_tasks: "array",
+        constraint: "string",
+        sources: "experience-sources",
+      }, errors);
+      checkObjectArray(data.experience_decisions.pending_items, "experience_decisions.pending_items", "E", {
+        applicable_tasks: "array",
+        decision_topic: "string",
+        sources: "sources",
+      }, errors);
+      if (Array.isArray(data.experience_decisions.pending_items)) {
+        data.experience_decisions.pending_items.forEach((item, index) => {
+          if (!isObject(item) || !Array.isArray(item.sources)) return;
+          item.sources.forEach((source, sourceIndex) => {
+            if (isObject(source) && source.type === "user_supplement") {
+              errors.push(`experience_decisions.pending_items[${index}].sources[${sourceIndex}].type 不允许使用 user_supplement`);
+            }
+          });
+        });
+      }
+    }
+  }
+
   const knownIds = new Set();
   for (const field of [
     "business_objects",
@@ -317,6 +346,24 @@ function validate(data) {
         }
       });
     });
+  }
+  if (isObject(data.experience_decisions)) {
+    const functionIds = new Set(
+      Array.isArray(data.functions_and_task_closure)
+        ? data.functions_and_task_closure.filter(isObject).map((item) => item.id)
+        : [],
+    );
+    for (const field of ["confirmed_constraints", "pending_items"]) {
+      if (!Array.isArray(data.experience_decisions[field])) continue;
+      data.experience_decisions[field].forEach((item, index) => {
+        if (!isObject(item) || !Array.isArray(item.applicable_tasks)) return;
+        item.applicable_tasks.forEach((id, refIndex) => {
+          if (typeof id === "string" && !functionIds.has(id)) {
+            errors.push(`experience_decisions.${field}[${index}].applicable_tasks[${refIndex}] 必须引用已有的 FN 编号`);
+          }
+        });
+      });
+    }
   }
 
   return errors;
