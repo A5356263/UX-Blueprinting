@@ -112,8 +112,7 @@
       "basis": "示例判断依据",
       "feedback_type": "InlineError",
       "system_feedback": "示例系统反馈",
-      "user_next_step": "示例用户下一步",
-      "recovery_path": "示例恢复路径"
+      "how_to_handle": "示例如何处理"
     }
   ],
   "surfaces": {
@@ -176,6 +175,7 @@
 8. 写入前按章节建立当次核对清单；清单不落盘，不生成 ID 或映射文件。
 9. 写入后核对 Markdown 正式条目数与 JSON 对应对象数；数量不一致时只修正投影遗漏，不返回正文重新推理。
 10. `information_architecture` 从 Markdown §1 提取站点树和主导航；只做结构投影，不得添加 Markdown 未写出的节点或路由。
+11. `journey_consumption[]` 的单项标题固定为“`{type}：{角色} · {阶段}`”：`type` 取冒号前文本，`source_stage` 取冒号后“角色 · 阶段”并仅将分隔符规范化为“角色 / 阶段”；`finding` 取“旅程信号”正文，`blueprint_target` 取“设计落点”中的显式条目。标题格式不完整时停止投影，不得推断补全。
 
 ### 3.1 上游合同
 
@@ -213,7 +213,7 @@
 | `§3` | `interaction_overview[]` | 每条路径、动作步骤和显式分支逐项保留 |
 | `§4` | `main_flow[]` | 每个节点及其五类信息逐项保留 |
 | `§5` | `sub_flows[]` | 每个次流程及其显式信息逐项保留 |
-| `§6` | `exceptions[]` | 每个异常的发生、条件、依据、反馈、下一步和恢复逐项保留 |
+| `§6` | `exceptions[]` | 每个异常的发生、条件、依据、反馈和如何处理逐项保留 |
 | `§7` | `surfaces.*[]` | 每个载体的全部非 ASCII 设计事实逐项保留；ASCII 本体留在 Markdown |
 | `§8` | `states[]`、`feedbacks[]` | 每行独立状态和反馈逐项保留 |
 | `§9` | `upstream_trace[]` | 上游承接追踪逐项保留；知识读取日志不重复写入 |

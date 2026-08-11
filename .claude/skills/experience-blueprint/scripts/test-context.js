@@ -68,8 +68,7 @@ function fixture() {
       basis: "必填校验未通过",
       feedback_type: "InlineError",
       system_feedback: "阻止提交",
-      user_next_step: "补充内容",
-      recovery_path: "补齐后重试，已填信息不丢失",
+      how_to_handle: "补充内容后重试，已填信息不丢失",
     }],
     surfaces: {
       pages: [{

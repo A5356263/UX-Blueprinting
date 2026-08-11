@@ -216,11 +216,11 @@ function validate(data) {
   collection(
     data.exceptions, "exceptions",
     ["name", "timing", "trigger_condition", "basis", "feedback_type", "system_feedback",
-      "user_next_step", "recovery_path"],
+      "how_to_handle"],
     errors,
     (item, itemPath) => {
       ["name", "timing", "trigger_condition", "basis", "feedback_type", "system_feedback",
-        "user_next_step", "recovery_path"].forEach((key) =>
+        "how_to_handle"].forEach((key) =>
         string(item[key], `${itemPath}.${key}`, errors));
     },
   );
