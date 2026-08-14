@@ -247,6 +247,10 @@
 <script>
 const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
   generated_at: "template",
+  main_chain: ["prd-review", "experience-blueprint", "page-spec"],
+  enhancements: [
+    { before: "experience-blueprint", skills: ["uxb", "stories", "journey-analysis"] }
+  ],
   sections: [
     {
       id: "explore",
@@ -255,8 +259,9 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Explore",
       note: "需求读取、问题诊断与方向收敛",
       skills: [
-        { id: "uxb", name_zh: "PRD需求分析", slash: "/uxb", status: "current", hint_dep: null, scene_hint: "有 PRD 时收敛正式需求" },
-        { id: "problem-framing", name_zh: "需求讨论", slash: "/problem-framing", status: "current", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
+        { id: "prd-review", name_zh: "需求审核与基线", slash: "/prd-review", status: "current", hint_dep: null, scene_hint: "审核 PRD 并冻结正式需求基线" },
+        { id: "uxb", name_zh: "体验定案", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：形成粗颗粒度体验方向与取舍" },
+        { id: "problem-framing", name_zh: "需求讨论", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
         { id: "product-analysis", name_zh: "需求方案发散", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
         { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
         { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" }
@@ -269,8 +274,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Task & Journey",
       note: "把需求拆成任务，再看用户一路怎么完成",
       skills: [
-        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "拆清用户要做哪些事、做到什么算完成", standalone_usable: true, standalone_note: "可独立使用；主链推荐先承接 uxb 或 problem-framing。" },
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "idle", hint_dep: "/uxb、/problem-framing 或 /stories", scene_hint: "看用户一路怎么走、哪里容易卡住", standalone_usable: true, standalone_note: "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。" }
+        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：补充用户任务拆解", standalone_usable: true },
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：补充旅程阶段、断点与风险", standalone_usable: true }
       ]
     },
     {
@@ -280,7 +285,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Design",
       note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
       skills: [
-        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/uxb 或 /problem-framing", scene_hint: "把需求变成正式体验方案" },
+        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/prd-review", scene_hint: "把正式需求基线展开为完整体验方案" },
         { id: "edge", name_zh: "穷举体验蓝图所有异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
         { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" }
       ]
@@ -352,7 +357,7 @@ function render() {
       } else if (skill.status === "current") {
         statusText = "\u73b0\u5728\u53ef\u4ee5\u505a";
       } else if (skill.status === "ready") {
-        statusText = "\u8be5\u73af\u8282\u53ef\u7528";
+        statusText = skill.is_enhancement ? "\u53ef\u9009\u589e\u5f3a" : "\u8be5\u73af\u8282\u53ef\u7528";
       } else if (skill.standalone_usable) {
         statusText = skill.hint_dep
           ? `\u53ef\u72ec\u7acb\u4f7f\u7528\uff0c\u4e3b\u94fe\u5efa\u8bae\u5148\u505a ${skill.hint_dep}`

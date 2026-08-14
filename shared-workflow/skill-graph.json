@@ -1,7 +1,36 @@
 {
-  "version": "1.1.2",
-  "_comment": "本文档只作为 Skill 静态关系图、进度预览和人工查看的数据源；不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。字段 id、name_zh、phase、reads、required、next_hint、standalone_usable、standalone_note 只用于关系展示、进度预览和人工参考；不用于低算力模式下的运行时路由。",
+  "version": "1.2.0",
+  "_comment": "本文档只作为 Skill 静态关系图、进度预览和人工查看的数据源；不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。main_chain、enhancements、reads、required、next_hint 及其他字段只用于静态展示、进度预览和人工参考。",
+  "main_chain": [
+    "prd-review",
+    "experience-blueprint",
+    "page-spec"
+  ],
+  "enhancements": [
+    {
+      "before": "experience-blueprint",
+      "skills": [
+        "uxb",
+        "stories",
+        "journey-analysis"
+      ]
+    }
+  ],
   "skills": [
+    {
+      "id": "prd-review",
+      "name_zh": "需求审核与基线",
+      "phase": 1,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "experience-blueprint"
+        ],
+        "reason": "正式需求基线完成后，进入体验蓝图生成完整交互流程和页面方案；UXB、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
+        "alternatives": []
+      }
+    },
     {
       "id": "uxb",
       "_comment": "需求定案 Markdown 与 Context JSON 完成并冻结后，UXB 再产出轻量的 page-generation-handoff.md；该后置步骤不参与核心推理，也不改变 UXB 的固定下一步推荐。",
@@ -67,7 +96,7 @@
       "name_zh": "用户旅程",
       "phase": 2,
       "standalone_usable": true,
-      "standalone_note": "可独立使用；主链可承接 stories 或第一阶梯正式上游，UXB 完成后固定推荐优先进入旅程分析。",
+      "standalone_note": "可独立使用；在 PRD 主链中作为 Experience Blueprint 前的可选旅程增强。",
       "anchor": false,
       "reads": [
         "stories",
@@ -87,8 +116,9 @@
       "id": "experience-blueprint",
       "name_zh": "体验蓝图",
       "phase": 3,
-      "_comment": "多上游承接规则写在 SKILL.md 内：正式来源至少需要 uxb 或 problem-framing，stories / journey-analysis 作为深化输入。这里不使用或条件 required，避免图谱硬编码导致独立调用卡壳。",
+      "_comment": "PRD 主链承接 prd-review；uxb、stories、journey-analysis 是蓝图前可选增强，problem-framing 保留独立入口。真实输入门禁仍由本 Skill 的 SKILL.md 决定。",
       "reads": [
+        "prd-review",
         "uxb",
         "problem-framing",
         "stories",
@@ -131,7 +161,6 @@
       "phase": 2.5,
       "reads": [
         "experience-blueprint",
-        "uxb",
         "edge"
       ],
       "required": [

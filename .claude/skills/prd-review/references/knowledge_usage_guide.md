@@ -4,9 +4,11 @@
 
 ## 1. 正式知识来源和权威边界
 
+从 `knowledge-wiki` Skill 读取正式知识；本文知识路径均相对该 Skill 根目录解析。只消费知识资源，不触发该 Skill 的知识问答、入库或维护流程。
+
 正式消费根目录：
 
-- 当前 Skill 同级的 `knowledge-wiki/knowledge/`
+- `knowledge-wiki` Skill 内的 `knowledge/`
 
 各类内容的作用：
 

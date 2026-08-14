@@ -1,15 +1,15 @@
 # Knowledge Wiki Overview
 
-- updated_at: 2026-08-02
+- updated_at: 2026-08-13
 
 ## 当前概况
 
-- raw_total: 84
+- raw_total: 86
 - domain_readme_total: 21
-- gap_count: 123
+- gap_count: 119
 - conflict_count: 9
 - question_marker_count: 48
-- questions_total: 176
+- questions_total: 172
 
 ## 路由健康
 
@@ -27,8 +27,8 @@
 
 ## 最近更新的 Raw
 
-- raw/业务/组织架构/任务与路径.md
-- raw/业务/人事服务/组织管理/业务对象与术语.md
-- raw/业务/人事服务/组织管理/规则与权限.md
-- raw/业务/协同办公/智能报表/规则与权限.md
-- raw/业务/协同办公/智能报表/页面与字段.md
+- raw/业务/应用管理/页面与字段.md
+- raw/业务/权限管理/页面与字段.md
+- raw/业务/应用管理/README.md
+- raw/业务/费用管理/README.md
+- raw/业务/费用管理/页面与字段.md

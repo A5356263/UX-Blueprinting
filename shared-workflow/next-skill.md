@@ -31,21 +31,27 @@
 - 若存在 `spark-output/solution-swimlane/solution_swimlane.html`，则 `done` 包含 `"solution-swimlane"`
 - 首次运行时，`done` 为空集合
 
-### 1.2 ready 判定
+### 1.2 主链当前节点
 
-对 `skill-graph.json` 中的每个 Skill，判断是否可启动：
+整体预览只按 `skill-graph.json` 的 `main_chain` 计算当前主链节点：
 
 ```text
-条件 1：该 Skill 不在 done 集合中（不重复执行）
-条件 2：该 Skill 的 required 数组中的每一项都在 done 集合中
+prd-review
+→ experience-blueprint
+→ page-spec
 ```
 
-两个条件同时满足，则该 Skill `ready`。
+按顺序找到第一个未完成节点，标记为当前主链节点。
 
-特殊情况：
+`enhancements` 只登记进入目标 Skill 前可选执行的增强项：
 
-- `required` 为空数组（如 `uxb`）：条件 2 自动满足，任何时候都就绪。
-- `required` 有多项：所有项都必须完成。
+- UXB
+- Stories
+- Journey Analysis
+
+三项增强均面向 Experience Blueprint。增强未完成不得改变当前主链节点，也不得阻止 Experience Blueprint 成为下一阶段。
+
+其他节点的 `required` 只用于静态可用状态和依赖提示，不参与 PRD 主链当前节点计算。
 
 ### 1.3 语义说明
 
@@ -75,28 +81,29 @@
 - 若调用来源是 `uxb` 执行中途的纠偏分支，则完成后回到当前 `uxb` 上下文继续定案，而不是开启一个新的主链分支
 - shared-workflow 只负责声明“回到 uxb”，具体是外部承接还是内部回流，由 `product-analysis` 和 `uxb` 各自的 `SKILL.md` 负责执行
 
-### 1.5 多上游主链说明
+### 1.5 主链与增强关系
 
-当前主链允许两个第一梯队正式来源：
+有正式 PRD 的主链固定为：
 
 ```text
-uxb -> journey-analysis / stories / experience-blueprint
-problem-framing -> stories / journey-analysis
-stories -> journey-analysis / experience-blueprint
-journey-analysis -> experience-blueprint
-experience-blueprint -> solution-swimlane / page-spec / edge / board / journey-metrics
-product-analysis -> uxb
-interface-audit -> uxb / journey-analysis / product-analysis
+prd-review -> experience-blueprint -> page-spec
 ```
 
-`uxb` 负责有 PRD 或明确需求材料时的需求定案；`problem-framing` 负责无 PRD、白纸或问题未定清时的问题框定。两者都是第一梯队来源，但不互相替代。
+Experience Blueprint 前可选增加：
 
-`stories` 和 `journey-analysis` 属于第二梯队深化：
+```text
+uxb / stories / journey-analysis -> experience-blueprint
+```
 
-- `stories` 把第一梯队结论转成用户故事、任务单元和验收口径
-- `journey-analysis` 把上游输入收拢为阶段、触点、断点和旅程结构
-- 二者职责不同，可按项目需要插入或独立调用；`uxb` 完成后固定推荐优先进入 `journey-analysis`，`problem-framing` 完成后固定推荐优先进入 `stories`
-- 二者是增强型输入，不是进入 `experience-blueprint` 的必经项
+静态关系说明：
+
+- PRD Review 提供正式需求基线。
+- UXB 提供粗颗粒度体验方向与取舍。
+- Stories 补充用户任务拆解。
+- Journey Analysis 补充旅程阶段、断点与风险。
+- 三项增强均不是进入 Experience Blueprint 的必经项。
+- 增强完成后，由 Experience Blueprint 按自身输入规则读取；`shared-workflow` 不执行交接。
+- Problem Framing 继续作为无正式 PRD 时的独立入口，其真实下游以自身 `SKILL.md` 为准。
 
 当前终点节点：
 
@@ -110,18 +117,9 @@ interface-audit -> uxb / journey-analysis / product-analysis
 
 硬规则：
 
-- `experience-blueprint` 需要至少一个第一梯队正式来源：`uxb` 或 `problem-framing`
-- `stories`、`journey-analysis` 的 standalone 结果不能替代第一梯队正式来源
-- 不得因为缺少 `stories` 或 `journey-analysis` 阻止推荐 `experience-blueprint`
-- shared-workflow 只做推荐与提示，不拦截用户强制调用；降级、补问和跳转由各 Skill 的 `SKILL.md` 执行
-
-### 1.5A journey-analysis 固定下一步
-
-`journey-analysis` 完成后的固定下一步只有 `experience-blueprint`。
-
-- 不根据第一阶梯来源、Stories 或当前产物状态改变候选项。
-- `experience-blueprint` 能否正式执行，由它自己的 Step 0 上游读取、模式判断与降级规则处理。
-- Handoff 只负责推荐，不负责替目标 Skill 完成运行条件判断。
+- 不得因为缺少 UXB、Stories 或 Journey Analysis 阻止预览进入 Experience Blueprint。
+- `main_chain` 与 `enhancements` 只服务关系展示和进度预览。
+- `shared-workflow` 不选择、调用、阻断或切换 Skill；入口、降级、补问和跳转由各 Skill 的 `SKILL.md` 执行。
 
 ### 1.6 推荐项产物状态提示
 
@@ -163,12 +161,13 @@ interface-audit -> uxb / journey-analysis / product-analysis
 ```text
 SKILL.md 固定推荐项集合
 =
-skill-graph.json 中 next_hint.preferred + next_hint.alternatives
+skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 ```
 
 - “停在这里”是交互选项，不写入关系图。
 - 终点 Skill 的两个数组都为空，Handoff 不推荐其他 Skill。
 - 允许消费某产物不等于固定推荐；只有 Handoff 中出现的 Skill 才登记为下一步。
+- `enhancements` 单独同步主链节点展示的可选增强，不并入普通推荐项或替代项。
 
 ### 2.3 特殊节点
 
@@ -197,6 +196,8 @@ skill-graph.json 中 next_hint.preferred + next_hint.alternatives
 修改任一 Skill 的固定 Handoff 后，必须同时核对：
 
 1. `skill-graph.json` 的静态候选集合是否一致。
-2. 本文件的静态关系说明是否仍然成立。
-3. 进度预览是否能正常生成。
-4. 是否残留动态路由、旧交接示例或基于产物内容的候选判断。
+2. `main_chain` 是否与主推荐一致。
+3. `enhancements` 是否与可选增强一致，且没有误入主链。
+4. 本文件的静态关系说明是否仍然成立。
+5. 进度预览是否能正常生成。
+6. 是否残留动态路由、旧交接示例或基于产物内容的候选判断。

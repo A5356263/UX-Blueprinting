@@ -10,6 +10,7 @@ const DEFAULTS = {
 };
 
 const slashAlias = {
+  "prd-review": "/prd-review",
   "uxb": "/uxb",
   "problem-framing": "/problem-framing",
   "stories": "/stories",
@@ -29,6 +30,7 @@ const slashAlias = {
 };
 
 const contextPathBySkill = {
+  "prd-review": "spark-output/context/requirements-baseline.json",
   "uxb": "spark-output/context/uxb.json",
   "problem-framing": "spark-output/context/problem-framing.json",
   "stories": "spark-output/context/stories.json",
@@ -48,6 +50,7 @@ const contextPathBySkill = {
 };
 
 const sectionBySkill = {
+  "prd-review": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
   "product-analysis": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
   "interface-audit": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
   "design-strategy": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
@@ -119,21 +122,19 @@ function main() {
   const nameMap = {};
   const doneMap = {};
   const sectionsMap = new Map();
-  const mainChainSkills = [];
+  const enhancementMap = new Map();
+  const mainChainSet = new Set(graph.main_chain || []);
+
+  for (const group of graph.enhancements || []) {
+    for (const skillId of group.skills || []) {
+      enhancementMap.set(skillId, group.before);
+    }
+  }
 
   graph.skills.forEach((skill, index) => {
     nameMap[skill.id] = slashAlias[skill.id] || `/${skill.id}`;
     const contextPath = contextPathBySkill[skill.id];
     doneMap[skill.id] = Boolean(contextPath && existsFromRoot(contextPath));
-
-    if (skill.type !== "infrastructure" && skill.phase !== null && skill.phase !== undefined) {
-      mainChainSkills.push({
-        id: skill.id,
-        phase: Number(skill.phase),
-        required: skill.required || [],
-        order: index
-      });
-    }
 
     const sectionMeta = sectionBySkill[skill.id] || section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3);
     if (!sectionsMap.has(sectionMeta.id)) {
@@ -142,10 +143,7 @@ function main() {
     sectionsMap.get(sectionMeta.id).skills.push(skill);
   });
 
-  const currentSkill = mainChainSkills
-    .sort((a, b) => a.phase - b.phase || a.order - b.order)
-    .find((skill) => !doneMap[skill.id] && isReady(skill, doneMap));
-  const currentSkillId = currentSkill ? currentSkill.id : null;
+  const currentSkillId = (graph.main_chain || []).find((skillId) => !doneMap[skillId]) || null;
 
   const sections = Array.from(sectionsMap.values())
     .sort((a, b) => a.order - b.order)
@@ -159,6 +157,7 @@ function main() {
         let status = "idle";
         if (doneMap[skill.id]) status = "done";
         else if (currentSkillId === skill.id) status = "current";
+        else if (mainChainSet.has(skill.id)) status = "idle";
         else if (isReady(skill, doneMap)) status = "ready";
 
         return {
@@ -167,6 +166,8 @@ function main() {
           slash: nameMap[skill.id],
           status,
           hint_dep: previewHint(skill.required || [], doneMap, nameMap),
+          is_enhancement: enhancementMap.has(skill.id),
+          enhances_before: enhancementMap.get(skill.id) || null,
           standalone_usable: Boolean(skill.standalone_usable),
           standalone_note: skill.standalone_note || null
         };
@@ -175,6 +176,8 @@ function main() {
 
   const state = {
     generated_at: formatNow(new Date()),
+    main_chain: graph.main_chain || [],
+    enhancements: graph.enhancements || [],
     sections
   };
 

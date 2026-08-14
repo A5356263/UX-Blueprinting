@@ -90,7 +90,7 @@ description: >
 - Agent 推理只能发现问题，不能成为需求事实。
 - 零阻断时直接生成需求基线。
 - 存在阻断时输出问题单并严格停止。
-- 推荐 UXB 或体验蓝图只是 Handoff 建议，不写入需求基线。
+- Experience Blueprint 推荐和可选增强只属于 Handoff，不写入需求基线。
 - 需求语义判断只由 Agent 完成，脚本只校验 JSON 结构。
 
 ## 触发边界
@@ -316,34 +316,36 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或体验蓝图。
 
+**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+
 ## Handoff · 下一步建议
 
-需求基线完成后，始终展示两个主链入口：
+需求基线完成后，固定推荐 Experience Blueprint。UXB、Stories 和 Journey Analysis 只作为蓝图前的可选增强。
 
-- UXB。
-- Experience Blueprint。
-
-UXB 只能标记为“推荐”或“可选”。
-
-Experience Blueprint 始终展示，不使用推荐标签。
-
-按 `references/output_structure_guide.md` 的 Handoff 规则判断，并使用 `references/review_calibration_guide.md` 校准需求大小与体验取舍不一致的反例。
-
-推荐理由只写一句。
-
-设计师可以选择非推荐项，不需要说明原因。
-
-固定展示：
+按 `references/output_structure_guide.md` 的 Handoff 格式输出：
 
 ```text
-可选增强：Stories｜Journey Analysis
+下一步：
+
+1. Experience Blueprint（推荐）
+   将正式需求基线展开为完整的交互流程和页面方案。
+
+可选增强：
+
+- UXB：形成粗颗粒度的体验方向与取舍
+- Stories：补充用户任务拆解
+- Journey Analysis：补充旅程阶段、断点与风险
+
+以上增强产物最终仍由 Experience Blueprint 承接。
+
+你回复对应名称即可。
 ```
 
 下一步建议和可选增强不得写入需求基线及其 Context JSON。
 
 展示后严格停止。
 
-用户未明确选择时，不得自动执行 UXB 或 Experience Blueprint。
+用户未明确选择时，不得自动执行任何下游或增强 Skill。
 
 不得根据会话上下文代替用户选择。
 

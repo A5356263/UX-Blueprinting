@@ -845,65 +845,32 @@ PRD Review 只把已确认业务事实改写为可观察结果。
 
 只有正式需求基线生成后，才给出下一步建议。
 
-主链始终展示：
-
-- `UXB`
-- `Experience Blueprint`
-
-UXB 只能标记为“推荐”或“可选”。
-
-Experience Blueprint 始终展示，不使用推荐标签。
+Experience Blueprint 是唯一推荐主链。UXB、Stories 和 Journey Analysis 固定列为蓝图前的可选增强。
 
 Handoff 建议不写入问题单、需求基线或 Context JSON。
 
-### 10.2 推荐结论来源
-
-UXB 标记为“推荐”或“可选”的判断只按 `SKILL.md` 的“Handoff · 下一步建议”执行。本文件不定义推荐信号、辅助信号或不确定时的处理规则。
-
-### 10.6 用户可见格式
-
-推荐 UXB：
+### 10.2 用户可见格式
 
 ```text
 下一步：
 
-1. UXB（推荐）
-   需要先确定关键节点的信息顺序、状态反馈和体验取舍。
+1. Experience Blueprint（推荐）
+   将正式需求基线展开为完整的交互流程和页面方案。
 
-2. Experience Blueprint
-   直接进入具体交互方案。
-
-请回复要进入的阶段。
-```
-
-UXB 可选：
-
-```text
-下一步：
-
-1. UXB（可选）
-   可选体验定案。
-
-2. Experience Blueprint
-   生成确定的具体交互方案。
-
-请回复要进入的阶段。
-```
-
-理由只写一句。完整判断依据只供 Agent 内部消费。
-
-两个主链入口之后固定增加：
-
-```text
 可选增强：
 
-- Stories
-- Journey Analysis
+- UXB：形成粗颗粒度的体验方向与取舍
+- Stories：补充用户任务拆解
+- Journey Analysis：补充旅程阶段、断点与风险
+
+以上增强产物最终仍由 Experience Blueprint 承接。
+
+你回复对应名称即可。
 ```
 
-不判断增强能力是否适用，不规定调用顺序。
+主推荐和增强说明使用短句，不补充需求级动态判断。增强能力由用户选择，不规定调用顺序，不自动执行。
 
-### 10.7 人工决定
+### 10.3 人工决定
 
 展示后的停止与人工选择规则只按 `SKILL.md` 的“Handoff · 下一步建议”执行。本文件不得根据用户可见格式自动触发下游。
 

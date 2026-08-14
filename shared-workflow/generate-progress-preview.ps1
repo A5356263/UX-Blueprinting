@@ -10,6 +10,7 @@ function Get-SlashAlias {
   param([string]$SkillId)
 
   $aliasMap = @{
+    "prd-review" = "/prd-review"
     "uxb" = "/uxb"
     "problem-framing" = "/problem-framing"
     "stories" = "/stories"
@@ -38,6 +39,7 @@ function Get-ContextPath {
   param([string]$SkillId)
 
   $contextMap = @{
+    "prd-review" = "spark-output/context/requirements-baseline.json"
     "uxb" = "spark-output/context/uxb.json"
     "problem-framing" = "spark-output/context/problem-framing.json"
     "stories" = "spark-output/context/stories.json"
@@ -66,6 +68,14 @@ function Get-SectionMeta {
   param([pscustomobject]$Skill)
 
   $sectionBySkillId = @{
+    "prd-review" = [pscustomobject]@{
+      id = "explore"
+      number = "01"
+      name_zh = "探索"
+      name_en = "Explore"
+      note = "需求读取、问题诊断与方向收敛"
+      order = 1
+    }
     "product-analysis" = [pscustomobject]@{
       id = "explore"
       number = "01"
@@ -246,28 +256,28 @@ try {
 
   $nameMap = @{}
   $doneMap = @{}
-  $skillOrder = @{}
-  $mainChainSkills = New-Object System.Collections.Generic.List[object]
+  $enhancementMap = @{}
+  $mainChainMap = @{}
   $sectionsMap = @{}
+
+  foreach ($skillId in @($graph.main_chain)) {
+    $mainChainMap[$skillId] = $true
+  }
+
+  foreach ($group in @($graph.enhancements)) {
+    foreach ($skillId in @($group.skills)) {
+      $enhancementMap[$skillId] = $group.before
+    }
+  }
 
   for ($i = 0; $i -lt $graph.skills.Count; $i++) {
     $skill = $graph.skills[$i]
-    $skillOrder[$skill.id] = $i
     $nameMap[$skill.id] = Get-SlashAlias -SkillId $skill.id
 
     $contextPath = Get-ContextPath -SkillId $skill.id
     $doneMap[$skill.id] = $false
     if ($contextPath) {
       $doneMap[$skill.id] = Test-Path $contextPath
-    }
-
-    if ($skill.type -ne "infrastructure" -and $null -ne $skill.phase) {
-      $mainChainSkills.Add([pscustomobject]@{
-        id = $skill.id
-        phase = [double]$skill.phase
-        required = @($skill.required)
-        order = $i
-      })
     }
 
     $sectionMeta = Get-SectionMeta -Skill $skill
@@ -286,23 +296,10 @@ try {
     $sectionsMap[$sectionMeta.id].skills.Add($skill)
   }
 
-  $sortedMainChain = $mainChainSkills | Sort-Object phase, order
   $currentSkillId = $null
-  foreach ($skill in $sortedMainChain) {
-    if ($doneMap[$skill.id]) {
-      continue
-    }
-
-    $ready = $true
-    foreach ($dep in @($skill.required)) {
-      if (-not $doneMap.ContainsKey($dep) -or -not $doneMap[$dep]) {
-        $ready = $false
-        break
-      }
-    }
-
-    if ($ready) {
-      $currentSkillId = $skill.id
+  foreach ($skillId in @($graph.main_chain)) {
+    if (-not $doneMap[$skillId]) {
+      $currentSkillId = $skillId
       break
     }
   }
@@ -317,6 +314,8 @@ try {
         $status = "done"
       } elseif ($currentSkillId -and $skill.id -eq $currentSkillId) {
         $status = "current"
+      } elseif ($mainChainMap.ContainsKey($skill.id)) {
+        $status = "idle"
       } elseif (Test-SkillReady -Skill $skill -DoneMap $doneMap) {
         $status = "ready"
       }
@@ -327,6 +326,8 @@ try {
         slash = $nameMap[$skill.id]
         status = $status
         hint_dep = Get-PreviewHint -DependsOn @($skill.required) -DoneMap $doneMap -NameMap $nameMap
+        is_enhancement = $enhancementMap.ContainsKey($skill.id)
+        enhances_before = $(if ($enhancementMap.ContainsKey($skill.id)) { $enhancementMap[$skill.id] } else { $null })
         standalone_usable = [bool]$skill.standalone_usable
         standalone_note = $skill.standalone_note
       }
@@ -344,6 +345,8 @@ try {
 
   $state = [pscustomobject]@{
     generated_at = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    main_chain = @($graph.main_chain)
+    enhancements = @($graph.enhancements)
     sections = $sectionStates
   }
 

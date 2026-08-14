@@ -1,6 +1,6 @@
 # Knowledge Wiki Questions
 
-- updated_at: 2026-08-02
+- updated_at: 2026-08-13
 
 ## 显式未决项
 
@@ -1015,223 +1015,195 @@
 ### Q-0145
 
 - question_id: Q-0145
-- source_path: knowledge/raw/业务/权限管理/页面与字段.md
-- question_type: GAP
-- text: 本文件中所有”通用权限管理 ->”菜单路径，其菜单名称和层级关系尚未经产品侧核实是否与当前管理后台实际菜单结构一致。平台组织底座重构后，”组织”已拆分为”组织管理”和”成员管理”两个独立一级菜单，但”通用权限管理”作为权限域专属菜单是否同步调整了名称或层级，当前没有确认来源。后续获取确认后需逐条修正。
-
-### Q-0146
-
-- question_id: Q-0146
-- source_path: knowledge/raw/业务/权限管理/页面与字段.md
-- question_type: GAP
-- text: 权限查询中的按角色查、按权限查、按功能点查的现状承载尚未核实
-
-### Q-0147
-
-- question_id: Q-0147
-- source_path: knowledge/raw/业务/权限管理/页面与字段.md
-- question_type: GAP
-- text: 部分治理弹窗和配置页的下游跳转未在现有页面事实中给出
-
-### Q-0148
-
-- question_id: Q-0148
-- source_path: knowledge/raw/业务/权限管理/页面与字段.md
-- question_type: GAP
-- text: 权限明细视图的独立页面语义尚未在现有材料中展开
-
-### Q-0149
-
-- question_id: Q-0149
 - source_path: knowledge/raw/业务/组织架构/README.md
 - question_type: QUESTION
 - text: 平台组织底座中新旧能力的迁移是否已全部完成，遗留映射是否已完全清晰
 
-### Q-0150
+### Q-0146
 
-- question_id: Q-0150
+- question_id: Q-0146
 - source_path: knowledge/raw/业务/组织架构/README.md
 - question_type: QUESTION
 - text: 组织范围生成的规则是否已完全稳定，与权限域的消费接口是否已明确
 
-### Q-0151
+### Q-0147
 
-- question_id: Q-0151
+- question_id: Q-0147
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未明确给出成本中心的默认职能归属与默认视图归属
 
-### Q-0152
+### Q-0148
 
-- question_id: Q-0152
+- question_id: Q-0148
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未明确平台默认视图与业务自定义视图在数据结构上的完整字段差异
 
-### Q-0153
+### Q-0149
 
-- question_id: Q-0153
+- question_id: Q-0149
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未展开成员挂载关系的字段结构、唯一性约束和变更规则
 
-### Q-0154
+### Q-0150
 
-- question_id: Q-0154
+- question_id: Q-0150
 - source_path: knowledge/raw/业务/组织架构/任务与路径.md
 - question_type: GAP
 - text: 当前资料未完整展开初始化过程中生成的全部默认对象和字段
 
-### Q-0155
+### Q-0151
 
-- question_id: Q-0155
+- question_id: Q-0151
 - source_path: knowledge/raw/业务/组织架构/任务与路径.md
 - question_type: GAP
 - text: 当前资料未完整展开所有状态流转前置条件、失败条件和回滚规则
 
-### Q-0156
+### Q-0152
 
-- question_id: Q-0156
+- question_id: Q-0152
 - source_path: knowledge/raw/业务/账户与企业生命周期/README.md
 - question_type: GAP
 - text: 企业注销的具体流程和前置条件待进一步明确
 
-### Q-0157
+### Q-0153
 
-- question_id: Q-0157
+- question_id: Q-0153
 - source_path: knowledge/raw/业务/账户与企业生命周期/README.md
 - question_type: QUESTION
 - text: 账号安全策略与安全管理域的安全设置之间的关系是否已完全清晰，需持续校验
+
+### Q-0154
+
+- question_id: Q-0154
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 操作指引（200+ 篇）、FAQ（97 条）、产品动态（27 篇）、员工操作手册（12 篇）均待采集
+
+### Q-0155
+
+- question_id: Q-0155
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 日常报销仍有管理员操作指引、员工操作指引和常见问题待采集
+
+### Q-0156
+
+- question_id: Q-0156
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 差旅服务仍有管理员操作指引、员工操作指引、常见问题和产品动态待采集
+
+### Q-0157
+
+- question_id: Q-0157
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 企业支付仍有管理员操作指引、员工操作指引和常见问题待采集
 
 ### Q-0158
 
 - question_id: Q-0158
 - source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: GAP
-- text: 操作指引（200+ 篇）、FAQ（97 条）、产品动态（27 篇）、员工操作手册（12 篇）均待采集
+- text: 通用配置仍有操作指引和常见问题正文待采集
 
 ### Q-0159
 
 - question_id: Q-0159
 - source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 日常报销仍有管理员操作指引、员工操作指引和常见问题待采集
+- question_type: QUESTION
+- text: 费用政策、预算方案是否统一配置入口，需结合各业务主题持续校验
 
 ### Q-0160
 
 - question_id: Q-0160
 - source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 差旅服务仍有管理员操作指引、员工操作指引、常见问题和产品动态待采集
+- question_type: QUESTION
+- text: 企业支付四种付款业务场景的边界条件仍需持续校验
 
 ### Q-0161
 
 - question_id: Q-0161
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 企业支付仍有管理员操作指引、员工操作指引和常见问题待采集
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 在正式口径确认前，不得用任一时效回答全部订单同步问题。
 
 ### Q-0162
 
 - question_id: Q-0162
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 通用配置仍有操作指引和常见问题正文待采集
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: `功能与操作清单.md / 差旅服务 / 里程补贴`记录多重里程补贴可按不同车型配置；`问答与差异.md` 的“能否根据不同车型设置不同的自驾里程补助”记录不支持。两者不能合并，等待正式来源确认。
 
 ### Q-0163
 
 - question_id: Q-0163
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: QUESTION
-- text: 费用政策、预算方案是否统一配置入口，需结合各业务主题持续校验
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 多条问答记录关联申请组件可配置为多选申请单；“关联申请单时可以设置关联多个申请单吗”又记录该组件只能选择一张单据。两者不能合并，等待正式来源确认。
 
 ### Q-0164
 
 - question_id: Q-0164
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: QUESTION
-- text: 企业支付四种付款业务场景的边界条件仍需持续校验
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: `规则与权限.md / 发票采集与查验`记录境外票据可按“其他票据”采集；“国外机票是否可以在薪福通中提单报销”记录国外机票不支持提单报销。票据采集与机票费用提单的对象边界未明确，不能互相扩展。
 
 ### Q-0165
 
 - question_id: Q-0165
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: 在正式口径确认前，不得用任一时效回答全部订单同步问题。
+- text: “费控的行程组件是否可以添加自定义字段”记录支持一个自定义档案字段；“行程组件可以自定义字段吗”记录出差申请行程组件不支持自定义字段。适用单据范围未明确，等待正式来源确认。
 
 ### Q-0166
 
 - question_id: Q-0166
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: `功能与操作清单.md / 差旅服务 / 里程补贴`记录多重里程补贴可按不同车型配置；`问答与差异.md` 的“能否根据不同车型设置不同的自驾里程补助”记录不支持。两者不能合并，等待正式来源确认。
+- text: “为什么在单据台账中看不到已关闭的单据”记录单据台账不支持已关闭状态；“如何查找已关闭的出差申请单”记录管理员可在单据台账查看。两者直接冲突，等待正式来源确认。
 
 ### Q-0167
 
 - question_id: Q-0167
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: 多条问答记录关联申请组件可配置为多选申请单；“关联申请单时可以设置关联多个申请单吗”又记录该组件只能选择一张单据。两者不能合并，等待正式来源确认。
+- text: “差旅预定现付模式是否支持对公户支付”记录不支持；“第三方平台现付是否支持公司账户支付”记录由平台决定且通常允许。两者不能合并，等待平台与产品正式口径确认。
 
 ### Q-0168
 
 - question_id: Q-0168
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: `规则与权限.md / 发票采集与查验`记录境外票据可按“其他票据”采集；“国外机票是否可以在薪福通中提单报销”记录国外机票不支持提单报销。票据采集与机票费用提单的对象边界未明确，不能互相扩展。
+- question_type: QUESTION
+- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
 
 ### Q-0169
 
 - question_id: Q-0169
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “费控的行程组件是否可以添加自定义字段”记录支持一个自定义档案字段；“行程组件可以自定义字段吗”记录出差申请行程组件不支持自定义字段。适用单据范围未明确，等待正式来源确认。
-
-### Q-0170
-
-- question_id: Q-0170
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “为什么在单据台账中看不到已关闭的单据”记录单据台账不支持已关闭状态；“如何查找已关闭的出差申请单”记录管理员可在单据台账查看。两者直接冲突，等待正式来源确认。
-
-### Q-0171
-
-- question_id: Q-0171
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “差旅预定现付模式是否支持对公户支付”记录不支持；“第三方平台现付是否支持公司账户支付”记录由平台决定且通常允许。两者不能合并，等待平台与产品正式口径确认。
-
-### Q-0172
-
-- question_id: Q-0172
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: QUESTION
-- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
-
-### Q-0173
-
-- question_id: Q-0173
 - source_path: knowledge/raw/业务/费用管理/规则与权限.md
 - question_type: QUESTION
 - text: “对公报账”与企业支付、采购系统、应付账款之间的职责边界需结合后续真源继续校验。
 
-### Q-0174
+### Q-0170
 
-- question_id: Q-0174
+- question_id: Q-0170
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 产品能力版图是否随产品迭代保持更新，需持续关注
 
-### Q-0175
+### Q-0171
 
-- question_id: Q-0175
+- question_id: Q-0171
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 平台角色与终端分类是否已完全覆盖当前产品状态，需持续校验
 
-### Q-0176
+### Q-0172
 
-- question_id: Q-0176
+- question_id: Q-0172
 - source_path: knowledge/raw/业务/项目背景/业务对象与术语.md
 - question_type: QUESTION
 - text: API 数量、报表数量、图表数量等具体数字需要以最新官方材料复核后再作为稳定指标使用。
