@@ -900,10 +900,8 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blu
 输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
 推荐项产物映射：
-- 方案协同图：`spark-output/solution-swimlane/solution_swimlane.html`
+- 业务泳道图：`spark-output/solution-swimlane/solution_swimlane.html`
 - 页面规格：`spark-output/page_spec.md` 或 `spark-output/context/page-spec.json`
-- 异常态：`spark-output/edge_output.md` 或 `spark-output/context/edge.json`
-- 视觉情绪板：`spark-output/board_output.md` 或 `spark-output/context/board.json`
 - 旅程埋点与度量需求：`spark-output/journey_metrics/journey_visual.md`、`spark-output/journey_metrics/journey_visual.html`、`spark-output/journey_metrics/journey_tracking_spec.md` 或 `spark-output/journey_metrics/error_tracking_spec.md`
 
 禁止：
@@ -918,11 +916,9 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blu
 
 ```text
 体验蓝图已完成。你可以继续：
-1. 方案协同图
-2. 页面规格
-3. 异常态
-4. 视觉情绪板
-5. 旅程埋点与度量需求
+1. 业务泳道图
+2. 页面规格（主推）
+3. 旅程埋点与度量需求
 
 你回复对应名称即可。
 ```

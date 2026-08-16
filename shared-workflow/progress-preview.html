@@ -255,16 +255,13 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
     {
       id: "explore",
       number: "01",
-      name_zh: "探索",
-      name_en: "Explore",
+      name_zh: "需求与问题",
+      name_en: "Requirements & Problem",
       note: "需求读取、问题诊断与方向收敛",
       skills: [
         { id: "prd-review", name_zh: "需求审核与基线", slash: "/prd-review", status: "current", hint_dep: null, scene_hint: "审核 PRD 并冻结正式需求基线" },
-        { id: "uxb", name_zh: "体验定案", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：形成粗颗粒度体验方向与取舍" },
         { id: "problem-framing", name_zh: "需求讨论", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
-        { id: "product-analysis", name_zh: "需求方案发散", slash: "/product-analysis", status: "ready", hint_dep: null, scene_hint: "已有方案，但想继续发散更多方向" },
         { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
-        { id: "design-strategy", name_zh: "设计策略生成", slash: "/design-strategy", status: "ready", hint_dep: null, scene_hint: "先判断方案方向" }
       ]
     },
     {
@@ -281,13 +278,12 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
     {
       id: "design",
       number: "03",
-      name_zh: "设计",
-      name_en: "Design",
+      name_zh: "体验与设计",
+      name_en: "Experience & Design",
       note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
       skills: [
+        { id: "uxb", name_zh: "体验定案", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "可选增强：形成项目级体验策略、设计标准与方案承接结果" },
         { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/prd-review", scene_hint: "把正式需求基线展开为完整体验方案" },
-        { id: "edge", name_zh: "穷举体验蓝图所有异常态", slash: "/edge", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "补齐异常态、空态和权限边界" },
-        { id: "board", name_zh: "视觉风格", slash: "/board", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "收敛视觉方向" }
       ]
     },
     {
@@ -295,10 +291,9 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "04",
       name_zh: "页面生成",
       name_en: "Page Build",
-      note: "整理页面规格，页面原型能力当前仅静态展示，不参与主流程",
+      note: "整理页面规格",
       skills: [
-        { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取页面规格" },
-        { id: "xft-design", name_zh: "页面原型", slash: "/xft-design", status: "idle", hint_dep: "暂不接入主流程", scene_hint: "能力保留展示，后续完善后再接入" }
+        { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取设计元素" }
       ]
     },
     {

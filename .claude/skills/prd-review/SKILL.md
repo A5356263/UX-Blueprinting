@@ -332,7 +332,7 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 可选增强：
 
-- UXB：形成粗颗粒度的体验方向与取舍
+- UXB：对需要重点讨论的体验方向、设计标准和方案承接要求形成定案
 - Stories：补充用户任务拆解
 - Journey Analysis：补充旅程阶段、断点与风险
 

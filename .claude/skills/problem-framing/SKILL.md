@@ -391,8 +391,11 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/problem-framin
 ```text
 问题框定已完成。你可以继续：
 1. 用户故事（推荐）
-2. 用户旅程
-3. 停在这里
+2. 用户旅程（推荐）
+
+可选增强：
+
+- UXB：对需要重点讨论的体验方向、设计标准和方案承接要求形成定案
 
 你回复对应名称即可。
 ```
