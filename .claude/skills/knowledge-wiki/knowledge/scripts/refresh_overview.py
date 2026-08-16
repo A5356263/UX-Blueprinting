@@ -64,6 +64,7 @@ def main() -> int:
         "forbidden_summary_reference_count",
         "numbered_business_file_count",
         "nonstandard_business_file_count",
+        "design_source_reference_count",
         "encoding_issue_count",
     ]
     lines = [

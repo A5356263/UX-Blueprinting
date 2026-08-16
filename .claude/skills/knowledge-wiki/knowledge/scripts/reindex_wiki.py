@@ -7,7 +7,7 @@ from pathlib import Path
 from _write_if_changed import write_text_if_changed
 
 
-STABLE_DESIGN_DIRS = {"设计准则", "交互模式"}
+DIRECT_DESIGN_DIRS = {"设计准则", "交互模式", "设计规范"}
 
 
 @dataclass(frozen=True)
@@ -15,6 +15,7 @@ class RouteEntry:
     group: str
     title: str
     signal: str
+    exclusion: str
     target: Path
 
 
@@ -47,11 +48,32 @@ def first_section_line(path: Path, headings: tuple[str, ...]) -> str:
     return "按该入口内的定位、覆盖边界和任务路由判断。"
 
 
+def global_route_signals(path: Path) -> tuple[str, str] | None:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != "## 全局入口信号":
+            continue
+        signal = ""
+        exclusion = ""
+        for candidate in lines[index + 1 :]:
+            stripped = candidate.strip()
+            if candidate.startswith("#"):
+                break
+            if stripped.startswith("- 命中："):
+                signal = stripped.removeprefix("- 命中：").strip()
+            elif stripped.startswith("- 排除："):
+                exclusion = stripped.removeprefix("- 排除：").strip()
+        if signal and exclusion:
+            return signal, exclusion
+    return None
+
+
 def entry_for(group: str, target: Path) -> RouteEntry:
+    route_signals = global_route_signals(target)
     return RouteEntry(
         group=group,
         title=first_heading(target),
-        signal=first_section_line(
+        signal=route_signals[0] if route_signals else first_section_line(
             target,
             (
                 "### 领域定义",
@@ -61,13 +83,14 @@ def entry_for(group: str, target: Path) -> RouteEntry:
                 "## 文档定位",
             ),
         ),
+        exclusion=route_signals[1] if route_signals else "只出现相近词但最终结果不由该入口解释时，按入口内的覆盖边界与条件依赖处理。",
         target=target,
     )
 
 
 def collection_entries(raw: Path) -> list[RouteEntry]:
     entries: list[RouteEntry] = []
-    for collection in sorted(path for path in raw.iterdir() if path.is_dir() and path.name not in STABLE_DESIGN_DIRS):
+    for collection in sorted(path for path in raw.iterdir() if path.is_dir() and path.name not in DIRECT_DESIGN_DIRS):
         collection_readme = collection / "README.md"
         if collection_readme.exists():
             entries.append(entry_for(collection.name, collection_readme))
@@ -95,7 +118,7 @@ def render_group(lines: list[str], group: str, entries: list[RouteEntry], wiki: 
                 f"### {entry.title}",
                 "",
                 f"- 命中：{entry.signal}",
-                "- 排除：只出现相近词但最终结果不由该入口解释时，按入口内的覆盖边界与条件依赖处理。",
+                f"- 排除：{entry.exclusion}",
                 f"- 入口：[{entry.title}]({relative_link(wiki, entry.target)})",
                 "",
             ]
@@ -109,7 +132,7 @@ def main() -> int:
     lines = [
         "# Knowledge Wiki Index",
         "",
-        "本页只负责选择知识类型、业务集合或领域。业务知识进入领域 README 学习文件路由，再按目标文件顶部导航定位章节；index 明确直达的单一设计知识直接进入。不得遍历 raw。",
+        "本页只负责选择知识类型、业务集合或领域。业务知识进入领域 README 学习文件路由；设计知识按各自入口进入章节地图、全局地图或分类路由，再按目标文件顶部导航定位章节。不得遍历 raw。",
         "",
         "## 系统页",
         "",
@@ -127,6 +150,7 @@ def main() -> int:
 
     design = raw / "设计准则" / "设计准则.md"
     interaction = raw / "交互模式" / "README.md"
+    specification = raw / "设计规范" / "README.md"
     lines.extend(["## 设计知识", ""])
     if design.exists():
         lines.extend(
@@ -147,6 +171,17 @@ def main() -> int:
                 "- 命中：需要选择入口、承载、行为、状态反馈、恢复与回流的具体交互模式。",
                 "- 排除：只需原则判断时读取设计准则；不得用模式替代业务事实。",
                 f"- 入口：[交互模式全局地图]({relative_link(wiki, interaction)})",
+                "",
+            ]
+        )
+    if specification.exists():
+        lines.extend(
+            [
+                "### 设计规范",
+                "",
+                "- 命中：需要查询当前产品的样式取值、组件使用、典型页面组织或具体任务场景标准。",
+                "- 排除：原则与价值取舍进入设计准则；通用交互组织进入交互模式；业务对象、字段、状态、权限和流程进入业务知识。",
+                f"- 入口：[设计规范分类路由]({relative_link(wiki, specification)})",
                 "",
             ]
         )

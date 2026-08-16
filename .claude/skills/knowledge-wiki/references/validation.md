@@ -30,6 +30,7 @@ python knowledge/scripts/update_wiki.py --strict
 - `forbidden_summary_reference_count=0`
 - `numbered_business_file_count=0`
 - `nonstandard_business_file_count=0`
+- `design_source_reference_count=0`
 - `encoding_issue_count=0`
 - `unimported_candidate_count` 符合本次预期
 - `git diff --check` 通过
@@ -48,6 +49,16 @@ python knowledge/scripts/update_wiki.py --strict
 - index 是否只路由顶层知识类型、业务集合、可直接消费的领域或大文件，而没有膨胀为逐文件目录。
 - 业务 raw 是否只使用八类固定文件名，没有数字前缀或自定义类型文件。
 - 没有新建空目录、空文件、第二语义镜像、registry、catalog、mapping table 或额外状态字段。
+
+### 设计规范结构复核
+
+- 全局 index 是否只保留一个设计规范入口，并指向 `raw/设计规范/README.md`。
+- 根 README 是否路由到样式、组件、典型页面和场景模式四个分类 README，没有膨胀为逐主题目录。
+- 每个分类 README 是否具备分类契约、任务触发索引、条件依赖、正式知识清单和停止条件。
+- 每个主题文件是否由唯一分类 README 路由；长文件是否可以通过顶部导航命中章节。
+- 文件名和标题是否表达具体稳定对象，没有重复上级目录已有的“规范”“组件”或“场景”语义。
+- 同一规范事实是否只维护一份，没有在 README、页面、组件或场景文件之间复制正文。
+- 正式设计规范是否没有原始材料来源路径、CSV 检索表、问答脚本、Prompt、回答模板或 AI 检索元数据。
 
 ## 语义复核
 
@@ -68,6 +79,7 @@ python knowledge/scripts/update_wiki.py --strict
 - 功能、FAQ、规则、权限、状态和流程是否各有唯一真源，没有相互复制。
 - 功能和 FAQ 是否按稳定维护责任组织，没有逐条建文件或形成不可导航巨型文件。
 - 大材料是否按自然批次完成读取、闭合和复核，没有一次处理后只留总体摘要。
+- 设计规范输入中的条件、数值、状态、例外、结构、步骤、反馈和恢复路径是否完整保留，没有被摘要或核心要点替代。
 
 ## 候选复核
 
@@ -93,3 +105,5 @@ index
 ```
 
 普通单点正文修正不强制新增测试文件、场景库、消费轨迹或召回指标。
+
+新增或调整设计规范结构时，至少分别使用一个样式、组件、典型页面和场景模式问题，确认能够从 index 精确到达命中章节，不需要遍历整个 `raw/设计规范/`。

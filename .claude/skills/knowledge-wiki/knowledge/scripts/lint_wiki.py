@@ -9,6 +9,7 @@ from _write_if_changed import write_text_if_changed
 
 
 LINK_PATTERN = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+HTML_ANCHOR_PATTERN = re.compile(r'<a\s+id=["\']([^"\']+)["\']\s*></a>', re.IGNORECASE)
 NUMBERED_PATTERN = re.compile(r"^(\d+)_")
 ALLOWED_BUSINESS_FILES = {
     "README.md",
@@ -21,9 +22,10 @@ ALLOWED_BUSINESS_FILES = {
     "问答与差异.md",
 }
 FORBIDDEN_SUMMARY_MARKERS = ("wiki/summaries", "summary-first", "先读 summary", "优先命中 `summary`")
-STABLE_DESIGN_DIRS = {"设计准则", "交互模式"}
+DIRECT_DESIGN_DIRS = {"设计准则", "交互模式", "设计规范"}
+ROUTE_CHECK_EXEMPT_DIRS = {"设计准则", "交互模式"}
 REQUIRED_ROUTE_HEADINGS = ("## 任务触发索引", "## 停止条件", "## 正式知识清单")
-CONTRACT_HEADINGS = ("## 领域契约", "## 知识集合契约")
+CONTRACT_HEADINGS = ("## 领域契约", "## 知识集合契约", "## 分类契约")
 
 
 def markdown_files(root: Path) -> list[Path]:
@@ -41,7 +43,7 @@ def canonical_anchor(value: str) -> str:
 
 def discover_index_targets(raw_root: Path) -> list[Path]:
     targets: list[Path] = []
-    for collection in sorted(path for path in raw_root.iterdir() if path.is_dir() and path.name not in STABLE_DESIGN_DIRS):
+    for collection in sorted(path for path in raw_root.iterdir() if path.is_dir() and path.name not in DIRECT_DESIGN_DIRS):
         collection_readme = collection / "README.md"
         if collection_readme.exists():
             targets.append(collection_readme)
@@ -60,10 +62,13 @@ def discover_index_targets(raw_root: Path) -> list[Path]:
 
     design = raw_root / "设计准则" / "设计准则.md"
     interaction = raw_root / "交互模式" / "README.md"
+    specification = raw_root / "设计规范" / "README.md"
     if design.exists():
         targets.append(design)
     if interaction.exists():
         targets.append(interaction)
+    if specification.exists():
+        targets.append(specification)
     return targets
 
 
@@ -75,6 +80,7 @@ def check_links(files: list[Path]) -> tuple[int, int, list[str]]:
         text = file.read_text(encoding="utf-8")
         headings = [line.lstrip("#").strip() for line in text.splitlines() if line.startswith("#")]
         heading_keys = {canonical_anchor(heading) for heading in headings}
+        heading_keys.update(canonical_anchor(anchor) for anchor in HTML_ANCHOR_PATTERN.findall(text))
         for target in LINK_PATTERN.findall(text):
             target = target.strip()
             if target.startswith(("http://", "https://", "mailto:")):
@@ -103,7 +109,7 @@ def main() -> int:
     issues: list[str] = []
 
     domain_readme_missing = 0
-    for collection in sorted(path for path in raw_root.iterdir() if path.is_dir() and path.name not in STABLE_DESIGN_DIRS):
+    for collection in sorted(path for path in raw_root.iterdir() if path.is_dir() and path.name not in ROUTE_CHECK_EXEMPT_DIRS):
         for directory in sorted(path for path in collection.rglob("*") if path.is_dir()):
             markdown = [path for path in directory.glob("*.md") if path.is_file() and path.name != "README.md"]
             subdirectories = [path for path in directory.iterdir() if path.is_dir()]
@@ -163,7 +169,8 @@ def main() -> int:
         if file.name == "README.md":
             continue
         text = file.read_text(encoding="utf-8")
-        if len(text.splitlines()) >= 400 and "## 快速导航" not in text:
+        navigation_headings = ("## 快速导航", "## 文档导航", "## 领域信息架构与页面导航")
+        if len(text.splitlines()) >= 400 and not any(heading in text for heading in navigation_headings):
             long_without_navigation += 1
             issues.append(f"long_raw_without_navigation:{file.relative_to(root).as_posix()}")
 
@@ -181,6 +188,15 @@ def main() -> int:
     ]
     for file in nonstandard_business_files:
         issues.append(f"nonstandard_business_file:{file.relative_to(root).as_posix()}")
+
+    design_spec_root = raw_root / "设计规范"
+    design_source_references = 0
+    if design_spec_root.exists():
+        for file in markdown_files(design_spec_root):
+            for line_number, line in enumerate(file.read_text(encoding="utf-8").splitlines(), start=1):
+                if "q&a/" in line or line.lstrip().startswith("> 来源"):
+                    design_source_references += 1
+                    issues.append(f"design_source_reference:{file.relative_to(root).as_posix()}:{line_number}")
 
     forbidden_summary_references = 0
     for scan_root in [repo_root / ".claude" / "skills"]:
@@ -218,6 +234,7 @@ def main() -> int:
         "forbidden_summary_reference_count": forbidden_summary_references,
         "numbered_business_file_count": len(numbered_business_files),
         "nonstandard_business_file_count": len(nonstandard_business_files),
+        "design_source_reference_count": design_source_references,
         "encoding_issue_count": encoding_issues,
         "issue_total": len(issues),
     }

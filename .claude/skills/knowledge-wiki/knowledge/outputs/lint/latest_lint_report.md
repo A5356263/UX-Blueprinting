@@ -1,7 +1,7 @@
 # Wiki Lint Report
 
-- raw_total: 86
-- domain_readme_total: 21
+- raw_total: 128
+- domain_readme_total: 32
 - domain_readme_missing_count: 0
 - unindexed_domain_count: 0
 - unrouted_raw_count: 0
@@ -12,6 +12,7 @@
 - forbidden_summary_reference_count: 0
 - numbered_business_file_count: 0
 - nonstandard_business_file_count: 0
+- design_source_reference_count: 0
 - encoding_issue_count: 0
 - issue_total: 0
 

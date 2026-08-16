@@ -1,15 +1,15 @@
 # Knowledge Wiki Overview
 
-- updated_at: 2026-08-13
+- updated_at: 2026-08-16
 
 ## 当前概况
 
-- raw_total: 86
-- domain_readme_total: 21
-- gap_count: 119
+- raw_total: 128
+- domain_readme_total: 32
+- gap_count: 128
 - conflict_count: 9
-- question_marker_count: 48
-- questions_total: 172
+- question_marker_count: 50
+- questions_total: 183
 
 ## 路由健康
 
@@ -23,12 +23,13 @@
 - forbidden_summary_reference_count: 0
 - numbered_business_file_count: 0
 - nonstandard_business_file_count: 0
+- design_source_reference_count: 0
 - encoding_issue_count: 0
 
 ## 最近更新的 Raw
 
-- raw/业务/应用管理/页面与字段.md
-- raw/业务/权限管理/页面与字段.md
-- raw/业务/应用管理/README.md
 - raw/业务/费用管理/README.md
-- raw/业务/费用管理/页面与字段.md
+- raw/业务/人事服务/README.md
+- raw/业务/协同办公/README.md
+- raw/业务/项目背景/README.md
+- raw/业务/账户与企业生命周期/README.md

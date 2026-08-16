@@ -1,187 +1,147 @@
-# UXB Context 9.0 JSON Schema
+# UXB Context 10.0 JSON Schema
 
 ## 快速导航
 
-- [1. 定位](#1-定位)
-- [2. 生成顺序](#2-生成顺序)
-- [3. 固定根结构](#3-固定根结构)
-- [4. 体验决定](#4-体验决定)
-- [5. 跨任务体验约束](#5-跨任务体验约束)
-- [6. 来源承接](#6-来源承接)
-- [7. 投影规则](#7-投影规则)
-- [8. 结构校验边界](#8-结构校验边界)
+- [1. 定位与生成顺序](#1-定位与生成顺序)
+- [2. 根结构](#2-根结构)
+- [3. 对象字段](#3-对象字段)
+- [4. 引用规则](#4-引用规则)
+- [5. 结构校验边界](#5-结构校验边界)
 
-## 1. 定位
+## 1. 定位与生成顺序
 
-- 正式 Markdown：spark-output/uxb_output.md
-- Context JSON：spark-output/context/uxb.json
-- skill：固定为 uxb
-- version：固定为 9.0
+- 正式 Markdown：`spark-output/uxb_output.md`
+- Context JSON：`spark-output/context/uxb.json`
+- skill：固定为 `uxb`
+- version：固定为 `10.0`
 
-Markdown 是唯一正式语义源。JSON 只投影已经确认并冻结的 Markdown。
+Markdown 是唯一正式语义源。Markdown 冻结后才能生成 JSON。
 
-## 2. 生成顺序
+生成顺序：
 
-只有正式 Markdown 冻结后，才能读取本文件并生成 JSON。
+1. 读取冻结 Markdown。
+2. 按 Markdown 顺序投影 Context。
+3. 运行结构校验。
+4. 由 Agent 核对语义一致性。
 
-生成时：
+JSON 不读取正式输入、知识库、聊天记录或内部分析补内容。
 
-1. 读取冻结后的 UXB Markdown。
-2. 从 §1 投影体验决定。
-3. 从真实存在的 §2 投影跨任务体验约束。
-4. 从 §3 投影来源承接。
-5. 运行结构校验。
-6. 由 Agent 核对 Markdown 与 JSON 的语义一致性。
+## 2. 根结构
 
-禁止：
+```json
+{
+  "skill": "uxb",
+  "version": "10.0",
+  "generated_at": "2026-08-16T00:00:00+08:00",
+  "project_name": "项目名称",
+  "artifact_md": "spark-output/uxb_output.md",
+  "result_status": "strategy_ready",
+  "strategy_basis": {},
+  "key_insights": [],
+  "experience_strategies": [],
+  "design_criteria": [],
+  "strategy_boundaries": [],
+  "source_trace": []
+}
+```
 
-- 回读需求基线、知识库、聊天记录或内部任务覆盖结果补 JSON。
-- 用 schema 要求 Markdown 增加字段。
-- 在 JSON 中重新概括、改写或扩展体验决定。
-- 保存候选体验问题、未选择方向和内部比较过程。
-- 保存页面、组件、布局和最终文案。
+根字段全部必填，不允许其他根字段。
 
-## 3. 固定根结构
+- `result_status`：`strategy_ready` 或 `no_independent_strategy`。
+- `strategy_ready`：`key_insights`、`experience_strategies`、`design_criteria` 和 `strategy_boundaries` 均至少一项。
+- `no_independent_strategy`：`experience_strategies`、`design_criteria` 和 `strategy_boundaries` 为空数组；`key_insights` 可以为空或记录判断依据。
 
-    {
-      "skill": "uxb",
-      "version": "9.0",
-      "generated_at": "2026-08-04T00:00:00+08:00",
-      "project_name": "项目名称",
-      "artifact_md": "spark-output/uxb_output.md",
-      "decisions": [],
-      "cross_cutting_constraints": [],
-      "upstream_trace": []
-    }
+## 3. 对象字段
 
-根字段全部必填。不得新增其他根字段。
+### 3.1 `strategy_basis`
 
-字段规则：
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `source_ref` | 非空字符串 | 引用存在的 `ST-xxx` |
+| `problem_or_goal` | 非空字符串 | 正式输入中的问题或目标 |
+| `target_users` | 非空字符串数组 | 正式输入中的目标用户 |
+| `key_tasks` | 非空字符串数组 | 正式输入中的关键任务 |
+| `solution_direction` | 非空字符串 | 已确认的解决方向或能力范围 |
+| `scope` | 非空字符串数组 | 本轮范围 |
+| `out_of_scope` | 字符串数组 | 明确不做内容；未声明时为空数组 |
 
-- skill：固定为 uxb。
-- version：固定为 9.0。
-- generated_at：非空 ISO 8601 时间字符串。
-- project_name：非空字符串。
-- artifact_md：固定为 spark-output/uxb_output.md。
-- decisions：体验决定数组，可以为空。
-- cross_cutting_constraints：跨任务体验约束数组，可以为空。
-- upstream_trace：来源数组，可以为空。
+### 3.2 `key_insights[]`
 
-## 4. 体验决定
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `id` | 非空字符串 | `KI-001` 格式，数组内唯一 |
+| `insight` | 非空字符串 | `§1` 中的关键体验判断 |
+| `applies_to` | 非空字符串数组 | 角色、任务或旅程阶段 |
+| `evidence_refs` | 非空字符串数组 | 引用存在的 `ST-xxx` |
 
-每个对象直接对应 Markdown §1 中的一条体验决定。
+### 3.3 `experience_strategies[]`
 
-### 4.1 最小对象
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `id` | 非空字符串 | `ES-001` 格式，数组内唯一 |
+| `title` | 非空字符串 | 策略标题 |
+| `thesis` | 非空字符串 | 策略主张 |
+| `tension` | 非空字符串 | 需要解决的体验矛盾 |
+| `applies_to` | 非空字符串数组 | 角色、任务或旅程阶段 |
+| `expected_outcome` | 非空字符串 | 预期体验结果 |
+| `handoff_outcome` | 非空字符串 | 后续方案需保留的体验结果 |
+| `evidence_refs` | 非空字符串数组 | 引用存在的 `ST-xxx` |
+| `confidence` | 枚举字符串 | `high`、`medium` 或 `low` |
 
-    {
-      "id": "ED-001",
-      "task": "对应任务",
-      "roles": ["涉及角色"],
-      "decision": "Markdown 中已确认的体验决定"
-    }
+### 3.4 `design_criteria[]`
 
-必填字段：
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `id` | 非空字符串 | `DC-001` 格式，数组内唯一 |
+| `criterion` | 非空字符串 | 可观察的体验结果 |
+| `strategy_refs` | 非空字符串数组 | 引用存在的 `ES-xxx` |
+| `source_refs` | 非空字符串数组 | 引用存在的 `ST-xxx` |
 
-- id：ED-001 格式，在 decisions 内唯一。
-- task：非空字符串，沿用 Markdown 中的任务名称。
-- roles：非空字符串数组。
-- decision：非空字符串，保持 Markdown 决定正文的语义和范围。
+### 3.5 `strategy_boundaries[]`
 
-### 4.2 可选字段
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `id` | 非空字符串 | `SB-001` 格式，数组内唯一 |
+| `boundary` | 非空字符串 | 策略边界或留给交互方案的内容 |
+| `strategy_refs` | 非空字符串数组 | 引用存在的 `ES-xxx` |
 
-    {
-      "business_objects": ["Markdown 中直接出现的业务对象"],
-      "states": ["Markdown 中直接出现的状态"],
-      "conditions": ["Markdown 中直接出现的适用条件"],
-      "additional_constraints": ["Markdown 中直接出现的额外约束"],
-      "source_refs": ["Markdown 中直接关联的来源编号"]
-    }
+### 3.6 `source_trace[]`
 
-可选字段规则：
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `id` | 非空字符串 | `ST-001` 格式，数组内唯一 |
+| `source_type` | 枚举字符串 | 见下方允许值 |
+| `source_name` | 非空字符串 | 来源名称 |
+| `used_for` | 非空字符串数组 | 引用已有对象或 `strategy_basis` |
+| `source_path` | 可选非空字符串 | 来源存在文件路径时填写 |
 
-- 字段出现时必须是非空字符串数组。
-- 数组不得为空，不得包含空字符串。
-- Markdown 没有直接内容时省略字段。
-- 不得从正式输入或知识库补充可选字段。
+`source_type` 允许值：
 
-一条 Markdown 决定只生成一个 decisions 对象。不要因为它同时涉及信息、状态和恢复而拆成多个 JSON 对象。
+- `formal_input`
+- `stories`
+- `journey`
+- `business_knowledge`
+- `design_principle`
+- `interaction_pattern`
+- `user_confirmation`
 
-## 5. 跨任务体验约束
+## 4. 引用规则
 
-每个对象直接对应 Markdown §2 中的一条跨任务体验约束。
+- `strategy_basis.source_ref` 必须引用 `source_trace[].id`。
+- 每个 `evidence_refs` 和 `source_refs` 必须引用 `source_trace[].id`。
+- 每个 `strategy_refs` 必须引用 `experience_strategies[].id`。
+- `source_trace[].used_for` 只能引用 `strategy_basis`、`KI-xxx`、`ES-xxx`、`DC-xxx` 或 `SB-xxx`，且编号必须存在。
+- Context 数组顺序沿用 Markdown 对应内容的顺序。
+- JSON 每条非元数据内容都必须能在 Markdown 中找到直接来源。
 
-    {
-      "id": "CC-001",
-      "constraint": "跨任务、跨角色或跨系统共同遵守的体验约束",
-      "applies_to": ["适用任务或角色"]
-    }
+置信度说明：
 
-字段全部必填：
+- `high`：正式主输入直接明确，或用户明确确认。
+- `medium`：正式主输入与体验证据或设计知识共同支持，且没有冲突。
+- `low`：主要来自设计推导；写入 Markdown 前已获用户逐条确认。
 
-- id：CC-001 格式，在 cross_cutting_constraints 内唯一。
-- constraint：非空字符串。
-- applies_to：非空字符串数组。
+## 5. 结构校验边界
 
-Markdown 没有 §2 时，cross_cutting_constraints 使用空数组。不要从 §1 再次提炼一套约束。
+脚本检查 JSON 可解析性、根字段、对象字段、固定值、字段类型、空值、编号、枚举和引用关系。
 
-## 6. 来源承接
-
-每个对象直接对应 Markdown §3 中的一项来源。
-
-    {
-      "id": "UT-001",
-      "source_type": "正式输入",
-      "source_name": "真实来源名称",
-      "source_path": "真实路径",
-      "used_for": ["ED-001"]
-    }
-
-必填字段：
-
-- id：UT-001 格式，在 upstream_trace 内唯一。
-- source_type：非空字符串。
-- source_name：非空字符串。
-- used_for：非空字符串数组。
-
-可选字段：
-
-- source_path：真实路径存在时输出非空字符串。用户直接提供完整正文且没有路径时省略。
-
-source_type 不使用固定枚举。沿用 Markdown 对来源的真实分类，例如正式输入、业务知识、设计准则或交互模式。
-
-used_for 只记录 Markdown 已写明的决定编号或判断范围。不得根据 JSON 对象关系补写来源用途。
-
-## 7. 投影规则
-
-- JSON 数组顺序与 Markdown 对应内容顺序一致。
-- 角色、任务、对象和状态名称沿用 Markdown。
-- id 只用于 UXB 本轮 Context 内识别，不作为跨 Skill 固定外键。
-- 不使用章节号、行号或固定路径建立语义绑定。
-- 没有对应内容时使用空数组或省略可选字段。
-- 不生成空字符串、空可选数组和占位对象。
-- JSON 中每条非元数据内容都必须能在 Markdown 中找到直接来源。
-- JSON 校验失败时只修 JSON。
-- Markdown 结论错误时返回 UXB 体验决定阶段并重新确认。
-
-## 8. 结构校验边界
-
-脚本可以校验：
-
-- JSON 是否可解析。
-- 根字段和对象字段是否存在。
-- 是否包含未知字段。
-- 字段类型。
-- 固定值。
-- 字符串和数组是否为空。
-- id 格式及数组内唯一性。
-
-脚本不能校验：
-
-- 体验问题是否真实。
-- 体验决定是否具体或合理。
-- 是否越界到页面方案。
-- Markdown 与 JSON 是否语义一致。
-- JSON 内容是否忠实投影 Markdown。
-- 是否应该执行 UXB。
-
-这些内容由 Agent 验收。
+脚本不检查策略正确性、业务事实充分性、体验方案是否越界、Markdown 与 JSON 语义一致性或策略遗漏。这些由 Agent 核对。
