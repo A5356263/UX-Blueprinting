@@ -260,8 +260,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       note: "需求读取、问题诊断与方向收敛",
       skills: [
         { id: "prd-review", name_zh: "需求审核与基线", slash: "/prd-review", status: "current", hint_dep: null, scene_hint: "审核 PRD 并冻结正式需求基线" },
-        { id: "problem-framing", name_zh: "需求讨论", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "无 PRD 时先定清问题" },
-        { id: "interface-audit", name_zh: "界面诊断", slash: "/interface-audit", status: "ready", hint_dep: null, scene_hint: "基于已有界面做体验与问题诊断" },
+        { id: "problem-framing", name_zh: "问题与业务方案", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "基于问题形成并确定主推荐业务方案" }
       ]
     },
     {
@@ -271,8 +270,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Task & Journey",
       note: "把需求拆成任务，再看用户一路怎么完成",
       skills: [
-        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：补充用户任务拆解", standalone_usable: true },
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "蓝图前可选：补充旅程阶段、断点与风险", standalone_usable: true }
+        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "体验与设计前可选：补充用户任务拆解", standalone_usable: true },
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "体验与设计前可选：补充旅程阶段、断点与风险", standalone_usable: true }
       ]
     },
     {
@@ -280,10 +279,11 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "03",
       name_zh: "体验与设计",
       name_en: "Experience & Design",
-      note: "生成体验方案，并把主流程、异常状态和视觉方向补齐",
+      note: "形成体验策略并输出交互方案",
       skills: [
-        { id: "uxb", name_zh: "体验定案", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "可选增强：形成项目级体验策略、设计标准与方案承接结果" },
+        { id: "uxb", name_zh: "体验策略", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "明确体验方向和关键取舍" },
         { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/prd-review", scene_hint: "把正式需求基线展开为完整体验方案" },
+        { id: "solution-swimlane", name_zh: "业务泳道图", slash: "/solution-swimlane", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "把体验方案转为跨角色协同流程" }
       ]
     },
     {

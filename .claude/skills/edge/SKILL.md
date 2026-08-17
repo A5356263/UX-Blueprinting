@@ -3,7 +3,7 @@ name: edge
 description: >
   异常态设计 Skill。读取已完成的体验蓝图或用户明确指定的目标页面，按状态矩阵补齐异常态、空状态、加载态和边界状态，输出结构化状态设计结果。
   仅在用户明确要求异常态、边界状态、空状态或异常流程补全时使用；不得在体验蓝图完成后自动触发。
-  排除：主交互方案（用 experience-blueprint）、页面规格提取（用 page-spec）、设计完整性走查（用 check）。
+  排除：主交互方案（用 experience-blueprint）、页面设计元素提取（用 page-spec）。
 ---
 
 # Edge

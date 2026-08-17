@@ -3,7 +3,7 @@ name: stories
 description: >
   用户故事 Skill。承接 uxb 或 problem-framing 的正式上游结论，把方向和承接要求拆成可设计、可验证的用户任务单元，输出用户故事文档和结构化 context。
   触发关键词：用户故事、stories、user story、故事拆解、拆任务、任务切片、把需求拆成故事、把方向拆成故事、设计故事、验收标准。
-  排除：问题尚未成形（用 problem-framing）、正式需求定案（用 uxb）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 experience-blueprint）。
+  排除：问题尚未成形（用 problem-framing）、体验策略（用 uxb）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 experience-blueprint）。
 ---
 
 # 用户故事
@@ -75,10 +75,12 @@ description: >
 
 当正式来源为 `problem-framing` 时，先检查其信息分层：
 
-- Problem Framing JSON 只接受 `2.0` 的紧凑定位字段；非 `2.0` 且 Markdown 可用时忽略旧 JSON，不做版本转换。
-- `confirmed_facts` 可直接消费
-- `working_assumptions` 可有限消费，但必须显式标记
-- `open_gaps` 不得直接转写为完成标准、状态规则或硬性交互要求
+- Problem Framing JSON 只接受 `3.0`；非 `3.0` 且 Markdown 可用时忽略 JSON，不做版本转换。
+- `confirmed_facts` 可直接消费。
+- `recommended_solution` 与 `business_solution_points` 是正式未来方案，可拆为用户任务。
+- `working_assumptions` 可有限消费，但必须显式标记。
+- `open_questions` 不得直接转写为完成标准、状态规则或硬性交互要求。
+- 验收条件和业务规则只来自主推荐方案的明确内容与 `confirmed_facts`，不从工作假设补全。
 - 上游明确排除的范围，不得滑入 P0/P1 主线 Story
 - 为体验完整性推导出的辅助能力，必须标为辅助能力或 P1/P2，不得抢主链
 - 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在 `source_basis` 中说明

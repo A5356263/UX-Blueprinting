@@ -4,7 +4,7 @@ description: >
   旅程分析 Skill。按角色输出任务生命周期中的阶段、行动、触点、痛点、流失风险和设计机会。
   触发关键词：旅程图、journey map、用户旅程、角色旅程、体验旅程、用户生命周期、旅程分析、补全旅程、画旅程。
   仅在用户明确要求分析角色任务生命周期、旅程阶段或旅程图时使用；不得仅因 UXB、用户故事或问题框定产物存在而自动触发。
-  排除：需求定案（用 uxb）、交互方案（用 experience-blueprint）、页面规格（用 page-spec）、埋点度量（用 journey-metrics）。
+  排除：体验策略（用 uxb）、交互方案（用 experience-blueprint）、页面设计元素提取（用 page-spec）、埋点度量（用 journey-metrics）。
 ---
 
 # 旅程分析
@@ -177,10 +177,10 @@ description: >
 
 #### Problem Framing 读取规则
 
-- Problem Framing JSON 只接受 `2.0` 的 `decision_summary`、`problem_statement`、`primary_roles`、`recommended_direction`、`handoff_requirements`、`hard_constraints`、`out_of_scope`、`confirmed_facts`、`working_assumptions`、`open_questions`。
-- 如果 `problem-framing.json` 和 `problem_framing.md` 都可用，JSON 只定位核心问题、角色、方向、约束和待确认问题，完整问题论证和承接要求必须从 `problem_framing.md` 获取。
+- Problem Framing JSON 只接受 `3.0` 的 `decision_summary`、`problem_statement`、`primary_roles`、`solution_goal`、`recommended_solution`、`business_solution_points`、`handoff_requirements`、`hard_constraints`、`out_of_scope`、`confirmed_facts`、`working_assumptions`、`open_questions`。
+- 如果 `problem-framing.json` 和 `problem_framing.md` 都可用，JSON 只定位核心问题、角色、目标结果、主推荐方案、约束和待确认问题，完整问题论证和承接要求必须从 `problem_framing.md` 获取。
 - 如果只有 `problem_framing.md`，正常进入 `framing-chain`，不得因缺少紧凑 JSON 降低正式语义置信度。
-- 检测到非 `2.0` Problem Framing JSON 且 Markdown 可用时，忽略旧 JSON 并提示重新生成，不做版本转换。
+- 检测到非 `3.0` Problem Framing JSON 且 Markdown 可用时，忽略旧 JSON 并提示重新生成，不做版本转换。
 - 如果同时存在 `stories` 或 `uxb_output.md`，只将 `problem-framing` 作为问题方向和边界补充，不改变主要模式。
 
 #### 原始需求读取规则
@@ -713,7 +713,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 
 - 去 `UXB`
 - 去 `probe`
-- 去 `product-analysis`
+- 回到问题与业务方案重新确定方向
 - 补充更具体 `PRD`
 
 ## 输出结构

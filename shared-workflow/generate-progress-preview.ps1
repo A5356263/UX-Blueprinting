@@ -16,16 +16,12 @@ function Get-SlashAlias {
     "stories" = "/stories"
     "journey-analysis" = "/journey-analysis"
     "experience-blueprint" = "/experience-blueprint"
+    "solution-swimlane" = "/solution-swimlane"
     "page-spec" = "/page-spec"
-    "xft-design" = "/xft-design"
     "edge" = "/edge"
-    "check" = "/check"
     "board" = "/board"
     "knowledge-wiki" = "/knowledge-wiki"
-    "product-analysis" = "/product-analysis"
-    "design-strategy" = "/design-strategy"
     "journey-metrics" = "/journey-metrics"
-    "interface-audit" = "/interface-audit"
   }
 
   if ($aliasMap.ContainsKey($SkillId)) {
@@ -45,16 +41,12 @@ function Get-ContextPath {
     "stories" = "spark-output/context/stories.json"
     "journey-analysis" = "spark-output/context/journey-analysis.json"
     "experience-blueprint" = "spark-output/context/experience-blueprint.json"
+    "solution-swimlane" = "spark-output/solution-swimlane/solution_swimlane.html"
     "page-spec" = "spark-output/context/page-spec.json"
-    "xft-design" = "spark-output/context/xft-design.json"
     "edge" = "spark-output/context/edge.json"
-    "check" = "spark-output/context/check.json"
     "board" = "spark-output/context/board.json"
     "knowledge-wiki" = "spark-output/context/knowledge-wiki.json"
-    "product-analysis" = "spark-output/context/product-analysis.json"
-    "design-strategy" = "spark-output/context/design-strategy.json"
     "journey-metrics" = "spark-output/context/journey-metrics.json"
-    "interface-audit" = "spark-output/context/interface-audit.json"
   }
 
   if ($contextMap.ContainsKey($SkillId)) {
@@ -69,132 +61,76 @@ function Get-SectionMeta {
 
   $sectionBySkillId = @{
     "prd-review" = [pscustomobject]@{
-      id = "explore"
+      id = "requirements-problem"
       number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
-      order = 1
-    }
-    "product-analysis" = [pscustomobject]@{
-      id = "explore"
-      number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
-      order = 1
-    }
-    "interface-audit" = [pscustomobject]@{
-      id = "explore"
-      number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
-      order = 1
-    }
-    "design-strategy" = [pscustomobject]@{
-      id = "explore"
-      number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
-      order = 1
-    }
-    "uxb" = [pscustomobject]@{
-      id = "explore"
-      number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
+      name_zh = "需求与问题"
+      name_en = "Requirements & Problem"
+      note = "审核需求或基于问题形成业务方案"
       order = 1
     }
     "problem-framing" = [pscustomobject]@{
-      id = "explore"
+      id = "requirements-problem"
       number = "01"
-      name_zh = "探索"
-      name_en = "Explore"
-      note = "需求读取、问题诊断与方向收敛"
+      name_zh = "需求与问题"
+      name_en = "Requirements & Problem"
+      note = "审核需求或基于问题形成业务方案"
       order = 1
     }
     "stories" = [pscustomobject]@{
-      id = "define"
+      id = "task-journey"
       number = "02"
-      name_zh = "定义"
-      name_en = "Define"
-      note = "用户故事、旅程结构与需求补全"
+      name_zh = "任务与旅程"
+      name_en = "Task & Journey"
+      note = "拆解用户任务，梳理用户完成过程"
       order = 2
     }
     "journey-analysis" = [pscustomobject]@{
-      id = "define"
+      id = "task-journey"
       number = "02"
-      name_zh = "定义"
-      name_en = "Define"
-      note = "用户故事、旅程结构与需求补全"
+      name_zh = "任务与旅程"
+      name_en = "Task & Journey"
+      note = "拆解用户任务，梳理用户完成过程"
       order = 2
     }
     "experience-blueprint" = [pscustomobject]@{
-      id = "design"
+      id = "experience-design"
       number = "03"
-      name_zh = "设计"
-      name_en = "Design"
-      note = "方案生成、规格细化与页面落地"
+      name_zh = "体验与设计"
+      name_en = "Experience & Design"
+      note = "形成体验策略并输出交互方案"
       order = 3
     }
-    "board" = [pscustomobject]@{
-      id = "design"
+    "solution-swimlane" = [pscustomobject]@{
+      id = "experience-design"
       number = "03"
-      name_zh = "设计"
-      name_en = "Design"
-      note = "方案生成、规格细化与页面落地"
+      name_zh = "体验与设计"
+      name_en = "Experience & Design"
+      note = "形成体验策略并输出交互方案"
       order = 3
     }
     "page-spec" = [pscustomobject]@{
-      id = "design"
-      number = "03"
-      name_zh = "设计"
-      name_en = "Design"
-      note = "方案生成、规格细化与页面落地"
-      order = 3
-    }
-    "xft-design" = [pscustomobject]@{
-      id = "design"
-      number = "03"
-      name_zh = "设计"
-      name_en = "Design"
-      note = "方案生成、规格细化与页面落地"
-      order = 3
-    }
-    "edge" = [pscustomobject]@{
-      id = "validate"
+      id = "page-build"
       number = "04"
-      name_zh = "验证"
-      name_en = "Validate"
-      note = "异常覆盖、质量校验与度量口径"
-      order = 4
-    }
-    "check" = [pscustomobject]@{
-      id = "validate"
-      number = "04"
-      name_zh = "验证"
-      name_en = "Validate"
-      note = "异常覆盖、质量校验与度量口径"
+      name_zh = "页面生成"
+      name_en = "Page Build"
+      note = "提取设计元素"
       order = 4
     }
     "journey-metrics" = [pscustomobject]@{
       id = "validate"
-      number = "04"
+      number = "05"
       name_zh = "验证"
       name_en = "Validate"
-      note = "异常覆盖、质量校验与度量口径"
-      order = 4
+      note = "定义关键节点的埋点与度量口径"
+      order = 5
     }
     "knowledge-wiki" = [pscustomobject]@{
       id = "deliver"
-      number = "05"
+      number = "06"
       name_zh = "沉淀"
       name_en = "Archive"
       note = "产物归档、知识沉淀与后续复用"
-      order = 5
+      order = 6
     }
   }
 
@@ -203,11 +139,11 @@ function Get-SectionMeta {
   }
 
   return [pscustomobject]@{
-    id = "design"
+    id = "experience-design"
     number = "03"
-    name_zh = "设计"
-    name_en = "Design"
-    note = "方案生成、规格细化与页面落地"
+    name_zh = "体验与设计"
+    name_en = "Experience & Design"
+    note = "形成体验策略并输出交互方案"
     order = 3
   }
 }
@@ -278,6 +214,10 @@ try {
     $doneMap[$skill.id] = $false
     if ($contextPath) {
       $doneMap[$skill.id] = Test-Path $contextPath
+    }
+
+    if ($skill.preview_hidden -eq $true) {
+      continue
     }
 
     $sectionMeta = Get-SectionMeta -Skill $skill

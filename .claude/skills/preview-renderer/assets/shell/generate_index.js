@@ -15,8 +15,8 @@ const PRODUCTS = [
   },
   {
     id: "problem-framing",
-    label: "问题框定",
-    purpose: "无 PRD 场景下的问题收敛与方向判断",
+    label: "问题与业务方案",
+    purpose: "基于问题形成并确定主推荐业务方案",
     markdown: "spark-output/problem_framing.md",
     context: "spark-output/context/problem-framing.json",
     script: ".claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js",

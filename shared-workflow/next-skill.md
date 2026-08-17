@@ -65,21 +65,13 @@ prd-review
 
 ### 1.4 基础设施型 Skill
 
-`skill-graph.json` 中 `type = "infrastructure"` 的 Skill，例如 `knowledge-wiki`、`product-analysis`：
+`skill-graph.json` 中 `type = "infrastructure"` 的 Skill，例如 `knowledge-wiki`：
 
 - 不参与 `ready` 判定
 - 不出现在主链就绪计算中
 - 任何时候都可按需调用
 
 就绪判定算法在扫描候选时应跳过 `type: "infrastructure"` 的条目。
-
-其中 `product-analysis` 还需额外遵守一条承接规则：
-
-- 它虽然是基础设施 Skill，但不是通用查询工具，而是“纠偏型回流节点”
-- 它的正式下游固定是 `uxb`，不能被推荐为直接进入 `experience-blueprint`、`page-spec` 或其他正式设计下游
-- 若调用来源是独立输入或外部材料，则完成后回到 `uxb`
-- 若调用来源是 `uxb` 执行中途的纠偏分支，则完成后回到当前 `uxb` 上下文继续定案，而不是开启一个新的主链分支
-- shared-workflow 只负责声明“回到 uxb”，具体是外部承接还是内部回流，由 `product-analysis` 和 `uxb` 各自的 `SKILL.md` 负责执行
 
 ### 1.5 主链与增强关系
 
@@ -98,7 +90,7 @@ uxb / stories / journey-analysis -> experience-blueprint
 静态关系说明：
 
 - PRD Review 提供正式需求基线。
-- UXB 提供粗颗粒度体验方向与取舍。
+- UXB 提供项目级体验策略与关键体验取舍。
 - Stories 补充用户任务拆解。
 - Journey Analysis 补充旅程阶段、断点与风险。
 - 三项增强均不是进入 Experience Blueprint 的必经项。
@@ -109,11 +101,7 @@ uxb / stories / journey-analysis -> experience-blueprint
 
 - `solution-swimlane`
 - `page-spec`
-- `edge`
-- `board`
 - `journey-metrics`
-- `design-strategy`
-- `check`
 
 硬规则：
 
@@ -173,10 +161,7 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 
 - `knowledge-wiki`、`preview-renderer` 是公共能力，不参与主链固定 Handoff。
 - `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown 与 JSON，不固定推荐后续 Skill。
-- `product-analysis` 是 UXB 纠偏回流节点，固定下一步只有 `uxb`。
-- `design-strategy` 是独立终点，当前无固定下一步。
-- `interface-audit` 是独立增强节点，固定关系为 `uxb`、`journey-analysis`、`product-analysis`。
-- `check` 是设计走查终点，当前无固定下一步。
+- `problem-framing` 在问题驱动路线中同时承担问题定义与方向纠偏，固定下一步为用户故事、用户旅程和可选 UXB。
 
 ### 2.4 进度预览刷新策略
 
@@ -187,7 +172,7 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 - 如需要刷新进度面板，优先执行跨平台入口：`node shared-workflow/generate-progress-preview.js`。
 - Windows 环境也可使用 PowerShell 兼容入口：`shared-workflow/generate-progress-preview.ps1`。
 - 如果当前环境不支持刷新脚本、脚本缺失或执行失败，直接跳过，不得阻断当前 Skill 完成。
-- 不直接修改 `shared-workflow/progress-preview.html` 模板。
+- 不直接修改 `spark-output/progress-preview.html`；需要刷新时通过生成器生成。
 
 ---
 

@@ -6,8 +6,8 @@ const markdownRenderer = require("../../markdown_renderer");
 
 const TEXT = {
   missing: "\u672a\u63d0\u4f9b",
-  product: "\u95ee\u9898\u6846\u5b9a",
-  previewTitle: "\u95ee\u9898\u6846\u5b9a\u9884\u89c8",
+  product: "\u95ee\u9898\u4e0e\u4e1a\u52a1\u65b9\u6848",
+  previewTitle: "\u95ee\u9898\u4e0e\u4e1a\u52a1\u65b9\u6848\u9884\u89c8",
   projectUntitled: "\u672a\u547d\u540d\u9879\u76ee",
   leadRecommended: "\u63a8\u8350\u65b9\u5411",
   leadProblem: "\u6838\u5fc3\u95ee\u9898",

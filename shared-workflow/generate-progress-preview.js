@@ -18,15 +18,10 @@ const slashAlias = {
   "experience-blueprint": "/experience-blueprint",
   "solution-swimlane": "/solution-swimlane",
   "page-spec": "/page-spec",
-  "xft-design": "/xft-design",
   "edge": "/edge",
-  "check": "/check",
   "board": "/board",
   "knowledge-wiki": "/knowledge-wiki",
-  "product-analysis": "/product-analysis",
-  "design-strategy": "/design-strategy",
-  "journey-metrics": "/journey-metrics",
-  "interface-audit": "/interface-audit"
+  "journey-metrics": "/journey-metrics"
 };
 
 const contextPathBySkill = {
@@ -38,35 +33,23 @@ const contextPathBySkill = {
   "experience-blueprint": "spark-output/context/experience-blueprint.json",
   "solution-swimlane": "spark-output/solution-swimlane/solution_swimlane.html",
   "page-spec": "spark-output/context/page-spec.json",
-  "xft-design": "spark-output/context/xft-design.json",
   "edge": "spark-output/context/edge.json",
-  "check": "spark-output/context/check.json",
   "board": "spark-output/context/board.json",
   "knowledge-wiki": "spark-output/context/knowledge-wiki.json",
-  "product-analysis": "spark-output/context/product-analysis.json",
-  "design-strategy": "spark-output/context/design-strategy.json",
-  "journey-metrics": "spark-output/context/journey-metrics.json",
-  "interface-audit": "spark-output/context/interface-audit.json"
+  "journey-metrics": "spark-output/context/journey-metrics.json"
 };
 
 const sectionBySkill = {
-  "prd-review": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "product-analysis": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "interface-audit": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "design-strategy": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "uxb": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "problem-framing": section("explore", "01", "探索", "Explore", "需求读取、问题诊断与方向收敛", 1),
-  "stories": section("define", "02", "定义", "Define", "用户故事、旅程结构与需求补全", 2),
-  "journey-analysis": section("define", "02", "定义", "Define", "用户故事、旅程结构与需求补全", 2),
-  "experience-blueprint": section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3),
-  "solution-swimlane": section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3),
-  "board": section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3),
-  "page-spec": section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3),
-  "xft-design": section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3),
-  "edge": section("validate", "04", "验证", "Validate", "异常覆盖、质量校验与度量口径", 4),
-  "check": section("validate", "04", "验证", "Validate", "异常覆盖、质量校验与度量口径", 4),
-  "journey-metrics": section("validate", "04", "验证", "Validate", "异常覆盖、质量校验与度量口径", 4),
-  "knowledge-wiki": section("deliver", "05", "沉淀", "Archive", "产物归档、知识沉淀与后续复用", 5)
+  "prd-review": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "审核需求或基于问题形成业务方案", 1),
+  "problem-framing": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "审核需求或基于问题形成业务方案", 1),
+  "stories": section("task-journey", "02", "任务与旅程", "Task & Journey", "拆解用户任务，梳理用户完成过程", 2),
+  "journey-analysis": section("task-journey", "02", "任务与旅程", "Task & Journey", "拆解用户任务，梳理用户完成过程", 2),
+  "uxb": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
+  "experience-blueprint": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
+  "solution-swimlane": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
+  "page-spec": section("page-build", "04", "页面生成", "Page Build", "提取设计元素", 4),
+  "journey-metrics": section("validate", "05", "验证", "Validate", "定义关键节点的埋点与度量口径", 5),
+  "knowledge-wiki": section("deliver", "06", "沉淀", "Archive", "产物归档、知识沉淀与后续复用", 6)
 };
 
 function section(id, number, nameZh, nameEn, note, order) {
@@ -136,7 +119,9 @@ function main() {
     const contextPath = contextPathBySkill[skill.id];
     doneMap[skill.id] = Boolean(contextPath && existsFromRoot(contextPath));
 
-    const sectionMeta = sectionBySkill[skill.id] || section("design", "03", "设计", "Design", "方案生成、规格细化与页面落地", 3);
+    if (skill.preview_hidden === true) return;
+
+    const sectionMeta = sectionBySkill[skill.id] || section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3);
     if (!sectionsMap.has(sectionMeta.id)) {
       sectionsMap.set(sectionMeta.id, { ...sectionMeta, skills: [] });
     }

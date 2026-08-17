@@ -1,11 +1,11 @@
 ---
 name: experience-blueprint
 description: >
-  体验蓝图 Skill。基于正式需求基线和可选 UXB 体验定案生成完整体验方案，
+  体验蓝图 Skill。基于正式需求基线和可选 UXB 体验策略生成完整体验方案，
   包含旅程消费摘要、交互流程、页面设计和状态文案。
   触发关键词：体验蓝图、完整体验方案、交互设计方案、交互流程设计、蓝图设计、生成体验设计方案。
   仅在用户明确要求生成体验蓝图或完整交互方案时使用；不得仅因 UXB、问题框定、用户故事或旅程产物存在而自动触发。
-  排除：需求定案（用 uxb）、设计策略（用 design-strategy）、页面规格（用 page-spec）、旅程分析（用 journey-analysis）。
+  排除：体验策略（用 uxb）、页面设计元素提取（用 page-spec）、用户旅程（用 journey-analysis）。
 ---
 
 # Experience Blueprint

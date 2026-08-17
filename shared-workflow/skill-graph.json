@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "_comment": "本文档只作为 Skill 静态关系图、进度预览和人工查看的数据源；不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。main_chain、enhancements、reads、required、next_hint 及其他字段只用于静态展示、进度预览和人工参考。",
   "main_chain": [
     "prd-review",
@@ -33,9 +33,9 @@
     },
     {
       "id": "uxb",
-      "_comment": "需求定案 Markdown 与 Context JSON 完成并冻结后，UXB 再产出轻量的 page-generation-handoff.md；该后置步骤不参与核心推理，也不改变 UXB 的固定下一步推荐。",
-      "name_zh": "需求定案",
-      "phase": 1,
+      "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
+      "name_zh": "体验策略",
+      "phase": 3,
       "reads": [],
       "required": [],
       "next_hint": {
@@ -51,20 +51,21 @@
     },
     {
       "id": "problem-framing",
-      "name_zh": "问题框定",
+      "name_zh": "问题与业务方案",
       "phase": 1,
       "standalone_usable": true,
-      "standalone_note": "用于无 PRD、问题未成形的白纸场景；输出问题定义、方向判断和下游承接要求。",
+      "standalone_note": "用于已形成的问题描述、问题证据或正式问题结论；输出正式问题、主推荐业务方案和下游承接要求。",
       "anchor": false,
       "reads": [],
       "required": [],
       "next_hint": {
         "preferred": [
-          "stories"
-        ],
-        "reason": "问题框定已完成，优先进入用户故事，把方向判断拆成可设计、可验证的任务单元。",
-        "alternatives": [
+          "stories",
           "journey-analysis"
+        ],
+        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXB 是可选的体验策略增强。",
+        "alternatives": [
+          "uxb"
         ]
       }
     },
@@ -129,19 +130,17 @@
         "preferred": [
           "solution-swimlane",
           "page-spec",
-          "edge",
-          "board",
           "journey-metrics"
         ],
-        "reason": "体验蓝图完成后，优先生成面向产品与开发宣讲的方案协同图；也可按需要进入页面规格、异常态、视觉风格或旅程埋点与度量需求。",
+        "reason": "体验蓝图完成后，可继续生成业务泳道图、页面规格或旅程埋点与度量需求。",
         "alternatives": []
       }
     },
     {
       "id": "solution-swimlane",
       "_comment": "只承接正式体验蓝图 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在体验蓝图完成后优先展示本节点；required 仍保证它不会提前就绪。",
-      "name_zh": "方案协同图",
-      "phase": 2.4,
+      "name_zh": "业务泳道图",
+      "phase": 3,
       "reads": [
         "experience-blueprint"
       ],
@@ -158,7 +157,7 @@
       "id": "page-spec",
       "_comment": "以 experience-blueprint 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
       "name_zh": "页面规格",
-      "phase": 2.5,
+      "phase": 4,
       "reads": [
         "experience-blueprint",
         "edge"
@@ -176,6 +175,7 @@
       "id": "edge",
       "name_zh": "异常态",
       "phase": 3,
+      "preview_hidden": true,
       "reads": [
         "experience-blueprint"
       ],
@@ -192,6 +192,7 @@
       "id": "board",
       "name_zh": "视觉情绪板",
       "phase": 3,
+      "preview_hidden": true,
       "reads": [
         "experience-blueprint"
       ],
@@ -217,74 +218,9 @@
       }
     },
     {
-      "id": "product-analysis",
-      "name_zh": "产品分析",
-      "type": "infrastructure",
-      "_comment": "纠偏型基础设施 Skill。用于在需求方向不成立、问题未定清或 UXB 执行中发现方向需要重定义时，产出问题重定义与方向选项；完成后统一回流到 UXB，由 UXB 继续正式定案。不作为主链正式节点，也不直接进入 experience-blueprint。",
-      "reads": [],
-      "required": [],
-      "next_hint": {
-        "preferred": [
-          "uxb"
-        ],
-        "reason": "产品分析完成后，统一回到 UXB 承接：独立进入时回到需求定案；若本来就在 UXB 执行中，则回到当前 UXB 上下文继续定案。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "design-strategy",
-      "name_zh": "设计策略",
-      "phase": null,
-      "_comment": "独立 Skill，不依赖也不被其他 Skill 依赖。默认从 spark-output/ 读取材料，产出策略报告写回 spark-output/。后续可再与 uxb / experience-blueprint 建立关系。",
-      "reads": [],
-      "required": [],
-      "next_hint": {
-        "preferred": [],
-        "reason": "独立 Skill，当前无下游。后续可再与其他 Skill 建立关系。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "interface-audit",
-      "name_zh": "界面诊断",
-      "phase": null,
-      "_comment": "独立增强 Skill。用于基于截图、DOM、A11Y、runtime 或混合证据分析现有界面问题，输出可供 UXB、journey-analysis、product-analysis 消费的诊断结果。不作为 experience-blueprint 的默认直接上游。",
-      "reads": [],
-      "required": [],
-      "next_hint": {
-        "preferred": [
-          "uxb"
-        ],
-        "reason": "界面诊断完成后，优先进入需求定案；也可进入用户旅程或产品分析继续消费诊断证据。",
-        "alternatives": [
-          "journey-analysis",
-          "product-analysis"
-        ]
-      }
-    },
-    {
-      "id": "check",
-      "name_zh": "设计走查",
-      "phase": 4,
-      "standalone_usable": true,
-      "standalone_note": "可读取体验蓝图、异常态和 UXB 做链路走查，也可基于用户明确提供的文件或文本独立执行。",
-      "anchor": false,
-      "reads": [
-        "uxb",
-        "experience-blueprint",
-        "edge"
-      ],
-      "required": [],
-      "next_hint": {
-        "preferred": [],
-        "reason": "设计走查完成后，当前无固定下游推荐。",
-        "alternatives": []
-      }
-    },
-    {
       "id": "journey-metrics",
       "name_zh": "旅程埋点与度量需求",
-      "phase": 2.5,
+      "phase": 5,
       "reads": [
         "experience-blueprint"
       ],

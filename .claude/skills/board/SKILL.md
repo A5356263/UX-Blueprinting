@@ -3,7 +3,7 @@ name: board
 description: >
   视觉风格 Skill。读取体验蓝图与现有设计规范，输出 3-4 套视觉风格方向，并在用户选定后沉淀结构化设计变量。
   仅在用户明确要求视觉风格、视觉方向、风格方案或设计变量时使用；不得在体验蓝图完成后自动触发。
-  排除：设计策略报告（用 design-strategy）、交互方案（用 experience-blueprint）、页面规格（用 page-spec）。
+  排除：体验策略（用 uxb）、交互方案（用 experience-blueprint）、页面设计元素提取（用 page-spec）。
 ---
 
 # Board

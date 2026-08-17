@@ -5,7 +5,8 @@ const path = require("path");
 
 const ROOT_KEYS = [
   "skill", "version", "generated_at", "project_name", "artifact_md", "source_refs",
-  "decision_summary", "problem_statement", "primary_roles", "recommended_direction",
+  "mode", "decision_summary", "problem_statement", "primary_roles", "solution_goal",
+  "success_signals", "recommended_solution", "recommendation_basis", "business_solution_points",
   "handoff_requirements", "hard_constraints", "out_of_scope", "confirmed_facts",
   "working_assumptions", "open_questions",
 ];
@@ -45,19 +46,23 @@ function validate(data) {
   const errors = [];
   if (!exactObject(data, ROOT_KEYS, "root", errors)) return errors;
   if (data.skill !== "problem-framing") errors.push("skill 必须为 problem-framing");
-  if (data.version !== "2.0") errors.push("version 必须为 2.0");
+  if (data.version !== "3.0") errors.push("version 必须为 3.0");
   if (data.artifact_md !== "spark-output/problem_framing.md") {
     errors.push("artifact_md 必须为 spark-output/problem_framing.md");
   }
   for (const field of [
     "generated_at", "project_name", "decision_summary", "problem_statement",
-    "recommended_direction",
+    "mode", "decision_summary", "problem_statement", "solution_goal", "recommended_solution",
   ]) {
     nonEmptyString(data[field], field, errors);
   }
+  if (!["problem-definition", "direction-correction", "unknown"].includes(data.mode)) {
+    errors.push("mode 必须为 problem-definition、direction-correction 或 unknown");
+  }
   for (const field of [
-    "source_refs", "primary_roles", "handoff_requirements", "hard_constraints",
-    "out_of_scope", "confirmed_facts", "working_assumptions", "open_questions",
+    "source_refs", "primary_roles", "success_signals", "recommendation_basis",
+    "business_solution_points", "handoff_requirements", "hard_constraints", "out_of_scope",
+    "confirmed_facts", "working_assumptions", "open_questions",
   ]) {
     stringArray(data[field], field, errors);
   }

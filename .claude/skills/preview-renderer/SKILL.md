@@ -92,7 +92,7 @@ description: >
 
 ```text
 当前预览状态：
-- 问题框定：Markdown 已存在 / HTML 已生成
+- 问题与业务方案：Markdown 已存在 / HTML 已生成
 - 用户故事：Markdown 已存在 / HTML 未生成
 - 角色旅程：Markdown 已存在 / HTML 已生成
 - 体验蓝图：Markdown 已存在 / HTML 已生成
@@ -156,7 +156,7 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 | 产物类型 | Markdown | Context JSON | 渲染方式 | 输出 |
 |---|---|---|---|---|
 | 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | native-script | `spark-output/preview/uxb_preview.html` |
-| 问题框定 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
+| 问题与业务方案 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
 | 用户故事 | `spark-output/stories.md` | `spark-output/context/stories.json` | native-script | `spark-output/preview/stories_preview.html` |
 | 角色旅程 | `spark-output/journey_analysis.md` | `spark-output/context/journey-analysis.json` | native-script | `spark-output/preview/journey_analysis_preview.html` |
 | 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | native-script | `spark-output/preview/experience_blueprint_preview.html` |
@@ -166,7 +166,7 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 | 产物类型 | 模板 / 脚本 | 规则参考 |
 |---|---|---|
 | 业务蓝图 | `.claude/skills/preview-renderer/assets/skills/uxb/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/uxb/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/uxb/html_preview_execution_guide.md` |
-| 问题框定 | `.claude/skills/preview-renderer/assets/skills/problem-framing/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/problem-framing/html_preview_execution_guide.md` |
+| 问题与业务方案 | `.claude/skills/preview-renderer/assets/skills/problem-framing/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/problem-framing/html_preview_execution_guide.md` |
 | 用户故事 | `.claude/skills/preview-renderer/assets/skills/stories/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/stories/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/stories/html_preview_execution_guide.md` |
 | 角色旅程 | `.claude/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/journey-analysis/html_preview_execution_guide.md` |
 | 体验蓝图 | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html` 与 `.claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js` | `.claude/skills/preview-renderer/assets/skills/experience-blueprint/html_preview_execution_guide.md` |
