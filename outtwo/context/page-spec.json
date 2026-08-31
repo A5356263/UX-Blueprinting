@@ -1,0 +1,73 @@
+{
+  "skill": "page-spec",
+  "version": "2.0",
+  "generated_at": "unknown",
+  "project_name": "智能收文",
+  "artifact_md": "spark-output/page_spec.md",
+  "source_refs": [],
+  "page_summary": {
+    "product_domain": "公文 — 收文办理（协同办公）",
+    "page_type": "列表页（收文管控）+ 弹窗（智能收文）",
+    "user_role": "收文办理人员",
+    "core_task": "选择收文流程并上传公文原始文件，系统识别生成表单字段后填入收文表单"
+  },
+  "generation_scope": {
+    "generate": ["incoming-control-page", "intelligent-receive-modal"],
+    "reference_only": ["incoming-register-form"],
+    "do_not_generate": []
+  },
+  "entities": [
+    {
+      "entity_id": "incoming-control-page",
+      "name": "收文管控页面",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 4. 收文管控页面"
+    },
+    {
+      "entity_id": "intelligent-receive-modal",
+      "name": "智能收文弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 5. 智能收文弹窗"
+    },
+    {
+      "entity_id": "incoming-register-form",
+      "name": "收文表单（收文登记页）",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "## 2. 生成范围"
+    }
+  ],
+  "entity_relationships": [
+    {
+      "from_entity_id": "incoming-control-page",
+      "to_entity_id": "intelligent-receive-modal",
+      "relation": "点击 [智能收文] 打开"
+    },
+    {
+      "from_entity_id": "intelligent-receive-modal",
+      "to_entity_id": "incoming-register-form",
+      "relation": "点击 [自动填入表单] 打开收文表单并填充识别字段"
+    },
+    {
+      "from_entity_id": "intelligent-receive-modal",
+      "to_entity_id": "incoming-control-page",
+      "relation": "点击 [取消] 返回"
+    }
+  ],
+  "coverage": {
+    "pages": 2,
+    "entities": 3,
+    "flows": 2,
+    "validation_rules": 2,
+    "states": 5,
+    "exceptions": 3,
+    "result_states": 0,
+    "copy_items": 14,
+    "template_variables": 5
+  },
+  "open_questions": [],
+  "edge_consumed": false,
+  "edge_trace": []
+}

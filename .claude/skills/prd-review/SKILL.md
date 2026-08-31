@@ -318,6 +318,19 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 **硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
+## 预览交接
+
+- `prd-review` 自身不生成 HTML 预览。
+- 正式产物完成并通过 Context JSON 校验后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改需求基线、问题单或 Context JSON。
+- 预览是附加动作，不改变主链流转，也不进入下一步推荐。
+- 固定提示口径：
+
+```text
+附加操作：
+如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
+这不会改变主链流转。
+```
+
 ## Handoff · 下一步建议
 
 需求基线完成后，固定推荐 Experience Blueprint。UXB、Stories 和 Journey Analysis 只作为蓝图前的可选增强。

@@ -1,0 +1,984 @@
+{
+  "schema_version": "2.1",
+  "project_name": "企业财富+商机中心",
+  "baseline_status": "formal",
+  "source_trace": {
+    "prd": [
+      {
+        "type": "prd",
+        "reference": "input/企业财富+商机中心需求文档.md",
+        "location": "1.2 用户角色、1.3 术语解释、1.4 价值指标、2.2 业务流程、2.3 原型、2.4 领域对象、3.1 策略管理、3.2 客户营销、3.3 数据回检、4.1 性能、4.2 安全、4.3 上线兼容"
+      }
+    ],
+    "formal_knowledge": [],
+    "product_responses": ["Q-001", "Q-002", "Q-003", "Q-004"]
+  },
+  "goal_and_scope": {
+    "business_problem": [
+      "总分行产品经理需要以客户为维度统一查看有效商机，优先关注高价值、临近过期的商机。",
+      "商机来源和客户名单分散，同一客户可能同时存在多条商机，难以判断优先关注什么，跨系统营销过程中容易遗漏商机。",
+      "现状缺少客户维度的统一入口、商机优先级与有效期表达、名单交接、营销状态回流和数据回检闭环。"
+    ],
+    "goals": [
+      "让产品经理从客户维度统一查看商机信息，关注最值得关注且仍在有效期内的商机，不遗漏商机。",
+      "通过企业财富+与CRM营销平台完成营销全流程，并基于回检数据持续迭代优化商机策略。"
+    ],
+    "in_scope": [
+      "策略管理：只读展示本期3条商机策略、策略详情与权限范围内商机记录，可进入对应客户详情。",
+      "客户营销：以客户维度统一查看商机与营销状态，支持筛选、批量去营销、暂不处理、已线下处理，并可查看客户详情的商机、活动与任务明细。",
+      "数据回检：从企业财富+直接进入CRM营销回检中心查看营销效果数据。",
+      "企业财富+与三室产品系统、CRM营销平台、Kafka之间的商机同步、名单传输和状态回流。"
+    ],
+    "out_of_scope": [
+      "不在企业财富+创建或审批CRM活动。",
+      "不自行建设营销效果看板。",
+      "暂不开放商机策略编辑（不新增、编辑、删除、启停或审批策略）。",
+      "不承接迁移存量商机及客户数据，本期从上线后新生成的商机开始。",
+      "商机记录筛选不支持按商机编号筛选。"
+    ],
+    "success_results": [
+      "产品经理从客户维度统一查看商机，优先处理高价值有效商机不遗漏。",
+      "通过企业财富+与CRM完成营销全流程，并基于回检数据迭代优化商机策略。"
+    ]
+  },
+  "business_objects": [
+    {
+      "id": "BO-001",
+      "name": "客户",
+      "definition": "商机识别和营销经营的对象，可拥有多个商机并参与多个营销活动；客户营销状态是客户的汇总属性。",
+      "relations": [
+        "客户 1--0..N 商机：拥有",
+        "客户 0..N--0..N 营销活动：参与",
+        "客户 0..N--0..N 营销任务：对应"
+      ],
+      "entry_conditions": ["上游客户主数据同步"],
+      "exclusion_conditions": [],
+      "change_type": "keep",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "2.4 领域对象定义"}]
+    },
+    {
+      "id": "BO-002",
+      "name": "商机策略",
+      "definition": "判断客户是否形成商机的规则，客户符合策略后形成当前商机；一名客户可同时符合多条策略。",
+      "relations": [
+        "商机策略 1--0..N 商机：生成"
+      ],
+      "entry_conditions": ["系统预置本期3条策略，只读"],
+      "exclusion_conditions": ["不新增、编辑、删除、启停或审批策略"],
+      "change_type": "keep",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "2.4 领域对象定义、3.1.1"}]
+    },
+    {
+      "id": "BO-003",
+      "name": "商机",
+      "definition": "某名客户符合某条商机策略后形成的一次具体经营机会，具有独立商机编号、商机生成时间、生效时间、过期时间和商机状态。",
+      "relations": [
+        "商机 属于一名客户和一条商机策略",
+        "营销活动 0..N--0..N 商机：通过快照覆盖",
+        "营销任务 0..N--0..N 商机：通过活动快照关联"
+      ],
+      "entry_conditions": ["客户命中商机策略，或三室产品系统同步封闭型产品到期复购未达标商机"],
+      "exclusion_conditions": ["缺少商机生成时间时同步失败，不生成不完整商机"],
+      "change_type": "add",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.3 术语解释、2.4 领域对象定义、3.1.5"}]
+    },
+    {
+      "id": "BO-004",
+      "name": "营销活动",
+      "definition": "产品经理在CRM营销平台创建并提交审批的活动，可包含多名客户，可通过创建活动时保存的快照覆盖多个商机，并可选择多个渠道。",
+      "relations": [
+        "营销活动 1--0..N 营销任务：审批后生成",
+        "营销活动 0..N--0..N 渠道：选择"
+      ],
+      "entry_conditions": ["CRM营销平台创建活动"],
+      "exclusion_conditions": ["企业财富+不创建、审批或执行CRM活动"],
+      "change_type": "keep",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "2.4 领域对象定义、3.2.1"}]
+    },
+    {
+      "id": "BO-005",
+      "name": "营销任务",
+      "definition": "营销活动审批后生成的具体执行单元，属于一个活动，可对应多名客户并通过多个渠道执行。",
+      "relations": [
+        "营销任务 通过活动创建时的快照关联客户及商机",
+        "渠道 0..N--0..N 营销任务：执行"
+      ],
+      "entry_conditions": ["CRM活动审批后生成任务"],
+      "exclusion_conditions": [],
+      "change_type": "keep",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "2.4 领域对象定义"}]
+    },
+    {
+      "id": "BO-006",
+      "name": "渠道",
+      "definition": "营销活动中选择的客户触达方式，可被多个活动选择，也可执行多个营销任务；具体枚举以CRM为准。",
+      "relations": [
+        "营销活动 0..N--0..N 渠道：选择",
+        "渠道 0..N--0..N 营销任务：执行"
+      ],
+      "entry_conditions": [],
+      "exclusion_conditions": [],
+      "change_type": "keep",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "2.4 领域对象定义"}]
+    },
+    {
+      "id": "BO-007",
+      "name": "人工处理记录",
+      "definition": "暂不处理、已线下处理操作对客户全部待营销商机逐条保存的处理记录，含操作类型、操作人、操作时间、客户号、商机编号。",
+      "relations": ["人工处理记录 归属于一条商机"],
+      "entry_conditions": ["对待营销状态客户执行暂不处理或已线下处理"],
+      "exclusion_conditions": [],
+      "change_type": "add",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2"}]
+    },
+    {
+      "id": "BO-008",
+      "name": "商机快照",
+      "definition": "去营销时保存待处理客户当前全部待营销商机的快照，不限制生效时间；CRM活动创建后，将活动与快照中的客户和商机关联，形成客户—活动—商机关系。",
+      "relations": [
+        "商机快照 覆盖多个商机",
+        "商机快照 关联客户与营销活动"
+      ],
+      "entry_conditions": ["点击去营销并确认后保存快照"],
+      "exclusion_conditions": [],
+      "change_type": "add",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2"}]
+    }
+  ],
+  "roles_and_permissions": [
+    {
+      "id": "RP-001",
+      "role": "总行系统管理员",
+      "responsibilities": ["系统与权限管理", "查看全部数据并处理系统操作"],
+      "allowed_actions": ["查看客户营销", "去做营销", "暂不处理", "已线下处理", "系统与权限配置"],
+      "permission_prerequisites": ["拥有对应功能权限"],
+      "business_scope": ["全部数据，可跨分行处理"],
+      "forbidden_actions": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    },
+    {
+      "id": "RP-002",
+      "role": "分行系统管理员",
+      "responsibilities": ["系统与权限管理", "查看本分行数据并处理本分行系统操作"],
+      "allowed_actions": ["查看客户营销", "去做营销", "暂不处理", "已线下处理"],
+      "permission_prerequisites": ["拥有对应功能权限"],
+      "business_scope": ["自己分行数据"],
+      "forbidden_actions": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    },
+    {
+      "id": "RP-003",
+      "role": "总行产品经理领导/产品经理",
+      "responsibilities": ["跨分行经营"],
+      "allowed_actions": ["查看客户营销", "去做营销", "暂不处理", "已线下处理", "查看商机策略", "查看商机数据回检"],
+      "permission_prerequisites": ["拥有对应功能权限"],
+      "business_scope": ["全部客户数据，可代分行发起营销"],
+      "forbidden_actions": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    },
+    {
+      "id": "RP-004",
+      "role": "分行产品经理领导/产品经理",
+      "responsibilities": ["本分行经营"],
+      "allowed_actions": ["查看客户营销", "去做营销", "暂不处理", "已线下处理", "查看商机策略", "查看商机数据回检"],
+      "permission_prerequisites": ["拥有对应功能权限"],
+      "business_scope": ["本分行客户数据"],
+      "forbidden_actions": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    },
+    {
+      "id": "RP-005",
+      "role": "客户经理",
+      "responsibilities": ["客户经营与营销发起", "在CRM处理对应客户的营销任务"],
+      "allowed_actions": ["查看客户营销", "去做营销"],
+      "permission_prerequisites": ["拥有查看客户营销和去做营销权限"],
+      "business_scope": ["自己数据权限内的客户"],
+      "forbidden_actions": ["暂不处理", "已线下处理"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    },
+    {
+      "id": "RP-006",
+      "role": "其他行内普通用户",
+      "responsibilities": ["非授权访问者"],
+      "allowed_actions": [],
+      "permission_prerequisites": [],
+      "business_scope": ["无"],
+      "forbidden_actions": ["查看客户营销", "去做营销", "暂不处理", "已线下处理", "查看商机策略", "查看商机数据回检"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.2 用户角色、3.2.6.1"}]
+    }
+  ],
+  "functions_and_task_closure": [
+    {
+      "id": "FN-001",
+      "name": "查看商机策略列表",
+      "actor": "有查看商机策略权限的用户",
+      "trigger_conditions": ["产品经理需要了解哪些客户事件会产生商机，判断应优先关注什么", "需要理解商机的重要程度和有效时间"],
+      "main_steps": [
+        "进入企业财富+商机中心",
+        "切换至策略管理页签",
+        "查看策略列表（策略名称/编号、优先级、规则说明、跟进期限及聚合客户数据）",
+        "按策略名称/编号、优先级筛选或搜索策略"
+      ],
+      "success_results": ["仅展示权限范围内本期3条商机策略，默认按优先级从高到低、相同优先级按预置顺序排列"],
+      "failure_or_rejection_results": ["未拥有查看商机策略权限时，不展示菜单，页面提示暂无权限且不返回业务数据"],
+      "next_business_nodes": ["可进入策略详情查看商机记录"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1"}]
+    },
+    {
+      "id": "FN-002",
+      "name": "查看策略详情与商机记录",
+      "actor": "有查看商机策略权限的用户",
+      "trigger_conditions": ["产品经理需要了解某条策略的规则、命中情况和商机明细", "需要查看该策略产生哪些客户商机、优先级与有效期"],
+      "main_steps": [
+        "打开策略详情，查看基本信息、标签组合规则和规则说明",
+        "在商机记录筛选区按客户名称/编号、所属机构、优先级、商机有效性、商机营销状态、生效时间、过期时间筛选",
+        "查看该策略权限范围内的全部当前及历史商机记录，每页10条，默认按生效时间倒序",
+        "点击商机记录操作列的查看关联活动或查看人工处理记录"
+      ],
+      "success_results": ["展示策略详情，以及该策略产生且客户属于用户数据权限范围内的全部当前及历史商机，后端按客户数据权限校验"],
+      "failure_or_rejection_results": ["无权限时不返回业务数据；客户详情接口再次校验数据权限"],
+      "next_business_nodes": ["点击客户名称/客户号，在新窗口打开企业财富+客户详情"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.3、3.1.4.2"}]
+    },
+    {
+      "id": "FN-003",
+      "name": "查看客户营销列表并筛选",
+      "actor": "有查看客户营销权限的用户",
+      "trigger_conditions": ["产品经理需要从客户维度统一查看商机，判断最值得优先关注的客户", "权限范围内存在自本系统上线以来至少产生过一条商机的客户"],
+      "main_steps": [
+        "查看顶部统计（新增匹配客户数、待营销客户数、已过期未营销客户数、公金五星客户数、企业财富重点客户数）",
+        "按客户名称/客户号、商机策略名称/编号、营销状态、公金星级、企业财富星级、所属机构、客户经理、商机最新触发时间、商机最晚过期时间、年日均余额、时点余额、历史最高时点余额筛选客户",
+        "查看统一客户列表",
+        "对列表进行排序或分页查看"
+      ],
+      "success_results": ["展示权限范围内自本系统上线以来至少产生过一条商机的全部客户，按客户号去重，每名客户一行；默认按客户营销状态分组、公金星级降序、企业财富星级降序、商机最新触发时间降序排序；顶部统计不随列表筛选变化"],
+      "failure_or_rejection_results": ["无查看权限时不展示客户营销菜单，直接访问页面提示暂无权限，接口不返回客户数据"],
+      "next_business_nodes": ["勾选客户进行批量处理，或点击客户名称进入客户详情"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.4.2"}]
+    },
+    {
+      "id": "FN-004",
+      "name": "批量去营销",
+      "actor": "有去做营销权限的用户",
+      "trigger_conditions": ["产品经理需要对筛选出的待营销客户发起营销", "存在客户营销状态为待营销的客户"],
+      "main_steps": [
+        "勾选待营销状态客户，点击去营销",
+        "首次使用时展示操作说明，用户确认并继续",
+        "提交客户选择；后端校验权限、客户去重、1—10000名上限及待营销商机",
+        "为每名客户固定其当前全部待营销商机快照，不限制生效时间",
+        "分批传输客户名单，每批最多1000名",
+        "全部批次成功后返回可跳转结果，打开CRM新建活动页",
+        "CRM创建营销活动并回流活动创建证据；企业财富+将活动与快照中的商机关联",
+        "CRM审批活动并生成营销任务，通过Kafka回流状态；企业财富+更新单条商机状态，再聚合客户营销状态"
+      ],
+      "success_results": ["名单全部传输成功，可跳转CRM新建活动页；收到活动创建证据且活动为待审批、审批中或审批通过后，覆盖商机进入营销中；CRM任务结果回流后，商机营销状态及客户营销状态按规则重算"],
+      "failure_or_rejection_results": ["任一批传输失败时不跳转并展示失败，允许重新提交；重复提交由接口幂等机制处理；名单交接成功但活动尚未创建时不改变商机营销状态"],
+      "next_business_nodes": ["CRM营销平台活动审批与任务执行；营销结果回流更新状态"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.3.2、3.2.6.2"}]
+    },
+    {
+      "id": "FN-005",
+      "name": "批量暂不处理",
+      "actor": "有暂不处理权限的用户",
+      "trigger_conditions": ["产品经理对当前不准备营销的待营销客户暂缓处理", "存在待营销客户且需要暂不处理"],
+      "main_steps": [
+        "勾选待营销状态客户，点击暂不处理并确认",
+        "对这些客户的全部待营销商机逐条保存操作类型、操作人、操作时间、客户号、商机编号，不限制生效时间",
+        "重算商机及客户营销状态"
+      ],
+      "success_results": ["商机及客户营销状态变为暂不处理，客户不再在待营销下展示；无需填写理由"],
+      "failure_or_rejection_results": ["状态已变化的客户默认不处理；确认前没有客户仍为待营销时，提示没有客户有待营销商机，默认不做处理，确认按钮置灰"],
+      "next_business_nodes": ["无；操作不可撤销，商机不恢复为待营销状态"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "FN-006",
+      "name": "批量已线下处理",
+      "actor": "有已线下处理权限的用户",
+      "trigger_conditions": ["产品经理对已在线下完成营销的待营销客户记录处理结果", "存在待营销客户且已在线下完成处理"],
+      "main_steps": [
+        "勾选待营销状态客户，点击已线下处理并确认",
+        "对这些客户的全部待营销商机逐条保存操作类型、操作人、操作时间、客户号、商机编号，不限制生效时间",
+        "重算商机及客户营销状态"
+      ],
+      "success_results": ["商机及客户营销状态变为已线下处理，客户不再在待营销下展示；无需填写方式和结果"],
+      "failure_or_rejection_results": ["状态已变化的客户默认不处理"],
+      "next_business_nodes": ["无；操作不可撤销，商机不恢复为待营销状态"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "FN-007",
+      "name": "查看客户详情及商机记录",
+      "actor": "有查看客户营销权限的用户",
+      "trigger_conditions": ["产品经理需要查看单个客户的商机明细、营销状态依据和活动任务记录", "需要了解该客户营销状态的计算依据和商机、活动、任务明细"],
+      "main_steps": [
+        "进入客户详情，查看客户信息与客户营销状态",
+        "查看商机记录，每页10条，默认按生效时间倒序",
+        "按策略名称/编号、优先级、商机有效性、商机营销状态、生效时间、过期时间筛选商机",
+        "根据商机营销状态点击查看关联活动或查看人工处理记录",
+        "对客户营销状态为待营销的客户，在顶部操作区点击去营销、暂不处理或已线下处理"
+      ],
+      "success_results": ["展示客户信息、客户营销状态、该客户全部当前及历史商机，以及对应商机的活动与任务或人工处理记录；客户详情接口再次校验当前客户数据权限"],
+      "failure_or_rejection_results": ["无权限或客户权限已变化时，提示暂无权限且不返回客户数据"],
+      "next_business_nodes": ["对待营销客户执行去营销、暂不处理或已线下处理"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.4.2"}]
+    },
+    {
+      "id": "FN-008",
+      "name": "进入CRM营销回检中心",
+      "actor": "有查看商机数据回检权限的用户",
+      "trigger_conditions": ["产品经理需要查看CRM营销效果数据，用于商机策略迭代优化", "需要进入营销效果分析"],
+      "main_steps": [
+        "点击数据回检",
+        "后端校验功能权限",
+        "获取可信跳转地址和必要参数（仅可信域名和HTTPS）",
+        "打开CRM营销回检中心；CRM再次校验用户权限"
+      ],
+      "success_results": ["打开CRM营销回检中心查看营销数据；企业财富+不改变客户及营销状态"],
+      "failure_or_rejection_results": ["无权限时提示暂无权限且不跳转；地址或参数获取失败、CRM不可访问时终止跳转并记录失败日志，提示暂时无法打开数据回检，请稍后重试"],
+      "next_business_nodes": ["CRM营销回检中心（下游）"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.3"}]
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "BR-001",
+      "name": "商机生成规则",
+      "applicable_objects": ["商机"],
+      "trigger_conditions": ["客户命中某条商机策略"],
+      "decision_conditions": ["客户符合策略定义的事件即形成一次商机", "一名客户可同时符合多条策略"],
+      "business_results": ["生成具有独立商机编号、商机生成时间、生效时间、过期时间和商机状态的商机", "生效时间取商机生成时间"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.3、2.4"}]
+    },
+    {
+      "id": "BR-002",
+      "name": "商机来源边界",
+      "applicable_objects": ["商机策略", "商机"],
+      "trigger_conditions": ["策略运行生成商机"],
+      "decision_conditions": ["封闭型产品到期复购未达标由三室产品系统生成并同步至企业财富+", "上市公司发布理财公告、转账他行购买理财由企业财富+后端生成"],
+      "business_results": ["企业财富+对两类来源的商机统一展示和计算客户营销状态"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5"}]
+    },
+    {
+      "id": "BR-003",
+      "name": "上游商机同步与幂等",
+      "applicable_objects": ["三室产品系统同步商机"],
+      "trigger_conditions": ["接收三室产品系统同步消息"],
+      "decision_conditions": ["商机生成时间取三室产品系统记录的生成时间，不取企业财富+接收时间", "缺少商机生成时间时本条同步失败"],
+      "business_results": ["延迟同步、补发或重复同步不重复生成商机，不重置生效时间、过期时间和跟进期限", "缺少商机生成时间时同步失败并告警，不生成不完整商机"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5"}]
+    },
+    {
+      "id": "BR-004",
+      "name": "跟进期限与过期时间",
+      "applicable_objects": ["商机"],
+      "trigger_conditions": ["商机生成"],
+      "decision_conditions": ["过期时间=生效时间+跟进期限，截止时刻不计入有效期", "跟进期限采用商机生成时策略快照值"],
+      "business_results": ["有效商机再次命中不延长过期时间", "商机过期后再次命中生成新的商机编号"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5"}]
+    },
+    {
+      "id": "BR-005",
+      "name": "商机有效性计算",
+      "applicable_objects": ["商机"],
+      "trigger_conditions": ["按生效时间、过期时间和当前时间计算"],
+      "decision_conditions": ["商机尚未过期且当前时间距生效时间不超过1天为新增匹配", "超过1天且仍未过期为持续有效", "到达过期时间为已过期"],
+      "business_results": ["新增匹配和持续有效属于当前有效商机"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.1"}]
+    },
+    {
+      "id": "BR-006",
+      "name": "商机营销状态计算顺序",
+      "applicable_objects": ["商机"],
+      "trigger_conditions": ["活动、任务、人工处理或商机有效性变化后重算"],
+      "decision_conditions": ["每条商机独立计算，只使用创建活动时明确覆盖该商机的快照、活动生成的任务及该商机的人工处理记录", "按营销成功、营销中、营销失败、无经营价值、已线下处理、暂不处理、已过期未营销、待营销的顺序判定"],
+      "business_results": ["名单交接成功但活动尚未创建时不改变商机营销状态", "CRM消息更新后均按计算顺序重新计算，不以消息到达先后直接覆盖状态"],
+      "priority_or_exclusion": ["营销成功＞营销中＞营销失败＞无经营价值＞已线下处理＞暂不处理＞已过期未营销＞待营销"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "BR-007",
+      "name": "客户营销状态聚合",
+      "applicable_objects": ["客户"],
+      "trigger_conditions": ["商机营销状态变化或进入新业务日期时重算"],
+      "decision_conditions": ["纳入生效日期位于最近30个自然日（含当天）的全部商机", "按营销中、待营销、营销成功、营销失败、无经营价值、已线下处理、暂不处理、已过期未营销取优先级最高", "没有符合时间条件的商机时取近期暂无营销状态"],
+      "business_results": ["不只看最新商机，也不限制商机条数", "生效日期早于当前业务日期－29天的商机不再影响客户营销状态，但仍保留在商机历史记录中"],
+      "priority_or_exclusion": ["营销中＞待营销＞营销成功＞营销失败＞无经营价值＞已线下处理＞暂不处理＞已过期未营销"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "BR-008",
+      "name": "暂不处理与已线下处理的操作范围及不可撤销",
+      "applicable_objects": ["客户", "商机"],
+      "trigger_conditions": ["选择待营销状态客户执行批量处理"],
+      "decision_conditions": ["仅可对客户营销状态为待营销的客户操作", "处理范围为该客户全部状态为待营销的商机，不限制生效时间"],
+      "business_results": ["逐条保存操作类型、操作人、操作时间、客户号、商机编号", "操作不可撤销，商机不恢复为待营销状态"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.1、3.2.6.2"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "BR-009",
+      "name": "去营销名单传输规则",
+      "applicable_objects": ["营销活动", "客户名单"],
+      "trigger_conditions": ["点击去营销并确认"],
+      "decision_conditions": ["去重后最多10000名客户，每批最多1000名"],
+      "business_results": ["保存待处理客户全部待营销商机快照，不限制生效时间", "全部批次成功才跳转CRM新建活动页", "任一批失败不跳转并允许重新提交；重复提交由接口幂等机制处理"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2、3.2.6.3"}]
+    },
+    {
+      "id": "BR-010",
+      "name": "新增匹配客户数口径",
+      "applicable_objects": ["策略管理", "客户营销顶部统计"],
+      "trigger_conditions": ["统计新增匹配客户数"],
+      "decision_conditions": ["策略管理中为列表中针对单策略下新增的匹配客户数", "客户营销顶部统计为今日新增的可营销商机客户数，客户聚合状态为待营销且至少存在一条尚未过期、距生效不超过1天、营销状态为待营销的商机"],
+      "business_results": ["两处指标含义不同，各自独立展示，均按客户去重"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "product_response", "reference": "Q-002", "location": "产品回复 Q-002"}, {"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5、3.2.4.2"}]
+    },
+    {
+      "id": "BR-011",
+      "name": "已过期未营销客户数口径",
+      "applicable_objects": ["策略管理"],
+      "trigger_conditions": ["统计已过期未营销客户数"],
+      "decision_conditions": ["以客户营销状态为已过期未营销统计，且指定策略至少产生过一条状态为已过期未营销的该客户商机", "同一客户只统计一次"],
+      "business_results": ["按客户营销状态口径统计"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "1.3、3.1.4.2"}, {"type": "product_response", "reference": "Q-002", "location": "产品回复 Q-002"}]
+    },
+    {
+      "id": "BR-012",
+      "name": "商机记录筛选字段",
+      "applicable_objects": ["策略详情商机记录", "客户详情商机记录"],
+      "trigger_conditions": ["查询商机记录"],
+      "decision_conditions": ["支持策略名称/编号、优先级、商机有效性、商机营销状态、生效时间、过期时间等筛选", "不支持按商机编号筛选"],
+      "business_results": ["商机筛选区不提供商机编号筛选"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.4.2"}, {"type": "product_response", "reference": "Q-004", "location": "产品回复 Q-004"}]
+    },
+    {
+      "id": "BR-013",
+      "name": "批量操作确认时状态复核",
+      "applicable_objects": ["批量去营销", "暂不处理", "已线下处理"],
+      "trigger_conditions": ["点击批量操作并确认前"],
+      "decision_conditions": ["提交前重新计算所选客户营销状态"],
+      "business_results": ["因状态变化导致部分客户不再为待营销时，只处理仍为待营销的客户并提示数量", "没有客户仍为待营销时，提示没有客户有待营销商机，默认不做处理且确认按钮置灰"],
+      "priority_or_exclusion": [],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2、3.2.6.3"}]
+    }
+  ],
+  "states_and_transitions": [
+    {
+      "id": "ST-001",
+      "business_object": "商机有效性",
+      "state": "新增匹配",
+      "meaning": "商机已生成并到达生效时间，尚未过期且当前时间距生效时间不超过1天。",
+      "entry_conditions": ["生成商机并到达生效时间"],
+      "allowed_actions": ["参与客户营销列表与统计"],
+      "forbidden_actions": [],
+      "next_states": ["持续有效", "已过期"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.1"}]
+    },
+    {
+      "id": "ST-002",
+      "business_object": "商机有效性",
+      "state": "持续有效",
+      "meaning": "商机超过1天且仍未过期。",
+      "entry_conditions": ["新增匹配后距生效时间超过1天且尚未过期"],
+      "allowed_actions": ["参与客户营销列表与统计"],
+      "forbidden_actions": [],
+      "next_states": ["已过期"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.1"}]
+    },
+    {
+      "id": "ST-003",
+      "business_object": "商机有效性",
+      "state": "已过期",
+      "meaning": "商机到达过期时间。",
+      "entry_conditions": ["到达过期时间"],
+      "allowed_actions": ["保留在商机历史记录中"],
+      "forbidden_actions": [],
+      "next_states": ["新增匹配（后续再次命中生成新商机，生成新的商机编号）"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.1"}]
+    },
+    {
+      "id": "ST-004",
+      "business_object": "商机营销状态",
+      "state": "待营销",
+      "meaning": "商机仍有效且不符合营销中及结果状态。",
+      "entry_conditions": ["商机生效，未关联进行中的活动或任务"],
+      "allowed_actions": ["被去营销、暂不处理、已线下处理覆盖"],
+      "forbidden_actions": [],
+      "next_states": ["营销中", "已线下处理", "暂不处理", "已过期未营销"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-005",
+      "business_object": "商机营销状态",
+      "state": "营销中",
+      "meaning": "商机已被CRM活动或任务覆盖且仍在进行中。",
+      "entry_conditions": ["CRM活动已创建且进入待审批、审批中或审批通过", "或任务为未营销、营销中"],
+      "allowed_actions": ["查看关联活动"],
+      "forbidden_actions": [],
+      "next_states": ["营销成功", "营销失败", "无经营价值", "待营销（活动终止且无进行中任务）"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-006",
+      "business_object": "商机营销状态",
+      "state": "营销成功",
+      "meaning": "CRM任务已形成营销成功结果。",
+      "entry_conditions": ["关联任务形成营销成功结果"],
+      "allowed_actions": ["查看关联活动"],
+      "forbidden_actions": [],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-007",
+      "business_object": "商机营销状态",
+      "state": "营销失败",
+      "meaning": "CRM任务已形成营销失败结果。",
+      "entry_conditions": ["无成功及进行中任务，至少一个任务为营销失败，其余为营销失败或无经营价值"],
+      "allowed_actions": ["查看关联活动"],
+      "forbidden_actions": [],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-008",
+      "business_object": "商机营销状态",
+      "state": "无经营价值",
+      "meaning": "CRM任务已形成无经营价值结果。",
+      "entry_conditions": ["关联任务非空且全部为无经营价值"],
+      "allowed_actions": ["查看关联活动"],
+      "forbidden_actions": [],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-009",
+      "business_object": "商机营销状态",
+      "state": "已线下处理",
+      "meaning": "商机已记录线下处理结果。",
+      "entry_conditions": ["不符合营销结果及进行中条件，且已有线下处理记录"],
+      "allowed_actions": ["查看人工处理记录"],
+      "forbidden_actions": ["恢复为待营销"],
+      "next_states": [],
+      "irreversible": true,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "ST-010",
+      "business_object": "商机营销状态",
+      "state": "暂不处理",
+      "meaning": "商机已记录暂不处理结果。",
+      "entry_conditions": ["不符合营销结果及进行中条件，且已有暂不处理记录"],
+      "allowed_actions": ["查看人工处理记录"],
+      "forbidden_actions": ["恢复为待营销"],
+      "next_states": [],
+      "irreversible": true,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "ST-011",
+      "business_object": "商机营销状态",
+      "state": "已过期未营销",
+      "meaning": "商机到期前未开始营销。",
+      "entry_conditions": ["商机已过期，未关联任务或关联任务在过期前始终为未营销，且没有其他营销中证据及人工处理记录"],
+      "allowed_actions": ["操作列显示-"],
+      "forbidden_actions": [],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "ST-012",
+      "business_object": "客户营销状态",
+      "state": "营销中",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为营销中。",
+      "entry_conditions": ["商机营销状态变化或进入新业务日期时，按聚合规则重算"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-013",
+      "business_object": "客户营销状态",
+      "state": "待营销",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为待营销。",
+      "entry_conditions": ["无营销中商机，存在待营销商机，按聚合规则重算"],
+      "allowed_actions": ["去营销", "暂不处理", "已线下处理"],
+      "forbidden_actions": [],
+      "next_states": ["营销中", "已线下处理", "暂不处理"],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-014",
+      "business_object": "客户营销状态",
+      "state": "营销成功",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为营销成功。",
+      "entry_conditions": ["无营销中、待营销商机，存在营销成功商机，按聚合规则重算"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-015",
+      "business_object": "客户营销状态",
+      "state": "营销失败",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为营销失败。",
+      "entry_conditions": ["无营销中、待营销、营销成功商机，存在营销失败商机，按聚合规则重算"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-016",
+      "business_object": "客户营销状态",
+      "state": "无经营价值",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为无经营价值。",
+      "entry_conditions": ["按聚合优先级判定为无经营价值"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-017",
+      "business_object": "客户营销状态",
+      "state": "已线下处理",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为已线下处理。",
+      "entry_conditions": ["按聚合优先级判定为已线下处理"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-018",
+      "business_object": "客户营销状态",
+      "state": "暂不处理",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为暂不处理。",
+      "entry_conditions": ["按聚合优先级判定为暂不处理"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-019",
+      "business_object": "客户营销状态",
+      "state": "已过期未营销",
+      "meaning": "客户名下生效日期位于最近30个自然日内商机聚合后的营销状态为已过期未营销。",
+      "entry_conditions": ["按聚合优先级判定为已过期未营销"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "ST-020",
+      "business_object": "客户营销状态",
+      "state": "近期暂无营销状态",
+      "meaning": "客户名下没有生效日期位于最近30个自然日内的商机。",
+      "entry_conditions": ["没有符合时间条件的商机"],
+      "allowed_actions": [],
+      "forbidden_actions": ["去营销、暂不处理、已线下处理"],
+      "next_states": [],
+      "irreversible": false,
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    }
+  ],
+  "exceptions_and_business_results": [
+    {
+      "id": "EX-001",
+      "scenario": "上游商机延迟或重复同步",
+      "trigger_conditions": ["三室产品系统延迟、补发或重复同步商机"],
+      "business_decision": "双方技术方案幂等识别为同一上游商机",
+      "task_result": "不生成新商机",
+      "object_state_result": "不重置生效时间、过期时间和跟进期限；企业财富+商机编号保持不变",
+      "retry_or_recovery": "不适用",
+      "responsible_party": "三室产品系统、企业财富+技术",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5"}]
+    },
+    {
+      "id": "EX-002",
+      "scenario": "上游商机关键字段缺失",
+      "trigger_conditions": ["同步消息缺少商机生成时间"],
+      "business_decision": "本条同步失败",
+      "task_result": "不生成不完整商机",
+      "object_state_result": "记录失败原因并告警",
+      "retry_or_recovery": "不适用",
+      "responsible_party": "企业财富+",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5"}]
+    },
+    {
+      "id": "EX-003",
+      "scenario": "名单传输任一批失败",
+      "trigger_conditions": ["去营销分批传输客户名单中任一批失败"],
+      "business_decision": "批次传输失败",
+      "task_result": "不跳转CRM新建活动页并展示失败，允许重新提交",
+      "object_state_result": "名单交接成功但活动尚未创建时不改变商机营销状态",
+      "retry_or_recovery": "允许重新提交，重复提交由接口幂等机制处理",
+      "responsible_party": "企业财富+",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.3.2、3.2.6.2"}]
+    },
+    {
+      "id": "EX-004",
+      "scenario": "活动组建失败、审批不通过或审批已撤回",
+      "trigger_conditions": ["CRM活动组建失败、审批不通过或审批已撤回，且无其他进行中证据"],
+      "business_decision": "活动终止",
+      "task_result": "营销流程终止",
+      "object_state_result": "有效商机恢复待营销，按商机营销状态计算顺序重算",
+      "retry_or_recovery": "允许重新发起去营销",
+      "responsible_party": "CRM营销平台",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "EX-005",
+      "scenario": "批量操作确认前客户状态变化",
+      "trigger_conditions": ["已选客户在确认弹窗打开前部分或全部不再是待营销状态"],
+      "business_decision": "提交前重新计算客户营销状态",
+      "task_result": "部分变化时提示实际处理数量，只处理仍为待营销的客户；全部变化时提示没有客户有待营销商机，默认不做处理，确认按钮置灰",
+      "object_state_result": "状态已变化的客户不处理",
+      "retry_or_recovery": "不适用",
+      "responsible_party": "",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2、3.2.6.3"}]
+    },
+    {
+      "id": "EX-006",
+      "scenario": "超过去营销人数上限",
+      "trigger_conditions": ["选择超过10000名去重客户点击去营销"],
+      "business_decision": "超过单次上限",
+      "task_result": "不上传并提示单次最多选择10000名客户",
+      "object_state_result": "不发起名单传输，商机状态不变",
+      "retry_or_recovery": "调整选择后允许重试",
+      "responsible_party": "",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.3"}]
+    },
+    {
+      "id": "EX-007",
+      "scenario": "数据回检跳转失败",
+      "trigger_conditions": ["跳转地址或参数获取失败、CRM不可访问"],
+      "business_decision": "终止跳转并记录失败日志",
+      "task_result": "用户留在当前页面，提示暂时无法打开数据回检，请稍后重试",
+      "object_state_result": "企业财富+不改变客户及营销状态",
+      "retry_or_recovery": "允许重试",
+      "responsible_party": "企业财富+",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.3.6"}]
+    },
+    {
+      "id": "EX-008",
+      "scenario": "CRM活动状态未知组合",
+      "trigger_conditions": ["收到CRM活动状态映射之外的未知组合"],
+      "business_decision": "识别为未知状态",
+      "task_result": "显示状态异常并告警",
+      "object_state_result": "活动状态标记为状态异常",
+      "retry_or_recovery": "不适用",
+      "responsible_party": "企业财富+",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "EX-009",
+      "scenario": "无权限访问",
+      "trigger_conditions": ["非客户经理的行内普通用户或未授权用户直接访问商机中心页面地址"],
+      "business_decision": "无对应功能权限",
+      "task_result": "不展示菜单；提示暂无权限，接口不返回业务数据",
+      "object_state_result": "不改变业务数据",
+      "retry_or_recovery": "不适用",
+      "responsible_party": "",
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.2.2、3.2.2.2、3.3.2.2"}]
+    }
+  ],
+  "data_system_and_audit": {
+    "data_changes": [
+      "新增商机记录：商机编号、策略快照（优先级、跟进期限、标签组合规则、规则说明）、商机有效性、商机营销状态、生效时间、过期时间；商机过期后再次命中生成新的商机编号。",
+      "新增人工处理记录：操作类型（暂不处理、已线下处理）、操作人、操作时间、客户号、商机编号；操作时间使用Asia/Shanghai，精确到秒，用于操作审计和历史追溯。",
+      "新增商机快照：去营销时保存待处理客户当前全部待营销商机，不限制生效时间；CRM活动创建后将活动与快照中的客户和商机关联。",
+      "新增客户营销状态：客户名下最近30个自然日内商机按优先级聚合的汇总属性，一个客户同一时刻只取一个状态。",
+      "活动与任务记录：活动编号、活动状态、任务编号、任务名称、任务渠道、任务状态，由CRM通过Kafka回流；未回流可空，不以名称替代。"
+    ],
+    "system_impacts": [
+      "企业财富+：调整商机中心页面、客户状态计算和商机中心功能权限；本期不创建或审批CRM活动。",
+      "CRM营销平台：接收企业财富+传输的客户名单，承接活动创建与审批，生成营销任务并回传状态。",
+      "三室产品系统：生成并同步封闭型产品到期复购未达标商机。",
+      "Kafka：承载CRM活动与任务状态回流消息。"
+    ],
+    "synchronization_and_failures": [
+      "名单分批传输，每批最多1000名，单次最多10000名；任一批失败不跳转并允许重新提交。",
+      "重复提交由接口幂等机制处理；重复消息幂等，不重复生成商机。",
+      "CRM消息乱序到达时，按商机营销状态计算顺序重新计算，不以消息到达先后直接覆盖状态。",
+      "监控名单批次成功率、失败人数、Kafka消费延迟/失败、未知状态、无法关联记录。"
+    ],
+    "audit_facts": [
+      "发起时间、发起人（发起流程时记录，保存发起时的用户快照，Asia/Shanghai精确到秒）。",
+      "暂不处理/已线下处理操作人、操作时间。",
+      "名单传输批次、重试和对账信息属于接口处理记录，不是营销任务。"
+    ],
+    "historical_data": [
+      "本期不承接迁移存量商机及客户数据。",
+      "当前客户状态与历史记录分离；旧策略和旧状态不直接混入新口径。"
+    ]
+  },
+  "constraints_and_out_of_scope": {
+    "business_constraints": [
+      "不在企业财富+创建或审批CRM活动。",
+      "不自行建设营销效果看板。",
+      "暂不开放商机策略编辑：不新增、编辑、删除、启停或审批策略。"
+    ],
+    "dependencies": [
+      "三室产品系统：生成并同步封闭型产品到期复购未达标商机。",
+      "CRM营销平台：接收名单、创建活动、审批、生成任务并回传状态。",
+      "Kafka：承载活动与任务状态回流。"
+    ],
+    "explicitly_out_of_scope": [
+      "不承接迁移存量商机及客户数据。",
+      "商机记录筛选不支持按商机编号筛选。",
+      "暂不处理、已线下处理不可撤销，商机不恢复为待营销状态。"
+    ],
+    "future_considerations": []
+  },
+  "experience_decisions": {
+    "confirmed_constraints": [],
+    "pending_items": []
+  },
+  "completion_criteria": [
+    {
+      "id": "AC-001",
+      "related_ids": ["FN-001"],
+      "preconditions": ["用户拥有商机中心-查看商机策略权限"],
+      "actions": ["进入策略管理"],
+      "observable_results": ["仅展示本期3条商机策略，含策略名称/编号、优先级、规则说明、跟进期限及聚合客户数据，默认按优先级从高到低排列"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1"}]
+    },
+    {
+      "id": "AC-002",
+      "related_ids": ["FN-002"],
+      "preconditions": ["策略已产生用户有权查看的商机"],
+      "actions": ["打开策略详情，设置筛选并查询"],
+      "observable_results": ["展示完整规则说明、标签组合规则和阈值；商机记录默认按生效时间倒序，每页10条；筛选区不支持按商机编号筛选"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.3、3.1.4.2"}]
+    },
+    {
+      "id": "AC-003",
+      "related_ids": ["FN-003"],
+      "preconditions": ["权限范围内客户曾产生过商机"],
+      "actions": ["打开客户营销"],
+      "observable_results": ["每名客户仅一行；默认按客户营销状态分组（待营销、营销中、其他状态）、公金星级降序、企业财富星级降序、商机最新触发时间降序；顶部统计不随筛选变化"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.4.2"}]
+    },
+    {
+      "id": "AC-004",
+      "related_ids": ["FN-004"],
+      "preconditions": ["已选择1—10000名待营销状态客户，且确认时仍为待营销"],
+      "actions": ["点击去营销并确认"],
+      "observable_results": ["保存客户全部待营销商机快照；分批传输名单（每批最多1000名）；全部成功后跳转CRM新建活动页；收到活动创建证据且活动为待审批、审批中或审批通过后，覆盖商机进入营销中；CRM任务结果回流后更新商机及客户营销状态"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.3.2、3.2.6.2"}]
+    },
+    {
+      "id": "AC-005",
+      "related_ids": ["FN-004", "EX-003"],
+      "preconditions": ["任一批名单传输失败"],
+      "actions": ["点击去营销"],
+      "observable_results": ["不跳转CRM新建活动页并展示失败，允许重新提交；名单交接成功但活动尚未创建时不改变商机营销状态"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.3.2、3.2.6.2"}]
+    },
+    {
+      "id": "AC-006",
+      "related_ids": ["FN-005", "FN-006"],
+      "preconditions": ["已选择待营销状态客户"],
+      "actions": ["点击暂不处理或已线下处理并确认"],
+      "observable_results": ["对客户全部待营销商机保存人工处理记录并重算状态，商机及客户营销状态变为对应处理状态，客户不再在待营销下展示；操作不可撤销"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.2"}, {"type": "product_response", "reference": "Q-001", "location": "产品回复 Q-001"}]
+    },
+    {
+      "id": "AC-007",
+      "related_ids": ["FN-007"],
+      "preconditions": ["客户营销状态为待营销"],
+      "actions": ["打开客户详情，查看顶部操作区"],
+      "observable_results": ["去营销、暂不处理、已线下处理按钮可用；客户营销状态非待营销时按钮置灰，提示只有待营销客户可以操作"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.4.2"}]
+    },
+    {
+      "id": "AC-008",
+      "related_ids": ["FN-008"],
+      "preconditions": ["用户拥有商机中心-查看商机数据回检权限"],
+      "actions": ["点击数据回检"],
+      "observable_results": ["打开CRM营销回检中心；企业财富+不改变客户及营销状态；无权限或跳转失败时不跳转并提示"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.3"}]
+    },
+    {
+      "id": "AC-009",
+      "related_ids": ["BR-007"],
+      "preconditions": ["同一客户分别有营销中、待营销和营销成功商机，生效日期均位于最近30个自然日内"],
+      "actions": ["系统重算"],
+      "observable_results": ["客户营销状态为营销中"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "AC-010",
+      "related_ids": ["BR-007"],
+      "preconditions": ["客户有三条商机，生效日期分别为当天、当前业务日期－29天、当前业务日期－30天"],
+      "actions": ["系统重算"],
+      "observable_results": ["前两条参与客户状态计算，第三条不参与"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.2"}]
+    },
+    {
+      "id": "AC-011",
+      "related_ids": ["BR-006"],
+      "preconditions": ["商机任务一直为未营销"],
+      "actions": ["到达过期时间"],
+      "observable_results": ["商机进入已过期未营销；任务已进入营销中时，商机过期仍保持营销中"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.5.2.1"}]
+    },
+    {
+      "id": "AC-012",
+      "related_ids": ["BR-008"],
+      "preconditions": ["待营销客户同时有两条待营销商机，生效日期分别为当前业务日期－29天和当前业务日期－30天"],
+      "actions": ["点击去营销、暂不处理或已线下处理并确认"],
+      "observable_results": ["两条待营销商机均被处理"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.2.6.3"}]
+    },
+    {
+      "id": "AC-013",
+      "related_ids": ["BR-003"],
+      "preconditions": ["双方技术方案识别为同一上游商机，再次收到同步消息"],
+      "actions": ["接收同步消息"],
+      "observable_results": ["不生成新商机，不重置生效时间、过期时间和跟进期限，企业财富+商机编号保持不变"],
+      "sources": [{"type": "prd", "reference": "input/企业财富+商机中心需求文档.md", "location": "3.1.5"}]
+    },
+    {
+      "id": "AC-014",
+      "related_ids": ["BR-010", "BR-011"],
+      "preconditions": ["客户营销顶部与策略管理统计同一批客户商机数据"],
+      "actions": ["查看对应统计指标"],
+      "observable_results": ["客户营销顶部新增匹配客户数按今日新增可营销商机客户数统计；策略管理新增匹配客户数按单策略新增匹配客户数统计；已过期未营销客户数按客户营销状态为已过期未营销统计，同一客户只统计一次"],
+      "sources": [{"type": "product_response", "reference": "Q-002", "location": "产品回复 Q-002"}]
+    }
+  ]
+}

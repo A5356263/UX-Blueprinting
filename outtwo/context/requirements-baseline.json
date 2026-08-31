@@ -1,0 +1,482 @@
+{
+  "schema_version": "2.1",
+  "project_name": "智能收文",
+  "baseline_status": "formal",
+  "source_trace": {
+    "prd": [
+      {
+        "type": "prd",
+        "reference": "用户粘贴需求正文（智能收文功能）",
+        "location": "功能入口 / 入口规则 / 弹窗说明"
+      }
+    ],
+    "formal_knowledge": [
+      {
+        "type": "formal_knowledge",
+        "reference": "公文 任务与路径",
+        "location": "收文流程-收文登记"
+      },
+      {
+        "type": "formal_knowledge",
+        "reference": "公文 页面与字段",
+        "location": "2.2 收文管控、2.2.1 收文"
+      },
+      {
+        "type": "formal_knowledge",
+        "reference": "公文 功能与操作清单",
+        "location": "收文办理"
+      },
+      {
+        "type": "formal_knowledge",
+        "reference": "权限管理 规则与权限",
+        "location": "L1 功能权限授权粒度"
+      }
+    ],
+    "product_responses": ["Q-001", "Q-002", "Q-003"]
+  },
+  "goal_and_scope": {
+    "business_problem": [
+      "收文办理人员在收到外部来文后，需将公文原始文件登记为收文并填写收文表单。"
+    ],
+    "goals": [
+      "让收文办理人员在收文管控页通过“智能收文”上传公文原始文件，选择收文流程后由系统识别生成收文表单字段，并自动填入所选收文流程对应的收文表单。"
+    ],
+    "in_scope": [
+      "收文管控页新增“智能收文”入口。",
+      "打开智能收文弹窗，支持选择收文流程、上传并校验公文文件。",
+      "调用智能化识别能力生成收文表单字段。",
+      "自动填入所选收文流程对应的收文表单。"
+    ],
+    "out_of_scope": [
+      "本期不涉及现有收文流程、收文表单字段配置的修改。",
+      "智能收文不新增独立收文记录类型，最终仍通过现有收文登记流程形成收文记录。"
+    ],
+    "success_results": [
+      "打开所选收文流程对应的收文表单，识别字段已填充，上传的公文原始文件自动作为正文或附件带入。"
+    ]
+  },
+  "business_objects": [
+    {
+      "id": "BO-001",
+      "name": "智能收文入口",
+      "definition": "收文管控页面新增的入口按钮，用于打开智能收文弹窗。",
+      "relations": ["隶属收文管控页面"],
+      "entry_conditions": ["用户拥有收文管控菜单功能权限"],
+      "exclusion_conditions": [],
+      "change_type": "add",
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "功能入口"
+        }
+      ]
+    },
+    {
+      "id": "BO-002",
+      "name": "智能收文弹窗",
+      "definition": "用于选择收文流程、上传公文文件、开始识别并自动填入表单的弹窗。",
+      "relations": ["识别后进入所选收文流程对应的收文表单"],
+      "entry_conditions": [],
+      "exclusion_conditions": [],
+      "change_type": "add",
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "BO-003",
+      "name": "收文表单",
+      "definition": "所选收文流程对应的现有收文表单，用于填写收文信息并提交或存草稿。",
+      "relations": ["属于所选收文流程", "沿用现有收文登记流程"],
+      "entry_conditions": [],
+      "exclusion_conditions": [],
+      "change_type": "keep",
+      "sources": [
+        {
+          "type": "formal_knowledge",
+          "reference": "公文 任务与路径",
+          "location": "收文流程-收文登记"
+        },
+        {
+          "type": "formal_knowledge",
+          "reference": "公文 页面与字段",
+          "location": "2.2.1 收文"
+        }
+      ]
+    },
+    {
+      "id": "BO-004",
+      "name": "公文原始文件",
+      "definition": "智能收文弹窗上传的公文文件，用于识别生成表单字段并带入收文表单。",
+      "relations": ["作为正文或附件带入收文表单"],
+      "entry_conditions": ["格式属于 PDF、JPG、PNG、WORD 之一", "文件大小不超过 100M", "每次上传 1 个文件"],
+      "exclusion_conditions": [],
+      "change_type": "add",
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        },
+        {
+          "type": "product_response",
+          "reference": "Q-002",
+          "location": "需求确认记录"
+        }
+      ]
+    }
+  ],
+  "roles_and_permissions": [
+    {
+      "id": "RP-001",
+      "role": "收文办理人员（拥有收文管控菜单功能权限）",
+      "responsibilities": [
+        "通过智能收文将收到的公文原始文件登记为收文，生成收文表单。"
+      ],
+      "allowed_actions": [
+        "点击智能收文",
+        "在弹窗选择收文流程",
+        "上传公文文件",
+        "开始识别",
+        "自动填入表单",
+        "在收文表单继续编辑并提交或存草稿"
+      ],
+      "permission_prerequisites": [
+        "所有企业均开放",
+        "拥有收文管控菜单功能权限"
+      ],
+      "business_scope": [
+        "沿用现有权限体系，无额外数据权限要求"
+      ],
+      "forbidden_actions": [
+        "未获得收文管控菜单功能权限的用户不可使用智能收文"
+      ],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "入口规则"
+        },
+        {
+          "type": "formal_knowledge",
+          "reference": "权限管理 规则与权限",
+          "location": "L1 功能权限授权粒度"
+        }
+      ]
+    }
+  ],
+  "functions_and_task_closure": [
+    {
+      "id": "FN-001",
+      "name": "智能收文生成收文表单",
+      "actor": "收文办理人员",
+      "trigger_conditions": [
+        "收到外部来文的公文原始文件，需要登记为收文",
+        "存在需登记的公文原始文件，需要生成收文表单",
+        "拥有收文管控菜单功能权限，企业已开启公文应用，存在启用状态的收文流程"
+      ],
+      "main_steps": [
+        "点击智能收文，打开智能收文弹窗",
+        "选择收文流程，下拉框展示启用状态的收文流程，支持单选",
+        "上传公文原始文件，支持 PDF、JPG、PNG、WORD 格式，每次 1 个，不超过 100M",
+        "系统对上传文件校验格式与大小",
+        "点击开始识别，系统调用智能化识别生成收文表单字段",
+        "识别结果在弹窗内单独展示",
+        "点击自动填入表单，打开所选收文流程对应的收文表单，填充识别字段"
+      ],
+      "success_results": [
+        "打开所选收文流程对应的收文表单，识别字段已填充",
+        "上传的公文原始文件自动作为正文或附件带入收文表单"
+      ],
+      "failure_or_rejection_results": [
+        "文件格式或大小校验不通过时不执行识别",
+        "识别失败时任务重新开始"
+      ],
+      "next_business_nodes": [
+        "用户在收文表单继续编辑，沿用现有收文登记流程提交或存草稿"
+      ],
+      "existing_task_location": "公文 → 公文管理 → 公文管控 → 收文管控页面",
+      "existing_carriers": ["收文管控页面"],
+      "existing_entry": "收文管控页“智能收文”按钮（位于“录入历史数据”按钮右侧）",
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "功能入口 / 弹窗说明"
+        },
+        {
+          "type": "formal_knowledge",
+          "reference": "公文 页面与字段",
+          "location": "2.2 收文管控"
+        },
+        {
+          "type": "product_response",
+          "reference": "Q-001",
+          "location": "需求确认记录"
+        },
+        {
+          "type": "product_response",
+          "reference": "Q-002",
+          "location": "需求确认记录"
+        }
+      ]
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "BR-001",
+      "name": "文件格式与大小校验",
+      "applicable_objects": ["智能收文弹窗上传的公文文件"],
+      "trigger_conditions": ["上传公文文件后"],
+      "decision_conditions": ["文件格式属于 PDF、JPG、PNG、WORD 之一", "文件大小不超过 100M"],
+      "business_results": ["校验通过才可执行识别", "校验不通过则不执行识别"],
+      "priority_or_exclusion": [],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "BR-002",
+      "name": "单文件上传限制",
+      "applicable_objects": ["智能收文弹窗"],
+      "trigger_conditions": ["上传公文文件时"],
+      "decision_conditions": ["每次上传 1 个文件"],
+      "business_results": ["一次仅可上传 1 个公文文件"],
+      "priority_or_exclusion": [],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "BR-003",
+      "name": "收文流程单选与展示范围",
+      "applicable_objects": ["智能收文弹窗的收文流程下拉框"],
+      "trigger_conditions": ["打开智能收文弹窗时"],
+      "decision_conditions": ["下拉框仅展示启用状态的收文流程", "支持单选一个流程"],
+      "business_results": ["用户从启用状态的收文流程中选择一个作为识别填充的对应流程"],
+      "priority_or_exclusion": [],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        },
+        {
+          "type": "product_response",
+          "reference": "Q-003",
+          "location": "需求确认记录"
+        }
+      ]
+    },
+    {
+      "id": "BR-004",
+      "name": "智能收文入口权限",
+      "applicable_objects": ["智能收文入口"],
+      "trigger_conditions": ["进入收文管控页面时"],
+      "decision_conditions": ["所有企业开放", "用户拥有收文管控菜单的功能权限"],
+      "business_results": ["拥有收文管控菜单功能权限的用户即可使用智能收文"],
+      "priority_or_exclusion": [],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "入口规则"
+        },
+        {
+          "type": "formal_knowledge",
+          "reference": "权限管理 规则与权限",
+          "location": "L1 功能权限授权粒度"
+        }
+      ]
+    }
+  ],
+  "states_and_transitions": [],
+  "exceptions_and_business_results": [
+    {
+      "id": "EX-001",
+      "scenario": "文件格式或大小校验不通过",
+      "trigger_conditions": ["上传的公文文件格式不属于 PDF、JPG、PNG、WORD", "或文件大小超过 100M"],
+      "business_decision": "格式或大小校验不通过",
+      "task_result": "不执行识别，任务停留在弹窗上传阶段",
+      "object_state_result": "无业务对象状态变化",
+      "retry_or_recovery": "允许重新上传符合要求的文件",
+      "responsible_party": "用户",
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "EX-002",
+      "scenario": "识别失败",
+      "trigger_conditions": ["智能化识别未能成功生成收文表单字段"],
+      "business_decision": "识别失败",
+      "task_result": "任务重新开始",
+      "object_state_result": "无业务对象状态变化",
+      "retry_or_recovery": "允许重新开始（重新上传或重新识别）",
+      "responsible_party": "用户",
+      "sources": [
+        {
+          "type": "product_response",
+          "reference": "Q-001",
+          "location": "需求确认记录"
+        }
+      ]
+    }
+  ],
+  "data_system_and_audit": {
+    "data_changes": [
+      "智能收文识别填充的收文表单：打开所选收文流程对应的现有收文表单，识别字段填充到表单",
+      "上传的公文原始文件自动作为正文或附件带入收文表单",
+      "收文记录最终通过现有收文登记流程形成，不新增独立收文记录类型"
+    ],
+    "system_impacts": [
+      "智能化识别对接外部识别能力（甲豪），用于识别公文文件生成收文表单字段",
+      "复用现有收文流程、收文表单及收文登记流程"
+    ],
+    "synchronization_and_failures": [
+      "识别对接外部能力，识别失败时任务重新开始"
+    ],
+    "audit_facts": [
+      "本期未新增独立审计事实；收文记录的发起人等信息沿用现有收文登记记录"
+    ],
+    "historical_data": []
+  },
+  "constraints_and_out_of_scope": {
+    "business_constraints": [
+      "所有企业均开放使用智能收文"
+    ],
+    "dependencies": [
+      "智能化识别对接外部能力（甲豪）"
+    ],
+    "explicitly_out_of_scope": [
+      "本期不修改现有收文流程和收文表单字段配置",
+      "本期不新增独立收文记录类型，智能收文仅作为收文登记的智能化前置能力"
+    ],
+    "future_considerations": []
+  },
+  "experience_decisions": {
+    "confirmed_constraints": [
+      {
+        "id": "EC-001",
+        "applicable_tasks": ["FN-001"],
+        "constraint": "识别成功后，识别生成的表单字段需在弹窗内单独展示，用户查看后再通过“自动填入表单”打开收文表单填入。",
+        "sources": [
+          {
+            "type": "user_supplement",
+            "reference": "prd_review_questions.md",
+            "location": "你还需要补充什么吗？第 1 条"
+          }
+        ]
+      }
+    ],
+    "pending_items": []
+  },
+  "completion_criteria": [
+    {
+      "id": "AC-001",
+      "related_ids": ["FN-001"],
+      "preconditions": ["用户拥有收文管控菜单功能权限，企业已开启公文应用"],
+      "actions": ["在收文管控页点击“智能收文”"],
+      "observable_results": ["打开智能收文弹窗，展示收文流程下拉框与文件上传区"],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "AC-002",
+      "related_ids": ["BR-001", "BR-002"],
+      "preconditions": ["用户已上传公文文件"],
+      "actions": ["上传格式不属于 PDF、JPG、PNG、WORD 或超过 100M 的文件"],
+      "observable_results": ["校验不通过，不执行识别，任务停留在弹窗上传阶段，可重新上传符合要求的文件"],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "AC-003",
+      "related_ids": ["BR-001", "BR-002"],
+      "preconditions": ["用户选择收文流程，上传 1 个格式与大小均合规的公文文件"],
+      "actions": ["点击“开始识别”"],
+      "observable_results": ["系统执行识别并生成收文表单字段"],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        }
+      ]
+    },
+    {
+      "id": "AC-004",
+      "related_ids": ["FN-001"],
+      "preconditions": ["识别成功生成收文表单字段"],
+      "actions": ["查看弹窗"],
+      "observable_results": ["识别生成的表单字段在弹窗内单独展示"],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明-自动填入表单"
+        }
+      ]
+    },
+    {
+      "id": "AC-005",
+      "related_ids": ["FN-001"],
+      "preconditions": ["识别结果已单独展示"],
+      "actions": ["点击“自动填入表单”"],
+      "observable_results": ["打开所选收文流程对应的收文表单，识别字段已填充，上传的公文原始文件自动作为正文或附件带入"],
+      "sources": [
+        {
+          "type": "prd",
+          "reference": "用户粘贴需求正文（智能收文功能）",
+          "location": "弹窗说明"
+        },
+        {
+          "type": "product_response",
+          "reference": "Q-002",
+          "location": "需求确认记录"
+        }
+      ]
+    },
+    {
+      "id": "AC-006",
+      "related_ids": ["EX-002"],
+      "preconditions": ["点击“开始识别”后识别未成功"],
+      "actions": ["系统触发识别失败"],
+      "observable_results": ["任务回到可重新开始状态，用户可重新上传或重新识别"],
+      "sources": [
+        {
+          "type": "product_response",
+          "reference": "Q-001",
+          "location": "需求确认记录"
+        }
+      ]
+    }
+  ]
+}

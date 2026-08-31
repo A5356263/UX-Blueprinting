@@ -5,6 +5,15 @@ const path = require("path");
 
 const PRODUCTS = [
   {
+    id: "prd-review",
+    label: "需求基线",
+    purpose: "审核闭环后的正式需求事实与待定案事项",
+    markdown: "spark-output/requirements_baseline.md",
+    context: "spark-output/context/requirements-baseline.json",
+    script: ".claude/skills/preview-renderer/assets/skills/prd-review/generate_preview.js",
+    preview: "spark-output/preview/requirements_baseline_preview.html"
+  },
+  {
     id: "uxb",
     label: "业务蓝图",
     purpose: "需求定案与业务边界的正式入口",
@@ -48,6 +57,15 @@ const PRODUCTS = [
     context: "spark-output/context/experience-blueprint.json",
     script: ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js",
     preview: "spark-output/preview/experience_blueprint_preview.html"
+  },
+  {
+    id: "page-spec",
+    label: "页面设计文档",
+    purpose: "提取页面实体、结构、状态和页面生成所需事实",
+    markdown: "spark-output/page_spec.md",
+    context: "spark-output/context/page-spec.json",
+    script: ".claude/skills/preview-renderer/assets/skills/page-spec/generate_preview.js",
+    preview: "spark-output/preview/page_spec_preview.html"
   }
 ];
 

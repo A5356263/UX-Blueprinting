@@ -1,0 +1,541 @@
+{
+  "skill": "experience-blueprint",
+  "version": "4.0",
+  "generated_at": "unknown",
+  "project_name": "智能收文",
+  "artifact_md": "spark-output/experience_blueprint.md",
+  "source_refs": [],
+  "upstream_contract": {
+    "mode": "baseline-mode",
+    "requirements_baseline_refs": [
+      "spark-output/requirements_baseline.md",
+      "spark-output/context/requirements-baseline.json"
+    ],
+    "uxb_refs": []
+  },
+  "information_architecture": {
+    "primary_navigation": [
+      {
+        "label": "首页",
+        "route": "/document-home",
+        "icon_hint": "home",
+        "access": "role-restricted",
+        "children": []
+      },
+      {
+        "label": "公文管理",
+        "route": "/document-management",
+        "icon_hint": "folder-open",
+        "access": "role-restricted",
+        "children": [
+          {
+            "label": "公文管控",
+            "route": null,
+            "icon_hint": "folder",
+            "access": "role-restricted",
+            "children": [
+              {
+                "label": "发文管控",
+                "route": "/outgoing-control",
+                "icon_hint": "file-text",
+                "access": "role-restricted",
+                "children": []
+              },
+              {
+                "label": "收文管控",
+                "route": "/incoming-control",
+                "icon_hint": "inbox",
+                "access": "role-restricted",
+                "children": []
+              }
+            ]
+          },
+          {
+            "label": "公文归档",
+            "route": "/archive",
+            "icon_hint": "archive",
+            "access": "role-restricted",
+            "children": []
+          }
+        ]
+      },
+      {
+        "label": "系统设置",
+        "route": "/system-settings",
+        "icon_hint": "settings",
+        "access": "role-restricted",
+        "children": []
+      }
+    ],
+    "site_tree": [
+      {
+        "label": "公文",
+        "route": null,
+        "access": "role-restricted",
+        "surface_type": "page",
+        "children": [
+          {
+            "label": "首页",
+            "route": "/document-home",
+            "access": "role-restricted",
+            "surface_type": "page",
+            "children": []
+          },
+          {
+            "label": "公文管理",
+            "route": "/document-management",
+            "access": "role-restricted",
+            "surface_type": "page",
+            "children": [
+              {
+                "label": "公文管控",
+                "route": null,
+                "access": "role-restricted",
+                "surface_type": "page",
+                "children": [
+                  {
+                    "label": "发文管控",
+                    "route": "/outgoing-control",
+                    "access": "role-restricted",
+                    "surface_type": "page",
+                    "children": []
+                  },
+                  {
+                    "label": "收文管控",
+                    "route": "/incoming-control",
+                    "access": "role-restricted",
+                    "surface_type": "page",
+                    "children": [
+                      {
+                        "label": "智能收文",
+                        "route": null,
+                        "access": "role-restricted",
+                        "surface_type": "modal",
+                        "children": []
+                      },
+                      {
+                        "label": "收文表单",
+                        "route": "/incoming-register",
+                        "access": "role-restricted",
+                        "surface_type": "system",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "公文归档",
+                "route": "/archive",
+                "access": "role-restricted",
+                "surface_type": "page",
+                "children": []
+              }
+            ]
+          },
+          {
+            "label": "系统设置",
+            "route": "/system-settings",
+            "access": "role-restricted",
+            "surface_type": "page",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "critical_design_judgments": [
+    {
+      "judgment": "智能收文用弹窗承载前置识别",
+      "impacts": ["收文管控页面", "智能收文弹窗"],
+      "recommended_approach": "在收文管控页点击智能收文打开弹窗；弹窗内完成流程选择、文件上传与识别结果展示；识别后离开弹窗进入收文表单，不回到弹窗。",
+      "not_recommended": "把智能收文做成独立全页面，打断收文登记主链路；或完成后仍滞留弹窗导致用户找不到去向。"
+    },
+    {
+      "judgment": "弹窗内单页顺序组织，不拆分步骤",
+      "impacts": ["智能收文弹窗结构"],
+      "recommended_approach": "弹窗按收文流程、公文文件、操作区顺序组织；点击开始识别后进入识别中状态，识别完成在同一弹窗内展示结果与自动填入表单操作，不引入步骤条。",
+      "not_recommended": "把选择流程、上传、识别拆成多步骤条，增加往返成本且无实质阶段依赖。"
+    },
+    {
+      "judgment": "识别前前置约束，避免无效识别",
+      "impacts": ["智能收文弹窗操作区"],
+      "recommended_approach": "开始识别在收文流程已选且文件上传并通过格式、大小校验前保持不可用；识别中锁定流程选择与文件上传，防止中途修改导致识别与所选不一致。",
+      "not_recommended": "未选流程或文件不合格仍可点击识别，等到识别阶段才报错。"
+    },
+    {
+      "judgment": "识别结果单独展示，确认后填入表单",
+      "impacts": ["智能收文弹窗识别结果区", "收文表单"],
+      "recommended_approach": "识别完成后弹窗出现识别结果区，列出识别出的字段与取值；操作区切换为取消、自动填入表单；点击后打开所选收文流程对应的收文表单并填充，上传文件自动作为正文或附件带入。",
+      "not_recommended": "识别结果不展示、用户看不到识别了哪些字段就盲目填入表单。"
+    },
+    {
+      "judgment": "识别与校验异常就地恢复",
+      "impacts": ["智能收文弹窗上传区与反馈区"],
+      "recommended_approach": "文件格式或大小不通过时上传区就地提示限制并支持重新选择；识别失败时弹窗内展示失败反馈，用户可重新上传或重新识别；失败前已选择的流程与已上传的文件保留。",
+      "not_recommended": "校验失败无提示、识别失败只报错无恢复路径，用户只能反复尝试或放弃。"
+    },
+    {
+      "judgment": "收文表单沿用现有登记流程",
+      "impacts": ["收文表单（复用引用）"],
+      "recommended_approach": "智能收文填充后，用户在原收文表单页面核对、修改字段，按现有收文登记流程提交或存草稿；智能收文不新增独立收文记录类型。",
+      "not_recommended": "为智能收文再造收文表单或提交链路，与现有收文登记流程分叉。"
+    }
+  ],
+  "journey_consumption": [
+    {
+      "type": "信心最低点",
+      "finding": "识别完成后，用户对识别出的字段是否正确、是否覆盖全部必要字段缺少把握，此时信心最低。",
+      "source_stage": "收文办理人员 / 识别结果确认",
+      "blueprint_target": "识别结果在弹窗内单独展示，字段与取值可见，供用户核对后确认填入。"
+    },
+    {
+      "type": "关键转折",
+      "finding": "用户从手工填写收文表单切换到上传文件智能识别，需要先理解智能收文的用途与前置要求。",
+      "source_stage": "收文办理人员 / 进入智能收文",
+      "blueprint_target": "弹窗副标题说明上传公文原始文件，智能化生成收文表单，并明确收文流程与文件要求；进入弹窗后先选择流程、上传文件，再开始识别，顺序引导任务推进。"
+    },
+    {
+      "type": "流失风险",
+      "finding": "识别失败时用户可能因缺少恢复路径而放弃智能收文，退回手工填写。",
+      "source_stage": "收文办理人员 / 识别失败",
+      "blueprint_target": "识别失败在弹窗内反馈，明确可重新上传或重新识别，任务可重新开始；识别结果区失败状态下保留已选流程与文件，减少重复操作。"
+    }
+  ],
+  "interaction_overview": [
+    {
+      "name": "主路径 1 · 收文办理人员智能收文生成收文表单",
+      "path_type": "主路径",
+      "steps": [
+        "收文管控页面",
+        "点击 [智能收文]",
+        "打开 智能收文弹窗",
+        "选择收文流程（下拉单选，仅启用状态流程）",
+        "上传公文文件",
+        "系统校验文件格式与大小",
+        "点击 [开始识别]",
+        "进入识别中状态",
+        "识别成功，弹窗内单独展示识别结果（字段与取值）",
+        "点击 [自动填入表单]",
+        "打开所选收文流程对应的收文表单，识别字段已填充",
+        "上传的公文原始文件自动作为正文或附件带入收文表单",
+        "用户在收文表单继续编辑",
+        "提交或存草稿（沿用现有收文登记流程）"
+      ],
+      "branches": [
+        "文件格式不属于 PDF、JPG、PNG、WORD 或超过 100M → 上传区就地提示，不执行识别，可重新上传",
+        "未选择收文流程或未上传通过校验的文件 → [开始识别] 不可用，不进入识别",
+        "识别失败 → 弹窗内展示失败反馈，任务重新开始，可重新上传或重新识别",
+        "点击 [取消] → 关闭智能收文弹窗，放弃本次智能收文，不生成收文记录"
+      ]
+    },
+    {
+      "name": "分支路径 · 文件校验失败",
+      "path_type": "分支路径",
+      "steps": [
+        "智能收文弹窗文件上传区",
+        "上传不符合格式或大小限制的文件",
+        "上传区就地显示错误提示",
+        "重新选择符合要求的文件",
+        "校验通过后继续 [开始识别]"
+      ],
+      "branches": []
+    },
+    {
+      "name": "分支路径 · 识别失败",
+      "path_type": "分支路径",
+      "steps": [
+        "智能收文弹窗识别结果区",
+        "识别未成功生成表单字段",
+        "弹窗内展示识别失败反馈",
+        "重新上传或重新识别",
+        "回到可重新开始状态"
+      ],
+      "branches": []
+    },
+    {
+      "name": "分支路径 · 取消智能收文",
+      "path_type": "分支路径",
+      "steps": [
+        "智能收文弹窗",
+        "点击 [取消]",
+        "弹窗关闭",
+        "回到收文管控页面"
+      ],
+      "branches": []
+    }
+  ],
+  "main_flow": [
+    {
+      "name": "节点 1 · 从收文管控页发起智能收文",
+      "user_action": "在收文管控页面点击 [智能收文]",
+      "system_feedback": "打开智能收文弹窗，展示标题智能收文、副标题您可以上传公文原始文件，智能化生成收文表单，以及收文流程下拉框、文件上传区和取消、开始识别操作",
+      "pre_explanations": ["智能收文用于上传公文原始文件自动生成收文表单，需先选择收文流程并上传文件"],
+      "copy_suggestions": ["副标题：您可以上传公文原始文件，智能化生成收文表单"],
+      "next_step": "在弹窗内选择收文流程"
+    },
+    {
+      "name": "节点 2 · 选择收文流程",
+      "user_action": "打开收文流程下拉框，从启用状态的收文流程中选择一个",
+      "system_feedback": "下拉框仅展示启用状态的收文流程，支持单选；选中后回填所选流程",
+      "pre_explanations": ["所选收文流程决定后续打开并填充的收文表单"],
+      "copy_suggestions": [],
+      "next_step": "上传公文文件"
+    },
+    {
+      "name": "节点 3 · 上传公文文件",
+      "user_action": "在文件上传区选择 1 个公文文件（PDF、JPG、PNG、WORD，不超过 100M）",
+      "system_feedback": "上传后校验文件格式与大小；通过后上传区展示文件名，开始识别变为可用",
+      "pre_explanations": ["每次仅支持上传 1 个文件，格式限 PDF、JPG、PNG、WORD，大小不超过 100M"],
+      "copy_suggestions": [],
+      "next_step": "点击 [开始识别]"
+    },
+    {
+      "name": "节点 4 · 开始识别",
+      "user_action": "点击 [开始识别]",
+      "system_feedback": "进入识别中状态，开始识别禁用并显示识别进度；收文流程与文件上传区锁定，防止中途修改",
+      "pre_explanations": ["识别需要一定时间，处理期间请勿关闭弹窗"],
+      "copy_suggestions": ["按钮状态：识别中"],
+      "next_step": "等待识别完成"
+    },
+    {
+      "name": "节点 5 · 查看识别结果",
+      "user_action": "查看弹窗内单独展示的识别结果",
+      "system_feedback": "识别成功，弹窗出现识别结果区，列出识别生成的表单字段与取值；操作区切换为取消、自动填入表单",
+      "pre_explanations": ["识别结果将填入所选收文流程对应的收文表单，可在填入前查看确认"],
+      "copy_suggestions": [],
+      "next_step": "点击 [自动填入表单]"
+    },
+    {
+      "name": "节点 6 · 自动填入表单",
+      "user_action": "点击 [自动填入表单]",
+      "system_feedback": "打开所选收文流程对应的收文表单，识别字段已填充；上传的公文原始文件自动作为正文或附件带入；智能收文弹窗关闭",
+      "pre_explanations": ["已进入收文表单，识别字段可继续编辑"],
+      "copy_suggestions": [],
+      "next_step": "在收文表单核对并编辑字段"
+    },
+    {
+      "name": "节点 7 · 完成收文登记",
+      "user_action": "在收文表单继续编辑，点击 [提交] 或 [存草稿]",
+      "system_feedback": "沿用现有收文登记流程处理，形成收文记录",
+      "pre_explanations": ["识别字段填充后仍需按收文登记要求确认内容"],
+      "copy_suggestions": [],
+      "next_step": "进入现有收文处理流程（提交进入审批，或存草稿后续处理）"
+    }
+  ],
+  "sub_flows": [
+    {
+      "name": "次流程 1 · 取消智能收文",
+      "trigger_condition": "用户在智能收文弹窗内点击 [取消]",
+      "user_action": "点击 [取消]",
+      "system_feedback": "智能收文弹窗关闭，返回收文管控页面；本次上传与识别内容不保留，不生成收文记录",
+      "pre_explanations": [],
+      "copy_suggestions": [],
+      "next_step": "停留在收文管控页面，可重新点击 [智能收文] 或改用 [收文] 手工登记"
+    }
+  ],
+  "exceptions": [
+    {
+      "name": "文件格式或大小校验失败",
+      "timing": "在智能收文弹窗上传公文文件后",
+      "trigger_condition": "文件格式不属于 PDF、JPG、PNG、WORD，或文件大小超过 100M",
+      "basis": "上传后系统按格式与大小校验（BR-001、BR-002）",
+      "feedback_type": "InlineError",
+      "system_feedback": "上传区显示错误原因，不执行识别；已选择的收文流程保留",
+      "how_to_handle": "用户重新选择符合格式与大小限制的文件，校验通过后继续点击 [开始识别]；任务停留在弹窗上传阶段，弹窗与已填内容不丢失"
+    },
+    {
+      "name": "识别失败",
+      "timing": "点击 [开始识别] 后",
+      "trigger_condition": "智能化识别未能成功生成收文表单字段",
+      "basis": "外部识别能力返回失败或无结果",
+      "feedback_type": "Inline",
+      "system_feedback": "弹窗内展示识别失败提示，说明识别未成功；已选择的收文流程与已上传的文件保留",
+      "how_to_handle": "用户可重新上传文件或重新识别，任务重新开始；也可点击 [取消] 关闭弹窗，返回收文管控页面改用 [收文] 手工登记"
+    },
+    {
+      "name": "前置条件未满足（开始识别不可用）",
+      "timing": "弹窗打开至上传文件完成前",
+      "trigger_condition": "未选择收文流程，或未上传通过校验的公文文件",
+      "basis": "开始识别需收文流程已选且文件已通过格式与大小校验",
+      "feedback_type": "Disabled",
+      "system_feedback": "开始识别不可点击，避免无效识别",
+      "how_to_handle": "用户完成收文流程选择与合规文件上传后，开始识别变为可用"
+    }
+  ],
+  "surfaces": {
+    "pages": [
+      {
+        "name": "收文管控页面",
+        "goal": "查看和筛选收文记录，发起收文并维护收文的处理与公示信息。",
+        "entry_condition": "公文 → 公文管理 → 公文管控 → 收文管控；拥有收文管控菜单功能权限。",
+        "markdown_heading": "7-1 收文管控页面（父级承载页）",
+        "structure_notes": [
+          "筛选查询区：标题输入框、字号下拉、来文单位下拉、重置、查询、更多筛选",
+          "工具与操作区：+收文、+录入历史数据、+智能收文（本期新增）、导出、表头设置",
+          "收文数据表格区：标题、字号、来文单位、状态、发文日期、收文日期、操作",
+          "底部分页区"
+        ],
+        "fields": ["标题", "字号", "来文单位", "状态", "发文日期", "收文日期", "操作"],
+        "validation_rules": [],
+        "state_feedback": [],
+        "exception_structure_changes": ["未获收文管控菜单功能权限的用户不展示智能收文按钮"],
+        "copy_items": ["[智能收文]"],
+        "buttons": ["+ 收文", "+ 录入历史数据", "+ 智能收文（本期新增）", "导出", "重置", "查询", "更多筛选", "表头设置"],
+        "success_feedback": ["点击 [智能收文] 后打开智能收文弹窗，当前收文管控页面状态与列表保留"],
+        "failure_feedback": ["未获收文管控菜单功能权限时智能收文入口不可见"]
+      }
+    ],
+    "modals": [
+      {
+        "name": "智能收文弹窗",
+        "goal": "让收文办理人员选择收文流程、上传公文原始文件，由系统识别生成表单字段并填入收文表单。",
+        "entry_condition": "在收文管控页面点击智能收文按钮。",
+        "markdown_heading": "7-2 智能收文弹窗",
+        "structure_notes": [
+          "标题区：标题智能收文、副标题您可以上传公文原始文件，智能化生成收文表单",
+          "收文流程区：下拉框，仅展示启用状态的收文流程，单选",
+          "公文文件区：文件上传控件，支持 PDF、JPG、PNG、WORD，单文件不超过 100M，每次 1 个",
+          "识别结果区：识别完成后单独展示识别生成的表单字段与取值",
+          "操作区：取消、开始识别（初始）；取消、自动填入表单（识别完成后）"
+        ],
+        "fields": ["收文流程（下拉框，单选）", "公文文件（上传控件）", "识别结果（字段与取值）"],
+        "validation_rules": [
+          "文件格式属于 PDF、JPG、PNG、WORD 之一",
+          "文件大小不超过 100M",
+          "每次上传 1 个文件",
+          "未选择收文流程或未上传通过校验的文件时开始识别置灰"
+        ],
+        "state_feedback": [
+          "待识别：请选择收文流程并上传公文文件",
+          "识别中：正在识别公文内容，请稍候…",
+          "识别成功：识别完成，已生成表单字段",
+          "识别失败：识别失败，请重新上传文件或重新识别"
+        ],
+        "exception_structure_changes": [
+          "开始识别在未选择收文流程或未上传通过校验的文件时置灰",
+          "识别中锁定收文流程与文件上传区",
+          "识别失败时识别结果区显示失败反馈，自动填入表单不出现，保留取消与重新开始入口"
+        ],
+        "copy_items": [
+          "弹窗标题：智能收文",
+          "副标题：您可以上传公文原始文件，智能化生成收文表单",
+          "收文流程占位：请选择收文流程",
+          "上传区提示：支持 PDF、JPG、PNG、WORD 格式，文件不超过 100M",
+          "格式错误提示：仅支持 PDF、JPG、PNG、WORD 格式文件",
+          "大小错误提示：文件大小不能超过 100M",
+          "识别中：正在识别公文内容，请稍候…",
+          "识别成功：识别完成，已生成表单字段",
+          "识别失败：识别失败，请重新上传文件或重新识别"
+        ],
+        "buttons": ["取消", "开始识别", "自动填入表单"],
+        "success_feedback": ["点击 [自动填入表单] 后，打开所选收文流程对应的收文表单，识别字段已填充，上传的公文原始文件自动作为正文或附件带入；智能收文弹窗关闭"],
+        "failure_feedback": [
+          "文件格式或大小校验失败：上传区就地显示错误提示，说明支持的格式与大小限制，不执行识别，可重新上传",
+          "识别失败：弹窗内识别结果区显示失败提示，说明识别未成功，可重新上传或重新识别"
+        ]
+      }
+    ],
+    "drawers": []
+  },
+  "states": [
+    {
+      "state": "待识别",
+      "meaning": "弹窗已打开，流程与文件就绪情况待完善",
+      "applies_to": "智能收文弹窗",
+      "user_actions": ["选择流程", "上传文件", "取消"],
+      "feedback": "请选择收文流程并上传公文文件"
+    },
+    {
+      "state": "识别中",
+      "meaning": "系统正在识别公文文件生成表单字段",
+      "applies_to": "智能收文弹窗",
+      "user_actions": ["等待识别完成", "取消"],
+      "feedback": "正在识别公文内容，请稍候…"
+    },
+    {
+      "state": "识别成功",
+      "meaning": "识别完成，表单字段已生成并展示",
+      "applies_to": "智能收文弹窗",
+      "user_actions": ["查看识别结果", "自动填入", "取消"],
+      "feedback": "识别完成，已生成表单字段"
+    },
+    {
+      "state": "识别失败",
+      "meaning": "识别未成功生成表单字段",
+      "applies_to": "智能收文弹窗",
+      "user_actions": ["重新上传", "重新识别", "取消"],
+      "feedback": "识别失败，请重新上传文件或重新识别"
+    },
+    {
+      "state": "文件校验失败",
+      "meaning": "上传文件格式或大小不满足限制",
+      "applies_to": "智能收文弹窗文件上传区",
+      "user_actions": ["重新选择文件"],
+      "feedback": "仅支持 PDF、JPG、PNG、WORD 格式文件；文件大小不能超过 100M"
+    }
+  ],
+  "feedbacks": [
+    {
+      "scenario": "自动填入表单成功",
+      "type": "Navigation",
+      "copy": "打开所选收文流程对应的收文表单，识别字段已填充"
+    }
+  ],
+  "upstream_trace": [
+    {
+      "upstream_judgment": "需求基线 FN-001：收文管控页新增智能收文入口，位于录入历史数据右侧",
+      "experience_meaning": "入口需与现有收文、录入历史数据入口并排组织",
+      "design_decision": "工具区在录入历史数据右侧新增智能收文按钮",
+      "blueprint_target": "§7 7-1"
+    },
+    {
+      "upstream_judgment": "需求基线 FN-001：弹窗内选择收文流程、上传文件、开始识别、自动填入",
+      "experience_meaning": "弹窗需按任务顺序组织并承载识别过程",
+      "design_decision": "弹窗单页顺序组织，含流程、文件、识别结果与操作区",
+      "blueprint_target": "§7 7-2、§4"
+    },
+    {
+      "upstream_judgment": "需求基线 BR-001、BR-002：文件格式与大小校验，每次 1 个文件",
+      "experience_meaning": "校验失败需就地反馈并可恢复",
+      "design_decision": "上传区就地错误提示，支持重新上传",
+      "blueprint_target": "§6 异常1"
+    },
+    {
+      "upstream_judgment": "需求基线 BR-003：流程下拉仅展示启用状态流程",
+      "experience_meaning": "下拉选项需限定可发起流程",
+      "design_decision": "流程下拉框仅展示启用状态的收文流程",
+      "blueprint_target": "§7 7-2、§4 节点2"
+    },
+    {
+      "upstream_judgment": "需求基线 BR-004：所有企业开放，拥有菜单功能权限即可使用",
+      "experience_meaning": "入口受功能权限控制",
+      "design_decision": "无权限用户不展示智能收文入口",
+      "blueprint_target": "§7 7-1"
+    },
+    {
+      "upstream_judgment": "需求基线 EC-001：识别结果需单独展示，确认后填入",
+      "experience_meaning": "识别结果需可核对再填入表单",
+      "design_decision": "弹窗内单独展示识别字段，自动填入表单前可查看",
+      "blueprint_target": "§0 D-004、§7 7-2"
+    },
+    {
+      "upstream_judgment": "需求基线 EX-001：校验不通过不执行识别，任务停留上传阶段",
+      "experience_meaning": "校验失败任务不中断",
+      "design_decision": "上传区就地提示，保留已填内容",
+      "blueprint_target": "§6 异常1"
+    },
+    {
+      "upstream_judgment": "需求基线 EX-002：识别失败任务重新开始",
+      "experience_meaning": "识别失败需可恢复",
+      "design_decision": "弹窗内失败反馈，可重新上传或重新识别",
+      "blueprint_target": "§0 D-005、§6 异常2"
+    },
+    {
+      "upstream_judgment": "需求基线 Q-002：上传文件自动作为正文或附件带入收文表单",
+      "experience_meaning": "用户无需重复上传文件",
+      "design_decision": "自动填入时文件自动带入正文或附件",
+      "blueprint_target": "§4 节点6"
+    }
+  ]
+}

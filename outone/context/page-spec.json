@@ -1,0 +1,231 @@
+{
+  "skill": "page-spec",
+  "version": "2.0",
+  "generated_at": "unknown",
+  "project_name": "企业财富+商机中心",
+  "artifact_md": "spark-output/page_spec.md",
+  "source_refs": [],
+  "page_summary": {
+    "product_domain": "企业财富+ — 商机中心（商机营销经营）",
+    "page_type": "父级承载页（商机中心）、列表页（客户营销 / 策略管理）、详情页（客户详情 / 策略详情）、确认弹窗（去营销 / 暂不处理 / 已线下处理）、展示弹窗（有效商机 / 人工处理记录）",
+    "user_role": "总分行产品经理及领导、系统管理员、客户经理",
+    "core_task": "产品经理从客户维度统一查看商机与营销状态，筛选客户并批量去营销、暂不处理、已线下处理，查看客户详情与商机记录，并查看商机策略与数据回检"
+  },
+  "generation_scope": {
+    "generate": [
+      "entity-center",
+      "entity-customer-marketing",
+      "entity-go-marketing-modal",
+      "entity-postpone-modal",
+      "entity-offline-modal",
+      "entity-valid-opportunity-modal",
+      "entity-customer-detail",
+      "entity-strategy-management",
+      "entity-strategy-detail",
+      "entity-handle-record-modal"
+    ],
+    "reference_only": [
+      "entity-data-review",
+      "entity-crm-create-page",
+      "entity-crm-review-center"
+    ],
+    "do_not_generate": [
+      "entity-upstream-sync"
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "entity-center",
+      "name": "商机中心（父级承载页）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 4. 商机中心（父级承载页）"
+    },
+    {
+      "entity_id": "entity-customer-marketing",
+      "name": "客户营销页（Tab）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 5. 客户营销页（Tab）"
+    },
+    {
+      "entity_id": "entity-go-marketing-modal",
+      "name": "去营销说明与确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 6. 去营销说明与确认弹窗"
+    },
+    {
+      "entity_id": "entity-postpone-modal",
+      "name": "暂不处理确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 7. 暂不处理确认弹窗"
+    },
+    {
+      "entity_id": "entity-offline-modal",
+      "name": "已线下处理确认弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 8. 已线下处理确认弹窗"
+    },
+    {
+      "entity_id": "entity-valid-opportunity-modal",
+      "name": "有效商机弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 9. 有效商机弹窗"
+    },
+    {
+      "entity_id": "entity-customer-detail",
+      "name": "客户详情（修改现有页面）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 10. 客户详情（修改现有页面）"
+    },
+    {
+      "entity_id": "entity-strategy-management",
+      "name": "策略管理页（Tab）",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 11. 策略管理页（Tab）"
+    },
+    {
+      "entity_id": "entity-strategy-detail",
+      "name": "策略详情页",
+      "type": "page",
+      "generate_mode": "generate",
+      "md_anchor": "## 12. 策略详情页"
+    },
+    {
+      "entity_id": "entity-handle-record-modal",
+      "name": "人工处理记录弹窗",
+      "type": "modal",
+      "generate_mode": "generate",
+      "md_anchor": "## 13. 人工处理记录弹窗"
+    },
+    {
+      "entity_id": "entity-data-review",
+      "name": "数据回检（跳转CRM营销回检中心）",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "## 2. 生成范围"
+    },
+    {
+      "entity_id": "entity-crm-create-page",
+      "name": "CRM新建活动页",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "## 2. 生成范围"
+    },
+    {
+      "entity_id": "entity-crm-review-center",
+      "name": "CRM营销回检中心",
+      "type": "page",
+      "generate_mode": "reference_only",
+      "md_anchor": "## 2. 生成范围"
+    },
+    {
+      "entity_id": "entity-upstream-sync",
+      "name": "上游商机同步（三室产品系统同步）",
+      "type": "system",
+      "generate_mode": "do_not_generate",
+      "md_anchor": "## 2. 生成范围"
+    }
+  ],
+  "entity_relationships": [
+    {
+      "from_entity_id": "entity-center",
+      "to_entity_id": "entity-customer-marketing",
+      "relation": "默认页签进入"
+    },
+    {
+      "from_entity_id": "entity-center",
+      "to_entity_id": "entity-strategy-management",
+      "relation": "页签切换"
+    },
+    {
+      "from_entity_id": "entity-customer-marketing",
+      "to_entity_id": "entity-go-marketing-modal",
+      "relation": "点击去营销"
+    },
+    {
+      "from_entity_id": "entity-customer-marketing",
+      "to_entity_id": "entity-postpone-modal",
+      "relation": "点击暂不处理"
+    },
+    {
+      "from_entity_id": "entity-customer-marketing",
+      "to_entity_id": "entity-offline-modal",
+      "relation": "点击已线下处理"
+    },
+    {
+      "from_entity_id": "entity-customer-marketing",
+      "to_entity_id": "entity-valid-opportunity-modal",
+      "relation": "点击有效商机列"
+    },
+    {
+      "from_entity_id": "entity-customer-marketing",
+      "to_entity_id": "entity-customer-detail",
+      "relation": "点击客户名称/客户号"
+    },
+    {
+      "from_entity_id": "entity-valid-opportunity-modal",
+      "to_entity_id": "entity-strategy-detail",
+      "relation": "点击策略名称/编号"
+    },
+    {
+      "from_entity_id": "entity-strategy-management",
+      "to_entity_id": "entity-strategy-detail",
+      "relation": "点击策略详情"
+    },
+    {
+      "from_entity_id": "entity-strategy-detail",
+      "to_entity_id": "entity-customer-detail",
+      "relation": "点击商机记录客户名称/客户号"
+    },
+    {
+      "from_entity_id": "entity-customer-detail",
+      "to_entity_id": "entity-go-marketing-modal",
+      "relation": "点击去营销"
+    },
+    {
+      "from_entity_id": "entity-customer-detail",
+      "to_entity_id": "entity-postpone-modal",
+      "relation": "点击暂不处理"
+    },
+    {
+      "from_entity_id": "entity-customer-detail",
+      "to_entity_id": "entity-offline-modal",
+      "relation": "点击已线下处理"
+    },
+    {
+      "from_entity_id": "entity-customer-detail",
+      "to_entity_id": "entity-handle-record-modal",
+      "relation": "点击查看人工处理记录"
+    }
+  ],
+  "coverage": {
+    "pages": 8,
+    "entities": 14,
+    "flows": 6,
+    "validation_rules": 6,
+    "states": 17,
+    "exceptions": 9,
+    "result_states": 0,
+    "copy_items": 38,
+    "template_variables": 12
+  },
+  "open_questions": [
+    {
+      "item": "策略详情页\"策略建议\"区域的具体内容与来源未定义（蓝图标注\"与设计稿一致\"）",
+      "impact": "影响策略详情页该区域的生成，需设计稿提供内容"
+    },
+    {
+      "item": "客户营销列表分页大小未明确（蓝图及需求基线均未定义每页条数）",
+      "impact": "影响客户营销列表分页组件生成"
+    }
+  ],
+  "edge_consumed": false,
+  "edge_trace": []
+}
