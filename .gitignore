@@ -13,3 +13,5 @@ input/
 test/
 spark-output/
 spec/
+out/
+plugin/

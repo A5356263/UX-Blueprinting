@@ -1,6 +1,6 @@
 # Knowledge Wiki Questions
 
-- updated_at: 2026-08-27
+- updated_at: 2026-09-25
 
 ## 显式未决项
 
@@ -9,7 +9,7 @@
 - question_id: Q-0001
 - source_path: knowledge/raw/业务/人事服务/README.md
 - question_type: GAP
-- text: 子域知识覆盖度不均匀：组织管理、员工管理、客户管理、招聘管理较完整，考勤管理仅覆盖产品介绍
+- text: 子域知识覆盖度不均匀；假勤管理已纳入业务对象、功能、任务、规则、状态、页面与问答，但未提供完整权限矩阵和全部页面详情
 
 ### Q-0002
 
@@ -21,1518 +21,1497 @@
 ### Q-0003
 
 - question_id: Q-0003
-- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
+- source_path: knowledge/raw/业务/人事服务/假勤管理/任务与路径.md
 - question_type: GAP
-- text: 员工关怀、人事统计报表的详细操作指引待补充
+- text: 入口、主要操作与下游任务待补。
 
 ### Q-0004
 
 - question_id: Q-0004
-- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
+- source_path: knowledge/raw/业务/人事服务/假勤管理/功能与操作清单.md
 - question_type: GAP
-- text: 第三方对接（钉钉/企微/飞书）的具体同步字段映射和冲突处理规则未采集
+- text: 当前仅确认入口，具体功能待补。
 
 ### Q-0005
 
 - question_id: Q-0005
-- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
-- question_type: QUESTION
-- text: 电子合同三版（集团版/融合版/标准版）的差异边界是否已完全清晰，需持续校验
+- source_path: knowledge/raw/业务/人事服务/假勤管理/状态与异常.md
+- question_type: GAP
+- text: 批量申请失败项再次校验、失败数据保留、重复提交防护以及加班校验失败的完整修复路径。
 
 ### Q-0006
 
 - question_id: Q-0006
-- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
+- source_path: knowledge/raw/业务/人事服务/假勤管理/状态与异常.md
 - question_type: GAP
-- text: 调动、兼任、借调、临时调店审批链的详细分支条件未完整展开。
+- text: 考勤确认的异议处理步骤、超时和重新确认机制；月结果发布撤回、锁定解锁及算薪取数后的变更同步。
 
 ### Q-0007
 
 - question_id: Q-0007
-- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
+- source_path: knowledge/raw/业务/人事服务/假勤管理/状态与异常.md
 - question_type: GAP
-- text: 入职协同中自定义事项与自定义字段的关联规则未详细说明。
+- text: 业务异常无实际影响时有无独立关闭分支，以及删除业务单据后的审批、统计和恢复后果。
 
 ### Q-0008
 
 - question_id: Q-0008
-- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
+- source_path: knowledge/raw/业务/人事服务/假勤管理/状态与异常.md
 - question_type: GAP
-- text: 自动确认入职/离职的具体触发时间和边界条件未完整。
+- text: 设备版本兼容、同步失败与重试的完整处理链。
 
 ### Q-0009
 
 - question_id: Q-0009
-- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
-- question_type: QUESTION
-- text: 异动审批被拒后是否支持重新发起、是否有冷却限制，未在帮助文档中明确。
+- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
+- question_type: GAP
+- text: 员工关怀、人事统计报表的详细操作指引待补充
 
 ### Q-0010
 
 - question_id: Q-0010
-- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
 - question_type: GAP
-- text: 自定义打印的完整字段公式语法未采集
+- text: 第三方对接（钉钉/企微/飞书）的具体同步字段映射和冲突处理规则未采集
 
 ### Q-0011
 
 - question_id: Q-0011
-- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
-- question_type: GAP
-- text: 第三方对接的同步字段映射关系未详细展开
+- source_path: knowledge/raw/业务/人事服务/员工管理/README.md
+- question_type: QUESTION
+- text: 电子合同三版（集团版/融合版/标准版）的差异边界是否已完全清晰，需持续校验
 
 ### Q-0012
 
 - question_id: Q-0012
-- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
 - question_type: GAP
-- text: 员工关怀红包的金额规则和发放限制未说明
+- text: 调动、兼任、借调、临时调店审批链的详细分支条件未完整展开。
 
 ### Q-0013
 
 - question_id: Q-0013
-- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
-- question_type: QUESTION
-- text: 新版统计报表与旧版的具体切换时间窗口和数据迁移方案待确认
+- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
+- question_type: GAP
+- text: 入职协同中自定义事项与自定义字段的关联规则未详细说明。
 
 ### Q-0014
 
 - question_id: Q-0014
-- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
 - question_type: GAP
-- text: 调动/兼任/借调/临时调店审批链的详细分支条件未完整展开
+- text: 自动确认入职/离职的具体触发时间和边界条件未完整。
 
 ### Q-0015
 
 - question_id: Q-0015
-- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
-- question_type: GAP
-- text: 入职协同中自定义事项与自定义字段的关联规则未详细说明
+- source_path: knowledge/raw/业务/人事服务/员工管理/任务与路径.md
+- question_type: QUESTION
+- text: 异动审批被拒后是否支持重新发起、是否有冷却限制，未在帮助文档中明确。
 
 ### Q-0016
 
 - question_id: Q-0016
-- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
 - question_type: GAP
-- text: 自动确认入职/离职的具体触发时间和边界条件未完整
+- text: 自定义打印的完整字段公式语法未采集
 
 ### Q-0017
 
 - question_id: Q-0017
-- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
-- question_type: QUESTION
-- text: 异动审批被拒后是否支持重新发起、是否有冷却限制，未在帮助文档中明确
+- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
+- question_type: GAP
+- text: 第三方对接的同步字段映射关系未详细展开
 
 ### Q-0018
 
 - question_id: Q-0018
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
 - question_type: GAP
-- text: 具体同步字段映射和冲突处理规则未采集
+- text: 员工关怀红包的金额规则和发放限制未说明
 
 ### Q-0019
 
 - question_id: Q-0019
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
-- question_type: GAP
-- text: 自定义打印的完整白名单适用范围和申请流程未采集
+- source_path: knowledge/raw/业务/人事服务/员工管理/功能与操作清单.md
+- question_type: QUESTION
+- text: 新版统计报表与旧版的具体切换时间窗口和数据迁移方案待确认
 
 ### Q-0020
 
 - question_id: Q-0020
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
 - question_type: GAP
-- text: 集团电子签双管理模式的白名单申请条件未说明
+- text: 调动/兼任/借调/临时调店审批链的详细分支条件未完整展开
 
 ### Q-0021
 
 - question_id: Q-0021
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
 - question_type: GAP
-- text: 第三方对接的同步冲突处理规则未采集
+- text: 入职协同中自定义事项与自定义字段的关联规则未详细说明
 
 ### Q-0022
 
 - question_id: Q-0022
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
 - question_type: GAP
-- text: 花名册导入数据与任职管理数据不一致时的自动校验和提示机制未说明
+- text: 自动确认入职/离职的具体触发时间和边界条件未完整
 
 ### Q-0023
 
 - question_id: Q-0023
-- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/状态与异常.md
 - question_type: QUESTION
-- text: 旧版花名册完全下架时间窗口和存量数据迁移方案是否已确定
+- text: 异动审批被拒后是否支持重新发起、是否有冷却限制，未在帮助文档中明确
 
 ### Q-0024
 
 - question_id: Q-0024
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
 - question_type: GAP
-- text: 部分FAQ涉及的特定场景图片和链接无法以纯文本方式还原
+- text: 具体同步字段映射和冲突处理规则未采集
 
 ### Q-0025
 
 - question_id: Q-0025
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
 - question_type: GAP
-- text: 读卡器安装说明的具体步骤未展开
+- text: 自定义打印的完整白名单适用范围和申请流程未采集
 
 ### Q-0026
 
 - question_id: Q-0026
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
 - question_type: GAP
-- text: 部分FAQ涉及的具体参数（如入职二维码有效期具体天数）未在帮助文档中明确
+- text: 集团电子签双管理模式的白名单申请条件未说明
 
 ### Q-0027
 
 - question_id: Q-0027
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
 - question_type: GAP
-- text: 自定义打印的完整菜单路径和权限入口未采集
+- text: 第三方对接的同步冲突处理规则未采集
 
 ### Q-0028
 
 - question_id: Q-0028
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
 - question_type: GAP
-- text: 第三方对接（钉钉/企微/飞书）的配置路径未采集
+- text: 花名册导入数据与任职管理数据不一致时的自动校验和提示机制未说明
 
 ### Q-0029
 
 - question_id: Q-0029
-- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
-- question_type: GAP
-- text: 员工端具体菜单层级和入口命名未采集
+- source_path: knowledge/raw/业务/人事服务/员工管理/规则与权限.md
+- question_type: QUESTION
+- text: 旧版花名册完全下架时间窗口和存量数据迁移方案是否已确定
 
 ### Q-0030
 
 - question_id: Q-0030
-- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
 - question_type: GAP
-- text: 花名册完整系统预设字段清单未列出（各分组具体包含哪些系统字段）
+- text: 部分FAQ涉及的特定场景图片和链接无法以纯文本方式还原
 
 ### Q-0031
 
 - question_id: Q-0031
-- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
 - question_type: GAP
-- text: 合同模板的人事控件完整清单未采集
+- text: 读卡器安装说明的具体步骤未展开
 
 ### Q-0032
 
 - question_id: Q-0032
-- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
 - question_type: GAP
-- text: 自定义字段关联OA表单的具体字段映射规则未展开
+- text: 部分FAQ涉及的具体参数（如入职二维码有效期具体天数）未在帮助文档中明确
 
 ### Q-0033
 
 - question_id: Q-0033
-- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
 - question_type: GAP
-- text: 自定义打印中公式字段的完整语法和可用函数未采集
+- text: 自定义打印的完整菜单路径和权限入口未采集
 
 ### Q-0034
 
 - question_id: Q-0034
-- source_path: knowledge/raw/业务/人事服务/客户管理/README.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
 - question_type: GAP
-- text: 产品动态和常见问题尚未入库
+- text: 第三方对接（钉钉/企微/飞书）的配置路径未采集
 
 ### Q-0035
 
 - question_id: Q-0035
-- source_path: knowledge/raw/业务/人事服务/客户管理/README.md
-- question_type: QUESTION
-- text: 客户管理与账款管理之间的数据回写边界是否已完全稳定，仍需结合账款域持续校验
+- source_path: knowledge/raw/业务/人事服务/员工管理/问答与差异.md
+- question_type: GAP
+- text: 员工端具体菜单层级和入口命名未采集
 
 ### Q-0036
 
 - question_id: Q-0036
-- source_path: knowledge/raw/业务/人事服务/客户管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
 - question_type: GAP
-- text: 与账款管理版块的具体接口和数据流未在帮助文档中展开
+- text: 花名册完整系统预设字段清单未列出（各分组具体包含哪些系统字段）
 
 ### Q-0037
 
 - question_id: Q-0037
-- source_path: knowledge/raw/业务/人事服务/客户管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
 - question_type: GAP
-- text: 导出样式配置的完整功能说明未采集
+- text: 合同模板的人事控件完整清单未采集
 
 ### Q-0038
 
 - question_id: Q-0038
-- source_path: knowledge/raw/业务/人事服务/招聘管理/README.md
+- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
 - question_type: GAP
-- text: Moka 开通条件是否随版本更新而变化，需持续关注
+- text: 自定义字段关联OA表单的具体字段映射规则未展开
 
 ### Q-0039
 
 - question_id: Q-0039
-- source_path: knowledge/raw/业务/人事服务/招聘管理/README.md
-- question_type: QUESTION
-- text: Offer 后同步至待入职的数据字段映射是否完全稳定，需结合员工管理域校验
+- source_path: knowledge/raw/业务/人事服务/员工管理/页面与字段.md
+- question_type: GAP
+- text: 自定义打印中公式字段的完整语法和可用函数未采集
 
 ### Q-0040
 
 - question_id: Q-0040
-- source_path: knowledge/raw/业务/人事服务/招聘管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/客户管理/README.md
 - question_type: GAP
-- text: Moka标准版和mini版的具体功能对比和价格差异未详细说明
+- text: 产品动态和常见问题尚未入库
 
 ### Q-0041
 
 - question_id: Q-0041
-- source_path: knowledge/raw/业务/人事服务/招聘管理/功能与操作清单.md
-- question_type: GAP
-- text: 面试流程的具体环节和反馈机制未在帮助文档中展开
+- source_path: knowledge/raw/业务/人事服务/客户管理/README.md
+- question_type: QUESTION
+- text: 客户管理与账款管理之间的数据回写边界是否已完全稳定，仍需结合账款域持续校验
 
 ### Q-0042
 
 - question_id: Q-0042
-- source_path: knowledge/raw/业务/人事服务/组织管理/README.md
+- source_path: knowledge/raw/业务/人事服务/客户管理/功能与操作清单.md
 - question_type: GAP
-- text: 组织管理常见问题尚未入库
+- text: 与账款管理版块的具体接口和数据流未在帮助文档中展开
 
 ### Q-0043
 
 - question_id: Q-0043
-- source_path: knowledge/raw/业务/人事服务/组织管理/README.md
-- question_type: QUESTION
-- text: 组织管理域与组织架构域的边界划分是否完全稳定，需结合两域持续校验
+- source_path: knowledge/raw/业务/人事服务/客户管理/功能与操作清单.md
+- question_type: GAP
+- text: 导出样式配置的完整功能说明未采集
 
 ### Q-0044
 
 - question_id: Q-0044
-- source_path: knowledge/raw/业务/人事服务/组织管理/业务对象与术语.md
+- source_path: knowledge/raw/业务/人事服务/招聘管理/README.md
 - question_type: GAP
-- text: 职级通道类型除 M/P 外是否支持自定义通道未明确
+- text: Moka 开通条件是否随版本更新而变化，需持续关注
 
 ### Q-0045
 
 - question_id: Q-0045
-- source_path: knowledge/raw/业务/人事服务/组织管理/业务对象与术语.md
-- question_type: GAP
-- text: 岗位与薪资/绩效的关联关系未在帮助文档中展开
+- source_path: knowledge/raw/业务/人事服务/招聘管理/README.md
+- question_type: QUESTION
+- text: Offer 后同步至待入职的数据字段映射是否完全稳定，需结合员工管理域校验
 
 ### Q-0046
 
 - question_id: Q-0046
-- source_path: knowledge/raw/业务/人事服务/组织管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/招聘管理/功能与操作清单.md
 - question_type: GAP
-- text: 组织架构变更的审批流程配置详情未采集
+- text: Moka标准版和mini版的具体功能对比和价格差异未详细说明
 
 ### Q-0047
 
 - question_id: Q-0047
-- source_path: knowledge/raw/业务/人事服务/组织管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/招聘管理/功能与操作清单.md
 - question_type: GAP
-- text: 组织架构变更的定时生效具体机制未说明
+- text: 面试流程的具体环节和反馈机制未在帮助文档中展开
 
 ### Q-0048
 
 - question_id: Q-0048
-- source_path: knowledge/raw/业务/人事服务/组织管理/规则与权限.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/README.md
 - question_type: GAP
-- text: 编制管理的具体审批流程节点细节未在帮助文档中展开
+- text: 组织管理常见问题尚未入库
 
 ### Q-0049
 
 - question_id: Q-0049
-- source_path: knowledge/raw/业务/人事服务/组织管理/规则与权限.md
-- question_type: GAP
-- text: 编制计划周期类型（年度/季度）的完整枚举未给出
+- source_path: knowledge/raw/业务/人事服务/组织管理/README.md
+- question_type: QUESTION
+- text: 组织管理域与组织架构域的边界划分是否完全稳定，需结合两域持续校验
 
 ### Q-0050
 
 - question_id: Q-0050
-- source_path: knowledge/raw/业务/人事服务/组织管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/业务对象与术语.md
 - question_type: GAP
-- text: 组织管理FAQ尚未系统采集，当前仅从操作指引中提取嵌入式问答
+- text: 职级通道类型除 M/P 外是否支持自定义通道未明确
 
 ### Q-0051
 
 - question_id: Q-0051
-- source_path: knowledge/raw/业务/人事服务/组织管理/问答与差异.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/业务对象与术语.md
 - question_type: GAP
-- text: 编制审批流程的具体节点和审批链未展开
+- text: 岗位与薪资/绩效的关联关系未在帮助文档中展开
 
 ### Q-0052
 
 - question_id: Q-0052
-- source_path: knowledge/raw/业务/人事服务/考勤管理/README.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/功能与操作清单.md
 - question_type: GAP
-- text: 当前仅入库产品介绍，操作指引（3 个子模块）、常见问题、产品动态均待采集
+- text: 组织架构变更的审批流程配置详情未采集
 
 ### Q-0053
 
 - question_id: Q-0053
-- source_path: knowledge/raw/业务/人事服务/考勤管理/README.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/功能与操作清单.md
 - question_type: GAP
-- text: 管理员和员工操作指引尚未入库
+- text: 组织架构变更的定时生效具体机制未说明
 
 ### Q-0054
 
 - question_id: Q-0054
-- source_path: knowledge/raw/业务/人事服务/考勤管理/README.md
-- question_type: QUESTION
-- text: 与钉钉/企微第三方同步的异常场景和边界条件是否已完整覆盖，需持续校验
+- source_path: knowledge/raw/业务/人事服务/组织管理/规则与权限.md
+- question_type: GAP
+- text: 编制管理的具体审批流程节点细节未在帮助文档中展开
 
 ### Q-0055
 
 - question_id: Q-0055
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/规则与权限.md
 - question_type: GAP
-- text: 排班管理的具体操作流程和班次模板未采集
+- text: 编制计划周期类型（年度/季度）的完整枚举未给出
 
 ### Q-0056
 
 - question_id: Q-0056
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/问答与差异.md
 - question_type: GAP
-- text: 各打卡方式的详细配置和异常处理规则未采集
+- text: 组织管理FAQ尚未系统采集，当前仅从操作指引中提取嵌入式问答
 
 ### Q-0057
 
 - question_id: Q-0057
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
+- source_path: knowledge/raw/业务/人事服务/组织管理/问答与差异.md
 - question_type: GAP
-- text: 假期类型完整清单和额度计算规则未采集
+- text: 编制审批流程的具体节点和审批链未展开
 
 ### Q-0058
 
 - question_id: Q-0058
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
-- question_type: GAP
-- text: 加班补偿方式（调休/加班费）的详细规则未采集
-
-### Q-0059
-
-- question_id: Q-0059
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
-- question_type: GAP
-- text: 考勤异常处理（漏打卡/迟到/早退）规则未采集
-
-### Q-0060
-
-- question_id: Q-0060
-- source_path: knowledge/raw/业务/人事服务/考勤管理/功能与操作清单.md
-- question_type: GAP
-- text: 操作指引、常见问题、产品动态均未采集
-
-### Q-0061
-
-- question_id: Q-0061
 - source_path: knowledge/raw/业务/企业设置/README.md
 - question_type: GAP
 - text: 组装方案中完整卡片列表未采集
 
-### Q-0062
+### Q-0059
 
-- question_id: Q-0062
+- question_id: Q-0059
 - source_path: knowledge/raw/业务/企业设置/README.md
 - question_type: QUESTION
 - text: 短信、微信公众号、邮件和 AI 电话语音的默认开关状态待确认
 
-### Q-0063
+### Q-0060
 
-- question_id: Q-0063
+- question_id: Q-0060
 - source_path: knowledge/raw/业务/企业设置/功能与操作清单.md
 - question_type: GAP
 - text: 组装方案中完整卡片列表未采集。
 
-### Q-0064
+### Q-0061
 
-- question_id: Q-0064
+- question_id: Q-0061
 - source_path: knowledge/raw/业务/企业设置/功能与操作清单.md
 - question_type: QUESTION
 - text: 短信、微信公众号、邮件和 AI 电话语音的默认开关状态待确认。
 
-### Q-0065
+### Q-0062
 
-- question_id: Q-0065
+- question_id: Q-0062
 - source_path: knowledge/raw/业务/企业设置/规则与权限.md
 - question_type: GAP
 - text: 群聊合规管理的默认提示文案未采集。
 
-### Q-0066
+### Q-0063
 
-- question_id: Q-0066
+- question_id: Q-0063
 - source_path: knowledge/raw/业务/企业设置/问答与差异.md
 - question_type: GAP
 - text: 页面级操作步骤、排障问答和帮助入口尚未采集。
 
-### Q-0067
+### Q-0064
 
-- question_id: Q-0067
+- question_id: Q-0064
 - source_path: knowledge/raw/业务/企业设置/页面与字段.md
 - question_type: GAP
 - text: 组装方案中卡片列表的完整枚举（人力资源行业版/律所行业版/医疗行业版以外的方案名称）未采集
 
-### Q-0068
+### Q-0065
 
-- question_id: Q-0068
+- question_id: Q-0065
 - source_path: knowledge/raw/业务/企业设置/页面与字段.md
 - question_type: QUESTION
 - text: 短信/微信公众号/邮件/AI电话语音四种渠道的默认开关状态待确认
 
-### Q-0069
+### Q-0066
 
-- question_id: Q-0069
+- question_id: Q-0066
 - source_path: knowledge/raw/业务/企业设置/页面与字段.md
 - question_type: GAP
 - text: 群聊合规管理中合规提示的默认文案内容未采集
 
-### Q-0070
+### Q-0067
 
-- question_id: Q-0070
+- question_id: Q-0067
 - source_path: knowledge/raw/业务/协同办公/README.md
 - question_type: GAP
 - text: 企业公告、必应的详细操作指引和常见问题待采集（缺口明细已下沉至对应子域 README；公文操作指引已完成采集）
 
-### Q-0071
+### Q-0068
 
-- question_id: Q-0071
+- question_id: Q-0068
 - source_path: knowledge/raw/业务/协同办公/README.md
 - question_type: QUESTION
 - text: 智能报表与智数平台的数据加工边界是否已完全清晰，需持续校验
 
-### Q-0072
+### Q-0069
 
-- question_id: Q-0072
+- question_id: Q-0069
 - source_path: knowledge/raw/业务/协同办公/企业公告/README.md
 - question_type: GAP
 - text: 企业公告的详细操作指引未采集
+
+### Q-0070
+
+- question_id: Q-0070
+- source_path: knowledge/raw/业务/协同办公/企业公告/README.md
+- question_type: GAP
+- text: 企业公告发布权限和审批流程未说明
+
+### Q-0071
+
+- question_id: Q-0071
+- source_path: knowledge/raw/业务/协同办公/企业公告/功能与操作清单.md
+- question_type: GAP
+- text: 企业公告的详细操作指引未采集
+
+### Q-0072
+
+- question_id: Q-0072
+- source_path: knowledge/raw/业务/协同办公/企业公告/功能与操作清单.md
+- question_type: GAP
+- text: 企业公告发布权限和审批流程未说明
 
 ### Q-0073
 
 - question_id: Q-0073
-- source_path: knowledge/raw/业务/协同办公/企业公告/README.md
+- source_path: knowledge/raw/业务/协同办公/公文/README.md
 - question_type: GAP
-- text: 企业公告发布权限和审批流程未说明
+- text: 公文15种文种的具体名称清单未枚举（密级三级、字号构成、文种数量已采集）
 
 ### Q-0074
 
 - question_id: Q-0074
-- source_path: knowledge/raw/业务/协同办公/企业公告/功能与操作清单.md
+- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 企业公告的详细操作指引未采集
+- text: 紧急程度的分级与语义定义待补。
 
 ### Q-0075
 
 - question_id: Q-0075
-- source_path: knowledge/raw/业务/协同办公/企业公告/功能与操作清单.md
+- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 企业公告发布权限和审批流程未说明
+- text: 来文单位的语义定义待补。
 
 ### Q-0076
 
 - question_id: Q-0076
-- source_path: knowledge/raw/业务/协同办公/公文/README.md
+- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 公文15种文种的具体名称清单未枚举（密级三级、字号构成、文种数量已采集）
+- text: 公告配置与阅知任务的完整关系待补。
 
 ### Q-0077
 
 - question_id: Q-0077
 - source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 紧急程度的分级与语义定义待补。
+- text: 废止公文的业务规则与影响待补。
 
 ### Q-0078
 
 - question_id: Q-0078
 - source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 来文单位的语义定义待补。
+- text: 签报的业务定义与流程待补。
 
 ### Q-0079
 
 - question_id: Q-0079
 - source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
 - question_type: GAP
-- text: 公告配置与阅知任务的完整关系待补。
+- text: 发文分组的业务规则待补。
 
 ### Q-0080
 
 - question_id: Q-0080
-- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
+- source_path: knowledge/raw/业务/协同办公/公文/功能与操作清单.md
 - question_type: GAP
-- text: 废止公文的业务规则与影响待补。
+- text: 公文15种文种的具体名称清单未枚举（密级三级、字号构成、文种数量已采集）
 
 ### Q-0081
 
 - question_id: Q-0081
-- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
+- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
 - question_type: GAP
-- text: 签报的业务定义与流程待补。
+- text: 公文状态（审批中 / 公示中）的含义、进入与退出条件、完整流转待补。
 
 ### Q-0082
 
 - question_id: Q-0082
-- source_path: knowledge/raw/业务/协同办公/公文/业务对象与术语.md
+- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
 - question_type: GAP
-- text: 发文分组的业务规则待补。
+- text: 归档状态的进入条件、结果与恢复方式待补。
 
 ### Q-0083
 
 - question_id: Q-0083
-- source_path: knowledge/raw/业务/协同办公/公文/功能与操作清单.md
+- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
 - question_type: GAP
-- text: 公文15种文种的具体名称清单未枚举（密级三级、字号构成、文种数量已采集）
+- text: 流程启用的生效范围与禁用影响待补。
 
 ### Q-0084
 
 - question_id: Q-0084
 - source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
 - question_type: GAP
-- text: 公文状态（审批中 / 公示中）的含义、进入与退出条件、完整流转待补。
+- text: 配置项启用 / 禁用的生效范围与影响待补。
 
 ### Q-0085
 
 - question_id: Q-0085
 - source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
 - question_type: GAP
-- text: 归档状态的进入条件、结果与恢复方式待补。
+- text: 公文状态、归档状态、流程状态与配置项状态的完整语义和流转规则未采集，当前仅记录页面展示的状态取值。
 
 ### Q-0086
 
 - question_id: Q-0086
-- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
-- question_type: GAP
-- text: 流程启用的生效范围与禁用影响待补。
-
-### Q-0087
-
-- question_id: Q-0087
-- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
-- question_type: GAP
-- text: 配置项启用 / 禁用的生效范围与影响待补。
-
-### Q-0088
-
-- question_id: Q-0088
-- source_path: knowledge/raw/业务/协同办公/公文/状态与异常.md
-- question_type: GAP
-- text: 公文状态、归档状态、流程状态与配置项状态的完整语义和流转规则未采集，当前仅记录页面展示的状态取值。
-
-### Q-0089
-
-- question_id: Q-0089
 - source_path: knowledge/raw/业务/协同办公/必应/README.md
 - question_type: GAP
 - text: 必应的详细操作指引未采集
 
-### Q-0090
+### Q-0087
 
-- question_id: Q-0090
+- question_id: Q-0087
 - source_path: knowledge/raw/业务/协同办公/智能报表/README.md
 - question_type: QUESTION
 - text: 智能报表与智数平台之间的数据加工与消费边界是否已完全稳定，需持续校验
 
-### Q-0091
+### Q-0088
 
-- question_id: Q-0091
+- question_id: Q-0088
 - source_path: knowledge/raw/业务/协同办公/智能报表/README.md
 - question_type: QUESTION
 - text: 报表授权中用户和角色各限 20 个的限制是否随版本变化，需持续关注
 
-### Q-0092
+### Q-0089
 
-- question_id: Q-0092
+- question_id: Q-0089
 - source_path: knowledge/raw/业务/协同办公/智能报表/功能与操作清单.md
 - question_type: GAP
 - text: 智数平台（企业应用开发中心）的报表创建和数据集管理流程未采集
 
-### Q-0093
+### Q-0090
 
-- question_id: Q-0093
+- question_id: Q-0090
 - source_path: knowledge/raw/业务/协同办公/智能报表/功能与操作清单.md
 - question_type: GAP
 - text: 订阅形式除邮件外正在完善中的其他渠道未说明
+
+### Q-0091
+
+- question_id: Q-0091
+- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
+- question_type: GAP
+- text: 数据维度的组合逻辑未明确（部门/岗位/人员的交集/并集/优先级）
+
+### Q-0092
+
+- question_id: Q-0092
+- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
+- question_type: GAP
+- text: 空数据原因的类型枚举与对应文案规范未建立
+
+### Q-0093
+
+- question_id: Q-0093
+- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
+- question_type: GAP
+- text: "无权限不展示"在导航、搜索结果、收藏列表等跨页面场景的细则未覆盖
 
 ### Q-0094
 
 - question_id: Q-0094
 - source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
 - question_type: GAP
-- text: 数据维度的组合逻辑未明确（部门/岗位/人员的交集/并集/优先级）
+- text: 权限变更后的即时生效机制（前端缓存刷新策略）未明确
 
 ### Q-0095
 
 - question_id: Q-0095
 - source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
-- question_type: GAP
-- text: 空数据原因的类型枚举与对应文案规范未建立
+- question_type: CONFLICT
+- text: 角色命名不统一：原始材料中"报表管理员""单报表管理员""报表应用管理员"混用
 
 ### Q-0096
 
 - question_id: Q-0096
-- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
+- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: "无权限不展示"在导航、搜索结果、收藏列表等跨页面场景的细则未覆盖
+- text: 首页的具体布局和信息展示规则未明确
 
 ### Q-0097
 
 - question_id: Q-0097
-- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
+- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 权限变更后的即时生效机制（前端缓存刷新策略）未明确
+- text: 模板详情页的具体内容和交互规则未采集
 
 ### Q-0098
 
 - question_id: Q-0098
-- source_path: knowledge/raw/业务/协同办公/智能报表/规则与权限.md
-- question_type: CONFLICT
-- text: 角色命名不统一：原始材料中"报表管理员""单报表管理员""报表应用管理员"混用
+- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
+- question_type: GAP
+- text: 权限项与界面组件的具体映射关系未建立
 
 ### Q-0099
 
 - question_id: Q-0099
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 首页的具体布局和信息展示规则未明确
+- text: 除邮件外的其他订阅渠道正在完善中
 
 ### Q-0100
 
 - question_id: Q-0100
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 模板详情页的具体内容和交互规则未采集
+- text: 该页面的具体功能规则未采集
 
 ### Q-0101
 
 - question_id: Q-0101
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 权限项与界面组件的具体映射关系未建立
+- text: 该页面的具体交互规则未完整采集
 
 ### Q-0102
 
 - question_id: Q-0102
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 除邮件外的其他订阅渠道正在完善中
+- text: 报表详情页的信息架构（字段布局、图表区、数据表格区等）未采集
 
 ### Q-0103
 
 - question_id: Q-0103
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 该页面的具体功能规则未采集
+- text: 首页的具体布局和差异化展示规则未明确
 
 ### Q-0104
 
 - question_id: Q-0104
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 该页面的具体交互规则未完整采集
+- text: 分类体系、搜索字段、筛选字段的完整枚举缺失
 
 ### Q-0105
 
 - question_id: Q-0105
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 报表详情页的信息架构（字段布局、图表区、数据表格区等）未采集
+- text: 待验收报表页的具体交互规则未完整采集
 
 ### Q-0106
 
 - question_id: Q-0106
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 首页的具体布局和差异化展示规则未明确
+- text: 报表管理员设置页的具体功能规则未采集
 
 ### Q-0107
 
 - question_id: Q-0107
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 分类体系、搜索字段、筛选字段的完整枚举缺失
+- text: 智数平台各子模块（报表制作、报表模板市场、数据处理）的具体功能规则未采集
 
 ### Q-0108
 
 - question_id: Q-0108
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 待验收报表页的具体交互规则未完整采集
+- text: 标签的完整枚举和分类方式未采集
 
 ### Q-0109
 
 - question_id: Q-0109
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 报表管理员设置页的具体功能规则未采集
+- text: 缩略图的具体呈现形式（示意插图 / 真实截图 / 结构图）未明确
 
 ### Q-0110
 
 - question_id: Q-0110
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 智数平台各子模块（报表制作、报表模板市场、数据处理）的具体功能规则未采集
+- text: 模板类型的完整枚举未采集
 
 ### Q-0111
 
 - question_id: Q-0111
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 标签的完整枚举和分类方式未采集
+- text: 业务场景标签的完整枚举和分类方式未采集
 
 ### Q-0112
 
 - question_id: Q-0112
 - source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
 - question_type: GAP
-- text: 缩略图的具体呈现形式（示意插图 / 真实截图 / 结构图）未明确
+- text: 分页的具体参数（每页卡片数量、默认排序规则）未明确
 
 ### Q-0113
 
 - question_id: Q-0113
-- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
-- question_type: GAP
-- text: 模板类型的完整枚举未采集
-
-### Q-0114
-
-- question_id: Q-0114
-- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
-- question_type: GAP
-- text: 业务场景标签的完整枚举和分类方式未采集
-
-### Q-0115
-
-- question_id: Q-0115
-- source_path: knowledge/raw/业务/协同办公/智能报表/页面与字段.md
-- question_type: GAP
-- text: 分页的具体参数（每页卡片数量、默认排序规则）未明确
-
-### Q-0116
-
-- question_id: Q-0116
 - source_path: knowledge/raw/业务/安全管理/README.md
 - question_type: GAP
 - text: 安全设置的具体配置项和生效范围待进一步明确
 
-### Q-0117
+### Q-0114
 
-- question_id: Q-0117
+- question_id: Q-0114
 - source_path: knowledge/raw/业务/安全管理/README.md
 - question_type: QUESTION
 - text: 安全管理与权限域的安全策略边界是否已完全清晰，需持续校验
 
-### Q-0118
+### Q-0115
 
-- question_id: Q-0118
+- question_id: Q-0115
 - source_path: knowledge/raw/业务/安全管理/功能与操作清单.md
 - question_type: GAP
 - text: 安全设置的具体配置项和生效范围待进一步明确。
 
-### Q-0119
+### Q-0116
 
-- question_id: Q-0119
+- question_id: Q-0116
 - source_path: knowledge/raw/业务/安全管理/功能与操作清单.md
 - question_type: QUESTION
 - text: 安全管理与权限域的安全策略边界是否已完全清晰，需持续校验。
 
-### Q-0120
+### Q-0117
 
-- question_id: Q-0120
+- question_id: Q-0117
 - source_path: knowledge/raw/业务/审批管理/README.md
 - question_type: GAP
 - text: 各业务域接入审批能力的具体对接规范和边界条件未完整采集。
 
-### Q-0121
+### Q-0118
 
-- question_id: Q-0121
+- question_id: Q-0118
 - source_path: knowledge/raw/业务/审批管理/README.md
 - question_type: QUESTION
 - text: 审批管理与 OA 审批的关系和边界是否已完全清晰，仍需持续校验。
 
-### Q-0122
+### Q-0119
 
-- question_id: Q-0122
+- question_id: Q-0119
 - source_path: knowledge/raw/业务/审批管理/任务与路径.md
 - question_type: QUESTION
 - text: 动态流程和子流程的详细生效条件、异常处理和版本兼容规则仍需核对。
 
-### Q-0123
+### Q-0120
 
-- question_id: Q-0123
+- question_id: Q-0120
 - source_path: knowledge/raw/业务/审批管理/任务与路径.md
 - question_type: QUESTION
 - text: 流程转派和流程交接在历史单据、进行中单据、未来单据中的生效范围仍需核对。
 
-### Q-0124
+### Q-0121
 
-- question_id: Q-0124
+- question_id: Q-0121
 - source_path: knowledge/raw/业务/审批管理/任务与路径.md
 - question_type: GAP
 - text: 员工端审批进度的完整状态和查看规则未完整采集。
 
-### Q-0125
+### Q-0122
 
-- question_id: Q-0125
+- question_id: Q-0122
 - source_path: knowledge/raw/业务/审批管理/功能与操作清单.md
 - question_type: GAP
 - text: 自动化任务可联动的完整业务数据范围未完整采集。
 
-### Q-0126
+### Q-0123
 
-- question_id: Q-0126
+- question_id: Q-0123
 - source_path: knowledge/raw/业务/审批管理/状态与异常.md
 - question_type: GAP
 - text: 超时阈值、通知触发时机和不同策略的详细生效规则未完整采集。
 
-### Q-0127
+### Q-0124
 
-- question_id: Q-0127
+- question_id: Q-0124
 - source_path: knowledge/raw/业务/审批管理/状态与异常.md
 - question_type: QUESTION
 - text: 找不到审批人时的可选处理方式、默认结果和恢复机制仍需核对。
 
-### Q-0128
+### Q-0125
 
-- question_id: Q-0128
+- question_id: Q-0125
 - source_path: knowledge/raw/业务/审批管理/状态与异常.md
 - question_type: QUESTION
 - text: 流程转派和流程交接在历史单据、进行中单据、未来单据中的生效范围仍需核对。
 
-### Q-0129
+### Q-0126
 
-- question_id: Q-0129
+- question_id: Q-0126
 - source_path: knowledge/raw/业务/审批管理/规则与权限.md
 - question_type: QUESTION
 - text: 普通管理员与表单审批管理员在不同后台页面的操作差异仍需核对。
 
-### Q-0130
+### Q-0127
 
-- question_id: Q-0130
+- question_id: Q-0127
 - source_path: knowledge/raw/业务/审批管理/规则与权限.md
 - question_type: GAP
 - text: 分支条件支持的完整条件类型未采集。
 
-### Q-0131
+### Q-0128
 
-- question_id: Q-0131
+- question_id: Q-0128
 - source_path: knowledge/raw/业务/审批管理/问答与差异.md
 - question_type: GAP
 - text: 帮助主题索引中的完整问答正文未逐条入库。
 
-### Q-0132
+### Q-0129
 
-- question_id: Q-0132
+- question_id: Q-0129
 - source_path: knowledge/raw/业务/审批管理/问答与差异.md
 - question_type: GAP
 - text: 移动端审批交互细节未完整采集。
+
+### Q-0130
+
+- question_id: Q-0130
+- source_path: knowledge/raw/业务/审批管理/页面与字段.md
+- question_type: GAP
+- text: 完整表单组件类型清单未展开。
+
+### Q-0131
+
+- question_id: Q-0131
+- source_path: knowledge/raw/业务/审批管理/页面与字段.md
+- question_type: GAP
+- text: 自定义控件的完整数据源协议和接口规范未采集。
+
+### Q-0132
+
+- question_id: Q-0132
+- source_path: knowledge/raw/业务/审批管理/页面与字段.md
+- question_type: QUESTION
+- text: 条件属性支持配置的完整字段范围仍需核对。
 
 ### Q-0133
 
 - question_id: Q-0133
 - source_path: knowledge/raw/业务/审批管理/页面与字段.md
-- question_type: GAP
-- text: 完整表单组件类型清单未展开。
+- question_type: QUESTION
+- text: 自定义打印模板的白名单状态和当前正式开放范围仍需核对。
 
 ### Q-0134
 
 - question_id: Q-0134
-- source_path: knowledge/raw/业务/审批管理/页面与字段.md
-- question_type: GAP
-- text: 自定义控件的完整数据源协议和接口规范未采集。
-
-### Q-0135
-
-- question_id: Q-0135
-- source_path: knowledge/raw/业务/审批管理/页面与字段.md
-- question_type: QUESTION
-- text: 条件属性支持配置的完整字段范围仍需核对。
-
-### Q-0136
-
-- question_id: Q-0136
-- source_path: knowledge/raw/业务/审批管理/页面与字段.md
-- question_type: QUESTION
-- text: 自定义打印模板的白名单状态和当前正式开放范围仍需核对。
-
-### Q-0137
-
-- question_id: Q-0137
 - source_path: knowledge/raw/业务/工作台与全局入口/README.md
 - question_type: QUESTION
 - text: 工作台承载内容是否随角色和权限动态变化，其规则是否已完全清晰，需结合权限域持续校验
 
-### Q-0138
+### Q-0135
 
-- question_id: Q-0138
+- question_id: Q-0135
 - source_path: knowledge/raw/业务/工作台与全局入口/README.md
 - question_type: QUESTION
 - text: 全局导航的扩展机制是否已稳定，新增业务域入口的接入规范待明确
 
-### Q-0139
+### Q-0136
 
-- question_id: Q-0139
+- question_id: Q-0136
 - source_path: knowledge/raw/业务/工作台与全局入口/页面与字段.md
 - question_type: QUESTION
 - text: 工作台承载内容是否随角色和权限动态变化，其规则是否已完全清晰，需结合权限域持续校验。
 
-### Q-0140
+### Q-0137
 
-- question_id: Q-0140
+- question_id: Q-0137
 - source_path: knowledge/raw/业务/工作台与全局入口/页面与字段.md
 - question_type: QUESTION
 - text: 全局导航的扩展机制是否已稳定，新增业务域入口的接入规范待明确。
 
-### Q-0141
+### Q-0138
 
-- question_id: Q-0141
+- question_id: Q-0138
 - source_path: knowledge/raw/业务/应用管理/README.md
 - question_type: GAP
 - text: 组装应用的具体机制和约束待进一步明确
 
-### Q-0142
+### Q-0139
 
-- question_id: Q-0142
+- question_id: Q-0139
 - source_path: knowledge/raw/业务/应用管理/README.md
 - question_type: QUESTION
 - text: 应用管理与权限域在可见范围层面的分工边界是否已完全清晰，需持续校验
 
-### Q-0143
+### Q-0140
 
-- question_id: Q-0143
+- question_id: Q-0140
 - source_path: knowledge/raw/业务/成员管理/README.md
 - question_type: QUESTION
 - text: 第三方同步（钉钉/企微/飞书）的同步机制和边界条件是否已完全清晰，需持续校验
 
-### Q-0144
+### Q-0141
 
-- question_id: Q-0144
+- question_id: Q-0141
 - source_path: knowledge/raw/业务/成员管理/README.md
 - question_type: QUESTION
 - text: 成员分组规则配置的灵活度和限制是否已完全稳定
 
-### Q-0145
+### Q-0142
 
-- question_id: Q-0145
+- question_id: Q-0142
 - source_path: knowledge/raw/业务/成员管理/业务对象与术语.md
 - question_type: QUESTION
 - text: 第三方同步（钉钉/企微/飞书）的同步机制和边界条件是否已完全清晰，需持续校验。
 
-### Q-0146
+### Q-0143
 
-- question_id: Q-0146
+- question_id: Q-0143
 - source_path: knowledge/raw/业务/成员管理/功能与操作清单.md
 - question_type: QUESTION
 - text: 成员分组规则配置的灵活度和限制是否已完全稳定。
 
-### Q-0147
+### Q-0144
 
-- question_id: Q-0147
+- question_id: Q-0144
 - source_path: knowledge/raw/业务/智能算薪/README.md
 - question_type: GAP
 - text: 编辑薪资组（2.1.2）、采集方案（4.4）、首页（1.1）等页面的页面详情未采集
 
-### Q-0148
+### Q-0145
 
-- question_id: Q-0148
+- question_id: Q-0145
 - source_path: knowledge/raw/业务/智能算薪/README.md
 - question_type: GAP
 - text: 台账（高阶版）各页面详情（8.2.x）、参停保信息同步（8.3.x）、数据看板（9.2）等页面详情未采集
 
-### Q-0149
+### Q-0146
 
-- question_id: Q-0149
+- question_id: Q-0146
 - source_path: knowledge/raw/业务/智能算薪/README.md
 - question_type: GAP
 - text: 个税服务、薪资代发、电子工资单为独立模块，其产品介绍、操作指引、常见问题与产品动态按各模块入口查看
 
-### Q-0150
+### Q-0147
 
-- question_id: Q-0150
+- question_id: Q-0147
 - source_path: knowledge/raw/业务/智能算薪/业务对象与术语.md
 - question_type: GAP
 - text: 编辑薪资组、采集方案、首页等页面相关对象定义的完整详情未采集
 
-### Q-0151
+### Q-0148
 
-- question_id: Q-0151
+- question_id: Q-0148
 - source_path: knowledge/raw/业务/智能算薪/业务对象与术语.md
 - question_type: GAP
 - text: 台账（高阶版）各页面、参停保信息同步、社保对账、数据看板等页面相关对象定义的完整详情未采集
 
-### Q-0152
+### Q-0149
 
-- question_id: Q-0152
+- question_id: Q-0149
 - source_path: knowledge/raw/业务/智能算薪/业务对象与术语.md
 - question_type: QUESTION
 - text: 定岗定薪关联表的字段类型（数值/文本等）与校验规则的完整配置项未在材料中展开
 
-### Q-0153
+### Q-0150
 
-- question_id: Q-0153
+- question_id: Q-0150
 - source_path: knowledge/raw/业务/智能算薪/任务与路径.md
 - question_type: GAP
 - text: 创建薪资组的"编辑薪资组"（2.1.2）、采集方案（4.4）、首页（1.1）等页面相关任务的详细分支未采集。
 
-### Q-0154
+### Q-0151
 
-- question_id: Q-0154
+- question_id: Q-0151
 - source_path: knowledge/raw/业务/智能算薪/任务与路径.md
 - question_type: GAP
 - text: 台账（高阶版）、参停保信息同步、社保对账等页面相关任务的详细分支未采集。
 
-### Q-0155
+### Q-0152
 
-- question_id: Q-0155
+- question_id: Q-0152
 - source_path: knowledge/raw/业务/智能算薪/任务与路径.md
 - question_type: QUESTION
 - text: 算薪审批被拒后是否支持重新发起、是否有冷却限制，未在材料中明确。
 
-### Q-0156
+### Q-0153
 
-- question_id: Q-0156
+- question_id: Q-0153
 - source_path: knowledge/raw/业务/智能算薪/功能与操作清单.md
 - question_type: GAP
 - text: 采集方案、数据看板、台账（高阶版）各页面、参停保信息同步、社保对账的页面详情未采集
 
-### Q-0157
+### Q-0154
 
-- question_id: Q-0157
+- question_id: Q-0154
 - source_path: knowledge/raw/业务/智能算薪/功能与操作清单.md
 - question_type: GAP
 - text: 编辑薪资组（2.1.2）页面详情未采集
 
-### Q-0158
+### Q-0155
 
-- question_id: Q-0158
+- question_id: Q-0155
 - source_path: knowledge/raw/业务/智能算薪/功能与操作清单.md
 - question_type: GAP
 - text: 个税服务、薪资代发、电子工资单为独立模块，其产品能力按各模块入口查看
 
-### Q-0159
+### Q-0156
 
-- question_id: Q-0159
+- question_id: Q-0156
 - source_path: knowledge/raw/业务/智能算薪/状态与异常.md
 - question_type: GAP
 - text: 台账（高阶版）、参停保信息同步、社保对账等页面相关状态的完整枚举未采集
 
-### Q-0160
+### Q-0157
 
-- question_id: Q-0160
+- question_id: Q-0157
 - source_path: knowledge/raw/业务/智能算薪/状态与异常.md
 - question_type: QUESTION
 - text: 算薪审批被拒后是否支持重新发起、是否有冷却限制，未在材料中明确
 
-### Q-0161
+### Q-0158
 
-- question_id: Q-0161
+- question_id: Q-0158
 - source_path: knowledge/raw/业务/智能算薪/状态与异常.md
 - question_type: QUESTION
 - text: 定调薪状态除"未定薪"外的完整取值（如定薪中、已定薪等）未在材料中明确
 
-### Q-0162
+### Q-0159
 
-- question_id: Q-0162
+- question_id: Q-0159
 - source_path: knowledge/raw/业务/智能算薪/规则与权限.md
 - question_type: GAP
 - text: 创建薪资组、采集方案、台账（高阶版）等页面相关规则未完整采集
 
-### Q-0163
+### Q-0160
 
-- question_id: Q-0163
+- question_id: Q-0160
 - source_path: knowledge/raw/业务/智能算薪/规则与权限.md
 - question_type: QUESTION
 - text: 校验规则（员工校验方式）的完整枚举是否仅包含"按姓名+证件号校验"和"按证件号校验"两种，材料未明确
 
-### Q-0164
+### Q-0161
 
-- question_id: Q-0164
+- question_id: Q-0161
 - source_path: knowledge/raw/业务/智能算薪/规则与权限.md
 - question_type: QUESTION
 - text: 定调薪折算中"根据工作日含节假日折算"的节假日判定口径未在材料中展开
 
-### Q-0165
+### Q-0162
 
-- question_id: Q-0165
+- question_id: Q-0162
 - source_path: knowledge/raw/业务/智能算薪/问答与差异.md
 - question_type: GAP
 - text: 页面结构、交互细节和操作步骤中的图片无法以纯文本方式还原，仅保留文字描述。
 
-### Q-0166
+### Q-0163
 
-- question_id: Q-0166
+- question_id: Q-0163
 - source_path: knowledge/raw/业务/智能算薪/问答与差异.md
 - question_type: GAP
 - text: 个税服务、薪资代发、电子工资单为独立模块，其操作指引按各模块入口查看。
 
-### Q-0167
+### Q-0164
 
-- question_id: Q-0167
+- question_id: Q-0164
 - source_path: knowledge/raw/业务/智能算薪/问答与差异.md
 - question_type: GAP
 - text: 创建薪资组、采集方案、台账（高阶版）、参停保信息同步、社保对账等页面相关操作步骤未完整展开。
+
+### Q-0165
+
+- question_id: Q-0165
+- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
+- question_type: GAP
+- text: 首页（1.1）、编辑薪资组（2.1.2）、采集方案（4.4）、数据看板（9.2）页面详情未采集。
+
+### Q-0166
+
+- question_id: Q-0166
+- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
+- question_type: GAP
+- text: 台账（高阶版）各页面（8.2.1-8.2.6）、参停保信息同步（8.3.1-8.3.2）页面详情未采集。
+
+### Q-0167
+
+- question_id: Q-0167
+- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
+- question_type: GAP
+- text: 批量算薪步骤 2 批量计算、步骤 3 算薪结果；薪资代发步骤 2 代发方式、步骤 3 选择发送代发人员；提交审批步骤 2 审批设置、步骤 3 提交完成等引导流程后续步骤未采集。
 
 ### Q-0168
 
 - question_id: Q-0168
 - source_path: knowledge/raw/业务/智能算薪/页面与字段.md
 - question_type: GAP
-- text: 首页（1.1）、编辑薪资组（2.1.2）、采集方案（4.4）、数据看板（9.2）页面详情未采集。
+- text: 客户账单对账人员差异明细视图列未采集。
 
 ### Q-0169
 
 - question_id: Q-0169
-- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
-- question_type: GAP
-- text: 台账（高阶版）各页面（8.2.1-8.2.6）、参停保信息同步（8.3.1-8.3.2）页面详情未采集。
-
-### Q-0170
-
-- question_id: Q-0170
-- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
-- question_type: GAP
-- text: 批量算薪步骤 2 批量计算、步骤 3 算薪结果；薪资代发步骤 2 代发方式、步骤 3 选择发送代发人员；提交审批步骤 2 审批设置、步骤 3 提交完成等引导流程后续步骤未采集。
-
-### Q-0171
-
-- question_id: Q-0171
-- source_path: knowledge/raw/业务/智能算薪/页面与字段.md
-- question_type: GAP
-- text: 客户账单对账人员差异明细视图列未采集。
-
-### Q-0172
-
-- question_id: Q-0172
 - source_path: knowledge/raw/业务/服务管理/README.md
 - question_type: GAP
 - text: 服务行为记录的具体内容和查询方式待进一步明确
 
-### Q-0173
+### Q-0170
 
-- question_id: Q-0173
+- question_id: Q-0170
 - source_path: knowledge/raw/业务/服务管理/README.md
 - question_type: QUESTION
 - text: 服务管理与成员域在服务人员身份管理上的分工边界是否已完全清晰，需持续校验
 
-### Q-0174
+### Q-0171
 
-- question_id: Q-0174
+- question_id: Q-0171
 - source_path: knowledge/raw/业务/权限管理/README.md
 - question_type: GAP
 - text: 某些帮助文档和历史外部口径仍需继续与当前权限真源核对
 
-### Q-0175
+### Q-0172
 
-- question_id: Q-0175
+- question_id: Q-0172
 - source_path: knowledge/raw/业务/权限管理/README.md
 - question_type: QUESTION
 - text: 当前组织重构后，上游领域边界是否已完全稳定，仍需结合邻近领域持续校验
+
+### Q-0173
+
+- question_id: Q-0173
+- source_path: knowledge/raw/业务/权限管理/任务与路径.md
+- question_type: GAP
+- text: 按权限查 / 按功能点查现状承载待进一步核实
+
+### Q-0174
+
+- question_id: Q-0174
+- source_path: knowledge/raw/业务/权限管理/任务与路径.md
+- question_type: GAP
+- text: 按角色查虽有角色管理承载，但独立查询语义与结果视图仍未完全明确
+
+### Q-0175
+
+- question_id: Q-0175
+- source_path: knowledge/raw/业务/权限管理/任务与路径.md
+- question_type: GAP
+- text: 按变更查当前分散在权限域与审批域之间，权限域内缺少统一变更台账页
 
 ### Q-0176
 
 - question_id: Q-0176
 - source_path: knowledge/raw/业务/权限管理/任务与路径.md
 - question_type: GAP
-- text: 按权限查 / 按功能点查现状承载待进一步核实
+- text: 批量授权后的统一结果核对页尚未在现有页面事实中明确
 
 ### Q-0177
 
 - question_id: Q-0177
-- source_path: knowledge/raw/业务/权限管理/任务与路径.md
-- question_type: GAP
-- text: 按角色查虽有角色管理承载，但独立查询语义与结果视图仍未完全明确
-
-### Q-0178
-
-- question_id: Q-0178
-- source_path: knowledge/raw/业务/权限管理/任务与路径.md
-- question_type: GAP
-- text: 按变更查当前分散在权限域与审批域之间，权限域内缺少统一变更台账页
-
-### Q-0179
-
-- question_id: Q-0179
-- source_path: knowledge/raw/业务/权限管理/任务与路径.md
-- question_type: GAP
-- text: 批量授权后的统一结果核对页尚未在现有页面事实中明确
-
-### Q-0180
-
-- question_id: Q-0180
 - source_path: knowledge/raw/业务/权限管理/功能与操作清单.md
 - question_type: GAP
 - text: 按权限查 / 按功能点查的现状承载仍待进一步核实
 
-### Q-0181
+### Q-0178
 
-- question_id: Q-0181
+- question_id: Q-0178
 - source_path: knowledge/raw/业务/权限管理/功能与操作清单.md
 - question_type: GAP
 - text: 当前资料未展开组织视图进入具体权限页面配置时的完整字段映射
 
-### Q-0182
+### Q-0179
 
-- question_id: Q-0182
+- question_id: Q-0179
 - source_path: knowledge/raw/业务/权限管理/问答与差异.md
 - question_type: CONFLICT
 - text: 当前帮助文档仍存在以下数据权限表述，是否与当前正式规则一致，需进一步核对：
 
-### Q-0183
+### Q-0180
 
-- question_id: Q-0183
+- question_id: Q-0180
 - source_path: knowledge/raw/业务/组织架构/README.md
 - question_type: QUESTION
 - text: 平台组织底座中新旧能力的迁移是否已全部完成，遗留映射是否已完全清晰
 
-### Q-0184
+### Q-0181
 
-- question_id: Q-0184
+- question_id: Q-0181
 - source_path: knowledge/raw/业务/组织架构/README.md
 - question_type: QUESTION
 - text: 组织范围生成的规则是否已完全稳定，与权限域的消费接口是否已明确
 
-### Q-0185
+### Q-0182
 
-- question_id: Q-0185
+- question_id: Q-0182
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未明确给出成本中心的默认职能归属与默认视图归属
 
-### Q-0186
+### Q-0183
 
-- question_id: Q-0186
+- question_id: Q-0183
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未明确平台默认视图与业务自定义视图在数据结构上的完整字段差异
 
-### Q-0187
+### Q-0184
 
-- question_id: Q-0187
+- question_id: Q-0184
 - source_path: knowledge/raw/业务/组织架构/业务对象与术语.md
 - question_type: GAP
 - text: 当前资料未展开成员挂载关系的字段结构、唯一性约束和变更规则
 
-### Q-0188
+### Q-0185
 
-- question_id: Q-0188
+- question_id: Q-0185
 - source_path: knowledge/raw/业务/组织架构/任务与路径.md
 - question_type: GAP
 - text: 当前资料未完整展开初始化过程中生成的全部默认对象和字段
 
-### Q-0189
+### Q-0186
 
-- question_id: Q-0189
+- question_id: Q-0186
 - source_path: knowledge/raw/业务/组织架构/任务与路径.md
 - question_type: GAP
 - text: 当前资料未完整展开所有状态流转前置条件、失败条件和回滚规则
 
-### Q-0190
+### Q-0187
 
-- question_id: Q-0190
+- question_id: Q-0187
 - source_path: knowledge/raw/业务/账户与企业生命周期/README.md
 - question_type: GAP
 - text: 企业注销的具体流程和前置条件待进一步明确
 
-### Q-0191
+### Q-0188
 
-- question_id: Q-0191
+- question_id: Q-0188
 - source_path: knowledge/raw/业务/账户与企业生命周期/README.md
 - question_type: QUESTION
 - text: 账号安全策略与安全管理域的安全设置之间的关系是否已完全清晰，需持续校验
+
+### Q-0189
+
+- question_id: Q-0189
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 操作指引（200+ 篇）、FAQ（97 条）、产品动态（27 篇）、员工操作手册（12 篇）均待采集
+
+### Q-0190
+
+- question_id: Q-0190
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 日常报销仍有管理员操作指引、员工操作指引和常见问题待采集
+
+### Q-0191
+
+- question_id: Q-0191
+- source_path: knowledge/raw/业务/费用管理/README.md
+- question_type: GAP
+- text: 差旅服务仍有管理员操作指引、员工操作指引、常见问题和产品动态待采集
 
 ### Q-0192
 
 - question_id: Q-0192
 - source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: GAP
-- text: 操作指引（200+ 篇）、FAQ（97 条）、产品动态（27 篇）、员工操作手册（12 篇）均待采集
+- text: 企业支付仍有管理员操作指引、员工操作指引和常见问题待采集
 
 ### Q-0193
 
 - question_id: Q-0193
 - source_path: knowledge/raw/业务/费用管理/README.md
 - question_type: GAP
-- text: 日常报销仍有管理员操作指引、员工操作指引和常见问题待采集
+- text: 通用配置仍有操作指引和常见问题正文待采集
 
 ### Q-0194
 
 - question_id: Q-0194
 - source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 差旅服务仍有管理员操作指引、员工操作指引、常见问题和产品动态待采集
+- question_type: QUESTION
+- text: 费用政策、预算方案是否统一配置入口，需结合各业务主题持续校验
 
 ### Q-0195
 
 - question_id: Q-0195
 - source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 企业支付仍有管理员操作指引、员工操作指引和常见问题待采集
+- question_type: QUESTION
+- text: 企业支付四种付款业务场景的边界条件仍需持续校验
 
 ### Q-0196
 
 - question_id: Q-0196
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: GAP
-- text: 通用配置仍有操作指引和常见问题正文待采集
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 在正式口径确认前，不得用任一时效回答全部订单同步问题。
 
 ### Q-0197
 
 - question_id: Q-0197
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: QUESTION
-- text: 费用政策、预算方案是否统一配置入口，需结合各业务主题持续校验
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: `功能与操作清单.md / 差旅服务 / 里程补贴`记录多重里程补贴可按不同车型配置；`问答与差异.md` 的“能否根据不同车型设置不同的自驾里程补助”记录不支持。两者不能合并，等待正式来源确认。
 
 ### Q-0198
 
 - question_id: Q-0198
-- source_path: knowledge/raw/业务/费用管理/README.md
-- question_type: QUESTION
-- text: 企业支付四种付款业务场景的边界条件仍需持续校验
+- source_path: knowledge/raw/业务/费用管理/状态与异常.md
+- question_type: CONFLICT
+- text: 多条问答记录关联申请组件可配置为多选申请单；“关联申请单时可以设置关联多个申请单吗”又记录该组件只能选择一张单据。两者不能合并，等待正式来源确认。
 
 ### Q-0199
 
 - question_id: Q-0199
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: 在正式口径确认前，不得用任一时效回答全部订单同步问题。
+- text: `规则与权限.md / 发票采集与查验`记录境外票据可按“其他票据”采集；“国外机票是否可以在薪福通中提单报销”记录国外机票不支持提单报销。票据采集与机票费用提单的对象边界未明确，不能互相扩展。
 
 ### Q-0200
 
 - question_id: Q-0200
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: `功能与操作清单.md / 差旅服务 / 里程补贴`记录多重里程补贴可按不同车型配置；`问答与差异.md` 的“能否根据不同车型设置不同的自驾里程补助”记录不支持。两者不能合并，等待正式来源确认。
+- text: “费控的行程组件是否可以添加自定义字段”记录支持一个自定义档案字段；“行程组件可以自定义字段吗”记录出差申请行程组件不支持自定义字段。适用单据范围未明确，等待正式来源确认。
 
 ### Q-0201
 
 - question_id: Q-0201
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: 多条问答记录关联申请组件可配置为多选申请单；“关联申请单时可以设置关联多个申请单吗”又记录该组件只能选择一张单据。两者不能合并，等待正式来源确认。
+- text: “为什么在单据台账中看不到已关闭的单据”记录单据台账不支持已关闭状态；“如何查找已关闭的出差申请单”记录管理员可在单据台账查看。两者直接冲突，等待正式来源确认。
 
 ### Q-0202
 
 - question_id: Q-0202
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
 - question_type: CONFLICT
-- text: `规则与权限.md / 发票采集与查验`记录境外票据可按“其他票据”采集；“国外机票是否可以在薪福通中提单报销”记录国外机票不支持提单报销。票据采集与机票费用提单的对象边界未明确，不能互相扩展。
+- text: “差旅预定现付模式是否支持对公户支付”记录不支持；“第三方平台现付是否支持公司账户支付”记录由平台决定且通常允许。两者不能合并，等待平台与产品正式口径确认。
 
 ### Q-0203
 
 - question_id: Q-0203
 - source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “费控的行程组件是否可以添加自定义字段”记录支持一个自定义档案字段；“行程组件可以自定义字段吗”记录出差申请行程组件不支持自定义字段。适用单据范围未明确，等待正式来源确认。
+- question_type: QUESTION
+- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
 
 ### Q-0204
 
 - question_id: Q-0204
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “为什么在单据台账中看不到已关闭的单据”记录单据台账不支持已关闭状态；“如何查找已关闭的出差申请单”记录管理员可在单据台账查看。两者直接冲突，等待正式来源确认。
-
-### Q-0205
-
-- question_id: Q-0205
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: CONFLICT
-- text: “差旅预定现付模式是否支持对公户支付”记录不支持；“第三方平台现付是否支持公司账户支付”记录由平台决定且通常允许。两者不能合并，等待平台与产品正式口径确认。
-
-### Q-0206
-
-- question_id: Q-0206
-- source_path: knowledge/raw/业务/费用管理/状态与异常.md
-- question_type: QUESTION
-- text: 不同单据类型在移动端、Web 端、招银 App、薪福通 App 中的按钮可见性差异需要继续核对。
-
-### Q-0207
-
-- question_id: Q-0207
 - source_path: knowledge/raw/业务/费用管理/规则与权限.md
 - question_type: QUESTION
 - text: “对公报账”与企业支付、采购系统、应付账款之间的职责边界需结合后续真源继续校验。
 
-### Q-0208
+### Q-0205
 
-- question_id: Q-0208
+- question_id: Q-0205
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 产品能力版图是否随产品迭代保持更新，需持续关注
 
-### Q-0209
+### Q-0206
 
-- question_id: Q-0209
+- question_id: Q-0206
 - source_path: knowledge/raw/业务/项目背景/README.md
 - question_type: QUESTION
 - text: 平台角色与终端分类是否已完全覆盖当前产品状态，需持续校验
 
-### Q-0210
+### Q-0207
 
-- question_id: Q-0210
+- question_id: Q-0207
 - source_path: knowledge/raw/业务/项目背景/业务对象与术语.md
 - question_type: QUESTION
 - text: API 数量、报表数量、图表数量等具体数字需要以最新官方材料复核后再作为稳定指标使用。
 
-### Q-0211
+### Q-0208
 
-- question_id: Q-0211
+- question_id: Q-0208
 - source_path: knowledge/raw/设计规范/README.md
 - question_type: GAP
 - text: 部分旧材料缺少统一的产品版本、终端和适用范围标记
 
-### Q-0212
+### Q-0209
 
-- question_id: Q-0212
+- question_id: Q-0209
 - source_path: knowledge/raw/设计规范/README.md
 - question_type: GAP
 - text: 部分场景缺少完整异常分支、退出条件和恢复路径
 
-### Q-0213
+### Q-0210
 
-- question_id: Q-0213
+- question_id: Q-0210
 - source_path: knowledge/raw/设计规范/README.md
 - question_type: QUESTION
 - text: 设计变量是否需要同步维护机器可读 Token 真源，仍需确认
 
-### Q-0214
+### Q-0211
 
-- question_id: Q-0214
+- question_id: Q-0211
 - source_path: knowledge/raw/设计规范/典型页面/README.md
 - question_type: GAP
 - text: 部分页面资产缺少统一的终端、版本和业务适用范围
 
-### Q-0215
+### Q-0212
 
-- question_id: Q-0215
+- question_id: Q-0212
 - source_path: knowledge/raw/设计规范/典型页面/README.md
 - question_type: QUESTION
 - text: 表格页与可编辑表格组件的边界仍需结合后续材料持续校验
 
-### Q-0216
+### Q-0213
 
-- question_id: Q-0216
+- question_id: Q-0213
 - source_path: knowledge/raw/设计规范/场景模式/README.md
 - question_type: GAP
 - text: 部分场景材料缺少异常分支、退出条件或恢复路径
 
-### Q-0217
+### Q-0214
 
-- question_id: Q-0217
+- question_id: Q-0214
 - source_path: knowledge/raw/设计规范/样式/README.md
 - question_type: GAP
 - text: 部分样式规则缺少统一的终端和产品版本标记
 
-### Q-0218
+### Q-0215
 
-- question_id: Q-0218
+- question_id: Q-0215
 - source_path: knowledge/raw/设计规范/样式/README.md
 - question_type: QUESTION
 - text: 设计变量是否需要同步维护机器可读 Token 真源，仍需确认维护责任
 
-### Q-0219
+### Q-0216
 
-- question_id: Q-0219
+- question_id: Q-0216
 - source_path: knowledge/raw/设计规范/组件/README.md
 - question_type: GAP
 - text: 部分旧组件材料缺少统一的产品版本和适用范围标记

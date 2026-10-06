@@ -1,15 +1,15 @@
 # Knowledge Wiki Overview
 
-- updated_at: 2026-08-27
+- updated_at: 2026-09-25
 
 ## 当前概况
 
-- raw_total: 139
+- raw_total: 145
 - domain_readme_total: 33
-- gap_count: 158
+- gap_count: 156
 - conflict_count: 9
-- question_marker_count: 56
-- questions_total: 219
+- question_marker_count: 55
+- questions_total: 216
 
 ## 路由健康
 
@@ -28,8 +28,8 @@
 
 ## 最近更新的 Raw
 
-- raw/业务/智能算薪/任务与路径.md
-- raw/业务/智能算薪/页面与字段.md
-- raw/业务/智能算薪/问答与差异.md
-- raw/业务/智能算薪/规则与权限.md
-- raw/业务/智能算薪/状态与异常.md
+- raw/业务/人事服务/假勤管理/功能与操作清单.md
+- raw/业务/人事服务/假勤管理/README.md
+- raw/业务/人事服务/假勤管理/任务与路径.md
+- raw/业务/人事服务/README.md
+- raw/业务/人事服务/假勤管理/页面与字段.md
