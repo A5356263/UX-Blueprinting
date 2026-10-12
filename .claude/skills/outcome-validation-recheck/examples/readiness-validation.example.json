@@ -1,0 +1,139 @@
+{
+  "run": {
+    "artifact_type": "outcome_validation_package",
+    "artifact_version": "4.0.0",
+    "producer_skill": "outcome-validation-recheck",
+    "run_id": "outcome-readiness-001",
+    "project_name": "报销提单优化",
+    "generated_at": "2026-07-25T10:00:00+08:00",
+    "source_mode": "explicit_input",
+    "sources": ["intervention-contract:int-001"],
+    "upstream_refs": ["handoff:root-to-outcome-001"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "validation_mode": "readiness_validation",
+    "validation_stage": "pre_launch",
+    "root_cause_handoff_ref": "handoff:root-to-outcome-001",
+    "intervention_contract_ref": "intervention-contract:int-001",
+    "govern_handoff_ref": null,
+    "completed_capabilities": ["readiness_assessment"],
+    "blocked_capabilities": ["effectiveness_assessment"]
+  },
+  "data_quality": {
+    "evidence_count": 0,
+    "baseline_status": "ready",
+    "observation_window_status": "ready",
+    "exposure_status": "ready",
+    "implementation_fidelity_status": "ready",
+    "measurement_status": "ready",
+    "known_gaps": []
+  },
+  "limitations": [],
+  "handoff": {
+    "input_gate_status": "ready",
+    "handoff_status": "ready",
+    "allowed_uses": ["enter_demo_validation"],
+    "forbidden_uses": ["effectiveness_claim", "causal_claim"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "validation_mode": "readiness_validation",
+    "validation_stage": "pre_launch",
+    "readiness_status": "ready",
+    "effectiveness": "not_applicable",
+    "attribution_strength": "not_applicable",
+    "durability_status": "not_applicable",
+    "manual_review_count": 0,
+    "handoff_targets": ["data-visualization"]
+  },
+  "analysis_results": {
+    "effect_measurements": [],
+    "validation_assessment": {
+      "assessment_id": "assessment-readiness-001",
+      "validation_mode": "readiness_validation",
+      "validation_stage": "pre_launch",
+      "scope": {"intervention_version": "1.0"},
+      "root_cause_refs": ["root-cause:rc-001"],
+      "intervention_contract_ref": "intervention-contract:int-001",
+      "readiness": {
+        "status": "ready",
+        "baseline": "ready",
+        "observation_window": "ready",
+        "exposure": "ready",
+        "implementation_fidelity": "ready",
+        "measurement": "ready",
+        "blocking_items": []
+      },
+      "hypothesis_support": "inconclusive",
+      "intervention_effectiveness": "not_applicable",
+      "attribution": {
+        "strength": "not_applicable",
+        "confounding_risk": "not_applicable",
+        "confounding_factors": [],
+        "rationale": "上线前只判断验证条件，不判断干预效果。"
+      },
+      "primary_outcomes": [],
+      "guardrail_outcomes": [],
+      "segment_outcomes": [],
+      "side_effects": [],
+      "problem_migration": [],
+      "durability": {
+        "status": "not_applicable",
+        "window_ref": null,
+        "rationale": "尚未进入长期观察。"
+      },
+      "decision": {
+        "status": "ready_for_demo",
+        "reason": "验证范围、暴露、实施和测量定义完整。",
+        "next_action": "按已批准合同进入演示验证。"
+      },
+      "caveats": []
+    },
+    "outcome_relationships": [
+      {
+        "relationship_id": "relationship-001",
+        "source_ref": "intervention:int-001",
+        "target_ref": "metric:completion-rate",
+        "relation_type": "validation_needed",
+        "validation_stage": "pre_launch",
+        "effect_attribution_confidence": "not_applicable",
+        "confounding_risk": "not_applicable",
+        "source_refs": ["intervention-contract:int-001"],
+        "caveats": []
+      }
+    ],
+    "reroute_decisions": [],
+    "outcome_evidence_patch_requests": [],
+    "root_cause_feedback_signals": [],
+    "pattern_observation_signals": [],
+    "monitoring_requirements": []
+  },
+  "manual_review_requests": [],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-outcome-viz-001",
+      "target_skill": "data-visualization",
+      "handoff_type": "readiness_summary",
+      "handoff_status": "ready",
+      "payload_refs": ["#/analysis_results/validation_assessment"],
+      "allowed_uses": ["visualize_readiness"],
+      "forbidden_uses": ["claim_effectiveness"],
+      "required_review_request_ids": [],
+      "caveats": []
+    }
+  ],
+  "quality": {
+    "schema_validated": true,
+    "semantic_gates_passed": true,
+    "self_check_passed": true
+  },
+  "write_safety": {
+    "can_auto_apply": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_schedule_monitoring": false,
+    "can_auto_rollback": false,
+    "can_auto_rerun_full_chain": false
+  }
+}

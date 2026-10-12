@@ -1,0 +1,141 @@
+{
+  "run": {
+    "artifact_type": "visualization_package",
+    "artifact_version": "5.0.0",
+    "producer_skill": "data-visualization",
+    "run_id": "dv_chart_ready_demo",
+    "project_name": "用户整理数据展示",
+    "generated_at": "2026-07-25T12:00:00+08:00",
+    "invocation_context": "independent",
+    "analysis_purpose": {"purpose_key": "visual-summary", "purpose_label": "可视化摘要"},
+    "status": "completed",
+    "source_mode": "chart_ready",
+    "sources": ["user-input/chart-ready"],
+    "write_status": "not_requested"
+  },
+  "data_quality": {
+    "status": "ready",
+    "source_contract_valid": true,
+    "semantic_gate_status": "passed",
+    "notes": ["单位、分母和时间窗口由用户明确提供。"]
+  },
+  "limitations": [],
+  "publication": {"status": "candidate", "analysis_purpose_key": "visual-summary", "analysis_purpose_label": "可视化摘要", "update_current_for_purpose": false},
+  "delivery": {"status": "not_requested", "requested": [], "files": []},
+  "handoff": {
+    "input_gate_status": "ready",
+    "handoff_status": "terminal",
+    "allowed_uses": ["presentation", "human_review", "offline_delivery"],
+    "forbidden_uses": [
+      "recalculate_analysis",
+      "create_metric",
+      "create_relationship",
+      "upgrade_causality",
+      "claim_validated_effect",
+      "publish_knowledge",
+      "auto_archive",
+      "auto_trigger_downstream"
+    ],
+    "blocked_reasons": []
+  },
+  "analysis_results": {
+    "visualization_package": {
+      "source_contracts": [
+        {
+          "source_id": "user-chart",
+          "producer_skill": "user",
+          "artifact_type": "chart_ready_data",
+          "artifact_version": "3.0.0",
+          "source_run_id": "user_chart_001",
+          "artifact_ref": "user-input/chart-ready",
+          "allowed_paths": ["#/chart_ready_data"],
+          "consumed_paths": ["#/chart_ready_data"],
+          "sensitivity_status": "minimum_disclosure",
+          "privacy_gate_status": "approved",
+          "contract_status": "valid"
+        }
+      ],
+      "visual_outputs": [
+        {
+          "visual_id": "segment-comparison",
+          "title": "企业分群完成率",
+          "intent": "comparison",
+          "chart_type": "bar",
+          "render_status": "formal",
+          "data_ref": "user-chart#/chart_ready_data/metrics",
+          "source_refs": ["user-chart#/chart_ready_data/metrics"],
+          "rationale": "分群类别比较使用柱状图。",
+          "epistemic_status": "observed",
+          "encoding": {
+            "x": "segment",
+            "y": "completion_rate",
+            "color": "segment",
+            "size": null,
+            "label": "completion_rate",
+            "unit": "ratio",
+            "denominator": "task_instance",
+            "time_window": "2026-06"
+          },
+          "chart_data": {
+            "series": [
+              {
+                "series_id": "segment-rate",
+                "label": "完成率",
+                "points": [
+                  {
+                    "label": "月活企业",
+                    "category": "月活企业",
+                    "x": null,
+                    "y": null,
+                    "value": 0.76,
+                    "epistemic_status": "observed",
+                    "source_ref": "user-chart#/chart_ready_data/metrics/0"
+                  },
+                  {
+                    "label": "深度月活企业",
+                    "category": "深度月活企业",
+                    "x": null,
+                    "y": null,
+                    "value": 0.88,
+                    "epistemic_status": "observed",
+                    "source_ref": "user-chart#/chart_ready_data/metrics/1"
+                  }
+                ]
+              }
+            ]
+          },
+          "accessibility": {
+            "summary": "深度月活企业完成率高于月活企业。",
+            "data_table_available": true,
+            "color_independent": true
+          },
+          "responsive": {
+            "strategy": "label_reduction_with_table",
+            "mobile_note": "移动端保留完整数据表。"
+          },
+          "caveats": []
+        }
+      ],
+      "relationship_diagrams": [],
+      "output_files": [],
+      "recalculation_performed": false
+    }
+  },
+  "manual_review_requests": [],
+  "quality": {
+    "overall_status": "pass",
+    "source_traceability": "pass",
+    "semantic_fidelity": "pass",
+    "label_clarity": "pass",
+    "accessibility": "pass",
+    "responsive": "pass",
+    "sensitive_display": "pass"
+  },
+  "write_safety": {
+    "output_root_checked": true,
+    "relative_paths_only": true,
+    "overwrite_policy": "not_requested",
+    "atomic_write": true,
+    "sensitive_content_checked": true
+  }
+}

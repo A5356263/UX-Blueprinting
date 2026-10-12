@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "subjective-feedback-analysis.input.schema.json",
+  "title": "Subjective Feedback Analysis Request 4.0.0",
+  "type": "object",
+  "required": ["artifact_type", "artifact_version", "project_name", "source_mode", "analysis_mode", "invocation_context", "analysis_purpose", "requested_analyses", "input_bindings", "requested_deliverables", "publication_policy", "retention_policy", "input_sources"],
+  "properties": {
+    "artifact_type": {"const": "subjective_analysis_request"},
+    "artifact_version": {"const": "4.0.0"},
+    "project_name": {"type": "string", "minLength": 1},
+    "source_mode": {"enum": ["independent", "chain_context"]},
+    "analysis_mode": {"enum": ["discovery", "comparative_analysis"]},
+    "invocation_context": {"enum": ["independent", "chain_context"]},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "input_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "analysis_scope": {"type": "object"},
+    "upstream_context_refs": {"type": "array", "items": {"type": "string"}},
+    "baseline_window": {"type": ["object", "null"]},
+    "comparison_window": {"type": ["object", "null"]},
+    "intervention_summary": {"type": ["string", "null"]},
+    "business_rule_refs": {"type": "array", "items": {"type": "string"}},
+    "requested_capabilities": {
+      "type": "array",
+      "items": {"enum": ["ticket_screening", "page_flow_mapping", "segmentation", "objective_validation_requests", "knowledge_candidates", "visualization"]}
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["source_id", "source_type", "format"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["ticket", "error_ticket_detail", "group_chat", "customer_service", "service_log", "operation_qa", "customer_feedback_summary", "app_review", "social_media", "survey", "interview", "embedded_feedback", "operation_note", "customer_success_note"]},
+        "format": {"type": "string", "minLength": 1},
+        "path_ref": {"type": "string"},
+        "content_ref": {"type": "string"},
+        "channel": {"type": "string"},
+        "sheets": {"oneOf": [{"type": "string"}, {"type": "array", "items": {"type": "string"}}]},
+        "time_window": {"type": ["object", "null"]},
+        "authorized_scope": {"type": ["string", "null"]}
+        ,"invited_count": {"type": "integer", "minimum": 0}
+        ,"content_role": {"enum": ["customer_voice", "support_restatement", "internal_context"]}
+        ,"field_bindings": {
+          "type": "object",
+          "properties": {
+            "customer_voice": {"$ref": "#/$defs/fieldNames"},
+            "support_restatement": {"$ref": "#/$defs/fieldNames"},
+            "internal_context": {"$ref": "#/$defs/fieldNames"},
+            "enterprise_id": {"type": "string", "minLength": 1},
+            "enterprise_name": {"type": "string", "minLength": 1},
+            "timestamp": {"type": "string", "minLength": 1},
+            "thread_id": {"type": "string", "minLength": 1},
+            "speaker_role": {"type": "string", "minLength": 1},
+            "status": {"type": "string", "minLength": 1},
+            "resolution": {"type": "string", "minLength": 1},
+            "reported_error": {"type": "string", "minLength": 1},
+            "business_loss": {"$ref": "#/$defs/fieldNames"}
+            ,"channel": {"type": "string", "minLength": 1}
+            ,"product_module": {"type": "string", "minLength": 1}
+            ,"page": {"type": "string", "minLength": 1}
+            ,"function": {"type": "string", "minLength": 1}
+            ,"operation_node": {"type": "string", "minLength": 1}
+            ,"nps_score": {"type": "string", "minLength": 1}
+            ,"response_id": {"type": "string", "minLength": 1}
+            ,"invited_flag": {"type": "string", "minLength": 1}
+            ,"business_board": {"type": "string", "minLength": 1}
+            ,"enterprise_state": {"type": "string", "minLength": 1}
+            ,"segment_fields": {
+              "type": "object",
+              "additionalProperties": {"type": "string", "minLength": 1}
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "anyOf": [{"required": ["path_ref"]}, {"required": ["content_ref"]}],
+      "additionalProperties": false
+    },
+    "fieldNames": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"source_mode": {"const": "independent"}}},
+      "then": {"properties": {"upstream_context_refs": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"source_mode": {"const": "chain_context"}}},
+      "then": {"required": ["upstream_context_refs"], "properties": {"upstream_context_refs": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"analysis_mode": {"const": "comparative_analysis"}}},
+      "then": {
+        "required": ["baseline_window", "comparison_window"],
+        "properties": {"baseline_window": {"type": "object"}, "comparison_window": {"type": "object"}}
+      }
+    }
+  ],
+  "additionalProperties": false
+}

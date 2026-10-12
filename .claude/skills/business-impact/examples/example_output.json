@@ -1,0 +1,217 @@
+{
+  "run": {
+    "artifact_type": "business_impact_assessment",
+    "artifact_version": "4.0.0",
+    "producer_skill": "business-impact",
+    "run_id": "bi-demo-20260723",
+    "project_name": "企业任务体验优化",
+    "generated_at": "2026-07-23T10:00:00+08:00",
+    "invocation_context": "chain_context",
+    "analysis_purpose": {
+      "purpose_key": "business-value",
+      "purpose_label": "业务价值评估"
+    },
+    "status": "completed",
+    "source_mode": "explicit_chain_context",
+    "context_mode": "chain_context",
+    "run_modes": ["problem_impact", "solution_value"],
+    "valuation_state": "provisional_forecast",
+    "data_classification": "restricted",
+    "sources": [
+      {"source_id": "src-govern", "source_type": "artifact", "source_ref": "governed", "source_skill": "evidence-govern", "source_version": "6.0.0", "project_name": "企业任务体验优化", "run_id": "govern-demo", "explicitly_referenced": true},
+      {"source_id": "src-objective", "source_type": "artifact", "source_ref": "objective", "source_skill": "objective-data-analysis", "source_version": "4.0.0", "project_name": "企业任务体验优化", "run_id": "objective-demo", "explicitly_referenced": true},
+      {"source_id": "src-blueprint", "source_type": "artifact", "source_ref": "experience-blueprint", "source_skill": "experience-blueprint", "source_version": "4.0.0", "project_name": "企业任务体验优化", "run_id": null, "explicitly_referenced": true},
+      {"source_id": "src-knowledge", "source_type": "knowledge_raw", "source_ref": "knowledge://enterprise/deep-active-rule", "source_skill": "knowledge-wiki", "source_version": "2026-06", "project_name": "企业任务体验优化", "run_id": null, "explicitly_referenced": true},
+      {"source_id": "src-user", "source_type": "user_input", "source_ref": "conversation://effect-and-unit-value", "source_skill": null, "source_version": null, "project_name": "企业任务体验优化", "run_id": null, "explicitly_referenced": true},
+      {"source_id": "src-plan", "source_type": "formal_plan", "source_ref": "plan://implementation-cost-v1", "source_skill": null, "source_version": "1", "project_name": "企业任务体验优化", "run_id": null, "explicitly_referenced": true}
+    ]
+  },
+  "analysis_contract": {
+    "requested_modes": ["problem_impact", "solution_value"],
+    "currency": "CNY",
+    "valuation_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"},
+    "report_mode": "full_report",
+    "calculation_precision": 4,
+    "knowledge_refs": ["knowledge://enterprise/deep-active-rule"]
+  },
+  "data_quality": {
+    "status": "ready_with_caveats",
+    "project_consistent": true,
+    "time_window_consistent": true,
+    "lineage_complete": true,
+    "warnings": ["方案效果为上线前情景假设，不是已验证结果"],
+    "blocked_reasons": []
+  },
+  "valuation_inputs": [
+    {"input_id": "vi-problem", "semantic_role": "problem_evidence", "source_type": "governed_artifact", "source_ref": "src-govern#/downstream_handoffs", "source_skill": "evidence-govern", "source_version": "6.0.0", "population_scope": "月活企业", "measurement_scope": {"grain": "task", "dimensions": {"business_board": "费控"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "population_definition": "费控任务实例"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "unit": "problem", "provenance_status": "formal_source", "allowed_uses": ["problem_scope", "impact_description", "reporting"], "sensitivity": "internal"},
+    {"input_id": "vi-population", "semantic_role": "population_metric", "source_type": "analysis_artifact", "source_ref": "src-objective#/analysis_results/enterprise_states/population_facts", "source_skill": "objective-data-analysis", "source_version": "4.0.0", "population_scope": "月活企业", "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控", "state": "active"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "population_definition": "费控板块月活企业"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "unit": "enterprise_x_business_board", "provenance_status": "formal_source", "allowed_uses": ["population_estimation", "forecast", "value_calculation", "reporting"], "sensitivity": "confidential"},
+    {"input_id": "vi-rule", "semantic_role": "business_rule", "source_type": "knowledge_raw", "source_ref": "src-knowledge#deep-active-conversion", "source_skill": "knowledge-wiki", "source_version": "2026-06", "population_scope": "月活企业", "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控"}, "time_window": null, "population_definition": "企业状态转化规则适用范围"}, "time_window": null, "unit": "rule", "provenance_status": "formal_source", "allowed_uses": ["forecast", "value_calculation", "reporting"], "sensitivity": "internal"},
+    {"input_id": "vi-solution", "semantic_role": "solution_scope", "source_type": "blueprint_artifact", "source_ref": "src-blueprint#/solution_designs/0", "source_skill": "experience-blueprint", "source_version": "4.0.0", "population_scope": "方案覆盖企业", "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控"}, "time_window": null, "population_definition": "方案计划覆盖的费控企业"}, "time_window": null, "unit": "solution", "provenance_status": "formal_source", "allowed_uses": ["solution_scope", "forecast", "reporting"], "sensitivity": "internal"},
+    {"input_id": "vi-effect", "semantic_role": "effect_estimate", "source_type": "scenario_assumption", "source_ref": "src-user#completion-uplift-scenario", "source_skill": null, "source_version": null, "population_scope": "方案覆盖企业", "measurement_scope": {"grain": "task", "dimensions": {"business_board": "费控"}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "population_definition": "方案覆盖企业的费控任务"}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "unit": "rate", "provenance_status": "scenario_assumption", "allowed_uses": ["forecast", "value_calculation", "reporting"], "sensitivity": "confidential"},
+    {"input_id": "vi-unit-value", "semantic_role": "unit_value", "source_type": "user_input", "source_ref": "src-user#deep-active-unit-value", "source_skill": null, "source_version": null, "population_scope": "新增深度月活企业", "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控", "state": "deep_active"}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "population_definition": "新增深度月活费控企业"}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "unit": "CNY/enterprise", "provenance_status": "user_confirmed", "allowed_uses": ["value_calculation", "reporting"], "sensitivity": "restricted"},
+    {"input_id": "vi-cost", "semantic_role": "cost", "source_type": "formal_plan", "source_ref": "src-plan#cost-range", "source_skill": null, "source_version": "1", "population_scope": null, "measurement_scope": {"grain": "unknown", "dimensions": {}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "population_definition": null}, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "unit": "CNY", "provenance_status": "formal_source", "allowed_uses": ["cost_calculation", "value_calculation", "reporting"], "sensitivity": "restricted"}
+  ],
+  "problem_impact_cases": [
+    {
+      "problem_impact_case_id": "pic-task-completion",
+      "stable_key": "enterprise-task-completion-friction",
+      "problem_statement": "关键任务中的流程摩擦与较低完成率相关",
+      "maturity": "evidence_backed",
+      "source_input_refs": ["vi-problem"],
+      "affected_population": {
+        "unit": "enterprise_x_business_board",
+        "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控", "state": "active"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "population_definition": "费控板块月活企业"},
+        "eligible_count": 20000,
+        "observed_sample_count": 10000,
+        "observed_affected_count": 9000,
+        "estimated_affected_range": {"low": 8000, "base": 9000, "high": 10000},
+        "denominator_count": 20000,
+        "affected_share_range": {"low": 0.4, "base": 0.45, "high": 0.5},
+        "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"},
+        "segments": [{"segment_ref": "segment:重点企业", "affected_range": {"low": 2400, "base": 2800, "high": 3200}, "difference_status": "observed", "source_input_refs": ["vi-population"]}],
+        "projection_status": "derived",
+        "basis_input_refs": ["vi-population"],
+        "join_coverage": {
+          "status": "sufficient",
+          "matched_count": 10000,
+          "left_count": 10000,
+          "right_count": 20000,
+          "left_match_rate": 1.0,
+          "right_match_rate": 0.5,
+          "source_input_refs": ["vi-population"],
+          "reason": "企业 ID 在同一统计窗口内完成关联"
+        }
+      },
+      "impact_components": [
+        {"impact_id": "impact-user-task-failure", "layer": "user", "description": "企业在关键任务中面临失败和重复操作", "epistemic_status": "fact", "relationship_type": "descriptive", "source_input_refs": ["vi-problem"], "magnitude_range": null, "unit": null, "dedup_group": "task-friction"},
+        {"impact_id": "impact-product-completion", "layer": "product", "description": "问题与任务完成率下降相关", "epistemic_status": "inference", "relationship_type": "correlated", "source_input_refs": ["vi-problem", "vi-population"], "magnitude_range": null, "unit": "completion_rate", "dedup_group": "task-friction"}
+      ],
+      "cost_of_inaction": {"status": "qualitative", "value_range": null, "currency": null, "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "basis_input_refs": ["vi-problem"], "caveats": ["当前未将持续损失单独货币化"]},
+      "addressable_opportunity": {"status": "quantified", "value_range": {"low": 80000, "base": 120000, "high": 180000}, "currency": "CNY", "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "basis_input_refs": ["vi-population", "vi-unit-value"], "caveats": ["这是可触达机会范围，不是方案收益承诺"]},
+      "limitations": ["问题与完成率目前按相关关系表达"]
+    }
+  ],
+  "solution_value_cases": [
+    {
+      "solution_value_case_id": "svc-guided-flow",
+      "problem_impact_case_ref": "pic-task-completion",
+      "solution_ref": "src-blueprint#/solution_designs/0",
+      "solution_source_type": "experience_blueprint",
+      "valuation_timing": "forecast",
+      "forecast_status": "provisional_forecast",
+      "valuation_level": "quantified_roi",
+      "source_input_refs": ["vi-solution", "vi-population", "vi-rule", "vi-effect", "vi-unit-value", "vi-cost"],
+      "qualitative_value_links": [],
+      "metric_value_links": [
+        {
+          "link_id": "mvl-completion-to-deep-active",
+          "metric_ref": "metric:task_completion_rate",
+          "measurement_scope": {"grain": "enterprise_x_business_board", "dimensions": {"business_board": "费控", "state": "active"}, "time_window": {"start": "2026-05-01", "end": "2026-05-31", "period_count": 1, "period_unit": "month"}, "population_definition": "费控板块月活企业"},
+          "baseline_input_ref": "vi-population",
+          "effect_status": "forecast_scenario",
+          "formula_type": "transition_value",
+          "addressable_volume": {"low": 8000, "base": 9000, "high": 10000},
+          "metric_change": {"low": 0.02, "base": 0.03, "high": 0.04},
+          "metric_change_unit": "rate",
+          "conversion_rate": {"low": 0.3, "base": 0.35, "high": 0.4},
+          "adoption_rate": {"low": 0.6, "base": 0.7, "high": 0.8},
+          "attribution_discount": {"low": 0.5, "base": 0.6, "high": 0.7},
+          "unit_value": {"low": 1000, "base": 1200, "high": 1400},
+          "period_multiplier": 1,
+          "currency": "CNY",
+          "source_input_refs": ["vi-population", "vi-effect", "vi-rule", "vi-unit-value"],
+          "dedup_group": "deep-active-value",
+          "aggregation_policy": "include",
+          "benefit_range": {"low": 14400, "base": 47628, "high": 125440}
+        }
+      ],
+      "effort_profile": {
+        "components": [
+          {"component_id": "cost-engineering", "category": "engineering", "cost_type": "one_time", "relative_effort": "medium", "cost_range": {"low": 15000, "base": 18000, "high": 22000}, "currency": "CNY", "source_input_ref": "vi-cost", "confidence": "medium", "sensitivity": "restricted", "display_policy": "show_range_only"},
+          {"component_id": "cost-implementation", "category": "implementation", "cost_type": "one_time", "relative_effort": "low", "cost_range": {"low": 5000, "base": 7000, "high": 10000}, "currency": "CNY", "source_input_ref": "vi-cost", "confidence": "medium", "sensitivity": "restricted", "display_policy": "show_range_only"}
+        ],
+        "total_investment_range": {"low": 20000, "base": 25000, "high": 32000}
+      },
+      "benefit_components": [{"component_id": "benefit:mvl-completion-to-deep-active", "description": "指标价值：metric:task_completion_rate", "value_range": {"low": 14400, "base": 47628, "high": 125440}, "currency": "CNY", "source_ref": "mvl-completion-to-deep-active", "dedup_group": "deep-active-value"}],
+      "disbenefit_components": [{"component_id": "disbenefit-support", "description": "方案初期额外支持负担", "value_range": {"low": 1000, "base": 2000, "high": 4000}, "currency": "CNY", "source_ref": "vi-cost", "dedup_group": "support-burden"}],
+      "guardrail_impacts": [{"guardrail_ref": "guardrail:error_rate", "status": "unknown", "affected_segments": [], "source_input_refs": ["vi-solution"], "manual_review_required": false}],
+      "distributional_effects": [{"segment_ref": "segment:重点企业", "effect_direction": "benefit", "description": "重点企业属于主要受益范围，但仍需 Outcome 验证", "source_input_refs": ["vi-population", "vi-effect"]}],
+      "expected_benefit_range": {"low": 14400, "base": 47628, "high": 125440},
+      "total_disbenefit_range": {"low": 1000, "base": 2000, "high": 4000},
+      "net_benefit_range": {"low": -21600, "base": 20628, "high": 104440},
+      "roi_range": {"low": -0.675, "base": 0.8251, "high": 5.222},
+      "payback_period_range": {"low": 0.1607, "base": 0.5479, "high": 3.0769},
+      "sensitivity_analysis": [
+        {"parameter": "metric_change", "direction": "positive", "result_impact": "完成率改善越高，预计收益越高", "source_input_ref": "vi-effect"},
+        {"parameter": "conversion_rate", "direction": "positive", "result_impact": "深度月活转化越高，预计收益越高", "source_input_ref": "vi-rule"},
+        {"parameter": "adoption_rate", "direction": "positive", "result_impact": "实际采用率越高，预计收益越高", "source_input_ref": "vi-effect"},
+        {"parameter": "unit_value", "direction": "positive", "result_impact": "单位价值越高，预计收益越高", "source_input_ref": "vi-unit-value"},
+        {"parameter": "attribution_discount", "direction": "positive", "result_impact": "可归因比例越高，预计收益越高", "source_input_ref": "vi-effect"},
+        {"parameter": "investment", "direction": "negative", "result_impact": "投入越高，净收益和 ROI 越低", "source_input_ref": "vi-cost"}
+      ],
+      "valuation_confidence": "low",
+      "decision_recommendation": "pilot_first",
+      "non_compensable_risks": [],
+      "prior_valuation_snapshot": null,
+      "limitations": ["完成率改善和转化率仍为预测情景"]
+    }
+  ],
+  "portfolio_summary": {
+    "problem_case_count": 1,
+    "solution_case_count": 1,
+    "valuation_level_counts": {"impact_only": 1, "value_vs_effort": 0, "quantified_roi": 1},
+    "business_value_priority_view": [
+      {"case_ref": "pic-task-completion", "case_type": "problem_impact", "value_status": "quantified", "readiness": "evidence_backed", "recommendation": "进入方案设计"},
+      {"case_ref": "svc-guided-flow", "case_type": "solution_value", "value_status": "quantified", "readiness": "provisional_forecast", "recommendation": "pilot_first"}
+    ],
+    "impact_value_chains": [{"chain_id": "chain:svc-guided-flow:mvl-completion-to-deep-active", "problem_ref": "pic-task-completion", "solution_ref": "svc-guided-flow", "metric_link_ref": "mvl-completion-to-deep-active", "nodes": ["problem:pic-task-completion", "population:enterprise_x_business_board", "metric:metric:task_completion_rate", "solution:src-blueprint#/solution_designs/0", "effect:forecast_scenario", "value:CNY"], "status": "forecast"}],
+    "solution_comparison_view": []
+  },
+  "assumption_ledger": [{"assumption_id": "assumption-effect", "description": "完成率提升使用保守、基准、乐观情景", "value": {"low": 0.02, "base": 0.03, "high": 0.04}, "unit": "rate", "time_window": {"start": "2026-08-01", "end": "2026-08-31", "period_count": 1, "period_unit": "month"}, "status": "scenario_assumption", "source_input_ref": "vi-effect", "sensitivity": "high", "decision_impact": "直接影响新增深度月活企业与 ROI", "owner": "业务负责人", "valid_until": "2026-08-31", "fallback": "保持 provisional forecast 并由 Outcome Validation 更新"}],
+  "limitations": ["本包不声明方案已产生实际效果", "受限成本和单位价值仅允许区间展示"],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "bi-demo-visualization",
+      "target_skill": "data-visualization",
+      "handoff_type": "business_impact_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/problem_impact_cases", "#/solution_value_cases", "#/portfolio_summary", "#/limitations"],
+      "allowed_uses": ["explicit_visualization"],
+      "forbidden_uses": ["recalculate", "effect_validation", "causal_confidence_upgrade"],
+      "required_review_request_ids": [],
+      "caveats": ["forecast_values_must_remain_forecast"]
+    },
+    {
+      "handoff_id": "bi-demo-archive",
+      "target_skill": "evidence-archive",
+      "handoff_type": "business_decision_snapshot_archive_request",
+      "handoff_status": "pending_review",
+      "payload_refs": ["#/run", "#/portfolio_summary", "#/limitations"],
+      "allowed_uses": ["persist_decision_snapshot"],
+      "forbidden_uses": ["persist_enterprise_detail", "persist_restricted_inputs", "use_as_evidence"],
+      "required_review_request_ids": ["review-bi-archive-001"],
+      "caveats": ["only_aggregated_decision_snapshot"]
+    }
+  ],
+  "publication": {
+    "status": "not_published",
+    "analysis_purpose_key": "business-value",
+    "analysis_purpose_label": "业务价值评估",
+    "update_current_for_purpose": false
+  },
+  "delivery": {
+    "status": "not_requested",
+    "requested": [],
+    "files": []
+  },
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "analysis_status": "completed",
+    "handoff_status": "ready_with_caveats",
+    "allowed_uses": ["business_decision_review", "solution_value_comparison", "visualization"],
+    "forbidden_uses": ["evidence_strength_upgrade", "causal_confidence_upgrade", "effect_validation"],
+    "recommended_next": ["outcome-validation-recheck", "human-review", "data-visualization"],
+    "blocked_reasons": [],
+    "write_status": "written"
+  }
+}

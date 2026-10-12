@@ -1,0 +1,4 @@
+interface:
+  display_name: "客观数据分析"
+  short_description: "基于客观数据识别指标、漏斗、路径、报错、分群与历史异常，并生成客观分析报告。"
+  default_prompt: "使用 $objective-data-analysis 分析我提供的客观数据，默认按指标-2026 建立口径并自动完成可执行分析。"

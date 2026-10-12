@@ -1,0 +1,194 @@
+{
+  "contract_version": "5.0.0",
+  "contracts": [
+    {
+      "producer_skill": "objective-data-analysis",
+      "artifact_type": "objective_evidence_package",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/handoff/visualization",
+      "allowed_paths": [
+        "#/analysis_results",
+        "#/findings",
+        "#/limitations",
+        "#/handoff/visualization"
+      ],
+      "relationship_paths": [
+        "#/analysis_results/journey/stage_transitions"
+      ],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/handoff/visualization"
+      ]
+    },
+    {
+      "producer_skill": "subjective-feedback-analysis",
+      "artifact_type": "subjective_evidence_package",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/handoff/visualization",
+      "allowed_paths": [
+        "#/analysis_results",
+        "#/findings",
+        "#/evidence_items",
+        "#/privacy",
+        "#/limitations",
+        "#/handoff/visualization"
+      ],
+      "relationship_paths": [],
+      "required_inherited_paths": [
+        "#/privacy",
+        "#/limitations",
+        "#/handoff/visualization"
+      ]
+    },
+    {
+      "producer_skill": "experience-heuristic-analysis",
+      "artifact_type": "heuristic_evidence_package",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/handoff/visualization",
+      "allowed_paths": [
+        "#/analysis_results",
+        "#/findings",
+        "#/evidence_items",
+        "#/validation_requests",
+        "#/business_rule_basis",
+        "#/limitations",
+        "#/handoff/visualization"
+      ],
+      "relationship_paths": [],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/handoff/visualization"
+      ]
+    },
+    {
+      "producer_skill": "evidence-govern",
+      "artifact_type": "evidence_govern_result",
+      "artifact_version": "6.0.0",
+      "handoff_path": "#/downstream_handoffs",
+      "allowed_paths": [
+        "#/evidence_items",
+        "#/evidence_relationships",
+        "#/evidence_change_signals",
+        "#/context_factor_assessments",
+        "#/downstream_handoffs",
+        "#/limitations"
+      ],
+      "relationship_paths": [
+        "#/evidence_relationships"
+      ],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/downstream_handoffs"
+      ]
+    },
+    {
+      "producer_skill": "root-cause-synthesis",
+      "artifact_type": "root_cause_synthesis_package",
+      "artifact_version": "5.0.0",
+      "handoff_path": "#/downstream_handoffs",
+      "allowed_paths": [
+        "#/analysis_summary",
+        "#/analysis_results/root_cause_candidates",
+        "#/analysis_results/candidate_mechanism_chains",
+        "#/analysis_results/root_cause_pattern_candidates",
+        "#/analysis_results/historical_similarity_matches",
+        "#/analysis_results/validation_hypotheses",
+        "#/analysis_results/intervention_direction_candidates",
+        "#/limitations",
+        "#/downstream_handoffs"
+      ],
+      "relationship_paths": [
+        "#/analysis_results/candidate_mechanism_chains"
+      ],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/downstream_handoffs"
+      ]
+    },
+    {
+      "producer_skill": "outcome-validation-recheck",
+      "artifact_type": "outcome_validation_package",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/downstream_handoffs",
+      "allowed_paths": [
+        "#/analysis_summary",
+        "#/analysis_results/validation_assessment",
+        "#/analysis_results/outcome_relationships",
+        "#/analysis_results/monitoring_requirements",
+        "#/analysis_results/reroute_decisions",
+        "#/analysis_results/pattern_observation_signals",
+        "#/limitations",
+        "#/downstream_handoffs"
+      ],
+      "relationship_paths": [
+        "#/analysis_results/outcome_relationships"
+      ],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/downstream_handoffs"
+      ]
+    },
+    {
+      "producer_skill": "business-impact",
+      "artifact_type": "business_impact_assessment",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/downstream_handoffs",
+      "allowed_paths": [
+        "#/problem_impact_cases",
+        "#/solution_value_cases",
+        "#/portfolio_summary",
+        "#/assumption_ledger",
+        "#/limitations",
+        "#/downstream_handoffs"
+      ],
+      "relationship_paths": [
+        "#/portfolio_summary/impact_value_chains"
+      ],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/downstream_handoffs"
+      ]
+    },
+    {
+      "producer_skill": "problem-framing",
+      "artifact_type": "problem_framing_package",
+      "artifact_version": "2.0.0",
+      "handoff_path": "#/visualization_handoff",
+      "allowed_paths": [
+        "#/problem_definition",
+        "#/target_population",
+        "#/target_scenarios",
+        "#/business_boundary",
+        "#/state_and_rule_constraints",
+        "#/success_definition",
+        "#/design_focus",
+        "#/candidate_directions",
+        "#/limitations",
+        "#/visualization_handoff"
+      ],
+      "relationship_paths": [],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/visualization_handoff"
+      ]
+    },
+    {
+      "producer_skill": "experience-blueprint",
+      "artifact_type": "experience_blueprint_package",
+      "artifact_version": "4.0.0",
+      "handoff_path": "#/visualization_handoff",
+      "allowed_paths": [
+        "#/blueprint_summary",
+        "#/solution_designs",
+        "#/validation_requirements",
+        "#/limitations",
+        "#/visualization_handoff"
+      ],
+      "relationship_paths": [],
+      "required_inherited_paths": [
+        "#/limitations",
+        "#/visualization_handoff"
+      ]
+    }
+  ]
+}

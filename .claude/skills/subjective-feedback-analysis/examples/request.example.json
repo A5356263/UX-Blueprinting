@@ -1,0 +1,40 @@
+{
+  "artifact_type": "subjective_analysis_request",
+  "artifact_version": "4.0.0",
+  "project_name": "薪福通体验工单分析",
+  "source_mode": "independent",
+  "analysis_mode": "discovery",
+  "invocation_context": "independent",
+  "analysis_purpose": {
+    "purpose_key": "ticket-discovery",
+    "purpose_label": "体验工单发现"
+  },
+  "requested_analyses": ["feedback_discovery"],
+  "input_bindings": [],
+  "requested_deliverables": [
+    {"format": "json", "required": true},
+    {"format": "markdown", "required": true}
+  ],
+  "publication_policy": {
+    "level": "formal",
+    "update_current_for_purpose": true
+  },
+  "retention_policy": "retain_result",
+  "input_sources": [
+    {
+      "source_id": "experience-tickets-july",
+      "source_type": "ticket",
+      "format": "xlsx",
+      "path_ref": "input/experience-tickets-july.xlsx",
+      "channel": "customer_service",
+      "authorized_scope": "用户明确提供的体验工单导出"
+    }
+  ],
+  "analysis_scope": {
+    "ticket_screening": "experience_related_and_possible",
+    "time_window": "2026-07"
+  },
+  "upstream_context_refs": [],
+  "business_rule_refs": [],
+  "requested_capabilities": ["ticket_screening", "objective_validation_requests", "knowledge_candidates"]
+}

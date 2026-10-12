@@ -1,0 +1,60 @@
+{
+  "artifact_type": "objective_analysis_request",
+  "artifact_version": "4.0.0",
+  "project_name": "示例旅程",
+  "source_mode": "independent",
+  "invocation_context": "independent",
+  "analysis_purpose": {
+    "purpose_key": "example-journey",
+    "purpose_label": "示例旅程分析"
+  },
+  "input_bindings": [],
+  "requested_deliverables": [
+    {"format": "json", "required": true},
+    {"format": "markdown", "required": true}
+  ],
+  "publication_policy": {
+    "level": "formal",
+    "update_current_for_purpose": true
+  },
+  "retention_policy": "retain_result",
+  "analysis_intent": "report",
+  "analysis_scope": {
+    "scenario_key": "example-journey",
+    "time_window": "2026-06"
+  },
+  "input_data_sources": [
+    {
+      "source_id": "event-data",
+      "path": "/absolute/path/to/events.xlsx",
+      "format": "xlsx",
+      "sheets": ["events"],
+      "role": "event_data",
+      "critical": true
+    }
+  ],
+  "requested_analyses": ["metrics", "funnel", "journey", "errors"],
+  "analysis_contract": {
+    "field_mapping": {
+      "user_id": "user_id",
+      "task_instance_id": "task_id",
+      "event_time": "event_time",
+      "event_name": "event_name",
+      "journey_step": "step_name",
+      "error_message": "error_message"
+    },
+    "event_mapping": {
+      "entry": ["enter"],
+      "submit": ["submit"],
+      "success": ["completed"],
+      "error": ["error"],
+      "exit": ["exit"],
+      "draft": ["draft"]
+    },
+    "funnel_steps": ["进入", "填写", "提交", "完成"],
+    "completion_events": ["completed"],
+    "submit_events": ["submit"],
+    "exit_events": ["exit"],
+    "draft_events": ["draft"]
+  }
+}

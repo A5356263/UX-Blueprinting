@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experience-heuristic-analysis.output.schema.json",
+  "title": "Heuristic Evidence Package 4.0.0",
+  "type": "object",
+  "required": ["run", "analysis_contract", "data_quality", "analysis_results", "findings", "evidence_items", "business_rule_basis", "validation_requests", "limitations", "publication", "delivery", "handoff"],
+  "properties": {
+    "run": {"$ref": "#/$defs/run"},
+    "analysis_contract": {"$ref": "#/$defs/analysisContract"},
+    "data_quality": {"$ref": "#/$defs/dataQuality"},
+    "analysis_results": {"$ref": "#/$defs/analysisResults"},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "evidence_items": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "business_rule_basis": {"type": "array", "items": {"$ref": "#/$defs/businessRuleBasis"}},
+    "validation_requests": {"type": "array", "items": {"$ref": "#/$defs/validationRequest"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "publication": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"},
+    "delivery": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"},
+    "handoff": {"$ref": "#/$defs/handoff"}
+  },
+  "$defs": {
+    "privacyStatus": {"enum": ["safe", "restricted", "needs_review", "blocked"]},
+    "artifactLocator": {
+      "type": "object",
+      "required": ["source_artifact_ref", "source_run_id", "payload_ref"],
+      "properties": {
+        "source_artifact_ref": {"type": "string"},
+        "source_run_id": {"type": "string"},
+        "payload_ref": {"type": "string", "pattern": "^#(?:/.*)?$"}
+      },
+      "additionalProperties": false
+    },
+    "comparisonLocator": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["ref_type", "source_artifact_ref", "source_run_id", "payload_ref"],
+          "properties": {
+            "ref_type": {"const": "artifact"},
+            "source_artifact_ref": {"type": "string"},
+            "source_run_id": {"type": "string"},
+            "payload_ref": {"type": "string", "pattern": "^#(?:/.*)?$"}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["ref_type", "source_id", "fingerprint"],
+          "properties": {
+            "ref_type": {"const": "source"},
+            "source_id": {"type": "string"},
+            "fingerprint": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "run": {
+      "type": "object",
+      "required": ["run_id", "artifact_type", "artifact_version", "producer_skill", "project_name", "generated_at", "source_mode", "analysis_mode", "status", "sources", "upstream_refs", "combined_input_fingerprint", "legacy_contract", "invocation_context", "analysis_purpose"],
+      "properties": {
+        "run_id": {"type": "string", "pattern": "^eha_"},
+        "artifact_type": {"const": "heuristic_evidence_package"},
+        "artifact_version": {"const": "4.0.0"},
+        "producer_skill": {"const": "experience-heuristic-analysis"},
+        "project_name": {"type": "string", "minLength": 1},
+        "generated_at": {"type": "string", "minLength": 1},
+        "source_mode": {"enum": ["independent", "chain_context"]},
+        "analysis_mode": {"enum": ["discovery", "intervention_recheck"]},
+        "status": {"enum": ["completed", "completed_with_caveats", "not_evaluable"]},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+        "upstream_refs": {"type": "array", "items": {"$ref": "#/$defs/artifactLocator"}},
+        "combined_input_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "legacy_contract": {"const": false},
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_id", "source_type", "source_ref", "acquisition", "status", "observable_capabilities", "limitations", "fingerprint", "sensitivity", "privacy_status", "redaction_applied", "disclosure_limitations"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["screenshot", "prototype", "figma_export", "frontend_code", "dom", "a11y", "runtime", "flow", "blueprint", "brief", "stories", "design_guideline", "design_system", "business_rule", "description"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "acquisition": {"enum": ["user_provided", "tool_collected", "explicit_upstream"]},
+        "upstream_locator": {"oneOf": [{"$ref": "#/$defs/artifactLocator"}, {"type": "null"}]},
+        "status": {"enum": ["loaded", "partially_loaded", "unreadable"]},
+        "observable_capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}},
+        "fingerprint": {"type": ["string", "null"]},
+        "sensitivity": {"enum": ["public", "internal", "confidential", "restricted", "unknown"]},
+        "privacy_status": {"$ref": "#/$defs/privacyStatus"},
+        "redaction_applied": {"type": "boolean"},
+        "disclosure_limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "analysisContract": {
+      "type": "object",
+      "required": ["analysis_scope", "focus_areas", "focus_source_refs", "applied_project_rule_refs", "rule_conflicts"],
+      "properties": {
+        "analysis_scope": {"$ref": "#/$defs/scope"},
+        "focus_areas": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "focus_source_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "applied_project_rule_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "rule_conflicts": {"type": "array", "items": {"$ref": "#/$defs/ruleConflict"}}
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["scope_type", "included", "excluded", "scope_reason", "review_areas"],
+      "properties": {
+        "scope_type": {"enum": ["full_review", "scoped_review", "diff_driven_review"]},
+        "included": {"type": "array", "items": {"type": "string"}},
+        "excluded": {"type": "array", "items": {"type": "string"}},
+        "scope_reason": {"type": "string"},
+        "review_areas": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["flow-continuity", "ia", "components", "visual-hierarchy", "edge-states", "copy", "responsive", "feedback", "accessibility", "brief-consistency"]}}
+      },
+      "additionalProperties": false
+    },
+    "ruleConflict": {
+      "type": "object",
+      "required": ["conflict_id", "rule_refs", "target_finding_refs", "status", "reason"],
+      "properties": {
+        "conflict_id": {"type": "string"},
+        "rule_refs": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string"}},
+        "target_finding_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "status": {"enum": ["resolved", "needs_confirmation"]},
+        "applied_rule_ref": {"type": ["string", "null"]},
+        "excluded_rule_refs": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "dataQuality": {
+      "type": "object",
+      "required": ["status", "source_gaps", "quality_risks", "material_boundary", "privacy_summary"],
+      "properties": {
+        "status": {"enum": ["ready", "ready_with_caveats", "partial", "not_evaluable"]},
+        "source_gaps": {"type": "array", "items": {"type": "string"}},
+        "quality_risks": {"type": "array", "items": {"type": "string"}},
+        "material_boundary": {"type": "string"},
+        "privacy_summary": {
+          "type": "object",
+          "required": ["safe", "restricted", "needs_review", "blocked"],
+          "properties": {
+            "safe": {"type": "integer", "minimum": 0},
+            "restricted": {"type": "integer", "minimum": 0},
+            "needs_review": {"type": "integer", "minimum": 0},
+            "blocked": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "analysisResults": {
+      "type": "object",
+      "required": ["coverage", "comparison", "summary"],
+      "properties": {
+        "coverage": {"type": "array", "items": {"$ref": "#/$defs/coverage"}},
+        "comparison": {"oneOf": [{"$ref": "#/$defs/comparison"}, {"type": "null"}]},
+        "summary": {"$ref": "#/$defs/summary"}
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["area", "status", "source_refs", "limitations"],
+      "properties": {
+        "area": {"enum": ["flow-continuity", "ia", "components", "visual-hierarchy", "edge-states", "copy", "responsive", "feedback", "accessibility", "brief-consistency"]},
+        "status": {"enum": ["evaluated_with_findings", "evaluated_no_finding", "not_evaluable", "not_in_scope"]},
+        "source_refs": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "comparison": {
+      "type": "object",
+      "required": ["baseline_ref", "current_ref", "resolved_finding_keys", "persisted_finding_keys", "new_finding_keys", "severity_changes", "scope_consistency", "effect_claim"],
+      "properties": {
+        "baseline_ref": {"$ref": "#/$defs/comparisonLocator"},
+        "current_ref": {"$ref": "#/$defs/comparisonLocator"},
+        "resolved_finding_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "persisted_finding_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "new_finding_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "severity_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding_key", "before", "after"],
+            "properties": {
+              "finding_key": {"type": "string"},
+              "before": {"enum": ["blocker", "major", "minor", "note"]},
+              "after": {"enum": ["blocker", "major", "minor", "note"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "scope_consistency": {"enum": ["comparable", "partially_comparable", "not_comparable"]},
+        "effect_claim": {"const": "not_claimed"}
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["blocker", "major", "minor", "note", "total_findings", "promoted_evidence_count", "coverage_status_counts", "summary_derivation"],
+      "properties": {
+        "blocker": {"type": "integer", "minimum": 0},
+        "major": {"type": "integer", "minimum": 0},
+        "minor": {"type": "integer", "minimum": 0},
+        "note": {"type": "integer", "minimum": 0},
+        "total_findings": {"type": "integer", "minimum": 0},
+        "promoted_evidence_count": {"type": "integer", "minimum": 0},
+        "coverage_status_counts": {"type": "object"},
+        "summary_derivation": {"const": "programmatically_derived"}
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["finding_id", "finding_key", "category", "heuristic_lenses", "risk_tags", "page_or_flow", "location", "state", "source_refs", "observation", "risk_hypothesis", "severity", "confidence", "design_attention", "rule_source", "business_rule_basis_refs", "project_rule_refs", "heuristic_rule_ref", "privacy_status", "allowed_uses", "forbidden_uses", "evidence_status", "not_promoted_reasons", "validation_request_refs"],
+      "properties": {
+        "finding_id": {"type": "string", "pattern": "^ehf_"},
+        "finding_key": {"type": "string", "pattern": "^ehk_[a-f0-9]{16}$"},
+        "category": {"enum": ["flow-continuity", "ia", "components", "visual-hierarchy", "edge-states", "copy", "responsive", "feedback", "accessibility", "brief-consistency"]},
+        "heuristic_lenses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "risk_tags": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "page_or_flow": {"type": "string", "minLength": 1},
+        "location": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "location_ref": {"type": "object"},
+        "source_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "observation": {"type": "string", "minLength": 1},
+        "risk_hypothesis": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["blocker", "major", "minor", "note"]},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "design_attention": {"type": "string", "minLength": 1},
+        "rule_source": {"enum": ["general_heuristic", "project_rule", "business_rule", "mixed"]},
+        "business_rule_basis_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "project_rule_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "heuristic_rule_ref": {"type": ["string", "null"]},
+        "privacy_status": {"$ref": "#/$defs/privacyStatus"},
+        "allowed_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "forbidden_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "evidence_status": {"enum": ["promoted", "not_promoted"]},
+        "not_promoted_reasons": {"type": "array", "items": {"type": "string"}},
+        "validation_request_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "sceneDescriptor": {
+      "type": "object",
+      "required": ["where", "what", "operation", "source_attribution", "evidence_form", "matching_policy"],
+      "properties": {
+        "where": {"type": "object", "required": ["product_area", "page_or_flow", "journey_step", "state"], "properties": {"product_area": {"type": "string"}, "page_or_flow": {"type": "string"}, "journey_step": {"type": "string"}, "state": {"type": "string"}}, "additionalProperties": false},
+        "what": {"type": "object", "required": ["business_object", "interface_element"], "properties": {"business_object": {"type": "string"}, "interface_element": {"type": "string"}}, "additionalProperties": false},
+        "operation": {"type": "object", "required": ["user_goal", "user_action"], "properties": {"user_goal": {"type": "string"}, "user_action": {"type": "string"}}, "additionalProperties": false},
+        "source_attribution": {"type": "object", "required": ["source_refs"], "properties": {"source_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}}, "additionalProperties": false},
+        "evidence_form": {"type": "array", "minItems": 1, "items": {"enum": ["screenshot", "prototype", "figma_export", "frontend_code", "dom", "a11y", "runtime", "flow", "blueprint", "description"]}},
+        "matching_policy": {"enum": ["automatic_candidate", "manual_only"]}
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["evidence_id", "finding_ref", "finding_key", "claim_type", "category", "observation", "risk_hypothesis", "design_attention", "source_refs", "confidence", "scene_descriptor", "business_rule_basis_refs", "project_rule_refs", "privacy_status", "can_be_used_as_strong_evidence", "manual_review_required", "causal_claim_allowed", "allowed_uses", "forbidden_uses", "lineage"],
+      "properties": {
+        "evidence_id": {"type": "string", "pattern": "^ehe_"},
+        "finding_ref": {"type": "string", "pattern": "^ehf_"},
+        "finding_key": {"type": "string"},
+        "claim_type": {"enum": ["heuristic_observation", "risk_hypothesis"]},
+        "category": {"type": "string"},
+        "observation": {"type": "string"},
+        "risk_hypothesis": {"type": "string"},
+        "design_attention": {"type": "string"},
+        "source_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "scene_descriptor": {"$ref": "#/$defs/sceneDescriptor"},
+        "business_rule_basis_refs": {"type": "array", "items": {"type": "string"}},
+        "project_rule_refs": {"type": "array", "items": {"type": "string"}},
+        "privacy_status": {"$ref": "#/$defs/privacyStatus"},
+        "can_be_used_as_strong_evidence": {"const": false},
+        "manual_review_required": {"const": true},
+        "causal_claim_allowed": {"const": false},
+        "allowed_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "forbidden_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "lineage": {"type": "object", "required": ["run_id", "source_refs", "finding_ref", "transformation_steps"], "properties": {"run_id": {"type": "string"}, "source_refs": {"type": "array", "items": {"type": "string"}}, "finding_ref": {"type": "string"}, "transformation_steps": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false}
+      },
+      "additionalProperties": false
+    },
+    "businessRuleBasis": {
+      "type": "object",
+      "required": ["basis_id", "source_type", "source_ref", "source_version", "rule_type", "description", "applicable_scope", "confidence", "confirmation_status", "allowed_uses", "forbidden_uses"],
+      "properties": {
+        "basis_id": {"type": "string", "pattern": "^ehbr_"},
+        "source_type": {"enum": ["user_confirmed", "formal_upstream", "knowledge_wiki", "explicit_project_rule", "provided_material", "evidence_inferred", "unknown"]},
+        "source_ref": {"type": ["string", "null"]},
+        "source_version": {"type": ["string", "null"]},
+        "rule_type": {"enum": ["allowed_repeat", "expected_backtrack", "required_step", "optional_step", "validation_rule", "exception_flow", "eligibility_rule", "policy_constraint", "configuration_rule", "scenario_rule"]},
+        "description": {"type": "string"},
+        "applicable_scope": {"type": "object"},
+        "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+        "confirmation_status": {"enum": ["confirmed", "confirmed_for_current_run", "candidate", "inferred", "unknown"]},
+        "allowed_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "forbidden_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "validationRequest": {
+      "type": "object",
+      "required": ["request_id", "target_finding_refs", "gap_type", "required_input", "reason", "blocks_evidence_promotion", "recommended_owner_or_skill"],
+      "properties": {
+        "request_id": {"type": "string", "pattern": "^ehv_"},
+        "target_finding_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "gap_type": {"enum": ["additional_interface_material", "manual_interface_review", "business_rule_confirmation", "objective_behavior_confirmation", "subjective_feedback_confirmation", "accessibility_specialist_review", "device_or_browser_verification", "design_rule_conflict_confirmation", "privacy_review"]},
+        "required_input": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "blocks_evidence_promotion": {"type": "boolean"},
+        "recommended_owner_or_skill": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "required": ["input_gate_status", "analysis_status", "handoff_status", "evidence_refs", "blocked_reasons", "evidence_govern", "visualization", "allowed_uses", "forbidden_uses"],
+      "properties": {
+        "input_gate_status": {"enum": ["ready", "ready_with_caveats", "partial", "needs_user_input", "not_evaluable"]},
+        "analysis_status": {"enum": ["completed", "completed_with_caveats", "not_evaluable"]},
+        "handoff_status": {"enum": ["ready", "ready_with_caveats", "blocked"]},
+        "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "blocked_reasons": {"type": "array", "items": {"type": "string"}},
+        "evidence_govern": {
+          "type": "object",
+          "required": ["target_skill", "status", "payload_refs", "allowed_uses", "forbidden_uses"],
+          "properties": {
+            "target_skill": {"const": "evidence-govern"},
+            "status": {"enum": ["ready", "blocked"]},
+            "payload_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^#(?:/.*)?$"}},
+            "allowed_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "forbidden_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "visualization": {
+          "$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"
+        },
+        "allowed_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "forbidden_uses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

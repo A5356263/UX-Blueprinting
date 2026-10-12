@@ -1,0 +1,141 @@
+{
+  "run": {
+    "artifact_type": "visualization_package",
+    "artifact_version": "5.0.0",
+    "producer_skill": "data-visualization",
+    "run_id": "dv_registered_demo",
+    "project_name": "客观指标展示",
+    "generated_at": "2026-07-25T12:00:00+08:00",
+    "invocation_context": "chain_context",
+    "analysis_purpose": {"purpose_key": "visual-summary", "purpose_label": "可视化摘要"},
+    "status": "completed",
+    "source_mode": "registered_upstream",
+    "sources": ["objective"],
+    "write_status": "not_requested"
+  },
+  "data_quality": {
+    "status": "ready",
+    "source_contract_valid": true,
+    "semantic_gate_status": "passed",
+    "notes": []
+  },
+  "limitations": [],
+  "publication": {"status": "candidate", "analysis_purpose_key": "visual-summary", "analysis_purpose_label": "可视化摘要", "update_current_for_purpose": false},
+  "delivery": {"status": "not_requested", "requested": [], "files": []},
+  "handoff": {
+    "input_gate_status": "ready",
+    "handoff_status": "terminal",
+    "allowed_uses": ["presentation", "human_review", "offline_delivery"],
+    "forbidden_uses": [
+      "recalculate_analysis",
+      "create_metric",
+      "create_relationship",
+      "upgrade_causality",
+      "claim_validated_effect",
+      "publish_knowledge",
+      "auto_archive",
+      "auto_trigger_downstream"
+    ],
+    "blocked_reasons": []
+  },
+  "analysis_results": {
+    "visualization_package": {
+      "source_contracts": [
+        {
+          "source_id": "objective",
+          "producer_skill": "objective-data-analysis",
+          "artifact_type": "objective_evidence_package",
+          "artifact_version": "4.0.0",
+          "source_run_id": "oda_demo",
+          "artifact_ref": "objective",
+          "allowed_paths": [
+            "#/analysis_results",
+            "#/findings",
+            "#/limitations",
+            "#/handoff/visualization"
+          ],
+          "consumed_paths": [
+            "#/analysis_results",
+            "#/limitations",
+            "#/handoff/visualization"
+          ],
+          "sensitivity_status": "inherited",
+          "privacy_gate_status": "safe",
+          "contract_status": "valid"
+        }
+      ],
+      "visual_outputs": [
+        {
+          "visual_id": "completion-rate",
+          "title": "任务完成率",
+          "intent": "comparison",
+          "chart_type": "bar",
+          "render_status": "formal",
+          "data_ref": "objective#/analysis_results/metrics/completion_rate",
+          "source_refs": ["objective#/analysis_results/metrics/completion_rate"],
+          "rationale": "比较两个已计算完成率。",
+          "epistemic_status": "observed",
+          "encoding": {
+            "x": "period",
+            "y": "completion_rate",
+            "color": "period",
+            "size": null,
+            "label": "completion_rate",
+            "unit": "ratio",
+            "denominator": "task_instance",
+            "time_window": "2026-06"
+          },
+          "chart_data": {
+            "series": [
+              {
+                "series_id": "completion",
+                "label": "完成率",
+                "points": [
+                  {
+                    "label": "当前",
+                    "category": "当前",
+                    "x": null,
+                    "y": null,
+                    "value": 0.82,
+                    "epistemic_status": "observed",
+                    "source_ref": "objective#/analysis_results/metrics/completion_rate"
+                  }
+                ]
+              }
+            ]
+          },
+          "accessibility": {
+            "summary": "当前任务完成率为 82%。",
+            "data_table_available": true,
+            "color_independent": true
+          },
+          "responsive": {
+            "strategy": "label_reduction_with_table",
+            "mobile_note": "移动端保留数值标签。"
+          },
+          "caveats": []
+        }
+      ],
+      "relationship_diagrams": [],
+      "output_files": [],
+      "recalculation_performed": false
+    }
+  },
+  "manual_review_requests": [],
+  "quality": {
+    "overall_status": "pass",
+    "source_traceability": "pass",
+    "semantic_fidelity": "pass",
+    "label_clarity": "pass",
+    "accessibility": "pass",
+    "responsive": "pass",
+    "sensitive_display": "pass"
+  },
+  "write_safety": {
+    "output_root_checked": true,
+    "relative_paths_only": true,
+    "overwrite_policy": "not_requested",
+    "atomic_write": true,
+    "sensitive_content_checked": true
+  }
+}

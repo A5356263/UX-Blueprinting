@@ -1,0 +1,471 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "data-visualization-input.schema.json",
+  "title": "Data Visualization Request 5.0.0",
+  "type": "object",
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "source_mode",
+    "project_name",
+    "visualization_intent",
+    "invocation_context",
+    "analysis_purpose",
+    "requested_analyses",
+    "input_bindings",
+    "requested_deliverables",
+    "publication_policy",
+    "retention_policy"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "visualization_package_input"
+    },
+    "schema_version": {
+      "const": "5.0.0"
+    },
+    "source_mode": {
+      "enum": [
+        "registered_upstream",
+        "chart_ready",
+        "visualization_brief"
+      ]
+    },
+    "project_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "review_decisions": {
+      "type": "array",
+      "items": {"$ref": "../../../../shared-workflow/data-analysis/schemas/review_decision.schema.json"}
+    },
+    "visualization_intent": {
+      "$ref": "#/$defs/visualizationIntent"
+    },
+    "upstream_sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/upstreamSource"
+      },
+      "uniqueItems": true
+    },
+    "artifact_bundle": {
+      "$ref": "#/$defs/artifactBundle"
+    },
+    "chart_ready_data": {
+      "$ref": "#/$defs/chartReadyData"
+    },
+    "visualization_brief": {
+      "$ref": "#/$defs/visualizationBrief"
+    },
+    "output_request": {
+      "$ref": "#/$defs/outputRequest"
+    },
+    "sensitivity_instruction": {
+      "type": ["object", "null"],
+      "properties": {
+        "status": {
+          "enum": [
+            "inherited",
+            "explicitly_authorized",
+            "minimum_disclosure",
+            "manual_review_required"
+          ]
+        },
+        "rule_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": ["status", "rule_refs"],
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "artifactBundle": {
+      "type": "object",
+      "required": ["bundle_id", "report_profile", "source_run_ids"],
+      "properties": {
+        "bundle_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "report_profile": {
+          "enum": ["objective_journey", "business_problem", "full_diagnostic"]
+        },
+        "source_run_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "visualizationIntent": {
+      "type": "object",
+      "required": ["reader_goal"],
+      "properties": {
+        "reader_goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "requested_chart_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/chartType"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "upstreamSource": {
+      "type": "object",
+      "required": [
+        "artifact_instance_ref",
+        "handoff",
+        "allowed_use",
+        "producer_skill",
+        "artifact_type",
+        "artifact_version",
+        "requested_paths"
+      ],
+      "properties": {
+        "artifact_instance_ref": {"$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"},
+        "handoff": {"$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"},
+        "allowed_use": {"type": "string", "minLength": 1},
+        "producer_skill": {
+          "enum": [
+            "objective-data-analysis",
+            "subjective-feedback-analysis",
+            "experience-heuristic-analysis",
+            "evidence-govern",
+            "root-cause-synthesis",
+            "problem-framing",
+            "experience-blueprint",
+            "outcome-validation-recheck",
+            "business-impact"
+          ]
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requested_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^#/"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "metric": {
+      "type": "object",
+      "required": [
+        "metric_id",
+        "label",
+        "value",
+        "unit",
+        "time_window",
+        "epistemic_status"
+      ],
+      "properties": {
+        "metric_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": ["number", "integer", "string"]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "denominator": {
+          "type": ["string", "null"]
+        },
+        "time_window": {
+          "type": "string",
+          "minLength": 1
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "source_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "table": {
+      "type": "object",
+      "required": ["table_id", "title", "columns", "rows"],
+      "properties": {
+        "table_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "required": [
+        "relationship_id",
+        "source",
+        "target",
+        "relation_type",
+        "epistemic_status"
+      ],
+      "properties": {
+        "relationship_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weight": {
+          "type": ["number", "null"],
+          "minimum": 0
+        },
+        "weight_unit": {
+          "type": ["string", "null"]
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "chartReadyData": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/metric"
+          }
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/table"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationship"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["metrics"],
+          "properties": {
+            "metrics": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "required": ["tables"],
+          "properties": {
+            "tables": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "required": ["relationships"],
+          "properties": {
+            "relationships": {
+              "minItems": 1
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "visualizationBrief": {
+      "type": "object",
+      "required": ["reader_goal", "available_information"],
+      "properties": {
+        "reader_goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "available_information": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "known_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputRequest": {
+      "type": "object",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "enum": ["json", "html", "markdown"]
+          },
+          "uniqueItems": true
+        },
+        "overwrite_existing_delivery": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "chartType": {
+      "enum": [
+        "metric_card",
+        "data_table",
+        "bar",
+        "grouped_bar",
+        "stacked_bar",
+        "line",
+        "distribution",
+        "scatter",
+        "funnel",
+        "sankey",
+        "relationship_flow",
+        "mechanism_chain"
+      ]
+    },
+    "epistemicStatus": {
+      "enum": [
+        "observed",
+        "reported",
+        "heuristic",
+        "candidate",
+        "estimated",
+        "forecast",
+        "validated",
+        "unknown"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_mode": {
+            "const": "registered_upstream"
+          }
+        }
+      },
+      "then": {
+        "required": ["upstream_sources"],
+        "properties": {
+          "upstream_sources": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_mode": {
+            "const": "chart_ready"
+          }
+        }
+      },
+      "then": {
+        "required": ["chart_ready_data"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_mode": {
+            "const": "visualization_brief"
+          }
+        }
+      },
+      "then": {
+        "required": ["visualization_brief"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,6 +1,0 @@
-.wizard-business-form { display: grid; gap: var(--alias-space-5); }
-.wizard-business-form__title { margin: 0 !important; }
-.wizard-business-form__error-summary { padding: var(--alias-space-3) var(--alias-space-4); background: var(--alias-surface-error-tint); border: 1px solid var(--alias-border-neutral); border-radius: var(--alias-radius-regular); }
-.wizard-business-form__stage { min-height: 320px; padding: var(--alias-space-5); background: var(--alias-surface-container-bright); border: 1px solid var(--alias-border-neutral); border-radius: var(--alias-radius-regular); }
-.wizard-business-form__stage-title { margin-top: 0 !important; }
-.wizard-business-form__footer { position: sticky; bottom: 0; padding: var(--alias-space-3) 0; background: var(--alias-surface-container-bright); border-top: 1px solid var(--alias-border-neutral); }

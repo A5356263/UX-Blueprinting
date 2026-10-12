@@ -1,0 +1,217 @@
+{
+  "run": {
+    "artifact_type": "outcome_validation_package",
+    "artifact_version": "4.0.0",
+    "producer_skill": "outcome-validation-recheck",
+    "run_id": "outcome-regression-001",
+    "project_name": "报销提单优化",
+    "generated_at": "2026-07-25T12:00:00+08:00",
+    "source_mode": "chain_context",
+    "sources": ["govern-handoff:outcome-002"],
+    "upstream_refs": ["handoff:root-to-outcome-003", "intervention-contract:int-003"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "validation_mode": "durability_monitoring",
+    "validation_stage": "regression_monitoring",
+    "root_cause_handoff_ref": "handoff:root-to-outcome-003",
+    "intervention_contract_ref": "intervention-contract:int-003",
+    "govern_handoff_ref": "govern-handoff:outcome-002",
+    "completed_capabilities": ["durability_assessment", "regression_assessment"],
+    "blocked_capabilities": ["monitoring_schedule_creation"]
+  },
+  "data_quality": {
+    "evidence_count": 3,
+    "baseline_status": "ready",
+    "observation_window_status": "ready",
+    "exposure_status": "ready",
+    "implementation_fidelity_status": "ready",
+    "measurement_status": "ready",
+    "known_gaps": ["尚无正式阈值、频率和通知政策"]
+  },
+  "limitations": [],
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "ready_with_caveats",
+    "allowed_uses": ["durability_assessment", "monitoring_requirement_proposal"],
+    "forbidden_uses": ["create_schedule", "auto_rollback", "auto_rerun"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "validation_mode": "durability_monitoring",
+    "validation_stage": "regression_monitoring",
+    "readiness_status": "ready_with_caveats",
+    "effectiveness": "partially_effective",
+    "attribution_strength": "associational_only",
+    "durability_status": "regressed",
+    "manual_review_count": 0,
+    "handoff_targets": ["evidence-govern"]
+  },
+  "analysis_results": {
+    "effect_measurements": [
+      {
+        "measurement_id": "measurement-regression-completion",
+        "metric_ref": "metric:completion-rate",
+        "metric_type": "task_metric",
+        "measurement_scope": {
+          "grain": "task",
+          "dimensions": {"business_board": "费控"},
+          "baseline_window": {"label": "stable-baseline"},
+          "comparison_window": {"label": "regression-window"}
+        },
+        "baseline_value": 0.81,
+        "comparison_value": 0.74,
+        "absolute_change": -0.07,
+        "result_status": "worsened",
+        "attribution_strength": "associational_only",
+        "source_refs": ["governed:metric-completion"],
+        "caveats": ["持续性窗口内观察到回落"]
+      }
+    ],
+    "validation_assessment": {
+      "assessment_id": "assessment-regression-001",
+      "validation_mode": "durability_monitoring",
+      "validation_stage": "regression_monitoring",
+      "scope": {"window": "2026-Q3"},
+      "root_cause_refs": ["root-cause:rc-001"],
+      "intervention_contract_ref": "intervention-contract:int-003",
+      "readiness": {
+        "status": "ready_with_caveats",
+        "baseline": "ready",
+        "observation_window": "ready",
+        "exposure": "ready",
+        "implementation_fidelity": "ready",
+        "measurement": "ready",
+        "blocking_items": []
+      },
+      "hypothesis_support": "partially_supported",
+      "intervention_effectiveness": "partially_effective",
+      "attribution": {
+        "strength": "associational_only",
+        "confounding_risk": "high",
+        "confounding_factors": ["同期版本变更"],
+        "rationale": "效果出现回落，但同期版本变更使原因无法单独归于原干预。"
+      },
+      "primary_outcomes": [
+        {
+          "metric_ref": "metric:completion-rate",
+          "result_status": "worsened",
+          "source_refs": ["objective-result:regression-window"],
+          "caveats": ["相对上线后窗口回落"]
+        }
+      ],
+      "guardrail_outcomes": [],
+      "segment_outcomes": [],
+      "side_effects": [],
+      "problem_migration": [],
+      "durability": {
+        "status": "regressed",
+        "window_ref": "window:2026-Q3",
+        "rationale": "主要指标未保持上线后改善水平。"
+      },
+      "decision": {
+        "status": "regressed",
+        "reason": "效果回落且存在版本混杂。",
+        "next_action": "先治理版本变更证据，再精准回检受影响范围。"
+      },
+      "caveats": ["不能把回归完全归因于原方案"]
+    },
+    "outcome_relationships": [
+      {
+        "relationship_id": "relationship-regression-001",
+        "source_ref": "version-change:2026-Q3",
+        "target_ref": "metric:completion-rate",
+        "relation_type": "counterevidence",
+        "validation_stage": "regression_monitoring",
+        "effect_attribution_confidence": "associational_only",
+        "confounding_risk": "high",
+        "source_refs": ["context:version-change", "objective-result:regression-window"],
+        "caveats": []
+      }
+    ],
+    "reroute_decisions": [],
+    "outcome_evidence_patch_requests": [
+      {
+        "request_id": "patch-request-regression-001",
+        "target_evidence_refs": ["evidence:post-launch-effect"],
+        "observed_change": "weakened",
+        "reason": "长期窗口出现回落且存在新混杂。",
+        "target_processor": "evidence-govern",
+        "requires_manual_approval": true,
+        "can_auto_apply": false
+      }
+    ],
+    "root_cause_feedback_signals": [
+      {
+        "signal_id": "root-feedback-regression-001",
+        "root_cause_candidate_ref": "root-cause:rc-001",
+        "signal": "regression_observed",
+        "govern_absorption_required": true,
+        "source_refs": ["assessment-regression-001"],
+        "caveats": ["先排除版本混杂"]
+      }
+    ],
+    "pattern_observation_signals": [
+      {
+        "signal_id": "pattern-observation-regression-001",
+        "candidate_mechanism_ref": "mechanism:chain-001",
+        "intervention_ref": "intervention:int-003",
+        "validation_stage": "regression_monitoring",
+        "effectiveness": "partially_effective",
+        "attribution_strength": "associational_only",
+        "context_refs": ["context:version-change"],
+        "review_status": "pending",
+        "can_form_pattern": false,
+        "caveats": ["单案例观察"]
+      }
+    ],
+    "monitoring_requirements": [
+      {
+        "requirement_id": "monitoring-001",
+        "metric_refs": ["metric:completion-rate"],
+        "segment_refs": [],
+        "baseline_ref": "baseline:post-launch",
+        "threshold_policy_ref": null,
+        "cadence_policy_ref": null,
+        "notification_policy_ref": null,
+        "status": "proposal",
+        "can_schedule": false,
+        "caveats": ["需业务确认阈值、频率和通知责任人"]
+      }
+    ]
+  },
+  "manual_review_requests": [],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-outcome-govern-regression-001",
+      "target_skill": "evidence-govern",
+      "handoff_type": "regression_feedback_absorption",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/outcome_evidence_patch_requests/0", "#/analysis_results/root_cause_feedback_signals/0"],
+      "allowed_uses": ["review_evidence_change", "absorb_outcome_feedback"],
+      "forbidden_uses": ["auto_apply_patch"],
+      "required_review_request_ids": [],
+      "caveats": ["存在版本混杂"]
+    },
+    {
+      "handoff_id": "handoff-outcome-viz-durability-001",
+      "target_skill": "data-visualization",
+      "handoff_type": "durability_result_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/validation_assessment"],
+      "allowed_uses": ["visualization"],
+      "forbidden_uses": ["recalculate_analysis", "change_validation_verdict"],
+      "required_review_request_ids": [],
+      "caveats": ["保留监测窗口及版本混杂限制"]
+    }
+  ],
+  "quality": {"schema_validated": true, "semantic_gates_passed": true, "self_check_passed": true},
+  "write_safety": {
+    "can_auto_apply": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_schedule_monitoring": false,
+    "can_auto_rollback": false,
+    "can_auto_rerun_full_chain": false
+  }
+}

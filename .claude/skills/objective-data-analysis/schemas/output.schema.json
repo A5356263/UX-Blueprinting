@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "objective-data-analysis.output.schema.json",
+  "title": "Objective Evidence Package 4.0.0",
+  "type": "object",
+  "required": ["run", "scope", "effective_analysis_contract", "data_quality", "analysis_results", "findings", "evidence_items", "limitations", "publication", "delivery", "handoff"],
+  "properties": {
+    "run": {"$ref": "#/$defs/run"}, "scope": {"type": "object"},
+    "effective_analysis_contract": {"type": "object", "required": ["metric_framework", "statistical_policy", "rule_sources"]},
+    "data_quality": {"$ref": "#/$defs/dataQuality"}, "analysis_results": {"$ref": "#/$defs/analysisResults"},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "evidence_items": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "publication": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"},
+    "delivery": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"},
+    "handoff": {"$ref": "#/$defs/handoff"}
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": ["run_id", "artifact_type", "artifact_version", "producer_skill", "project_name", "generated_at", "source_mode", "analysis_intent", "status", "selected_analyses", "sources", "combined_input_fingerprint", "invocation_context", "analysis_purpose"],
+      "properties": {
+        "run_id": {"type": "string", "pattern": "^oda_"}, "artifact_type": {"const": "objective_evidence_package"},
+        "artifact_version": {"const": "4.0.0"}, "producer_skill": {"const": "objective-data-analysis"},
+        "project_name": {"type": "string"}, "generated_at": {"type": "string"}, "source_mode": {"enum": ["independent", "chain_context"]},
+        "analysis_intent": {"enum": ["comprehensive", "report", "focused"]}, "status": {"enum": ["completed", "completed_with_caveats"]},
+        "selected_analyses": {"type": "array", "items": {"enum": ["metrics", "funnel", "journey", "errors", "segments", "baseline", "feature_usage", "enterprise_states"]}},
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/sourceManifest"}}, "combined_input_fingerprint": {"type": "string"},
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"}
+      },
+      "additionalProperties": false
+    },
+    "sourceManifest": {
+      "type": "object", "required": ["source_id", "format", "row_count", "status", "critical"],
+      "properties": {
+        "source_id": {"type": "string"}, "role": {"type": "string"}, "format": {"type": "string"}, "path_ref": {"type": "string"},
+        "fingerprint": {"type": ["string", "null"]}, "size_bytes": {"type": ["integer", "null"]}, "row_count": {"type": "integer"},
+        "field_count": {"type": "integer"}, "fields": {"type": "array"}, "sheets": {"type": "array"}, "read_mode": {"type": "string"},
+        "status": {"enum": ["loaded", "unreadable"]}, "critical": {"type": "boolean"}, "failure_reason": {"type": "string"},
+        "data_grain": {"enum": ["event", "task_summary"]}
+        ,"semantic_type": {"enum": ["aggregate_metric_summary", "task_summary", "journey_node_detail", "error_context_detail", "business_blueprint", "dimension_lookup", "enterprise_state_detail", "general_event_log"]}
+        ,"semantic_type_basis": {"enum": ["explicit", "role", "field_combination"]}
+        ,"metric_authority": {"enum": ["official", "reference", "diagnostic"]}
+        ,"enterprise_state_type": {"type": ["string", "null"]}
+        ,"declared_scope": {"type": "object"}
+        ,"observed_time_window": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {"start": {"type": ["string", "null"]}, "end": {"type": ["string", "null"]}},
+          "additionalProperties": false
+        }
+        ,"observed_grain_counts": {
+          "type": "object",
+          "required": ["task_instance", "user", "enterprise"],
+          "properties": {"task_instance": {"type": "integer"}, "user": {"type": "integer"}, "enterprise": {"type": "integer"}},
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataQuality": {
+      "type": "object",
+      "required": ["status", "input_row_count", "analysis_row_count", "excluded_row_count", "duplicate_row_count", "derived_task_row_count", "invalid_timestamp_count", "missing_core_mappings", "ambiguous_mappings", "invalid_explicit_mappings", "source_failures", "task_boundary_reliable", "task_boundary_reasons", "event_class_counts", "field_mapping", "source_field_mapping", "source_data_grains", "data_grain", "error_classification_reliable", "row_level_persisted"],
+      "properties": {
+        "status": {"enum": ["ready", "ready_with_caveats"]}, "input_row_count": {"type": "integer"}, "analysis_row_count": {"type": "integer"},
+        "excluded_row_count": {"type": "integer"}, "duplicate_row_count": {"type": "integer"}, "derived_task_row_count": {"type": "integer"},
+        "invalid_timestamp_count": {"type": "integer"}, "missing_core_mappings": {"type": "array"}, "ambiguous_mappings": {"type": "array"}, "invalid_explicit_mappings": {"type": "array"},
+        "source_failures": {"type": "array"}, "task_boundary_reliable": {"type": "boolean"}, "task_boundary_reasons": {"type": "array"},
+        "event_class_counts": {"type": "object"}, "field_mapping": {"type": "object"},
+        "source_field_mapping": {"type": "object"}, "source_data_grains": {"type": "object"},
+        "source_semantic_types": {"type": "object"}, "source_semantic_type_basis": {"type": "object"},
+        "dimension_join_results": {"type": "array", "items": {"type": "object"}},
+        "data_grain": {"enum": ["event", "task_summary", "mixed"]},
+        "error_classification_reliable": {"type": "boolean"}, "row_level_persisted": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "analysisBlock": {
+      "type": "object", "required": ["status"],
+      "properties": {
+        "status": {"enum": ["completed", "completed_with_caveats", "not_evaluable", "not_requested"]},
+        "reason": {"type": "string"}, "reliability": {"type": "object"}, "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "baseline": {
+      "allOf": [{"$ref": "#/$defs/analysisBlock"}],
+      "properties": {
+        "definition": {"type": "object"}, "comparability": {"type": "object"}, "comparisons": {"type": "array"},
+        "candidate": {
+          "anyOf": [
+            {"type": "null"},
+            {"$ref": "../../../../shared-workflow/data-analysis/schemas/baseline_item.schema.json"}
+          ]
+        }
+      }
+    },
+    "analysisResults": {
+      "type": "object", "required": ["metrics", "funnel", "journey", "errors", "segments", "baseline", "feature_usage", "enterprise_states"],
+      "properties": {
+        "metrics": {"$ref": "#/$defs/analysisBlock"}, "funnel": {"$ref": "#/$defs/analysisBlock"},
+        "journey": {"$ref": "#/$defs/analysisBlock"}, "errors": {"$ref": "#/$defs/analysisBlock"},
+        "segments": {"$ref": "#/$defs/analysisBlock"}, "baseline": {"$ref": "#/$defs/baseline"},
+        "feature_usage": {"$ref": "#/$defs/analysisBlock"},
+        "enterprise_states": {"$ref": "#/$defs/analysisBlock"}
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["finding_id", "source_analysis", "claim_type", "statement", "metric_refs", "sample_size", "impact_count", "reliability_status", "evidence_eligible", "allowed_uses", "forbidden_uses"],
+      "properties": {
+        "finding_id": {"type": "string"}, "source_analysis": {"enum": ["metrics", "funnel", "journey", "errors", "segments", "baseline", "feature_usage", "enterprise_states"]},
+        "claim_type": {"enum": ["fact", "correlation", "anomaly"]}, "statement": {"type": "string"}, "metric_refs": {"type": "array", "items": {"type": "string"}},
+        "sample_size": {"type": "integer", "minimum": 0}, "impact_count": {"type": "integer", "minimum": 0},
+        "reliability_status": {"enum": ["descriptive_supported", "limited"]}, "evidence_eligible": {"type": "boolean"},
+        "allowed_uses": {"type": "array", "items": {"type": "string"}}, "forbidden_uses": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["evidence_id", "finding_ref", "statement", "claim_type", "metric_refs", "sample_size", "impact_count", "reliability_status", "scene_descriptor", "privacy_status", "manual_review_required", "allowed_uses", "forbidden_uses", "lineage"],
+      "properties": {
+        "evidence_id": {"type": "string"}, "finding_ref": {"type": "string"}, "statement": {"type": "string"}, "claim_type": {"type": "string"},
+        "metric_refs": {"type": "array"}, "sample_size": {"type": "integer"}, "impact_count": {"type": "integer"}, "reliability_status": {"const": "descriptive_supported"},
+        "scene_descriptor": {"type": "object", "required": ["where", "what", "operation", "source_attribution", "evidence_form"]},
+        "privacy_status": {"enum": ["safe", "restricted", "needs_review", "blocked"]}, "manual_review_required": {"type": "boolean"},
+        "allowed_uses": {"type": "array"}, "forbidden_uses": {"type": "array"}, "lineage": {"type": "object", "required": ["run_id", "input_fingerprint"]}
+      },
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object", "required": ["next_skill", "input_gate_status", "handoff_status", "payload_refs", "evidence_refs", "analysis_result_refs", "limitations_ref", "lineage_ref", "visualization", "allowed_uses", "forbidden_uses"],
+      "properties": {
+        "next_skill": {"const": "evidence-govern"}, "input_gate_status": {"enum": ["ready", "ready_with_caveats"]}, "handoff_status": {"enum": ["ready", "ready_with_caveats", "blocked"]},
+        "payload_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^#/evidence_items/[0-9]+$"}},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}}, "analysis_result_refs": {"type": "object"},
+        "limitations_ref": {"const": "#/limitations"}, "lineage_ref": {"const": "#/run"},
+        "visualization": {"$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"},
+        "allowed_uses": {"type": "array", "items": {"type": "string"}},
+        "forbidden_uses": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

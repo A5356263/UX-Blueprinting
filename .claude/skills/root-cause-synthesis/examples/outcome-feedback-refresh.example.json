@@ -1,0 +1,104 @@
+{
+  "run": {
+    "artifact_type": "root_cause_synthesis_package",
+    "artifact_version": "5.0.0",
+    "producer_skill": "root-cause-synthesis",
+    "run_id": "rc_demo_feedback_001",
+    "project_name": "示例项目",
+    "generated_at": "2026-07-25T10:00:00+08:00",
+    "source_mode": "chain_context",
+    "sources": ["governed"],
+    "upstream_refs": ["govern-absorption:outcome-1"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "run_mode": "outcome_feedback_refresh",
+    "govern_handoff_ref": "govern-handoff:feedback-demo",
+    "evidence_basis": "multi_source_corroborated",
+    "root_cause_readiness": "ready",
+    "completed_capabilities": ["lifecycle_patch_proposal"],
+    "blocked_capabilities": []
+  },
+  "data_quality": {
+    "evidence_count": 1,
+    "source_type_count": 1,
+    "lineage_complete": true,
+    "known_gaps": []
+  },
+  "limitations": [],
+  "handoff": {
+    "input_gate_status": "ready",
+    "handoff_status": "pending_review",
+    "allowed_uses": ["root_cause_lifecycle_review"],
+    "forbidden_uses": ["auto_apply"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "run_mode": "outcome_feedback_refresh",
+    "candidate_count": 0,
+    "dominant_causal_confidence": "not_applicable",
+    "manual_review_count": 1,
+    "handoff_targets": ["evidence-govern"]
+  },
+  "analysis_results": {
+    "root_cause_candidates": [],
+    "candidate_mechanism_chains": [],
+    "intervention_direction_candidates": [],
+    "validation_hypotheses": [],
+    "root_cause_lifecycle_patches": [
+      {
+        "patch_id": "rc-patch-1",
+        "root_cause_candidate_ref": "archive:root-cause/rc-1",
+        "feedback_signal": "resolution_observed",
+        "current_status": "active",
+        "action": "mark_resolved",
+        "proposed_status": "resolved",
+        "govern_absorption_ref": "govern-absorption:outcome-1",
+        "reason": "Reviewed Outcome 显示目标改善且护栏稳定，申请人工确认解决状态",
+        "requires_manual_approval": true,
+        "can_auto_apply": false
+      }
+    ],
+    "historical_similarity_matches": [],
+    "root_cause_pattern_candidates": []
+  },
+  "manual_review_requests": [
+    {
+      "review_id": "review-lifecycle-1",
+      "review_type": "risk_review",
+      "suggested_owner": "根因治理负责人",
+      "status": "pending",
+      "blocking_scope": "rc-patch-1",
+      "reason": "解决状态必须人工确认",
+      "required_decision": "批准或拒绝 mark_resolved",
+      "source_refs": ["govern-absorption:outcome-1"],
+      "affected_output_refs": ["#/analysis_results/root_cause_lifecycle_patches/0"],
+      "caveats": []
+    }
+  ],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-govern-patch-1",
+      "target_skill": "evidence-govern",
+      "handoff_type": "root_cause_lifecycle_patch_review",
+      "handoff_status": "pending_review",
+      "payload_refs": ["#/analysis_results/root_cause_lifecycle_patches/0"],
+      "allowed_uses": ["review_root_cause_lifecycle_patch"],
+      "forbidden_uses": ["auto_apply"],
+      "required_review_request_ids": ["review-lifecycle-1"],
+      "caveats": []
+    }
+  ],
+  "quality": {
+    "schema_validated": true,
+    "semantic_gates_passed": true,
+    "self_check_passed": true
+  },
+  "write_safety": {
+    "can_auto_publish": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_publish_strategy": false,
+    "can_publish_knowledge": false
+  }
+}

@@ -1,7 +1,0 @@
-{
-  "name": "uxw-monorepo-fixture",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
-}

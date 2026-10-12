@@ -1,0 +1,220 @@
+{
+  "run": {
+    "artifact_type": "evidence_govern_result",
+    "artifact_version": "6.0.0",
+    "producer_skill": "evidence-govern",
+    "run_id": "eg_20260724_example",
+    "project_name": "差旅报销提单体验分析",
+    "generated_at": "2026-07-24T10:00:00+08:00",
+    "invocation_context": "chain_context",
+    "analysis_purpose": {
+      "purpose_key": "travel-expense-evidence",
+      "purpose_label": "差旅报销证据治理"
+    },
+    "status": "completed_with_caveats",
+    "source_mode": "chain_context",
+    "sources": [
+      "objective"
+    ],
+    "upstream_refs": [
+      {
+        "artifact_instance_ref": {
+          "artifact_id": "objective",
+          "artifact_version": "4.0.0",
+          "producer_skill": "objective-data-analysis",
+          "run_id": "oda_20260724_example",
+          "artifact_path": "spark-output/results/objective/demo--overall--oda-example.json",
+          "content_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "project_name": "差旅报销提单体验分析",
+          "analysis_purpose_key": "overall",
+          "publication_status": "published"
+        },
+        "handoff_ref": "#/handoff",
+        "allowed_use": "evidence_governance",
+        "payload_refs": [
+          "#/evidence_items/0"
+        ]
+      }
+    ],
+    "write_status": "written"
+  },
+  "analysis_contract": {
+    "run_mode": "evidence_governance",
+    "prior_govern_result_ref": null,
+    "archived_evidence_refs": [],
+    "baseline_refs": [],
+    "outcome_patch_refs": [],
+    "context_input_manifest": [],
+    "phase_status": {
+      "normalization": "completed",
+      "evidence_linking_context": "completed",
+      "governance_release": "completed"
+    }
+  },
+  "data_quality": {
+    "source_count": 1,
+    "evidence_item_count": 1,
+    "lineage_complete_count": 1,
+    "known_gaps": [
+      "缺少独立的主观或启发式来源"
+    ]
+  },
+  "evidence_items": [
+    {
+      "evidence_id": "ev_27fc5d01b5b080f1",
+      "evidence_type": "objective",
+      "claim_type": "metric_observation",
+      "claim_summary": "报错任务完成率显著低于无报错任务",
+      "scope": {
+        "journey": "差旅报销提单",
+        "segment": "all"
+      },
+      "time_window": {
+        "start": "2026-06-01",
+        "end": "2026-06-30"
+      },
+      "scene_descriptor": {
+        "where": "提单旅程",
+        "what": "报错任务完成率较低",
+        "operation": "提交差旅报销单",
+        "who_redacted": {
+          "segment": "all"
+        }
+      },
+      "comparison_key": "cmp_example_completion_by_error",
+      "lineage": {
+        "sources": [
+          {
+            "source_artifact_ref": "objective",
+            "source_artifact_version": "4.0.0",
+            "source_run_id": "oda_example_001",
+            "payload_ref": "#/evidence_items/0",
+            "source_object_id": "obj_ev_1"
+          }
+        ],
+        "canonicalization_version": "6.0.0",
+        "lineage_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "evidence_strength": "medium",
+      "lifecycle_status": "released",
+      "privacy_status": "safe",
+      "manual_review_required": false,
+      "allowed_uses": [
+        "causal_synthesis",
+        "historical_trace",
+        "persist_in_archive"
+      ],
+      "forbidden_uses": [
+        "claim_confirmed_root_cause",
+        "automatic_archive_all_evidence"
+      ],
+      "business_rule_basis_refs": [],
+      "limitations": [
+        "single_source_only"
+      ]
+    }
+  ],
+  "evidence_relationships": [],
+  "evidence_change_signals": [],
+  "context_factor_assessments": [],
+  "evidence_patches": [
+    {
+      "patch_id": "egp_example_release",
+      "target_ref": "ev_27fc5d01b5b080f1",
+      "action": "release",
+      "from_status": "candidate",
+      "to_status": "released",
+      "supersedes_ref": null,
+      "decision_status": "not_required",
+      "review_id": null,
+      "source_refs": [
+        "objective#/evidence_items/0"
+      ],
+      "rationale": "来源、范围和血缘完整，可用于探索性综合",
+      "can_persist": true,
+      "applied": false
+    }
+  ],
+  "baseline_patches": [],
+  "manual_review_queue": [],
+  "review_decisions": [],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "egh_example_root",
+      "target_skill": "root-cause-synthesis",
+      "handoff_type": "governed_evidence_for_root_cause",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": [
+        "#/evidence_items/0"
+      ],
+      "allowed_uses": [
+        "causal_synthesis"
+      ],
+      "forbidden_uses": [
+        "claim_confirmed_root_cause",
+        "automatic_archive_all_evidence"
+      ],
+      "required_review_request_ids": [],
+      "caveats": [
+        "single_source_only"
+      ]
+    },
+    {
+      "handoff_id": "egh_example_archive",
+      "target_skill": "evidence-archive",
+      "handoff_type": "approved_archive_persistence",
+      "handoff_status": "ready",
+      "payload_refs": [
+        "#/evidence_patches/0"
+      ],
+      "allowed_uses": [
+        "persist_in_archive"
+      ],
+      "forbidden_uses": [
+        "automatic_archive_all_evidence",
+        "claim_confirmed_root_cause"
+      ],
+      "required_review_request_ids": [],
+      "caveats": []
+    },
+    {
+      "handoff_id": "egh_example_visualization",
+      "target_skill": "data-visualization",
+      "handoff_type": "governed_relationships_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/evidence_relationships"],
+      "allowed_uses": ["visualization"],
+      "forbidden_uses": ["recalculate_analysis", "create_evidence", "upgrade_causality"],
+      "required_review_request_ids": [],
+      "caveats": ["只展示已治理关系及其原有强度"]
+    }
+  ],
+  "limitations": [
+    "当前只有一个独立来源，只能支持探索性候选机制"
+  ],
+  "publication": {
+    "status": "published",
+    "analysis_purpose_key": "travel-expense-evidence",
+    "analysis_purpose_label": "差旅报销证据治理",
+    "update_current_for_purpose": true
+  },
+  "delivery": {
+    "status": "completed",
+    "requested": [{"format": "json", "required": true}],
+    "files": []
+  },
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "ready_with_caveats",
+    "allowed_uses": [
+      "exploratory_root_cause_synthesis"
+    ],
+    "forbidden_uses": [
+      "claim_confirmed_root_cause",
+      "publish_knowledge"
+    ],
+    "blocked_reasons": [],
+    "root_cause_readiness": "exploratory_only",
+    "evidence_basis": "single_source"
+  }
+}

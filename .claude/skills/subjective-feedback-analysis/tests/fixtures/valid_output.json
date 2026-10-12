@@ -1,0 +1,276 @@
+{
+  "run": {
+    "run_id": "sfa_demo_001",
+    "artifact_type": "subjective_evidence_package",
+    "artifact_version": "4.0.0",
+    "producer_skill": "subjective-feedback-analysis",
+    "project_name": "薪福通体验工单分析",
+    "generated_at": "2026-07-22T12:00:00+08:00",
+    "invocation_context": "independent",
+    "analysis_purpose": {
+      "purpose_key": "feedback-discovery",
+      "purpose_label": "反馈发现"
+    },
+    "source_mode": "independent",
+    "analysis_mode": "discovery",
+    "status": "completed_with_caveats",
+    "sources": [
+      {
+        "source_id": "tickets-july",
+        "source_type": "ticket",
+        "channel": "customer_service",
+        "format": "json",
+        "status": "loaded",
+        "input_count": 1,
+        "fingerprint": "fixture001",
+        "failure_reason": null
+      }
+    ],
+    "upstream_refs": [],
+    "combined_input_fingerprint": "fixture001",
+    "write_status": "not_requested",
+    "legacy_contract": false
+  },
+  "scope": {
+    "channels": ["customer_service"],
+    "time_window": "2026-07",
+    "ticket_screening": "experience_related_and_possible"
+  },
+  "source_summary": {
+    "input_count": 1,
+    "valid_count": 1,
+    "excluded_count": 0,
+    "duplicate_count": 0,
+    "channel_distribution": {"customer_service": 1},
+    "language_distribution": {"zh-CN": 1},
+    "time_windows": ["2026-07"],
+    "deduplication_unit": "thread"
+  },
+  "privacy": {
+    "pii_detected": true,
+    "redaction_applied": true,
+    "risk_types": ["company"],
+    "redaction_summary": {"company": 1},
+    "manual_review_items": [],
+    "manual_review_required": false,
+    "unredacted_text_persisted": false
+  },
+  "data_quality": {
+    "status": "ready_with_caveats",
+    "field_gaps": ["user_segment"],
+    "thread_completeness": "complete",
+    "channel_coverage": ["customer_service"],
+    "channel_bias_risks": ["support_channel_overrepresents_problem_cases"],
+    "sample_boundary": "Only one customer-service ticket is included; no population inference is allowed.",
+    "classification_rule_version": "ticket-experience-v1.0",
+    "translation_or_semantic_risks": [],
+    "segment_coverage": null
+  },
+  "analysis_results": {
+    "ticket_screening": [
+      {
+        "source_item_id": "sfi_001",
+        "relevance_status": "experience_related",
+        "experience_issue_labels": ["information_communication", "error_failure_feedback"],
+        "reason": "用户看到失败提示且无法判断恢复方式。",
+        "classification_confidence": "high",
+        "non_experience_route": "not_applicable"
+      }
+    ],
+    "normalized_feedback_items": [
+      {
+        "item_id": "sfi_001",
+        "source_ref": "tickets-july#1",
+        "thread_ref": "thread_001",
+        "channel": "customer_service",
+        "timestamp": "2026-07-01T10:00:00+08:00",
+        "speaker_role": "user",
+        "redacted_text": "[COMPANY_1] 用户提交后看到状态不允许提示，不知道下一步怎么办。",
+        "language": "zh-CN",
+        "privacy_flags": ["company_redacted"]
+      }
+    ],
+    "theme_clusters": [
+      {
+        "cluster_id": "sfc_001",
+        "label": "失败提示缺少恢复指引",
+        "source_item_ids": ["sfi_001"],
+        "sample_count": 1,
+        "sample_share": 1.0,
+        "channels": ["customer_service"],
+        "representative_quotes": [
+          {
+            "quote_id": "sfq_001",
+            "source_item_id": "sfi_001",
+            "redacted_text": "提交后提示状态不允许，但不知道下一步怎么办。"
+          }
+        ],
+        "affected_pages": ["提交页"],
+        "affected_flows": ["提交"],
+        "affected_journey_steps": [],
+        "confidence": "low",
+        "bias_notes": ["single_support_ticket"]
+      }
+    ],
+    "sentiment_summary": {"negative_medium": 1},
+    "analysis_attention_items": [
+      {
+        "attention_id": "sfa_attention_001",
+        "cluster_ref": "sfc_001",
+        "level": "needs_review",
+        "basis": ["single_sample", "task_interruption"]
+      }
+    ],
+    "mapping_summary": {"page_mapping_confidence": "medium"},
+    "business_rule_signals": [],
+    "comparison": null,
+    "objective_validation_requests": [
+      {
+        "objective_request_id": "sfor_001",
+        "related_finding_refs": ["sff_001"],
+        "related_evidence_refs": ["sfe_001"],
+        "hypothesis": "该状态提示可能对应一类可重复的提交失败。",
+        "falsification_condition": "在同一范围和时间窗内未观察到对应失败事件，或出现该提示的任务完成率不低于未出现提示的可比任务。",
+        "requested_signal": "相关错误码、失败事件和恢复后的完成情况",
+        "metric_refs": ["task_completion_rate", "error_task_rate"],
+        "denominator_definition": "同一场景、同一时间窗内进入提交阶段且任务边界可靠的任务实例。",
+        "scope": {"page": "提交页"},
+        "time_window": null,
+        "priority": "medium",
+        "reason": "主观工单不能说明错误规模或真实失败率。",
+        "target_skill": "objective-data-analysis",
+        "requires_user_confirmation": true,
+        "raw_feedback_included": false
+      }
+    ],
+    "nps_summary": {
+      "status": "not_evaluable",
+      "reason": "nps_score_input_unavailable",
+      "overall": null,
+      "slices": [],
+      "reliability": {
+        "response_count": 0,
+        "invalid_score_count": 0,
+        "duplicate_response_count": 0
+      },
+      "limitations": ["本次输入没有 NPS 评分字段。"]
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "sff_001",
+      "cluster_ref": "sfc_001",
+      "claim_type": "sample_observation",
+      "statement": "当前样本中有用户报告提交失败提示缺少可理解的恢复建议。",
+      "source_item_ids": ["sfi_001"],
+      "sample_count": 1,
+      "sample_share": 1.0,
+      "confidence": "low",
+      "evidence_eligible": true,
+      "limitations": ["single_support_ticket"]
+    }
+  ],
+  "evidence_items": [
+    {
+      "evidence_id": "sfe_001",
+      "finding_ref": "sff_001",
+      "cluster_ref": "sfc_001",
+      "claim_type": "reported_error",
+      "statement": "一条客服工单中的用户报告提交后出现状态不允许提示并缺少恢复指引。",
+      "source_item_ids": ["sfi_001"],
+      "representative_quote_refs": ["sfq_001"],
+      "sample_count": 1,
+      "sample_share": 1.0,
+      "affected_pages": ["提交页"],
+      "affected_flows": ["提交"],
+      "affected_journey_steps": [],
+      "confidence": "low",
+      "scene_descriptor": {
+        "where": "提交页",
+        "what": "状态不允许提示",
+        "operation": "提交",
+        "who": {
+          "actor_role": "user",
+          "user_segment": null,
+          "stable_redacted_entity_ref": "[COMPANY_1]"
+        },
+        "when": "2026-07",
+        "source_attribution": "user_quoted_system_message",
+        "evidence_form": "ticket_description"
+      },
+      "business_rule_basis": null,
+      "privacy_status": "safe",
+      "manual_review_required": false,
+      "allowed_uses": ["subjective_theme", "objective_validation_scope", "problem_signal"],
+      "forbidden_uses": ["prevalence_claim", "causal_claim", "final_root_cause", "objective_impact_scale", "intervention_effectiveness", "knowledge_publish"],
+      "lineage": {"run_id": "sfa_demo_001", "input_fingerprint": "fixture001"}
+    }
+  ],
+  "knowledge_candidates": [
+    {
+      "knowledge_candidate_id": "sfk_001",
+      "candidate_type": "qa_candidate",
+      "source_item_ids": ["sfi_001"],
+      "canonical_question": "出现状态不允许提示时如何恢复提交？",
+      "answer_summary": "当前材料没有稳定答案，需要核对状态规则和恢复路径。",
+      "applicable_context": ["提交页"],
+      "required_conditions": ["状态规则已确认"],
+      "official_rule_confidence": "unknown",
+      "conflict_risk": "low",
+      "staleness_risk": "medium",
+      "privacy_risk": "low",
+      "workaround_flag": false,
+      "recommended_action": "create_candidate",
+      "manual_review_required": true
+    }
+  ],
+  "limitations": ["单一客服渠道和单条样本不能代表总体用户。"],
+  "publication": {
+    "status": "candidate",
+    "analysis_purpose_key": "feedback-discovery",
+    "analysis_purpose_label": "反馈发现",
+    "update_current_for_purpose": false
+  },
+  "delivery": {
+    "status": "not_requested",
+    "requested": [],
+    "files": []
+  },
+  "handoff": {
+    "next_skill": "evidence-govern",
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "ready_with_caveats",
+    "payload_refs": ["#/evidence_items/0"],
+    "evidence_refs": ["sfe_001"],
+    "business_impact_access": {
+      "available_on_explicit_request": true,
+      "evidence_path": "#/evidence_items",
+      "finding_path": "#/findings",
+      "finding_maturity": "problem_signal"
+    },
+    "visualization": {
+      "handoff_id": "handoff-subjective-visualization-001",
+      "target_skill": "data-visualization",
+      "handoff_type": "analysis_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results", "#/findings", "#/evidence_items", "#/privacy", "#/limitations"],
+      "allowed_uses": ["visualization"],
+      "forbidden_uses": ["recalculate_analysis", "create_metric", "upgrade_causality"],
+      "required_review_request_ids": [],
+      "caveats": ["样本不代表总体发生率"]
+    },
+    "knowledge_review_request": {
+      "candidate_refs": ["sfk_001"],
+      "read_gate": "governance_release_or_explicit_user_review",
+      "auto_publish_allowed": false
+    },
+    "outcome_comparison_access": {
+      "requires_root_cause_and_intervention_contract": true,
+      "comparison_path": "#/analysis_results/comparison"
+    },
+    "archive_access": {"governance_gate_required": true},
+    "allowed_uses": ["evidence_governance", "problem_impact_input", "knowledge_candidate_review_request"],
+    "forbidden_uses": ["treat_findings_as_governed_evidence", "publish_knowledge", "claim_prevalence", "claim_root_cause", "claim_effectiveness", "recalculate_visualization", "archive_without_governance"],
+    "blocked_reasons": []
+  }
+}

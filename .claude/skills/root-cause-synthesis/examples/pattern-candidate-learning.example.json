@@ -1,0 +1,121 @@
+{
+  "run": {
+    "artifact_type": "root_cause_synthesis_package",
+    "artifact_version": "5.0.0",
+    "producer_skill": "root-cause-synthesis",
+    "run_id": "rc_demo_pattern_001",
+    "project_name": "示例项目",
+    "generated_at": "2026-07-25T11:00:00+08:00",
+    "source_mode": "chain_context",
+    "sources": ["governed"],
+    "upstream_refs": ["govern-case:outcome-a", "govern-case:outcome-b"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "run_mode": "pattern_candidate_learning",
+    "govern_handoff_ref": "govern-handoff:pattern-demo",
+    "evidence_basis": "multi_source_corroborated",
+    "root_cause_readiness": "ready",
+    "completed_capabilities": ["historical_similarity", "pattern_candidate"],
+    "blocked_capabilities": ["knowledge_publication"]
+  },
+  "data_quality": {
+    "evidence_count": 2,
+    "source_type_count": 1,
+    "lineage_complete": true,
+    "known_gaps": ["案例数量仍少"]
+  },
+  "limitations": [
+    {
+      "limitation_id": "lim-pattern-1",
+      "limitation_type": "limited_case_count",
+      "affected_scope": "pattern generalization",
+      "conclusion_impact": "只能形成候选模式",
+      "required_action": "继续积累可比 reviewed cases",
+      "source_refs": ["govern-case:outcome-a", "govern-case:outcome-b"]
+    }
+  ],
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "pending_review",
+    "allowed_uses": ["pattern_candidate_review"],
+    "forbidden_uses": ["publish_knowledge", "generalize_without_review"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "run_mode": "pattern_candidate_learning",
+    "candidate_count": 0,
+    "dominant_causal_confidence": "not_applicable",
+    "manual_review_count": 1,
+    "handoff_targets": ["knowledge-wiki"]
+  },
+  "analysis_results": {
+    "root_cause_candidates": [],
+    "candidate_mechanism_chains": [],
+    "intervention_direction_candidates": [],
+    "validation_hypotheses": [],
+    "root_cause_lifecycle_patches": [],
+    "historical_similarity_matches": [
+      {
+        "match_id": "match-1",
+        "outcome_case_refs": ["outcome:a", "outcome:b"],
+        "matched_dimensions": ["mechanism", "journey_step", "segment"],
+        "different_dimensions": ["product_version"],
+        "comparability_status": "comparable_with_caveats"
+      }
+    ],
+    "root_cause_pattern_candidates": [
+      {
+        "pattern_id": "pattern-1",
+        "status": "context_dependent_candidate",
+        "reviewed_outcome_case_refs": ["outcome:a", "outcome:b"],
+        "common_mechanism": "前置条件理解不足在新企业首次办理中重复出现",
+        "applicable_contexts": ["首次办理", "规则前置条件较多"],
+        "non_applicable_contexts": ["熟练用户重复办理"],
+        "counterexamples": ["版本 B 的熟练用户未出现相同问题"],
+        "publication_review_status": "pending",
+        "can_publish": false,
+        "caveats": ["仅两个案例，不能直接泛化"]
+      }
+    ]
+  },
+  "manual_review_requests": [
+    {
+      "review_id": "review-publication-1",
+      "review_type": "publication_review",
+      "suggested_owner": "知识治理负责人",
+      "status": "pending",
+      "blocking_scope": "pattern-1",
+      "reason": "跨案例候选进入 Wiki 前必须审核适用边界",
+      "required_decision": "批准、驳回或要求继续观察",
+      "source_refs": ["outcome:a", "outcome:b"],
+      "affected_output_refs": ["#/analysis_results/root_cause_pattern_candidates/0"],
+      "caveats": ["批准审阅不等于自动发布"]
+    }
+  ],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-wiki-pattern-1",
+      "target_skill": "knowledge-wiki",
+      "handoff_type": "root_cause_pattern_candidate_ingestion_request",
+      "handoff_status": "pending_review",
+      "payload_refs": ["#/analysis_results/root_cause_pattern_candidates/0"],
+      "allowed_uses": ["review_pattern_candidate"],
+      "forbidden_uses": ["publish_knowledge", "treat_as_final_pattern"],
+      "required_review_request_ids": ["review-publication-1"],
+      "caveats": ["必须经过 Knowledge Wiki ingestion gate"]
+    }
+  ],
+  "quality": {
+    "schema_validated": true,
+    "semantic_gates_passed": true,
+    "self_check_passed": true
+  },
+  "write_safety": {
+    "can_auto_publish": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_publish_strategy": false,
+    "can_publish_knowledge": false
+  }
+}

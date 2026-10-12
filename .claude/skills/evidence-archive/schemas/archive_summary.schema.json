@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "archive_summary.schema.json",
+  "title": "Evidence Archive Summary 3.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run",
+    "data_quality",
+    "authorization",
+    "archive_target_refs",
+    "archive_results",
+    "store_updates",
+    "limitations",
+    "publication",
+    "delivery",
+    "handoff"
+  ],
+  "properties": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_type",
+        "artifact_version",
+        "producer_skill",
+        "run_id",
+        "project_name",
+        "generated_at",
+        "source_mode",
+        "sources",
+        "write_status",
+        "invocation_context",
+        "analysis_purpose",
+        "status"
+      ],
+      "properties": {
+        "artifact_type": {"const": "evidence_archive_summary"},
+        "artifact_version": {"const": "3.0.0"},
+        "producer_skill": {"const": "evidence-archive"},
+        "run_id": {"type": "string", "minLength": 1},
+        "project_name": {"type": "string"},
+        "generated_at": {"type": "string", "minLength": 1},
+        "source_mode": {
+          "enum": ["explicit_user_request", "approved_handoff"]
+        },
+        "sources": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "write_status": {"enum": ["written", "partial"]},
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+        "status": {"enum": ["completed", "completed_with_caveats", "blocked", "failed"]}
+      }
+    },
+    "data_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_contract_valid",
+        "authorization_valid",
+        "snapshot_valid",
+        "store_integrity"
+      ],
+      "properties": {
+        "source_contract_valid": {"type": "boolean"},
+        "authorization_valid": {"type": "boolean"},
+        "snapshot_valid": {"type": "boolean"},
+        "store_integrity": {
+          "enum": ["valid", "valid_with_caveats", "not_checked"]
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "authorization_ref",
+        "approved_actions",
+        "review_decision_refs"
+      ],
+      "properties": {
+        "mode": {
+          "enum": ["explicit_user_request", "approved_handoff"]
+        },
+        "authorization_ref": {"type": "string", "minLength": 1},
+        "approved_actions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "review_decision_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "archive_target_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "archive_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_ref",
+          "record_kind",
+          "result",
+          "archive_record_ref",
+          "payload_fingerprint",
+          "authorization_ref",
+          "governance_or_review_refs",
+          "sensitivity",
+          "reason"
+        ],
+        "properties": {
+          "target_ref": {"type": "string", "minLength": 1},
+          "record_kind": {
+            "enum": [
+              "evidence",
+              "context_factor",
+              "root_cause",
+              "outcome",
+              "business_decision_snapshot",
+              "baseline"
+            ]
+          },
+          "result": {
+            "enum": ["archived", "duplicate", "skipped", "failed"]
+          },
+          "archive_record_ref": {"type": ["string", "null"]},
+          "payload_fingerprint": {"type": ["string", "null"]},
+          "authorization_ref": {"type": "string", "minLength": 1},
+          "governance_or_review_refs": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "sensitivity": {
+            "enum": ["internal", "confidential", "restricted"]
+          },
+          "reason": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "store_updates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "store_artifact_id",
+          "store_ref",
+          "before_count",
+          "after_count",
+          "appended_count"
+        ],
+        "properties": {
+          "store_artifact_id": {"type": "string", "minLength": 1},
+          "store_ref": {"type": "string", "minLength": 1},
+          "before_count": {"type": "integer", "minimum": 0},
+          "after_count": {"type": "integer", "minimum": 0},
+          "appended_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "publication": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"
+    },
+    "delivery": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_gate_status",
+        "handoff_status",
+        "allowed_uses",
+        "forbidden_uses",
+        "blocked_reasons"
+      ],
+      "properties": {
+        "input_gate_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "partial",
+            "needs_user_input",
+            "blocked",
+            "not_evaluable"
+          ]
+        },
+        "handoff_status": {"const": "terminal"},
+        "allowed_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "blocked_reasons": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    }
+  }
+}

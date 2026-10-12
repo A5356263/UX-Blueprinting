@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "root-cause-synthesis-input.schema.json",
+  "title": "Root Cause Synthesis Input 5.0.0",
+  "type": "object",
+  "required": ["run", "invocation_context", "analysis_purpose", "requested_analyses", "input_bindings", "requested_deliverables", "publication_policy", "retention_policy", "govern_artifact_instance_ref", "govern_handoff", "governed_context", "review_decisions"],
+  "properties": {
+    "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "run": {
+      "type": "object",
+      "required": ["run_id", "project_name", "run_mode", "source_mode", "requested_at"],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "project_name": {"type": "string"},
+        "run_mode": {
+          "enum": [
+            "candidate_synthesis",
+            "outcome_feedback_refresh",
+            "pattern_candidate_learning"
+          ]
+        },
+        "source_mode": {"enum": ["explicit_input", "chain_context"]},
+        "requested_at": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "govern_artifact_instance_ref": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"
+    },
+    "govern_handoff": {
+      "allOf": [
+        {
+          "$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"
+        },
+        {
+          "properties": {
+          "target_skill": {"const": "root-cause-synthesis"},
+            "handoff_type": {
+              "enum": [
+                "governed_evidence_for_root_cause",
+                "governed_outcome_feedback_for_root_cause",
+                "governed_pattern_cases_for_root_cause"
+              ]
+            },
+            "allowed_uses": {
+              "contains": {"const": "causal_synthesis"}
+            }
+          }
+        }
+      ]
+    },
+    "governed_context": {
+      "type": "object",
+      "required": [
+        "evidence_basis",
+        "root_cause_readiness",
+        "evidence_item_refs",
+        "evidence_relationship_refs",
+        "context_factor_assessment_refs",
+        "business_rule_basis_refs",
+        "reviewed_outcome_case_refs"
+      ],
+      "properties": {
+        "evidence_basis": {
+          "enum": [
+            "single_source",
+            "multi_source_corroborated",
+            "contested",
+            "insufficient"
+          ]
+        },
+        "root_cause_readiness": {
+          "enum": ["ready", "exploratory_only", "conflict_first", "blocked"]
+        },
+        "evidence_item_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "evidence_relationship_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "context_factor_assessment_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "business_rule_basis_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "reviewed_outcome_case_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reviewedOutcomeCase"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "review_decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "../../../../shared-workflow/data-analysis/schemas/review_decision.schema.json"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "run": {
+            "properties": {"run_mode": {"const": "candidate_synthesis"}},
+            "required": ["run_mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "governed_context": {
+            "properties": {"evidence_item_refs": {"minItems": 1}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "run": {
+            "properties": {"run_mode": {"const": "outcome_feedback_refresh"}},
+            "required": ["run_mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "governed_context": {
+            "properties": {"reviewed_outcome_case_refs": {"minItems": 1}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "run": {
+            "properties": {"run_mode": {"const": "pattern_candidate_learning"}},
+            "required": ["run_mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "governed_context": {
+            "properties": {"reviewed_outcome_case_refs": {"minItems": 2}}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "reviewedOutcomeCase": {
+      "type": "object",
+      "required": [
+        "outcome_ref",
+        "review_status",
+        "govern_absorption_ref",
+        "comparability_key"
+      ],
+      "properties": {
+        "outcome_ref": {"type": "string", "minLength": 1},
+        "review_status": {"const": "approved"},
+        "govern_absorption_ref": {"type": "string", "minLength": 1},
+        "comparability_key": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

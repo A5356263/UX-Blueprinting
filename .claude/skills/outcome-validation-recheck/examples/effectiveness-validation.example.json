@@ -1,0 +1,280 @@
+{
+  "run": {
+    "artifact_type": "outcome_validation_package",
+    "artifact_version": "4.0.0",
+    "producer_skill": "outcome-validation-recheck",
+    "run_id": "outcome-pilot-001",
+    "project_name": "报销提单优化",
+    "generated_at": "2026-07-25T11:00:00+08:00",
+    "source_mode": "chain_context",
+    "sources": ["govern-handoff:outcome-001"],
+    "upstream_refs": ["handoff:root-to-outcome-002", "intervention-contract:int-002"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "validation_mode": "effectiveness_validation",
+    "validation_stage": "pilot",
+    "root_cause_handoff_ref": "handoff:root-to-outcome-002",
+    "intervention_contract_ref": "intervention-contract:int-002",
+    "govern_handoff_ref": "govern-handoff:outcome-001",
+    "completed_capabilities": ["effectiveness_assessment", "attribution_assessment", "segment_guardrail_check"],
+    "blocked_capabilities": []
+  },
+  "data_quality": {
+    "evidence_count": 4,
+    "baseline_status": "ready",
+    "observation_window_status": "ready",
+    "exposure_status": "ready",
+    "implementation_fidelity_status": "ready",
+    "measurement_status": "ready",
+    "known_gaps": ["关键小微企业分群样本较少"]
+  },
+  "limitations": [
+    {
+      "limitation_id": "limitation-001",
+      "limitation_type": "segment_sample_size",
+      "affected_scope": "小微企业分群",
+      "conclusion_impact": "分群伤害方向可信，但幅度不作外推。",
+      "required_action": "延长该分群观察窗口。",
+      "source_refs": ["objective-result:segment-small"]
+    }
+  ],
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "ready_with_caveats",
+    "allowed_uses": ["effectiveness_assessment", "govern_feedback"],
+    "forbidden_uses": ["auto_root_cause_update", "auto_release"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "validation_mode": "effectiveness_validation",
+    "validation_stage": "pilot",
+    "readiness_status": "ready_with_caveats",
+    "effectiveness": "mixed",
+    "attribution_strength": "causal_suggestive",
+    "durability_status": "not_applicable",
+    "manual_review_count": 0,
+    "handoff_targets": ["evidence-govern", "objective-data-analysis"]
+  },
+  "analysis_results": {
+    "effect_measurements": [
+      {
+        "measurement_id": "measurement-pilot-nps",
+        "metric_ref": "metric:nps",
+        "metric_type": "nps",
+        "measurement_scope": {
+          "grain": "survey_response",
+          "dimensions": {"business_board": "费控"},
+          "baseline_window": {"label": "before"},
+          "comparison_window": {"label": "pilot"}
+        },
+        "baseline_value": 8,
+        "comparison_value": 16,
+        "absolute_change": 8,
+        "result_status": "improved",
+        "attribution_strength": "causal_suggestive",
+        "source_refs": ["governed:nps-pilot"],
+        "caveats": ["NPS 按问卷响应样本计算"]
+      },
+      {
+        "measurement_id": "measurement-pilot-deep-active",
+        "metric_ref": "metric:deep-active-entered-count",
+        "metric_type": "enterprise_state_transition",
+        "measurement_scope": {
+          "grain": "enterprise_x_business_board",
+          "dimensions": {"business_board": "费控", "state": "deep_active"},
+          "baseline_window": {"label": "before"},
+          "comparison_window": {"label": "pilot"}
+        },
+        "baseline_value": 12,
+        "comparison_value": 18,
+        "absolute_change": 6,
+        "result_status": "improved",
+        "attribution_strength": "associational_only",
+        "source_refs": ["governed:enterprise-transition-pilot"],
+        "caveats": ["企业状态成员变化不是天然因果转化"]
+      }
+    ],
+    "validation_assessment": {
+      "assessment_id": "assessment-pilot-001",
+      "validation_mode": "effectiveness_validation",
+      "validation_stage": "pilot",
+      "scope": {"pilot": "enterprise-segment-a"},
+      "root_cause_refs": ["root-cause:rc-001"],
+      "intervention_contract_ref": "intervention-contract:int-002",
+      "readiness": {
+        "status": "ready_with_caveats",
+        "baseline": "ready",
+        "observation_window": "ready",
+        "exposure": "ready",
+        "implementation_fidelity": "ready",
+        "measurement": "ready",
+        "blocking_items": []
+      },
+      "hypothesis_support": "partially_supported",
+      "intervention_effectiveness": "mixed",
+      "attribution": {
+        "strength": "causal_suggestive",
+        "confounding_risk": "medium",
+        "confounding_factors": ["试点期同步开展操作培训"],
+        "rationale": "总体完成率改善与干预方向一致，但培训可能贡献部分变化。"
+      },
+      "primary_outcomes": [
+        {
+          "metric_ref": "metric:completion-rate",
+          "result_status": "improved",
+          "source_refs": ["objective-result:completion-rate"],
+          "caveats": []
+        }
+      ],
+      "guardrail_outcomes": [
+        {
+          "metric_ref": "metric:error-rate",
+          "result_status": "stable",
+          "critical": true,
+          "source_refs": ["objective-result:error-rate"],
+          "caveats": []
+        }
+      ],
+      "segment_outcomes": [
+        {
+          "segment_ref": "segment:small-enterprise",
+          "result_status": "worsened",
+          "critical": true,
+          "source_refs": ["objective-result:segment-small"],
+          "caveats": ["样本较少，不外推幅度"]
+        }
+      ],
+      "side_effects": [],
+      "problem_migration": [],
+      "durability": {
+        "status": "not_applicable",
+        "window_ref": null,
+        "rationale": "试点阶段尚不判断长期持续性。"
+      },
+      "decision": {
+        "status": "mixed",
+        "reason": "总体改善，但关键小微企业分群恶化。",
+        "next_action": "补充小微企业样本并检查方案适配性。"
+      },
+      "caveats": ["培训造成中等混杂风险"]
+    },
+    "outcome_relationships": [
+      {
+        "relationship_id": "relationship-pilot-001",
+        "source_ref": "intervention:int-002",
+        "target_ref": "metric:completion-rate",
+        "relation_type": "observed_association",
+        "validation_stage": "pilot",
+        "effect_attribution_confidence": "causal_suggestive",
+        "confounding_risk": "medium",
+        "source_refs": ["objective-result:completion-rate"],
+        "caveats": ["培训同步发生"]
+      },
+      {
+        "relationship_id": "relationship-pilot-002",
+        "source_ref": "intervention:int-002",
+        "target_ref": "segment:small-enterprise",
+        "relation_type": "segment_harm",
+        "validation_stage": "pilot",
+        "effect_attribution_confidence": "causal_suggestive",
+        "confounding_risk": "medium",
+        "source_refs": ["objective-result:segment-small"],
+        "caveats": ["样本较少"]
+      }
+    ],
+    "reroute_decisions": [
+      {
+        "reroute_id": "reroute-001",
+        "blocking_issue_type": "segment_sample_gap",
+        "target_type": "skill",
+        "target": "objective-data-analysis",
+        "reason": "关键分群需要延长观察并复核样本可靠性。",
+        "required_inputs": ["同口径小微企业后续窗口"],
+        "scope": "仅小微企业分群",
+        "full_chain_rerun": false
+      }
+    ],
+    "outcome_evidence_patch_requests": [
+      {
+        "request_id": "patch-request-001",
+        "target_evidence_refs": ["evidence:completion-rate-pilot"],
+        "observed_change": "strengthened",
+        "reason": "试点结果支持总体方向但存在分群反证。",
+        "target_processor": "evidence-govern",
+        "requires_manual_approval": true,
+        "can_auto_apply": false
+      }
+    ],
+    "root_cause_feedback_signals": [
+      {
+        "signal_id": "root-feedback-001",
+        "root_cause_candidate_ref": "root-cause:rc-001",
+        "signal": "strengthened",
+        "govern_absorption_required": true,
+        "source_refs": ["assessment-pilot-001"],
+        "caveats": ["关键分群存在反向结果"]
+      }
+    ],
+    "pattern_observation_signals": [
+      {
+        "signal_id": "pattern-observation-001",
+        "candidate_mechanism_ref": "mechanism:chain-001",
+        "intervention_ref": "intervention:int-002",
+        "validation_stage": "pilot",
+        "effectiveness": "mixed",
+        "attribution_strength": "causal_suggestive",
+        "context_refs": ["segment:small-enterprise"],
+        "review_status": "pending",
+        "can_form_pattern": false,
+        "caveats": ["仅单次案例观察"]
+      }
+    ],
+    "monitoring_requirements": []
+  },
+  "manual_review_requests": [],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-outcome-govern-001",
+      "target_skill": "evidence-govern",
+      "handoff_type": "outcome_feedback_absorption",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/outcome_evidence_patch_requests", "#/analysis_results/root_cause_feedback_signals"],
+      "allowed_uses": ["review_outcome_feedback", "prepare_root_cause_feedback_handoff"],
+      "forbidden_uses": ["auto_apply_patch"],
+      "required_review_request_ids": [],
+      "caveats": ["关键分群样本较少"]
+    },
+    {
+      "handoff_id": "handoff-outcome-objective-001",
+      "target_skill": "objective-data-analysis",
+      "handoff_type": "targeted_recheck",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/reroute_decisions/0"],
+      "allowed_uses": ["recheck_named_segment"],
+      "forbidden_uses": ["rerun_full_chain"],
+      "required_review_request_ids": [],
+      "caveats": []
+    },
+    {
+      "handoff_id": "handoff-outcome-viz-effectiveness-001",
+      "target_skill": "data-visualization",
+      "handoff_type": "effectiveness_result_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/validation_assessment"],
+      "allowed_uses": ["visualization"],
+      "forbidden_uses": ["recalculate_analysis", "change_validation_verdict"],
+      "required_review_request_ids": [],
+      "caveats": ["保留原验证口径、置信度和限制"]
+    }
+  ],
+  "quality": {"schema_validated": true, "semantic_gates_passed": true, "self_check_passed": true},
+  "write_safety": {
+    "can_auto_apply": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_schedule_monitoring": false,
+    "can_auto_rollback": false,
+    "can_auto_rerun_full_chain": false
+  }
+}

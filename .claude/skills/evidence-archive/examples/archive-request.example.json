@@ -1,0 +1,92 @@
+{
+  "artifact_type": "evidence_archive_request",
+  "artifact_version": "3.0.0",
+  "project_name": "示例项目",
+  "invocation_context": "chain_context",
+  "analysis_purpose": {
+    "purpose_key": "evidence-archive",
+    "purpose_label": "证据归档"
+  },
+  "requested_analyses": ["archive"],
+  "input_bindings": [],
+  "requested_deliverables": [{"format": "json", "required": true}],
+  "publication_policy": {"level": "formal", "update_current_for_purpose": true},
+  "retention_policy": "archive_requested",
+  "review_decisions": [],
+  "authorization": {
+    "mode": "explicit_user_request",
+    "authorization_ref": "conversation://archive-approval-001",
+    "confirmed_at": "2026-07-24T10:00:00+08:00",
+    "authorized_target_refs": [
+      "governed#evidence_id=ev_27fc5d01b5b080f1"
+    ],
+    "authorized_field_paths": [
+      "evidence_items"
+    ],
+    "approved_actions": [
+      "persist_in_archive"
+    ],
+    "review_decision_refs": []
+  },
+  "targets": [
+    {
+      "target_ref": "governed#evidence_id=ev_27fc5d01b5b080f1",
+      "record_kind": "evidence",
+      "projection": "canonical_evidence_item",
+      "logical_object_ref": "evidence:ev_27fc5d01b5b080f1",
+      "source_artifact_id": "governed",
+      "source_artifact_instance_ref": {
+        "artifact_id": "governed",
+        "artifact_version": "6.0.0",
+        "producer_skill": "evidence-govern",
+        "run_id": "eg_20260724_example",
+        "artifact_path": "spark-output/results/governed/example--archive--eg-20260724-example.json",
+        "content_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project_name": "示例项目",
+        "analysis_purpose_key": "evidence-governance",
+        "publication_status": "published"
+      },
+      "source_artifact_version": "6.0.0",
+      "source_run_id": "eg_20260724_example",
+      "source_selector": {
+        "path": "evidence_items",
+        "id_field": "evidence_id",
+        "id_value": "ev_27fc5d01b5b080f1"
+      },
+      "source_content_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "authorized_field_paths": [
+        "evidence_items"
+      ],
+      "record_action": "new",
+      "supersedes_ref": null,
+      "sensitivity": "internal",
+      "redaction_state": "not_required",
+      "allowed_uses": [
+        "historical_trace"
+      ],
+      "forbidden_uses": [
+        "claim_confirmed_root_cause",
+        "automatic_knowledge_publication"
+      ],
+      "governance": {
+        "artifact_id": "governed",
+        "artifact_instance_ref": {
+          "artifact_id": "governed",
+          "artifact_version": "6.0.0",
+          "producer_skill": "evidence-govern",
+          "run_id": "eg_20260724_example",
+          "artifact_path": "spark-output/results/governed/example--archive--eg-20260724-example.json",
+          "content_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "project_name": "示例项目",
+          "analysis_purpose_key": "evidence-governance",
+          "publication_status": "published"
+        },
+        "source_run_id": "eg_20260724_example",
+        "content_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "handoff_ref": "egh_example_archive",
+        "patch_ref": "egp_example_release",
+        "review_decision_refs": []
+      }
+    }
+  ]
+}

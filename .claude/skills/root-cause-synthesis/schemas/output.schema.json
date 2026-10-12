@@ -1,0 +1,960 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "root-cause-synthesis-output.schema.json",
+  "title": "Root Cause Synthesis Package 5.0.0",
+  "type": "object",
+  "required": [
+    "run",
+    "analysis_contract",
+    "data_quality",
+    "limitations",
+    "publication",
+    "delivery",
+    "handoff",
+    "analysis_summary",
+    "analysis_results",
+    "manual_review_requests",
+    "downstream_handoffs",
+    "quality",
+    "write_safety"
+  ],
+  "properties": {
+    "run": {"$ref": "#/$defs/run"},
+    "analysis_contract": {"$ref": "#/$defs/analysisContract"},
+    "data_quality": {"$ref": "#/$defs/dataQuality"},
+    "limitations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/limitation"}
+    },
+    "publication": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"
+    },
+    "delivery": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"
+    },
+    "handoff": {"$ref": "#/$defs/contextHandoff"},
+    "analysis_summary": {"$ref": "#/$defs/analysisSummary"},
+    "analysis_results": {"$ref": "#/$defs/analysisResults"},
+    "manual_review_requests": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/manualReviewRequest"}
+    },
+    "downstream_handoffs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/downstreamHandoff"}
+    },
+    "quality": {"$ref": "#/$defs/quality"},
+    "write_safety": {"$ref": "#/$defs/writeSafety"}
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_version",
+        "producer_skill",
+        "run_id",
+        "project_name",
+        "generated_at",
+        "source_mode",
+        "sources",
+        "upstream_refs",
+        "write_status",
+        "invocation_context",
+        "analysis_purpose",
+        "status"
+      ],
+      "properties": {
+        "artifact_type": {"const": "root_cause_synthesis_package"},
+        "artifact_version": {"const": "5.0.0"},
+        "producer_skill": {"const": "root-cause-synthesis"},
+        "run_id": {"type": "string", "minLength": 1},
+        "project_name": {"type": "string"},
+        "generated_at": {"type": "string"},
+        "source_mode": {"enum": ["explicit_input", "chain_context"]},
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+        "status": {"enum": ["completed", "completed_with_caveats", "blocked", "failed"]},
+        "sources": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "upstream_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "write_status": {
+          "enum": ["written", "partial", "failed", "not_requested"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "analysisContract": {
+      "type": "object",
+      "required": [
+        "run_mode",
+        "govern_handoff_ref",
+        "evidence_basis",
+        "root_cause_readiness",
+        "completed_capabilities",
+        "blocked_capabilities"
+      ],
+      "properties": {
+        "run_mode": {
+          "enum": [
+            "candidate_synthesis",
+            "outcome_feedback_refresh",
+            "pattern_candidate_learning"
+          ]
+        },
+        "govern_handoff_ref": {"type": "string", "minLength": 1},
+        "evidence_basis": {
+          "enum": [
+            "single_source",
+            "multi_source_corroborated",
+            "contested",
+            "insufficient"
+          ]
+        },
+        "root_cause_readiness": {
+          "enum": ["ready", "exploratory_only", "conflict_first", "blocked"]
+        },
+        "completed_capabilities": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "blocked_capabilities": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataQuality": {
+      "type": "object",
+      "required": [
+        "evidence_count",
+        "source_type_count",
+        "lineage_complete",
+        "known_gaps"
+      ],
+      "properties": {
+        "evidence_count": {"type": "integer", "minimum": 0},
+        "source_type_count": {"type": "integer", "minimum": 0},
+        "lineage_complete": {"type": "boolean"},
+        "known_gaps": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "limitation": {
+      "type": "object",
+      "required": [
+        "limitation_id",
+        "limitation_type",
+        "affected_scope",
+        "conclusion_impact",
+        "required_action",
+        "source_refs"
+      ],
+      "properties": {
+        "limitation_id": {"type": "string", "minLength": 1},
+        "limitation_type": {"type": "string", "minLength": 1},
+        "affected_scope": {"type": "string", "minLength": 1},
+        "conclusion_impact": {"type": "string", "minLength": 1},
+        "required_action": {"type": "string", "minLength": 1},
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "contextHandoff": {
+      "type": "object",
+      "required": [
+        "input_gate_status",
+        "handoff_status",
+        "allowed_uses",
+        "forbidden_uses",
+        "blocked_reasons"
+      ],
+      "properties": {
+        "input_gate_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "partial",
+            "needs_user_input",
+            "blocked",
+            "not_evaluable"
+          ]
+        },
+        "handoff_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "pending_review",
+            "blocked",
+            "terminal"
+          ]
+        },
+        "allowed_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "blocked_reasons": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "analysisSummary": {
+      "type": "object",
+      "required": [
+        "run_mode",
+        "candidate_count",
+        "dominant_causal_confidence",
+        "manual_review_count",
+        "handoff_targets"
+      ],
+      "properties": {
+        "run_mode": {
+          "enum": [
+            "candidate_synthesis",
+            "outcome_feedback_refresh",
+            "pattern_candidate_learning"
+          ]
+        },
+        "candidate_count": {"type": "integer", "minimum": 0},
+        "dominant_causal_confidence": {
+          "enum": ["high", "medium", "low", "insufficient", "not_applicable"]
+        },
+        "manual_review_count": {"type": "integer", "minimum": 0},
+        "handoff_targets": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "analysisResults": {
+      "type": "object",
+      "required": [
+        "root_cause_candidates",
+        "candidate_mechanism_chains",
+        "intervention_direction_candidates",
+        "validation_hypotheses",
+        "root_cause_lifecycle_patches",
+        "historical_similarity_matches",
+        "root_cause_pattern_candidates"
+      ],
+      "properties": {
+        "root_cause_candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/rootCauseCandidate"}
+        },
+        "candidate_mechanism_chains": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mechanismChain"}
+        },
+        "intervention_direction_candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/interventionDirection"}
+        },
+        "validation_hypotheses": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/validationHypothesis"}
+        },
+        "root_cause_lifecycle_patches": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/lifecyclePatch"}
+        },
+        "historical_similarity_matches": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/similarityMatch"}
+        },
+        "root_cause_pattern_candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/patternCandidate"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "rootCauseCandidate": {
+      "type": "object",
+      "required": [
+        "candidate_id",
+        "status",
+        "lifecycle_status",
+        "is_primary",
+        "issue_scope",
+        "observed_symptoms",
+        "evidence_facts",
+        "evidence_chain",
+        "counter_evidence",
+        "alternative_explanations",
+        "causal_confidence",
+        "business_rule_basis_refs",
+        "review_status",
+        "required_next_evidence",
+        "caveats"
+      ],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": [
+            "candidate",
+            "candidate_requires_review",
+            "insufficient_evidence",
+            "rejected"
+          ]
+        },
+        "lifecycle_status": {
+          "enum": [
+            "active",
+            "pending_review",
+            "resolved",
+            "stale",
+            "reopened",
+            "rejected"
+          ]
+        },
+        "is_primary": {"type": "boolean"},
+        "issue_scope": {"type": "object"},
+        "observed_symptoms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence_facts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence_chain": {"$ref": "#/$defs/evidenceChain"},
+        "counter_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/counterEvidence"}
+        },
+        "alternative_explanations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/alternativeExplanation"}
+        },
+        "causal_confidence": {"$ref": "#/$defs/causalConfidence"},
+        "business_rule_basis_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "review_status": {
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        },
+        "required_next_evidence": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceChain": {
+      "type": "object",
+      "required": [
+        "supporting_evidence_refs",
+        "reasoning_steps",
+        "alignment_assessment",
+        "missing_links"
+      ],
+      "properties": {
+        "supporting_evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "reasoning_steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "alignment_assessment": {
+          "type": "object",
+          "required": ["temporal", "journey", "segment", "definition"],
+          "properties": {
+            "temporal": {"enum": ["high", "medium", "low", "unknown"]},
+            "journey": {"enum": ["high", "medium", "low", "unknown"]},
+            "segment": {"enum": ["high", "medium", "low", "unknown"]},
+            "definition": {"enum": ["high", "medium", "low", "unknown"]}
+          },
+          "additionalProperties": false
+        },
+        "missing_links": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "counterEvidence": {
+      "type": "object",
+      "required": ["statement", "strength", "resolution_status", "source_refs"],
+      "properties": {
+        "statement": {"type": "string", "minLength": 1},
+        "strength": {"enum": ["strong", "medium", "weak", "unknown"]},
+        "resolution_status": {
+          "enum": ["unresolved", "partially_explained", "explained", "not_observed"]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "alternativeExplanation": {
+      "type": "object",
+      "required": ["explanation", "status", "source_refs"],
+      "properties": {
+        "explanation": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": [
+            "not_checked",
+            "plausible",
+            "partially_ruled_out",
+            "ruled_out",
+            "stronger_than_primary"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "causalConfidence": {
+      "type": "object",
+      "required": ["level", "dimensions", "ceiling_reasons", "rationale"],
+      "properties": {
+        "level": {"enum": ["high", "medium", "low", "insufficient"]},
+        "dimensions": {
+          "type": "object",
+          "required": [
+            "source_independence",
+            "temporal_alignment",
+            "journey_alignment",
+            "segment_specificity",
+            "mechanism_coherence",
+            "counter_evidence_strength",
+            "confounding_risk",
+            "data_quality"
+          ],
+          "additionalProperties": {"enum": ["high", "medium", "low", "unknown"]}
+        },
+        "ceiling_reasons": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "mechanismChain": {
+      "type": "object",
+      "required": [
+        "chain_id",
+        "root_cause_candidate_refs",
+        "nodes",
+        "edges",
+        "causal_confidence",
+        "caveats"
+      ],
+      "properties": {
+        "chain_id": {"type": "string", "minLength": 1},
+        "root_cause_candidate_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "nodes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mechanismNode"}
+        },
+        "edges": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mechanismEdge"}
+        },
+        "causal_confidence": {
+          "enum": ["high", "medium", "low", "insufficient"]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "mechanismNode": {
+      "type": "object",
+      "required": ["node_id", "node_type", "label", "source_refs"],
+      "properties": {
+        "node_id": {"type": "string", "minLength": 1},
+        "node_type": {
+          "enum": [
+            "observed_symptom",
+            "evidence_fact",
+            "mechanism_hypothesis",
+            "candidate_root_cause",
+            "counter_evidence",
+            "alternative_explanation",
+            "intervention_direction",
+            "validation_hypothesis"
+          ]
+        },
+        "label": {"type": "string", "minLength": 1},
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "mechanismEdge": {
+      "type": "object",
+      "required": [
+        "edge_id",
+        "source_node_id",
+        "target_node_id",
+        "relation_type",
+        "source_refs",
+        "status"
+      ],
+      "properties": {
+        "edge_id": {"type": "string", "minLength": 1},
+        "source_node_id": {"type": "string", "minLength": 1},
+        "target_node_id": {"type": "string", "minLength": 1},
+        "relation_type": {
+          "enum": [
+            "supports",
+            "contradicts",
+            "candidate_explanation",
+            "alternative_to",
+            "targets",
+            "tested_by"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "status": {
+          "enum": ["candidate", "needs_validation", "contradicted", "reviewed"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "interventionDirection": {
+      "type": "object",
+      "required": [
+        "direction_id",
+        "root_cause_candidate_refs",
+        "direction_type",
+        "objective",
+        "target_scope",
+        "readiness",
+        "recommended_downstream",
+        "preconditions",
+        "constraints",
+        "prohibited_outputs",
+        "review_status",
+        "caveats"
+      ],
+      "properties": {
+        "direction_id": {"type": "string", "minLength": 1},
+        "root_cause_candidate_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "direction_type": {"type": "string", "minLength": 1},
+        "objective": {"type": "string", "minLength": 1},
+        "target_scope": {"type": "object"},
+        "readiness": {
+          "enum": [
+            "validation_only",
+            "exploration_ready",
+            "design_ready_after_review",
+            "blocked"
+          ]
+        },
+        "recommended_downstream": {
+          "enum": [
+            "evidence-govern",
+            "problem-framing",
+            "outcome-validation-recheck",
+            "business-impact"
+          ]
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "constraints": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "prohibited_outputs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "review_status": {
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "validationHypothesis": {
+      "type": "object",
+      "required": [
+        "hypothesis_id",
+        "root_cause_candidate_refs",
+        "intervention_direction_refs",
+        "mechanism_statement",
+        "target_metric_refs",
+        "expected_direction",
+        "guardrail_metric_refs",
+        "required_segments",
+        "baseline_requirements",
+        "observation_requirements",
+        "falsification_conditions",
+        "registration_timing",
+        "review_status",
+        "source_refs",
+        "caveats"
+      ],
+      "properties": {
+        "hypothesis_id": {"type": "string", "minLength": 1},
+        "root_cause_candidate_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "intervention_direction_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "mechanism_statement": {"type": "string", "minLength": 1},
+        "target_metric_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "expected_direction": {
+          "enum": ["increase", "decrease", "stable", "unknown"]
+        },
+        "guardrail_metric_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "required_segments": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "baseline_requirements": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "observation_requirements": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "falsification_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "registration_timing": {"enum": ["prospective", "retrospective"]},
+        "review_status": {
+          "enum": ["draft", "pending", "approved", "rejected"]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecyclePatch": {
+      "type": "object",
+      "required": [
+        "patch_id",
+        "root_cause_candidate_ref",
+        "feedback_signal",
+        "current_status",
+        "action",
+        "proposed_status",
+        "govern_absorption_ref",
+        "reason",
+        "requires_manual_approval",
+        "can_auto_apply"
+      ],
+      "properties": {
+        "patch_id": {"type": "string", "minLength": 1},
+        "root_cause_candidate_ref": {"type": "string", "minLength": 1},
+        "feedback_signal": {
+          "enum": [
+            "strengthened",
+            "weakened",
+            "contradicted",
+            "stable",
+            "resolution_observed",
+            "regression_observed",
+            "unknown"
+          ]
+        },
+        "current_status": {
+          "enum": [
+            "active",
+            "pending_review",
+            "resolved",
+            "stale",
+            "reopened",
+            "rejected"
+          ]
+        },
+        "action": {
+          "enum": [
+            "retain",
+            "amend",
+            "mark_resolved",
+            "mark_stale",
+            "reopen",
+            "reject",
+            "request_review"
+          ]
+        },
+        "proposed_status": {
+          "enum": [
+            "active",
+            "pending_review",
+            "resolved",
+            "stale",
+            "reopened",
+            "rejected"
+          ]
+        },
+        "govern_absorption_ref": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "requires_manual_approval": {"const": true},
+        "can_auto_apply": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "similarityMatch": {
+      "type": "object",
+      "required": [
+        "match_id",
+        "outcome_case_refs",
+        "matched_dimensions",
+        "different_dimensions",
+        "comparability_status"
+      ],
+      "properties": {
+        "match_id": {"type": "string", "minLength": 1},
+        "outcome_case_refs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "matched_dimensions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "different_dimensions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "comparability_status": {
+          "enum": ["comparable", "comparable_with_caveats", "not_comparable"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "patternCandidate": {
+      "type": "object",
+      "required": [
+        "pattern_id",
+        "status",
+        "reviewed_outcome_case_refs",
+        "common_mechanism",
+        "applicable_contexts",
+        "non_applicable_contexts",
+        "counterexamples",
+        "publication_review_status",
+        "can_publish",
+        "caveats"
+      ],
+      "properties": {
+        "pattern_id": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": [
+            "candidate",
+            "partial_candidate",
+            "context_dependent_candidate",
+            "negative_pattern_candidate",
+            "needs_more_observation",
+            "invalidated_candidate"
+          ]
+        },
+        "reviewed_outcome_case_refs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "common_mechanism": {"type": "string", "minLength": 1},
+        "applicable_contexts": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "non_applicable_contexts": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "counterexamples": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "publication_review_status": {
+          "enum": ["not_requested", "pending", "approved", "rejected"]
+        },
+        "can_publish": {"const": false},
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "manualReviewRequest": {
+      "type": "object",
+      "required": [
+        "review_id",
+        "review_type",
+        "suggested_owner",
+        "status",
+        "blocking_scope",
+        "reason",
+        "required_decision",
+        "source_refs",
+        "affected_output_refs",
+        "caveats"
+      ],
+      "properties": {
+        "review_id": {"type": "string", "minLength": 1},
+        "review_type": {
+          "enum": [
+            "business_rule_review",
+            "technical_review",
+            "service_review",
+            "research_review",
+            "strategy_review",
+            "measurement_review",
+            "risk_review",
+            "publication_review",
+            "archive_authorization"
+          ]
+        },
+        "suggested_owner": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pending", "approved", "rejected"]},
+        "blocking_scope": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "required_decision": {"type": "string", "minLength": 1},
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "affected_output_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "caveats": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "downstreamHandoff": {
+      "allOf": [
+        {
+          "$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"
+        },
+        {
+          "properties": {
+            "source_skill": {"const": "root-cause-synthesis"},
+            "target_skill": {
+              "enum": [
+                "evidence-govern",
+                "problem-framing",
+                "business-impact",
+                "outcome-validation-recheck",
+                "data-visualization",
+                "knowledge-wiki",
+                "evidence-archive"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "quality": {
+      "type": "object",
+      "required": ["schema_validated", "semantic_gates_passed", "self_check_passed"],
+      "properties": {
+        "schema_validated": {"type": "boolean"},
+        "semantic_gates_passed": {"type": "boolean"},
+        "self_check_passed": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "writeSafety": {
+      "type": "object",
+      "required": [
+        "can_auto_publish",
+        "can_write_evidence_store",
+        "can_modify_root_cause_state",
+        "can_publish_strategy",
+        "can_publish_knowledge"
+      ],
+      "properties": {
+        "can_auto_publish": {"const": false},
+        "can_write_evidence_store": {"const": false},
+        "can_modify_root_cause_state": {"const": false},
+        "can_publish_strategy": {"const": false},
+        "can_publish_knowledge": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

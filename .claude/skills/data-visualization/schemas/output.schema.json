@@ -1,0 +1,1004 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "data-visualization-output.schema.json",
+  "title": "Data Visualization Package 5.0.0",
+  "type": "object",
+  "required": [
+    "run",
+    "data_quality",
+    "limitations",
+    "publication",
+    "delivery",
+    "handoff",
+    "analysis_results",
+    "manual_review_requests",
+    "quality",
+    "write_safety"
+  ],
+  "properties": {
+    "run": {
+      "$ref": "#/$defs/run"
+    },
+    "data_quality": {
+      "$ref": "#/$defs/dataQuality"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/limitation"
+      }
+    },
+    "publication": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"
+    },
+    "delivery": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"
+    },
+    "handoff": {
+      "$ref": "#/$defs/handoff"
+    },
+    "analysis_results": {
+      "type": "object",
+      "required": ["visualization_package"],
+      "properties": {
+        "visualization_package": {
+          "$ref": "#/$defs/visualizationPackage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "manual_review_requests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/manualReviewRequest"
+      }
+    },
+    "quality": {
+      "$ref": "#/$defs/quality"
+    },
+    "write_safety": {
+      "$ref": "#/$defs/writeSafety"
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_version",
+        "producer_skill",
+        "run_id",
+        "project_name",
+        "generated_at",
+        "source_mode",
+        "sources",
+        "write_status",
+        "invocation_context",
+        "analysis_purpose",
+        "status"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "visualization_package"
+        },
+        "artifact_version": {
+          "const": "5.0.0"
+        },
+        "producer_skill": {
+          "const": "data-visualization"
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "^dv_"
+        },
+        "project_name": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_mode": {
+          "enum": [
+            "registered_upstream",
+            "chart_ready",
+            "visualization_brief"
+          ]
+        },
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+        "status": {"enum": ["completed", "completed_with_caveats", "blocked", "failed"]},
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "write_status": {
+          "enum": [
+            "written",
+            "partial",
+            "failed",
+            "not_requested"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataQuality": {
+      "type": "object",
+      "required": [
+        "status",
+        "source_contract_valid",
+        "semantic_gate_status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "blocked",
+            "spec_only"
+          ]
+        },
+        "source_contract_valid": {
+          "type": "boolean"
+        },
+        "semantic_gate_status": {
+          "enum": [
+            "passed",
+            "degraded",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitation": {
+      "type": "object",
+      "required": [
+        "limitation_id",
+        "type",
+        "description",
+        "affects_outputs"
+      ],
+      "properties": {
+        "limitation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "source",
+            "quality",
+            "semantic",
+            "sensitivity",
+            "rendering",
+            "scope"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affects_outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "required": [
+        "input_gate_status",
+        "handoff_status",
+        "allowed_uses",
+        "forbidden_uses",
+        "blocked_reasons"
+      ],
+      "properties": {
+        "input_gate_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "needs_user_input",
+            "blocked"
+          ]
+        },
+        "handoff_status": {
+          "const": "terminal"
+        },
+        "allowed_uses": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "presentation",
+              "human_review",
+              "offline_delivery",
+              "explicit_archive_attachment"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "recalculate_analysis",
+              "create_metric",
+              "create_relationship",
+              "upgrade_causality",
+              "claim_validated_effect",
+              "publish_knowledge",
+              "auto_archive",
+              "auto_trigger_downstream"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "blocked_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "visualizationPackage": {
+      "type": "object",
+      "required": [
+        "source_contracts",
+        "visual_outputs",
+        "relationship_diagrams",
+        "output_files",
+        "recalculation_performed"
+      ],
+      "properties": {
+        "source_contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceContract"
+          }
+        },
+        "visual_outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/visualOutput"
+          }
+        },
+        "relationship_diagrams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationshipDiagram"
+          }
+        },
+        "output_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/outputFile"
+          }
+        },
+        "recalculation_performed": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourceContract": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "producer_skill",
+        "artifact_type",
+        "artifact_version",
+        "source_run_id",
+        "artifact_ref",
+        "allowed_paths",
+        "consumed_paths",
+        "sensitivity_status",
+        "privacy_gate_status",
+        "contract_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer_skill": {
+          "enum": [
+            "objective-data-analysis",
+            "subjective-feedback-analysis",
+            "experience-heuristic-analysis",
+            "evidence-govern",
+            "root-cause-synthesis",
+            "problem-framing",
+            "experience-blueprint",
+            "outcome-validation-recheck",
+            "business-impact",
+            "user"
+          ]
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#/"
+          },
+          "uniqueItems": true
+        },
+        "consumed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#/"
+          },
+          "uniqueItems": true
+        },
+        "sensitivity_status": {
+          "enum": [
+            "inherited",
+            "explicitly_authorized",
+            "minimum_disclosure",
+            "manual_review_required"
+          ]
+        },
+        "privacy_gate_status": {
+          "enum": ["safe", "approved", "needs_review", "blocked", "unknown"]
+        },
+        "contract_status": {
+          "enum": [
+            "valid",
+            "invalid",
+            "manual_review_required"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "visualOutput": {
+      "type": "object",
+      "required": [
+        "visual_id",
+        "title",
+        "intent",
+        "chart_type",
+        "render_status",
+        "data_ref",
+        "source_refs",
+        "rationale",
+        "epistemic_status",
+        "encoding",
+        "accessibility",
+        "responsive",
+        "caveats"
+      ],
+      "properties": {
+        "visual_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intent": {
+          "enum": [
+            "single_value",
+            "comparison",
+            "composition",
+            "trend",
+            "distribution",
+            "correlation",
+            "stage_conversion",
+            "quantitative_flow",
+            "relationship",
+            "mechanism",
+            "detail"
+          ]
+        },
+        "chart_type": {
+          "$ref": "#/$defs/chartType"
+        },
+        "render_status": {
+          "enum": [
+            "formal",
+            "degraded",
+            "spec_only",
+            "blocked"
+          ]
+        },
+        "data_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "encoding": {
+          "$ref": "#/$defs/encoding"
+        },
+        "chart_data": {
+          "$ref": "#/$defs/chartData"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/accessibility"
+        },
+        "responsive": {
+          "$ref": "#/$defs/responsive"
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "render_status": {
+                "enum": ["formal", "degraded"]
+              }
+            }
+          },
+          "then": {
+            "required": ["chart_data"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "encoding": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": ["string", "null"]
+        },
+        "y": {
+          "type": ["string", "null"]
+        },
+        "color": {
+          "type": ["string", "null"]
+        },
+        "size": {
+          "type": ["string", "null"]
+        },
+        "label": {
+          "type": ["string", "null"]
+        },
+        "unit": {
+          "type": ["string", "null"]
+        },
+        "denominator": {
+          "type": ["string", "null"]
+        },
+        "time_window": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "chartData": {
+      "type": "object",
+      "properties": {
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/series"
+          }
+        },
+        "table": {
+          "$ref": "#/$defs/tableData"
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["series"]
+        },
+        {
+          "required": ["table"]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "series": {
+      "type": "object",
+      "required": ["series_id", "label", "points"],
+      "properties": {
+        "series_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "point": {
+      "type": "object",
+      "required": ["label", "epistemic_status"],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "category": {
+          "type": ["string", "null"]
+        },
+        "x": {
+          "type": ["number", "string", "null"]
+        },
+        "y": {
+          "type": ["number", "null"]
+        },
+        "value": {
+          "type": ["number", "string", "null"]
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "source_ref": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "tableData": {
+      "type": "object",
+      "required": ["columns", "rows"],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "summary",
+        "data_table_available",
+        "color_independent"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_table_available": {
+          "type": "boolean"
+        },
+        "color_independent": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "responsive": {
+      "type": "object",
+      "required": ["strategy"],
+      "properties": {
+        "strategy": {
+          "enum": [
+            "stack",
+            "horizontal_scroll",
+            "label_reduction_with_table",
+            "table_first",
+            "not_applicable"
+          ]
+        },
+        "mobile_note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "relationshipDiagram": {
+      "type": "object",
+      "required": [
+        "diagram_id",
+        "title",
+        "producer",
+        "relation_type",
+        "source_refs",
+        "nodes",
+        "edges",
+        "confidence",
+        "caveats"
+      ],
+      "properties": {
+        "diagram_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationshipNode"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationshipEdge"
+          }
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "mixed",
+            "not_applicable"
+          ]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relationshipNode": {
+      "type": "object",
+      "required": ["node_id", "label", "node_type", "epistemic_status", "source_refs"],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "node_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relationshipEdge": {
+      "type": "object",
+      "required": [
+        "edge_id",
+        "source",
+        "target",
+        "relation_type",
+        "epistemic_status",
+        "source_refs",
+        "caveats"
+      ],
+      "properties": {
+        "edge_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weight": {
+          "type": ["number", "null"],
+          "minimum": 0
+        },
+        "weight_unit": {
+          "type": ["string", "null"]
+        },
+        "epistemic_status": {
+          "$ref": "#/$defs/epistemicStatus"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputFile": {
+      "type": "object",
+      "required": [
+        "path",
+        "format",
+        "purpose",
+        "source_run_ids",
+        "write_status"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^/].*"
+        },
+        "format": {
+          "enum": ["json", "html", "markdown", "svg", "png"]
+        },
+        "purpose": {
+          "enum": [
+            "contract",
+            "generic_visualization_page",
+            "objective_report",
+            "review_attachment"
+          ]
+        },
+        "source_run_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "write_status": {
+          "enum": [
+            "written",
+            "failed",
+            "not_requested"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "manualReviewRequest": {
+      "type": "object",
+      "required": [
+        "request_id",
+        "reason_type",
+        "description",
+        "affected_refs",
+        "required_action",
+        "blocking"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason_type": {
+          "enum": [
+            "source_contract",
+            "semantic_ambiguity",
+            "sensitivity",
+            "quality",
+            "write_safety"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocking": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "overall_status",
+        "source_traceability",
+        "semantic_fidelity",
+        "label_clarity",
+        "accessibility",
+        "responsive",
+        "sensitive_display"
+      ],
+      "properties": {
+        "overall_status": {
+          "enum": [
+            "pass",
+            "degraded",
+            "blocked"
+          ]
+        },
+        "source_traceability": {
+          "$ref": "#/$defs/checkStatus"
+        },
+        "semantic_fidelity": {
+          "$ref": "#/$defs/checkStatus"
+        },
+        "label_clarity": {
+          "$ref": "#/$defs/checkStatus"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/checkStatus"
+        },
+        "responsive": {
+          "$ref": "#/$defs/checkStatus"
+        },
+        "sensitive_display": {
+          "$ref": "#/$defs/checkStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "checkStatus": {
+      "enum": [
+        "pass",
+        "degraded",
+        "blocked",
+        "not_applicable"
+      ]
+    },
+    "writeSafety": {
+      "type": "object",
+      "required": [
+        "output_root_checked",
+        "relative_paths_only",
+        "overwrite_policy",
+        "atomic_write",
+        "sensitive_content_checked"
+      ],
+      "properties": {
+        "output_root_checked": {
+          "type": "boolean"
+        },
+        "relative_paths_only": {
+          "type": "boolean"
+        },
+        "overwrite_policy": {
+          "enum": [
+            "version_on_conflict",
+            "explicit_overwrite",
+            "immutable_result_with_purpose_pointer",
+            "not_requested"
+          ]
+        },
+        "atomic_write": {
+          "type": "boolean"
+        },
+        "sensitive_content_checked": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "chartType": {
+      "enum": [
+        "metric_card",
+        "data_table",
+        "bar",
+        "grouped_bar",
+        "stacked_bar",
+        "line",
+        "distribution",
+        "scatter",
+        "funnel",
+        "sankey",
+        "relationship_flow",
+        "mechanism_chain"
+      ]
+    },
+    "epistemicStatus": {
+      "enum": [
+        "observed",
+        "reported",
+        "heuristic",
+        "candidate",
+        "estimated",
+        "forecast",
+        "validated",
+        "unknown"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

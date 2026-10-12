@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "business-impact-input.schema.json",
+  "title": "Business Impact 4.0 Input",
+  "type": "object",
+  "required": ["project_name", "context_mode", "requested_modes", "sources", "invocation_context", "analysis_purpose", "requested_analyses", "input_bindings", "requested_deliverables", "publication_policy", "retention_policy"],
+  "properties": {
+    "project_name": {"type": "string", "minLength": 1},
+    "run_id": {"type": ["string", "null"]},
+    "context_mode": {"enum": ["independent", "chain_context"]},
+    "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "requested_modes": {
+      "type": "array",
+      "items": {"enum": ["problem_impact", "solution_value", "validated_revaluation"]},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/source"},
+      "minItems": 1
+    },
+    "source_artifact_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "problem_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "solution_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "blueprint_artifact_instance_ref": {"$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"},
+    "blueprint_handoff": {"$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"},
+    "outcome_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "prior_valuation_ref": {"type": ["string", "null"]},
+    "user_problem_statement": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "user_solution_statement": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "currency": {"type": ["string", "null"]},
+    "valuation_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+    "knowledge_context_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "report_requested": {"type": "boolean"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"requested_modes": {"contains": {"const": "solution_value"}}}, "required": ["requested_modes"]},
+      "then": {"anyOf": [
+        {"required": ["solution_refs"], "properties": {"solution_refs": {"minItems": 1}}},
+        {"required": ["user_solution_statement"], "properties": {"user_solution_statement": {"type": "string", "minLength": 1}}},
+        {
+          "required": ["sources"],
+          "properties": {
+            "sources": {
+              "contains": {
+                "type": "object",
+                "required": ["source_type"],
+                "properties": {"source_type": {"const": "formal_plan"}}
+              }
+            }
+          }
+        }
+      ]}
+    },
+    {
+      "if": {"properties": {"requested_modes": {"contains": {"const": "validated_revaluation"}}}, "required": ["requested_modes"]},
+      "then": {
+        "required": ["outcome_refs", "prior_valuation_ref"],
+        "properties": {
+          "outcome_refs": {"minItems": 1},
+          "prior_valuation_ref": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"context_mode": {"const": "chain_context"}}, "required": ["context_mode"]},
+      "then": {"required": ["source_artifact_refs"]}
+    }
+  ],
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["source_id", "source_type", "source_ref", "project_name", "explicitly_referenced"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["artifact", "user_input", "formal_plan", "knowledge_raw"]},
+        "source_skill": {"type": ["string", "null"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_version": {"type": ["string", "null"]},
+        "project_name": {"type": "string", "minLength": 1},
+        "run_id": {"type": ["string", "null"]},
+        "explicitly_referenced": {"const": true},
+        "time_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]}
+      },
+      "additionalProperties": false
+    },
+    "window": {
+      "type": "object",
+      "required": ["start", "end", "period_count", "period_unit"],
+      "properties": {
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
+        "period_count": {"type": "number", "exclusiveMinimum": 0},
+        "period_unit": {"enum": ["day", "week", "month", "quarter", "year"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

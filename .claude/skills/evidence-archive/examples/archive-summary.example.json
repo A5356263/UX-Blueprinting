@@ -1,0 +1,89 @@
+{
+  "run": {
+    "artifact_type": "evidence_archive_summary",
+    "artifact_version": "3.0.0",
+    "producer_skill": "evidence-archive",
+    "run_id": "ea_0123456789abcdef",
+    "project_name": "示例项目",
+    "generated_at": "2026-07-24T10:01:00+08:00",
+    "source_mode": "explicit_user_request",
+    "sources": [
+      "governed"
+    ],
+    "write_status": "written",
+    "invocation_context": "chain_context",
+    "analysis_purpose": {
+      "purpose_key": "evidence-archive",
+      "purpose_label": "证据归档"
+    },
+    "status": "completed"
+  },
+  "data_quality": {
+    "source_contract_valid": true,
+    "authorization_valid": true,
+    "snapshot_valid": true,
+    "store_integrity": "valid"
+  },
+  "authorization": {
+    "mode": "explicit_user_request",
+    "authorization_ref": "conversation://archive-approval-001",
+    "approved_actions": [
+      "persist_in_archive"
+    ],
+    "review_decision_refs": []
+  },
+  "archive_target_refs": [
+    "governed#evidence_id=ev_27fc5d01b5b080f1"
+  ],
+  "archive_results": [
+    {
+      "target_ref": "governed#evidence_id=ev_27fc5d01b5b080f1",
+      "record_kind": "evidence",
+      "result": "archived",
+      "archive_record_ref": "archived-evidence-store#archive_record_id=ar_0123456789abcdef01234567",
+      "payload_fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "authorization_ref": "conversation://archive-approval-001",
+      "governance_or_review_refs": [
+        "egh_example_archive",
+        "egp_example_release"
+      ],
+      "sensitivity": "internal",
+      "reason": null
+    }
+  ],
+  "store_updates": [
+    {
+      "store_artifact_id": "archived-evidence-store",
+      "store_ref": "spark-output/context/stores/archived-evidence-store.jsonl",
+      "before_count": 0,
+      "after_count": 1,
+      "appended_count": 1
+    }
+  ],
+  "limitations": [],
+  "publication": {
+    "status": "published",
+    "analysis_purpose_key": "evidence-archive",
+    "analysis_purpose_label": "证据归档",
+    "update_current_for_purpose": true
+  },
+  "delivery": {
+    "status": "completed",
+    "requested": [{"format": "json", "required": true}],
+    "files": []
+  },
+  "handoff": {
+    "input_gate_status": "ready",
+    "handoff_status": "terminal",
+    "allowed_uses": [
+      "exact_archive_record_lookup",
+      "historical_trace"
+    ],
+    "forbidden_uses": [
+      "treat_all_archive_records_as_evidence",
+      "automatic_knowledge_publication",
+      "current_context_inference"
+    ],
+    "blocked_reasons": []
+  }
+}

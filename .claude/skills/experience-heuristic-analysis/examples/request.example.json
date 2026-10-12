@@ -1,0 +1,44 @@
+{
+  "artifact_type": "heuristic_analysis_request",
+  "artifact_version": "4.0.0",
+  "project_name": "发票采集提交体验",
+  "source_mode": "independent",
+  "analysis_mode": "discovery",
+  "invocation_context": "independent",
+  "analysis_purpose": {
+    "purpose_key": "checkout-risk-review",
+    "purpose_label": "结算流程风险检查"
+  },
+  "requested_analyses": ["heuristic_analysis"],
+  "input_bindings": [],
+  "requested_deliverables": [
+    {"format": "json", "required": true},
+    {"format": "markdown", "required": true}
+  ],
+  "publication_policy": {
+    "level": "formal",
+    "update_current_for_purpose": true
+  },
+  "retention_policy": "retain_result",
+  "sources": [
+    {
+      "source_id": "src_screenshot_001",
+      "source_type": "screenshot",
+      "source_ref": "input/invoice-submit.png",
+      "acquisition": "user_provided",
+      "description": "发票采集提交页默认态截图"
+    }
+  ],
+  "analysis_scope": {
+    "scope_type": "scoped_review",
+    "included": ["发票采集提交页默认态"],
+    "excluded": ["动态交互", "移动端", "辅助技术运行结果"],
+    "scope_reason": "本次只提供了桌面端默认态截图",
+    "review_areas": ["visual-hierarchy", "accessibility", "brief-consistency"]
+  },
+  "focus_areas": ["底部操作区主行动清晰度"],
+  "focus_source_refs": ["src_screenshot_001"],
+  "explicit_upstream_refs": [],
+  "business_rule_inputs": [],
+  "project_rule_source_refs": []
+}

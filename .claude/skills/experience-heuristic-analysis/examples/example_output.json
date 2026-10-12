@@ -1,0 +1,330 @@
+{
+  "run": {
+    "run_id": "eha_demo_20260726",
+    "artifact_type": "heuristic_evidence_package",
+    "artifact_version": "4.0.0",
+    "producer_skill": "experience-heuristic-analysis",
+    "project_name": "发票采集提交体验",
+    "generated_at": "2026-07-26T12:00:00+08:00",
+    "source_mode": "independent",
+    "analysis_mode": "discovery",
+    "status": "completed_with_caveats",
+    "sources": [
+      {
+        "source_id": "src_screenshot_001",
+        "source_type": "screenshot",
+        "source_ref": "input/invoice-submit.png",
+        "acquisition": "user_provided",
+        "status": "loaded",
+        "observable_capabilities": [
+          "visible_layout",
+          "visual_hierarchy",
+          "visible_copy",
+          "static_state"
+        ],
+        "limitations": [
+          "不能证明动态交互或真实任务完成情况"
+        ],
+        "fingerprint": "sha256:demo-screenshot",
+        "sensitivity": "internal",
+        "privacy_status": "restricted",
+        "redaction_applied": false,
+        "disclosure_limitations": [
+          "原图不进入可读报告或下游归档"
+        ]
+      }
+    ],
+    "upstream_refs": [],
+    "combined_input_fingerprint": "5214828fa22d3efee226c0de33f50bfe6baaa6c0d46ac5206823dcc4ca3e2ab6",
+    "legacy_contract": false
+  },
+  "analysis_contract": {
+    "analysis_scope": {
+      "scope_type": "scoped_review",
+      "included": [
+        "发票采集提交页默认态"
+      ],
+      "excluded": [
+        "动态交互",
+        "移动端",
+        "辅助技术运行结果"
+      ],
+      "scope_reason": "本次只提供了桌面端默认态截图",
+      "review_areas": [
+        "visual-hierarchy",
+        "accessibility",
+        "brief-consistency"
+      ]
+    },
+    "focus_areas": [
+      "底部操作区主行动清晰度"
+    ],
+    "focus_source_refs": [
+      "src_screenshot_001"
+    ],
+    "applied_project_rule_refs": [],
+    "rule_conflicts": []
+  },
+  "data_quality": {
+    "status": "ready_with_caveats",
+    "source_gaps": [
+      "缺少动态状态和真实设备证据"
+    ],
+    "quality_risks": [
+      "原图包含内部信息，仅输出去标识化观察"
+    ],
+    "material_boundary": "结论只适用于已提供的桌面端默认态截图",
+    "privacy_summary": {
+      "safe": 0,
+      "restricted": 1,
+      "needs_review": 0,
+      "blocked": 0
+    }
+  },
+  "analysis_results": {
+    "coverage": [
+      {
+        "area": "visual-hierarchy",
+        "status": "evaluated_with_findings",
+        "source_refs": [
+          "src_screenshot_001"
+        ],
+        "limitations": []
+      },
+      {
+        "area": "accessibility",
+        "status": "not_evaluable",
+        "source_refs": [
+          "src_screenshot_001"
+        ],
+        "limitations": [
+          "缺少 DOM、A11Y Tree、键盘和辅助技术运行证据"
+        ]
+      },
+      {
+        "area": "brief-consistency",
+        "status": "not_evaluable",
+        "source_refs": [],
+        "limitations": [
+          "未提供 Brief、验收条件或适用业务规则"
+        ]
+      }
+    ],
+    "comparison": null,
+    "summary": {
+      "blocker": 0,
+      "major": 1,
+      "minor": 0,
+      "note": 0,
+      "total_findings": 1,
+      "promoted_evidence_count": 1,
+      "coverage_status_counts": {
+        "evaluated_with_findings": 1,
+        "not_evaluable": 2
+      },
+      "summary_derivation": "programmatically_derived"
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "ehf_001",
+      "finding_key": "ehk_8091c7b9206cdefe",
+      "category": "visual-hierarchy",
+      "heuristic_lenses": [
+        "primary_action_visibility",
+        "attention_competition"
+      ],
+      "risk_tags": [
+        "discoverability"
+      ],
+      "page_or_flow": "发票采集提交页",
+      "location": "底部操作区",
+      "state": "default",
+      "location_ref": {
+        "screenshot_region": "bottom action area"
+      },
+      "source_refs": [
+        "src_screenshot_001"
+      ],
+      "observation": "底部操作区多个操作的视觉权重接近，主提交行动的相对层级不明显。",
+      "risk_hypothesis": "关键行动可能较难被快速识别。",
+      "severity": "major",
+      "confidence": "high",
+      "design_attention": "后续设计需要建立可识别的主行动层级。",
+      "rule_source": "general_heuristic",
+      "business_rule_basis_refs": [],
+      "project_rule_refs": [],
+      "heuristic_rule_ref": "references/platform-accessibility-rules.md#视觉清晰度",
+      "privacy_status": "safe",
+      "allowed_uses": [
+        "evidence_governance",
+        "supporting_evidence",
+        "preliminary_problem_signal",
+        "explicit_visualization"
+      ],
+      "forbidden_uses": [
+        "user_behavior_fact",
+        "prevalence_claim",
+        "causal_claim",
+        "final_root_cause",
+        "business_impact_scale",
+        "intervention_effectiveness"
+      ],
+      "evidence_status": "promoted",
+      "not_promoted_reasons": [],
+      "validation_request_refs": [
+        "ehv_001"
+      ]
+    }
+  ],
+  "evidence_items": [
+    {
+      "evidence_id": "ehe_001",
+      "finding_ref": "ehf_001",
+      "finding_key": "ehk_8091c7b9206cdefe",
+      "claim_type": "heuristic_observation",
+      "category": "visual-hierarchy",
+      "observation": "底部操作区多个操作的视觉权重接近，主提交行动的相对层级不明显。",
+      "risk_hypothesis": "关键行动可能较难被快速识别。",
+      "design_attention": "后续设计需要建立可识别的主行动层级。",
+      "source_refs": [
+        "src_screenshot_001"
+      ],
+      "confidence": "high",
+      "scene_descriptor": {
+        "where": {
+          "product_area": "发票采集",
+          "page_or_flow": "发票采集提交页",
+          "journey_step": "提交前确认",
+          "state": "default"
+        },
+        "what": {
+          "business_object": "发票采集任务",
+          "interface_element": "底部操作区"
+        },
+        "operation": {
+          "user_goal": "提交发票采集结果",
+          "user_action": "识别并触发主提交行动"
+        },
+        "source_attribution": {
+          "source_refs": [
+            "src_screenshot_001"
+          ]
+        },
+        "evidence_form": [
+          "screenshot"
+        ],
+        "matching_policy": "automatic_candidate"
+      },
+      "business_rule_basis_refs": [],
+      "project_rule_refs": [],
+      "privacy_status": "safe",
+      "can_be_used_as_strong_evidence": false,
+      "manual_review_required": true,
+      "causal_claim_allowed": false,
+      "allowed_uses": [
+        "evidence_governance",
+        "supporting_evidence",
+        "preliminary_problem_signal",
+        "explicit_visualization"
+      ],
+      "forbidden_uses": [
+        "user_behavior_fact",
+        "prevalence_claim",
+        "causal_claim",
+        "final_root_cause",
+        "business_impact_scale",
+        "intervention_effectiveness"
+      ],
+      "lineage": {
+        "run_id": "eha_demo_20260726",
+        "source_refs": [
+          "src_screenshot_001"
+        ],
+        "finding_ref": "ehf_001",
+        "transformation_steps": [
+          "deduplicated_finding",
+          "privacy_checked",
+          "evidence_promotion_gate_passed"
+        ]
+      }
+    }
+  ],
+  "business_rule_basis": [],
+  "validation_requests": [
+    {
+      "request_id": "ehv_001",
+      "target_finding_refs": [
+        "ehf_001"
+      ],
+      "gap_type": "objective_behavior_confirmation",
+      "required_input": "对应页面的主行动点击、误点或步骤完成数据",
+      "reason": "用于判断该可见风险是否对应真实行为影响",
+      "blocks_evidence_promotion": false,
+      "recommended_owner_or_skill": "objective-data-analysis"
+    }
+  ],
+  "limitations": [
+    "本次只检查静态截图，不代表真实用户行为。",
+    "本次未执行完整可访问性审计。"
+  ],
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "analysis_status": "completed_with_caveats",
+    "handoff_status": "ready_with_caveats",
+    "evidence_refs": [
+      "ehe_001"
+    ],
+    "blocked_reasons": [],
+    "evidence_govern": {
+      "target_skill": "evidence-govern",
+      "status": "ready",
+      "payload_refs": [
+        "#/evidence_items/0"
+      ],
+      "allowed_uses": [
+        "evidence_governance"
+      ],
+      "forbidden_uses": [
+        "use_findings_as_evidence",
+        "use_comparison_as_evidence",
+        "claim_user_behavior",
+        "claim_root_cause"
+      ]
+    },
+    "visualization": {
+      "handoff_id": "handoff-heuristic-visualization-001",
+      "target_skill": "data-visualization",
+      "handoff_type": "analysis_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": [
+        "#/analysis_results",
+        "#/findings",
+        "#/limitations"
+      ],
+      "allowed_uses": [
+        "visualization"
+      ],
+      "forbidden_uses": [
+        "recalculate_analysis",
+        "create_evidence",
+        "upgrade_causality"
+      ],
+      "required_review_request_ids": [],
+      "caveats": [
+        "启发式发现不是用户行为或因果证据"
+      ]
+    },
+    "allowed_uses": [
+      "evidence_governance",
+      "preliminary_problem_signal",
+      "explicit_visualization"
+    ],
+    "forbidden_uses": [
+      "claim_user_behavior",
+      "claim_root_cause",
+      "claim_effectiveness",
+      "automatic_archive"
+    ]
+  }
+}

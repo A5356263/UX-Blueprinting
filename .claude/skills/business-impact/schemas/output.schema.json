@@ -1,0 +1,511 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "business-impact-output.schema.json",
+  "title": "Business Impact Assessment 4.0.0",
+  "type": "object",
+  "required": [
+    "run", "analysis_contract", "data_quality", "valuation_inputs",
+    "problem_impact_cases", "solution_value_cases", "portfolio_summary",
+    "assumption_ledger", "limitations", "downstream_handoffs", "publication", "delivery", "handoff"
+  ],
+  "properties": {
+    "run": {"$ref": "#/$defs/run"},
+    "analysis_contract": {"$ref": "#/$defs/analysisContract"},
+    "data_quality": {"$ref": "#/$defs/inputQuality"},
+    "valuation_inputs": {"type": "array", "items": {"$ref": "#/$defs/valuationInput"}, "minItems": 1},
+    "problem_impact_cases": {"type": "array", "items": {"$ref": "#/$defs/problemCase"}},
+    "solution_value_cases": {"type": "array", "items": {"$ref": "#/$defs/solutionCase"}},
+    "portfolio_summary": {"$ref": "#/$defs/portfolioSummary"},
+    "assumption_ledger": {"type": "array", "items": {"$ref": "#/$defs/assumption"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "downstream_handoffs": {
+      "type": "array",
+      "items": {"$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"}
+    },
+    "publication": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"},
+    "delivery": {"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"},
+    "handoff": {"$ref": "#/$defs/handoff"}
+  },
+  "allOf": [{"$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json"}],
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": ["artifact_type", "artifact_version", "producer_skill", "run_id", "project_name", "generated_at", "status", "source_mode", "context_mode", "run_modes", "valuation_state", "data_classification", "sources", "invocation_context", "analysis_purpose"],
+      "properties": {
+        "artifact_type": {"const": "business_impact_assessment"},
+        "artifact_version": {"const": "4.0.0"},
+        "producer_skill": {"const": "business-impact"},
+        "run_id": {"type": "string", "minLength": 1},
+        "project_name": {"type": "string", "minLength": 1},
+        "generated_at": {"type": "string", "minLength": 1},
+        "status": {"enum": ["completed", "partial", "not_evaluable", "blocked"]},
+        "source_mode": {"enum": ["user_inputs_only", "explicit_chain_context"]},
+        "context_mode": {"enum": ["independent", "chain_context"]},
+        "run_modes": {"type": "array", "items": {"enum": ["problem_impact", "solution_value", "validated_revaluation"]}, "minItems": 1, "uniqueItems": true},
+        "valuation_state": {"enum": ["problem_impact_only", "provisional_forecast", "decision_ready_forecast", "validated_revaluation"]},
+        "data_classification": {"enum": ["internal", "confidential", "restricted"]},
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}, "minItems": 1},
+        "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+        "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_id", "source_type", "source_ref", "source_skill", "source_version", "project_name", "run_id", "explicitly_referenced"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["artifact", "user_input", "formal_plan", "knowledge_raw"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_skill": {"type": ["string", "null"]},
+        "source_version": {"type": ["string", "null"]},
+        "project_name": {"type": "string", "minLength": 1},
+        "run_id": {"type": ["string", "null"]},
+        "explicitly_referenced": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "analysisContract": {
+      "type": "object",
+      "required": ["requested_modes", "currency", "valuation_window", "report_mode", "calculation_precision", "knowledge_refs"],
+      "properties": {
+        "requested_modes": {"type": "array", "items": {"enum": ["problem_impact", "solution_value", "validated_revaluation"]}, "minItems": 1, "uniqueItems": true},
+        "currency": {"type": ["string", "null"]},
+        "valuation_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+        "report_mode": {"enum": ["full_report", "light_summary", "json_only"]},
+        "calculation_precision": {"type": "integer", "minimum": 0, "maximum": 8},
+        "knowledge_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "window": {
+      "type": "object",
+      "required": ["start", "end", "period_count", "period_unit"],
+      "properties": {
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
+        "period_count": {"type": "number", "exclusiveMinimum": 0},
+        "period_unit": {"enum": ["day", "week", "month", "quarter", "year"]}
+      },
+      "additionalProperties": false
+    },
+    "measurementScope": {
+      "type": "object",
+      "required": ["grain", "dimensions", "time_window", "population_definition"],
+      "properties": {
+        "grain": {
+          "enum": [
+            "enterprise",
+            "user",
+            "account",
+            "task",
+            "survey_response",
+            "business_board",
+            "enterprise_x_business_board",
+            "unknown"
+          ]
+        },
+        "dimensions": {"type": "object"},
+        "time_window": {
+          "oneOf": [
+            {"$ref": "#/$defs/window"},
+            {"type": "null"}
+          ]
+        },
+        "population_definition": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "inputQuality": {
+      "type": "object",
+      "required": ["status", "project_consistent", "time_window_consistent", "lineage_complete", "warnings", "blocked_reasons"],
+      "properties": {
+        "status": {"enum": ["ready", "ready_with_caveats", "partial", "needs_user_input", "blocked", "not_evaluable"]},
+        "project_consistent": {"type": "boolean"},
+        "time_window_consistent": {"type": "boolean"},
+        "lineage_complete": {"type": "boolean"},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "blocked_reasons": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "valuationInput": {
+      "type": "object",
+      "required": ["input_id", "semantic_role", "source_type", "source_ref", "source_skill", "source_version", "population_scope", "measurement_scope", "time_window", "unit", "provenance_status", "allowed_uses", "sensitivity"],
+      "properties": {
+        "input_id": {"type": "string", "minLength": 1},
+        "semantic_role": {"enum": ["problem_evidence", "population_metric", "business_rule", "solution_scope", "effect_estimate", "unit_value", "cost", "assumption"]},
+        "source_type": {"enum": ["governed_artifact", "analysis_artifact", "outcome_artifact", "blueprint_artifact", "knowledge_raw", "formal_plan", "user_input", "scenario_assumption"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_skill": {"type": ["string", "null"]},
+        "source_version": {"type": ["string", "null"]},
+        "population_scope": {"type": ["string", "null"]},
+        "measurement_scope": {"$ref": "#/$defs/measurementScope"},
+        "time_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+        "unit": {"type": ["string", "null"]},
+        "provenance_status": {"enum": ["formal_source", "user_confirmed", "scenario_assumption", "unverified"]},
+        "allowed_uses": {"type": "array", "items": {"enum": ["problem_scope", "population_estimation", "impact_description", "solution_scope", "forecast", "validated_revaluation", "cost_calculation", "value_calculation", "reporting"]}, "minItems": 1, "uniqueItems": true},
+        "sensitivity": {"enum": ["internal", "confidential", "restricted"]}
+      },
+      "additionalProperties": false
+    },
+    "range3": {
+      "type": "object",
+      "required": ["low", "base", "high"],
+      "properties": {"low": {"type": "number"}, "base": {"type": "number"}, "high": {"type": "number"}},
+      "additionalProperties": false
+    },
+    "nonNegativeRange3": {
+      "type": "object",
+      "required": ["low", "base", "high"],
+      "properties": {"low": {"type": "number", "minimum": 0}, "base": {"type": "number", "minimum": 0}, "high": {"type": "number", "minimum": 0}},
+      "additionalProperties": false
+    },
+    "rateRange3": {
+      "type": "object",
+      "required": ["low", "base", "high"],
+      "properties": {"low": {"type": "number", "minimum": 0, "maximum": 1}, "base": {"type": "number", "minimum": 0, "maximum": 1}, "high": {"type": "number", "minimum": 0, "maximum": 1}},
+      "additionalProperties": false
+    },
+    "affectedPopulation": {
+      "type": "object",
+      "required": ["unit", "measurement_scope", "eligible_count", "observed_sample_count", "observed_affected_count", "estimated_affected_range", "denominator_count", "affected_share_range", "time_window", "segments", "projection_status", "basis_input_refs", "join_coverage"],
+      "properties": {
+        "unit": {"enum": ["enterprise", "user", "account", "task", "survey_response", "business_board", "enterprise_x_business_board", "unknown"]},
+        "measurement_scope": {"$ref": "#/$defs/measurementScope"},
+        "eligible_count": {"type": ["number", "null"], "minimum": 0},
+        "observed_sample_count": {"type": ["number", "null"], "minimum": 0},
+        "observed_affected_count": {"type": ["number", "null"], "minimum": 0},
+        "estimated_affected_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "denominator_count": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "affected_share_range": {"oneOf": [{"$ref": "#/$defs/rateRange3"}, {"type": "null"}]},
+        "time_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+        "segments": {"type": "array", "items": {"$ref": "#/$defs/segmentImpact"}},
+        "projection_status": {"enum": ["measured", "derived", "assumption", "not_evaluable"]},
+        "basis_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "join_coverage": {"$ref": "#/$defs/joinCoverage"}
+      },
+      "additionalProperties": false
+    },
+    "joinCoverage": {
+      "type": "object",
+      "required": ["status", "matched_count", "left_count", "right_count", "left_match_rate", "right_match_rate", "source_input_refs", "reason"],
+      "properties": {
+        "status": {"enum": ["not_required", "sufficient", "partial", "no_overlap", "unknown"]},
+        "matched_count": {"type": ["number", "null"], "minimum": 0},
+        "left_count": {"type": ["number", "null"], "minimum": 0},
+        "right_count": {"type": ["number", "null"], "minimum": 0},
+        "left_match_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "right_match_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "reason": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "segmentImpact": {
+      "type": "object",
+      "required": ["segment_ref", "affected_range", "difference_status", "source_input_refs"],
+      "properties": {
+        "segment_ref": {"type": "string", "minLength": 1},
+        "affected_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "difference_status": {"enum": ["observed", "derived", "assumed", "not_evaluable"]},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "impactComponent": {
+      "type": "object",
+      "required": ["impact_id", "layer", "description", "epistemic_status", "relationship_type", "source_input_refs", "magnitude_range", "unit", "dedup_group"],
+      "properties": {
+        "impact_id": {"type": "string", "minLength": 1},
+        "layer": {"enum": ["user", "product", "service", "business", "organization"]},
+        "description": {"type": "string", "minLength": 1},
+        "epistemic_status": {"enum": ["fact", "inference", "assumption", "not_evaluable"]},
+        "relationship_type": {"enum": ["descriptive", "correlated", "candidate_mechanism", "validated_effect", "unknown"]},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "magnitude_range": {"oneOf": [{"$ref": "#/$defs/range3"}, {"type": "null"}]},
+        "unit": {"type": ["string", "null"]},
+        "dedup_group": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "valueFrame": {
+      "type": "object",
+      "required": ["status", "value_range", "currency", "time_window", "basis_input_refs", "caveats"],
+      "properties": {
+        "status": {"enum": ["qualitative", "quantified", "not_evaluable"]},
+        "value_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "currency": {"type": ["string", "null"]},
+        "time_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+        "basis_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "caveats": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "problemCase": {
+      "type": "object",
+      "required": ["problem_impact_case_id", "stable_key", "problem_statement", "maturity", "source_input_refs", "affected_population", "impact_components", "cost_of_inaction", "addressable_opportunity", "limitations"],
+      "properties": {
+        "problem_impact_case_id": {"type": "string", "minLength": 1},
+        "stable_key": {"type": "string", "minLength": 1},
+        "problem_statement": {"type": "string", "minLength": 1},
+        "maturity": {"enum": ["preliminary", "evidence_backed"]},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "affected_population": {"$ref": "#/$defs/affectedPopulation"},
+        "impact_components": {"type": "array", "items": {"$ref": "#/$defs/impactComponent"}},
+        "cost_of_inaction": {"$ref": "#/$defs/valueFrame"},
+        "addressable_opportunity": {"$ref": "#/$defs/valueFrame"},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "qualitativeValueLink": {
+      "type": "object",
+      "required": ["link_id", "metric_ref", "value_direction", "description", "source_input_refs"],
+      "properties": {
+        "link_id": {"type": "string", "minLength": 1},
+        "metric_ref": {"type": ["string", "null"]},
+        "value_direction": {"enum": ["positive", "negative", "mixed", "unknown"]},
+        "description": {"type": "string", "minLength": 1},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "metricValueLink": {
+      "type": "object",
+      "required": ["link_id", "metric_ref", "measurement_scope", "baseline_input_ref", "effect_status", "formula_type", "addressable_volume", "metric_change", "metric_change_unit", "conversion_rate", "adoption_rate", "attribution_discount", "unit_value", "period_multiplier", "currency", "source_input_refs", "dedup_group", "aggregation_policy", "benefit_range"],
+      "properties": {
+        "link_id": {"type": "string", "minLength": 1},
+        "metric_ref": {"type": "string", "minLength": 1},
+        "measurement_scope": {"$ref": "#/$defs/measurementScope"},
+        "baseline_input_ref": {"type": "string", "minLength": 1},
+        "effect_status": {"enum": ["forecast_scenario", "validated_result"]},
+        "formula_type": {"enum": ["transition_value", "direct_value", "nps_value"]},
+        "addressable_volume": {"$ref": "#/$defs/nonNegativeRange3"},
+        "metric_change": {"$ref": "#/$defs/range3"},
+        "metric_change_unit": {"enum": ["rate", "nps_points", "count"]},
+        "conversion_rate": {"$ref": "#/$defs/rateRange3"},
+        "adoption_rate": {"$ref": "#/$defs/rateRange3"},
+        "attribution_discount": {"$ref": "#/$defs/rateRange3"},
+        "unit_value": {"$ref": "#/$defs/nonNegativeRange3"},
+        "period_multiplier": {"type": "number", "exclusiveMinimum": 0},
+        "currency": {"type": "string", "minLength": 1},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "dedup_group": {"type": "string", "minLength": 1},
+        "aggregation_policy": {"enum": ["include", "exclude_from_total"]},
+        "benefit_range": {"$ref": "#/$defs/nonNegativeRange3"}
+      },
+      "additionalProperties": false
+    },
+    "effortComponent": {
+      "type": "object",
+      "required": ["component_id", "category", "cost_type", "relative_effort", "cost_range", "currency", "source_input_ref", "confidence", "sensitivity", "display_policy"],
+      "properties": {
+        "component_id": {"type": "string", "minLength": 1},
+        "category": {"enum": ["design", "engineering", "testing", "data", "implementation", "migration", "operations", "training", "support", "compliance", "maintenance", "other"]},
+        "cost_type": {"enum": ["one_time", "recurring"]},
+        "relative_effort": {"enum": ["low", "medium", "high", "unknown", "not_applicable"]},
+        "cost_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "currency": {"type": ["string", "null"]},
+        "source_input_ref": {"type": ["string", "null"]},
+        "confidence": {"enum": ["high", "medium", "low", "insufficient"]},
+        "sensitivity": {"enum": ["internal", "confidential", "restricted"]},
+        "display_policy": {"enum": ["show", "show_range_only", "restricted"]}
+      },
+      "additionalProperties": false
+    },
+    "effortProfile": {
+      "type": "object",
+      "required": ["components", "total_investment_range"],
+      "properties": {
+        "components": {"type": "array", "items": {"$ref": "#/$defs/effortComponent"}},
+        "total_investment_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]}
+      },
+      "additionalProperties": false
+    },
+    "valueComponent": {
+      "type": "object",
+      "required": ["component_id", "description", "value_range", "currency", "source_ref", "dedup_group"],
+      "properties": {
+        "component_id": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "value_range": {"$ref": "#/$defs/nonNegativeRange3"},
+        "currency": {"type": "string", "minLength": 1},
+        "source_ref": {"type": "string", "minLength": 1},
+        "dedup_group": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "guardrailImpact": {
+      "type": "object",
+      "required": ["guardrail_ref", "status", "affected_segments", "source_input_refs", "manual_review_required"],
+      "properties": {
+        "guardrail_ref": {"type": "string", "minLength": 1},
+        "status": {"enum": ["passed", "at_risk", "harmed", "unknown", "not_evaluable"]},
+        "affected_segments": {"type": "array", "items": {"type": "string"}},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "manual_review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "distributionalEffect": {
+      "type": "object",
+      "required": ["segment_ref", "effect_direction", "description", "source_input_refs"],
+      "properties": {
+        "segment_ref": {"type": "string", "minLength": 1},
+        "effect_direction": {"enum": ["benefit", "neutral", "harm", "unknown"]},
+        "description": {"type": "string", "minLength": 1},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "sensitivityItem": {
+      "type": "object",
+      "required": ["parameter", "direction", "result_impact", "source_input_ref"],
+      "properties": {
+        "parameter": {"enum": ["metric_change", "conversion_rate", "adoption_rate", "unit_value", "attribution_discount", "investment"]},
+        "direction": {"enum": ["positive", "negative", "mixed"]},
+        "result_impact": {"type": "string", "minLength": 1},
+        "source_input_ref": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "priorSnapshot": {
+      "type": "object",
+      "required": ["prior_run_ref", "prior_solution_case_ref", "forecast_benefit_range", "forecast_roi_range", "key_assumption_refs", "actual_difference_summary"],
+      "properties": {
+        "prior_run_ref": {"type": "string", "minLength": 1},
+        "prior_solution_case_ref": {"type": "string", "minLength": 1},
+        "forecast_benefit_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "forecast_roi_range": {"oneOf": [{"$ref": "#/$defs/range3"}, {"type": "null"}]},
+        "key_assumption_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "actual_difference_summary": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "solutionCase": {
+      "type": "object",
+      "required": ["solution_value_case_id", "problem_impact_case_ref", "solution_ref", "solution_source_type", "valuation_timing", "forecast_status", "valuation_level", "source_input_refs", "qualitative_value_links", "metric_value_links", "effort_profile", "benefit_components", "disbenefit_components", "guardrail_impacts", "distributional_effects", "expected_benefit_range", "total_disbenefit_range", "net_benefit_range", "roi_range", "payback_period_range", "sensitivity_analysis", "valuation_confidence", "decision_recommendation", "non_compensable_risks", "prior_valuation_snapshot", "limitations"],
+      "properties": {
+        "solution_value_case_id": {"type": "string", "minLength": 1},
+        "problem_impact_case_ref": {"type": "string", "minLength": 1},
+        "solution_ref": {"type": "string", "minLength": 1},
+        "solution_source_type": {"enum": ["experience_blueprint", "user_defined_solution", "formal_plan"]},
+        "valuation_timing": {"enum": ["forecast", "validated_revaluation"]},
+        "forecast_status": {"enum": ["not_applicable", "provisional_forecast", "decision_ready_forecast"]},
+        "valuation_level": {"enum": ["value_vs_effort", "quantified_roi"]},
+        "source_input_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "qualitative_value_links": {"type": "array", "items": {"$ref": "#/$defs/qualitativeValueLink"}},
+        "metric_value_links": {"type": "array", "items": {"$ref": "#/$defs/metricValueLink"}},
+        "effort_profile": {"$ref": "#/$defs/effortProfile"},
+        "benefit_components": {"type": "array", "items": {"$ref": "#/$defs/valueComponent"}},
+        "disbenefit_components": {"type": "array", "items": {"$ref": "#/$defs/valueComponent"}},
+        "guardrail_impacts": {"type": "array", "items": {"$ref": "#/$defs/guardrailImpact"}},
+        "distributional_effects": {"type": "array", "items": {"$ref": "#/$defs/distributionalEffect"}},
+        "expected_benefit_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "total_disbenefit_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "net_benefit_range": {"oneOf": [{"$ref": "#/$defs/range3"}, {"type": "null"}]},
+        "roi_range": {"oneOf": [{"$ref": "#/$defs/range3"}, {"type": "null"}]},
+        "payback_period_range": {"oneOf": [{"$ref": "#/$defs/nonNegativeRange3"}, {"type": "null"}]},
+        "sensitivity_analysis": {"type": "array", "items": {"$ref": "#/$defs/sensitivityItem"}},
+        "valuation_confidence": {"enum": ["high", "medium", "low", "insufficient"]},
+        "decision_recommendation": {"enum": ["enter_review", "compare_options", "pilot_first", "request_costs", "request_effect_evidence", "hold", "manual_risk_review"]},
+        "non_compensable_risks": {"type": "array", "items": {"type": "string"}},
+        "prior_valuation_snapshot": {"oneOf": [{"$ref": "#/$defs/priorSnapshot"}, {"type": "null"}]},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "priorityItem": {
+      "type": "object",
+      "required": ["case_ref", "case_type", "value_status", "readiness", "recommendation"],
+      "properties": {
+        "case_ref": {"type": "string", "minLength": 1},
+        "case_type": {"enum": ["problem_impact", "solution_value"]},
+        "value_status": {"enum": ["qualitative", "quantified", "not_evaluable"]},
+        "readiness": {"enum": ["preliminary", "evidence_backed", "provisional_forecast", "decision_ready_forecast", "validated_revaluation"]},
+        "recommendation": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "impactValueChain": {
+      "type": "object",
+      "required": ["chain_id", "problem_ref", "solution_ref", "metric_link_ref", "nodes", "status"],
+      "properties": {
+        "chain_id": {"type": "string", "minLength": 1},
+        "problem_ref": {"type": "string", "minLength": 1},
+        "solution_ref": {"type": "string", "minLength": 1},
+        "metric_link_ref": {"type": "string", "minLength": 1},
+        "nodes": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+        "status": {"enum": ["forecast", "validated_revaluation"]}
+      },
+      "additionalProperties": false
+    },
+    "solutionComparison": {
+      "type": "object",
+      "required": ["problem_ref", "solution_case_refs"],
+      "properties": {
+        "problem_ref": {"type": "string", "minLength": 1},
+        "solution_case_refs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "portfolioSummary": {
+      "type": "object",
+      "required": ["problem_case_count", "solution_case_count", "valuation_level_counts", "business_value_priority_view", "impact_value_chains", "solution_comparison_view"],
+      "properties": {
+        "problem_case_count": {"type": "integer", "minimum": 0},
+        "solution_case_count": {"type": "integer", "minimum": 0},
+        "valuation_level_counts": {
+          "type": "object",
+          "required": ["impact_only", "value_vs_effort", "quantified_roi"],
+          "properties": {
+            "impact_only": {"type": "integer", "minimum": 0},
+            "value_vs_effort": {"type": "integer", "minimum": 0},
+            "quantified_roi": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "business_value_priority_view": {"type": "array", "items": {"$ref": "#/$defs/priorityItem"}},
+        "impact_value_chains": {"type": "array", "items": {"$ref": "#/$defs/impactValueChain"}},
+        "solution_comparison_view": {"type": "array", "items": {"$ref": "#/$defs/solutionComparison"}}
+      },
+      "additionalProperties": false
+    },
+    "assumption": {
+      "type": "object",
+      "required": ["assumption_id", "description", "value", "unit", "time_window", "status", "source_input_ref", "sensitivity", "decision_impact", "owner", "valid_until", "fallback"],
+      "properties": {
+        "assumption_id": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "value": {},
+        "unit": {"type": ["string", "null"]},
+        "time_window": {"oneOf": [{"$ref": "#/$defs/window"}, {"type": "null"}]},
+        "status": {"enum": ["user_confirmed", "formal_source", "scenario_assumption", "unverified"]},
+        "source_input_ref": {"type": ["string", "null"]},
+        "sensitivity": {"enum": ["high", "medium", "low"]},
+        "decision_impact": {"type": "string", "minLength": 1},
+        "owner": {"type": ["string", "null"]},
+        "valid_until": {"type": ["string", "null"]},
+        "fallback": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "required": ["input_gate_status", "analysis_status", "handoff_status", "allowed_uses", "forbidden_uses", "recommended_next", "blocked_reasons", "write_status"],
+      "properties": {
+        "input_gate_status": {"enum": ["ready", "ready_with_caveats", "partial", "needs_user_input", "blocked", "not_evaluable"]},
+        "analysis_status": {"enum": ["completed", "partial", "not_evaluable", "blocked"]},
+        "handoff_status": {"enum": ["ready", "ready_with_caveats", "blocked", "terminal"]},
+        "allowed_uses": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "forbidden_uses": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "recommended_next": {"type": "array", "items": {"enum": ["objective-data-analysis", "subjective-feedback-analysis", "experience-heuristic-analysis", "root-cause-synthesis", "experience-blueprint", "outcome-validation-recheck", "data-visualization", "evidence-archive", "human-review"]}, "uniqueItems": true},
+        "blocked_reasons": {"type": "array", "items": {"type": "string"}},
+        "write_status": {"enum": ["written", "partial", "failed", "not_requested"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

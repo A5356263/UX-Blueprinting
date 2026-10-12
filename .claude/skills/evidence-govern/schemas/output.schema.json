@@ -1,0 +1,576 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-govern-output.schema.json",
+  "title": "Evidence Govern Result 6.0.0",
+  "type": "object",
+  "required": [
+    "run",
+    "analysis_contract",
+    "data_quality",
+    "evidence_items",
+    "evidence_relationships",
+    "evidence_change_signals",
+    "context_factor_assessments",
+    "evidence_patches",
+    "baseline_patches",
+    "manual_review_queue",
+    "review_decisions",
+    "downstream_handoffs",
+    "limitations",
+    "publication",
+    "delivery",
+    "handoff"
+  ],
+  "properties": {
+    "run": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_version",
+        "producer_skill",
+        "run_id",
+        "project_name",
+        "generated_at",
+        "invocation_context",
+        "analysis_purpose",
+        "status",
+        "source_mode",
+        "sources",
+        "upstream_refs",
+        "write_status"
+      ],
+      "properties": {
+        "artifact_type": {"const": "evidence_govern_result"},
+        "artifact_version": {"const": "6.0.0"},
+        "producer_skill": {"const": "evidence-govern"},
+        "run_id": {"type": "string", "pattern": "^eg_"},
+        "project_name": {"type": "string"},
+        "generated_at": {"type": "string"},
+        "invocation_context": {"enum": ["independent", "chain_context"]},
+        "analysis_purpose": {
+          "$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"
+        },
+        "status": {
+          "enum": ["completed", "completed_with_caveats", "partial", "not_evaluable", "blocked"]
+        },
+        "source_mode": {"enum": ["explicit_input", "chain_context"]},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "upstream_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": ["artifact_instance_ref", "handoff_ref", "payload_refs", "allowed_use"],
+            "properties": {
+              "artifact_instance_ref": {
+                "$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"
+              },
+              "handoff_ref": {"type": "string", "pattern": "^#(?:/.*)?$"},
+              "allowed_use": {"const": "evidence_governance"},
+              "payload_refs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^#(?:/.*)?$"}
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "write_status": {
+          "enum": ["written", "partial", "failed", "not_requested"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "analysis_contract": {
+      "type": "object",
+      "required": [
+        "run_mode",
+        "prior_govern_result_ref",
+        "archived_evidence_refs",
+        "baseline_refs",
+        "outcome_patch_refs",
+        "context_input_manifest",
+        "phase_status"
+      ],
+      "properties": {
+        "run_mode": {
+          "enum": [
+            "evidence_governance",
+            "outcome_patch_absorption",
+            "review_decision_absorption"
+          ]
+        },
+        "prior_govern_result_ref": {"type": ["string", "null"]},
+        "archived_evidence_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "baseline_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "outcome_patch_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "context_input_manifest": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["context_id", "input_type", "source_ref", "content_fingerprint", "declared_scope", "sensitivity", "load_status"],
+            "properties": {
+              "context_id": {"type": "string"},
+              "input_type": {"type": "string"},
+              "source_ref": {"type": ["string", "null"]},
+              "content_fingerprint": {"type": "string", "minLength": 64, "maxLength": 64},
+              "declared_scope": {"type": ["object", "null"]},
+              "sensitivity": {"enum": ["public", "internal", "confidential", "restricted", "unknown"]},
+              "load_status": {"enum": ["declared", "missing_reference"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "phase_status": {
+          "type": "object",
+          "required": ["normalization", "evidence_linking_context", "governance_release"],
+          "properties": {
+            "normalization": {"enum": ["completed", "partial", "not_run", "blocked"]},
+            "evidence_linking_context": {"enum": ["completed", "partial", "not_run", "blocked"]},
+            "governance_release": {"enum": ["completed", "partial", "not_run", "blocked"]}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "data_quality": {
+      "type": "object",
+      "required": [
+        "source_count",
+        "evidence_item_count",
+        "lineage_complete_count",
+        "known_gaps"
+      ],
+      "properties": {
+        "source_count": {"type": "integer", "minimum": 0},
+        "evidence_item_count": {"type": "integer", "minimum": 0},
+        "lineage_complete_count": {"type": "integer", "minimum": 0},
+        "known_gaps": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": {
+        "$ref": "../../../../shared-workflow/data-analysis/schemas/evidence_item.schema.json"
+      }
+    },
+    "evidence_relationships": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceRelationship"}
+    },
+    "evidence_change_signals": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceChangeSignal"}
+    },
+    "context_factor_assessments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/contextFactorAssessment"}
+    },
+    "evidence_patches": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidencePatch"}
+    },
+    "baseline_patches": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/baselinePatch"}
+    },
+    "manual_review_queue": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/manualReviewItem"}
+    },
+    "review_decisions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/reviewDecision"}
+    },
+    "downstream_handoffs": {
+      "type": "array",
+      "items": {
+        "$ref": "../../../../shared-workflow/data-analysis/schemas/downstream_handoff.schema.json"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "publication": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/publication"
+    },
+    "delivery": {
+      "$ref": "../../../../shared-workflow/data-analysis/schemas/context_handoff.schema.json#/properties/delivery"
+    },
+    "handoff": {
+      "type": "object",
+      "required": [
+        "input_gate_status",
+        "handoff_status",
+        "allowed_uses",
+        "forbidden_uses",
+        "blocked_reasons",
+        "root_cause_readiness",
+        "evidence_basis"
+      ],
+      "properties": {
+        "input_gate_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "partial",
+            "needs_user_input",
+            "blocked",
+            "not_evaluable"
+          ]
+        },
+        "handoff_status": {
+          "enum": [
+            "ready",
+            "ready_with_caveats",
+            "pending_review",
+            "blocked",
+            "terminal"
+          ]
+        },
+        "allowed_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "blocked_reasons": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "root_cause_readiness": {
+          "enum": ["ready", "exploratory_only", "conflict_first", "blocked"]
+        },
+        "evidence_basis": {
+          "enum": [
+            "single_source",
+            "multi_source_corroborated",
+            "contested",
+            "insufficient"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "evidenceRelationship": {
+      "type": "object",
+      "required": [
+        "relationship_id",
+        "relationship_type",
+        "evidence_refs",
+        "matched_dimensions",
+        "mismatched_dimensions",
+        "source_independence",
+        "evidence_link_confidence",
+        "rationale",
+        "limitations"
+      ],
+      "properties": {
+        "relationship_id": {"type": "string"},
+        "relationship_type": {
+          "enum": [
+            "corroborates",
+            "counterevidence",
+            "contradicts",
+            "qualifies_scope",
+            "non_independent",
+            "unresolved_match"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "matched_dimensions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "mismatched_dimensions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "source_independence": {
+          "enum": ["independent", "non_independent", "unknown"]
+        },
+        "evidence_link_confidence": {
+          "enum": ["high", "medium", "low", "insufficient"]
+        },
+        "rationale": {"type": "string"},
+        "limitations": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceChangeSignal": {
+      "type": "object",
+      "required": [
+        "signal_id",
+        "evidence_refs",
+        "signal_type",
+        "source_refs",
+        "observed_at",
+        "rationale"
+      ],
+      "properties": {
+        "signal_id": {"type": "string"},
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "signal_type": {
+          "enum": [
+            "strengthened",
+            "weakened",
+            "stable",
+            "resolved",
+            "stale",
+            "contradicted"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "observed_at": {"type": "string"},
+        "rationale": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "contextFactorAssessment": {
+      "type": "object",
+      "required": [
+        "factor_id",
+        "factor_type",
+        "source_refs",
+        "time_window",
+        "affected_scope",
+        "related_evidence_refs",
+        "time_overlap",
+        "scope_overlap",
+        "possible_effect_direction",
+        "disposition",
+        "assessment_confidence",
+        "rationale"
+      ],
+      "properties": {
+        "factor_id": {"type": "string"},
+        "factor_type": {
+          "enum": [
+            "service_incident",
+            "product_change",
+            "operation_or_training",
+            "policy_or_process",
+            "measurement_or_data_change",
+            "population_or_scope_change",
+            "seasonality_or_external_event",
+            "other"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "time_window": {
+          "anyOf": [
+            {"type": "object"},
+            {"type": "string"},
+            {"type": "null"}
+          ]
+        },
+        "affected_scope": {"type": "object"},
+        "related_evidence_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "time_overlap": {
+          "enum": ["none", "partial", "full", "unknown"]
+        },
+        "scope_overlap": {
+          "enum": ["none", "partial", "full", "unknown"]
+        },
+        "possible_effect_direction": {
+          "enum": ["increase", "decrease", "mixed", "unknown"]
+        },
+        "disposition": {
+          "enum": [
+            "no_material_overlap",
+            "add_caveat",
+            "separate_scope",
+            "request_reanalysis",
+            "manual_review",
+            "unknown"
+          ]
+        },
+        "assessment_confidence": {
+          "enum": ["high", "medium", "low", "unknown"]
+        },
+        "rationale": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "evidencePatch": {
+      "type": "object",
+      "required": [
+        "patch_id",
+        "target_ref",
+        "action",
+        "from_status",
+        "to_status",
+        "decision_status",
+        "review_id",
+        "source_refs",
+        "rationale",
+        "can_persist",
+        "applied"
+      ],
+      "properties": {
+        "patch_id": {"type": "string"},
+        "target_ref": {"type": "string"},
+        "action": {
+          "enum": ["release", "amend", "restrict", "supersede", "archive", "retain"]
+        },
+        "from_status": {
+          "enum": ["candidate", "released", "restricted", "superseded", "archived"]
+        },
+        "to_status": {
+          "enum": ["candidate", "released", "restricted", "superseded", "archived"]
+        },
+        "supersedes_ref": {"type": ["string", "null"]},
+        "decision_status": {
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        },
+        "review_id": {"type": ["string", "null"]},
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "rationale": {"type": "string"},
+        "can_persist": {"type": "boolean"},
+        "applied": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "baselinePatch": {
+      "type": "object",
+      "required": [
+        "patch_id",
+        "baseline_ref",
+        "action",
+        "from_status",
+        "to_status",
+        "decision_status",
+        "review_id",
+        "source_refs",
+        "rationale",
+        "can_persist",
+        "applied"
+      ],
+      "properties": {
+        "patch_id": {"type": "string"},
+        "baseline_ref": {"type": "string"},
+        "action": {
+          "enum": ["activate", "amend", "mark_stale", "supersede", "archive", "retain"]
+        },
+        "from_status": {
+          "enum": ["proposed", "active", "stale", "superseded", "archived"]
+        },
+        "to_status": {
+          "enum": ["proposed", "active", "stale", "superseded", "archived"]
+        },
+        "decision_status": {
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        },
+        "review_id": {"type": ["string", "null"]},
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "rationale": {"type": "string"},
+        "can_persist": {"type": "boolean"},
+        "applied": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "manualReviewItem": {
+      "type": "object",
+      "required": [
+        "review_id",
+        "target_refs",
+        "risk_level",
+        "reason",
+        "blocked_consumers",
+        "status"
+      ],
+      "properties": {
+        "review_id": {"type": "string"},
+        "target_refs": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "risk_level": {
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "reason": {"type": "string"},
+        "blocked_consumers": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "status": {"enum": ["open", "closed"]}
+      },
+      "additionalProperties": false
+    },
+    "reviewDecision": {
+      "type": "object",
+      "required": [
+        "review_id",
+        "decision",
+        "reviewer_ref",
+        "decided_at",
+        "rationale",
+        "approved_actions"
+      ],
+      "properties": {
+        "review_id": {"type": "string"},
+        "decision": {
+          "enum": ["approved", "rejected", "needs_more_information"]
+        },
+        "reviewer_ref": {"type": "string"},
+        "decided_at": {"type": "string"},
+        "rationale": {"type": "string"},
+        "approved_actions": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

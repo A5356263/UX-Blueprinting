@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experience-heuristic-analysis.input.schema.json",
+  "title": "Experience Heuristic Analysis Request 4.0.0",
+  "type": "object",
+  "required": ["artifact_type", "artifact_version", "source_mode", "analysis_mode", "invocation_context", "analysis_purpose", "requested_analyses", "input_bindings", "requested_deliverables", "publication_policy", "retention_policy", "sources", "analysis_scope"],
+  "properties": {
+    "artifact_type": {"const": "heuristic_analysis_request"},
+    "artifact_version": {"const": "4.0.0"},
+    "project_name": {"type": ["string", "null"]},
+    "source_mode": {"enum": ["independent", "chain_context"]},
+    "analysis_mode": {"enum": ["discovery", "intervention_recheck"]},
+    "invocation_context": {"enum": ["independent", "chain_context"]},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "analysis_scope": {"$ref": "#/$defs/scope"},
+    "focus_areas": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "focus_source_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "explicit_upstream_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/artifactLocator"}},
+    "baseline_ref": {"oneOf": [{"$ref": "#/$defs/comparisonLocator"}, {"type": "null"}]},
+    "current_ref": {"oneOf": [{"$ref": "#/$defs/comparisonLocator"}, {"type": "null"}]},
+    "business_rule_inputs": {"type": "array", "items": {"type": "object"}},
+    "project_rule_source_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["source_id", "source_type", "source_ref", "acquisition"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {
+          "enum": ["screenshot", "prototype", "figma_export", "frontend_code", "dom", "a11y", "runtime", "flow", "blueprint", "brief", "stories", "design_guideline", "design_system", "business_rule", "description"]
+        },
+        "source_ref": {"type": "string", "minLength": 1},
+        "acquisition": {"enum": ["user_provided", "tool_collected", "explicit_upstream"]},
+        "description": {"type": ["string", "null"]},
+        "upstream_locator": {"oneOf": [{"$ref": "#/$defs/artifactLocator"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"acquisition": {"const": "explicit_upstream"}}, "required": ["acquisition"]},
+          "then": {"required": ["upstream_locator"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["scope_type", "included", "excluded", "scope_reason", "review_areas"],
+      "properties": {
+        "scope_type": {"enum": ["full_review", "scoped_review", "diff_driven_review"]},
+        "included": {"type": "array", "items": {"type": "string"}},
+        "excluded": {"type": "array", "items": {"type": "string"}},
+        "scope_reason": {"type": "string"},
+        "review_areas": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["flow-continuity", "ia", "components", "visual-hierarchy", "edge-states", "copy", "responsive", "feedback", "accessibility", "brief-consistency"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifactLocator": {
+      "type": "object",
+      "required": ["artifact_instance_ref", "payload_ref"],
+      "properties": {
+        "artifact_instance_ref": {"$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"},
+        "payload_ref": {"type": "string", "pattern": "^#(?:/.*)?$"}
+      },
+      "additionalProperties": false
+    },
+    "comparisonLocator": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["ref_type", "artifact_instance_ref", "payload_ref"],
+          "properties": {
+            "ref_type": {"const": "artifact"},
+            "artifact_instance_ref": {"$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"},
+            "payload_ref": {"type": "string", "pattern": "^#(?:/.*)?$"}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["ref_type", "source_id", "fingerprint"],
+          "properties": {
+            "ref_type": {"const": "source"},
+            "source_id": {"type": "string"},
+            "fingerprint": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"source_mode": {"const": "independent"}}, "required": ["source_mode"]},
+      "then": {"properties": {"explicit_upstream_refs": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"analysis_mode": {"const": "intervention_recheck"}}, "required": ["analysis_mode"]},
+      "then": {"required": ["baseline_ref", "current_ref"]}
+    }
+  ],
+  "additionalProperties": false
+}

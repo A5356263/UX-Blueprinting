@@ -1,0 +1,223 @@
+{
+  "run": {
+    "artifact_type": "root_cause_synthesis_package",
+    "artifact_version": "5.0.0",
+    "producer_skill": "root-cause-synthesis",
+    "run_id": "rc_demo_candidate_001",
+    "project_name": "示例项目",
+    "generated_at": "2026-07-25T09:00:00+08:00",
+    "source_mode": "chain_context",
+    "sources": ["governed"],
+    "upstream_refs": ["govern-handoff:root-demo"],
+    "write_status": "not_requested"
+  },
+  "analysis_contract": {
+    "run_mode": "candidate_synthesis",
+    "govern_handoff_ref": "govern-handoff:root-demo",
+    "evidence_basis": "multi_source_corroborated",
+    "root_cause_readiness": "ready",
+    "completed_capabilities": ["candidate_synthesis", "mechanism_chain", "validation_hypothesis"],
+    "blocked_capabilities": []
+  },
+  "data_quality": {
+    "evidence_count": 3,
+    "source_type_count": 2,
+    "lineage_complete": true,
+    "known_gaps": ["尚未获得正式方案合同"]
+  },
+  "limitations": [
+    {
+      "limitation_id": "lim-1",
+      "limitation_type": "intervention_missing",
+      "affected_scope": "Outcome validation",
+      "conclusion_impact": "当前只能形成治理方向与草案验证假设",
+      "required_action": "方案形成后补充 Intervention Contract",
+      "source_refs": ["govern-handoff:root-demo"]
+    }
+  ],
+  "handoff": {
+    "input_gate_status": "ready_with_caveats",
+    "handoff_status": "pending_review",
+    "allowed_uses": ["candidate_synthesis", "design_exploration"],
+    "forbidden_uses": ["final_root_cause", "effect_claim", "roi_estimation"],
+    "blocked_reasons": []
+  },
+  "analysis_summary": {
+    "run_mode": "candidate_synthesis",
+    "candidate_count": 1,
+    "dominant_causal_confidence": "medium",
+    "manual_review_count": 1,
+    "handoff_targets": ["outcome-validation-recheck"]
+  },
+  "analysis_results": {
+    "root_cause_candidates": [
+      {
+        "candidate_id": "rc-1",
+        "status": "candidate_requires_review",
+        "lifecycle_status": "pending_review",
+        "is_primary": true,
+        "issue_scope": {"journey_step": "submit", "segment": "new_enterprise"},
+        "observed_symptoms": ["新企业在提交前退出比例上升"],
+        "evidence_facts": ["行为指标与反馈主题在同一窗口和任务节点对齐"],
+        "evidence_chain": {
+          "supporting_evidence_refs": ["evidence:objective-1", "evidence:subjective-1"],
+          "reasoning_steps": [
+            "提交前退出是观察症状",
+            "用户反馈集中在前置条件理解",
+            "候选机制为前置条件理解不足"
+          ],
+          "alignment_assessment": {
+            "temporal": "high",
+            "journey": "high",
+            "segment": "medium",
+            "definition": "high"
+          },
+          "missing_links": ["尚未排除近期培训变化"]
+        },
+        "counter_evidence": [
+          {
+            "statement": "部分新企业仍能顺利完成提交",
+            "strength": "medium",
+            "resolution_status": "partially_explained",
+            "source_refs": ["evidence:objective-1"]
+          }
+        ],
+        "alternative_explanations": [
+          {
+            "explanation": "同期培训覆盖变化可能影响完成表现",
+            "status": "plausible",
+            "source_refs": ["context:training-unknown"]
+          }
+        ],
+        "causal_confidence": {
+          "level": "medium",
+          "dimensions": {
+            "source_independence": "high",
+            "temporal_alignment": "high",
+            "journey_alignment": "high",
+            "segment_specificity": "medium",
+            "mechanism_coherence": "high",
+            "counter_evidence_strength": "medium",
+            "confounding_risk": "medium",
+            "data_quality": "high"
+          },
+          "ceiling_reasons": ["培训变化尚未排除"],
+          "rationale": "多源范围一致，但仍有可竞争情境解释"
+        },
+        "business_rule_basis_refs": ["wiki:rule/submit-prerequisite#v2"],
+        "review_status": "pending",
+        "required_next_evidence": ["确认培训覆盖是否变化"],
+        "caveats": ["候选根因尚未验证"]
+      }
+    ],
+    "candidate_mechanism_chains": [
+      {
+        "chain_id": "chain-1",
+        "root_cause_candidate_refs": ["rc-1"],
+        "nodes": [
+          {"node_id": "n1", "node_type": "observed_symptom", "label": "提交前退出上升", "source_refs": ["evidence:objective-1"]},
+          {"node_id": "n2", "node_type": "mechanism_hypothesis", "label": "前置条件理解不足", "source_refs": ["evidence:subjective-1"]},
+          {"node_id": "n3", "node_type": "candidate_root_cause", "label": "候选根因 rc-1", "source_refs": ["rc-1"]},
+          {"node_id": "n4", "node_type": "alternative_explanation", "label": "培训变化", "source_refs": ["context:training-unknown"]},
+          {"node_id": "n5", "node_type": "validation_hypothesis", "label": "验证前置条件理解机制", "source_refs": ["vh-1"]}
+        ],
+        "edges": [
+          {"edge_id": "e1", "source_node_id": "n1", "target_node_id": "n2", "relation_type": "candidate_explanation", "source_refs": ["evidence:objective-1"], "status": "candidate"},
+          {"edge_id": "e2", "source_node_id": "n2", "target_node_id": "n3", "relation_type": "supports", "source_refs": ["evidence:subjective-1"], "status": "candidate"},
+          {"edge_id": "e3", "source_node_id": "n4", "target_node_id": "n3", "relation_type": "alternative_to", "source_refs": ["context:training-unknown"], "status": "needs_validation"},
+          {"edge_id": "e4", "source_node_id": "n3", "target_node_id": "n5", "relation_type": "tested_by", "source_refs": ["vh-1"], "status": "needs_validation"}
+        ],
+        "causal_confidence": "medium",
+        "caveats": ["存在未排除替代解释"]
+      }
+    ],
+    "intervention_direction_candidates": [
+      {
+        "direction_id": "dir-1",
+        "root_cause_candidate_refs": ["rc-1"],
+        "direction_type": "information_comprehension",
+        "objective": "降低用户理解提交前置条件的成本",
+        "target_scope": {"journey_step": "submit"},
+        "readiness": "design_ready_after_review",
+        "recommended_downstream": "problem-framing",
+        "preconditions": ["完成业务规则复核"],
+        "constraints": ["不得绕过业务资格规则"],
+        "prohibited_outputs": ["具体 UI", "发布承诺"],
+        "review_status": "pending",
+        "caveats": ["方向不是具体方案"]
+      }
+    ],
+    "validation_hypotheses": [
+      {
+        "hypothesis_id": "vh-1",
+        "root_cause_candidate_refs": ["rc-1"],
+        "intervention_direction_refs": ["dir-1"],
+        "mechanism_statement": "若用户能在提交前正确理解资格条件，因理解不足导致的退出应减少",
+        "target_metric_refs": ["metric:task_completion_rate"],
+        "expected_direction": "increase",
+        "guardrail_metric_refs": ["metric:error_rate", "metric:help_request_rate"],
+        "required_segments": ["new_enterprise"],
+        "baseline_requirements": ["同口径提交任务历史基线"],
+        "observation_requirements": ["方案覆盖和实际曝光可识别"],
+        "falsification_conditions": ["理解表现改善但任务完成没有改善"],
+        "registration_timing": "prospective",
+        "review_status": "draft",
+        "source_refs": ["rc-1", "dir-1"],
+        "caveats": ["具体方案尚未形成"]
+      }
+    ],
+    "root_cause_lifecycle_patches": [],
+    "historical_similarity_matches": [],
+    "root_cause_pattern_candidates": []
+  },
+  "manual_review_requests": [
+    {
+      "review_id": "review-1",
+      "review_type": "business_rule_review",
+      "suggested_owner": "业务规则负责人",
+      "status": "pending",
+      "blocking_scope": "dir-1",
+      "reason": "需要确认提交资格规则在分析窗口内是否变化",
+      "required_decision": "确认规则版本与适用范围",
+      "source_refs": ["wiki:rule/submit-prerequisite#v2"],
+      "affected_output_refs": ["#/analysis_results/intervention_direction_candidates/0"],
+      "caveats": []
+    }
+  ],
+  "downstream_handoffs": [
+    {
+      "handoff_id": "handoff-blueprint-1",
+      "target_skill": "problem-framing",
+      "handoff_type": "root_cause_for_problem_framing",
+      "handoff_status": "pending_review",
+      "payload_refs": ["#/analysis_results/root_cause_candidates/0", "#/analysis_results/intervention_direction_candidates/0"],
+      "allowed_uses": ["problem_framing"],
+      "forbidden_uses": ["direct_business_valuation", "effect_claim", "final_root_cause"],
+      "required_review_request_ids": ["review-1"],
+      "caveats": ["业务规则复核通过后才可进入方案设计"]
+    },
+    {
+      "handoff_id": "handoff-root-visualization-1",
+      "target_skill": "data-visualization",
+      "handoff_type": "root_cause_candidates_for_visualization",
+      "handoff_status": "ready_with_caveats",
+      "payload_refs": ["#/analysis_results/root_cause_candidates", "#/analysis_results/intervention_direction_candidates"],
+      "allowed_uses": ["visualization"],
+      "forbidden_uses": ["recalculate_analysis", "confirm_root_cause", "create_solution"],
+      "required_review_request_ids": [],
+      "caveats": ["只展示候选机制和干预方向，不得表述为已确认根因"]
+    }
+  ],
+  "quality": {
+    "schema_validated": true,
+    "semantic_gates_passed": true,
+    "self_check_passed": true
+  },
+  "write_safety": {
+    "can_auto_publish": false,
+    "can_write_evidence_store": false,
+    "can_modify_root_cause_state": false,
+    "can_publish_strategy": false,
+    "can_publish_knowledge": false
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "archive_request.schema.json",
+  "title": "Evidence Archive Request 3.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "artifact_version",
+    "project_name",
+    "invocation_context",
+    "analysis_purpose",
+    "requested_analyses",
+    "input_bindings",
+    "requested_deliverables",
+    "publication_policy",
+    "retention_policy",
+    "authorization",
+    "targets"
+  ],
+  "properties": {
+    "artifact_type": {"const": "evidence_archive_request"},
+    "artifact_version": {"const": "3.0.0"},
+    "project_name": {"type": "string"},
+    "invocation_context": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/invocation_context"},
+    "analysis_purpose": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/analysis_purpose"},
+    "requested_analyses": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_analyses"},
+    "input_bindings": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/input_bindings"},
+    "requested_deliverables": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/requested_deliverables"},
+    "publication_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/publication_policy"},
+    "retention_policy": {"$ref": "../../../../shared-workflow/data-analysis/schemas/analysis_request.schema.json#/properties/retention_policy"},
+    "authorization": {"$ref": "#/$defs/authorization"},
+    "review_decisions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "../../../../shared-workflow/data-analysis/schemas/review_decision.schema.json"
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/target"}
+    }
+  },
+  "$defs": {
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "authorization_ref",
+        "authorized_target_refs",
+        "authorized_field_paths",
+        "approved_actions",
+        "review_decision_refs"
+      ],
+      "properties": {
+        "mode": {
+          "enum": ["explicit_user_request", "approved_handoff"]
+        },
+        "authorization_ref": {"type": "string", "minLength": 1},
+        "confirmed_at": {"type": ["string", "null"]},
+        "authorized_target_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "authorized_field_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "approved_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "persist_in_archive",
+              "approve_archive_decision_snapshot"
+            ]
+          }
+        },
+        "review_decision_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+        },
+        "id_field": {"type": ["string", "null"]},
+        "id_value": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["id_field"],
+            "properties": {"id_field": {"type": "string"}}
+          },
+          "then": {
+            "required": ["id_value"],
+            "properties": {"id_value": {"type": "string", "minLength": 1}}
+          }
+        }
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_instance_ref",
+        "source_run_id",
+        "content_digest",
+        "handoff_ref",
+        "patch_ref",
+        "review_decision_refs"
+      ],
+      "properties": {
+        "artifact_id": {"type": ["string", "null"]},
+        "artifact_instance_ref": {
+          "oneOf": [
+            {"$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"},
+            {"type": "null"}
+          ]
+        },
+        "source_run_id": {"type": ["string", "null"]},
+        "content_digest": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "handoff_ref": {"type": ["string", "null"]},
+        "patch_ref": {"type": ["string", "null"]},
+        "review_decision_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_ref",
+        "record_kind",
+        "projection",
+        "logical_object_ref",
+        "source_artifact_id",
+        "source_artifact_instance_ref",
+        "source_artifact_version",
+        "source_run_id",
+        "source_selector",
+        "source_content_digest",
+        "authorized_field_paths",
+        "record_action",
+        "supersedes_ref",
+        "sensitivity",
+        "redaction_state",
+        "allowed_uses",
+        "forbidden_uses",
+        "governance"
+      ],
+      "properties": {
+        "target_ref": {"type": "string", "minLength": 1},
+        "record_kind": {
+          "enum": [
+            "evidence",
+            "context_factor",
+            "root_cause",
+            "outcome",
+            "business_decision_snapshot",
+            "baseline"
+          ]
+        },
+        "projection": {
+          "enum": [
+            "canonical_evidence_item",
+            "governed_context_assessment",
+            "root_cause_minimum",
+            "outcome_minimum",
+            "business_decision_minimum",
+            "shared_baseline_item"
+          ]
+        },
+        "logical_object_ref": {"type": "string", "minLength": 1},
+        "source_artifact_id": {"type": "string", "minLength": 1},
+        "source_artifact_instance_ref": {
+          "$ref": "../../../../shared-workflow/data-analysis/schemas/artifact_instance_ref.schema.json"
+        },
+        "source_artifact_version": {"type": "string", "minLength": 1},
+        "source_run_id": {"type": "string", "minLength": 1},
+        "source_selector": {"$ref": "#/$defs/selector"},
+        "source_content_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "authorized_field_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "record_action": {"enum": ["new", "superseding"]},
+        "supersedes_ref": {"type": ["string", "null"]},
+        "sensitivity": {"enum": ["internal", "confidential", "restricted"]},
+        "redaction_state": {
+          "enum": [
+            "not_required",
+            "upstream_redacted",
+            "archive_safe_projection"
+          ]
+        },
+        "allowed_uses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "governance": {"$ref": "#/$defs/governance"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"record_action": {"const": "new"}}
+          },
+          "then": {
+            "properties": {"supersedes_ref": {"type": "null"}}
+          }
+        },
+        {
+          "if": {
+            "properties": {"record_action": {"const": "superseding"}}
+          },
+          "then": {
+            "properties": {
+              "supersedes_ref": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      ]
+    }
+  }
+}
