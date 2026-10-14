@@ -368,7 +368,7 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
 
 推荐项产物映射：
 - 用户旅程：`spark-output/journey_analysis.md` 或 `spark-output/context/journey-analysis.json`
-- 体验蓝图：`spark-output/experience_blueprint.md` 或 `spark-output/context/experience-blueprint.json`
+- 体验蓝图：`spark-output/experience_blueprint.md`
 
 禁止：
 - 读取推荐项产物正文

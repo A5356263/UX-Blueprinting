@@ -315,7 +315,6 @@ Q-002：
 ### 8.1 输出路径
 
 - `spark-output/requirements_baseline.md`
-- `spark-output/context/requirements-baseline.json`
 
 ### 8.2 生成门禁
 
@@ -802,7 +801,7 @@ PRD Review 只把已确认业务事实改写为可观察结果。
 - 未被产品回复关闭的冲突不得进入基线。
 - Agent 不得用推理补写缺失事实。
 
-“需求初识”只用于建立审查认知，不是需求事实。体验定案按本文件 §10 与 `review_rules.md` 的分类规则写入基线和 Context；原始补充、候选方案与页面方案不写入。
+“需求初识”只用于建立审查认知，不是需求事实。体验定案按本文件 §10 与 `review_rules.md` 的分类规则写入基线；原始补充、候选方案与页面方案不写入。
 
 每条事实写入前依次检查：
 
@@ -847,7 +846,7 @@ PRD Review 只把已确认业务事实改写为可观察结果。
 
 Experience Blueprint 是唯一推荐主链。UXB、Stories 和 Journey Analysis 固定列为蓝图前的可选增强。
 
-Handoff 建议不写入问题单、需求基线或 Context JSON。
+Handoff 建议不写入问题单或需求基线。
 
 ### 10.2 用户可见格式
 

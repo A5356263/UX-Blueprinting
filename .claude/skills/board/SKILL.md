@@ -45,21 +45,17 @@ description: >
 启动后按以下顺序读取：
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界
-2. 读取 `spark-output/context/experience-blueprint.json`
-3. 读取 `spark-output/experience_blueprint.md`
-4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中章节；不得预设目录层级或遍历 raw
+2. 完整读取 `spark-output/experience_blueprint.md`
+3. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中章节；不得预设目录层级或遍历 raw
 
 这是链路消费型 skill，默认承接 `spark-output/` 中的上游产物属于正式工作流。
 
 上游读取硬门禁：
 
-- Blueprint `3.0` JSON 是结构化设计事实的机器面；只按本 Skill 现有视觉语境提取需要，读取项目、关键判断、目标载体、状态和反馈等相关字段。
-- JSON 不包含 ASCII 和完整设计叙述，链路模式仍必须实际完整读取 `experience_blueprint.md`。
-- 不得因为 JSON 字段增多而新增视觉方向判断或改变现有方向生成规则。
+- 从蓝图全文提取本 Skill 所需的项目、关键判断、目标载体、状态和反馈等设计事实；不得改变现有视觉方向判断规则。
 - 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时停止使用冲突字段并报告交接错误；不得静默选择任一侧或自行修复。
-- 只有 JSON 而没有 Markdown 时，不得进入链路模式或据此形成视觉方向。
+- 没有蓝图 Markdown 时，不得进入链路模式或据此形成视觉方向。
 - 蓝图未读完前，不得提炼视觉语境、生成方向方案或写入设计变量。
 
 降级规则：

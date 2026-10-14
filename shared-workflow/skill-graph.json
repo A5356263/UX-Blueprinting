@@ -138,7 +138,7 @@
     },
     {
       "id": "solution-swimlane",
-      "_comment": "只承接正式体验蓝图 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在体验蓝图完成后优先展示本节点；required 仍保证它不会提前就绪。",
+      "_comment": "只承接正式体验蓝图 Markdown，输出单文件 HTML。phase 2.4 仅用于进度预览在体验蓝图完成后优先展示本节点；required 仍保证它不会提前就绪。",
       "name_zh": "业务泳道图",
       "phase": 3,
       "reads": [
@@ -155,7 +155,7 @@
     },
     {
       "id": "page-spec",
-      "_comment": "以 experience-blueprint 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
+      "_comment": "以 experience-blueprint 的正式 Markdown 作为体验设计权威，必须全文读取。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
       "name_zh": "页面规格",
       "phase": 4,
       "reads": [

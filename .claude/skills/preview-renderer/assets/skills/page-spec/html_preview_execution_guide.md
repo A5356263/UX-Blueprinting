@@ -2,12 +2,11 @@
 
 ## 目标
 
-本文件说明 `page-spec` 的页面设计文档如何在 `preview-renderer` 内生成 HTML 预览。`page-spec` 自身只负责正式 Markdown 与 Context JSON 产出。
+本文件说明 `page-spec` 的页面设计文档如何在 `preview-renderer` 内生成 HTML 预览。`page-spec` 自身只负责正式 Markdown 产出。
 
 ## 输入与输出
 
 - 输入 Markdown：`spark-output/page_spec.md`
-- 可选 Context：`spark-output/context/page-spec.json`
 - 输出 HTML：`spark-output/preview/page_spec_preview.html`
 
 ## 结构要求
@@ -27,12 +26,11 @@ node ".claude/skills/preview-renderer/assets/skills/page-spec/generate_preview.j
 显式参数执行：
 
 ```text
-node ".claude/skills/preview-renderer/assets/skills/page-spec/generate_preview.js" "<公共壳>" "<内容模板>" "<Context JSON>" "<正式 Markdown>" "<输出 HTML>"
+node ".claude/skills/preview-renderer/assets/skills/page-spec/generate_preview.js" "<公共壳>" "<内容模板>" "<正式 Markdown>" "<输出 HTML>"
 ```
 
 ## 红线
 
-- Context JSON 缺失不得阻断预览生成，也不得决定正文内容。
-- 不得修改页面设计文档、Context JSON、页面生成范围或主链状态。
+- 不得修改页面设计文档、页面生成范围或主链状态。
 - ASCII 草图必须以代码块形式保留。
 - 生成前检查必需插槽；生成后不得遗留未替换占位符。

@@ -2,12 +2,11 @@
 
 ## 目标
 
-本文件说明 `prd-review` 的需求基线如何在 `preview-renderer` 内生成 HTML 预览。`prd-review` 自身只负责正式 Markdown 与 Context JSON 产出。
+本文件说明 `prd-review` 的需求基线如何在 `preview-renderer` 内生成 HTML 预览。`prd-review` 自身只负责正式 Markdown 产出。
 
 ## 输入与输出
 
 - 输入 Markdown：`spark-output/requirements_baseline.md`
-- 可选 Context：`spark-output/context/requirements-baseline.json`
 - 输出 HTML：`spark-output/preview/requirements_baseline_preview.html`
 
 ## 结构要求
@@ -27,11 +26,10 @@ node ".claude/skills/preview-renderer/assets/skills/prd-review/generate_preview.
 显式参数执行：
 
 ```text
-node ".claude/skills/preview-renderer/assets/skills/prd-review/generate_preview.js" "<公共壳>" "<内容模板>" "<Context JSON>" "<正式 Markdown>" "<输出 HTML>"
+node ".claude/skills/preview-renderer/assets/skills/prd-review/generate_preview.js" "<公共壳>" "<内容模板>" "<正式 Markdown>" "<输出 HTML>"
 ```
 
 ## 红线
 
-- Context JSON 缺失不得阻断预览生成，也不得决定正文内容。
-- 不得修改需求基线、问题单、Context JSON 或主链状态。
+- 不得修改需求基线、问题单或主链状态。
 - 生成前检查必需插槽；生成后不得遗留未替换占位符。

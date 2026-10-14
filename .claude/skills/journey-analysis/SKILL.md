@@ -831,7 +831,7 @@ node {skill_dir}/scripts/validate_context.js {context_json_path}
 输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
 推荐项产物映射：
-- 体验蓝图：`spark-output/experience_blueprint.md` 或 `spark-output/context/experience-blueprint.json`
+- 体验蓝图：`spark-output/experience_blueprint.md`
 
 禁止：
 - 读取推荐项产物正文

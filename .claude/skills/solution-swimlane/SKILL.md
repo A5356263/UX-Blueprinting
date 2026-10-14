@@ -1,7 +1,7 @@
 ---
 name: solution-swimlane
 description: >
-  从正式体验蓝图 Markdown 或可选 Context JSON 中抽取角色、责任、业务动作、系统处理、条件、交接、主次流程、异常、恢复与待确认项，生成确定性的单文件 HTML/SVG 方案协同泳道图。用户要求方案协同图、业务泳道图、跨角色流程主图、需求宣讲主图，或要求将 experience_blueprint.md 转为泳道图时使用。不用于需求分析、用户旅程、页面原型、页面动作清单或建设阶段图。
+  从正式体验蓝图 Markdown 中抽取角色、责任、业务动作、系统处理、条件、交接、主次流程、异常、恢复与待确认项，生成确定性的单文件 HTML/SVG 方案协同泳道图。用户要求方案协同图、业务泳道图、跨角色流程主图、需求宣讲主图，或要求将 experience_blueprint.md 转为泳道图时使用。不用于需求分析、用户旅程、页面原型、页面动作清单或建设阶段图。
 ---
 
 # Solution Swimlane
@@ -14,10 +14,9 @@ description: >
 
 ```text
 spark-output/experience_blueprint.md
-spark-output/context/experience-blueprint.json
 ```
 
-第二个文件可缺失。只写入：
+只写入：
 
 ```text
 spark-output/solution-swimlane/solution_swimlane.html
@@ -63,12 +62,8 @@ spark-output/solution-swimlane/.work/validation.json
 
 ## 1. 选择输入
 
-1. Markdown 存在时，以 Markdown 为唯一权威业务语义来源。
-2. JSON 只补充 Markdown 未表达且不冲突的结构化流程信息。
-3. 同一事实冲突时采用 Markdown，并把冲突写入 `open_questions`。
-4. JSON 的项目名或业务范围与 Markdown 明示内容不一致时，忽略整份 JSON 并报告警告。
-5. 只有 JSON 时，仅当能识别泳道、业务节点和一条完整主流程才继续。
-6. 两个输入均不存在、无法识别泳道或无法形成主流程时停止。
+1. 以 Markdown 为唯一权威业务语义来源。
+2. Markdown 不存在、无法识别泳道或无法形成主流程时停止。
 
 ## 2. 抽取语义
 

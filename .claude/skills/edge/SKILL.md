@@ -53,9 +53,8 @@ description: >
 启动后按以下顺序读取：
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身位置和输入边界
-2. 读取 `spark-output/context/experience-blueprint.json`
-3. 读取 `spark-output/experience_blueprint.md`
-4. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中的反馈、报错、异常、恢复或状态章节；不得预设目录层级或遍历 raw
+2. 完整读取 `spark-output/experience_blueprint.md`
+3. 如需知识补充，从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中的反馈、报错、异常、恢复或状态章节；不得预设目录层级或遍历 raw
 
 - 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出
 - 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集
@@ -65,22 +64,19 @@ description: >
 
 上游读取硬门禁：
 
-- Blueprint `3.0` JSON 是结构化设计事实的机器面；重点消费目标载体相关的 `exceptions`、`states`、`feedbacks`、流程和页面状态事实。
-- JSON 不包含 ASCII 和完整设计叙述，链路模式仍必须实际完整读取 `experience_blueprint.md`。
-- `interaction_overview`、关键判断、旅程消费和上游追踪不用于替代本 Skill 现有状态矩阵分析。
+- 从蓝图全文提取目标载体相关的异常、状态、反馈、流程和页面状态事实。
+- 交互总览、关键判断、旅程消费和上游追踪不用于替代本 Skill 现有状态矩阵分析。
 - 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时停止使用冲突字段并报告交接错误；不得静默选择任一侧或自行修复。
-- 只有 JSON 而没有 Markdown 时，不得进入链路模式或据此补齐状态、异常、恢复和文案。
+- 没有蓝图 Markdown 时，不得进入链路模式或据此补齐状态、异常、恢复和文案。
 - 蓝图未读完前，不得进入状态矩阵分析或生成正式 Edge 产物。
 
 如果存在 `page-spec` 消费需求，`edge` 的输出应被视为状态补丁层，而不是新的主设计源。
 
 降级规则：
 
-- 如果 Blueprint `3.0` JSON 与 Markdown 同时存在，先从 JSON 读取结构化状态、异常和反馈，再以完整 Markdown 补充语境并核对一致性
-- 如果 JSON 缺失但 `experience_blueprint.md` 存在，则从 Markdown 中提取目标页面、主流程和异常段落
-- 如果只有 JSON 或两个文件都缺失，不进入链路模式，转为独立模式并向用户确认目标范围
+- 如果 `experience_blueprint.md` 可读，则从全文提取目标页面、主流程、异常、状态和反馈
+- 如果蓝图 Markdown 缺失，不进入链路模式，转为独立模式并向用户确认目标范围
 - 如果知识库不可用，继续执行，但不要伪造知识消费结果
 
 ### Step 0.3 · 独立模式确认

@@ -9,7 +9,7 @@ const PRODUCTS = [
     label: "需求基线",
     purpose: "审核闭环后的正式需求事实与待定案事项",
     markdown: "spark-output/requirements_baseline.md",
-    context: "spark-output/context/requirements-baseline.json",
+    context: null,
     script: ".claude/skills/preview-renderer/assets/skills/prd-review/generate_preview.js",
     preview: "spark-output/preview/requirements_baseline_preview.html"
   },
@@ -54,7 +54,7 @@ const PRODUCTS = [
     label: "体验蓝图",
     purpose: "把上游结论展开为交互流程、页面和状态方案",
     markdown: "spark-output/experience_blueprint.md",
-    context: "spark-output/context/experience-blueprint.json",
+    context: null,
     script: ".claude/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js",
     preview: "spark-output/preview/experience_blueprint_preview.html"
   },
@@ -63,7 +63,7 @@ const PRODUCTS = [
     label: "页面设计文档",
     purpose: "提取页面实体、结构、状态和页面生成所需事实",
     markdown: "spark-output/page_spec.md",
-    context: "spark-output/context/page-spec.json",
+    context: null,
     script: ".claude/skills/preview-renderer/assets/skills/page-spec/generate_preview.js",
     preview: "spark-output/preview/page_spec_preview.html"
   }
@@ -84,7 +84,7 @@ function escapeHtml(value) {
 
 function stateFor(product, root) {
   const markdownExists = exists(root, product.markdown);
-  const contextExists = exists(root, product.context);
+  const contextExists = product.context ? exists(root, product.context) : false;
   const scriptExists = exists(root, product.script);
   const previewExists = exists(root, product.preview);
   let status = "missing_markdown";
@@ -140,7 +140,7 @@ function renderCard(item) {
       <p class="preview-card-purpose">${escapeHtml(item.purpose)}</p>
       <dl class="preview-card-meta">
         <div><dt>正式 Markdown</dt><dd>${escapeHtml(boolText(item.markdownExists))}</dd></div>
-        <div><dt>Context JSON</dt><dd>${escapeHtml(boolText(item.contextExists))}</dd></div>
+        ${item.context ? `<div><dt>Context JSON</dt><dd>${escapeHtml(boolText(item.contextExists))}</dd></div>` : ""}
         <div><dt>HTML 预览</dt><dd>${escapeHtml(boolText(item.previewExists))}</dd></div>
       </dl>
       ${action}

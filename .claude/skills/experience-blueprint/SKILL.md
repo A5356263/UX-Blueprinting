@@ -10,7 +10,7 @@ description: >
 
 # Experience Blueprint
 
-这个 skill 负责读取正式需求基线和可选 UXB 体验定案，并把它们展开为完整的交互设计方案。默认只输出 Markdown 与 Context JSON；如需预览，交给 `preview-renderer`。
+这个 skill 负责读取正式需求基线和可选 UXB 体验定案，并把它们展开为完整的交互设计方案。默认只输出 Markdown；如需预览，交给 `preview-renderer`。
 
 本次调整保持 `§0-§9` 正文分析骨架，只补足任务内触发、知识消费边界和正式产物收口规则。
 
@@ -22,9 +22,8 @@ description: >
 
 正式产物：
 - `spark-output/experience_blueprint.md`
-- `spark-output/context/experience-blueprint.json`
 
-只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+只允许检查文件是否存在；禁止读取产物正文、禁止根据已有产物改变当前任务类型。
 
 若任一正式产物存在，先输出以下状态提示，然后继续执行本 Skill 的入口规则：
 
@@ -36,7 +35,6 @@ description: >
 
 禁止：
 - 读取产物正文
-- 解析 JSON 内容
 - 根据已有产物改变当前任务类型
 - 根据已有产物执行下游
 - 根据已有产物询问处理方式
@@ -52,7 +50,7 @@ PRD Review 主链固定按以下顺序读取：
 
 1. 按当前 `SKILL.md` 的规则确认本 Skill 自身角色和输入边界
 2. 完整读取 `spark-output/requirements_baseline.md`
-3. 读取 `spark-output/context/requirements-baseline.json`，只接受 `2.1`，核对结构化投影与 Markdown 是否一致；完整读取 `experience_decisions`，核对每项与 Markdown `§10` 一致
+3. 完整读取 Markdown `§10 体验定案`，核对其中已确认约束与待定案事项
 4. 检测到完整 UXB 正式产物时，完整读取 `spark-output/uxb_output.md`
 5. 读取 `spark-output/context/uxb.json`，只接受 `8.0`
 6. 读取 `spark-output/context/stories.json`；有效 `3.0` JSON 存在时作为用户故事正式机器输入
@@ -71,19 +69,17 @@ PRD Review 主链固定按以下顺序读取：
 4. Stories、Journey 和设计知识仍按本 Skill 的现有规则消费。
 5. 执行 Step 0.4 的 `3+1` 检查。
 
-双轨读取原因：
+上游输入职责：
 
 - 需求基线 Markdown 是正式业务语义源
-- 需求基线 JSON 是同一基线的结构化投影
 - UXB Markdown 是可选体验定案语义源
 - UXB `8.0` JSON 是同一体验定案的结构化投影
 
 上游读取硬门禁：
 
-- 在 PRD Review 主链中，正式需求基线 Markdown 与 JSON 必须同时存在并通过一致性核对。
+- 在 PRD Review 主链中，正式需求基线 Markdown 必须存在并完整读取。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- 需求基线 JSON 与 Markdown 冲突时停止，报告交接错误，不得自行选择或重判。
 - UXB JSON 与 Markdown 冲突时停止，报告 UXB 交接错误。禁止静默忽略 UXB 后回到 `baseline-mode`。
 - UXB Markdown 和 JSON 同时不存在时进入 `baseline-mode`。
 - 只有 UXB JSON 或只有 UXB Markdown 时停止，报告 UXB 交接不完整。
@@ -102,12 +98,9 @@ UXB JSON 读取：
 - 不得把 UXB 字段直接当作已经完成的页面、组件、布局、具体交互形式或最终文案。
 - 检测到旧 UXB JSON 时，不转换、不兼容、不从旧字段恢复业务事实。
 
-需求基线 JSON 读取：
+需求基线 Markdown 读取：
 
-- 只接受 Requirements Baseline `2.1`。
-- JSON 用于结构定位，Markdown 仍是正式业务语义源。
-- 检测到旧合同或两者冲突时停止，不转换、不兼容。
-- 完整读取 Markdown `§10 体验定案` 与 JSON `experience_decisions`。`confirmed_constraints` 是必须承接的体验关系；`pending_items` 是本轮需要完成的体验判断。
+- 完整读取正式需求基线；`§10 体验定案` 中已确认的体验约束必须承接，待定案事项须在本轮完成体验判断。
 - 每条已确认体验约束按任务、角色和场景关联到对应流程、异常或承载对象。每条待定案事项使用命中的设计准则和交互模式完成定案。
 - `§10` 缺少任一分组时，按空数组处理；不读取问题单、原始 PRD、历史产物或聊天记录补回体验定案。
 
@@ -139,7 +132,7 @@ UXB JSON 读取：
 
 降级规则：
 
-- 需求基线 Markdown 或 JSON 缺失时，不进入 PRD Review 主链蓝图生成，提示先完成 PRD Review。
+- 需求基线 Markdown 缺失时，不进入 PRD Review 主链蓝图生成，提示先完成 PRD Review。
 - UXB 两份正式产物同时不存在时，进入 `baseline-mode`。
 - UXB 两份正式产物缺少任一项时停止，报告交接不完整。
 - UXB 不是 `8.0` 时停止，不得做兼容转换。
@@ -407,11 +400,10 @@ UXB JSON 读取：
 输出到：
 
 - `spark-output/experience_blueprint.md`
-- `spark-output/context/experience-blueprint.json`
 
 输出规则补充：
 
-- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
+- 如果宿主支持文件系统，先检查并创建 `spark-output/`，再写入产物
 - 开始写入 `§0` 至 `§9` 前，完整读取 `references/output_structure_guide.md`，只将其用于固定正文写法
 
 必须包含以下 9 个正文章节和 1 个附录部分：
@@ -534,7 +526,7 @@ UXB JSON 读取：
 
 标题只写旅程类型、角色和阶段，不写“驱动 §X”。旅程信号用一至两句表达；设计落点按“章节：已确定做法”拆为短列表。
 
-标题中的角色与阶段是 `source_stage` 的唯一 Markdown 来源。缺少全角冒号 `：`、` · ` 分隔符、角色或阶段时，停止 JSON 投影并报告格式缺口；不得从旅程信号或设计落点推断补全。
+标题中的角色与阶段必须明确。缺少全角冒号 `：`、` · ` 分隔符、角色或阶段时，报告格式缺口；不得从旅程信号或设计落点推断补全。
 
 降级：如果 journey-analysis 未执行（`spark-output/journey_analysis.md` 和 `spark-output/context/journey-analysis.json` 均不存在），从正式需求基线、可选 UXB 和有效 Stories 推导简化版旅程，并标注"基于上游结论推导，未经深度旅程分析"。
 
@@ -846,45 +838,10 @@ ASCII 结构草图只允许出现在这一章的“页面结构”部分。
 - `baseline-mode` 和 `uxb-mode` 不执行 `3+1` 完整性拦截
 - 当来源为 `problem-framing` 时，如 `3+1` 未通过，不得输出假完整方案
 
-## ⛔ Context JSON 生成门禁
-
-写入 Context JSON 前，必须完整读取：
-
-`references/context-schema.md`
-
-硬规则：
-
-1. 未完整读取该文件，禁止开始生成 Context JSON。
-2. 禁止凭记忆重建 schema，禁止沿用旧 `1.0` / `2.0` JSON 结构。
-3. JSON 是冻结 Markdown 中结构化设计事实的机器面，不是摘要、索引或第二次推理。
-4. 只能写入 schema 明确允许的字段；不得新增、删除、改名或改变字段类型。
-5. Markdown 必须先完成并通过本 Skill 自检；JSON 阶段只读取这份冻结 Markdown，禁止回读上游、知识库、原始需求或会话补充。
-6. 只做字段归位和显式列表拆分；不得概括、改写、压缩、合并、补全或重新判断业务语义。
-7. `§0-§8` 中会影响流程、页面、交互、状态、反馈、文案或异常的结构化事实必须逐项承接；`§9` 只承接上游承接追踪。
-8. ASCII 页面图本体只保留在 Markdown `§7`；JSON 仅保留对应 surface 的 `markdown_heading` 和非 ASCII 设计事实。
-9. 不得为了填满 JSON 编造信息；单值缺失写 `unknown`，集合缺失写 `[]`。
-10. 写入后逐章核对 Markdown 正式条目数与 JSON 对应对象数；数量不一致时只修正投影遗漏，不得返回正文重新推理。
-11. 禁止增加 ID、anchor 引用图、回接映射、泳道、图节点、关系边、坐标、连线或 coverage 字段。
-12. 写盘后必须运行指定校验脚本。
-13. 校验失败时必须修复并重跑；校验未通过不得进入 Handoff，不得宣告 Skill 完成。
-14. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
-
-## Context JSON 写入
-
-文档生成并自检通过后，严格按 `references/context-schema.md` 的 `4.0` 合同写入：
-
-`spark-output/context/experience-blueprint.json`
-
-写入后必须运行：
-
-```bash
-node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blueprint.json
-```
-
 ## 预览交接
 
 - `experience-blueprint` 自身不再生成 HTML 预览。
-- 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改当前 skill 的正式 Markdown、Context JSON 或知识消费逻辑。
+- 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改当前 skill 的正式 Markdown 或知识消费逻辑。
 - 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
 - 固定提示口径：
 
@@ -902,7 +859,7 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blu
 
 推荐项产物映射：
 - 业务泳道图：`spark-output/solution-swimlane/solution_swimlane.html`
-- 页面规格：`spark-output/page_spec.md` 或 `spark-output/context/page-spec.json`
+- 页面规格：`spark-output/page_spec.md`
 - 旅程埋点与度量需求：`spark-output/journey_metrics/journey_visual.md`、`spark-output/journey_metrics/journey_visual.html`、`spark-output/journey_metrics/journey_tracking_spec.md` 或 `spark-output/journey_metrics/error_tracking_spec.md`
 
 禁止：
@@ -926,7 +883,7 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/experience-blu
 
 “（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+**硬规则：正式产物写入并完成本 Skill 自检后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 设计参考使用规则
 

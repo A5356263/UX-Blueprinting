@@ -91,7 +91,7 @@ description: >
 - 零阻断时直接生成需求基线。
 - 存在阻断时输出问题单并严格停止。
 - Experience Blueprint 推荐和可选增强只属于 Handoff，不写入需求基线。
-- 需求语义判断只由 Agent 完成，脚本只校验 JSON 结构。
+- 需求语义判断只由 Agent 完成，不以脚本代替语义验收。
 
 ## 触发边界
 
@@ -127,7 +127,6 @@ INIT
                     → RESPONSE_REVIEW
                     → BASELINE_GATE
 → BASELINE_GENERATION
-→ CONTEXT_VALIDATION
 → PAGE_FACT_PROJECTION
 → HANDOFF
 ```
@@ -140,13 +139,7 @@ INIT
 - `references/knowledge_usage_guide.md`
 - `references/review_calibration_guide.md`
 - `references/output_structure_guide.md`
-- `references/context-schema.md`
 - `references/page_generation_handoff.md`
-
-结构校验脚本：
-
-- `scripts/validate-context.js`
-- `scripts/test-context.js`
 
 ## 先读什么
 
@@ -275,11 +268,10 @@ INIT
 门禁通过后，按 `references/output_structure_guide.md` 生成：
 
 - `spark-output/requirements_baseline.md`
-- `spark-output/context/requirements-baseline.json`
 
-Markdown 是正式语义源。JSON 只能从冻结 Markdown 投影。
+Markdown 是正式语义源。
 
-问题单存在“你还需要补充什么吗？”的用户补充或体验定案事项时，先按 `references/review_rules.md` 的体验定案分类规则完成转写，再生成需求基线与 JSON 投影。
+问题单存在“你还需要补充什么吗？”的用户补充或体验定案事项时，先按 `references/review_rules.md` 的体验定案分类规则完成转写，再生成需求基线。
 
 正式需求基线只记录被正式来源唯一证明的进入渠道。
 
@@ -298,16 +290,6 @@ Markdown 是正式语义源。JSON 只能从冻结 Markdown 投影。
 
 不得推测现有页面，也不得在基线中设计新页面。
 
-## Context JSON 校验
-
-读取 `references/context-schema.md`，生成 Context JSON 后执行：
-
-```text
-node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/requirements-baseline.json
-```
-
-脚本通过不能替代 Agent 的语义验收。
-
 ## 页面事实后置投影
 
 需求基线冻结后，读取 `references/page_generation_handoff.md`，生成：
@@ -316,12 +298,12 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 
 该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或体验蓝图。
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+**硬规则：正式产物写入并完成本 Skill 自检后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 预览交接
 
 - `prd-review` 自身不生成 HTML 预览。
-- 正式产物完成并通过 Context JSON 校验后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改需求基线、问题单或 Context JSON。
+- 正式产物完成并通过本 Skill 自检后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改需求基线或问题单。
 - 预览是附加动作，不改变主链流转，也不进入下一步推荐。
 - 固定提示口径：
 
@@ -354,7 +336,7 @@ node .claude/skills/prd-review/scripts/validate-context.js spark-output/context/
 你回复对应名称即可。
 ```
 
-下一步建议和可选增强不得写入需求基线及其 Context JSON。
+下一步建议和可选增强不得写入需求基线。
 
 展示后严格停止。
 

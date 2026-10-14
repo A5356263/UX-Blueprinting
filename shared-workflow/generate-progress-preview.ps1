@@ -35,14 +35,14 @@ function Get-ContextPath {
   param([string]$SkillId)
 
   $contextMap = @{
-    "prd-review" = "spark-output/context/requirements-baseline.json"
+    "prd-review" = "spark-output/requirements_baseline.md"
     "uxb" = "spark-output/context/uxb.json"
     "problem-framing" = "spark-output/context/problem-framing.json"
     "stories" = "spark-output/context/stories.json"
     "journey-analysis" = "spark-output/context/journey-analysis.json"
-    "experience-blueprint" = "spark-output/context/experience-blueprint.json"
+    "experience-blueprint" = "spark-output/experience_blueprint.md"
     "solution-swimlane" = "spark-output/solution-swimlane/solution_swimlane.html"
-    "page-spec" = "spark-output/context/page-spec.json"
+    "page-spec" = "spark-output/page_spec.md"
     "edge" = "spark-output/context/edge.json"
     "board" = "spark-output/context/board.json"
     "knowledge-wiki" = "spark-output/context/knowledge-wiki.json"

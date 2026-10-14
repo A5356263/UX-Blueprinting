@@ -157,13 +157,13 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 
 | 产物类型 | Markdown | Context JSON | 渲染方式 | 输出 |
 |---|---|---|---|---|
-| 需求基线 | `spark-output/requirements_baseline.md` | `spark-output/context/requirements-baseline.json` | native-script | `spark-output/preview/requirements_baseline_preview.html` |
+| 需求基线 | `spark-output/requirements_baseline.md` | 无 | native-script | `spark-output/preview/requirements_baseline_preview.html` |
 | 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | native-script | `spark-output/preview/uxb_preview.html` |
 | 问题与业务方案 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
 | 用户故事 | `spark-output/stories.md` | `spark-output/context/stories.json` | native-script | `spark-output/preview/stories_preview.html` |
 | 角色旅程 | `spark-output/journey_analysis.md` | `spark-output/context/journey-analysis.json` | native-script | `spark-output/preview/journey_analysis_preview.html` |
-| 体验蓝图 | `spark-output/experience_blueprint.md` | `spark-output/context/experience-blueprint.json` | native-script | `spark-output/preview/experience_blueprint_preview.html` |
-| 页面设计文档 | `spark-output/page_spec.md` | `spark-output/context/page-spec.json` | native-script | `spark-output/preview/page_spec_preview.html` |
+| 体验蓝图 | `spark-output/experience_blueprint.md` | 无 | native-script | `spark-output/preview/experience_blueprint_preview.html` |
+| 页面设计文档 | `spark-output/page_spec.md` | 无 | native-script | `spark-output/preview/page_spec_preview.html` |
 
 集中资产：
 

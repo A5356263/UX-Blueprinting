@@ -23,7 +23,7 @@
 
 ### 1.1 done 集合
 
-通常扫描 `spark-output/context/` 目录下的正式 Context JSON 判定完成状态。只输出单文件 HTML 的 `solution-swimlane` 是明确例外：以 `spark-output/solution-swimlane/solution_swimlane.html` 存在作为完成信号。
+通常扫描 `spark-output/context/` 目录下的正式 Context JSON 判定完成状态。主链三个节点分别以 `spark-output/requirements_baseline.md`、`spark-output/experience_blueprint.md`、`spark-output/page_spec.md` 判定完成；只输出单文件 HTML 的 `solution-swimlane` 以 `spark-output/solution-swimlane/solution_swimlane.html` 判定完成。
 
 示例：
 
@@ -59,7 +59,7 @@ prd-review
 
 补充说明：
 
-- 除 `solution-swimlane` 的固定 HTML 产物外，`done` 集合只以 `spark-output/context/` 下的 JSON 文件为依据；MD 文件存在与否不影响 `ready` 判定。
+- 主链三个节点以各自正式 Markdown 文件判定完成，`solution-swimlane` 以固定 HTML 文件判定完成；其他节点以 `spark-output/context/` 下的 JSON 文件判定完成。
 - 如果用户在 Skill 不就绪时仍然强制执行，行为由该 Skill 的 `SKILL.md` 降级规则定义，例如回退读取、柔和引导或输出骨架版结果。
 - 本文件只负责“推荐什么”，不负责“拦截什么”。
 
@@ -160,7 +160,7 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 ### 2.3 特殊节点
 
 - `knowledge-wiki`、`preview-renderer` 是公共能力，不参与主链固定 Handoff。
-- `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown 与 JSON，不固定推荐后续 Skill。
+- `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown，不固定推荐后续 Skill。
 - `problem-framing` 在问题驱动路线中同时承担问题定义与方向纠偏，固定下一步为用户故事、用户旅程和可选 UXB。
 
 ### 2.4 进度预览刷新策略
