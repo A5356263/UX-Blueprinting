@@ -6,8 +6,8 @@ __pycache__/
 Thumbs.db
 .playwright-mcp/
 .tmp/
-.claude/temp/
-.claude/worktrees/
+.agents/temp/
+.agents/worktrees/
 docs/
 input/
 test/
@@ -15,3 +15,5 @@ spark-output/
 spec/
 out/
 plugin/
+myguize.md
+V0.2User Manual.md

@@ -13,7 +13,6 @@ function Get-SlashAlias {
     "prd-review" = "/prd-review"
     "uxb" = "/uxb"
     "problem-framing" = "/problem-framing"
-    "stories" = "/stories"
     "journey-analysis" = "/journey-analysis"
     "experience-blueprint" = "/experience-blueprint"
     "solution-swimlane" = "/solution-swimlane"
@@ -38,7 +37,6 @@ function Get-ContextPath {
     "prd-review" = "spark-output/requirements_baseline.md"
     "uxb" = "spark-output/context/uxb.json"
     "problem-framing" = "spark-output/context/problem-framing.json"
-    "stories" = "spark-output/context/stories.json"
     "journey-analysis" = "spark-output/context/journey-analysis.json"
     "experience-blueprint" = "spark-output/experience_blueprint.md"
     "solution-swimlane" = "spark-output/solution-swimlane/solution_swimlane.html"
@@ -65,7 +63,7 @@ function Get-SectionMeta {
       number = "01"
       name_zh = "需求与问题"
       name_en = "Requirements & Problem"
-      note = "审核需求或基于问题形成业务方案"
+      note = "形成需求基线或明确问题与推荐方案"
       order = 1
     }
     "problem-framing" = [pscustomobject]@{
@@ -73,23 +71,15 @@ function Get-SectionMeta {
       number = "01"
       name_zh = "需求与问题"
       name_en = "Requirements & Problem"
-      note = "审核需求或基于问题形成业务方案"
+      note = "形成需求基线或明确问题与推荐方案"
       order = 1
-    }
-    "stories" = [pscustomobject]@{
-      id = "task-journey"
-      number = "02"
-      name_zh = "任务与旅程"
-      name_en = "Task & Journey"
-      note = "拆解用户任务，梳理用户完成过程"
-      order = 2
     }
     "journey-analysis" = [pscustomobject]@{
       id = "task-journey"
       number = "02"
       name_zh = "任务与旅程"
       name_en = "Task & Journey"
-      note = "拆解用户任务，梳理用户完成过程"
+      note = "梳理角色旅程阶段、触点与风险"
       order = 2
     }
     "experience-blueprint" = [pscustomobject]@{

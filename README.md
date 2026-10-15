@@ -25,7 +25,7 @@ uxb -> experience-blueprint
 
 当前最关键的 3 个目录是：
 
-- `.claude/`
+- `.agents/skills/`
   Skill 能力层，存放各个 Skill 的定义与规则。
 - `shared-workflow/`
   协同规则层，定义 Skill 之间怎么衔接、什么时候衔接。

@@ -11,7 +11,6 @@
       "before": "experience-blueprint",
       "skills": [
         "uxb",
-        "stories",
         "journey-analysis"
       ]
     }
@@ -19,7 +18,7 @@
   "skills": [
     {
       "id": "prd-review",
-      "name_zh": "需求审核与基线",
+      "name_zh": "需求分析",
       "phase": 1,
       "reads": [],
       "required": [],
@@ -27,7 +26,7 @@
         "preferred": [
           "experience-blueprint"
         ],
-        "reason": "正式需求基线完成后，进入体验蓝图生成完整交互流程和页面方案；UXB、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
+        "reason": "正式需求基线完成后，进入体验蓝图生成完整交互流程和页面方案；UXB 和 Journey Analysis 可按需作为蓝图前增强。",
         "alternatives": []
       }
     },
@@ -42,16 +41,15 @@
         "preferred": [
           "journey-analysis"
         ],
-        "reason": "需求定案已完成，优先进入用户旅程，把需求结论收拢为阶段、触点和体验断点；用户故事可作为可选任务拆解补充。",
+        "reason": "需求定案已完成，优先进入用户旅程，把需求结论收拢为阶段、触点和体验断点。",
         "alternatives": [
-          "stories",
           "experience-blueprint"
         ]
       }
     },
     {
       "id": "problem-framing",
-      "name_zh": "问题与业务方案",
+      "name_zh": "设计策略生成",
       "phase": 1,
       "standalone_usable": true,
       "standalone_note": "用于已形成的问题描述、问题证据或正式问题结论；输出正式问题、主推荐业务方案和下游承接要求。",
@@ -60,47 +58,23 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "stories",
           "journey-analysis"
         ],
-        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXB 是可选的体验策略增强。",
+        "reason": "设计策略生成已完成，可进入用户旅程梳理角色阶段、触点与风险；UXB 是可选的体验策略增强。",
         "alternatives": [
           "uxb"
         ]
       }
     },
     {
-      "id": "stories",
-      "name_zh": "用户故事",
-      "phase": 2,
-      "standalone_usable": true,
-      "standalone_note": "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
-      "anchor": false,
-      "reads": [
-        "uxb",
-        "problem-framing"
-      ],
-      "required": [],
-      "next_hint": {
-        "preferred": [
-          "journey-analysis"
-        ],
-        "reason": "用户故事已拆出任务单元，进入用户旅程可以把任务放入阶段、触点和流失风险中继续深化。",
-        "alternatives": [
-          "experience-blueprint"
-        ]
-      }
-    },
-    {
       "id": "journey-analysis",
-      "_comment": "当前 Skill 可承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
+      "_comment": "当前 Skill 可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
       "phase": 2,
       "standalone_usable": true,
       "standalone_note": "可独立使用；在 PRD 主链中作为 Experience Blueprint 前的可选旅程增强。",
       "anchor": false,
       "reads": [
-        "stories",
         "uxb",
         "problem-framing"
       ],
@@ -117,12 +91,11 @@
       "id": "experience-blueprint",
       "name_zh": "体验蓝图",
       "phase": 3,
-      "_comment": "PRD 主链承接 prd-review；uxb、stories、journey-analysis 是蓝图前可选增强，problem-framing 保留独立入口。真实输入门禁仍由本 Skill 的 SKILL.md 决定。",
+      "_comment": "PRD 主链承接 prd-review；uxb、journey-analysis 是蓝图前可选增强，problem-framing 保留独立入口。真实输入门禁仍由本 Skill 的 SKILL.md 决定。",
       "reads": [
         "prd-review",
         "uxb",
         "problem-framing",
-        "stories",
         "journey-analysis"
       ],
       "required": [],

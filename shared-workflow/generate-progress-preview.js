@@ -13,7 +13,6 @@ const slashAlias = {
   "prd-review": "/prd-review",
   "uxb": "/uxb",
   "problem-framing": "/problem-framing",
-  "stories": "/stories",
   "journey-analysis": "/journey-analysis",
   "experience-blueprint": "/experience-blueprint",
   "solution-swimlane": "/solution-swimlane",
@@ -28,7 +27,6 @@ const contextPathBySkill = {
   "prd-review": "spark-output/requirements_baseline.md",
   "uxb": "spark-output/context/uxb.json",
   "problem-framing": "spark-output/context/problem-framing.json",
-  "stories": "spark-output/context/stories.json",
   "journey-analysis": "spark-output/context/journey-analysis.json",
   "experience-blueprint": "spark-output/experience_blueprint.md",
   "solution-swimlane": "spark-output/solution-swimlane/solution_swimlane.html",
@@ -40,10 +38,9 @@ const contextPathBySkill = {
 };
 
 const sectionBySkill = {
-  "prd-review": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "审核需求或基于问题形成业务方案", 1),
-  "problem-framing": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "审核需求或基于问题形成业务方案", 1),
-  "stories": section("task-journey", "02", "任务与旅程", "Task & Journey", "拆解用户任务，梳理用户完成过程", 2),
-  "journey-analysis": section("task-journey", "02", "任务与旅程", "Task & Journey", "拆解用户任务，梳理用户完成过程", 2),
+  "prd-review": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "形成需求基线或明确问题与推荐方案", 1),
+  "problem-framing": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "形成需求基线或明确问题与推荐方案", 1),
+  "journey-analysis": section("task-journey", "02", "任务与旅程", "Task & Journey", "梳理角色旅程阶段、触点与风险", 2),
   "uxb": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
   "experience-blueprint": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
   "solution-swimlane": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),

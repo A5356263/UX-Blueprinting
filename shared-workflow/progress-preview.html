@@ -249,7 +249,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
   generated_at: "template",
   main_chain: ["prd-review", "experience-blueprint", "page-spec"],
   enhancements: [
-    { before: "experience-blueprint", skills: ["uxb", "stories", "journey-analysis"] }
+    { before: "experience-blueprint", skills: ["uxb", "journey-analysis"] }
   ],
   sections: [
     {
@@ -259,8 +259,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Requirements & Problem",
       note: "需求读取、问题诊断与方向收敛",
       skills: [
-        { id: "prd-review", name_zh: "需求审核与基线", slash: "/prd-review", status: "current", hint_dep: null, scene_hint: "审核 PRD 并冻结正式需求基线" },
-        { id: "problem-framing", name_zh: "问题与业务方案", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "基于问题形成并确定主推荐业务方案" }
+        { id: "prd-review", name_zh: "需求分析", slash: "/prd-review", status: "current", hint_dep: null, scene_hint: "审核 PRD 并冻结正式需求基线" },
+        { id: "problem-framing", name_zh: "设计策略生成", slash: "/problem-framing", status: "ready", hint_dep: null, scene_hint: "基于问题形成并确定主推荐业务方案" }
       ]
     },
     {
@@ -268,9 +268,8 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "02",
       name_zh: "任务与旅程",
       name_en: "Task & Journey",
-      note: "把需求拆成任务，再看用户一路怎么完成",
+      note: "梳理角色旅程阶段、触点与风险",
       skills: [
-        { id: "stories", name_zh: "用户故事", slash: "/stories", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "体验与设计前可选：补充用户任务拆解", standalone_usable: true },
         { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "体验与设计前可选：补充旅程阶段、断点与风险", standalone_usable: true }
       ]
     },

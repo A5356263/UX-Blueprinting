@@ -46,10 +46,9 @@ prd-review
 `enhancements` 只登记进入目标 Skill 前可选执行的增强项：
 
 - UXB
-- Stories
 - Journey Analysis
 
-三项增强均面向 Experience Blueprint。增强未完成不得改变当前主链节点，也不得阻止 Experience Blueprint 成为下一阶段。
+两项增强均面向 Experience Blueprint。增强未完成不得改变当前主链节点，也不得阻止 Experience Blueprint 成为下一阶段。
 
 其他节点的 `required` 只用于静态可用状态和依赖提示，不参与 PRD 主链当前节点计算。
 
@@ -84,16 +83,15 @@ prd-review -> experience-blueprint -> page-spec
 Experience Blueprint 前可选增加：
 
 ```text
-uxb / stories / journey-analysis -> experience-blueprint
+uxb / journey-analysis -> experience-blueprint
 ```
 
 静态关系说明：
 
 - PRD Review 提供正式需求基线。
 - UXB 提供项目级体验策略与关键体验取舍。
-- Stories 补充用户任务拆解。
 - Journey Analysis 补充旅程阶段、断点与风险。
-- 三项增强均不是进入 Experience Blueprint 的必经项。
+- 两项增强均不是进入 Experience Blueprint 的必经项。
 - 增强完成后，由 Experience Blueprint 按自身输入规则读取；`shared-workflow` 不执行交接。
 - Problem Framing 继续作为无正式 PRD 时的独立入口，其真实下游以自身 `SKILL.md` 为准。
 
@@ -105,7 +103,7 @@ uxb / stories / journey-analysis -> experience-blueprint
 
 硬规则：
 
-- 不得因为缺少 UXB、Stories 或 Journey Analysis 阻止预览进入 Experience Blueprint。
+- 不得因为缺少 UXB 或 Journey Analysis 阻止预览进入 Experience Blueprint。
 - `main_chain` 与 `enhancements` 只服务关系展示和进度预览。
 - `shared-workflow` 不选择、调用、阻断或切换 Skill；入口、降级、补问和跳转由各 Skill 的 `SKILL.md` 执行。
 
@@ -161,7 +159,7 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 
 - `knowledge-wiki`、`preview-renderer` 是公共能力，不参与主链固定 Handoff。
 - `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown，不固定推荐后续 Skill。
-- `problem-framing` 在问题驱动路线中同时承担问题定义与方向纠偏，固定下一步为用户故事、用户旅程和可选 UXB。
+- `problem-framing` 在问题驱动路线中同时承担问题定义与方向纠偏，固定下一步为用户旅程和可选 UXB。
 
 ### 2.4 进度预览刷新策略
 
