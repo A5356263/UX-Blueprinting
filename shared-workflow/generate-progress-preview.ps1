@@ -14,11 +14,7 @@ function Get-SlashAlias {
     "uxb" = "/uxb"
     "problem-framing" = "/problem-framing"
     "journey-analysis" = "/journey-analysis"
-    "experience-blueprint" = "/experience-blueprint"
-    "solution-swimlane" = "/solution-swimlane"
     "page-spec" = "/page-spec"
-    "edge" = "/edge"
-    "board" = "/board"
     "knowledge-wiki" = "/knowledge-wiki"
     "journey-metrics" = "/journey-metrics"
   }
@@ -35,14 +31,10 @@ function Get-ContextPath {
 
   $contextMap = @{
     "prd-review" = "spark-output/requirements_baseline.md"
-    "uxb" = "spark-output/context/uxb.json"
-    "problem-framing" = "spark-output/context/problem-framing.json"
-    "journey-analysis" = "spark-output/context/journey-analysis.json"
-    "experience-blueprint" = "spark-output/experience_blueprint.md"
-    "solution-swimlane" = "spark-output/solution-swimlane/solution_swimlane.html"
+    "uxb" = "spark-output/uxb_output.md"
+    "problem-framing" = "spark-output/problem_framing.md"
+    "journey-analysis" = "spark-output/journey_analysis.md"
     "page-spec" = "spark-output/page_spec.md"
-    "edge" = "spark-output/context/edge.json"
-    "board" = "spark-output/context/board.json"
     "knowledge-wiki" = "spark-output/context/knowledge-wiki.json"
     "journey-metrics" = "spark-output/context/journey-metrics.json"
   }
@@ -82,29 +74,13 @@ function Get-SectionMeta {
       note = "梳理角色旅程阶段、触点与风险"
       order = 2
     }
-    "experience-blueprint" = [pscustomobject]@{
-      id = "experience-design"
-      number = "03"
-      name_zh = "体验与设计"
-      name_en = "Experience & Design"
-      note = "形成体验策略并输出交互方案"
-      order = 3
-    }
-    "solution-swimlane" = [pscustomobject]@{
-      id = "experience-design"
-      number = "03"
-      name_zh = "体验与设计"
-      name_en = "Experience & Design"
-      note = "形成体验策略并输出交互方案"
-      order = 3
-    }
     "page-spec" = [pscustomobject]@{
-      id = "page-build"
-      number = "04"
-      name_zh = "页面生成"
-      name_en = "Page Build"
-      note = "提取设计元素"
-      order = 4
+      id = "experience-design"
+      number = "03"
+      name_zh = "体验与设计"
+      name_en = "Experience & Design"
+      note = "输出交付级页面设计文档"
+      order = 3
     }
     "journey-metrics" = [pscustomobject]@{
       id = "validate"
@@ -133,7 +109,7 @@ function Get-SectionMeta {
     number = "03"
     name_zh = "体验与设计"
     name_en = "Experience & Design"
-    note = "形成体验策略并输出交互方案"
+    note = "形成项目级体验策略"
     order = 3
   }
 }

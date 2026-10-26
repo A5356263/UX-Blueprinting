@@ -1,9 +1,9 @@
 ---
 name: stories
 description: >
-  用户故事 Skill。承接 uxb 或 problem-framing 的正式上游结论，把方向和承接要求拆成可设计、可验证的用户任务单元，输出用户故事文档和结构化 context。
+  用户故事 Skill。承接 uxb 或 problem-framing 的正式上游结论，把方向和承接要求拆成可设计、可验证的用户任务单元，输出用户故事文档。
   触发关键词：用户故事、stories、user story、故事拆解、拆任务、任务切片、把需求拆成故事、把方向拆成故事、设计故事、验收标准。
-  排除：问题尚未成形（用 problem-framing）、体验策略（用 uxb）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 experience-blueprint）。
+  排除：问题尚未成形（用 problem-framing）、体验策略（用 uxb）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 page-spec）。
 ---
 
 # 用户故事
@@ -20,9 +20,8 @@ description: >
 
 正式产物：
 - `spark-output/stories.md`
-- `spark-output/context/stories.json`
 
-只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+只允许检查文件是否存在；禁止读取产物正文、禁止根据已有产物改变当前任务类型。
 
 若任一正式产物存在，先输出以下状态提示，然后继续执行本 Skill 的入口规则：
 
@@ -34,7 +33,6 @@ description: >
 
 禁止：
 - 读取产物正文
-- 解析 JSON 内容
 - 根据已有产物改变当前任务类型
 - 根据已有产物执行下游
 - 根据已有产物询问处理方式
@@ -44,46 +42,40 @@ description: >
 
 启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
 
-1. `spark-output/context/uxb.json`
-2. UXB JSON 缺失、Story 必需字段为 `unknown` 或 `[]`、与 Markdown 明显冲突，或需要审计完整论证时，再读取 `spark-output/uxb_output.md`
-3. `spark-output/context/problem-framing.json`
-4. `spark-output/problem_framing.md`
-5. 用户当前对话中明确提供的方向、角色、任务背景
+1. 完整读取 `spark-output/uxb_output.md`（可用且同源时）。
+2. 完整读取 `spark-output/problem_framing.md`（可用且同源时）。
+3. 用户当前对话中明确提供的方向、角色、任务背景。
 
 上游读取硬门禁：
 
-- 除 UXB `5.0` 外，JSON 只用于快速定位，不是正式语义源；存在对应 Markdown 时必须实际完整读取。
+- Problem Framing 以 Markdown 全文作为正式语义源。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- UXB JSON 与 Markdown 明显冲突时，停止使用冲突字段，回读 Markdown 核对并将 JSON 记为交接错误；不得自行选择或重判。
-- 只有 JSON 而没有对应 Markdown 时，不得据此生成 Story 详情、验收标准或设计触点。
-- 上一条不适用于结构完整的 UXB `5.0` JSON；该 JSON 可单独构成 UXB 正式机器输入。
+- 没有完整正式 Markdown 时，不得仅凭会话回忆生成 Story 详情、验收标准或设计触点。
 - 未读完当前实际必需的正式输入，不得进入正式来源判断或 Story 生成。
 
 ### Step 0.3 · 正式来源判断
 
 读取规则：
 
-- UXB `5.0` JSON 是同一轮定案结论的结构化机器面。重点消费 `roles`、`features`、`business_rules`、`states`、`exceptions`、`constraints`、`open_questions`，不得只基于功能名生成 Story。
-- JSON 字段为 `unknown`、`[]`，且该字段是当前 Story 生成的必需信息时，必须回读 `uxb_output.md`；不得从会话上下文补齐。
-- 如果有效 UXB `5.0` JSON 或 `uxb_output.md` 与 problem-framing 同时存在，优先以 UXB 作为正式上游来源。
-- 如果只有结构完整的 UXB `5.0` JSON，可将其作为正式机器输入；需要完整论证、背景来源或章节语境时再回读 Markdown。
-- 如果只有 `problem_framing.md`，允许正式运行；只有 `problem-framing.json` 不构成完整正式输入。
-- 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在输出中标注 `source_mode = direct-input`。
+- UXB Markdown 是同一轮体验定案的正式语义源。完整读取策略前提、整体方向、必要局部策略、业务触点、承接约束、真实依赖与边界；不得只基于策略标题生成 Story。
+- 如果 `uxb_output.md` 与 problem-framing 同时存在，优先以同源 UXB 作为正式上游来源。
+- 如果有 `problem_framing.md`，允许正式运行。
+- 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在`1. 来源与方向`中标注直接输入。
 - 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
-- P0 Story 的规则、状态、异常和验收条件必须来自有效 UXB `5.0` JSON、UXB Markdown 或其他完整正式来源，不得自行推导。
+- P0 Story 的业务规则、状态和异常必须来自已确认的业务事实来源；UXB 只提供体验方向和约束，不得据此补造业务条件。验收条件须能追溯到相应权威事实或已确认体验决定。
 
 当正式来源为 `problem-framing` 时，先检查其信息分层：
 
-- Problem Framing JSON 只接受 `3.0`；非 `3.0` 且 Markdown 可用时忽略 JSON，不做版本转换。
-- `confirmed_facts` 可直接消费。
-- `recommended_solution` 与 `business_solution_points` 是正式未来方案，可拆为用户任务。
-- `working_assumptions` 可有限消费，但必须显式标记。
-- `open_questions` 不得直接转写为完成标准、状态规则或硬性交互要求。
-- 验收条件和业务规则只来自主推荐方案的明确内容与 `confirmed_facts`，不从工作假设补全。
+- 完整读取 Problem Framing Markdown，并按已确认事实、主推荐方案、工作假设、待确认事项的原有分层消费。
+- 已确认事实可直接消费。
+- `§7 主推荐业务方案`与`§8 业务能力、角色责任、核心过程与关键规则`属于未来方案，可拆为用户任务。
+- 工作假设可有限消费，但必须显式标记。
+- 待确认事项不得直接转写为完成标准、状态规则或硬性交互要求。
+- 验收条件和业务规则只来自主推荐方案的明确内容与已确认事实，不从工作假设补全。
 - 上游明确排除的范围，不得滑入 P0/P1 主线 Story
 - 为体验完整性推导出的辅助能力，必须标为辅助能力或 P1/P2，不得抢主链
-- 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在 `source_basis` 中说明
+- 如果某个 Story 来自下游可选增强，而不是上游明确边界，必须在`来源依据`中说明
 
 ## 角色定义
 
@@ -93,7 +85,7 @@ description: >
 - 判断当前方向是主题、Epic 还是单个 Story
 - 输出 Story 索引
 - 生成每个 Story 的角色、场景、目标、验收标准和设计触点
-- 为 `journey-analysis` 和 `experience-blueprint` 提供任务层输入
+- 为 `journey-analysis` 和 `page-spec` 提供任务层输入
 
 用户故事不负责：
 
@@ -116,8 +108,7 @@ description: >
 - 问题还未成形：用 `problem-framing`。
 - 已有明确 PRD 但尚未做需求定案：用 `uxb`。
 - 需要旅程阶段、情绪、流失风险：用 `journey-analysis`。
-- 需要交互流程、页面设计、状态文案：用 `experience-blueprint`。
-- 需要页面生成规格：用 `page-spec`。
+- 需要交互流程、页面设计、状态文案或页面生成规格：用 `page-spec`。
 
 ## 核心判断规则
 
@@ -148,7 +139,7 @@ description: >
 
 明确本次 Story 来源：
 
-- `uxb`（有效 UXB `5.0` JSON 或 `uxb_output.md` 可用）
+- `uxb`（同源 `uxb_output.md` 可用）
 - `problem-framing`
 - `direct-input`
 
@@ -166,7 +157,7 @@ description: >
 该步骤只在以下条件全部满足时触发：
 
 - 正式来源为 `problem-framing`
-- 有效 UXB `5.0` JSON 与 `uxb_output.md` 均不存在
+- `uxb_output.md` 不存在或不可用
 - 当前输入仍是 `theme` 或 `epic`
 - 主角色、核心任务目标、或本轮明确不做什么 这三类关键信息之一缺失或明显不稳定
 
@@ -270,12 +261,11 @@ Story 索引必须包含：
 输出到：
 
 - `spark-output/stories.md`
-- `spark-output/context/stories.json`
 
 输出规则补充：
 
-- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物。
-- 如果文件写入失败，仍可在对话中输出完整 Markdown，并提示 context JSON 未写入。
+- 如果宿主支持文件系统，先检查并创建 `spark-output/`，再写入产物。
+- 如果文件写入失败，仍可在对话中输出完整 Markdown，并提示正式文件未写入。
 
 Markdown 固定结构：
 
@@ -320,37 +310,11 @@ Markdown 固定结构：
 - ...
 ```
 
-## Context JSON 写入
-
-写入前必须完整读取 `references/context-schema.md`。
-
-硬规则：
-
-1. 未完整读取 schema，禁止生成 Context JSON。
-2. JSON 阶段只以已完成并通过自检的 `stories.md` 为内容来源；禁止回读上游、原始输入、知识库或会话补充、纠正或重判 Markdown。
-3. Context JSON 是同一轮用户故事结论的结构化机器面，不是标题索引、Markdown 全文镜像或第二次 Story 分析；只允许结构化改写和原意不变的简写。
-4. 每个非 `unknown` 业务字符串都必须能直接指回 `stories.md` 的明确表述；禁止新增事实、Story、优先级、完成标准、设计触点、假设或待确认结论。
-5. 只能写入 schema 允许的字段；不得建立 Story ID 引用、章节映射、中间 JSON 或下游专用字段。
-6. Markdown 没有明确内容时，单值写 `unknown`，集合写 `[]`；禁止为了填满字段进行推导。
-7. 生成 JSON 时必须执行 schema 规定的 Story 完整覆盖核对；不得遗漏、重复或新增 Story，不得挑选部分完成标准或设计触点。
-8. 写入后必须运行校验；失败时只修 JSON 并重跑，不得反向修改 Markdown。
-9. schema 文件缺失或无法读取时，停止 JSON 生成并明确报告，禁止临时自创结构。
-
-严格按 `references/context-schema.md` 的 `3.0` 合同写入：
-
-`spark-output/context/stories.json`
-
-运行：
-
-```bash
-node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
-```
-
 ## 预览交接
 
 - `stories` 自身不生成 HTML 预览。
 - 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`。
-- 不得为了预览修改当前 Skill 的正式 Markdown、Context JSON、Story 优先级或验收标准。
+- 不得为了预览修改当前 Skill 的正式 Markdown、Story 优先级或验收标准。
 - 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
 - 固定提示口径：
 
@@ -367,8 +331,8 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
 输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
 
 推荐项产物映射：
-- 用户旅程：`spark-output/journey_analysis.md` 或 `spark-output/context/journey-analysis.json`
-- 体验蓝图：`spark-output/experience_blueprint.md`
+- 用户旅程：`spark-output/journey_analysis.md`
+- 页面设计文档：`spark-output/page_spec.md`
 
 禁止：
 - 读取推荐项产物正文
@@ -383,7 +347,7 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
 ```text
 用户故事已完成。你可以继续：
 1. 用户旅程
-2. 体验蓝图
+2. 页面设计文档
 3. 停在这里
 
 你回复对应名称即可。
@@ -391,7 +355,7 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
 
 “（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+**硬规则：正式 Markdown 写入并自检通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 
@@ -409,9 +373,9 @@ node {skill_dir}/scripts/validate-context.js spark-output/context/stories.json
 
 `stories` 输出任务单元；`journey-analysis` 输出阶段、触点、断点和流失风险。
 
-### 与 experience-blueprint
+### 与 page-spec
 
-`stories` 不写页面结构、流程节点、状态文案或异常方案，这些由 `experience-blueprint` 展开。
+`stories` 不写页面结构、流程节点、状态文案或异常方案，这些由 `page-spec` 展开。
 
 ## 质量标准
 

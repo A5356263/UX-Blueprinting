@@ -9,7 +9,6 @@ const PRODUCTS = [
     label: "需求基线",
     purpose: "审核闭环后的正式需求事实与待定案事项",
     markdown: "spark-output/requirements_baseline.md",
-    context: null,
     script: ".agents/skills/preview-renderer/assets/skills/prd-review/generate_preview.js",
     preview: "spark-output/preview/requirements_baseline_preview.html"
   },
@@ -18,7 +17,6 @@ const PRODUCTS = [
     label: "业务蓝图",
     purpose: "需求定案与业务边界的正式入口",
     markdown: "spark-output/uxb_output.md",
-    context: "spark-output/context/uxb.json",
     script: ".agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js",
     preview: "spark-output/preview/uxb_preview.html"
   },
@@ -27,7 +25,6 @@ const PRODUCTS = [
     label: "设计策略生成",
     purpose: "基于问题形成并确定主推荐业务方案",
     markdown: "spark-output/problem_framing.md",
-    context: "spark-output/context/problem-framing.json",
     script: ".agents/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js",
     preview: "spark-output/preview/problem_framing_preview.html"
   },
@@ -36,7 +33,6 @@ const PRODUCTS = [
     label: "用户故事",
     purpose: "把上游结论转成任务单元与验收口径",
     markdown: "spark-output/stories.md",
-    context: "spark-output/context/stories.json",
     script: ".agents/skills/preview-renderer/assets/skills/stories/generate_preview.js",
     preview: "spark-output/preview/stories_preview.html"
   },
@@ -45,25 +41,14 @@ const PRODUCTS = [
     label: "角色旅程",
     purpose: "展开角色阶段、触点、断点和机会点",
     markdown: "spark-output/journey_analysis.md",
-    context: "spark-output/context/journey-analysis.json",
     script: ".agents/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js",
     preview: "spark-output/preview/journey_analysis_preview.html"
   },
   {
-    id: "experience-blueprint",
-    label: "体验蓝图",
-    purpose: "把上游结论展开为交互流程、页面和状态方案",
-    markdown: "spark-output/experience_blueprint.md",
-    context: null,
-    script: ".agents/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js",
-    preview: "spark-output/preview/experience_blueprint_preview.html"
-  },
-  {
     id: "page-spec",
     label: "页面设计文档",
-    purpose: "提取页面实体、结构、状态和页面生成所需事实",
+    purpose: "输出可供设计检查和页面生成的交付级页面设计文档",
     markdown: "spark-output/page_spec.md",
-    context: null,
     script: ".agents/skills/preview-renderer/assets/skills/page-spec/generate_preview.js",
     preview: "spark-output/preview/page_spec_preview.html"
   }
@@ -84,7 +69,6 @@ function escapeHtml(value) {
 
 function stateFor(product, root) {
   const markdownExists = exists(root, product.markdown);
-  const contextExists = product.context ? exists(root, product.context) : false;
   const scriptExists = exists(root, product.script);
   const previewExists = exists(root, product.preview);
   let status = "missing_markdown";
@@ -96,7 +80,6 @@ function stateFor(product, root) {
   return {
     ...product,
     markdownExists,
-    contextExists,
     scriptExists,
     previewExists,
     canGenerate: markdownExists && scriptExists,
@@ -140,7 +123,6 @@ function renderCard(item) {
       <p class="preview-card-purpose">${escapeHtml(item.purpose)}</p>
       <dl class="preview-card-meta">
         <div><dt>正式 Markdown</dt><dd>${escapeHtml(boolText(item.markdownExists))}</dd></div>
-        ${item.context ? `<div><dt>Context JSON</dt><dd>${escapeHtml(boolText(item.contextExists))}</dd></div>` : ""}
         <div><dt>HTML 预览</dt><dd>${escapeHtml(boolText(item.previewExists))}</dd></div>
       </dl>
       ${action}

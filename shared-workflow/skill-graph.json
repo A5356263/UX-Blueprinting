@@ -3,12 +3,11 @@
   "_comment": "本文档只作为 Skill 静态关系图、进度预览和人工查看的数据源；不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。main_chain、enhancements、reads、required、next_hint 及其他字段只用于静态展示、进度预览和人工参考。",
   "main_chain": [
     "prd-review",
-    "experience-blueprint",
     "page-spec"
   ],
   "enhancements": [
     {
-      "before": "experience-blueprint",
+      "before": "page-spec",
       "skills": [
         "uxb",
         "journey-analysis"
@@ -24,9 +23,9 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "experience-blueprint"
+          "page-spec"
         ],
-        "reason": "正式需求基线完成后，进入体验蓝图生成完整交互流程和页面方案；UXB 和 Journey Analysis 可按需作为蓝图前增强。",
+        "reason": "正式需求基线完成后，可直接生成页面设计文档；UXB 和 Journey Analysis 是可选增强。",
         "alternatives": []
       }
     },
@@ -39,11 +38,11 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "journey-analysis"
+          "page-spec"
         ],
-        "reason": "需求定案已完成，优先进入用户旅程，把需求结论收拢为阶段、触点和体验断点。",
+        "reason": "体验策略经设计师确认后，可由 Page Spec 按自身门禁落实为页面设计文档；用户旅程仍可按需单独开展。",
         "alternatives": [
-          "experience-blueprint"
+          "journey-analysis"
         ]
       }
     },
@@ -72,7 +71,7 @@
       "name_zh": "用户旅程",
       "phase": 2,
       "standalone_usable": true,
-      "standalone_note": "可独立使用；在 PRD 主链中作为 Experience Blueprint 前的可选旅程增强。",
+      "standalone_note": "可独立使用；在 PRD 主链中作为 Page Spec 前的可选旅程增强。",
       "anchor": false,
       "reads": [
         "uxb",
@@ -81,17 +80,17 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "experience-blueprint"
+          "page-spec"
         ],
-        "reason": "旅程分析已就位，进入体验蓝图可以把旅程洞察转化为具体的交互流程和页面设计。",
+        "reason": "旅程分析已就位，可由 Page Spec 按输入规则转化为页面设计文档。",
         "alternatives": []
       }
     },
     {
-      "id": "experience-blueprint",
-      "name_zh": "体验蓝图",
+      "id": "page-spec",
+      "_comment": "交付级页面设计文档可直接承接同一需求的正式基线，也可按自身输入门禁承接用户指定材料；UXB、Stories、Journey、Edge 仅在本轮合法采用时消费。静态图不替代 SKILL.md。",
+      "name_zh": "页面设计文档",
       "phase": 3,
-      "_comment": "PRD 主链承接 prd-review；uxb、journey-analysis 是蓝图前可选增强，problem-framing 保留独立入口。真实输入门禁仍由本 Skill 的 SKILL.md 决定。",
       "reads": [
         "prd-review",
         "uxb",
@@ -100,81 +99,8 @@
       ],
       "required": [],
       "next_hint": {
-        "preferred": [
-          "solution-swimlane",
-          "page-spec",
-          "journey-metrics"
-        ],
-        "reason": "体验蓝图完成后，可继续生成业务泳道图、页面规格或旅程埋点与度量需求。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "solution-swimlane",
-      "_comment": "只承接正式体验蓝图 Markdown，输出单文件 HTML。phase 2.4 仅用于进度预览在体验蓝图完成后优先展示本节点；required 仍保证它不会提前就绪。",
-      "name_zh": "业务泳道图",
-      "phase": 3,
-      "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
-        "preferred": [],
-        "reason": "方案协同图已完成，当前无固定下一步推荐。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "page-spec",
-      "_comment": "以 experience-blueprint 的正式 Markdown 作为体验设计权威，必须全文读取。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
-      "name_zh": "页面规格",
-      "phase": 4,
-      "reads": [
-        "experience-blueprint",
-        "edge"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
         "preferred": [],
         "reason": "页面设计文档已输出，目前 design skill 正在建设中，可让 agent 根据文档直接生成 HTML 原型。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "edge",
-      "name_zh": "异常态",
-      "phase": 3,
-      "preview_hidden": true,
-      "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
-        "preferred": [],
-        "reason": "异常态补充完成后，当前无固定下游推荐；后续由用户显式指定是否进入页面规格、走查或页面生成。",
-        "alternatives": []
-      }
-    },
-    {
-      "id": "board",
-      "name_zh": "视觉情绪板",
-      "phase": 3,
-      "preview_hidden": true,
-      "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
-      "next_hint": {
-        "preferred": [],
-        "reason": "当前链路终点，无下游 Skill。",
         "alternatives": []
       }
     },
@@ -194,17 +120,15 @@
       "id": "journey-metrics",
       "name_zh": "旅程埋点与度量需求",
       "phase": 5,
-      "reads": [
-        "experience-blueprint"
-      ],
-      "required": [
-        "experience-blueprint"
-      ],
+      "reads": [],
+      "required": [],
       "next_hint": {
         "preferred": [],
         "reason": "旅程埋点与度量需求完成后，当前无固定下游推荐。",
         "alternatives": []
-      }
+      },
+      "standalone_usable": true,
+      "_comment": "可按自身 SKILL.md 从用户明确提供的需求材料独立启动；旧蓝图输入仅作历史材料，不参与当前主链静态依赖。"
     }
   ]
 }

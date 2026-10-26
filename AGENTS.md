@@ -65,8 +65,8 @@
 
 ## 能力模块边界规则
 
-1. `.agents/skills/uxb/` 负责需求分析定案。
-2. `.agents/skills/experience-blueprint/` 负责体验蓝图输出。
+1. `.agents/skills/uxb/` 负责体验策略定案。
+2. `.agents/skills/page-spec/` 负责页面方案推导与交付级页面设计文档输出。
 3. `shared-workflow/` 存放跨 Skill 协调文件，包括流转关系、context schema 和交接模板。
 4. `.agents/skills/knowledge-wiki/` 是业务知识的正式维护方，内嵌的 `knowledge/` 是唯一消费源。项目根目录的 `knowledge/` 仅作备份保留。
 5. `input/` 是用户输入层，`spark-output/` 是输出层。输入层只定义存放位置，不代表 Agent 获得自动发现或选择文件的权限。

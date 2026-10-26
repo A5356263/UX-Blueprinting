@@ -23,12 +23,11 @@
 
 ### 1.1 done 集合
 
-通常扫描 `spark-output/context/` 目录下的正式 Context JSON 判定完成状态。主链三个节点分别以 `spark-output/requirements_baseline.md`、`spark-output/experience_blueprint.md`、`spark-output/page_spec.md` 判定完成；只输出单文件 HTML 的 `solution-swimlane` 以 `spark-output/solution-swimlane/solution_swimlane.html` 判定完成。
+主链两个节点分别以 `spark-output/requirements_baseline.md` 和 `spark-output/page_spec.md` 判定完成；其他静态节点按各自登记的正式产物路径判定。
 
 示例：
 
-- 若目录下存在 `uxb.json`，则 `done = { "uxb" }`
-- 若存在 `spark-output/solution-swimlane/solution_swimlane.html`，则 `done` 包含 `"solution-swimlane"`
+- 若目录下存在 UXB 登记的正式产物，则 `done = { "uxb" }`
 - 首次运行时，`done` 为空集合
 
 ### 1.2 主链当前节点
@@ -37,7 +36,6 @@
 
 ```text
 prd-review
-→ experience-blueprint
 → page-spec
 ```
 
@@ -48,7 +46,7 @@ prd-review
 - UXB
 - Journey Analysis
 
-两项增强均面向 Experience Blueprint。增强未完成不得改变当前主链节点，也不得阻止 Experience Blueprint 成为下一阶段。
+两项增强均面向 Page Spec。增强未完成不得改变当前主链节点，也不得阻止 Page Spec 成为下一阶段。
 
 其他节点的 `required` 只用于静态可用状态和依赖提示，不参与 PRD 主链当前节点计算。
 
@@ -58,7 +56,7 @@ prd-review
 
 补充说明：
 
-- 主链三个节点以各自正式 Markdown 文件判定完成，`solution-swimlane` 以固定 HTML 文件判定完成；其他节点以 `spark-output/context/` 下的 JSON 文件判定完成。
+- 主链两个节点以各自正式 Markdown 文件判定完成；其他登记节点以各自的正式产物路径判定完成。
 - 如果用户在 Skill 不就绪时仍然强制执行，行为由该 Skill 的 `SKILL.md` 降级规则定义，例如回退读取、柔和引导或输出骨架版结果。
 - 本文件只负责“推荐什么”，不负责“拦截什么”。
 
@@ -77,13 +75,13 @@ prd-review
 有正式 PRD 的主链固定为：
 
 ```text
-prd-review -> experience-blueprint -> page-spec
+prd-review -> page-spec
 ```
 
-Experience Blueprint 前可选增加：
+Page Spec 前可选增加：
 
 ```text
-uxb / journey-analysis -> experience-blueprint
+uxb / journey-analysis -> page-spec
 ```
 
 静态关系说明：
@@ -91,19 +89,18 @@ uxb / journey-analysis -> experience-blueprint
 - PRD Review 提供正式需求基线。
 - UXB 提供项目级体验策略与关键体验取舍。
 - Journey Analysis 补充旅程阶段、断点与风险。
-- 两项增强均不是进入 Experience Blueprint 的必经项。
-- 增强完成后，由 Experience Blueprint 按自身输入规则读取；`shared-workflow` 不执行交接。
+- 两项增强均不是进入 Page Spec 的必经项。
+- 增强完成后，由 Page Spec 按自身输入规则读取；`shared-workflow` 不执行交接。
 - Problem Framing 继续作为无正式 PRD 时的独立入口，其真实下游以自身 `SKILL.md` 为准。
 
 当前终点节点：
 
-- `solution-swimlane`
 - `page-spec`
 - `journey-metrics`
 
 硬规则：
 
-- 不得因为缺少 UXB 或 Journey Analysis 阻止预览进入 Experience Blueprint。
+- 不得因为缺少 UXB 或 Journey Analysis 阻止预览进入 Page Spec。
 - `main_chain` 与 `enhancements` 只服务关系展示和进度预览。
 - `shared-workflow` 不选择、调用、阻断或切换 Skill；入口、降级、补问和跳转由各 Skill 的 `SKILL.md` 执行。
 
@@ -158,7 +155,6 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 ### 2.3 特殊节点
 
 - `knowledge-wiki`、`preview-renderer` 是公共能力，不参与主链固定 Handoff。
-- `solution-swimlane` 是体验蓝图后的可视化终点，只承接正式体验蓝图 Markdown，不固定推荐后续 Skill。
 - `problem-framing` 在问题驱动路线中同时承担问题定义与方向纠偏，固定下一步为用户旅程和可选 UXB。
 
 ### 2.4 进度预览刷新策略

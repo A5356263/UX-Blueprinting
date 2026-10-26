@@ -14,25 +14,17 @@ const slashAlias = {
   "uxb": "/uxb",
   "problem-framing": "/problem-framing",
   "journey-analysis": "/journey-analysis",
-  "experience-blueprint": "/experience-blueprint",
-  "solution-swimlane": "/solution-swimlane",
   "page-spec": "/page-spec",
-  "edge": "/edge",
-  "board": "/board",
   "knowledge-wiki": "/knowledge-wiki",
   "journey-metrics": "/journey-metrics"
 };
 
 const contextPathBySkill = {
   "prd-review": "spark-output/requirements_baseline.md",
-  "uxb": "spark-output/context/uxb.json",
-  "problem-framing": "spark-output/context/problem-framing.json",
-  "journey-analysis": "spark-output/context/journey-analysis.json",
-  "experience-blueprint": "spark-output/experience_blueprint.md",
-  "solution-swimlane": "spark-output/solution-swimlane/solution_swimlane.html",
+  "uxb": "spark-output/uxb_output.md",
+  "problem-framing": "spark-output/problem_framing.md",
+  "journey-analysis": "spark-output/journey_analysis.md",
   "page-spec": "spark-output/page_spec.md",
-  "edge": "spark-output/context/edge.json",
-  "board": "spark-output/context/board.json",
   "knowledge-wiki": "spark-output/context/knowledge-wiki.json",
   "journey-metrics": "spark-output/context/journey-metrics.json"
 };
@@ -41,10 +33,8 @@ const sectionBySkill = {
   "prd-review": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "形成需求基线或明确问题与推荐方案", 1),
   "problem-framing": section("requirements-problem", "01", "需求与问题", "Requirements & Problem", "形成需求基线或明确问题与推荐方案", 1),
   "journey-analysis": section("task-journey", "02", "任务与旅程", "Task & Journey", "梳理角色旅程阶段、触点与风险", 2),
-  "uxb": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
-  "experience-blueprint": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
-  "solution-swimlane": section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3),
-  "page-spec": section("page-build", "04", "页面生成", "Page Build", "提取设计元素", 4),
+  "uxb": section("experience-design", "03", "体验与设计", "Experience & Design", "形成项目级体验策略", 3),
+  "page-spec": section("experience-design", "03", "体验与设计", "Experience & Design", "输出交付级页面设计文档", 3),
   "journey-metrics": section("validate", "05", "验证", "Validate", "定义关键节点的埋点与度量口径", 5),
   "knowledge-wiki": section("deliver", "06", "沉淀", "Archive", "产物归档、知识沉淀与后续复用", 6)
 };
@@ -118,7 +108,7 @@ function main() {
 
     if (skill.preview_hidden === true) return;
 
-    const sectionMeta = sectionBySkill[skill.id] || section("experience-design", "03", "体验与设计", "Experience & Design", "形成体验策略并输出交互方案", 3);
+    const sectionMeta = sectionBySkill[skill.id] || section("experience-design", "03", "体验与设计", "Experience & Design", "形成项目级体验策略", 3);
     if (!sectionsMap.has(sectionMeta.id)) {
       sectionsMap.set(sectionMeta.id, { ...sectionMeta, skills: [] });
     }

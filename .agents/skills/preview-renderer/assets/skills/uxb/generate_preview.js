@@ -197,20 +197,19 @@ function renderNav(sections) {
 }
 
 function parseArgs(args) {
-  if (args.length === 5) {
-    const [shellPathArg, templatePathArg, contextPathArg, markdownPathArg, outputPathArg] = args;
-    return { shellPathArg, templatePathArg, contextPathArg, markdownPathArg, outputPathArg };
+  if (args.length === 4) {
+    const [shellPathArg, templatePathArg, markdownPathArg, outputPathArg] = args;
+    return { shellPathArg, templatePathArg, markdownPathArg, outputPathArg };
   }
   if (args.length === 0) {
     return {
       shellPathArg: ".agents/skills/preview-renderer/assets/shell/preview_shell.html",
       templatePathArg: ".agents/skills/preview-renderer/assets/skills/uxb/preview_template.html",
-      contextPathArg: "spark-output/context/uxb.json",
       markdownPathArg: "spark-output/uxb_output.md",
       outputPathArg: "spark-output/preview/uxb_preview.html"
     };
   }
-  fail("shell_path content_template_path context_json_path markdown_path output_html_path are required");
+  fail("shell_path content_template_path markdown_path output_html_path are required");
 }
 
 function main() {
@@ -218,7 +217,6 @@ function main() {
   const shellRaw = readFile(path.resolve(process.cwd(), args.shellPathArg), "shell template");
   let templateRaw = readFile(path.resolve(process.cwd(), args.templatePathArg), "content template");
   const markdown = readFile(path.resolve(process.cwd(), args.markdownPathArg), "markdown source");
-  readFile(path.resolve(process.cwd(), args.contextPathArg), "context json", false);
 
   if (hasMojibake(markdown) || hasMojibake(shellRaw) || hasMojibake(templateRaw)) {
     fail("source contains obvious mojibake; stop preview generation");

@@ -1,7 +1,7 @@
 ---
 name: problem-framing
 description: >
-  设计策略生成 Skill。用于接收已经形成的问题描述、问题证据或正式问题结论，明确正式问题，形成并比较业务方案，确定主推荐方案。适用于数据分析、工单分析、体验诊断、用户研究、业务讨论或已有方向被质疑后的问题与方案定义。触发关键词：设计策略生成、问题框定、问题与业务方案、重新定义问题、业务方案、方向纠偏、方向不成立、方案发散、解决方向。排除：正式 PRD 审核用 prd-review；体验策略用 uxb；交互方案用 experience-blueprint。
+  设计策略生成 Skill。用于接收已经形成的问题描述、问题证据或正式问题结论，明确正式问题，形成并比较业务方案，确定主推荐方案。适用于数据分析、工单分析、体验诊断、用户研究、业务讨论或已有方向被质疑后的问题与方案定义。触发关键词：设计策略生成、问题框定、问题与业务方案、重新定义问题、业务方案、方向纠偏、方向不成立、方案发散、解决方向。排除：正式 PRD 审核用 prd-review；体验策略用 uxb；交互方案用 page-spec。
 ---
 
 # 设计策略生成
@@ -15,7 +15,6 @@ description: >
 执行前只检查以下正式产物是否存在：
 
 - `spark-output/problem_framing.md`
-- `spark-output/context/problem-framing.json`
 
 存在时仅提示“检测到本 Skill 已有正式产物（已产出）”，继续按当前用户输入执行。已有产物不改变当前任务类型，也不自动触发下游。
 
@@ -25,15 +24,15 @@ description: >
 
 1. 用户当前提供的问题描述、目标、约束和背景。
 2. 用户明确指定的文件、链接或正式上游产物。
-3. 用户明确要求基于已有产物继续时，读取其 Markdown 正文；JSON 只定位产物类型和正文路径。
+3. 用户明确要求基于已有产物继续时，读取其 Markdown 正文。
 
 原始数据集、批量工单、未整理聊天记录和待诊断界面证据，先由对应上游分析能力形成问题描述、证据结论或正式诊断结论。本 Skill 接收这些结论，不执行统计、聚类、原始材料清洗或界面证据诊断。
 
-Markdown 与 JSON 同时存在时，以 Markdown 为正式语义源。只有 JSON 而缺少对应 Markdown 时，先请用户补充正式语义源。
+没有正式 Markdown 时，先请用户补充正式语义源。
 
 ### Step 0.3 · 输入校准与模式判断
 
-正式 PRD 的审核任务交给 `prd-review`；界面证据诊断任务交给 `interface-audit`；明确要求体验定案时使用 `uxb`；明确要求交互方案时使用 `experience-blueprint`。用户明确要求本 Skill 时，按本 Skill 执行。
+正式 PRD 的审核任务交给 `prd-review`；界面证据诊断任务交给 `interface-audit`；明确要求体验定案时使用 `uxb`；明确要求交互方案时使用 `page-spec`。用户明确要求本 Skill 时，按本 Skill 执行。
 
 选择一个内部模式：
 
@@ -121,7 +120,6 @@ Markdown 与 JSON 同时存在时，以 Markdown 为正式语义源。只有 JSO
 输出到：
 
 - `spark-output/problem_framing.md`
-- `spark-output/context/problem-framing.json`
 
 Markdown 固定结构：
 
@@ -145,23 +143,15 @@ Markdown 固定结构：
 
 先写结论，再写依据。使用短段落、小标题和短列表。方案比较可以使用表格。相同结论只在最相关章节完整表达。
 
-`confirmed_facts` 只记录当前事实和约束。主推荐方案属于未来解决办法，写入 `recommended_solution` 和 `business_solution_points`。工作假设与待确认事项保持不确定状态。
-
-## Context JSON 写入
-
-写入前完整读取 `references/context-schema.md`。JSON 只从完成的 Markdown 投影；校验失败时只修改 JSON。运行：
-
-```bash
-node {skill_dir}/scripts/validate-context.js spark-output/context/problem-framing.json
-```
+已确认事实只记录当前事实和约束。主推荐方案属于未来解决办法，在相应章节说明。工作假设与待确认事项保持不确定状态。
 
 ## 预览交接
 
-正式产物完成后，用户明确确认需要预览时，再交给 `preview-renderer`。预览不改变正式 Markdown、Context、主链流转或 Handoff。
+正式产物完成后，用户明确确认需要预览时，再交给 `preview-renderer`。预览不改变正式 Markdown、主链流转或 Handoff。
 
 ## Handoff · 固定下一步
 
-正式产物写入并校验通过后，运行：
+正式 Markdown 写入并自检通过后，运行：
 
 ```bash
 node shared-workflow/generate-progress-preview.js
@@ -169,7 +159,7 @@ node shared-workflow/generate-progress-preview.js
 
 失败时记录告警并继续 Handoff。只检查以下产物是否存在；存在时在名称后追加“（已产出）”：
 
-- 用户旅程：`spark-output/journey_analysis.md` 或 `spark-output/context/journey-analysis.json`
+- 用户旅程：`spark-output/journey_analysis.md`
 
 固定输出：
 
@@ -191,4 +181,3 @@ node shared-workflow/generate-progress-preview.js
 - 候选方案具有实质业务差异；单一可行方向说明排除依据。
 - 主推荐方案可被下游承接，且没有扩展成完整 PRD 或交互方案。
 - 当前事实、未来方案、工作假设和待确认事项保持分层。
-- JSON 是 Markdown 投影，不补造事实或结论。

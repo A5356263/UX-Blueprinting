@@ -90,14 +90,14 @@ description: >
 - Agent 推理只能发现问题，不能成为需求事实。
 - 零阻断时直接生成需求基线。
 - 存在阻断时输出问题单并严格停止。
-- Experience Blueprint 推荐和可选增强只属于 Handoff，不写入需求基线。
+- Page Spec 推荐和可选增强只属于 Handoff，不写入需求基线。
 - 需求语义判断只由 Agent 完成，不以脚本代替语义验收。
 
 ## 触发边界
 
 用户明确要求审查 PRD、检查需求完整度、梳理需求闭环或调用 PRD Review 时，可以启动本 Skill。
 
-用户明确要求 UXB、体验蓝图、问题框定或其他 Skill 时，不得抢占任务。
+用户明确要求 UXB、页面设计、问题框定或其他 Skill 时，不得抢占任务。
 
 仅提到 PRD、仅出现需求文件路径或工作区存在需求文件，不等于要求执行 PRD Review。
 
@@ -197,7 +197,7 @@ INIT
 - “进入渠道”只描述本期支持从哪个业务位置或场景开始任务。
 - 不得在本阶段决定按钮、弹窗、抽屉、页面布局等交互形式。
 - 核心任务需要用户主动发起、正式来源未说明进入渠道，且不同渠道会改变本期能力范围时，必须形成阻断问题。
-- 仅缺少页面组件形式时不阻断，留给 UXB 或 Experience Blueprint。
+- 仅缺少页面组件形式时不阻断，留给 Page Spec。
 
 每个候选问题生成前必须回查：
 
@@ -296,7 +296,7 @@ Markdown 是正式语义源。
 
 - `spark-output/context/page-generation-handoff.md`
 
-该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或体验蓝图。
+该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或 Page Spec。
 
 **硬规则：正式产物写入并完成本 Skill 自检后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
@@ -315,22 +315,22 @@ Markdown 是正式语义源。
 
 ## Handoff · 下一步建议
 
-需求基线完成后，固定推荐 Experience Blueprint。UXB 和 Journey Analysis 只作为蓝图前的可选增强。
+需求基线完成后，固定推荐 Page Spec。UXB 和 Journey Analysis 只作为 Page Spec 前的可选增强。
 
 按 `references/output_structure_guide.md` 的 Handoff 格式输出：
 
 ```text
 下一步：
 
-1. Experience Blueprint（推荐）
-   将正式需求基线展开为完整的交互流程和页面方案。
+1. Page Spec（推荐）
+   将正式需求基线直接转为交付级页面设计文档。
 
 可选增强：
 
-- UXB：对需要重点讨论的体验方向、设计标准和方案承接要求形成定案
+- UXB：对需要重点讨论的体验方向、业务触点和必要局部策略形成设计师确认的体验定案
 - Journey Analysis：补充旅程阶段、断点与风险
 
-以上增强产物最终仍由 Experience Blueprint 承接。
+以上增强产物仅在本轮明确采用并满足门禁时由 Page Spec 承接。
 
 你回复对应名称即可。
 ```

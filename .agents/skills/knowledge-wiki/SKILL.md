@@ -10,7 +10,7 @@ description: >
 
 # knowledge-wiki
 
-统一承担知识问答、材料整理、知识候选、正式入库和当前状态维护。正式知识只读写本 Skill 内的 `knowledge/`，候选状态只读写 `candidates/`；不进入 `uxb -> experience-blueprint` 主链路，不负责需求定案、体验诊断和方案判断。
+统一承担知识问答、材料整理、知识候选、正式入库和当前状态维护。正式知识只读写本 Skill 内的 `knowledge/`，候选状态只读写 `candidates/`；不进入 `prd-review -> page-spec` 主链路，不负责需求定案、体验诊断和方案判断。
 
 固定原则：
 
@@ -188,4 +188,4 @@ description: >
 
 需要写入时只要求用户回复“确认处理”、“确认覆盖”或必要事实。不要求用户手动选择知识集合、领域、文件、移动文件、刷新 index 或运行校验。
 
-完成当前场景后停止。`knowledge-wiki` 不推进 `uxb -> experience-blueprint` 主链路；超出知识事实范围时交回 UXB。
+完成当前场景后停止。`knowledge-wiki` 不推进 `prd-review -> page-spec` 主链路；超出知识事实范围时交回当前调用方。

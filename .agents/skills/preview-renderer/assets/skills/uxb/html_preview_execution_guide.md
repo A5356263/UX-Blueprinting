@@ -3,12 +3,11 @@
 ## 目标
 
 本文件只说明 `uxb` 的 HTML 预览如何在 `preview-renderer` 内稳定生成。
-`uxb` 自身只负责正式 Markdown 与 Context JSON 产出，不再持有 HTML 预览职责。
+`uxb` 自身只负责正式 Markdown 产出，不持有 HTML 预览职责。
 
 ## 输入
 
 - `spark-output/uxb_output.md`
-- `spark-output/context/uxb.json`（如存在）
 - `.agents/skills/preview-renderer/assets/shell/preview_shell.html`
 - `.agents/skills/preview-renderer/assets/skills/uxb/preview_template.html`
 - `.agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js`
@@ -28,12 +27,11 @@
 
 1. 调用 `.agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js`。
 2. 读取 `uxb_output.md`。
-3. 读取 `uxb.json`（如存在，仅用于元信息，不补业务正文）。
-4. 提取 `业务蓝图` 的正式章节。
-5. 生成左侧章节导航并注入公共壳。
-6. 将章节内容注入业务蓝图内容片段。
-7. 将内容片段注入公共壳。
-8. 输出到 `spark-output/preview/uxb_preview.html`。
+3. 提取正式 Markdown 章节。
+4. 生成左侧章节导航并注入公共壳。
+5. 将章节内容注入业务蓝图内容片段。
+6. 将内容片段注入公共壳。
+7. 输出到 `spark-output/preview/uxb_preview.html`。
 
 ## 脚本入口
 
@@ -46,7 +44,7 @@ node ".agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js"
 显式参数执行：
 
 ```text
-node ".agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js" ".agents/skills/preview-renderer/assets/shell/preview_shell.html" ".agents/skills/preview-renderer/assets/skills/uxb/preview_template.html" "spark-output/context/uxb.json" "spark-output/uxb_output.md" "spark-output/preview/uxb_preview.html"
+node ".agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js" ".agents/skills/preview-renderer/assets/shell/preview_shell.html" ".agents/skills/preview-renderer/assets/skills/uxb/preview_template.html" "spark-output/uxb_output.md" "spark-output/preview/uxb_preview.html"
 ```
 
 ## 红线
@@ -55,4 +53,4 @@ node ".agents/skills/preview-renderer/assets/skills/uxb/generate_preview.js" ".a
 - 不删除正式章节。
 - 不把正文压缩成摘要卡片。
 - 不为预览临时改写 Markdown 标题。
-- 不根据 `uxb.json` 重新生成业务结论。
+- 不根据预览内容重新生成业务结论。

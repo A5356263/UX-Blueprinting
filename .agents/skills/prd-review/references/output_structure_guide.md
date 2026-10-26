@@ -826,7 +826,7 @@ PRD Review 只把已确认业务事实改写为可观察结果。
 - 不复制问题讨论过程。
 - 不保留“建议”“可能”“待确认”等讨论语气。
 - 不写下一步推荐。
-- 不写 UXB 或体验蓝图结论。
+- 不写 UXB 或 Page Spec 的设计结论。
 
 ## 9. 来源追溯
 
@@ -844,7 +844,7 @@ PRD Review 只把已确认业务事实改写为可观察结果。
 
 只有正式需求基线生成后，才给出下一步建议。
 
-Experience Blueprint 是唯一推荐主链。UXB 和 Journey Analysis 固定列为蓝图前的可选增强。
+Page Spec 是唯一推荐主链。UXB 和 Journey Analysis 固定列为 Page Spec 前的可选增强。
 
 Handoff 建议不写入问题单或需求基线。
 
@@ -853,15 +853,15 @@ Handoff 建议不写入问题单或需求基线。
 ```text
 下一步：
 
-1. Experience Blueprint（推荐）
-   将正式需求基线展开为完整的交互流程和页面方案。
+1. Page Spec（推荐）
+   将正式需求基线直接转为交付级页面设计文档。
 
 可选增强：
 
 - UXB：形成粗颗粒度的体验方向与取舍
 - Journey Analysis：补充旅程阶段、断点与风险
 
-以上增强产物最终仍由 Experience Blueprint 承接。
+以上增强产物仅在本轮明确采用并满足门禁时由 Page Spec 承接。
 
 你回复对应名称即可。
 ```

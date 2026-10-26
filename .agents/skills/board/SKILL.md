@@ -20,9 +20,8 @@ description: >
 
 正式产物：
 - `spark-output/board_output.md`
-- `spark-output/context/board.json`
 
-只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+只允许检查文件是否存在；禁止读取产物正文、禁止根据已有产物改变当前任务类型。
 
 若任一正式产物存在，先输出以下状态提示，然后继续执行本 Skill 的入口规则：
 
@@ -34,7 +33,6 @@ description: >
 
 禁止：
 - 读取产物正文
-- 解析 JSON 内容
 - 根据已有产物改变当前任务类型
 - 根据已有产物执行下游
 - 根据已有产物询问处理方式
@@ -138,27 +136,12 @@ Board 不依赖外部情绪映射文件，固定使用以下轻量映射：
 用户选定方案后，输出到：
 
 - `spark-output/board_output.md`
-- `spark-output/context/board.json`
 
 输出规则补充：
 
-- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
+- 如果宿主支持文件系统，先检查并创建 `spark-output/`，再写入产物
 
-`board.json` 至少包含：
-
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `selected_scheme`
-- `style_keywords[]`
-- `color`
-- `typography`
-- `spacing`
-- `radius`
-- `component`
-
-如果用户暂未选定，也可以先输出提案文档，但要明确标注“尚未最终确认方案”，不要把未确认方案写成最终 token。
+如果用户暂未选定，也可以先输出提案文档，但要明确标注“尚未最终确认方案”，不要把未确认方案写成最终设计变量。
 
 ## 输出要求
 
@@ -170,74 +153,7 @@ Markdown 提案至少包含：
 - 推荐方案与推荐理由
 - 待确认项
 
-JSON 要求：
-
-- 只在方案确认后写最终版本
-- 不输出空的设计变量对象
-- 颜色、字体、间距和组件字段要成套出现
-
-## Context JSON 写入
-
-正式产物生成后，按固定结构写入 `spark-output/context/board.json`。
-
-固定结构：
-
-```json
-{
-  "skill": "board",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/board.md",
-  "source_refs": [],
-  "read_sections": [],
-  "selected_scheme": {
-    "scheme_id": "unknown",
-    "scheme_name": "unknown",
-    "selection_reason": "unknown"
-  },
-  "style_keywords": [],
-  "color": {
-    "primary": "unknown",
-    "secondary": "unknown",
-    "background": "unknown",
-    "surface": "unknown",
-    "text": "unknown",
-    "semantic": {}
-  },
-  "typography": {
-    "font_family": "unknown",
-    "scale": [],
-    "weight": []
-  },
-  "spacing": {
-    "base": "unknown",
-    "scale": []
-  },
-  "radius": {
-    "base": "unknown",
-    "scale": []
-  },
-  "component": {
-    "button": {},
-    "card": {},
-    "input": {},
-    "navigation": {},
-    "feedback": {}
-  },
-  "open_questions": []
-}
-```
-
-硬规则：
-
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
-- 不得为了填满 JSON 编造信息。
-- 只写最终选中方案和变量；未确认候选方案不得写成最终方案。
-- `component` 只填当前产物明确给出的组件规则，不补设计系统。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+方案确认后才在正式 Markdown 中写入最终设计变量；颜色、字体、间距和组件信息保持成套表达，不将未确认候选写成最终方案。
 
 ## Handoff · 固定下一步
 
@@ -248,7 +164,7 @@ JSON 要求：
 你可以停在这里。
 ```
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+**硬规则：正式 Markdown 写入并自检通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 

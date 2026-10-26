@@ -96,7 +96,6 @@ description: >
 - 设计策略生成：Markdown 已存在 / HTML 已生成
 - 用户故事：Markdown 已存在 / HTML 未生成
 - 角色旅程：Markdown 已存在 / HTML 已生成
-- 体验蓝图：Markdown 已存在 / HTML 已生成
 - 页面设计文档：Markdown 未检测到 / HTML 未生成
 - 业务蓝图：Markdown 未检测到 / HTML 未生成
 ```
@@ -151,19 +150,16 @@ HTML 预览只是查看产物的附加动作，不会改变主链状态。
 
 不得只凭正文关键词猜测产物类型。
 
-Context JSON 只允许作为目录页状态展示，不得作为是否能生成 HTML 预览的前置条件。
-
 当前支持产物：
 
-| 产物类型 | Markdown | Context JSON | 渲染方式 | 输出 |
-|---|---|---|---|---|
-| 需求基线 | `spark-output/requirements_baseline.md` | 无 | native-script | `spark-output/preview/requirements_baseline_preview.html` |
-| 业务蓝图 | `spark-output/uxb_output.md` | `spark-output/context/uxb.json` | native-script | `spark-output/preview/uxb_preview.html` |
-| 设计策略生成 | `spark-output/problem_framing.md` | `spark-output/context/problem-framing.json` | native-script | `spark-output/preview/problem_framing_preview.html` |
-| 用户故事 | `spark-output/stories.md` | `spark-output/context/stories.json` | native-script | `spark-output/preview/stories_preview.html` |
-| 角色旅程 | `spark-output/journey_analysis.md` | `spark-output/context/journey-analysis.json` | native-script | `spark-output/preview/journey_analysis_preview.html` |
-| 体验蓝图 | `spark-output/experience_blueprint.md` | 无 | native-script | `spark-output/preview/experience_blueprint_preview.html` |
-| 页面设计文档 | `spark-output/page_spec.md` | 无 | native-script | `spark-output/preview/page_spec_preview.html` |
+| 产物类型 | Markdown | 渲染方式 | 输出 |
+|---|---|---|---|
+| 需求基线 | `spark-output/requirements_baseline.md` | native-script | `spark-output/preview/requirements_baseline_preview.html` |
+| 业务蓝图 | `spark-output/uxb_output.md` | native-script | `spark-output/preview/uxb_preview.html` |
+| 设计策略生成 | `spark-output/problem_framing.md` | native-script | `spark-output/preview/problem_framing_preview.html` |
+| 用户故事 | `spark-output/stories.md` | native-script | `spark-output/preview/stories_preview.html` |
+| 角色旅程 | `spark-output/journey_analysis.md` | native-script | `spark-output/preview/journey_analysis_preview.html` |
+| 页面设计文档 | `spark-output/page_spec.md` | native-script | `spark-output/preview/page_spec_preview.html` |
 
 集中资产：
 
@@ -174,7 +170,6 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 | 设计策略生成 | `.agents/skills/preview-renderer/assets/skills/problem-framing/preview_template.html` 与 `.agents/skills/preview-renderer/assets/skills/problem-framing/generate_preview.js` | `.agents/skills/preview-renderer/assets/skills/problem-framing/html_preview_execution_guide.md` |
 | 用户故事 | `.agents/skills/preview-renderer/assets/skills/stories/preview_template.html` 与 `.agents/skills/preview-renderer/assets/skills/stories/generate_preview.js` | `.agents/skills/preview-renderer/assets/skills/stories/html_preview_execution_guide.md` |
 | 角色旅程 | `.agents/skills/preview-renderer/assets/skills/journey-analysis/journey_preview_template.html` 与 `.agents/skills/preview-renderer/assets/skills/journey-analysis/generate_preview.js` | `.agents/skills/preview-renderer/assets/skills/journey-analysis/html_preview_execution_guide.md` |
-| 体验蓝图 | `.agents/skills/preview-renderer/assets/skills/experience-blueprint/preview_template.html` 与 `.agents/skills/preview-renderer/assets/skills/experience-blueprint/generate_preview.js` | `.agents/skills/preview-renderer/assets/skills/experience-blueprint/html_preview_execution_guide.md` |
 | 页面设计文档 | `.agents/skills/preview-renderer/assets/skills/page-spec/preview_template.html` 与 `.agents/skills/preview-renderer/assets/skills/page-spec/generate_preview.js` | `.agents/skills/preview-renderer/assets/skills/page-spec/html_preview_execution_guide.md` |
 
 统一公共壳：
@@ -209,7 +204,7 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 - 公共层负责“像同一套产品”
 - 规则层负责“识别和渲染具体产物”
 - 公共壳不得暴露项目名构建占位字段；项目名只允许进入最终 `<title>` 或具体内容区
-- 目录页固定维护当前支持预览的产物卡片：`prd-review`、`uxb`、`problem-framing`、`stories`、`journey-analysis`、`experience-blueprint`、`page-spec`
+- 目录页固定维护当前支持预览的产物卡片：`prd-review`、`uxb`、`problem-framing`、`stories`、`journey-analysis`、`page-spec`
 - 业务 skill 不维护 `preview/manifest.json`、`render-rule.md`、模板或脚本
 - 不允许为了预览要求业务 skill 反向补充接入配置
 - 预览脚本只允许结构化展示既有 Markdown，不得新增业务结论、改写优先级、补写缺失验收标准或替代正式产物
@@ -219,7 +214,7 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 
 统一预览容器的视觉气质默认参考：
 
-- `preview-renderer/assets/skills/experience-blueprint/preview_template.html`
+- `preview-renderer/assets/skills/page-spec/preview_template.html`
 - 公共壳实际承载文件：`preview-renderer/assets/shell/preview_shell.html`
 
 风格要求：
@@ -276,8 +271,6 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 
 补充规则：
 
-- 缺少 Context JSON 时，不得阻断 HTML 预览生成。
-- 现有 `native-script` 不得把 Context JSON 作为预览生成的必要输入。
 - 模板缺失时，不现场设计新模板，只提示当前产物暂无法生成专属预览。
 - 用户选择未支持的 Markdown 时，只能输出通用降级预览，并明确标注为通用预览。
 
@@ -296,14 +289,13 @@ Context JSON 只允许作为目录页状态展示，不得作为是否能生成 
 - `problem-framing`
 - `stories`
 - `journey-analysis`
-- `experience-blueprint`
 - `page-spec`
 
 接入原则：
 
 - 已有正式 Markdown 的产物，才允许进入专属预览。
 - `problem-framing`、`stories`、`journey-analysis` 走 `native-script`，由集中脚本完成结构化投影。
-- `prd-review`、`uxb`、`experience-blueprint`、`page-spec` 走 `native-script`，由集中脚本读取正式 Markdown 并注入专属内容模板。
+- `prd-review`、`uxb`、`page-spec` 走 `native-script`，由集中脚本读取正式 Markdown 并注入专属内容模板。
 - `xft-design` 当前不属于正式产物投影预览范围，暂不接入。
 
 ## 边界

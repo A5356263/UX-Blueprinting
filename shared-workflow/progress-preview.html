@@ -247,9 +247,9 @@
 <script>
 const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
   generated_at: "template",
-  main_chain: ["prd-review", "experience-blueprint", "page-spec"],
+  main_chain: ["prd-review", "page-spec"],
   enhancements: [
-    { before: "experience-blueprint", skills: ["uxb", "journey-analysis"] }
+    { before: "page-spec", skills: ["uxb", "journey-analysis"] }
   ],
   sections: [
     {
@@ -270,7 +270,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Task & Journey",
       note: "梳理角色旅程阶段、触点与风险",
       skills: [
-        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "体验与设计前可选：补充旅程阶段、断点与风险", standalone_usable: true }
+        { id: "journey-analysis", name_zh: "用户旅程", slash: "/journey-analysis", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "page-spec", scene_hint: "页面设计前可选：补充旅程阶段、断点与风险", standalone_usable: true }
       ]
     },
     {
@@ -278,21 +278,10 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       number: "03",
       name_zh: "体验与设计",
       name_en: "Experience & Design",
-      note: "形成体验策略并输出交互方案",
+      note: "形成体验策略并输出页面设计文档",
       skills: [
-        { id: "uxb", name_zh: "体验策略", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "experience-blueprint", scene_hint: "明确体验方向和关键取舍" },
-        { id: "experience-blueprint", name_zh: "体验蓝图", slash: "/experience-blueprint", status: "idle", hint_dep: "/prd-review", scene_hint: "把正式需求基线展开为完整体验方案" },
-        { id: "solution-swimlane", name_zh: "业务泳道图", slash: "/solution-swimlane", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "把体验方案转为跨角色协同流程" }
-      ]
-    },
-    {
-      id: "page-build",
-      number: "04",
-      name_zh: "页面生成",
-      name_en: "Page Build",
-      note: "整理页面规格",
-      skills: [
-        { id: "page-spec", name_zh: "设计文档", slash: "/page-spec", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "提取设计元素" }
+        { id: "uxb", name_zh: "体验策略", slash: "/uxb", status: "ready", hint_dep: null, is_enhancement: true, enhances_before: "page-spec", scene_hint: "明确体验方向和关键取舍" },
+        { id: "page-spec", name_zh: "页面设计文档", slash: "/page-spec", status: "idle", hint_dep: "/prd-review", scene_hint: "从正式需求基线输出交付级页面设计文档" }
       ]
     },
     {
@@ -302,7 +291,7 @@ const PREVIEW_STATE = window.__PREVIEW_STATE__ || {
       name_en: "Validate",
       note: "定义关键节点的埋点与度量口径",
       skills: [
-        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "idle", hint_dep: "/experience-blueprint", scene_hint: "定义关键节点的埋点与度量口径" }
+        { id: "journey-metrics", name_zh: "旅程埋点与度量需求", slash: "/journey-metrics", status: "ready", hint_dep: null, scene_hint: "按明确材料定义关键节点的埋点与度量口径" }
       ]
     },
     {

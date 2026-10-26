@@ -28,9 +28,8 @@ description: >
 
 正式产物：
 - `spark-output/edge_output.md`
-- `spark-output/context/edge.json`
 
-只允许检查文件是否存在；禁止读取产物正文、禁止解析 JSON 内容、禁止根据已有产物改变当前任务类型。
+只允许检查文件是否存在；禁止读取产物正文、禁止根据已有产物改变当前任务类型。
 
 若任一正式产物存在，先输出以下状态提示，然后继续执行本 Skill 的入口规则：
 
@@ -42,7 +41,6 @@ description: >
 
 禁止：
 - 读取产物正文
-- 解析 JSON 内容
 - 根据已有产物改变当前任务类型
 - 根据已有产物执行下游
 - 根据已有产物询问处理方式
@@ -207,23 +205,10 @@ Edge 不负责：
 输出到：
 
 - `spark-output/edge_output.md`
-- `spark-output/context/edge.json`
 
 输出规则补充：
 
-- 如果宿主支持文件系统，先检查并创建 `spark-output/` 与 `spark-output/context/`，再写入产物
-
-`edge.json` 至少包含：
-
-- `skill`
-- `version`
-- `generated_at`
-- `project_name`
-- `source_mode`
-- `targets[]`
-- `states_matrix[]`
-- `coverage`
-- `critical_missing[]`
+- 如果宿主支持文件系统，先检查并创建 `spark-output/`，再写入产物
 
 写入失败不阻断完成，但必须明确提示。
 
@@ -243,25 +228,11 @@ Markdown 默认不是“逐屏每态全文展开报告”，而是“异常态�
 输出定位要求：
 
 - `edge_output.md` 是补强层结果，不是新的页面主规格
-- `edge.json` 默认供 `page-spec`、`check` 或页面生成阶段按需吸收
+- `edge_output.md` 默认供 `page-spec`、`check` 或页面生成阶段按需吸收
 - 不要求下游完整复写 `edge` 全文，只吸收与目标页面直接相关的状态补丁
 - `edge_output.md` 默认应更像“补丁说明书”，而不是“完整异常态专项设计稿”
 
-JSON 要求：
-
-- `states_matrix[].screen`
-- `states_matrix[].screen_id`
-- `states_matrix[].states[]`
-- `states_matrix[].states[].state_type`
-- `states_matrix[].states[].required`
-- `states_matrix[].states[].severity`
-- `states_matrix[].states[].design_description`
-- `states_matrix[].states[].fallback_behavior`
-- `states_matrix[].states[].visual_hint`
-- `states_matrix[].states[].copy_hint`
-- `states_matrix[].states[].target_section`
-
-`target_section` 只用于标记建议注入位置，可选值为：
+建议注入章节只用于标记补丁落位，可使用：
 
 - `状态表现`
 - `异常恢复`
@@ -291,99 +262,7 @@ Markdown 建议结构：
 - UI / 交互补丁
 - 文案补丁
 - 用户出口 / 恢复路径
-- 建议注入章节（`target_section`）
-
-## Context JSON 写入
-
-正式产物生成后，按固定结构写入 `spark-output/context/edge.json`。
-
-固定结构：
-
-```json
-{
-  "skill": "edge",
-  "version": "1.0",
-  "generated_at": "unknown",
-  "project_name": "unknown",
-  "artifact_md": "spark-output/edge_cases.md",
-  "source_refs": [],
-  "read_sections": [],
-  "source_mode": "unknown",
-  "scope": {
-    "targets": [],
-    "included": [],
-    "excluded": []
-  },
-  "overview_stats": {
-    "targets_count": 0,
-    "states_count": 0,
-    "critical_missing_count": 0,
-    "compressible_count": 0
-  },
-  "targets": [
-    {
-      "screen_id": "unknown",
-      "screen_name": "unknown",
-      "source": "unknown"
-    }
-  ],
-  "states_matrix": [
-    {
-      "screen": "unknown",
-      "screen_id": "unknown",
-      "states": [
-        {
-          "state_type": "unknown",
-          "required": "unknown",
-          "severity": "unknown",
-          "design_description": "unknown",
-          "fallback_behavior": "unknown",
-          "visual_hint": "unknown",
-          "copy_hint": "unknown",
-          "target_section": "unknown"
-        }
-      ]
-    }
-  ],
-  "coverage": {
-    "covered": [],
-    "missing": [],
-    "not_applicable": []
-  },
-  "critical_missing": [
-    {
-      "screen_id": "unknown",
-      "state_type": "unknown",
-      "reason": "unknown",
-      "impact": "unknown",
-      "suggested_fix": "unknown"
-    }
-  ],
-  "compressible_states": [
-    {
-      "state_type": "unknown",
-      "can_be_absorbed_by": "unknown",
-      "reason": "unknown"
-    }
-  ],
-  "open_questions": [
-    {
-      "question": "unknown",
-      "impact": "unknown"
-    }
-  ]
-}
-```
-
-硬规则：
-
-- 字段固定，不得新增、删除或改名。
-- 只填入本 Skill 正式 Markdown 已产出的信息；缺失信息写 `unknown`、空数组，或进入 `open_questions[]`。
-- 不得为了填满 JSON 编造信息。
-- `states_matrix[].states[]` 是核心，不得压缩成统计数。
-- `critical_missing[]` 必须保留影响和建议修复。
-- JSON 不复制 Markdown 全文。
-- 写入失败不阻断完成，但应在输出中提示。
+- 建议注入章节
 
 ## Handoff · 固定下一步
 
@@ -394,7 +273,7 @@ Markdown 建议结构：
 你可以停在这里。
 ```
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+**硬规则：正式 Markdown 写入并自检通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## 边界
 

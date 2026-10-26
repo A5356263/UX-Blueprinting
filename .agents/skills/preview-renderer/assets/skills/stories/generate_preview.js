@@ -64,157 +64,6 @@ function requiredReplace(source, marker, value) {
   return source.replace(marker, value);
 }
 
-function formatValue(value) {
-  if (Array.isArray(value)) return value.map(formatValue).join("\uff1b");
-  if (value && typeof value === "object") {
-    return Object.entries(value).map(([key, item]) => `${key}: ${formatValue(item)}`).join("\uff1b");
-  }
-  return String(value ?? "").trim() || TEXT.missing;
-}
-
-function asList(value) {
-  if (Array.isArray(value)) return value.filter((item) => item !== undefined && item !== null && String(item).trim());
-  if (value && typeof value === "object") return Object.entries(value).map(([key, item]) => `${key}: ${formatValue(item)}`);
-  if (value === undefined || value === null || String(value).trim() === "") return [];
-  return [value];
-}
-
-function renderList(items) {
-  const list = asList(items);
-  if (!list.length) return '<p class="preview-empty">' + TEXT.missing + "</p>";
-  return `<ul>${list.map((item) => `<li>${escapeHtml(formatValue(item))}</li>`).join("")}</ul>`;
-}
-
-function normalizeRole(role) {
-  const roleText = formatValue(role);
-  if (roleText.includes(TEXT.employee)) return TEXT.employee;
-  if (roleText.includes("\u5ba1\u6279") || roleText.includes("\u8d1f\u8d23\u4eba")) return TEXT.approver;
-  if (roleText.includes("\u7ba1\u7406")) return TEXT.admin;
-  if (roleText.includes(TEXT.system)) return TEXT.system;
-  return roleText;
-}
-
-function roleIcon(role) {
-  if (role === TEXT.employee) return "01";
-  if (role === TEXT.approver) return "02";
-  if (role === TEXT.admin) return "03";
-  if (role === TEXT.system) return "04";
-  return "#";
-}
-
-function priorityClass(priority) {
-  return String(priority || "").toUpperCase() === "P0" ? "p0" : "";
-}
-
-function renderStoryCard(story) {
-  const assumptions = asList(story.critical_assumptions || story.critical_assumption);
-  const assumption = assumptions.map(formatValue).join("\uff1b");
-  const risks = story.risks_or_validation || story.risks || story.risk;
-  return `
-    <article class="story-card">
-      <div class="story-card-head">
-        <h3>${escapeHtml(story.id || "Story")} · ${escapeHtml(story.title || TEXT.untitledStory)}</h3>
-      </div>
-      <div class="story-meta">
-        <span class="story-pill ${priorityClass(story.priority)}">${escapeHtml(story.priority || TEXT.priorityMissing)}</span>
-        <span class="story-pill">${escapeHtml(story.granularity || story.size || story.type || "Story")}</span>
-        ${assumption ? `<span class="story-pill assumption">${TEXT.assumption}</span>` : ""}
-      </div>
-      <p><strong>${TEXT.role}\uff1a</strong>${escapeHtml(story.persona || story.role || TEXT.missing)}</p>
-      <p><strong>${TEXT.goal}\uff1a</strong>${escapeHtml(story.goal || TEXT.missing)}</p>
-      <p><strong>${TEXT.scenario}\uff1a</strong>${escapeHtml(story.scenario || TEXT.missing)}</p>
-      <div class="story-card-section">
-        <h4>${TEXT.userTask}</h4>
-        <p>${escapeHtml(story.story_text || story.user_story || TEXT.missing)}</p>
-      </div>
-      <div class="story-card-section">
-        <h4>${TEXT.acceptance}</h4>
-        ${renderList(story.acceptance_criteria)}
-      </div>
-      <div class="story-card-section">
-        <h4>${TEXT.touchpoints}</h4>
-        ${renderList(story.design_touchpoints)}
-      </div>
-      <div class="story-card-section">
-        <h4>${TEXT.sourceRisk}</h4>
-        <p><strong>${TEXT.sourceBasis}\uff1a</strong>${escapeHtml(formatValue(story.source_basis || TEXT.missing))}</p>
-        <p><strong>${TEXT.risk}\uff1a</strong>${escapeHtml(formatValue(risks || TEXT.missing))}</p>
-        ${assumption ? `<p><strong>${TEXT.assumption}\uff1a</strong>${escapeHtml(assumption)}</p>` : ""}
-      </div>
-    </article>
-  `;
-}
-
-function storyArray(data) {
-  if (Array.isArray(data.stories)) return data.stories;
-  if (Array.isArray(data.user_stories)) return data.user_stories;
-  if (Array.isArray(data.story_map)) return data.story_map;
-  return [];
-}
-
-function buildContent(data) {
-  const stories = storyArray(data);
-  const groups = new Map();
-  for (const story of stories) {
-    const role = normalizeRole(story.persona || story.role);
-    if (!groups.has(role)) groups.set(role, []);
-    groups.get(role).push(story);
-  }
-
-  const p0Count = stories.filter((story) => String(story.priority || "").toUpperCase() === "P0").length;
-  const assumptionCount = stories.filter((story) => asList(story.critical_assumptions || story.critical_assumption).length).length;
-  const nav = [{ id: "stories-overview", title: TEXT.overview, level: 1 }];
-
-  let html = `
-    <h1 class="preview-document-title">${TEXT.product}\uff1a${escapeHtml(data.project_name || TEXT.untitledProject)}</h1>
-    <section class="preview-section-block" id="stories-overview">
-      <h2 class="preview-section-heading">${TEXT.overview}</h2>
-      <div class="story-summary">
-        <div class="story-summary-card"><span>${TEXT.source}</span><strong>${escapeHtml(data.source_mode || data.source || TEXT.missing)}</strong></div>
-        <div class="story-summary-card"><span>${TEXT.storyCount}</span><strong>${stories.length}</strong></div>
-        <div class="story-summary-card"><span>${TEXT.p0}</span><strong>${p0Count}</strong></div>
-        <div class="story-summary-card"><span>${TEXT.assumption}</span><strong>${assumptionCount}</strong></div>
-      </div>
-      <p>${escapeHtml(data.direction_summary || data.direction || data.summary || TEXT.summaryMissing)}</p>
-    </section>
-  `;
-
-  for (const [role, roleStories] of groups.entries()) {
-    const id = `stories-role-${nav.length}`;
-    nav.push({ id, title: role, level: 1 });
-    html += `
-      <section class="preview-section-block story-role-group" id="${id}">
-        <h2 class="story-role-title"><span class="story-role-icon">${escapeHtml(roleIcon(role))}</span>${escapeHtml(role)}</h2>
-        <div class="story-grid">${roleStories.map(renderStoryCard).join("")}</div>
-      </section>
-    `;
-  }
-
-  const p0Stories = stories
-    .filter((story) => String(story.priority || "").toUpperCase() === "P0")
-    .map((story) => `${story.id || "Story"} ${story.title || ""}`.trim());
-  const auxiliaryStories = stories
-    .filter((story) => String(story.priority || "").toUpperCase() !== "P0")
-    .map((story) => `${story.id || "Story"} ${story.title || ""}`.trim());
-  const assumptions = stories
-    .filter((story) => asList(story.critical_assumptions || story.critical_assumption).length)
-    .map((story) => `${story.id || "Story"}\uff1a${asList(story.critical_assumptions || story.critical_assumption).map(formatValue).join("\uff1b")}`);
-
-  nav.push({ id: "stories-lists", title: TEXT.mainAndAssumption, level: 1 });
-  html += `
-    <section class="preview-section-block" id="stories-lists">
-      <h2 class="preview-section-heading">${TEXT.mainAndAssumption}</h2>
-      <div class="preview-section-body">
-        <h3>${TEXT.p0List}</h3>${renderList(p0Stories)}
-        <h3>${TEXT.auxiliaryList}</h3>${renderList(auxiliaryStories)}
-        <h3>${TEXT.assumptionList}</h3>${renderList(assumptions)}
-      </div>
-    </section>
-  `;
-
-  return { html, nav };
-}
-
 function buildMarkdownFallback(markdown) {
   const sections = markdownRenderer.markdownToSections(markdown, {
     prefix: "stories-markdown-section",
@@ -227,31 +76,22 @@ function buildMarkdownFallback(markdown) {
 }
 
 function main() {
-  const [shellArg, templateArg, contextArg, markdownArg, outputArg] = process.argv.slice(2);
-  if (!shellArg || !templateArg || !contextArg || !markdownArg || !outputArg) {
-    fail("shell_path content_template_path context_json_path markdown_path output_html_path are required");
+  const [shellArg, templateArg, markdownArg, outputArg] = process.argv.slice(2);
+  if (!shellArg || !templateArg || !markdownArg || !outputArg) {
+    fail("shell_path content_template_path markdown_path output_html_path are required");
   }
 
   const shellRaw = readFile(path.resolve(process.cwd(), shellArg), "shell template");
   const templateRaw = readFile(path.resolve(process.cwd(), templateArg), "content template");
   const markdown = readFile(path.resolve(process.cwd(), markdownArg), "markdown");
 
-  let data = null;
-  try {
-    const contextRaw = readFile(path.resolve(process.cwd(), contextArg), "context json", false);
-    if (contextRaw.trim()) data = JSON.parse(contextRaw);
-  } catch (_) {
-    data = null;
-  }
-
-  const hasDetailedStories = Boolean(data && storyArray(data).length);
-  const rendered = hasDetailedStories ? buildContent(data) : buildMarkdownFallback(markdown);
+  const rendered = buildMarkdownFallback(markdown);
   const contentHtml = requiredReplace(templateRaw, "<!-- STORIES_CONTENT -->", rendered.html);
   const sidebarNav = rendered.nav.map((item) => `<a class="preview-nav-item level-${item.level}" href="#${item.id}" data-skill="stories">${escapeHtml(item.title)}</a>`).join("\n");
   const bootstrapData = JSON.stringify({ activeSkill: "stories", skills: ["stories"] }, null, 2);
 
   let html = shellRaw;
-  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml((data && data.project_name) || TEXT.untitledProject)}</title>`);
+  html = html.replace("<title>\u7edf\u4e00\u9884\u89c8</title>", `<title>${TEXT.previewTitle} - ${escapeHtml(TEXT.untitledProject)}</title>`);
   html = requiredReplace(html, "<!-- PREVIEW_SIDEBAR_NAV -->", sidebarNav);
   html = requiredReplace(html, "<!-- PREVIEW_CONTENT -->", contentHtml);
   html = requiredReplace(html, "<!-- PREVIEW_BOOTSTRAP_DATA -->", bootstrapData);
