@@ -1,6 +1,6 @@
 {
   "name": "dsh-ux-blueprinting",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "在 DeepSeek Harness 中运行设计任务、记录确认并交接产物。",
   "type": "module",
   "engines": { "dsh": ">=0.2.2-rc.1 <0.3.0" },

@@ -26,11 +26,16 @@ window.__ModuleLoader__.load({
       emptyArtifacts: 'No artifact has been registered yet.',
       preview: 'Preview',
       startPrefix: 'Start · ',
-      state: {
-        ready: 'Ready', running: 'Running', waiting: 'Waiting for product replies',
-        cancelling: 'Cancelling', cancelled: 'Cancelled', failed: 'Failed', interrupted: 'Interrupted',
-      },
-      command: { reply: 'Submit replies', cancel: 'Cancel run', retry: 'Retry this stage' },
+      'state.ready': 'Ready',
+      'state.running': 'Running',
+      'state.waiting': 'Waiting for product replies',
+      'state.cancelling': 'Cancelling',
+      'state.cancelled': 'Cancelled',
+      'state.failed': 'Failed',
+      'state.interrupted': 'Interrupted',
+      'command.reply': 'Submit replies',
+      'command.cancel': 'Cancel run',
+      'command.retry': 'Retry this stage',
     }
 
     const zh = {
@@ -53,11 +58,16 @@ window.__ModuleLoader__.load({
       emptyArtifacts: '当前还没有登记产物。',
       preview: '预览',
       startPrefix: '开始 · ',
-      state: {
-        ready: '就绪', running: '执行中', waiting: '待产品确认',
-        cancelling: '正在取消', cancelled: '已取消', failed: '执行失败', interrupted: '执行中断',
-      },
-      command: { reply: '提交回复', cancel: '取消执行', retry: '重试本阶段' },
+      'state.ready': '就绪',
+      'state.running': '执行中',
+      'state.waiting': '待产品确认',
+      'state.cancelling': '正在取消',
+      'state.cancelled': '已取消',
+      'state.failed': '执行失败',
+      'state.interrupted': '执行中断',
+      'command.reply': '提交回复',
+      'command.cancel': '取消执行',
+      'command.retry': '重试本阶段',
     }
 
     const ui = {

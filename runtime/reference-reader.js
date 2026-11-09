@@ -1,4 +1,4 @@
-import { readFileSync, realpathSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import { isAbsolute, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -13,7 +13,10 @@ const inside = (dir, file) => {
 }
 
 export function apply(ctx) {
-  const roots = allowed.map(dir => realpathSync(resolve(root, dir)))
+  const roots = allowed
+    .map(dir => resolve(root, dir))
+    .filter(dir => existsSync(dir))
+    .map(dir => realpathSync(dir))
   ctx.tools.register({
     name: 'read_design_reference',
     description: '读取插件内的专业参考资料。使用 .agents/skills/ 内的相对路径，可用 offset 继续阅读。',

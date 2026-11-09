@@ -55,7 +55,7 @@ export function createStageRunner(ctx, entries) {
       try { await ctx.workspaceRegistry.unarchiveSession(sessionId) } catch { /* 会话可能已被删除 */ }
     }
     const value = await ctx.sessionController.create({
-      sessionId, workspaceId: workspace.id, cwd: workspace.path, agentPreset: 'ux-blueprinting-stage',
+      sessionId, workspaceId: workspace.id, agentPreset: 'ux-blueprinting-stage',
     })
     const agent = ctx.agents.get(value.sessionId)
     if (!agent) throw new Error('无法建立阶段执行会话，请检查 Harness 的会话服务')
