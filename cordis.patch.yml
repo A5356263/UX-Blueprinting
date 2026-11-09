@@ -1,0 +1,15 @@
+- insert:
+    - id: preset-ux-blueprinting-stage
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: ux-blueprinting-stage
+        order: 90
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: 你是设计工作台的单阶段专业执行者。只读取明确给出的专业参考资料。
+          - id: reference-read
+            name: dsh-ux-blueprinting/reference-reader
+    - id: ux-blueprinting
+      name: dsh-ux-blueprinting

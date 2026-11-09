@@ -1,0 +1,46 @@
+{
+  "name": "dsh-ux-blueprinting",
+  "version": "0.1.0",
+  "description": "在 DeepSeek Harness 中运行设计任务、记录确认并交接产物。",
+  "type": "module",
+  "engines": { "dsh": "0.2.2-rc.1" },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./reference-reader": "./runtime/reference-reader.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "skills-provider.js",
+    "runtime/state.js",
+    "runtime/artifacts.js",
+    "runtime/workbench.js",
+    "runtime/runner.js",
+    "runtime/reference-reader.js",
+    "cordis.patch.yml",
+    ".agents/skills/board/",
+    ".agents/skills/edge/",
+    ".agents/skills/journey-analysis/",
+    ".agents/skills/journey-metrics/",
+    ".agents/skills/knowledge-wiki/",
+    ".agents/skills/page-spec/",
+    ".agents/skills/prd-review/",
+    ".agents/skills/preview-renderer/",
+    ".agents/skills/problem-framing/",
+    ".agents/skills/solution-swimlane/",
+    ".agents/skills/stories/",
+    ".agents/skills/uxb/",
+    "!.agents/skills/**/tests/**",
+    "!.agents/skills/**/__pycache__/**",
+    "!.agents/skills/**/*.pyc",
+    "shared-workflow/skill-graph.json",
+    "shared-workflow/generate-progress-preview.js",
+    "shared-workflow/progress-preview.html"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": { "platform": "web", "inject": [] }
+  }
+}

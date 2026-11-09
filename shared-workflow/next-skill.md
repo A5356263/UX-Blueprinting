@@ -164,7 +164,6 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 执行规则：
 
 - 如需要刷新进度面板，优先执行跨平台入口：`node shared-workflow/generate-progress-preview.js`。
-- Windows 环境也可使用 PowerShell 兼容入口：`shared-workflow/generate-progress-preview.ps1`。
 - 如果当前环境不支持刷新脚本、脚本缺失或执行失败，直接跳过，不得阻断当前 Skill 完成。
 - 不直接修改 `spark-output/progress-preview.html`；需要刷新时通过生成器生成。
 

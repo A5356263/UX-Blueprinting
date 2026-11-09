@@ -12,70 +12,9 @@ description: >
 
 这个 Skill 只负责审查 PRD、复核产品回复，并生成正式需求基线。
 
-## Step 0 · 启动与目标绑定
+## 专业输入
 
-### Step 0.1 · 固定启动提示
-
-每次新启动本 Skill，先固定输出：
-
-```text
-我是一个梳理需求完整度的 Skill。
-- 结合 PRD 和相关业务知识，检查角色、任务、规则、状态、异常与业务闭环。
-- 输出需要与产品确认的问题。最后输出完善的PRD。
-```
-
-这是固定的能力说明，不是要求用户输入的触发口令。
-
-本 Skill 已进入 `WAIT_TARGET` 后，用户在同一任务中提供具体文件路径、附件或需求正文，视为当前流程继续，不重复输出固定启动提示。
-
-本 Skill 已进入 `WAIT_PRODUCT_RESPONSES` 后，用户在同一任务中直接回复问题编号，视为当前流程继续，不重复输出固定启动提示。
-
-### Step 0.2 · 目标绑定门禁
-
-只有以下任一输入可以绑定本轮审查目标：
-
-- 用户明确提供的具体文件路径。
-- 用户本轮上传的附件。
-- 用户本轮直接粘贴的需求正文。
-
-未绑定目标时，固定输出并停止：
-
-```text
-请提供需要审查的 PRD 文件路径、附件或需求正文。
-```
-
-目标未绑定时禁止：
-
-- 扫描或枚举 `input/`。
-- 搜索工作区中的 PRD。
-- 列出可选项目。
-- 按文件名、修改时间或版本号选择文件。
-- 读取历史对话中的文件路径。
-- 读取旧问题单、需求基线或其他产物推测目标。
-- 因目录中只有一个文件而自动选择。
-
-用户只提供目录时：
-
-- 只有用户同时明确要求查看该目录，才允许列出目录内容。
-- 目录包含多个文件时，等待用户指定具体文件。
-- 禁止自行选择最新版、名称最相近文件或修改时间最新文件。
-
-目标绑定成功后，输出：
-
-```text
-审查目标：{用户明确提供的文件路径、附件名或正文标识}
-```
-
-随后才允许判断运行模式。
-
-### Step 0.3 · 运行模式
-
-只根据本轮用户明确输入判断运行模式：
-
-- `initial-review`：读取本轮 PRD 与相关正式知识。
-- `response-finalization`：重新读取原始 PRD、相关正式知识、原问题单和本轮产品回复。
-
-不得根据旧产物或历史聊天自动切换模式。
+工作台提供本轮已绑定的 PRD；复核时一并提供原问题及用户的逐项回复。未提供的工作区文件和历史产物不属于本轮材料。
 
 ## 角色定义
 
@@ -90,7 +29,7 @@ description: >
 - Agent 推理只能发现问题，不能成为需求事实。
 - 零阻断时直接生成需求基线。
 - 存在阻断时输出问题单并严格停止。
-- Page Spec 推荐和可选增强只属于 Handoff，不写入需求基线。
+- 正式基线只记录需求事实。
 - 需求语义判断只由 Agent 完成，不以脚本代替语义验收。
 
 ## 触发边界
@@ -106,30 +45,6 @@ description: >
 ## 项目名确定
 
 优先使用用户明确提供的项目名。没有项目名时，使用 PRD 标题或文件名，不得自行创造业务名称。
-
-## 固定状态顺序
-
-```text
-INIT
-→ ACTIVATION_PROMPT
-→ TARGET_BINDING
-   ├─ 未提供明确目标：WAIT_TARGET
-   │                  └─ 用户提供明确目标：INPUT_READY
-   └─ 已提供明确目标：INPUT_READY
-→ KNOWLEDGE_COVERAGE
-→ SEMANTIC_MODELING
-→ REVIEW
-→ BLOCKER_CHECK
-   ├─ 零阻断且无建议：BASELINE_GATE
-   ├─ 零阻断但有建议：REVIEW_RECORD → BASELINE_GATE
-   └─ 存在阻断：QUESTIONS_GENERATED
-                    → WAIT_PRODUCT_RESPONSES
-                    → RESPONSE_REVIEW
-                    → BASELINE_GATE
-→ BASELINE_GENERATION
-→ PAGE_FACT_PROJECTION
-→ HANDOFF
-```
 
 ## 当前结构
 
@@ -156,7 +71,7 @@ INIT
 
 1. 重新完整读取原始 PRD。
 2. 重新读取相关正式知识。
-3. 完整读取 `spark-output/prd_review_questions.md`。
+3. 完整读取工作台提供的本轮问题及其历史记录。
 4. 读取本轮产品回复。
 5. 读取 `references/review_rules.md`。
 6. 原问题、产品回复或新候选问题涉及复用基座、知识缺口、正式知识冲突、固定继承，或改变当前需求与已有能力的关系时，读取 `references/knowledge_usage_guide.md` 的对应章节。
@@ -226,11 +141,9 @@ INIT
 
 ## 问题单生成
 
-存在阻断，或存在建议修改、建议新增时，按 `references/output_structure_guide.md` 生成：
+存在阻断，或存在建议修改、建议新增时，按 `references/output_structure_guide.md` 形成问题单或审核记录，交由工作台登记。
 
-- `spark-output/prd_review_questions.md`
-
-存在阻断时，问题单写入后立即停止，不生成需求基线，不推荐下游。
+存在阻断时，返回本轮仍开放的问题，不生成需求基线。
 
 零阻断但存在建议时，记录建议后直接进入需求基线门禁。
 
@@ -252,12 +165,7 @@ INIT
 
 只有全部待确认项关闭后，场景中的阻断状态才能关闭。
 
-任一列表项未关闭，或回复产生新阻断时：
-
-1. 更新同一问题文件。
-2. 只追加未关闭的短问题。
-3. 保持整体状态为 `waiting_response`。
-4. 严格停止。
+任一列表项未关闭，或回复产生新阻断时，保留未关闭的短问题，既有问题沿用原编号。
 
 不得用一条回复推断关闭未被明确回答的列表项。
 
@@ -265,9 +173,7 @@ INIT
 
 ## 正式需求基线生成
 
-门禁通过后，按 `references/output_structure_guide.md` 生成：
-
-- `spark-output/requirements_baseline.md`
+业务阻断全部关闭后，按 `references/output_structure_guide.md` 返回正式需求基线 Markdown。
 
 Markdown 是正式语义源。
 
@@ -297,51 +203,6 @@ Markdown 是正式语义源。
 - `spark-output/context/page-generation-handoff.md`
 
 该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或 Page Spec。
-
-**硬规则：正式产物写入并完成本 Skill 自检后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
-
-## 预览交接
-
-- `prd-review` 自身不生成 HTML 预览。
-- 正式产物完成并通过本 Skill 自检后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览修改需求基线或问题单。
-- 预览是附加动作，不改变主链流转，也不进入下一步推荐。
-- 固定提示口径：
-
-```text
-附加操作：
-如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
-这不会改变主链流转。
-```
-
-## Handoff · 下一步建议
-
-需求基线完成后，固定推荐 Page Spec。UXB 和 Journey Analysis 只作为 Page Spec 前的可选增强。
-
-按 `references/output_structure_guide.md` 的 Handoff 格式输出：
-
-```text
-下一步：
-
-1. Page Spec（推荐）
-   将正式需求基线直接转为交付级页面设计文档。
-
-可选增强：
-
-- UXB：对需要重点讨论的体验方向、业务触点和必要局部策略形成设计师确认的体验定案
-- Journey Analysis：补充旅程阶段、断点与风险
-
-以上增强产物仅在本轮明确采用并满足门禁时由 Page Spec 承接。
-
-你回复对应名称即可。
-```
-
-下一步建议和可选增强不得写入需求基线。
-
-展示后严格停止。
-
-用户未明确选择时，不得自动执行任何下游或增强 Skill。
-
-不得根据会话上下文代替用户选择。
 
 ## 边界与红线
 
