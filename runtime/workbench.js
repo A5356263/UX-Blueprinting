@@ -1,13 +1,14 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
-import { actions, dispatch, newTask, recover, settle } from './state.js'
+import { actions, dispatch, migrate, newTask, recover, settle } from './state.js'
 import { validateMarkdown } from './artifacts.js'
+import { renderPreview } from './preview.js'
 
 const limit = 320_000
 const idPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const digest = data => createHash('sha256').update(data).digest('hex')
-const view = ({ operations, replies, questionHistory, ...task }) => ({ ...task, actions: actions(task) })
+const view = (task, catalog) => ({ ...task, actions: actions(task, catalog.available(Object.keys(task.artifacts))) })
 
 function contained(root, path) {
   const local = relative(root, path)
@@ -37,25 +38,32 @@ function readMaterial(root, path) {
   return { path: local.split(sep).join('/'), sha256: digest(bytes), content }
 }
 
-function readBoundMaterial(workspace, task) {
-  const source = task.execution.stage === 'prd-review' ? task.input : task.artifacts.baseline
-  if (!source || (task.execution.stage !== 'prd-review' && source.taskId !== task.id)) {
-    throw new Error('缺少本轮已登记的材料')
+function readArtifact(workspace, task, skill) {
+  const artifact = task.artifacts[skill]
+  if (!artifact) return undefined
+  const material = readMaterial(workspace.path, artifact.path)
+  if (artifact.taskId !== task.id || artifact.sha256 !== material.sha256) {
+    throw new Error('本轮已登记产物版本无效，请重新生成')
   }
-  const material = readMaterial(workspace.path, source.path)
-  if (source.sha256 !== material.sha256) throw new Error('登记的材料已被修改，请恢复原版本后重试')
-  if (task.execution.stage !== 'page-spec') return material.content
-  const enhancements = {}
-  for (const [kind, key] of [['uxb', 'strategy'], ['journey', 'journey']]) {
-    const artifact = task.artifacts[kind]
-    if (!artifact) continue
-    const content = readMaterial(workspace.path, artifact.path)
-    if (artifact.taskId !== task.id || !artifact.confirmedAt || artifact.sha256 !== content.sha256) {
-      throw new Error('本轮已采用的增强产物版本无效')
-    }
-    enhancements[key] = content.content
+  return material.content
+}
+
+function readBoundMaterial(workspace, task, catalog) {
+  const skill = task.execution.skill
+  if (skill === 'prd-review') {
+    const material = readMaterial(workspace.path, task.input.path)
+    if (task.input.sha256 !== material.sha256) throw new Error('登记的材料已被修改，请恢复原版本后重试')
+    return { baseline: material.content, materials: [] }
   }
-  return Object.keys(enhancements).length ? { baseline: material.content, ...enhancements } : material.content
+  const baseline = readArtifact(workspace, task, 'prd-review')
+  if (!baseline) throw new Error('缺少本轮已登记的正式需求基线')
+  const materials = []
+  for (const id of catalog.reads(skill)) {
+    if (id === 'prd-review') continue
+    const content = readArtifact(workspace, task, id)
+    if (content !== undefined) materials.push({ skill: id, name: catalog.name(id), content })
+  }
+  return { baseline, materials }
 }
 
 function directory(root, parts, create) {
@@ -72,7 +80,7 @@ function directory(root, parts, create) {
   return current
 }
 
-export function createWorkbench(registry, runStage) {
+export function createWorkbench(registry, runStage, cancelStage = () => {}, catalog) {
   const active = new Map()
   let disposed = false
   const folder = (workspace, id, create) => directory(workspace.path, ['spark-output', 'design-workbench', id], create)
@@ -87,39 +95,39 @@ export function createWorkbench(registry, runStage) {
     if (!idPattern.test(id)) throw new Error('无效的任务标识')
     const file = join(folder(workspace, id, false), 'task.json')
     if (!lstatSync(file).isFile()) throw new Error('无法读取任务记录')
-    const task = JSON.parse(readFileSync(file, 'utf8'))
-    if (task.id !== id || task.workspaceId !== workspace.id) throw new Error('任务不属于已选工作区')
+    const stored = JSON.parse(readFileSync(file, 'utf8'))
+    if (stored.id !== id || stored.workspaceId !== workspace.id) throw new Error('任务不属于已选工作区')
+    const migrated = migrate(stored)
+    if (migrated !== stored) return save(workspace, migrated)
     if (!active.has(id)) {
-      const recovered = recover(task)
-      if (recovered !== task) return save(workspace, recovered)
+      const recovered = recover(migrated)
+      if (recovered !== migrated) return save(workspace, recovered)
     }
-    return task
+    return migrated
   }
   function list(workspace) {
     let items
     try { items = readdirSync(directory(workspace.path, ['spark-output', 'design-workbench'], false), { withFileTypes: true }) }
     catch (error) { if (error.code === 'ENOENT') return []; throw error }
-    return items.filter(item => item.isDirectory() && idPattern.test(item.name)).map(item => view(load(workspace, item.name)))
+    return items.filter(item => item.isDirectory() && idPattern.test(item.name))
+      .map(item => view(load(workspace, item.name), catalog))
   }
   function publish(workspace, task, result) {
     if (task.state === 'cancelling') return settle(task, task.execution.id, {})
-    const { id: executionId, stage } = task.execution
-    const review = stage === 'prd-review'
-    const uxb = stage === 'uxb'
-    const journey = stage === 'journey-analysis'
     if (!Array.isArray(result.questions) || typeof result.markdown !== 'string') throw new Error('阶段返回格式无效')
     if (result.questions.length) {
-      if (!review || result.markdown.trim()) throw new Error('阻断问题与正式产物不能同时登记')
-      return settle(task, executionId, result)
+      if (result.markdown.trim()) throw new Error('阻断问题与正式产物不能同时登记')
+      return settle(task, task.execution.id, result)
     }
+    const { id: executionId, skill } = task.execution
     const bytes = Buffer.from(result.markdown)
     if (!bytes.length || bytes.length > limit) throw new Error('阶段未返回有效的 Markdown 产物')
-    const complete = validateMarkdown(stage, result.markdown)
+    validateMarkdown(skill, result.markdown)
+    const name = skill + '.md'
     const dir = folder(workspace, task.id, false)
-    const name = review ? 'requirements_baseline.md' : uxb ? 'uxb_draft.md' : journey ? 'journey_analysis.md' : 'page_spec.md'
     const file = join(dir, executionId + '-' + name)
-    const artifact = { path: contained(workspace.path, file).split(sep).join('/'), sha256: digest(bytes),
-      taskId: task.id, executionId, stage, kind: review ? 'baseline' : uxb ? 'uxbDraft' : journey ? 'journeyDraft' : 'pageSpec', version: task.revision, ...(journey ? { complete } : {}) }
+    const artifact = { kind: skill, skill, path: contained(workspace.path, file).split(sep).join('/'),
+      sha256: digest(bytes), taskId: task.id, executionId, version: task.revision }
     const next = settle(task, executionId, { artifact })
     writeFileSync(file, bytes, { flag: 'wx' })
     return next
@@ -131,9 +139,9 @@ export function createWorkbench(registry, runStage) {
     void (async () => {
       let result
       try {
-        result = await runStage(task, workspace, readBoundMaterial(workspace, task), controller.signal)
+        result = await runStage(task, workspace, readBoundMaterial(workspace, task, catalog), controller.signal)
       } catch (error) {
-        result = { error: error.code ? '阶段执行失败，请检查工作区或 Harness 模型配置' : error.message || '阶段执行失败' }
+        result = { error: error?.message || '阶段执行失败，请检查工作区或 Harness 模型配置' }
       }
       try {
         if (disposed) return
@@ -141,7 +149,7 @@ export function createWorkbench(registry, runStage) {
         if (current.execution.id !== id) return
         let next
         try {
-          if (!result?.error && current.state === 'running') readBoundMaterial(workspace, current)
+          if (!result?.error && current.state === 'running') readBoundMaterial(workspace, current, catalog)
           next = result?.error ? settle(current, id, result) : publish(workspace, current, result)
         }
         catch (error) { next = settle(current, id, { error: error.message }) }
@@ -154,14 +162,17 @@ export function createWorkbench(registry, runStage) {
   return {
     dispose() {
       disposed = true
-      for (const controller of active.values()) controller.abort()
+      for (const [taskId, controller] of active) { controller.abort(); cancelStage(taskId) }
     },
     async fetch(request) {
       const json = (data, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } })
       const url = new URL(request.url)
       try {
         if (request.method === 'GET' && !url.searchParams.has('workspace')) {
-          return json({ workspaces: registry.list().map(({ id, title, path }) => ({ id, title, path })) })
+          return json({
+            workspaces: registry.list().map(({ id, title, path }) => ({ id, title, path })),
+            catalog: catalog.list(),
+          })
         }
         let body
         if (request.method === 'POST') {
@@ -174,32 +185,34 @@ export function createWorkbench(registry, runStage) {
           if (!url.searchParams.has('task')) return json({ tasks: list(workspace) })
           const task = load(workspace, url.searchParams.get('task'))
           const kind = url.searchParams.get('artifact')
-          if (!['baseline', 'uxbDraft', 'uxb', 'journeyDraft', 'journey', 'pageSpec'].includes(kind) || !task.artifacts[kind]) throw new Error('该产物尚未登记')
+          if (!kind || !task.artifacts[kind]) throw new Error('该产物尚未登记')
           const material = readMaterial(workspace.path, task.artifacts[kind].path)
           if (material.sha256 !== task.artifacts[kind].sha256) throw new Error('已登记产物被修改')
+          if (url.searchParams.get('preview')) {
+            return new Response(renderPreview(material.content, task.title + ' · ' + catalog.name(kind)), {
+              headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+            })
+          }
           return json({ content: material.content })
         }
         if (body.action === 'create') {
           if (typeof body.title !== 'string' || !body.title.trim() || body.title.length > 200) throw new Error('请输入不超过 200 字的任务名')
           const { content, ...input } = readMaterial(workspace.path, body.path)
-          return json({ task: view(save(workspace, newTask(workspace.id, body.title, input))) })
+          return json({ task: view(save(workspace, newTask(workspace.id, body.title, input)), catalog) })
         }
         const current = load(workspace, body.taskId)
-        const next = dispatch(current, body)
+        const next = dispatch(current, body, catalog.available(Object.keys(current.artifacts)))
         if (next !== current) {
-          if (['confirm-uxb', 'confirm-journey'].includes(body.action)) {
-            const draft = current.artifacts[body.action === 'confirm-uxb' ? 'uxbDraft' : 'journeyDraft']
-            const strategy = readMaterial(workspace.path, draft.path)
-            if (draft.sha256 !== strategy.sha256) throw new Error('待确认产物已被修改，请重新生成后确认')
-            readBoundMaterial(workspace, current)
-          }
           save(workspace, next)
           if (next.state === 'running') launch(workspace, next)
-          if (next.state === 'cancelling') active.get(next.id)?.abort()
+          if (next.state === 'cancelling') {
+            active.get(next.id)?.abort()
+            cancelStage(next.id)
+          }
         }
-        return json({ task: view(next) })
+        return json({ task: view(next, catalog) })
       } catch (error) {
-        return json({ error: error.code ? '工作区文件操作失败' : error.message }, 400)
+        return json({ error: error?.message || '工作台请求失败' }, 400)
       }
     },
   }
