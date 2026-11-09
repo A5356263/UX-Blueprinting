@@ -28,16 +28,15 @@ export function readBundledSkills() {
           locator: name, invocation: { modelInvocable: true, userInvocable: true },
           resourceBase: { kind: 'directory', path: dir },
         },
-        blocked: body.includes('shared-workflow/data-analysis/'),
         content: body + '\n\n## Harness 插件环境\n\nSkill 资源根：' + dir +
           '\n插件资源根：' + root +
-          '\n请从插件资源根读取 .agents/skills/ 和 shared-workflow/ 下的随包资料。运行随包脚本时使用其绝对路径，工作目录保留为用户选定的工作区。用户输入和 spark-output/ 不在插件安装目录。\n',
+          '\n随包资料只从上述绝对路径读取；用户工作区里的同名目录不属于随包资料。用户输入和 spark-output/ 位于用户选定的工作区。\n',
       }
     })
 }
 
 export function createSkillProvider(entries) {
-  const active = new Map(entries.filter(entry => !entry.blocked).map(entry => [entry.candidate.name, entry]))
+  const active = new Map(entries.map(entry => [entry.candidate.name, entry]))
   return {
     name: provider,
     async list() { return [...active.values()].map(entry => entry.candidate) },

@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "description": "在 DeepSeek Harness 中运行设计任务、记录确认并交接产物。",
   "type": "module",
-  "engines": { "dsh": "0.2.2-rc.1" },
+  "engines": { "dsh": ">=0.2.2-rc.1 <0.3.0" },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
     "./reference-reader": "./runtime/reference-reader.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
     "./package.json": "./package.json"
   },
   "files": [
@@ -19,28 +21,35 @@
     "runtime/workbench.js",
     "runtime/runner.js",
     "runtime/reference-reader.js",
+    "runtime/orchestration.js",
+    "runtime/preview.js",
     "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
     ".agents/skills/board/",
+    ".agents/skills/business-impact/",
+    ".agents/skills/data-visualization/",
     ".agents/skills/edge/",
+    ".agents/skills/evidence-archive/",
+    ".agents/skills/evidence-govern/",
+    ".agents/skills/experience-heuristic-analysis/",
     ".agents/skills/journey-analysis/",
     ".agents/skills/journey-metrics/",
     ".agents/skills/knowledge-wiki/",
+    ".agents/skills/objective-data-analysis/",
+    ".agents/skills/outcome-validation-recheck/",
     ".agents/skills/page-spec/",
     ".agents/skills/prd-review/",
-    ".agents/skills/preview-renderer/",
     ".agents/skills/problem-framing/",
+    ".agents/skills/root-cause-synthesis/",
     ".agents/skills/solution-swimlane/",
     ".agents/skills/stories/",
+    ".agents/skills/subjective-feedback-analysis/",
     ".agents/skills/uxb/",
-    "!.agents/skills/**/tests/**",
-    "!.agents/skills/**/__pycache__/**",
-    "!.agents/skills/**/*.pyc",
-    "shared-workflow/skill-graph.json",
-    "shared-workflow/generate-progress-preview.js",
-    "shared-workflow/progress-preview.html"
+    "shared-workflow/skill-graph.json"
   ],
   "dsh": {
     "bundle": { "patch": "./cordis.patch.yml" },
-    "client": { "platform": "web", "inject": [] }
+    "client": { "platform": "web", "immediately": true, "inject": [] }
   }
 }

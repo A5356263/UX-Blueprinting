@@ -1,19 +1,19 @@
 ---
 name: solution-swimlane
 description: >
-  从正式体验蓝图 Markdown 中抽取角色、责任、业务动作、系统处理、条件、交接、主次流程、异常、恢复与待确认项，生成确定性的单文件 HTML/SVG 方案协同泳道图。用户要求方案协同图、业务泳道图、跨角色流程主图、需求宣讲主图，或要求将 experience_blueprint.md 转为泳道图时使用。不用于需求分析、用户旅程、页面原型、页面动作清单或建设阶段图。
+  从正式页面规格 Markdown 中抽取角色、责任、业务动作、系统处理、条件、交接、主次流程、异常、恢复与待确认项，生成确定性的单文件 HTML/SVG 方案协同泳道图。用户要求方案协同图、业务泳道图、跨角色流程主图、需求宣讲主图，或要求将 page_spec.md 转为泳道图时使用。不用于需求分析、用户旅程、页面原型、页面动作清单或建设阶段图。
 ---
 
 # Solution Swimlane
 
-把体验蓝图转换为最小语义草稿，由脚本补全机械字段并稳定输出 HTML。不要建立来源清单或逐字段对账；只允许在当次执行记录中建立一次紧凑 P/S/E 覆盖清单。
+把页面规格转换为最小语义草稿，由脚本补全机械字段并稳定输出 HTML。不要建立来源清单或逐字段对账；只允许在当次执行记录中建立一次紧凑 P/S/E 覆盖清单。
 
 ## 文件边界
 
 只读取：
 
 ```text
-spark-output/experience_blueprint.md
+spark-output/page_spec.md
 ```
 
 只写入：
@@ -25,7 +25,7 @@ spark-output/solution-swimlane/.work/semantic-model.json
 spark-output/solution-swimlane/.work/validation.json
 ```
 
-不得修改输入、其他 Skill、`shared-workflow/`、项目配置或其他输出。不得调用 `shared-workflow/generate-progress-preview.js`。
+不得修改输入、其他 Skill、项目配置或其他输出。不得生成全局进度预览。
 如果本轮操作修改到其他 Skill，立即停止，不得继续修复、回退或扩展，并报告具体路径。
 
 ## 执行门禁
@@ -80,7 +80,7 @@ spark-output/solution-swimlane/.work/validation.json
 | 系统处理 | 系统自动校验、计算、写入或通知什么？ | `nodes` |
 | 顺序 | 下一步是什么？ | `edges` |
 | 条件 | 在什么条件下走不同路径？ | `decision` + `conditional` |
-| 交接 | 任务或结果交给谁？ | `handoff` |
+| 交接 | 任务或结果交给谁？ | 语义模型中的交接字段 |
 | 结果 | 流程完成、失败或终止后得到什么？ | `result` / `end` |
 | 异常 | 出错后如何恢复、回流或终止？ | `exception` / `return` / `terminate` |
 

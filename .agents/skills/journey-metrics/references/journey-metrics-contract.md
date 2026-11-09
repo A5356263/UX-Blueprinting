@@ -12,11 +12,11 @@ Generate journey and tracking artifacts from host project inputs:
 
 ## Input Priority
 
-1. Experience blueprint materials
+1. Page spec materials
    - Use as the journey skeleton.
    - Existing and requirement-added nodes can be `confirmed`.
 2. Background materials
-   - Use when no experience blueprint exists.
+   - Use when no page spec exists.
    - Mark inferred context explicitly.
 3. Requirement materials
    - Use as the minimum input.
@@ -28,7 +28,7 @@ Use exactly these labels:
 
 | Label | Meaning |
 |---|---|
-| `confirmed` | Explicitly supported by the requirement, background, or experience blueprint. |
+| `confirmed` | Explicitly supported by the requirement, background, or page spec. |
 | `inferred` | Reasonable context completion that needs human review. |
 | `conflict` | Requirement conflicts with trusted business knowledge; generate but flag. |
 

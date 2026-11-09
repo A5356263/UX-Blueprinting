@@ -106,4 +106,4 @@ Stories 和 Journey 是体验证据，不覆盖正式主输入中的业务事实
 - 不为固定维度或数量补写策略。
 - 不让业务知识、Stories 或 Journey 覆盖本轮权威业务事实。
 - 不在 UXB 内处理 Page Spec 的页面方案。
-- 不修改 PRD Review、Stories、Journey、Problem Framing、Page Spec 或 `shared-workflow/`。
+- 不修改 PRD Review、Stories、Journey、Problem Framing、Page Spec 或项目配置。

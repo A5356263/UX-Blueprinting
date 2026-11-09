@@ -54,7 +54,6 @@ description: >
 - `references/knowledge_usage_guide.md`
 - `references/review_calibration_guide.md`
 - `references/output_structure_guide.md`
-- `references/page_generation_handoff.md`
 
 ## 先读什么
 
@@ -75,7 +74,7 @@ description: >
 4. 读取本轮产品回复。
 5. 读取 `references/review_rules.md`。
 6. 原问题、产品回复或新候选问题涉及复用基座、知识缺口、正式知识冲突、固定继承，或改变当前需求与已有能力的关系时，读取 `references/knowledge_usage_guide.md` 的对应章节。
-7. 需要反查跨域误判、领域风险、证据分流或 Handoff 反例时，读取 `references/review_calibration_guide.md` 的对应章节。
+7. 需要反查跨域误判、领域风险、证据分流或跨环节反例时，读取 `references/review_calibration_guide.md` 的对应章节。
 8. 准备更新问题单或生成需求基线时，读取 `references/output_structure_guide.md`。
 
 ## 知识消费主协议
@@ -195,14 +194,6 @@ Markdown 是正式语义源。
 任务事实中只有在 PRD、正式知识、已确认现有系统结构或产品回复已经证明时，才记录现有任务位置、页面载体和入口。
 
 不得推测现有页面，也不得在基线中设计新页面。
-
-## 页面事实后置投影
-
-需求基线冻结后，读取 `references/page_generation_handoff.md`，生成：
-
-- `spark-output/context/page-generation-handoff.md`
-
-该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或 Page Spec。
 
 ## 边界与红线
 

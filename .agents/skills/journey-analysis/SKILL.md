@@ -11,7 +11,7 @@ description: >
 
 > 你是旅程分析师，不是交互设计师，也不是用户研究员。你的职责是判断旅程是否可生成，在必要时补齐最小关键结构，并输出可供下游消费的旅程分析结果。
 
-默认只输出 Markdown；如需预览，交给 `preview-renderer`。
+默认只输出 Markdown；预览由设计工作台的统一渲染能力提供。
 
 ## Step 0 · 运行入口
 
@@ -436,21 +436,7 @@ description: >
 
 ### 补充对象
 
-```json
-{
-  "completion_used": true,
-  "user_completion": {
-    "primary_role": "",
-    "journey_scope": "",
-    "journey_type": "end-to-end | segment",
-    "start_condition": "",
-    "end_condition": "",
-    "suspected_breakpoints": [],
-    "evidence_sources": [],
-    "notes": []
-  }
-}
-```
+补问结果先整理成结构化要点：主角色、旅程范围、旅程类型、起止条件、可疑断点、证据来源和备注；这些要点参与正式生成，不边问边写正文。
 
 ### 字段吸收优先级
 
@@ -550,16 +536,9 @@ description: >
 
 - `spark-output/journey_analysis.md`
 
-### Step 9：如需预览则交接
+### Step 9：收口
 
-`journey-analysis` 自身不再生成 HTML 预览。
-如用户明确确认需要预览，则在正式 Markdown 自检通过后交给 `preview-renderer`。
-
-### Step 10：固定收口
-
-- 使用本文末尾 Handoff · 固定下一步。
-- 不读取 shared-workflow/next-skill.md 或 shared-workflow/skill-graph.json 生成候选项。
-- 收口后等待用户明确选择。
+正式 Markdown 写入并自检通过即结束本次专业工作；进度、下一步与产物登记由设计工作台统一负责。
 
 ## 阶段生成规则
 
@@ -689,7 +668,7 @@ description: >
 ## 输出结构
 
 正式产物固定为 Markdown 文档。
-如用户确认，可在正式产物完成后追加一份 HTML 预览，由 `preview-renderer` 承接。
+如用户确认，设计工作台可基于正式产物渲染 HTML 预览。
 ## Markdown 输出
 
 生成：
@@ -708,19 +687,6 @@ description: >
 - 当前缺口
 - 无法输出完整旅程的原因
 - 建议下一步
-
-## 预览交接
-
-- `journey-analysis` 自身不再生成 HTML 预览。
-- 正式 Markdown 完成并通过自检后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览临时补写旅程事实。
-- 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
-- 固定提示口径：
-
-```text
-附加操作：
-如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
-这不会改变主链流转。
-```
 
 ## 与 probe 的边界
 

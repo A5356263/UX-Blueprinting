@@ -3,6 +3,8 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: ux-blueprinting-stage
+        name: 设计工作台阶段执行
+        description: 仅供设计工作台内部阶段调用；只读随包参考资料，不提供通用对话能力。
         order: 90
         plugins:
           - id: persona

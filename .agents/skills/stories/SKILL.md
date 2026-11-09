@@ -310,53 +310,6 @@ Markdown 固定结构：
 - ...
 ```
 
-## 预览交接
-
-- `stories` 自身不生成 HTML 预览。
-- 正式产物完成后，如用户明确确认需要预览，再交给 `preview-renderer`。
-- 不得为了预览修改当前 Skill 的正式 Markdown、Story 优先级或验收标准。
-- 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
-- 固定提示口径：
-
-```text
-附加操作：
-如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
-这不会改变主链流转。
-```
-
-## Handoff · 固定下一步
-
-本 Skill 完成后，只输出固定下一步推荐。
-
-输出推荐前，只按以下映射检查推荐项正式产物是否存在；若存在，只在推荐项名称后追加“（已产出）”。
-
-推荐项产物映射：
-- 用户旅程：`spark-output/journey_analysis.md`
-- 页面设计文档：`spark-output/page_spec.md`
-
-禁止：
-- 读取推荐项产物正文
-- 根据产物存在改变推荐顺序
-- 动态计算候选项
-- 读取 shared-workflow/next-skill.md 生成候选项
-- 读取 shared-workflow/skill-graph.json 生成候选项
-- 直接执行下一步
-
-固定输出：
-
-```text
-用户故事已完成。你可以继续：
-1. 用户旅程
-2. 页面设计文档
-3. 停在这里
-
-你回复对应名称即可。
-```
-
-“（已产出）”只代表状态，不代表该项被选中或质量通过。
-
-**硬规则：正式 Markdown 写入并自检通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
-
 ## 边界
 
 ### 与 uxb

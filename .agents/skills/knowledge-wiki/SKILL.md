@@ -91,7 +91,7 @@ description: >
 
 - `spark-output/uxb_output.md`
 - `spark-output/journey_analysis.md`
-- `spark-output/experience_blueprint.md`
+- `spark-output/page_spec.md`
 
 业务产物读取硬门禁：
 

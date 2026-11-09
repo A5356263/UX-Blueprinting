@@ -1,7 +1,7 @@
 ---
 name: journey-metrics
 description: >
-  旅程埋点与度量 Skill。基于体验蓝图或需求材料，输出视觉旅程图、埋点需求、异常追踪需求和预览集成约定。
+  旅程埋点与度量 Skill。基于页面规格或需求材料，输出视觉旅程图、埋点需求、异常追踪需求和预览集成约定。
   触发关键词：旅程埋点、埋点需求、旅程度量、旅程追踪、埋点清单、异常追踪、度量需求、追踪规格。
   仅在用户明确要求埋点、度量或追踪规格时使用；不得因用户只要求旅程图或工作区已有旅程产物而触发。
   排除：角色任务生命周期与旅程阶段分析（用 journey-analysis）。
@@ -9,7 +9,7 @@ description: >
 
 # Journey Metrics
 
-Use this skill as a sidecar UXB capability. It can run after an experience blueprint exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
+Use this skill as a sidecar UXB capability. It can run after an page spec exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
 
 Do not automatically read existing project materials to decide the generation scope. When this skill is invoked, first ask the user which tasks or scenarios need visual journey and tracking requirement documents. Read files only after the user confirms the scope.
 
@@ -29,17 +29,16 @@ Do not present the preview renderer as the generator. The renderer only consumes
 
 Prefer inputs in this order:
 
-1. Experience blueprint materials: reuse the journey and interaction sections as the highest-confidence skeleton.
+1. Page spec materials: reuse the journey and interaction sections as the highest-confidence skeleton.
 2. Background materials: derive a role/path skeleton from scenario background.
 3. Requirement materials: derive a minimal journey and mark inferred context explicitly.
 
-当用户确认范围并选择 Experience Blueprint 作为正式输入时，执行以下硬门禁：
+当用户确认范围并选择 Page Spec 作为正式输入时，执行以下硬门禁：
 
-- 必须实际完整读取蓝图 Markdown；JSON 如存在，只用于快速定位，不是正式语义源。
-- 即使蓝图刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
+- 必须实际完整读取页面规格 Markdown。
+- 即使页面规格刚在同一会话生成、当前上下文仍保留内容，也不得替代本次文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
-- JSON 与 Markdown 冲突时，以 Markdown 为正式语义源，并记录交接错误。
-- 只有 JSON、Markdown 缺失或 Markdown 未读完时，不得生成旅程节点、埋点需求或异常追踪需求。
+- 页面规格 Markdown 缺失或未读完时，不得生成旅程节点、埋点需求或异常追踪需求。
 - 本门禁不改变先由用户确认任务或场景范围的现有入口规则。
 
 如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中的埋点方法、业务对象或状态章节。两者都不存在时，在定案参数与 API 细节前先索取或形成明确假设。
@@ -119,17 +118,6 @@ When porting this capability to a newer UXB project, read `references/migration-
 - Adapt preview parsing/rendering to the new preview model.
 - Treat `assets/fixtures/` as regression fixtures, not production inputs.
 - Add the CLI entrypoint only after the host command registry and packaging model are known.
-
-## Handoff · 固定下一步
-
-固定输出：
-
-```text
-旅程埋点与度量需求已完成。当前没有固定下一步推荐。
-你可以停在这里。
-```
-
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
 ## Bundled Resources
 

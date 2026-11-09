@@ -6,7 +6,7 @@
 - **主要输入源**：source/background.md + source/requirement.md
 - **补全策略**：从背景描述中提取"当前完整流程"骨架，将需求文档的改动点定位到对应位置
 
-> ⚠️ 未基于体验蓝图生成（experience_blueprint.md 不存在）。当前旅程基于需求文档和背景描述推导，部分交互节点为推断补全。建议先运行 `generate-experience` 以获得更精确的交互流程定义。
+> ⚠️ 未基于页面规格生成（page_spec.md 不存在）。当前旅程基于需求文档和背景描述推导，部分交互节点为推断补全。建议先运行 `generate-experience` 以获得更精确的交互流程定义。
 
 ## 1. 场景概览
 
