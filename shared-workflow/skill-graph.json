@@ -28,13 +28,15 @@
         ],
         "reason": "正式需求基线完成后，进入页面规格生成完整交互流程和页面方案；UXB、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
         "alternatives": []
-      }
+      },
+      "anchor": true,
+      "requiredAny": []
     },
     {
       "id": "uxb",
       "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
       "name_zh": "体验策略",
-      "phase": 3,
+      "phase": 1,
       "reads": [],
       "required": [],
       "next_hint": {
@@ -46,7 +48,9 @@
           "stories",
           "page-spec"
         ]
-      }
+      },
+      "anchor": true,
+      "requiredAny": []
     },
     {
       "id": "problem-framing",
@@ -66,12 +70,13 @@
         "alternatives": [
           "uxb"
         ]
-      }
+      },
+      "requiredAny": []
     },
     {
       "id": "stories",
       "name_zh": "用户故事",
-      "phase": 2,
+      "phase": 1,
       "standalone_usable": true,
       "standalone_note": "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
       "anchor": false,
@@ -88,13 +93,14 @@
         "alternatives": [
           "page-spec"
         ]
-      }
+      },
+      "requiredAny": []
     },
     {
       "id": "journey-analysis",
       "_comment": "当前 Skill 可承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
-      "phase": 2,
+      "phase": 1,
       "standalone_usable": true,
       "standalone_note": "可独立使用；在 PRD 主链中作为 Page Spec 前的可选旅程增强。",
       "anchor": false,
@@ -110,30 +116,31 @@
         ],
         "reason": "旅程分析已就位，进入页面规格可以把旅程洞察转化为具体的交互流程和页面设计。",
         "alternatives": []
-      }
+      },
+      "requiredAny": []
     },
     {
       "id": "solution-swimlane",
       "_comment": "只承接正式页面规格 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在页面规格完成后优先展示本节点；required 仍保证它不会提前就绪。",
       "name_zh": "业务泳道图",
-      "phase": 3,
+      "phase": 2,
       "reads": [
         "page-spec"
       ],
-      "required": [
-        "page-spec"
-      ],
+      "required": [],
       "next_hint": {
         "preferred": [],
         "reason": "方案协同图已完成，当前无固定下一步推荐。",
         "alternatives": []
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "page-spec",
       "_comment": "以 page-spec 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
       "name_zh": "页面规格",
-      "phase": 4,
+      "phase": 2,
       "reads": [
         "edge",
         "prd-review",
@@ -150,12 +157,14 @@
         ],
         "reason": "页面设计文档已输出，目前 design skill 正在建设中，可让 agent 根据文档直接生成 HTML 原型。",
         "alternatives": []
-      }
+      },
+      "anchor": true,
+      "requiredAny": []
     },
     {
       "id": "edge",
       "name_zh": "异常态",
-      "phase": 3,
+      "phase": 2,
       "preview_hidden": true,
       "reads": [
         "page-spec"
@@ -167,12 +176,14 @@
         "preferred": [],
         "reason": "异常态补充完成后，当前无固定下游推荐；后续由用户显式指定是否进入页面规格、走查或页面生成。",
         "alternatives": []
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "board",
       "name_zh": "视觉情绪板",
-      "phase": 3,
+      "phase": 2,
       "preview_hidden": true,
       "reads": [
         "page-spec"
@@ -184,7 +195,9 @@
         "preferred": [],
         "reason": "当前链路终点，无下游 Skill。",
         "alternatives": []
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "knowledge-wiki",
@@ -196,18 +209,19 @@
         "preferred": [],
         "reason": "基础设施型 Skill，按需调用，不参与主链流转。",
         "alternatives": []
-      }
+      },
+      "phase": 2,
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "journey-metrics",
       "name_zh": "旅程埋点与度量需求",
-      "phase": 5,
+      "phase": 2,
       "reads": [
         "page-spec"
       ],
-      "required": [
-        "page-spec"
-      ],
+      "required": [],
       "next_hint": {
         "preferred": [
           "objective-data-analysis"
@@ -217,12 +231,14 @@
           "subjective-feedback-analysis",
           "experience-heuristic-analysis"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "objective-data-analysis",
       "name_zh": "客观数据分析",
-      "phase": "analysis",
+      "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
       "preview_order": 100,
@@ -265,12 +281,14 @@
           "data-visualization",
           "evidence-archive"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "subjective-feedback-analysis",
       "name_zh": "主观反馈分析",
-      "phase": "analysis",
+      "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
       "preview_order": 110,
@@ -303,12 +321,14 @@
           "data-visualization",
           "evidence-archive"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "experience-heuristic-analysis",
       "name_zh": "体验启发式分析",
-      "phase": "analysis",
+      "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
       "preview_order": 120,
@@ -340,12 +360,14 @@
         "alternatives": [
           "data-visualization"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "evidence-govern",
       "name_zh": "证据处理与治理",
-      "phase": "orchestration",
+      "phase": 3,
       "preview_visibility": "internal",
       "direct_invocation_policy": "gate_required",
       "reads": [
@@ -394,12 +416,18 @@
           "knowledge-wiki",
           "data-visualization"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis"
+      ]
     },
     {
       "id": "root-cause-synthesis",
       "name_zh": "候选根因综合",
-      "phase": "synthesis",
+      "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
       "preview_order": 130,
@@ -423,12 +451,14 @@
           "data-visualization",
           "evidence-archive"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "business-impact",
       "name_zh": "业务影响评估",
-      "phase": "analysis",
+      "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
       "preview_order": 140,
@@ -478,12 +508,14 @@
           "data-visualization",
           "evidence-archive"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "outcome-validation-recheck",
       "name_zh": "效果验证与回检",
-      "phase": "validation",
+      "phase": 3,
       "preview_visibility": "user_facing",
       "repeatable": true,
       "direct_invocation_policy": "gate_required",
@@ -511,7 +543,9 @@
           "evidence-archive",
           "data-visualization"
         ]
-      }
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "data-visualization",
@@ -542,7 +576,10 @@
         "preferred": [],
         "reason": "数据可视化只表达正式上游结论，不改变分析主链状态。",
         "alternatives": []
-      }
+      },
+      "phase": 3,
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "evidence-archive",
@@ -570,7 +607,10 @@
         "preferred": [],
         "reason": "证据归档只在显式授权后保存不可变历史快照，不自动推进主链或发布知识。",
         "alternatives": []
-      }
+      },
+      "phase": 3,
+      "anchor": false,
+      "requiredAny": []
     }
   ]
 }

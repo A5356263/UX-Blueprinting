@@ -5,6 +5,7 @@ const baselineSections = [
 ]
 
 export function validateMarkdown(skill, markdown) {
+  if (typeof markdown !== 'string') throw new Error('产物必须是 Markdown 文本')
   const lines = markdown.trim().split(/\r?\n/)
   if (!/^# \S/.test(lines[0] ?? '')) throw new Error('产物缺少一级标题')
   if (markdown.trim().length < 20) throw new Error('产物内容过短')

@@ -1,17 +1,3 @@
 - insert:
-    - id: preset-ux-blueprinting-stage
-      name: '@deepseek-ai/dsh-agent-preset'
-      config:
-        id: ux-blueprinting-stage
-        name: 设计工作台阶段执行
-        description: 仅供设计工作台内部阶段调用；只读随包参考资料，不提供通用对话能力。
-        order: 90
-        plugins:
-          - id: persona
-            name: '@deepseek-ai/dsh-persona'
-            config:
-              prefix: 你是设计工作台的单阶段专业执行者。只读取明确给出的专业参考资料。
-          - id: reference-read
-            name: dsh-ux-blueprinting/reference-reader
     - id: ux-blueprinting
       name: dsh-ux-blueprinting

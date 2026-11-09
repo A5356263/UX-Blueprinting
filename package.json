@@ -1,9 +1,11 @@
 {
   "name": "dsh-ux-blueprinting",
-  "version": "0.1.2",
-  "description": "在 DeepSeek Harness 中运行设计任务、记录确认并交接产物。",
+  "version": "0.4.4",
+  "description": "会话式设计工作台：把 Skill 发进原生会话，保留执行时间线、产物与下一步。",
   "type": "module",
-  "engines": { "dsh": ">=0.2.2-rc.1 <0.3.0" },
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -19,7 +21,6 @@
     "runtime/state.js",
     "runtime/artifacts.js",
     "runtime/workbench.js",
-    "runtime/runner.js",
     "runtime/reference-reader.js",
     "runtime/orchestration.js",
     "runtime/preview.js",
@@ -49,7 +50,13 @@
     "shared-workflow/skill-graph.json"
   ],
   "dsh": {
-    "bundle": { "patch": "./cordis.patch.yml" },
-    "client": { "platform": "web", "immediately": true, "inject": [] }
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
   }
 }

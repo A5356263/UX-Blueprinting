@@ -1,14 +1,13 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, writeFileSync } from 'node:fs'
+import { lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
-import { actions, dispatch, migrate, newTask, recover, settle } from './state.js'
+import { completedFor, emptyManifest } from './state.js'
 import { validateMarkdown } from './artifacts.js'
-import { renderPreview } from './preview.js'
+import { recommendHandoff } from './orchestration.js'
 
 const limit = 320_000
-const idPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+const sessionPattern = /^[A-Za-z0-9._-]{8,100}$/
 const digest = data => createHash('sha256').update(data).digest('hex')
-const view = (task, catalog) => ({ ...task, actions: actions(task, catalog.available(Object.keys(task.artifacts))) })
 
 function contained(root, path) {
   const local = relative(root, path)
@@ -18,52 +17,9 @@ function contained(root, path) {
   return local
 }
 
-function readMaterial(root, path) {
-  if (typeof path !== 'string' || !path.trim() || !/\.(md|txt)$/i.test(path)) {
-    throw new Error('请指定工作区内的 Markdown 或纯文本文件')
-  }
-  const requested = resolve(root, path)
-  contained(root, requested)
-  let real
-  try { real = realpathSync(requested) } catch { throw new Error('找不到指定的材料') }
-  const local = contained(root, real)
-  const info = lstatSync(real)
-  if (!info.isFile() || !info.size || info.size > limit) throw new Error('材料必须是非空文本，且不超过 320 KB')
-  const bytes = readFileSync(real)
-  let content
-  try { content = new TextDecoder('utf-8', { fatal: true }).decode(bytes) } catch {
-    throw new Error('材料必须使用 UTF-8 编码')
-  }
-  if (!content.trim() || content.includes('\0')) throw new Error('指定的材料不是有效文本')
-  return { path: local.split(sep).join('/'), sha256: digest(bytes), content }
-}
-
-function readArtifact(workspace, task, skill) {
-  const artifact = task.artifacts[skill]
-  if (!artifact) return undefined
-  const material = readMaterial(workspace.path, artifact.path)
-  if (artifact.taskId !== task.id || artifact.sha256 !== material.sha256) {
-    throw new Error('本轮已登记产物版本无效，请重新生成')
-  }
-  return material.content
-}
-
-function readBoundMaterial(workspace, task, catalog) {
-  const skill = task.execution.skill
-  if (skill === 'prd-review') {
-    const material = readMaterial(workspace.path, task.input.path)
-    if (task.input.sha256 !== material.sha256) throw new Error('登记的材料已被修改，请恢复原版本后重试')
-    return { baseline: material.content, materials: [] }
-  }
-  const baseline = readArtifact(workspace, task, 'prd-review')
-  if (!baseline) throw new Error('缺少本轮已登记的正式需求基线')
-  const materials = []
-  for (const id of catalog.reads(skill)) {
-    if (id === 'prd-review') continue
-    const content = readArtifact(workspace, task, id)
-    if (content !== undefined) materials.push({ skill: id, name: catalog.name(id), content })
-  }
-  return { baseline, materials }
+function sameDirectory(root, path) {
+  const local = relative(resolve(root), resolve(path))
+  return local === '' || (local !== '..' && !local.startsWith('..' + sep) && !isAbsolute(local))
 }
 
 function directory(root, parts, create) {
@@ -80,140 +36,245 @@ function directory(root, parts, create) {
   return current
 }
 
-export function createWorkbench(registry, runStage, cancelStage = () => {}, catalog) {
-  const active = new Map()
-  let disposed = false
-  const folder = (workspace, id, create) => directory(workspace.path, ['spark-output', 'design-workbench', id], create)
-  function save(workspace, task) {
-    const dir = folder(workspace, task.id, true)
-    const temporary = join(dir, randomUUID() + '.tmp')
-    writeFileSync(temporary, JSON.stringify(task), { flag: 'wx' })
-    renameSync(temporary, join(dir, 'task.json'))
-    return task
+export function createWorkbench(ctx, catalog) {
+  const registry = ctx.workspaceRegistry
+  const knownSkills = new Set(catalog.list().map(skill => skill.id))
+  const queues = new Map()
+
+  function serialize(key, task) {
+    const previous = queues.get(key) ?? Promise.resolve()
+    const current = previous.then(task, task)
+    queues.set(key, current.then(() => {}, () => {}))
+    return current
   }
-  function load(workspace, id) {
-    if (!idPattern.test(id)) throw new Error('无效的任务标识')
-    const file = join(folder(workspace, id, false), 'task.json')
-    if (!lstatSync(file).isFile()) throw new Error('无法读取任务记录')
-    const stored = JSON.parse(readFileSync(file, 'utf8'))
-    if (stored.id !== id || stored.workspaceId !== workspace.id) throw new Error('任务不属于已选工作区')
-    const migrated = migrate(stored)
-    if (migrated !== stored) return save(workspace, migrated)
-    if (!active.has(id)) {
-      const recovered = recover(migrated)
-      if (recovered !== migrated) return save(workspace, recovered)
+
+  const baseDir = (workspace, create) => directory(workspace.path, ['spark-output', 'design-workbench'], create)
+
+  function windowDir(workspace, sessionId, create) {
+    if (!sessionPattern.test(sessionId)) throw new Error('无效的规划窗口标识')
+    return directory(workspace.path, ['spark-output', 'design-workbench', sessionId], create)
+  }
+
+  function atomicWrite(dir, name, bytes) {
+    const target = join(dir, name)
+    try {
+      const info = lstatSync(target)
+      if (info.isSymbolicLink() || !info.isFile()) throw new Error('目标必须是普通文件')
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error
     }
-    return migrated
-  }
-  function list(workspace) {
-    let items
-    try { items = readdirSync(directory(workspace.path, ['spark-output', 'design-workbench'], false), { withFileTypes: true }) }
-    catch (error) { if (error.code === 'ENOENT') return []; throw error }
-    return items.filter(item => item.isDirectory() && idPattern.test(item.name))
-      .map(item => view(load(workspace, item.name), catalog))
-  }
-  function publish(workspace, task, result) {
-    if (task.state === 'cancelling') return settle(task, task.execution.id, {})
-    if (!Array.isArray(result.questions) || typeof result.markdown !== 'string') throw new Error('阶段返回格式无效')
-    if (result.questions.length) {
-      if (result.markdown.trim()) throw new Error('阻断问题与正式产物不能同时登记')
-      return settle(task, task.execution.id, result)
+    const temporary = join(dir, '.' + name + '-' + randomUUID() + '.tmp')
+    writeFileSync(temporary, bytes, { flag: 'wx' })
+    try { renameSync(temporary, target) } catch (error) {
+      try { unlinkSync(temporary) } catch {}
+      throw error
     }
-    const { id: executionId, skill } = task.execution
-    const bytes = Buffer.from(result.markdown)
-    if (!bytes.length || bytes.length > limit) throw new Error('阶段未返回有效的 Markdown 产物')
-    validateMarkdown(skill, result.markdown)
-    const name = skill + '.md'
-    const dir = folder(workspace, task.id, false)
-    const file = join(dir, executionId + '-' + name)
-    const artifact = { kind: skill, skill, path: contained(workspace.path, file).split(sep).join('/'),
-      sha256: digest(bytes), taskId: task.id, executionId, version: task.revision }
-    const next = settle(task, executionId, { artifact })
-    writeFileSync(file, bytes, { flag: 'wx' })
-    return next
   }
-  function launch(workspace, task) {
-    const controller = new AbortController()
-    const { id } = task.execution
-    active.set(task.id, controller)
-    void (async () => {
-      let result
-      try {
-        result = await runStage(task, workspace, readBoundMaterial(workspace, task, catalog), controller.signal)
-      } catch (error) {
-        result = { error: error?.message || '阶段执行失败，请检查工作区或 Harness 模型配置' }
+
+  function oldRuns(workspace, sessionId) {
+    try {
+      const file = join(baseDir(workspace, false), 'runs.json')
+      const info = lstatSync(file)
+      if (info.isSymbolicLink() || !info.isFile()) return []
+      const rows = JSON.parse(readFileSync(file, 'utf8'))
+      if (!Array.isArray(rows)) return []
+      const latest = new Map()
+      for (const run of rows) {
+        if (run?.sessionId !== sessionId || !run.skill || !run.artifactPath) continue
+        const previous = latest.get(run.skill)
+        if (!previous || (Number(run.version) || 0) > (Number(previous.version) || 0)) latest.set(run.skill, run)
       }
-      try {
-        if (disposed) return
-        const current = load(workspace, task.id)
-        if (current.execution.id !== id) return
-        let next
-        try {
-          if (!result?.error && current.state === 'running') readBoundMaterial(workspace, current, catalog)
-          next = result?.error ? settle(current, id, result) : publish(workspace, current, result)
-        }
-        catch (error) { next = settle(current, id, { error: error.message }) }
-        save(workspace, next)
-      } finally {
-        active.delete(task.id)
-      }
-    })().catch(error => console.error('设计工作台无法持久化阶段回执：' + (error.code ?? '存储错误')))
+      return [...latest.values()].map(run => ({
+        skill: run.skill,
+        path: run.artifactPath,
+        sha256: run.sha256,
+        title: run.title,
+        updatedAt: run.createdAt ?? new Date().toISOString(),
+        stale: false,
+        staleSince: null,
+      }))
+    } catch { return [] }
   }
-  return {
-    dispose() {
-      disposed = true
-      for (const [taskId, controller] of active) { controller.abort(); cancelStage(taskId) }
-    },
-    async fetch(request) {
-      const json = (data, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } })
-      const url = new URL(request.url)
-      try {
-        if (request.method === 'GET' && !url.searchParams.has('workspace')) {
-          return json({
-            workspaces: registry.list().map(({ id, title, path }) => ({ id, title, path })),
-            catalog: catalog.list(),
-          })
+
+  function loadManifest(workspace, sessionId) {
+    try {
+      const file = join(windowDir(workspace, sessionId, false), 'manifest.json')
+      const info = lstatSync(file)
+      if (info.isSymbolicLink() || !info.isFile()) return emptyManifest(workspace.id, sessionId)
+      const parsed = JSON.parse(readFileSync(file, 'utf8'))
+      if (!parsed || parsed.sessionId !== sessionId || typeof parsed.skills !== 'object' || parsed.skills === null) {
+        return emptyManifest(workspace.id, sessionId)
+      }
+      return {
+        version: 1,
+        workspaceId: workspace.id,
+        sessionId,
+        updatedAt: parsed.updatedAt ?? new Date().toISOString(),
+        skills: parsed.skills,
+      }
+    } catch {
+      const manifest = emptyManifest(workspace.id, sessionId)
+      for (const entry of oldRuns(workspace, sessionId)) manifest.skills[entry.skill] = entry
+      return manifest
+    }
+  }
+
+  function saveManifest(workspace, sessionId, manifest) {
+    manifest.updatedAt = new Date().toISOString()
+    const dir = windowDir(workspace, sessionId, true)
+    atomicWrite(dir, 'manifest.json', JSON.stringify(manifest))
+  }
+
+  async function listSessions(workspace) {
+    const controller = ctx.sessionController
+    if (typeof controller?.list !== 'function') return []
+    let value
+    try { value = await controller.list({}, AbortSignal.timeout(5000)) } catch { return [] }
+    if (value?.ok === true) value = value.value
+    if (value?.ok === false) return []
+    const rows = value?.items ?? value?.rows ?? value?.sessions ?? (Array.isArray(value) ? value : [])
+    const archived = new Set(registry.archivedSessionIds ?? [])
+    return rows
+      .map(row => ({
+        id: row?.sessionId ?? row?.id,
+        title: row?.projections?.values?.title || '未命名会话',
+        cwd: row?.cwd ?? null,
+        updatedAt: row?.updatedAt ?? row?.time ?? null,
+        origin: row?.origin ?? null,
+        blank: row?.blank === true,
+      }))
+      .filter(row => row.id && row.origin !== 'subagent' && !row.blank && !archived.has(row.id) &&
+        (workspace.sessionIds?.includes(row.id) ?? false))
+      .sort((a, b) => (Number(b.updatedAt) || Date.parse(b.updatedAt) || 0) - (Number(a.updatedAt) || Date.parse(a.updatedAt) || 0))
+  }
+
+  async function createSession(workspace) {
+    const value = await ctx.sessionController.create({ workspaceId: workspace.id })
+    const created = value?.ok === true ? value.value : value
+    if (!created?.sessionId) throw new Error(value?.error?.message || '无法创建会话')
+    return created.sessionId
+  }
+
+  async function workspaceForSession(sessionId) {
+    const workspaces = registry.list()
+    const registered = workspaces.find(item => item.sessionIds?.includes(sessionId))
+    if (registered) return registered
+    const live = ctx.sessions?.get?.(sessionId)
+    const cwd = live?.header?.cwd ?? live?.cwd
+    if (cwd) {
+      const workspace = workspaces.find(item => sameDirectory(item.path, cwd))
+      if (workspace) return workspace
+    }
+    for (const workspace of workspaces) {
+      const sessions = await listSessions(workspace)
+      if (sessions.some(session => session.id === sessionId)) return workspace
+    }
+    throw new Error('该会话不属于任何已登记工作区')
+  }
+
+  async function submit({ skill, markdown, title }, callerSessionId) {
+    if (!callerSessionId) throw new Error('无法确认调用会话')
+    if (!knownSkills.has(skill)) throw new Error('未知 Skill：' + skill)
+    const workspace = await workspaceForSession(callerSessionId)
+    validateMarkdown(skill, markdown)
+    const bytes = Buffer.from(markdown)
+    if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
+    return serialize(workspace.id, () => {
+      const dir = windowDir(workspace, callerSessionId, true)
+      const name = skill + '.md'
+      atomicWrite(dir, name, bytes)
+      const manifest = loadManifest(workspace, callerSessionId)
+      const now = new Date().toISOString()
+      const sha256 = digest(bytes)
+      const previous = manifest.skills[skill]
+      const changed = !previous || previous.sha256 !== sha256
+      manifest.skills[skill] = {
+        skill,
+        path: relative(workspace.path, join(dir, name)).split(sep).join('/'),
+        sha256,
+        title: title?.trim() || previous?.title || '',
+        updatedAt: now,
+        stale: false,
+        staleSince: null,
+      }
+      if (changed) {
+        const affected = new Set([skill])
+        for (const [id, entry] of Object.entries(manifest.skills)) {
+          if (id !== skill && entry.stale) affected.add(id)
         }
-        let body
-        if (request.method === 'POST') {
-          if (!/^application\/json(?:;|$)/i.test(request.headers.get('content-type') ?? '')) return json({ error: '请求格式无效' }, 415)
-          body = await request.json()
-        }
-        const workspace = registry.get(body?.workspaceId ?? url.searchParams.get('workspace'))
-        if (!workspace) throw new Error('请选择已在 Harness 登记的工作区')
-        if (request.method === 'GET') {
-          if (!url.searchParams.has('task')) return json({ tasks: list(workspace) })
-          const task = load(workspace, url.searchParams.get('task'))
-          const kind = url.searchParams.get('artifact')
-          if (!kind || !task.artifacts[kind]) throw new Error('该产物尚未登记')
-          const material = readMaterial(workspace.path, task.artifacts[kind].path)
-          if (material.sha256 !== task.artifacts[kind].sha256) throw new Error('已登记产物被修改')
-          if (url.searchParams.get('preview')) {
-            return new Response(renderPreview(material.content, task.title + ' · ' + catalog.name(kind)), {
-              headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
-            })
+        let found = true
+        while (found) {
+          found = false
+          for (const [id, entry] of Object.entries(manifest.skills)) {
+            if (id === skill || entry.stale) continue
+            const reads = typeof catalog.reads === 'function' ? (catalog.reads(id) ?? []) : []
+            if (reads.some(dep => affected.has(dep))) {
+              entry.stale = true
+              entry.staleSince = now
+              affected.add(id)
+              found = true
+            }
           }
-          return json({ content: material.content })
         }
-        if (body.action === 'create') {
-          if (typeof body.title !== 'string' || !body.title.trim() || body.title.length > 200) throw new Error('请输入不超过 200 字的任务名')
-          const { content, ...input } = readMaterial(workspace.path, body.path)
-          return json({ task: view(save(workspace, newTask(workspace.id, body.title, input)), catalog) })
-        }
-        const current = load(workspace, body.taskId)
-        const next = dispatch(current, body, catalog.available(Object.keys(current.artifacts)))
-        if (next !== current) {
-          save(workspace, next)
-          if (next.state === 'running') launch(workspace, next)
-          if (next.state === 'cancelling') {
-            active.get(next.id)?.abort()
-            cancelStage(next.id)
-          }
-        }
-        return json({ task: view(next, catalog) })
-      } catch (error) {
-        return json({ error: error?.message || '工作台请求失败' }, 400)
       }
-    },
+      saveManifest(workspace, callerSessionId, manifest)
+      return {
+        registered: true,
+        skill,
+        path: manifest.skills[skill].path,
+        stale: Object.entries(manifest.skills).filter(([, entry]) => entry.stale).map(([id]) => id),
+        next: catalog.recommend(completedFor(manifest), skill),
+      }
+    })
   }
+
+  async function fetch(request) {
+    const json = (data, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } })
+    const url = new URL(request.url)
+    try {
+      if (request.method === 'GET' && !url.searchParams.has('workspace')) {
+        return json({
+          workspaces: registry.list().map(({ id, title, path }) => ({ id, title, path })),
+          catalog: catalog.list(),
+        })
+      }
+      let body
+      if (request.method === 'POST') {
+        if (!/^application\/json(?:;|$)/i.test(request.headers.get('content-type') ?? '')) return json({ error: '请求格式无效' }, 415)
+        body = await request.json()
+      }
+      const workspace = registry.get(body?.workspaceId ?? url.searchParams.get('workspace'))
+      if (!workspace) throw new Error('请选择已在 Harness 登记的工作区')
+      if (request.method === 'POST') {
+        if (body.action === 'create-session') return json({ sessionId: await createSession(workspace) })
+        throw new Error('未知操作')
+      }
+      const sessionId = url.searchParams.get('session') ?? ''
+      if (url.searchParams.has('skill')) {
+        if (!sessionId) throw new Error('缺少规划窗口')
+        const manifest = loadManifest(workspace, sessionId)
+        const entry = manifest.skills[url.searchParams.get('skill')]
+        if (!entry) throw new Error('该 Skill 尚未在本窗口登记产物')
+        const requested = resolve(workspace.path, entry.path)
+        contained(workspace.path, requested)
+        const real = realpathSync(requested)
+        contained(workspace.path, real)
+        const info = lstatSync(real)
+        if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
+        const bytes = readFileSync(real)
+        if (digest(bytes) !== entry.sha256) throw new Error('已登记产物被修改')
+        return json({ content: bytes.toString('utf8'), artifact: entry })
+      }
+      const manifest = sessionId ? loadManifest(workspace, sessionId) : null
+      const latest = manifest
+        ? Object.values(manifest.skills).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]
+        : undefined
+      const next = latest ? recommendHandoff(completedFor(manifest), latest.skill) : []
+      return json({ sessions: await listSessions(workspace), manifest, next })
+    } catch (error) {
+      return json({ error: error?.message || '工作台请求失败' }, 400)
+    }
+  }
+
+  return { fetch, submit, dispose() {} }
 }
