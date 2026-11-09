@@ -42,7 +42,7 @@ JSON 是唯一结构化事实源。交付载体只由 `requested_deliverables[]`
 
 ## 4. 下游权限
 
-- Experience Blueprint：可读受影响对象、场景、价值方向和约束；不得把价值当作方案成立证据。
+- Page Spec：可读受影响对象、场景、价值方向和约束；不得把价值当作方案成立证据。
 - Outcome Validation：可读方案引用、价值相关指标和估值窗口；不得把预测收益当效果证据。
 - Data Visualization：可表达 Case、派生链、情景和敏感性；不得重算。
 - Evidence Archive：仅人工允许后保存脱敏决策快照和血缘；不得写 Evidence/Baseline Store。

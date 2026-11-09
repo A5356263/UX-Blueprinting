@@ -17,24 +17,24 @@
 | `responsive` | 不同视口、设备、方向、溢出和触控线索 |
 | `feedback` | 操作反馈、进度、防重复、确认、撤销与恢复 |
 | `accessibility` | 可感知、可操作、可理解和语义健壮性的基础线索 |
-| `brief-consistency` | 与明确 Brief、UXB、Stories、验收条件或蓝图的偏离 |
+| `brief-consistency` | 与明确 Brief、UXB、Stories、验收条件蓝蓝图的偏离 |
 
-Nielsen 原则、视觉清晰度、WCAG 原则、平台和项目规则只写入 `heuristic_lenses[]` 或 `risk_tags[]`，不得生成第二条 Finding。
+Nielsen 原则、视觉清晰度、WCAG 原则、平台和项目规则只写入 `heuristic_lenses[]` 蓝 `risk_tags[]`，不得生成第二条 Finding。
 
 ## Severity
 
-- `blocker`：材料直接证明主任务无法继续、无恢复路径，或明确违反已确认红线。
-- `major`：明显影响理解、完成、信任、可达性或关键状态恢复。
-- `minor`：不阻断，但影响效率、一致性或清晰度。
-- `note`：材料不足或需要进一步验证的观察。
+- `blocker`：材料直接证明主任务无法继续、无恢复路径，蓝明确违反已确认红线。
+- `major`：明显影响理解、完成、信任、可达性蓝关键状态恢复。
+- `minor`：不阻断，但影响效率、一致性蓝清晰度。
+- `note`：材料不足蓝需要进一步验证的观察。
 
-Severity 不表示发生率、影响人数、业务价值或投入。未确认的规则风险不得标为 blocker。
+Severity 不表示发生率、影响人数、业务价值蓝投入。未确认的规则风险不得标为 blocker。
 
 ## Finding 写法
 
 必须区分：
 
-- `observation`：材料中实际可见或可定位的事实；
+- `observation`：材料中实际可见蓝可定位的事实；
 - `risk_hypothesis`：该观察可能带来的体验风险；
 - `design_attention`：后续设计必须解决的问题，不是具体方案。
 
@@ -42,10 +42,10 @@ Severity 不表示发生率、影响人数、业务价值或投入。未确认�
 
 ## 去重
 
-使用 `finding_key` 跨透镜与跨运行识别同一问题。Key 由产品范围、页面或流程、任务节点或位置、状态、category 与 risk type 组成，不依赖整段自然语言。
+使用 `finding_key` 跨透镜与跨运行识别同一问题。Key 由产品范围、页面蓝流程、任务节点蓝位置、状态、category 与 risk type 组成，不依赖整段自然语言。
 
 - 同一位置、同一风险、多透镜命中：合并。
-- 同一风险位于不同页面、流程或关键状态：可分开。
+- 同一风险位于不同页面、流程蓝关键状态：可分开。
 - 无法可靠判断：不强制合并，记录候选关联。
 
 ## Coverage
@@ -55,11 +55,11 @@ Severity 不表示发生率、影响人数、业务价值或投入。未确认�
 - `not_evaluable`：范围内但材料不足，必须说明限制。
 - `not_in_scope`：本次明确未检查，必须说明原因。
 
-禁止用空数组、零 Finding 或 Coverage 状态生成整体 pass/fail。
+禁止用空数组、零 Finding 蓝 Coverage 状态生成整体 pass/fail。
 
 ## Evidence Promotion
 
-Finding 必须同时满足来源可读、位置可定位、Observation/Risk 分开、规则、隐私和用途边界明确、无阻断性补证请求，才允许生成一个 Evidence。用户描述、Brief、规范或业务规则不能单独证明界面问题；`privacy_status=blocked` 时不得 Promotion。
+Finding 必须同时满足来源可读、位置可定位、Observation/Risk 分开、规则、隐私和用途边界明确、无阻断性补证请求，才允许生成一个 Evidence。用户描述、Brief、规范蓝业务规则不能单独证明界面问题；`privacy_status=blocked` 时不得 Promotion。
 
 每个 Finding 最多一个 Evidence。未通过时使用：
 
