@@ -14,5 +14,6 @@ execution_critical: false
 | `mhjabreel/uisentinel`、Browser UI Test | 区分截图、运行态与 diff review | `interface-evidence-guide.md` | 浏览器自动化 |
 | Design Auditor、Vercel Web Design Guidelines | 项目规范优先、设计系统一致性 | `platform-accessibility-rules.md` | 技术栈专用检查器 |
 | Retina / saliency 类方法 | 视觉清晰度风险与眼动边界 | `platform-accessibility-rules.md`、`confidence-and-boundary-rules.md` | 热力图、真实眼动、显著性模型 |
+| `ucats-interface-evaluator` | 按页面职责选检查点，核对对象、信号、动作与反馈，限定局部材料的判断范围，以直接证据组织报告开头 | `interface-evidence-guide.md`、`platform-accessibility-rules.md`、`SKILL.md` | 评分与通过判定、独立诊断模型与数据契约、HTML 与自动化、具体改法 |
 
 维护时必须先把可采用方法写入正式执行 reference，再更新本表。不得仅新增来源链接就声称技能具备对应能力。

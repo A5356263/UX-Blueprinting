@@ -36,7 +36,7 @@ Keep conflict scope narrow. If only a field limit, parameter value, copy rule, o
 
 ## Tracking API Contract
 
-宿主项目存在本地埋点方法文档时，将其作为最高优先级的本地规范；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，按实际入口进入必要 README 或单一 raw，只读取命中的埋点方法、业务对象或状态章节，不预设目录层级或 README 必然存在。
+宿主项目存在本地埋点方法文档时，将其作为最高优先级的本地规范；否则从萃知检索直接相关的埋点方法、业务对象或状态。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
 
 User journey rules:
 

@@ -17,7 +17,7 @@
 每项输入至少记录：
 
 - `input_id`、`semantic_role`；
-- `source_type`、`source_skill`、精确到字段/JSON Pointer 的 `source_ref`；
+- `source_type`、`source_skill`、精确到原始数据字段或上游 Markdown 章节与条目 的 `source_ref`；
 - `source_version`、`provenance_status`；
 - `population_scope`、`time_window`、`unit`；
 - `allowed_uses`、`sensitivity`。

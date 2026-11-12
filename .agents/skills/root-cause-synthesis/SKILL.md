@@ -1,264 +1,113 @@
 ---
 name: root-cause-synthesis
-description: 候选根因综合技能。仅在 Evidence Govern 已形成面向本技能的消费者专属 Handoff 时使用；将已治理证据综合为可反驳的候选根因、机制链、因果置信度、治理方向和验证假设，也可在 Govern 吸收 reviewed Outcome 后刷新候选生命周期，或基于至少两个可比 reviewed cases 形成跨案例模式候选。不得直接读取原始数据或绕过 Evidence Govern，不得输出已验证根因、具体方案、效果判断、ROI 或自动状态变更。
+description: 候选根因综合 Skill。把已治理并放行的证据综合为可反驳的候选根因、机制链、因果置信度、治理方向与验证假设，也可在结果回检被吸收后刷新候选生命周期，或基于至少两个可比且已审查的案例形成跨案例模式候选。仅在已取得面向本 Skill 的证据放行结论时使用；排除原始数据分析、证据治理与放行、具体方案设计、效果判断、ROI 估算和自动状态变更。
 ---
 
 # 候选根因综合
 
-把 Evidence Govern 已治理的证据组织成可追溯、可反驳、可人工复核的候选机制。不要重新分析原始材料，不要设计具体方案，也不要把候选写成已验证根因。
+本 Skill 把已经治理并放行的证据组织成可追溯、可反驳、可人工复核的候选机制，回答“最可能是哪一个原因、机制如何成立、还缺什么证据”。它不重新分析原始材料，不设计具体方案，也不把候选写成已验证根因。
 
-## Step 0 · 运行入口
+## 适用与边界
 
-### 0.1 检查正式输入
+一次运行只用一种模式，不得组合：
 
-启动时读取：
+- 候选综合：把已放行的证据综合为候选根因、机制链、治理方向与验证假设。假设登记并入本模式。
+- 反馈刷新：结果回检结论已被证据治理吸收并精确回流后，刷新候选生命周期。
+- 模式学习：至少两个可比、已审查且已被吸收的结果案例形成跨案例模式候选。
 
-1. `shared-workflow/skill-graph.json`
-2. `shared-workflow/data-analysis/artifact-registry.json`
-3. `shared-workflow/data-analysis/references/context-handoff-protocol.md`
-4. 用户本轮明确指定的输入或正式 Handoff
+同一份证据可以支撑多个候选，但一次运行只回答本轮问题。独立调用与链式调用使用同一套规则和同一份文档，不因调用方式改变判定标准。
 
-只接受 `.agents/skills/root-cause-synthesis/schemas/input.schema.json` 定义的输入。正式输入必须包含 Evidence Govern 面向 `root-cause-synthesis` 的消费者专属 Handoff。
+本 Skill 负责候选根因与候选机制链、反证与替代解释、因果置信度、不落到方案的治理方向、可证伪的验证假设、被吸收后的候选生命周期刷新、跨案例模式候选。
 
-不得扫描 `spark-output/context/`、Archive Store 或历史目录寻找“最新”输入。
+本 Skill 不负责原始客观、主观或启发式分析；不负责证据规范化、互证、情境治理与放行；不负责具体页面、组件、文案、服务脚本或发布方案；不负责验证执行、效果判断与回归监测；不负责业务影响、收益、投入、ROI 与优先级；也不自动修改证据、知识库或策略资产。
 
-### 0.2 已有产物状态
+只接受面向本 Skill 的消费者专属放行结论。不得绕过证据治理直接读取原始数据、原始工单、原始日志或未经治理的结论包。已有产物只表示曾经运行，不得自动沿用正文、改变模式或跳过门禁。独立调用且只拿到原始材料时，用业务语言说明先做证据治理的必要性，不追问内部引用、字段映射或状态名称。
 
-正式 latest：
+## Step 0 · 运行入口与来源门禁
 
-```text
-spark-output/results/root-cause/ 与 spark-output/context/current/root-cause.json
-```
+正式输入必须同时满足：来源是证据治理环节，放行结论面向本 Skill；放行版本完整、摘要一致，未被过期或替换；放行状态为可运行或带保留可运行；允许用途包含因果综合，引用范围可解析且不超出授权。存在待关闭审核时，只接受与同一版本、同一放行结论和全部引用绑定的已批准审核，任一项不匹配即阻断，不做降级放行。
 
-已有产物只表示曾经运行，不得自动沿用正文、改变本轮模式或跳过输入门禁。
+按模式读取：候选综合读取已治理证据、证据关系、情境评估、业务规则依据、证据基线与根因就绪度；反馈刷新读取已被吸收的已审查结果案例；模式学习读取至少两个已被放行的已审查结果案例。
 
-### 0.3 独立调用沟通
+不得扫描历史目录、归档或“最新”文件寻找输入。信息不足时只提出精确补证需求，由证据治理补足，不回跳原始来源技能。启发式 Findings、单一渠道反馈或未经互证的结论只能作为线索，不能直接支撑候选。
 
-有有效 Govern Handoff 时直接执行。只有原始数据或分析报告时，用业务语言说明：
+放行结论与业务规则依据冲突、或证据之间仍有未解决冲突时，不得自行择一：记录冲突、按较弱一方设置置信度上限，并把冲突写入限制。放行已过期或版本被替换时重新取得放行，不沿用旧版继续推理。
 
-> 我可以综合候选根因，但这些结论需要先确认是否在同一时间、范围和口径下能够一起使用。请先完成证据治理，避免把相似现象误当成同一个原因。
+门禁结论只有五种：阻断，不生成正常候选；需补充，只问会改变判断的关键确认；部分可用，列明已完成与被阻断范围；带保留可运行，继承全部限制；可运行，仍不代表根因已验证。
 
-不要询问用户 `payload_refs`、Schema、字段映射或内部状态名。一次只确认一个会改变范围、规则解释或运行模式的问题。
+### 上游交接核对
 
-## 角色与边界
+候选综合只读取本轮关联的 `spark-output/evidence-governance.md` 中面向本 Skill 且已放行的证据。宿主明确传入治理报告时，以该文件为准，并核对报告身份。反馈刷新须读取经治理吸收的本轮回检结论及对应候选来源。报告中为候选、支撑证据和反证保留稳定编号与出处，逐项写明允许传给回检的验证假设、适用条件与限制。
 
-负责：
+## 分析规则
 
-- 候选根因与候选机制链；
-- 反证和替代解释；
-- `causal_confidence`；
-- 非具体方案的治理方向；
-- 轻量、可证伪的 `validation_hypotheses[]`；
-- Govern 吸收 Outcome 后的候选生命周期 Patch；
-- 至少两个 reviewed cases 的跨案例模式候选。
+**推理顺序。** 观察到的症状 → 证据事实 → 机制假设 → 候选根因，四层不得混写。指标下降、漏斗掉点、报错上升、求助增加、启发式风险或用户“不理解”都只是症状或事实，不能直接写成根因。
 
-不负责：
+**对齐检查。** 证据需在时间窗口、任务与旅程节点、角色与分群、对象状态、业务场景与版本、指标与规则口径、来源独立性上可比较。仅仅主题相似而范围不一致时，不得形成强机制链。
 
-- 原始客观、主观或启发式分析；
-- Evidence 规范化、互证、情境治理和放行；
-- 具体 UI、文案、服务脚本或发布方案；
-- 验证设计、效果判断和回归监测；
-- 业务影响、收益、投入、ROI 或优先级；
-- 自动修改 Evidence、Root Cause、知识库或策略资产。
+**候选卡内聚。** 每个候选在同一张卡内记录：范围与症状、证据事实与推理链、反证、替代解释、因果置信度及上限原因、业务规则依据、审核状态与限制。
 
-## 总原则
+**因果置信度上限门禁。** 不计算综合分，只判断上限：证据不足时不生成正常候选；单一来源、未解决冲突、强反证、强混杂或更强替代解释时最高为低；多来源但关键范围只部分对齐时最高为中；多来源独立、范围一致、反证已处理、混杂较低时最高可为高；明确禁止因果结论时最高为低。高置信仍只是高置信候选，不是确认根因。
 
-1. 所有根因保持 candidate。
-2. 每个正常候选必须有反证检查和至少一个替代解释。
-3. 三种置信度不得混用：这里只使用 `causal_confidence`。
-4. 只消费 Govern Handoff 允许的引用和用途。
-5. 变化信号、生命周期状态和 Patch 动作必须分开。
-6. JSON 是唯一结构化事实源；报告不能增加新结论。
+**反证优先检查。** 相似分群是否正常；异常是否早于候选原因；候选问题存在时是否仍有大量任务顺利完成；主观感知是否与客观行为相反；界面风险是否缺少真实行为对应；变更撤回或故障恢复后问题是否继续；口径变化是否足以解释现象。没有发现反证不等于反证不存在，需记录检查范围并标为未知。
 
-用户报告使用 `shared-workflow/data-analysis/presentation-vocabulary.json` 的中文状态；候选 ID、Handoff ID 和状态码只保留在 JSON 与追溯明细。
-7. 人工审核只局部阻断受影响候选、用途或交接。
+**替代解释。** 每个候选至少保留一个竞争解释，常见类型包括数据质量、指标定义、客群变化、规则或权限变化、故障、运营活动、季节性与正常业务阻断。只有存在明确证据才能排除；竞争解释强于原候选时，原候选不得继续作为首要候选。
 
-## 运行模式
+**机制链。** 每个未被否决、证据也不充分的候选都应有一条候选机制链，显式包含反证、替代解释和验证假设节点，全部只表达候选关系。
 
-一次运行只使用一种模式：
+**范围收窄。** 证据只覆盖部分角色、分群、节点或时间窗时，候选必须写明适用边界，不得外推到全量用户或全部场景，范围外只能作为待验证线索。
 
-| 模式 | 触发条件 | 核心输出 |
-| --- | --- | --- |
-| `candidate_synthesis` | Govern 放行候选根因综合 | 候选、机制链、方向、验证假设 |
-| `outcome_feedback_refresh` | reviewed Outcome 已被 Govern 吸收并精确回流 | 根因生命周期 Patch |
-| `pattern_candidate_learning` | 至少两个可比、已审查且已被 Govern 吸收的 Outcome Case | 相似性与模式候选 |
+**证据缺口。** 缺证据时说明缺什么、为什么关键、补哪一类证据最省，不提猜测性结论，也不把“没查到”写成“不存在”。
 
-假设登记并入 `candidate_synthesis`；验证计划和回归监测归 Outcome；不得多模式组合执行。
+**候选顺序。** 多个候选并存时按证据强度、反证处理程度和范围覆盖排序，保留竞争关系，不为给出单一答案而合并机制不同的候选。
 
-## 输入门禁
+**治理方向。** 只描述需要改善或验证的能力，不落到组件、布局、按钮、文案、客服话术、频控、灰度或发布范围。准备度分为仅验证、可探索、审核后可设计、阻断四档，低置信候选只能取仅验证或阻断。系统、权限、合规、数据口径与正常业务规则问题优先转相应核查，不默认转成体验方案。
 
-目标 Handoff 必须满足：
+**验证假设。** 只记录预期机制、目标指标与方向、护栏、必要分群、基线与观察要求、可证伪条件。不设计执行方式、样本量、统计方法或业务成功阈值，不输出提升百分比、收益、成本、ROI 或优先级；事后补记的假设需标明登记时机。
 
-```text
-source_skill = evidence-govern
-govern_artifact_instance_ref = 完整且摘要匹配的 Govern 已发布实例
-target_skill = root-cause-synthesis
-handoff_status = ready | ready_with_caveats
-allowed_uses contains causal_synthesis
-payload_refs[] are absolute JSON Pointers and all resolve
-```
+**业务规则。** 区分规则导致的正常阻断、规则暴露过晚或理解成本高的体验候选、规则本身需人工裁决。只有业务规则会改变候选机制时，才从萃知定向检索，核对适用范围、条件、例外及出处。未查到充分依据时记录规则缺口。
 
-`required_review_request_ids[]` 非空时，只接受与同一 Artifact Instance Ref、`handoff_id` 和全部 `payload_refs[]` 绑定的已批准 `review_decisions[]`；否则 fail closed。
+**反馈刷新。** 反馈信号、生命周期状态与刷新动作三层分开：一次强化信号不自动改变生命周期；标记已解决、重开与否决必须人工批准，不得自动应用。刷新只在证据治理已吸收结果回检后提出。
 
-按模式读取：
+**模式学习。** 至少两个可比、已审查、已被吸收的案例，记录共同机制、适用与不适用情境、反例与失败条件。允许正向、负向、部分和情境依赖模式，案例不足时不生成正常模式候选。历史相似性只支持候选或验证方向，不提高当前因果置信度。模式候选不自动发布，知识库只接收经人工发布审核的候选。
 
-- Candidate：Canonical Evidence、Evidence Relationship、Context Assessment、Business Rule Basis、Evidence Basis 和 Root Cause Readiness。
-- Feedback：Govern 吸收后的 reviewed Outcome Case 引用。
-- Pattern：至少两个 Govern 放行的 reviewed Outcome Case 引用。
+**隐私与证据边界。** 只保留证据标识、脱敏来源引用、聚合场景与分群、机制、反证与限制。不保存原始反馈正文、原始日志、逐用户路径、真实用户或企业或工单标识、敏感故障正文；不重算原始统计，不伪造缺失的基线。
 
-不得直接读取 Objective、Subjective、Heuristic 或未经 Govern 的 Outcome 包。信息不足时请求 Govern 补证，不得绕过治理。
+**人工审核。** 强混杂、强反证、规则或权限或故障判断、准备进入设计、知识发布与归档时提出局部审核，只阻断受影响候选、用途或结论。
 
-门禁状态：
+## 输出（Markdown）
 
-- `blocked`：不生成正常候选；
-- `needs_user_input`：只请求会改变判断的关键确认；
-- `partial`：列出已完成和被阻断范围；
-- `ready_with_caveats`：继承所有 caveat；
-- `ready`：允许完整运行，但不表示根因已验证。
+正式产物为 `spark-output/root-cause-synthesis.md`。在正文记录本轮任务、范围或时间窗、输入来源和产物身份。消费上游时读取本轮明确关联的完整 Markdown，核对所属项目或需求、分析范围、来源、可用结论及限制。同一路径的旧产物只有在本轮明确关联时才可采用。需要放行或审核的内容，以报告中可定位的条目及明确授权为准。
 
-## Reference 路由
+必须输出一份 Markdown 文档。文档包含以下章节：
 
-- `candidate_synthesis` 必读 `references/candidate-synthesis-rules.md`
-- 候选可进入方案探索或验证准备时读 `references/intervention-and-validation-hypothesis-rules.md`
-- Feedback 或 Pattern 模式读 `references/lifecycle-and-pattern-rules.md`
-- 每次输出和交接前读 `references/handoff-reporting-and-risk-rules.md`
+- `## 1. 结论摘要与候选总览`
+- `## 2. 证据基线与范围对齐`
+- `## 3. 症状、事实与机制推理`
+- `## 4. 候选根因卡`
+- `## 5. 候选机制链`
+- `## 6. 治理方向与验证假设`
+- `## 7. 生命周期刷新与跨案例模式`
+- `## 8. 限制、隐私与待人工确认事项`
 
-真实业务规则正文仍来自 Knowledge Wiki、正式上游或用户输入。本技能默认不扫描 Wiki，只沿精确 `business_rule_basis_ref` 最小读取。
+写作要求：先结论后依据，使用短段落与短列表，候选对比和置信度上限可用表格，每个候选自带反证与替代解释，同一结论只写一次。第 7 章按本次模式展开，不涉及的模式写明“本次未涉及”，其余章节保持存在。文档不得新增证据之外的结论，不得出现原始正文、逐用户明细或敏感标识，不生成 HTML 或图片，也不重算图表。
 
-## 执行步骤
+章节内容：第 2 章写清证据范围、时间窗和仍未满足的对齐项；第 4 章每个候选独立成卡；第 5 章按节点顺序表达机制，并标出反证与替代解释所在位置；第 6 章把治理方向与验证假设分开写；第 8 章列出限制、隐私边界和需人工确认的事项。
 
-### Step 1 · 校验输入合同
+## 自检
 
-运行：
+- 输入只来自面向本 Skill 的证据放行结论，未绕过治理读取原始材料。
+- 症状、事实、机制与候选分层清楚，没有把现象写成根因。
+- 每个候选都有反证检查与至少一个替代解释，置信度没有突破上限。
+- 候选的适用边界与证据范围一致，没有外推到未覆盖的角色、分群或场景。
+- 全文没有已验证根因、最终根因或因果定论。
+- 没有具体方案、效果判断、回归监测、ROI 或优先级。
+- 治理方向未落到组件、文案或发布动作，低置信候选只保留验证。
+- 反馈刷新先经证据治理吸收，模式学习至少两个可比且已审查的案例。
+- 文档无原始正文、逐用户明细、真实标识或敏感故障描述。
+- 章节结构与本次模式一致，结论均可回溯到已治理证据。
+- 能修的直接修；不能修的降级、局部阻断或提出精确补证，不写冗长自检报告。
 
-```bash
-python3 .agents/skills/root-cause-synthesis/scripts/validate_and_write.py validate \
-  --input <input.json> \
-  --candidate <candidate-output.json>
-```
+## 交付与下一步
 
-生成候选前先检查 Handoff、Evidence Basis、Readiness、允许/禁止用途和审核依赖。输入 blocked 时只形成阻断说明和精确补证需求。
-
-### Step 2 · 分离症状、事实、机制和候选
-
-按固定顺序推理：
-
-```text
-observed_symptom
-→ evidence_fact
-→ mechanism_hypothesis
-→ candidate_root_cause
-```
-
-不要把指标下降、报错、求助增加、启发式风险或用户“不理解”直接写成根因。
-
-### Step 3 · 内聚候选卡片
-
-每个候选在同一对象内记录：
-
-- 范围和症状；
-- 证据事实与推理链；
-- 反证；
-- 替代解释；
-- 因果置信度及上限原因；
-- 业务规则引用；
-- 审核状态、补证需求和 caveat。
-
-单一来源、未解决冲突、强反证、强混杂、更强替代解释或禁止 causal claim 时，置信度最高为 `low`。`high` 仍是高置信候选，不是确认根因。
-
-### Step 4 · 生成候选机制链
-
-为每个非 rejected、非 insufficient 候选生成 `candidate_mechanism_chains[]`。链必须显式包含反证、替代解释和验证假设节点，并只表达 candidate 关系。
-
-### Step 5 · 生成治理方向与验证假设
-
-治理方向只表达需要改善或验证的能力，不给具体方案。低置信候选只能进入
-`validation_only`。经审核且达到 `design_ready_after_review` 的方向必须通过
-`Root Cause → Problem Framing` 精确 Handoff 进入方案设计；不得直接跳到
-Business Impact 的方案价值模式。
-
-`validation_hypotheses[]` 只记录机制、指标方向、baseline/观察要求、guardrail、分群和可证伪条件。不得设计实验执行、输出提升百分比或估值。
-
-### Step 6 · 条件反馈与模式学习
-
-Feedback 模式只在 Govern 已吸收 Outcome 后提出 `root_cause_lifecycle_patches[]`；Patch 必须人工批准且不能自动应用。
-
-Pattern 模式至少使用两个可比 reviewed cases，记录共同机制、适用/不适用情境、反例、失败条件和 publication review。不得自动发布。
-
-### Step 7 · 生成交接
-
-只允许以下 Skill 目标：
-
-```text
-evidence-govern
-problem-framing
-business-impact
-outcome-validation-recheck
-data-visualization
-knowledge-wiki
-evidence-archive
-```
-
-人工审核写入 `manual_review_requests[]`，不得伪装成 Skill。Outcome Handoff 必须同时提示需要正式 Intervention Contract。Knowledge Wiki 只接收跨案例模式候选；Archive 需要 `persist_in_archive` 和显式审核。
-
-### Step 8 · 校验并写入
-
-先生成临时候选 JSON，再运行合同工具。只有 Input Schema、Output Schema 和核心语义门禁全部通过，才执行：
-
-```bash
-python3 .agents/skills/root-cause-synthesis/scripts/validate_and_write.py write \
-  --input <input.json> \
-  --candidate <candidate-output.json>
-```
-
-正式发布写入不可变结果，并只按 `analysis_purpose.purpose_key` 更新 Current Pointer；失败不覆盖已有正式结果。
-
-## 输出
-
-正式 JSON 顶层：
-
-```text
-run
-analysis_contract
-data_quality
-limitations
-handoff
-analysis_summary
-analysis_results
-manual_review_requests
-downstream_handoffs
-quality
-write_safety
-```
-
-只接受 Registry 登记的 `5.0.0` 契约；其他版本没有真实适配器时必须重跑。
-
-是否生成 Markdown 由 `requested_deliverables` 决定，与独立或链式调用无关。需要可视化时交给 Data Visualization，不在本技能重算或生成 HTML。
-
-## 标准交接
-
-完成后读取 `shared-workflow/next-skill.md`，只按本次 Handoff、用途许可和门禁给出下一步。
-
-写入成功后运行：
-
-```bash
-node shared-workflow/generate-progress-preview.js
-```
-
-刷新失败只告警，不改变分析结果。
-
-## 内部自检
-
-完成前确认：
-
-- 输入只来自 Root Cause 专属 Govern Handoff；
-- 候选、反证、替代解释和置信度内聚且可追溯；
-- 没有 validated/final root cause；
-- 没有具体方案、效果判断、回归监测或 ROI；
-- Feedback 先经过 Govern；
-- Pattern 至少两个 reviewed cases；
-- 人工审核和 Handoff 引用可解析；
-- JSON 与 Markdown 无原始正文、明细 ID 或敏感信息；
-- Schema、语义门禁和原子写入成功。
-
-能修复的问题直接修复；不能修复时降级、局部阻断或提出精确补证，不生成冗长自检报告。
+正式报告写入并通过自检后，若有适合且获准展示的结果，在会话交付结尾给一句可选提示。按本轮结果调整说法，例如「用数据可视化展示本次允许披露的候选机制链」。提示仅出现在会话中，用户明确提出后再调用 `data-visualization`。

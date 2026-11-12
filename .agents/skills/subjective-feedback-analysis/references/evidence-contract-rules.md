@@ -34,7 +34,7 @@ reported_error
 
 假设不得成为正式 evidence claim type。每条 evidence 必须引用一个 `evidence_eligible=true` 的 finding，并包含 statement、cluster ref、source refs、样本信息、置信度、scene descriptor、允许/禁止用途和 lineage。
 
-涉及规则、权限、配置、资格、预期流程或校验要求时，按 `shared-workflow/data-analysis/references/business-rule-basis-rules.md` 附带 `business_rule_basis`。Subjective 只能使用用户确认、正式上游、Knowledge Wiki 命中或材料推断等来源标注规则线索；未确认内容必须 `needs_confirmation` 或 `inferred_only`，不得验证规则真伪。
+涉及规则、权限、配置、资格、预期流程或校验要求时，必须标注规则线索的来源。只能使用用户确认、正式上游、知识库命中或材料推断这几类来源；未确认内容必须明确标为待确认或仅为推断，不得验证规则真伪。
 
 固定禁止用途至少包含：`prevalence_claim`、`causal_claim`、`final_root_cause`、`objective_impact_scale`、`intervention_effectiveness` 和 `knowledge_publish`。
 

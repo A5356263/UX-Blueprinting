@@ -5,13 +5,7 @@ execution_critical: true
 
 ## 当前生产者
 
-只适配当前 Registry 版本：
-
-- Objective 4.0.0
-- Subjective 4.0.0
-- Experience Heuristic 4.0.0
-
-不读取 Registry 未登记或没有真实适配器的旧证据处理产物。
+只接收本轮明确关联的客观数据分析、主观反馈分析和体验启发式分析正式报告。核对生产者、项目或需求、分析范围、对应来源及条目用途。无法确认来源或适用版本时，记录缺口并阻断受影响条目。
 
 ## 最小源字段
 
@@ -84,4 +78,4 @@ ev_<sha256 前 16 位>
 
 ## 排除
 
-上游 Findings、比较结果、Knowledge Candidate、Validation Request 和报告正文都不能转成 Canonical Evidence Item，除非上游正式 Schema 已将其提升为 `evidence_items[]`。
+上游 Findings、比较结果、Knowledge Candidate、Validation Request 和报告正文都不能转成 Canonical Evidence Item，除非上游正式报告明确将相关条目列为证据，且提供来源、适用范围、限制与允许用途。

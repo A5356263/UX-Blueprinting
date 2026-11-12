@@ -11,21 +11,9 @@ description: >
 
 Use this skill as a sidecar UXB capability. It can run after an experience blueprint exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
 
+## Step 0 · 运行入口与来源门禁
+
 Do not automatically read existing project materials to decide the generation scope. When this skill is invoked, first ask the user which tasks or scenarios need visual journey and tracking requirement documents. Read files only after the user confirms the scope.
-
-## Operating Model
-
-Treat the capability as five layers:
-
-1. **Generation layer**: create `journey_visual.md`, `journey_visual.html`, `journey_tracking_spec.md`, and `error_tracking_spec.md`.
-2. **Contract layer**: enforce input priority, source labels, output structure, and failure conditions.
-3. **Template layer**: use bundled Markdown templates from `assets/templates/`.
-4. **Validation layer**: run `scripts/validate_journey_metrics.py` before calling the output complete.
-5. **Preview adapter layer**: parse and render the generated files in the host project; do not assume the host uses this repository's preview code unchanged.
-
-Do not present the preview renderer as the generator. The renderer only consumes files in the host `journey_metrics/` output directory.
-
-## Inputs
 
 Prefer inputs in this order:
 
@@ -42,11 +30,23 @@ Prefer inputs in this order:
 - 只有 JSON、Markdown 缺失或 Markdown 未读完时，不得生成旅程节点、埋点需求或异常追踪需求。
 - 本门禁不改变先由用户确认任务或场景范围的现有入口规则。
 
-如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从 `knowledge-wiki` 的 `knowledge/wiki/index.md` 开始，业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读命中的埋点方法、业务对象或状态章节。两者都不存在时，在定案参数与 API 细节前先索取或形成明确假设。
+如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从萃知检索直接相关的埋点方法、业务对象或状态。两者均无法提供充分依据时，在定案参数与 API 细节前先索取或形成明确假设。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
 
 - 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出。
 - 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集。
 - 输出边界：以上仅作内部检查，不展示读取过程或检查项；证据不足影响正确性时，只说明必要边界。
+
+## Operating Model
+
+Treat the capability as five layers:
+
+1. **Generation layer**: create `journey_visual.md`, `journey_visual.html`, `journey_tracking_spec.md`, and `error_tracking_spec.md`.
+2. **Contract layer**: enforce input priority, source labels, output structure, and failure conditions.
+3. **Template layer**: use bundled Markdown templates from `assets/templates/`.
+4. **Validation layer**: run `scripts/validate_journey_metrics.py` before calling the output complete.
+5. **Preview adapter layer**: parse and render the generated files in the host project; do not assume the host uses this repository's preview code unchanged.
+
+Do not present the preview renderer as the generator. The renderer only consumes files in the host `journey_metrics/` output directory.
 
 ## Outputs
 
@@ -120,17 +120,6 @@ When porting this capability to a newer UXB project, read `references/migration-
 - Treat `assets/fixtures/` as regression fixtures, not production inputs.
 - Add the CLI entrypoint only after the host command registry and packaging model are known.
 
-## Handoff · 固定下一步
-
-固定输出：
-
-```text
-旅程埋点与度量需求已完成。当前没有固定下一步推荐。
-你可以停在这里。
-```
-
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
-
 ## Bundled Resources
 
 - `references/journey-metrics-contract.md`: compact rule contract.
@@ -140,3 +129,12 @@ When porting this capability to a newer UXB project, read `references/migration-
 - `assets/fixtures/demo-journey/`: known-good sample outputs.
 - `scripts/render_journey_visual_html.py`: render `journey_visual.html` from the Markdown appendix.
 - `scripts/validate_journey_metrics.py`: lightweight structural validator.
+
+## 交付与下一步
+
+固定提示：
+
+```text
+旅程埋点与度量需求已完成。当前没有固定下一步推荐。
+你可以停在这里。
+```

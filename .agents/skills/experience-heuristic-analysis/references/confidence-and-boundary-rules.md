@@ -26,7 +26,7 @@ causal_claim_allowed = false
 
 ## 业务规则依据
 
-包级 `business_rule_basis[]` 登记，Finding 使用 `business_rule_basis_refs[]` 引用。来源优先级：
+在走查报告中记录规则的正式出处及适用范围，相关发现按条目引用。来源优先级：
 
 ```text
 user_confirmed
@@ -38,7 +38,7 @@ user_confirmed
 → unknown
 ```
 
-只有确认有效的用户规则、正式上游、Wiki raw 或明确项目规则可以支持确定性业务判断。`provided_material` 只在本轮范围内确认；推断或 unknown 只能支持待确认风险。每条依据只使用一个 `source_type`，不增加自由文本来源类型字段。
+只有确认有效的用户规则、正式上游、萃知可回溯的正式原文或明确项目规则可以支持确定性业务判断。`provided_material` 只在本轮范围内确认；推断或 unknown 只能支持待确认风险。每条依据只使用一个 `source_type`，不增加自由文本来源类型字段。
 
 ## 项目设计规范
 

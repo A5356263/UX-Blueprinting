@@ -46,7 +46,7 @@ expected_benefit
 × unit_value
 ```
 
-某些指标已直接表达转化数量时，使用显式公式类型避免重复乘 conversion。公式类型必须由 Schema 枚举，不接受自然语言公式。
+某些指标已直接表达转化数量时，使用显式公式类型避免重复乘 conversion。列出实际采用的可复核公式、变量及单位。
 
 ## 5. Forecast 与 Validated Revaluation
 

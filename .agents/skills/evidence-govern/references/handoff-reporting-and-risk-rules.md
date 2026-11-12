@@ -66,4 +66,4 @@ Objective 指标与 Baseline、Heuristic 页面风险、Business Impact ROI、�
 
 ## 可读表达
 
-不生成独立 Markdown。对话摘要只报告运行模式、证据数量、关系覆盖、主要限制、审核项和已允许下游，不得新增 JSON 中不存在的判断。
+正式产物为 `spark-output/evidence-governance.md`。报告内按证据编号写清治理、审核和分消费者放行；对话摘要以报告为准。

@@ -11,9 +11,9 @@ description: >
 
 > 你是旅程分析师，不是交互设计师，也不是用户研究员。你的职责是判断旅程是否可生成，在必要时补齐最小关键结构，并输出可供下游消费的旅程分析结果。
 
-默认只输出 Markdown；如需预览，交给 `preview-renderer`。
+正式产物为 Markdown。
 
-## Step 0 · 运行入口
+## Step 0 · 运行入口与来源门禁
 
 ### Step 0.1 · 本 Skill 产物状态
 
@@ -44,11 +44,11 @@ description: >
 按以下固定优先级检查并读取正式输入：
 
 1. 先确认本 Skill 自身输入边界。
-2. 检查并完整读取 `spark-output/stories.md`；存在且同源时作为用户故事正式输入。
+2. 仅当用户本轮明确指定使用某份用户故事产物时，核对同源并完整读取；不自动查找历史 `stories.md`。
 3. 检查并完整读取 `spark-output/uxb_output.md`；存在且同源时作为 UXB 正式输入。
 4. 检查并完整读取 `spark-output/problem_framing.md`；存在且同源时作为问题框定正式输入。
 5. 上述正式上游均不可用时，读取用户明确提供的 `PRD`、需求文档、场景描述或口头需求。
-6. 如 `knowledge-wiki` 可用，从其 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读与旅程角色、任务、状态、异常或回流直接相关的章节；条件依赖触发时补读后回到主域，不遍历 raw。
+6. 萃知可用时，从萃知检索与旅程角色、任务、状态、异常或回流直接相关的正式规则；条件依赖触发时补查后回到主域。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
 
 - 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出。
 - 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集。
@@ -60,22 +60,22 @@ description: >
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次正式文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
 - 未读完当前实际必需的正式输入，不得进入模式判断、旅程可生成性判断或旅程生成。
-- 同源 `stories.md` 存在时始终作为主要任务单元；同时存在的 `uxb_output.md` 或 `problem-framing` 只补充边界和约束，不替代用户故事。
-- 无同源 `stories.md`，但有同源 `uxb_output.md` 时，以 UXB 为主要输入；`problem-framing` 只作为补充。
+- 本轮明确指定且同源的用户故事作为主要任务单元；同时存在的 `uxb_output.md` 或 `problem-framing` 只补充边界和约束，不替代用户故事。
+- 未采用用户故事且有同源 `uxb_output.md` 时，以 UXB 为主要输入；`problem-framing` 只作为补充。
 - 禁止在读取前判断运行模式。
 
 ### Step 0.3 · 模式判断与降级
 
 完成 Step 0.2 后，按以下互斥优先级确定运行模式：
 
-1. 同源 `stories.md` 可读：进入 `stories-chain`。
-2. 无同源 `stories.md`，但同源 `uxb_output.md` 可用：进入 `uxb-chain`。
-3. 无同源 `stories.md` 和 `uxb_output.md`，但同源 `problem_framing.md` 可读：进入 `framing-chain`。
+1. 用户本轮明确指定且同源的用户故事可读：进入 `stories-chain`。
+2. 未采用用户故事且同源 `uxb_output.md` 可用：进入 `uxb-chain`。
+3. 未采用用户故事且同源 UXB 不可用，但同源 `problem_framing.md` 可读：进入 `framing-chain`。
 4. 上述正式上游均不可用：进入 `prd-standalone`，并等待用户提供或确认本次输入。
 
 #### `stories-chain`
 
-触发条件：同源 `spark-output/stories.md` 可读。
+触发条件：用户本轮明确指定的同源用户故事可读。
 
 用途：
 
@@ -99,7 +99,7 @@ description: >
 
 触发条件：
 
-- 同源 `stories.md` 与 `uxb_output.md` 均不可用；且
+- 未采用用户故事，同源 `uxb_output.md` 不可用；且
 - `spark-output/problem_framing.md` 可读。
 
 用途：
@@ -111,7 +111,7 @@ description: >
 
 触发条件：
 
-- 同源 `stories.md`、`uxb_output.md` 与 `problem_framing.md` 均不可用；且
+- 未采用用户故事，同源 `uxb_output.md` 与 `problem_framing.md` 均不可用；且
 - 用户已经明确提供并确认了本次分析要使用的 `PRD`、需求文档、场景描述或口头需求。
 
 用途：
@@ -141,9 +141,9 @@ description: >
 #### 输入确认硬门槛
 
 - 无论是否检测到上游，都必须先向用户说明当前状态并等待确认。
-- 如果检测到同源 `stories.md`，必须先确认“是否基于当前用户故事继续做旅程分析”。
-- 如果未检测到同源 `stories.md`，但检测到同源 `uxb_output.md`，必须先确认“是否基于当前 UXB 继续做旅程分析”。
-- 如果未检测到同源 `stories.md` 和 `uxb_output.md`，但检测到同源 `problem_framing.md`，必须先确认“是否基于当前问题框定继续做旅程分析”。
+- 如果用户本轮指定了同源用户故事，必须先确认“是否基于当前用户故事继续做旅程分析”。
+- 如果未采用用户故事，但检测到同源 `uxb_output.md`，必须先确认“是否基于当前 UXB 继续做旅程分析”。
+- 如果未采用用户故事且无同源 UXB，但检测到同源 `problem_framing.md`，必须先确认“是否基于当前问题框定继续做旅程分析”。
 - 如果未检测到任何正式上游，必须先要求用户提供或确认本次要分析的需求材料。
 - 未收到用户确认前，不得进入 readiness 判断。
 - 未收到用户确认前，不得抽取旅程结构。
@@ -550,14 +550,9 @@ description: >
 
 - `spark-output/journey_analysis.md`
 
-### Step 9：如需预览则交接
+### Step 9：固定收口
 
-`journey-analysis` 自身不再生成 HTML 预览。
-如用户明确确认需要预览，则在正式 Markdown 自检通过后交给 `preview-renderer`。
-
-### Step 10：固定收口
-
-- 使用本文末尾 Handoff · 固定下一步。
+- 使用本文末尾的「交付与下一步」。
 - 不读取 shared-workflow/next-skill.md 或 shared-workflow/skill-graph.json 生成候选项。
 - 收口后等待用户明确选择。
 
@@ -689,7 +684,6 @@ description: >
 ## 输出结构
 
 正式产物固定为 Markdown 文档。
-如用户确认，可在正式产物完成后追加一份 HTML 预览，由 `preview-renderer` 承接。
 ## Markdown 输出
 
 生成：
@@ -708,19 +702,6 @@ description: >
 - 当前缺口
 - 无法输出完整旅程的原因
 - 建议下一步
-
-## 预览交接
-
-- `journey-analysis` 自身不再生成 HTML 预览。
-- 正式 Markdown 完成并通过自检后，如用户明确确认需要预览，再交给 `preview-renderer`；不得为了预览临时补写旅程事实。
-- 预览是附加动作，不改变主链流转，也不进入 `next_hint`。
-- 固定提示口径：
-
-```text
-附加操作：
-如果需要，我可以继续把本次正式产物渲染成 HTML 预览。
-这不会改变主链流转。
-```
 
 ## 与 probe 的边界
 
@@ -752,7 +733,7 @@ description: >
 - 当前 Skill 的启动、输入读取、执行分支和收口，以用户显式意图和本 SKILL.md 为准。
 - standalone 能力只表示本 Skill 可在材料足够时独立执行，不改变全局预览面板的展示口径。
 
-## Handoff · 固定下一步
+## 交付与下一步
 
 本 Skill 完成后，只输出固定下一步推荐。
 
@@ -769,15 +750,15 @@ description: >
 - 读取 shared-workflow/skill-graph.json 生成候选项
 - 直接执行下一步
 
-固定输出：
+固定提示：
 
 ```text
 用户旅程已完成。你可以继续：
 1. 页面设计文档
 
-你回复对应名称即可。
+如需继续，请回复对应名称。
 ```
 
 “（已产出）”只代表状态，不代表该项被选中或质量通过。
 
-**硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
+正式产物写入并校验通过后，按「交付与下一步」输出。

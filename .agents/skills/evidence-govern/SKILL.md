@@ -1,352 +1,144 @@
 ---
 name: evidence-govern
-description: >
-  内部证据处理与治理技能。在单一流程中完成来源标准化、证据关联与情境评估、生命周期治理、
-  人工审核和消费者专属放行。消费 Objective、Subjective、Experience Heuristic 的正式证据包，
-  或吸收 Outcome Patch 与人工审核决定。不得绕过输入门禁，不做根因、效果重判、价值估算或知识写入。
+description: 内部证据处理与治理技能。在单一流程中完成来源标准化、证据关联与情境评估、生命周期治理、人工审核与下游放行；用于已持有客观数据、主观反馈或体验走查的正式证据结论，或需要吸收效果回检变化与人工审核决定的场景。不做根因判断、效果重判、价值估算、方案设计或知识写入，不扫描历史目录猜测相关材料。
 ---
 
-# Evidence Govern 6.0.0
+# 证据治理与放行
 
-## Step 0：定位项目与合同
+本技能把来自客观数据、主观反馈和体验走查的正式证据，整理成可追溯、可比较、可安全消费的治理结论：每条证据来自哪里、是否重复、能否比较、彼此是互证还是冲突、被哪些情境干扰、可以被哪些下游以什么用途使用、哪些处置必须先经人工审核。它只治理证据本身，不解释问题为什么发生。
 
-1. 读取 `shared-workflow/skill-graph.json`。
-2. 读取 `shared-workflow/data-analysis/artifact-registry.json`。
-3. 读取 `shared-workflow/data-analysis/references/context-handoff-protocol.md`。
-4. 只解析本次请求显式提供的 Artifact、Archive Record、Baseline、Context、Outcome Patch 或 Review Decision 引用。跨技能 Artifact 必须同时给出完整 Artifact Instance Ref、正式 Handoff 引用和绝对 JSON Pointer `payload_refs[]`。
-5. 不扫描 `spark-output`、Store、Knowledge Wiki 或用户目录寻找可能相关材料。
+## 适用与边界
 
-正式输出固定为：
+适用：
 
-```text
-spark-output/results/governed/ 与 spark-output/context/current/governed.json
-```
+- 已持有客观数据、主观反馈或体验走查的正式证据结论，需要统一治理后才能被下游使用。
+- 需要吸收效果回检带来的证据变化，或吸收人工审核决定后重新处置既有证据。
+- 需要为候选根因、业务影响、效果回检、数据可视化或知识候选划定允许使用范围。
 
-只有这一份 latest；不创建 Normalize、Triangulate、中间 latest、per-run 目录或默认历史副本。
+不适用：
 
-## 角色
+- 判断问题为什么发生、哪个机制是最终根因（候选根因综合负责）。
+- 判断某方案是否有效、如何归因（结果回检负责）。
+- 估算优化价值、投入产出或 ROI（业务影响负责）。
+- 设计具体体验方案、页面交付规格，或把内容直接写入知识库。
+- 链式重复加工：标准化、关联、情境评估与放行都在本技能内一次完成，不再调用其他证据处理技能。
 
-Evidence Govern 是一个内部技能，包含三个不可跳过的阶段：
+内部有三个不可跳过的阶段，顺序固定：
 
-```text
-Phase 1  输入标准化与血缘
-Phase 2  证据关联、变化与情境评估
-Phase 3  生命周期、审核与消费者放行
-```
+- 第一步，输入标准化与血缘——保留了哪条证据、来自哪里、是否重复、能否比较。
+- 第二步，证据关联、变化与情境评估——多条证据是否在说同一现象，互相支持、限制还是冲突，有哪些情境在干扰解释。
+- 第三步，生命周期、审核与消费者放行——每条证据现在处于什么状态，可以被谁以什么用途读取，哪些处置必须先经人工裁决。
 
-它回答：
+## Step 0 · 运行入口与来源门禁
 
-- 输入证据是否可追溯、是否重复、能否比较；
-- 多条证据是否在描述同一现象，是否互相支持、限制或冲突；
-- 故障、版本、运营、规则、口径和样本变化是否干扰解释；
-- 每条证据可以被哪些下游以什么用途消费；
-- 哪些处置需要人工审核或显式归档。
+必需：至少一份已登记的当前版本正式证据结论，以及本次要治理什么、给谁用的说明。
 
-它不回答：
+可选：此前的治理结论、显式指定的归档记录、基线、情境资料（结构化材料、原始文件、上游引用或用户口述）。
 
-- 问题为什么发生；
-- 哪个机制是最终根因；
-- 某方案是否有效；
-- 优化价值或 ROI 是多少；
-- 应采用什么具体体验方案；
-- 哪条内容应直接写入 Knowledge Wiki。
+处理口径由材料自动判定，不要求用户回答内部名称：
 
-## 核心原则
+- 提供了新的分析证据 → 治理新证据。
+- 提供了效果回检材料 → 吸收回检带来的变化。
+- 提供了人工审核决定 → 吸收审核决定。
 
-1. 证据变化信号与生命周期处置分离。
-2. 证据关联置信度不等于因果置信度或效果归因置信度。
-3. 缺少情境资料不等于不存在混杂因素。
-4. 单一来源可以进入探索性究因，但不能包装成多源互证。
-5. 同源派生报告不能虚增证据强度。
-6. 审核只局部阻断受影响证据和消费者，不默认中断整个运行。
-7. Handoff 表示允许或建议交接，不表示目标技能已经执行。
-8. Archive 保存证据历史；Knowledge Wiki 保存经过独立门禁的可复用知识表达。
+多种口径同时成立且会改变处理范围时，只用业务语言问清要处理“新分析证据”“效果回检结果”还是“审核决定”。
 
-用户摘要使用 `shared-workflow/data-analysis/presentation-vocabulary.json` 的中文标签、含义和下一步；Evidence ID、Review ID 与机器状态码只在结构化输出和引用明细中出现。
+门禁：
 
-## 项目状态与读取路由
+- 只接受已登记的当前正式版本；未登记或没有适配途径的旧产物不进入正式消费。
+- 缺少全部正式上游时说明受阻原因，不产出正常治理结论。
+- 缺少来源、来源编号或隐私状态时，只限制对应证据，不阻断整包。
+- 缺少情境资料时继续执行，把相关混杂判断如实标为未知，不得写成“未发现混杂”。
+- 吸收回检变化时不得重判效果、重算指标或重跑根因；吸收审核决定时只能处理既有且尚未关闭的审核项。
+- 只处理本次显式给出的材料，不遍历输出目录、归档库或知识库猜测相关材料。
 
-按运行模式选择输入，不额外补读无关 reference：
+缺少必要信息时先完成能安全判断的部分，再用业务语言说明缺口，例如：“我已经完成能安全判断的部分；要继续判断这些证据是否描述同一个问题，还需要补充时间范围、用户或企业范围，以及这段时间是否发生过版本、故障、运营或口径变化。”不询问内部映射或阶段名称。
 
-| 模式 | 必需输入 | 可选输入 |
-|---|---|---|
-| `evidence_governance` | 至少一个 Objective、Subjective 或 Heuristic 正式产物 | prior Govern、显式 Archive Record、Baseline、Context |
-| `outcome_patch_absorption` | prior Govern + Outcome Patch | Review Decision、相关 Baseline |
-| `review_decision_absorption` | prior Govern + Review Decision | 审核要求明确引用的补充材料 |
+## 分析规则
 
-自动推断：
+1. **来源最小要求。** 每条证据至少要能说明来源编号、结论摘要或观察引用、适用范围、时间窗、来源归属、证据形态、血缘、隐私状态、是否需要人工审核，以及允许用途与禁止用途。
+2. **稳定编号与血缘。** 证据编号由生产者、来源条目、结论类型、结论摘要、范围与时间窗确定性生成，完全相同的来源重复运行必须得到相同血缘指纹。修正历史证据时创建新编号，并指向被替代的旧证据。
+3. **可比性。** 只有当指标或问题定义、业务对象、任务环节、单位口径与核心范围都充分时才判定可比。新时间窗产生新证据编号但可共享可比键；可比只表示能够比较，不表示支持或冲突。
+4. **不当作证据的材料。** Findings、比较结果、知识候选、验证请求和报告正文都不能直接当成证据条目，除非上游正式产物已将其列为证据。
+5. **关系判定。** 证据之间只允许六种关系：互证、反证、矛盾、范围限定、非独立、待定匹配。判定时逐项核对用户或企业范围、任务或旅程环节、可观察现象、时间窗、产品版本或场景、指标或问题口径。
+6. **关系强度。** 互证不等于因果；关联置信度按范围匹配、血缘完整和来源独立性判断，不能只按数量判断。同源派生报告只算一条证据，不得虚增证据强度。
+7. **情境因素。** 只评估显式提供的：服务故障、产品变更、运营或培训、政策或流程、度量或口径变化、人群或范围变化、季节性外部事件、其他。只判断它是否可能干扰证据解释，不判断它是否真正导致问题；不得自行排除原始数据或重算指标，需要重算时向对应上游提出精确请求。
+8. **变化信号。** 只有六种：增强、减弱、稳定、已解决、失效、被反驳。它只描述事实变化，不直接改写生命周期：已解决不删除历史证据，失效不自动归档，被反驳先进入审核或限制。
+9. **生命周期。** 证据：候选、已放行、受限、被替代、已归档；基线：提议、生效、失效、被替代、已归档。待审核是审核状态，受阻是放行门禁，二者都不是生命周期。基线数值由客观分析计算，本技能只治理基线的版本与生命周期。
+10. **缺失处理。** 缺时间不做跨时间比较；缺主体不做实体或分群匹配；缺操作可匹配现象但降低置信度；缺全部场景只保留单条证据，不形成跨源互证。只限制受影响的证据，不阻断整个证据包。
+11. **根因就绪度。** 多源互证→就绪；单一来源→仅供探索；存在争议→先解决冲突；信息不足→受阻。单一来源必须具备可追溯来源和安全解释所需范围，否则视为信息不足；单一来源可以进入探索性究因，但不能包装成多源互证。
+12. **权限收敛。** 下游只能收窄允许用途、扩大禁止用途，不得放宽上游限制。修改指标、旅程、分群、粒度或口径时不得静默更新基线。
+13. **风险分级。** 低：保留注意事项不中断；中：阻断强用途、允许探索性读取；高：阻断受影响的根因、知识或归档消费；极高：阻断相关正式下游并要求人工裁决。只阻断受影响的证据与消费者，不把局部风险升级为整包失败。
+14. **隐私与证据边界。** 不复制原始日志、工单正文、企业编号、用户编号或设计链接；原始服务日志只提取时间、活动类型、模块、聚合分群、区域与来源引用；涉及个人信息必须先脱敏。证据阶段只输出关联判断，不输出因果或效果归因置信度。
+15. **知识与归档放行。** 知识放行只针对主观反馈已生成的知识候选，且必须已有批准提交知识审核的人工决定；它只放行审阅，不表示已批准入库。客观指标与基线、页面风险、ROI、单次根因或单次回检结论都不得直接获得知识放行。归档只接受已获准持久化的变更与重要案例，待审或已拒绝的不得持久化，放行不等于已写入。
+16. **禁止。** 不做候选根因、效果重判、方案设计、价值估算或正式知识写入；不遍历归档库、知识库或用户目录猜测历史；不自动写入证据库或基线库；不创建第二份中间事实源。
 
-- 有分析证据引用：`evidence_governance`
-- 有 Outcome Patch：`outcome_patch_absorption`
-- 有 Review Decision：`review_decision_absorption`
+**消费边界。** 放行按消费者分别给出，一个消费者获准不表示其他消费者可用：
 
-只有多种模式同时满足且会改变执行范围时，才用业务语言询问用户要处理“新分析证据”“效果回检结果”还是“审核决定”。不要要求用户回答 Schema、字段映射或内部模式名。
+- 候选根因：可读治理后的问题证据、关系、反证、情境与就绪度；不得把单一来源写成确认根因。
+- 业务影响：可读问题证据、影响范围成熟度与分母限制；不得用价值或 ROI 反写证据可信度。
+- 结果回检：只有候选根因、验证假设与干预方案都已登记，才可读证据与基线引用。
+- 数据可视化：只可表达已治理的结构，不得新增关系、删除注意事项或重算。
+- 归档：只接受获准持久化的变更与重要案例，放行只是可申请范围，不等于写入授权。
+- 知识库：只接受获准审阅的候选引用，不得直接发布、扩大范围或复制原始证据。
+- 客观数据、主观反馈、体验走查：只接受精确的补证或重分析请求，不接受“全部重跑”。
+- 页面设计不在放行对象内，应在候选机制与干预方向形成之后另行接入。
 
-## 输入与权限
+## 正式放行与交接
 
-输入 Schema：
+客观、主观和启发式证据分别从本轮关联的 `spark-output/objective-data-analysis.md`、`spark-output/subjective-feedback-analysis.md` 和 `spark-output/experience-heuristic-analysis.md` 读取。回检反馈从本轮关联的 `spark-output/outcome-validation-recheck.md` 读取。实际产物由用户或宿主明确传入时，以传入文件为准，并核对报告身份。
 
-```text
-.agents/skills/evidence-govern/schemas/input.schema.json
-```
+每项放行在「下游允许范围与根因就绪度」明确记录目标 Skill、证据或结论编号、允许用途、禁止用途、审核结果及遗留限制。只有当前用途所需审核已通过的对应条目可进入下游。回检反馈须按上游报告的证据引用核对后再吸收，保持原有血缘及变更理由。
 
-支持：
+## 输出（Markdown）
 
-```text
-requested_mode
-source_mode
-upstream_artifact_refs[]
-prior_govern_result_ref
-archived_evidence_refs[]
-baseline_refs[]
-context_inputs[]
-outcome_patch_refs[]
-review_decisions[]
-```
+正式产物为 `spark-output/evidence-governance.md`。在正文记录本轮任务、范围或时间窗、输入来源和产物身份。消费上游时读取本轮明确关联的完整 Markdown，核对所属项目或需求、分析范围、来源、可用结论及限制。同一路径的旧产物只有在本轮明确关联时才可采用。需要放行或审核的内容，以报告中可定位的条目及明确授权为准。
 
-`context_inputs[]` 只接受：
+必须输出一份 Markdown 文档（建议 `evidence-governance.md`），作为本次治理唯一的正式产物；每章的事实都要能回溯到具体证据编号，对话摘要只报告处理口径、证据数量、关系覆盖、主要限制与待审事项，不得新增文档中不存在的判断。章节固定为：
 
-- `structured_package`
-- `raw_file`
-- `upstream_ref`
-- `user_statement`
+## 1. 治理范围与输入清单
 
-原始服务日志只提取时间、活动类型、模块、聚合分群、区域和来源引用；不得复制客户原话、企业明细或设计链接。
+说明本次处理的正式证据来源与版本、处理口径、进入治理的证据条目，以及未纳入的证据与原因。
 
-## 输入门禁
+## 2. 证据标准化与血缘核对
 
-- 只接受 Artifact Registry 当前版本，或存在真实适配器的显式 Legacy 版本。
-- 未登记版本或没有真实适配器的旧产物不能进入正式消费。
-- 缺少血缘、来源 ID 或必要隐私状态时，只局部限制对应证据。
-- 缺少全部正式上游时输出 `blocked`，不生成正常治理结论。
-- 缺少情境资料时继续执行，但将相关混杂判断标为 `unknown`。
-- Outcome Patch 吸收不得重判效果、重算指标或重跑 Root Cause。
-- Review Decision 只能处理 prior Govern 中存在且尚未关闭的 Review ID。
+逐条给出证据编号、来源、范围、时间窗与可比性，标出完全重复、同源派生、跨时间可比较和信息不足的情况。
 
-## Phase 1：输入标准化与血缘
+## 3. 证据关系判定
 
-执行前读取：
+写明互证、反证、矛盾、范围限定、非独立与待定匹配，说明每条判断所依据的匹配维度和置信度，并声明互证不代表因果。
 
-```text
-references/normalization-and-lineage-rules.md
-```
+## 4. 情境因素与变化信号
 
-1. 读取上游正式 `evidence_items[]`，不得读取行级原始数据补做分析。
-2. 保留上游 Evidence ID 和 JSON Pointer。
-3. 生成稳定 `evidence_id`、`lineage_fingerprint` 和可选 `comparison_key`。
-4. 将 Objective、Subjective、Heuristic 映射为共享 Canonical Evidence Item。
-5. 判断完全重复、同源派生、跨时间可比较或信息不足。
-6. 只输出标准证据，不把 Findings、Comparison、Knowledge Candidate、Validation Request 当成 Evidence Item。
+列出显式提供的情境因素、可能的干扰方向、处置方式与未知项；给出增强、减弱、稳定、已解决、失效、被反驳的变化信号及其所依据的先后证据。
 
-Phase 1 不做跨源互证、因果解释、生命周期发布或知识候选判断。
+## 5. 生命周期处置与待审事项
 
-## Phase 2：证据关联、变化与情境评估
+给出每条证据与基线的生命周期、拟执行的处置（放行、修订、限制、替代、归档、保留），以及必须由人工裁决的审核项和风险等级。
 
-执行前读取：
+## 6. 下游允许范围与根因就绪度
 
-```text
-references/evidence-link-context-and-change-rules.md
-```
+按消费者列出允许用途、禁止用途与限制条件，给出根因就绪度（就绪、仅供探索、先解决冲突、受阻）及理由。
 
-### 证据关系
+## 7. 风险、限制与知识候选放行
 
-只允许：
-
-```text
-corroborates
-counterevidence
-contradicts
-qualifies_scope
-non_independent
-unresolved_match
-```
-
-检查用户/企业范围、任务或旅程、可观察现象、时间、产品版本或场景、指标或问题口径。输出 `evidence_link_confidence`，不得输出 Evidence 阶段的 `attribution_confidence`。
-
-### 情境因素
-
-只评估显式提供的：
-
-```text
-service_incident
-product_change
-operation_or_training
-policy_or_process
-measurement_or_data_change
-population_or_scope_change
-seasonality_or_external_event
-other
-```
-
-只判断情境是否可能干扰证据解释，不判断其是否真正导致问题。需要重算时向对应上游发出精确请求。
-
-### 变化信号
-
-只允许：
-
-```text
-strengthened
-weakened
-stable
-resolved
-stale
-contradicted
-```
-
-变化信号描述事实变化，不直接修改生命周期。
-
-## Phase 3：生命周期、审核与放行
-
-执行前读取：
-
-```text
-references/lifecycle-review-and-patch-rules.md
-references/handoff-reporting-and-risk-rules.md
-```
-
-### 生命周期
-
-Evidence：
-
-```text
-candidate
-released
-restricted
-superseded
-archived
-```
-
-Baseline：
-
-```text
-proposed
-active
-stale
-superseded
-archived
-```
-
-`needs_review` 属于审核状态，`blocked` 属于发布门禁；二者都不是生命周期。
-
-### Root Cause 门禁
-
-```text
-multi_source_corroborated → ready
-single_source             → exploratory_only
-contested                 → conflict_first
-insufficient              → blocked
-```
-
-单一来源只能支持候选机制。Root Cause 负责 `causal_confidence`，Evidence Govern 不生成因果解释。
-
-### Knowledge Wiki
-
-Evidence Govern 只可放行 Subjective 已生成的 `knowledge_candidates[]` 审阅请求。必须存在 `approve_for_knowledge_submission` 审核决定。Handoff 类型为：
-
-```text
-knowledge_candidate_review_request
-```
-
-放行只允许 Knowledge Wiki 读取和审阅，不表示已批准入库。Knowledge Wiki 仍执行候选、冲突、隐私、适用范围和用户确认门禁。
-
-Root Cause 模式知识不经过本技能回流；完整路径为：
-
-```text
-Outcome reviewed cases
-→ Govern 吸收回检变化
-→ Root Cause pattern learning
-→ 模式发布人工审查
-→ Knowledge Wiki
-```
-
-## 确定性校验与原子写入
-
-唯一脚本：
-
-```text
-.agents/skills/evidence-govern/scripts/evidence_govern_contract.py
-```
-
-执行：
-
-```text
-python3 .agents/skills/evidence-govern/scripts/evidence_govern_contract.py prepare <request.json>
-python3 .agents/skills/evidence-govern/scripts/evidence_govern_contract.py validate <candidate.json>
-python3 .agents/skills/evidence-govern/scripts/evidence_govern_contract.py write <candidate.json>
-```
-
-`prepare` 只处理确定性映射、ID 和血缘；语义关系、情境和治理判断由本 Skill 完成。`write` 只有在核心不变量和可选完整 Schema 校验全部通过后才原子替换 latest。
-
-## 输出
-
-正式输出必须符合：
-
-```text
-.agents/skills/evidence-govern/schemas/output.schema.json
-```
-
-顶层固定为：
-
-```text
-run
-analysis_contract
-data_quality
-evidence_items[]
-evidence_relationships[]
-evidence_change_signals[]
-context_factor_assessments[]
-evidence_patches[]
-baseline_patches[]
-manual_review_queue[]
-review_decisions[]
-downstream_handoffs[]
-limitations[]
-handoff
-```
-
-不生成独立 Markdown。需要人工快速审阅时，在对话中以简短表格呈现审核项；结构化 JSON 始终是事实源。
-
-## 标准 Handoff
-
-- Root Cause：治理后的问题证据、readiness、用途和限制。
-- Business Impact：问题证据、受影响范围成熟度和分母限制；不得把价值反写证据。
-- Outcome：只有 Root、Hypothesis、Intervention 已登记时交付证据与 Baseline 引用。
-- Data Visualization：只交付结构化结果引用，禁止新增关系。
-- Evidence Archive：只交付允许持久化的 Patch 或重要案例引用；正式 Handoff 必须面向 `evidence-archive`、包含 `persist_in_archive`、精确 payload ref，并满足全部审核要求。Handoff ready 不自动执行写入。
-- Knowledge Wiki：只交付已获准审阅的候选引用。
-- Objective、Subjective、Heuristic：只交付精确重分析或补证请求。
-- Experience Blueprint 不从本技能直接触发；应在 Root Cause 形成候选机制和干预方向后接入。
-
-## 用户沟通
-
-不要询问用户内部字段映射、Schema 或阶段名。缺少必要信息时说明：
-
-```text
-我已经完成能安全判断的部分。要继续判断这些证据是否描述同一个问题，还需要补充：
-- 哪个时间范围；
-- 哪类用户或企业；
-- 是否在这段时间发生过版本、故障、运营或口径变化。
-```
-
-正常运行不因低风险审核项中断。只有模式冲突、正式效果判断、发布依赖强情境信息或用户必须裁决的高风险事项才询问。
+汇总隐私与脱敏处理、已知限制、未解决冲突和需要补充的材料；单独说明知识候选是否获准进入审阅，以及哪些处置允许提交归档。
 
 ## 自检
 
-- 所有 Evidence ID、source refs 和 fingerprint 可解析。
-- 同源派生未计为多源互证。
-- 变化信号未直接修改生命周期。
-- 未批准 Patch 未进入 Archive Handoff。
-- 单一来源未生成 ready 根因门禁。
-- Evidence 阶段未输出因果或效果归因置信度。
-- Knowledge Wiki Handoff 只允许候选审阅。
-- 所有消费者只能读取自己的 Handoff 和 Access。
-- 输出通过契约工具校验并原子写入。
+- 每条证据的来源、编号与血缘可解析；缺来源或隐私状态的已按限制处理。
+- 同源派生未计为多源互证，证据数量未被用来代替独立性判断。
+- 变化信号未直接改写生命周期。
+- 单一来源未标为就绪，互证未被写成因果。
+- 证据阶段未输出因果或效果归因置信度。
+- 每份放行只覆盖对应消费者，未放宽上游的允许与禁止用途。
+- 待审或已拒绝的处置未进入归档范围。
+- 知识候选只写成获准审阅，未写成已入库。
+- 文档中无原始日志、工单正文、企业编号、用户编号或未脱敏个人信息。
+- 全文未出现根因结论、效果判断或 ROI 估算。
 
-## 硬边界
+## 交付与下一步
 
-- 不做 Root Cause、效果重判、方案设计、ROI 或正式知识写入。
-- 不遍历 Store 或 Wiki 猜测历史。
-- 不复制原始日志、工单正文、企业 ID 或用户 ID。
-- 不自动应用 Evidence Store 或 Baseline Store Patch。
-- 不创建第二份中间事实源。
-- 不调用其他证据处理技能；标准化、关联、情境评估与放行都在本技能内完成。
+正式报告写入并通过自检后，若本轮已有明确面向候选根因综合的放行，相关审核已关闭，在会话交付结尾提示：「可以说『用已放行的证据做候选根因综合』。」用户明确选择后再调用 `root-cause-synthesis`。未放行时只说明缺口或待审事项。该提示不写入正式报告。
+
+正式报告写入并通过自检后，若有适合且获准展示的结果，在会话交付结尾给一句可选提示。按本轮结果调整说法，例如「用数据可视化梳理本次已放行证据的支持、冲突和限制」。提示仅出现在会话中，用户明确提出后再调用 `data-visualization`。

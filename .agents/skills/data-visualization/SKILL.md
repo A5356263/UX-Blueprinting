@@ -1,299 +1,119 @@
 ---
 name: data-visualization
-description: 将已登记的客观、主观、启发式、证据治理、候选根因、业务影响或效果回检产物，以及用户提供的 chart-ready 数据，转换为可追溯的图表规格、关系图、离线 HTML 和 Objective 专用分析报告。用户要求数据可视化、图表、Dashboard、桑基图、漏斗图、关系图或分析报告 HTML 时使用；只做可信表达，不读取原始日志或工单重做分析，不推导新指标、根因、价值链、ROI 或效果结论。
+description: 把已登记的正式分析结论或用户亲自整理好的数据，转换成可追溯的图表规格、关系图说明与可视化分析报告。用户要求数据可视化、图表、Dashboard、桑基图、漏斗图、关系图或分析报告时使用；只做可信表达，不读取原始日志或工单重做分析，不推导新指标、根因、价值链、ROI 或效果结论。
 ---
 
-# Data Visualization
+# 数据可视化
 
-把已经形成的分析事实或用户整理好的数据转换为可信、可复核、可交付的视觉表达。保持上游语义，不建立第二套事实模型。
+把已经形成的分析事实或用户整理好的数据，转换成可信、可复核、可交付的视觉表达，并写成一份完整的中文 Markdown 文档。本 Skill 只对“如何把事实表达清楚”负责，不对“事实是什么”负责。
 
-## Step 0 · 运行入口
+## 适用与边界
 
-先读取：
+在以下任务中使用：
 
-1. `shared-workflow/skill-graph.json`
-2. `shared-workflow/data-analysis/artifact-registry.json`
-3. `schemas/source-contracts.json`
+- 已登记的正式分析结论需要转成图表：客观指标与路径、主观反馈主题、启发式走查发现、证据治理结论、候选根因、问题定义、页面方案、业务影响与效果回检。
+- 用户直接给出已整理好的指标、表格、节点或边，需要选图并给出可直接照做的规格。
+- 需要桑基图、漏斗图、关系图、机制链、指标卡组或 Dashboard 的视觉方案。
+- 需要按业务问题组织的可视化分析报告，或单源旅程专题报告。
 
-识别一种输入模式：
+不适用：
 
-| 模式 | 进入条件 | 能力上限 |
-| --- | --- | --- |
-| `registered_upstream` | 用户明确引用已登记的正式分析产物，并给出显式 Artifact Bundle | 生成 Objective 旅程专题、业务问题报告或完整诊断报告 |
-| `chart_ready` | 用户给出已整理指标、表格、节点或边 | 直接生成图表规格和通用图表页 |
-| `visualization_brief` | 只有表达目标，没有正式数值 | 只输出选图、布局和待补数据规格 |
+- 只有原始埋点、日志、工单、访谈或页面材料时，先做对应分析；本 Skill 不读原文重算。
+- 不新建指标、目标值、价值链节点、关系或结论，不重算漏斗、转化率、投入产出比、效果、根因与证据强度。
+- 不推荐工程图表库、不安装依赖、不扫描依赖清单，不调用外部设计或预览接口，不读写知识库。
+- 不因工作区里存在图表文件、旧产物或历史页面就自动开始，也不把历史产物当成本次输入。
 
-输入已经充分时直接执行，不固定要求确认。只有覆盖已有交付文件、外部发布、敏感披露或会改变含义的口径歧义需要确认。
+## Step 0 · 运行入口与来源门禁
 
-无法判断模式时，只问：
+三种输入模式，先判断属于哪一种：
 
-> 你希望读者通过这张图看懂什么？你现在有已经整理好的数据、上游分析结果，还是只有一个可视化想法？
+- **正式上游结论**：用户明确引用已登记的分析产物，并给出明确的产物范围与来源运行，可以出正式图表和完整报告。
+- **已整理数据**：用户直接给出指标、表格、节点或边，可以直接出图，但数据口径与可靠性由用户声明。
+- **只有想法**：只有表达目标、没有正式数值时，只输出选图、布局和待补数据清单，不渲染虚构结果。
 
-不要询问 Schema、字段映射或契约版本。只有分母、单位、时间窗口或关系方向不明确且会改变含义时，再补问一个具体问题。
+门禁：
 
-## 角色定义
+- 每张图都必须能追溯到正式来源路径或用户本轮给出的数据；不扫描目录找“最新”文件，不按相似字段名猜路径，不读取未登记的旧版本。
+- 只消费来源允许范围内的内容，并原样继承上游的限制、置信度、样本量、敏感级别与脱敏状态。用户直接给的数据不得冒充正式产物。
+- 输入充分时直接执行，只在覆盖已有交付文件、对外发布、敏感披露，或口径歧义会改变含义时才确认。不问结构版本、字段映射这类问题。
+- 表达目标不清楚时只问一句：你希望读者通过这张图看懂什么，现在手里是整理好的数据、上游分析结果，还是只有一个想法。
+- 以下情况阻断正式图表并列入人工复核，不静默降级：单位、分母或时间窗缺失且会改变含义；来源运行或字段无法追溯；关系方向、节点含义或权重单位存在实质歧义；请求把相关、候选机制、估算或预测表达为确定事实；敏感内容缺少展示授权且无法安全降级。
 
-本技能负责：
+## 分析规则
 
-- 选择与数据意图匹配的图表；
-- 定义视觉编码、标签、图注、响应式和无障碍规则；
-- 继承并展示上游的来源、置信、限制与敏感性状态；
-- 生成强类型 `visualization_package`；
-- 在正式发布入口生成语义中立的离线图表页；
-- 在同一正式发布入口为 Objective 4.0.0 生成确定性的交互式旅程报告；
-- 从显式 Artifact Bundle 生成按业务问题组织的完整诊断报告。
+更细的选图、视觉编码、关系图与价值表达、响应式与无障碍规则见同目录 `references/` 下的说明，按任务需要读取，不必一次全部加载。
 
-本技能不负责：
+**保留生产者语义。** 统一视觉样式，但不统一上游的关系语义。可以调整位置、颜色和标签密度，不得新增、删除或升级关系与结论。
 
-- 读取原始埋点、日志、工单、访谈或页面材料重新分析；
-- 创建指标、目标值、价值链节点、关系或结论；
-- 重算漏斗、转化率、ROI、效果、根因或证据强度；
-- 推荐工程图表库、安装依赖或扫描 `package.json`；
-- 主动调用 Figma、GitHub、CDN 或外部预览 API；
-- 主动读取或写回 Knowledge Wiki；
-- 自动触发下游、归档或改变分析链状态。
+**状态不升级。** 观测、上报、启发式、候选、估算、预测、目标与已验证必须分别标注，用文字标签而不只靠颜色。只有上游明确给出已验证，才可以展示为已验证；相关、支持、矛盾、候选机制与已验证影响不得互相升级。
 
-## 总原则
+**先定意图再选图。** 单个关键值用指标卡加口径说明，不用饼图和仪表盘；类别比较用柱状图；构成用堆叠柱或表格；时间趋势用折线图；分布与离群用分布图，不只展示平均值；两变量关系用散点图，不连线暗示因果；阶段转化用漏斗图；定量流量用桑基图；只有关系没有流量时用关系流或机制链，不用线宽暗示规模。
 
-1. 每个图必须能追溯到正式来源路径或用户提供的 chart-ready 数据。
-2. 统一视觉样式，不统一上游关系语义。
-3. 估算、预测、观测、目标和已验证结果必须显式区分。
-4. 相关、支持、矛盾、候选机制与已验证影响不得相互升级。
-5. 缺少必要含义时阻断正式图表；信息完整但质量有限时降级并显著标注。
-6. 默认离线、自包含、无外部依赖，并提供文字或数据表替代表达。
-7. 只执行展示层最小披露，不自行制定新的脱敏标准。
+**必要语义阈值。** 漏斗图只用于有顺序的阶段转化，分母变化必须由上游给出，不得从节点数量自行计算转化率；桑基图只在每条边都有可比较的非负流量和统一权重单位时使用，节点进出无法解释时必须写限制；分布图只接受上游已给的分箱与非负频数或比例，只有原始样本时不得在展示层自动分箱；柱状图、分组柱、堆叠柱与漏斗图只支持非负值，带符号数据改用显式数据表，不取绝对值，柱状图也不做正负发散编码。
 
-面向用户的图例、状态和说明使用 `shared-workflow/data-analysis/presentation-vocabulary.json`；内部 ID 只用于追溯，不作为图表主标签。
+**数值表达。** 百分比表示比例，百分点表示两个比例的绝对差；同一张图的单位、分母、时间窗和人群口径必须一致；当前值、基线值、变化值与不确定区间分别编码；零值、缺失、不可比与未采集分别表达；不截断坐标轴制造差异，确需截断时要显著标注。
 
-## 固定状态顺序
+**图内标签。** 每张正式图至少给出标题与表达意图、指标名称、单位、时间窗、关键数值或可读数据表、来源引用、限制与可信状态；标签优先用业务可理解名称，内部编号只用于追溯。
 
-```text
-mode_detected
-→ source_contract_checked
-→ semantic_gate_checked
-→ visualization_spec_built
-→ quality_checked
-→ files_written
-→ terminal
+**颜色与排序。** 同一状态在同一交付物中保持同一颜色；正负、通过失败、已验证与预测不得只靠红绿区分；顺序来自时间、业务阶段或上游排序，展示层不重排优先级；图例超过读者可辨识的数量时显示 Top N 与“其他”，并保留完整表格。
+
+**关系图与价值链。** 关系图必须带生产者、原始关系类型、来源引用、节点、边、置信度与限制。证据治理的支持、限制与矛盾不得统一改写为因果；候选机制不得写成最终根因；弱归因不得写成已验证效果；预测价值不得写成实际收益；启发式风险不得写成用户事实。价值链只在业务影响已给出或用户提供完整数据时绘制，不强制固定层数，不补齐缺失节点；价值范围、成本、投入产出比与敏感性只展示不重算，一条链混合观测与预测时逐节点标注。
+
+**业务阶段与原始节点。** 原始事件或任务节点只有在上游给出明确业务阶段映射及其依据时，才能聚合并命名为业务阶段；没有映射时只能称“任务节点流向”，不猜测节点归并，不用常见路径反推阶段。
+
+**复杂度控制。** 优先展示主链，其余关系进明细表；按上游已有分组折叠，不自行合并语义不同的节点；反证、混杂、护栏与分群伤害不得因为“图更简洁”而隐藏。
+
+**隐私与脱敏。** 继承上游的敏感级别、脱敏状态与允许展示范围；用户编号、企业编号、工单原文和原始报错不默认作为大面积标签；能用聚合值、匿名编号或摘要时执行最小披露；上游明确允许原文展示时保留其授权依据；无法判断是否可展示时阻断发布并转人工复核。交付中不写本机绝对路径、访问令牌或未授权的位置信息。
+
+**交付与写入。** 正式交付只走一个入口，同一运行同一用途不得先后产出两份内容不同的正式页面；文件落在指定输出目录内，先校验再原子写入，同名冲突默认版本化而不覆盖，只记录相对路径。
+
+## 上游结论引用
+
+按本轮明确提供的分析报告和条目取数，写清分母、单位、时间窗和允许展示范围。用户直接提供的图表数据保留其原始来源说明。正式产物保留图表规格和可复核的数据表。
+
+## 输出（Markdown）
+
+正式产物为 `spark-output/data-visualization.md`。在正文记录本轮任务、范围或时间窗、输入来源和产物身份。消费上游时读取本轮明确关联的完整 Markdown，核对所属项目或需求、分析范围、来源、可用结论及限制。同一路径的旧产物只有在本轮明确关联时才可采用。需要放行或审核的内容，以报告中可定位的条目及明确授权为准。
+
+必须输出一份完整、可直接阅读的中文 Markdown 文档，不再产出机器结构文件、脚本或数据文件。文档本身就是可视化方案与可视化分析报告的载体；图表最终用什么实现、是否再做页面渲染，由用户另行决定，但任何渲染都要保持离线、自包含，不引用外部字体、脚本或 CDN。
+
+文档按以下章节组织：
+
+```markdown
+## 1. 表达目标与阅读顺序
+## 2. 数据来源与可信度
+## 3. 图表规格
+## 4. 关系图、桑基与机制链
+## 5. 口径、限制与降级
+## 6. 可访问性与响应式要求
+## 7. 图表数据表与追溯附录
 ```
 
-任一阻断门禁失败时，停止正式渲染并写入 `manual_review_requests[]`。不得静默降级。
+写作要求：
 
-## 来源契约与门禁
-
-`registered_upstream` 只接受 `schemas/source-contracts.json` 登记的：
-
-- `artifact_type`
-- 当前唯一 `artifact_version`
-- `producer_skill`
-- 正式字段路径
-- 来源 `run_id`
-
-Artifact 来源必须提供完整 `artifact_instance_ref` 与面向 data-visualization 的 Handoff，消费路径必须同时落在 Handoff 和来源契约允许范围内。用户直接提供的 chart-ready 数据不冒充 Registry Artifact。
-
-`registered_upstream` 还必须声明 `artifact_bundle.bundle_id`、`report_profile` 和与上游实例完全一致的 `source_run_ids`。不扫描目录寻找“最新”文件，不读取未登记旧版本，不根据相似字段名猜测路径。
-
-生产者语义必须保留：
-
-- Objective：指标、漏斗、旅程、报错和有限分群，只表达现有 `analysis_results`；
-- Subjective：样本内主题、Finding、Evidence 和渠道/隐私限制；
-- Heuristic：启发式 Finding、Coverage、Comparison 和验证请求；
-- Evidence Govern：证据支持、限制、矛盾、情境和治理状态；
-- Root Cause：候选机制链、替代解释和待验证项；
-- Problem Framing：问题定义、目标人群、业务边界、成功定义和设计关注点；
-- Experience Blueprint：方案摘要、具体方案和验证要求；
-- Business Impact：问题影响、方案价值预测、敏感性和价值链；
-- Outcome：干预、观测、归因、护栏和验证结论。
-
-详细矩阵与失败规则见 `references/source-contract-risk-and-quality-rules.md`。
-
-## 图表类型门禁
-
-首版正式支持：
-
-- `metric_card`
-- `data_table`
-- `bar`
-- `grouped_bar`
-- `stacked_bar`
-- `line`
-- `distribution`
-- `scatter`
-- `funnel`
-- `sankey`
-- `relationship_flow`
-- `mechanism_chain`
-
-只有边含有可比较的非负流量时使用 `sankey`；只有阶段转化数据时使用 `funnel`；只有关系时使用 `relationship_flow` 或 `mechanism_chain`，不得以线宽暗示规模。
-
-不支持的类型在正式发布时失败关闭，不得猜测转换或自动改写 `chart_type`。只有调用方显式提交 `data_table`、`spec_only`，或带非空数据表与限制说明的 `render_status=degraded` 时，才交付降级结果。
-
-`distribution` 的正式图只接受上游已提供的明确分箱及非负频数/比例；只有原始样本时不得在展示层自动分箱，应失败关闭或由调用方显式提交降级数据表。当前 `bar`、`grouped_bar`、`stacked_bar` 和 `funnel` 正式图只支持非负值；带符号数据使用显式数据表，不得取绝对值或自动换图。
-
-按任务读取：
-
-| 任务 | Reference |
-| --- | --- |
-| 比较、趋势、分布、单值或图表编码 | `references/chart-selection-and-visual-encoding-rules.md` |
-| 关系图、机制链或 Business Impact 已有价值链 | `references/relationship-and-value-expression-rules.md` |
-| HTML、Dashboard、移动端或无障碍 | `references/report-responsive-accessibility-rules.md` |
-| 来源、门禁、敏感信息、质量和写入风险 | `references/source-contract-risk-and-quality-rules.md` |
-
-## 执行流程
-
-### Step 1 · 建立输入契约
-
-把请求写成 `schemas/input.schema.json` 对应的结构。`visualization_brief` 没有数值时，不得生成正式数值图。
-
-报告配置固定为：
-
-- `objective_journey`：单一 Objective 实例，提供完整旅程结论与交互路径；
-- `business_problem`：以问题、证据、机制、方案和价值组织显式来源；
-- `full_diagnostic`：在业务问题结构上纳入已显式绑定的 Objective、Subjective、Heuristic、Govern、Root Cause、Problem Framing、Experience Blueprint、Business Impact 与 Outcome。缺少的环节明确列为“本次未纳入”，不得扫描补齐。
-
-```text
-python3 .agents/skills/data-visualization/scripts/validate_visualization_package.py \
-  validate-input --request [visualization-request.json]
-```
-
-### Step 2 · 生成可视化规格
-
-`registered_upstream` 先由显式 Artifact Bundle 生成确定性候选：
-
-```text
-python3 .agents/skills/data-visualization/scripts/validate_visualization_package.py \
-  build-bundle --request <visualization-request.json> \
-  --package-output <candidate-package.json>
-```
-
-Objective 单源旅程专题也可使用下方专用构建器；两种方式最终都进入同一个 publisher。
-
-每个 `visual_outputs[]` 至少声明：
-
-- `visual_id`
-- `title`
-- `intent`
-- `chart_type`
-- `render_status`
-- `data_ref`
-- `rationale`
-- `epistemic_status`
-- `encoding`
-- `accessibility`
-- `responsive`
-- `caveats`
-
-每个 `relationship_diagrams[]` 必须声明生产者、原始关系类型、来源引用、节点、边、置信或限制。不得创建上游不存在的关系。
-
-### Step 3 · 校验候选包
-
-运行：
-
-```text
-python3 .agents/skills/data-visualization/scripts/validate_visualization_package.py \
-  validate --package <candidate-package.json>
-```
-
-不要在校验阶段写 HTML、Context 或第二套报告。通用图表页只在 Step 5
-的正式发布入口生成，只组织已校验的图表、关系、来源和限制，不生成分析叙事。
-
-### Step 4 · Objective 专用报告
-
-用户明确要求 Objective HTML 时，先生成不含交付路径的候选包：
-
-```text
-python3 .agents/skills/data-visualization/scripts/render_objective_report.py \
-  --objective <objective-artifact.json> \
-  --package-output <candidate-package.json> \
-  --source-ref objective
-```
-
-只接受 Objective `4.0.0`。候选包必须声明消费
-`analysis_results`、`findings`、`limitations` 和授权 Handoff，不写
-`spark-output/context/data-visualization.json`，也不提前生成 HTML。
-
-报告按“范围与质量 → 整体表现 → 任务停止/流转/重复 → 报错与待复核消息模式 →
-业务分群 → 待验证内容 → 技术附录”组织已有事实。未请求模块不渲染；无法评估
-模块解释原因；核心指标冲突时不得显示单一 KPI。没有正式业务阶段映射时只称为
-“任务节点流向”，不得由展示层创建阶段映射。路径专题直接投影 Objective 的完整路径、节点和连线事实，支持真实路径/最多路径/正式理想路径标记、筛选、节点与连线同步高亮，以及任务数、事件次数、占比、P50/P70/P90、报错、退出和折返详情；没有正式业务蓝图时不得把高频路径标为理想路径。任一路径节点不存在于 `stage_nodes`，或任一相邻节点不存在于 `stage_transitions` 时，以 `projection_consistency_error` 失败关闭，不在浏览器端创建空节点兜底。
-
-### Step 5 · 单一正式发布
-
-无论使用 Objective 专用模板还是通用模板，都只从同一入口发布：
-
-```text
-python3 .agents/skills/data-visualization/scripts/validate_visualization_package.py \
-  publish --package <candidate-package.json> \
-  --request <visualization-request.json>
-```
-
-发布器校验请求来源、Artifact Instance、来源中登记的原始 Handoff、Artifact Bundle、requested paths 与候选包
-consumed paths；根据 `report_profile` 选择 Objective 旅程模板、业务问题模板或完整诊断模板。正式 JSON
-与 HTML 使用同一 Run、Purpose 和来源，并共同写入
-`spark-output/results/visualization/`。`output_files[]` 必须指向这组真实不可变
-路径。渲染或必需交付失败时不得发布，也不得更新 Current Pointer。
-
-## 输出契约
-
-复用共享顶层信封：
-
-- `run`
-- `limitations`
-- `handoff`
-- `analysis_results.visualization_package`
-- `manual_review_requests`
-- `quality`
-- `write_safety`
-
-正式结构见 `schemas/output.schema.json`。`analysis_results.visualization_package.recalculation_performed` 必须为 `false`。
-
-写入规则：
-
-- 交付路径必须位于指定 `output_root`；
-- JSON 和 HTML 采用临时文件加原子替换；
-- 正式结果按 Registry 的 `immutable_result_with_purpose_pointer` 发布；
-- 新运行不得再写旧的 `context/data-visualization.json` 或
-  `data-visualization/objective-analysis-report-*.html`；
-- 契约中只记录相对路径，不写入绝对本机路径或访问令牌。
-
-## 标准交接
-
-本技能是可跳过的终点型支持技能：
-
-- `handoff.handoff_status = terminal`
-- 不自动调用分析、验证、Knowledge Wiki 或 Evidence Archive
-- 发现来源、口径或敏感性问题时只写 `manual_review_requests[]`
-- 是否归档由用户或套件层显式决定
-
-成功写出并校验后执行：
-
-```text
-node shared-workflow/generate-progress-preview.js
-```
-
-预览刷新失败只告警，不改变正式产物状态。
-
-会话内输出：
-
-```html
-<!-- spark-context:data-visualization ref="spark-output/context/current/visualization.json" -->
-数据可视化已完成：mode=[source_mode]，outputs=[N]，quality=[pass/degraded]，handoff=terminal
-<!-- /spark-context:data-visualization -->
-```
+- 每张图先写表达意图和读者应当看到什么，再写选型理由与被排除的图表，最后写编码、标签与图注。
+- 指标卡、柱状图、折线图、漏斗图、分布图与散点图的规格要能直接照着画：坐标轴、单位、分母、时间窗、排序规则、标注、颜色含义和每个数据点。
+- 关系图、桑基图与机制链分别说明节点、边、方向、权重单位、置信与限制；没有可比较权重时写“未提供可比较规模”并改用统一线宽。
+- 每张数值图配一份可读数据表，读者不看图也能复核数值；关系图另给节点表和边表。
+- 无法评估、本次未纳入、只有想法或已降级的内容保留章节并写明缺什么、需要谁补，不补造数值。
+- 报告型文档按“已有结论 → 图表或表格 → 口径与限制”组织，技术追溯、内部编号与完整来源路径集中在附录，不用状态码充当标题。
+- 单源旅程专题按范围与质量、整体表现、任务停止与流转、报错与待复核消息、业务分群、待验证内容、技术附录组织；路径专题要能区分真实路径、最多路径与正式理想路径（仅在上游给出正式蓝图时），并展示任务数、事件次数、占比、耗时分位、报错、退出与折返。
+- 核心指标互相冲突时不给单一指标卡，改为说明冲突范围与需要对齐的口径。
+- 全文不写方案建议、根因结论、投入产出结论或效果判断，只做表达。
 
 ## 自检
 
-1. 输入是否属于三种模式之一？
-2. 是否只读取当前正式来源契约？
-3. 是否记录每个消费字段的来源运行和路径？
-4. 是否没有新增指标、关系、价值链或分析结论？
-5. 桑基图是否具备真实权重？
-6. 估算、预测和已验证结果是否清楚区分？
-7. 低质量或敏感信息是否显著限制或进入人工复核？
-8. HTML 是否离线、自包含、响应式并有文字/表格替代？
-9. 输出路径是否安全且未意外覆盖？
-10. 是否保持 `recalculation_performed=false` 和终点交接？
-11. 正式 JSON 的 `output_files[]` 是否与同目录正式 HTML 完全对应？
-12. 是否只有一个正式发布入口，没有产生第二套 Context 或 HTML？
-13. registered_upstream 是否显式绑定 Artifact Bundle，且没有读取包外 current/latest？
-14. 旅程图是否能区分真实路径、最多路径和正式理想路径，并展示报错、退出、折返和多类耗时？
+- 是否属于三种输入模式之一，且每张图都能追溯到正式来源或用户本轮数据。
+- 是否没有新增指标、关系、价值链或结论，也没有重算漏斗、转化率、投入产出比与效果。
+- 桑基图的边是否都有真实可比较的非负流量与统一单位；漏斗图是否只表达上游已给的顺序与分母。
+- 分布图是否只使用上游已给分箱；带符号数据是否改用显式数据表而不是取绝对值。
+- 观测、估算、预测、目标与已验证是否用文字区分，没有把候选或相关写成确定事实。
+- 降级项是否同时给了非空数据表与明显限制；阻断项是否列入人工复核而不是静默出图。
+- 是否继承上游敏感级别、只做最小披露，且没有输出本机绝对路径、令牌或未授权定位信息。
+- 每张数值图是否有可读数据表，状态是否不只靠颜色区分，窄屏与打印是否仍可读。
+- 是否只走一个正式入口、没有覆盖已有文件、没有产出第二份内容不同的正式页面。
+- 是否交付了一份完整 Markdown 文档，章节齐全，缺失与缺口都有说明。
+
+## 交付与下一步
+
+在会话中交付 Markdown 可视化报告。当前无固定下一步。

@@ -18,7 +18,7 @@
 
 ## 报告
 
-JSON 是唯一结构化事实源。独立调用默认生成完整 Markdown；链式调用默认只输出 JSON 和会话摘要。Markdown 必须由已校验 JSON 派生，不得增加新结论或敏感信息，不生成 HTML。
+独立或链式调用均交付同一份 Markdown，写明候选、治理报告条目、反证、限制与放行范围。对话摘要以报告为准。
 
 ## 隐私
 
@@ -26,10 +26,4 @@ JSON 是唯一结构化事实源。独立调用默认生成完整 Markdown；链
 
 ## 写入
 
-正式产物与按分析目的维护的 Current Pointer 为：
-
-```text
-spark-output/results/root-cause/ 与 spark-output/context/current/root-cause.json
-```
-
-不创建 per-run 目录或重型 Run Log。正式产物实例不可覆盖；失败不得更新最后一次有效的 Current Pointer。归档只通过 Evidence Archive 的显式授权路径。
+正式产物为 `spark-output/root-cause-synthesis.md`。完成证据、隐私和交接核对后写入。归档通过证据归档 Skill 的显式授权路径。
