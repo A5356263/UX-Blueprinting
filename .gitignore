@@ -1,3 +1,10 @@
+# 根目录只跟踪 Skill、共享流程、项目说明和本文件。
+/*
+!/.agents/
+!/shared-workflow/
+!/README.md
+!/.gitignore
+
 __pycache__/
 *.pyc
 *.pyo
