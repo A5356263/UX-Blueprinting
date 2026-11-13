@@ -1,9 +1,15 @@
-# 根目录只跟踪 Skill、共享流程、项目说明和本文件。
+# 根目录只放行项目文件和需要随分支保存的本地资料。
 /*
 !/.agents/
 !/shared-workflow/
 !/README.md
 !/.gitignore
+!/.mcp.json
+!/AGENTS.md
+!/skills-lock.json
+!/input/
+!/skill/
+!/spec/
 
 __pycache__/
 *.pyc
@@ -16,10 +22,8 @@ Thumbs.db
 .agents/temp/
 .agents/worktrees/
 docs/
-input/
 test/
 spark-output/
-spec/
 out/
 plugin/
 myguize.md
