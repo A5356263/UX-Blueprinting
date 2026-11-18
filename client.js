@@ -184,7 +184,8 @@ window.__ModuleLoader__.load({
       .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 0 0 1.5px var(--ink), 0 22px 54px -14px rgb(0 0 0 / .28); }
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
       .uxbp-art { flex: none; aspect-ratio: 4 / 3; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
-      .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); }
+      .uxbp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+      .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); pointer-events: none; }
       .uxbp-card-body { flex: 1; min-height: 0; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 3px; }
       .uxbp-card-body strong { font-size: 12.5px; line-height: 17px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -486,8 +487,62 @@ window.__ModuleLoader__.load({
       for (const char of skillId) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
       const hue = hash % 360
       return {
-        background: `linear-gradient(135deg, hsl(${hue} 48% 86%), hsl(${(hue + 46) % 360} 42% 68%))`,
+        background: `linear-gradient(135deg, hsl(${hue} 20% 92%), hsl(${(hue + 34) % 360} 22% 84%))`,
+        color: '#3d362e',
       }
+    }
+
+    const artIcons = {
+      uxb: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z M16 8l-2.4 5.6L8 16l2.4-5.6L16 8Z',
+      'prd-review': 'M6 2h8l4 4v16H6Z M14 2v4h4 M9 12l2 2 4-4 M9 17h6',
+      'problem-framing': 'M3 5h9v6H3Z M12 8h5 M17 5h4v6h-4 M7 15h10 M7 19h6',
+      stories: 'M4 4h6v6H4Z M14 4h6v6h-6Z M4 14h6v6H4Z M14 14h6v6h-6Z M6 7l2 2 2-3',
+      'journey-analysis': 'M4 18c4-9 8 0 12-7 2-4 4-4 4-4 M7 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z M17 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+      'journey-metrics': 'M4 20V4 M4 20h16 M7 16l4-5 3 3 5-7',
+      'page-spec': 'M3 4h18v16H3Z M3 8h18 M8 8v12 M12 11h6 M12 15h6',
+      'board': 'M3 5h7v14H3Z M12 5h9v7h-9Z M12 14h9v5h-9Z M6 9h1 M6 13h1',
+      'edge': 'M6 4v6a4 4 0 0 0 4 4h8 M6 20v-4 M18 4v10 M16 12l2 2 2-2',
+      'solution-swimlane': 'M3 4h18v4H3Z M3 10h18v4H3Z M3 16h18v4H3Z M8 6h6 M12 12h5 M7 18h8',
+      'knowledge-wiki': 'M3 5c4-2 7-2 9 0v14c-2-2-5-2-9 0Z M21 5c-4-2-7-2-9 0v14c2-2 5-2 9 0Z',
+      'objective-data-analysis': 'M4 20V4 M4 20h16 M7 16v-5 M11 16V8 M15 16v-3 M19 16V6',
+      'subjective-feedback-analysis': 'M3 4h12v8H8l-3 3v-3H3Z M10 9h11v7h-4l2 3-3-3h-6Z',
+      'experience-heuristic-analysis': 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z M16 16l4 4 M7 8h8 M7 12h6',
+      'evidence-govern': 'M12 2l8 4v7c0 4-3 7-8 9-5-2-8-5-8-9V6Z M9 12l2 2 4-4',
+      'root-cause-synthesis': 'M12 21V9 M12 13 6 7 M12 13l6-6 M6 7 4 3 M6 7 2 8 M18 7l2-4 M18 7l4 1',
+      'business-impact': 'M3 20h18 M5 16l4-5 3 2 5-7 M16 6h4v4',
+      'outcome-validation-recheck': 'M20 12a8 8 0 1 1-2.3-5.7 M20 4v6h-6 M8 12l3 3 4-5',
+      'evidence-archive': 'M3 5h18v4H3Z M5 9h14v10H5Z M9 13h6',
+      'data-visualization': 'M12 3a9 9 0 1 0 9 9h-9Z M12 3v9h9 M4 16l4-4 3 2 5-6',
+    }
+
+    function SkillArt({ skillId }) {
+      const icon = artIcons[skillId] ?? artIcons.uxb
+      return h('svg', {
+        viewBox: '0 0 200 140',
+        role: 'img',
+        'aria-label': skillId + ' illustration',
+        preserveAspectRatio: 'xMidYMid slice',
+      },
+        h('circle', { cx: 160, cy: 25, r: 42, fill: 'var(--accent)', fillOpacity: .08 }),
+        h('circle', { cx: 34, cy: 122, r: 48, fill: 'currentColor', fillOpacity: .035 }),
+        h('path', {
+          d: 'M14 116c26-18 44 6 70-5s44-37 102-25',
+          fill: 'none', stroke: 'currentColor', strokeOpacity: .22, strokeWidth: 1,
+          strokeDasharray: '2 6', strokeLinecap: 'round',
+        }),
+        h('g', {
+          transform: 'translate(50 22) scale(4)',
+          fill: 'none', stroke: 'currentColor', strokeWidth: .9,
+          strokeLinecap: 'round', strokeLinejoin: 'round',
+        }, ...icon.split(' M').map((part, index) => h('path', {
+          key: index,
+          d: (index === 0 ? '' : 'M') + part,
+        }))),
+        h('circle', { cx: 158, cy: 104, r: 13, fill: 'none', stroke: 'currentColor', strokeOpacity: .35, strokeWidth: 1 }),
+        h('circle', { cx: 158, cy: 104, r: 4, fill: 'var(--accent)', fillOpacity: .75 }),
+        h('path', { d: 'M120 128h56', stroke: 'var(--accent)', strokeOpacity: .4, strokeWidth: 1, strokeLinecap: 'round' }),
+        h('path', { d: 'M20 24h22 M20 30h13', stroke: 'currentColor', strokeOpacity: .24, strokeWidth: 1, strokeLinecap: 'round' }),
+      )
     }
 
     function groupOf(phase) {
@@ -899,7 +954,7 @@ window.__ModuleLoader__.load({
                       onFocus: () => shakeCard(item.id),
                       onDoubleClick: () => useSkill(item.id),
                     },
-                    h('span', { className: 'uxbp-art', style: artStyle(item.id) }),
+                    h('span', { className: 'uxbp-art', style: artStyle(item.id) }, h(SkillArt, { skillId: item.id })),
                     h('span', { className: 'uxbp-card-body' },
                       h('strong', null, item.name),
                       h('p', null, item.id + ' · ' + (item.phase === 1 ? '探索与定义' : item.phase === 2 ? '设计与交付' : '分析与证据'))),
