@@ -41,6 +41,8 @@ window.__ModuleLoader__.load({
       paused: 'Paused',
       completed: 'Completed',
       idle: 'Not started',
+      progress: 'Progress',
+      outputs: 'outputs',
       running: 'Running…',
       openTask: 'Open',
       view: 'View',
@@ -81,6 +83,8 @@ window.__ModuleLoader__.load({
       paused: '已暂停',
       completed: '已完成',
       idle: '未开始',
+      progress: '任务进度',
+      outputs: '产物',
       running: '执行中…',
       openTask: '打开',
       view: '查看',
@@ -113,7 +117,7 @@ window.__ModuleLoader__.load({
       }
       .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
       .uxbp-top {
-        position: absolute; z-index: 30; top: 14px; left: 18px; right: 18px;
+        position: absolute; z-index: 30; top: 14px; left: 18px; right: 320px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
         padding: 0; background: transparent; pointer-events: none;
       }
@@ -146,8 +150,8 @@ window.__ModuleLoader__.load({
         border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
-      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 288px; gap: 14px; margin: 70px 18px 16px; }
-      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 288px; gap: 14px; margin: 14px 18px 16px; }
+      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding-top: 52px; }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; scrollbar-gutter: stable; }
@@ -201,10 +205,11 @@ window.__ModuleLoader__.load({
       .uxbp-up input { position: absolute; width: 1px; height: 1px; opacity: 0; }
       .uxbp-error { margin: 0 2px; padding: 8px 10px; border-radius: 10px; color: var(--dsw-alias-state-error-primary, #a52c28);
         background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 9%, var(--card)); font-size: 12px; }
-      .uxbp-aside { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
-      .uxbp-panel { min-height: 0; display: flex; flex-direction: column; border: .5px solid var(--line-strong); border-radius: var(--radius);
-        background: var(--card); box-shadow: var(--shadow); overflow: hidden; }
-      .uxbp-panel-head { flex: none; padding: 13px 16px; border-bottom: .5px solid var(--line); }
+      .uxbp-aside { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px;
+        border-left: .5px solid var(--line); padding-left: 16px; }
+      .uxbp-panel { min-height: 0; display: flex; flex-direction: column; border: 0; border-radius: 0;
+        background: transparent; box-shadow: none; overflow: hidden; }
+      .uxbp-panel-head { flex: none; padding: 0 0 12px; border-bottom: .5px solid var(--line); }
       .uxbp-taskline { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
       .uxbp-taskline strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
       .uxbp-meta { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
@@ -214,7 +219,7 @@ window.__ModuleLoader__.load({
       .uxbp-subtab { height: 28px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: var(--muted);
         font: inherit; font-size: 12px; cursor: pointer; }
       .uxbp-subtab[data-on="true"] { background: var(--soft); color: var(--ink); font-weight: 650; }
-      .uxbp-scroll { flex: 1; min-height: 0; overflow: auto; padding: 10px 14px; }
+      .uxbp-scroll { flex: 1; min-height: 0; overflow: auto; padding: 10px 0; }
       .uxbp-node { padding: 9px 0; border-bottom: .5px solid color-mix(in srgb, var(--line) 65%, transparent); }
       .uxbp-node:last-child { border-bottom: 0; }
       .uxbp-node-head { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
@@ -223,7 +228,7 @@ window.__ModuleLoader__.load({
         font: 11.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
       .uxbp-msg { padding: 7px 0; font-size: 12.5px; line-height: 20px; white-space: pre-wrap; overflow-wrap: anywhere; }
       .uxbp-msg b { color: var(--muted); font-size: 11px; font-weight: 650; }
-      .uxbp-next { flex: none; max-height: 38%; overflow: auto; padding: 12px 16px; border-top: .5px solid var(--line); }
+      .uxbp-next { flex: none; max-height: 38%; overflow: auto; padding: 12px 0 0; border-top: .5px solid var(--line); }
       .uxbp-next h3 { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 650; }
       .uxbp-next-main { width: 100%; text-align: left; padding: 11px; border: .5px solid color-mix(in srgb, var(--accent) 40%, var(--line-strong));
         border-radius: 11px; background: color-mix(in srgb, var(--accent) 8%, var(--card)); color: var(--ink);
@@ -244,13 +249,22 @@ window.__ModuleLoader__.load({
       .uxbp-status { flex: none; padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
       .uxbp-status[data-status="active"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
       .uxbp-status[data-status="completed"] { color: #216b51; background: #edf7f1; }
+      .uxbp-progress { padding: 10px 0 12px; border-bottom: .5px solid var(--line); }
+      .uxbp-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+      .uxbp-progress-head strong { font-size: 11px; font-weight: 650; color: var(--muted); }
+      .uxbp-progress-track { height: 4px; margin: 7px 0 5px; overflow: hidden; border-radius: 999px; background: var(--soft); }
+      .uxbp-progress-fill { height: 100%; border-radius: inherit; background: var(--accent); transition: width .3s var(--ease); }
+      .uxbp-progress-meta { color: var(--faint); font-size: 10.5px; }
       @container (max-width: 760px) {
-        .uxbp-body { grid-template-columns: minmax(0, 1fr); margin-top: 84px; }
-        .uxbp-aside { max-height: 42vh; }
+        .uxbp-top { right: 18px; }
+        .uxbp-body { grid-template-columns: minmax(0, 1fr); margin: 62px 18px 16px; }
+        .uxbp-left { padding-top: 0; }
+        .uxbp-aside { max-height: 42vh; border-left: 0; border-top: .5px solid var(--line); padding: 12px 0 0; }
       }
       @container (max-width: 700px) {
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
         .uxbp-body { margin: 10px; }
+        .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
         .uxbp-card { width: 160px; height: 236px; }
         .uxbp-plane { padding: 4px 10px 100px; }
@@ -782,6 +796,8 @@ window.__ModuleLoader__.load({
 
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
       const status = task ? statusLabel(task.status) : ''
+      const outputCount = Object.keys(manifest?.skills ?? {}).length
+      const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
@@ -898,7 +914,15 @@ window.__ModuleLoader__.load({
                         h('button', { className: 'uxbp-btn', onClick: () => void action('resume'), disabled: task.status === 'active' }, t('resume')),
                         h('button', { className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
                         h('button', { className: 'uxbp-btn', onClick: () => void rename() }, t('rename')),
-                        h('button', { className: 'uxbp-btn', onClick: () => void newTask() }, t('newTask'))))
+                        h('button', { className: 'uxbp-btn', onClick: () => void newTask() }, t('newTask'))),
+                      h('div', { className: 'uxbp-progress' },
+                        h('div', { className: 'uxbp-progress-head' },
+                          h('strong', null, t('progress')),
+                          h('span', { className: 'uxbp-meta' }, status)),
+                        h('div', { className: 'uxbp-progress-track' },
+                          h('div', { className: 'uxbp-progress-fill', style: { width: progress + '%' } })),
+                        h('div', { className: 'uxbp-progress-meta' },
+                          (task.skills?.length ?? 0) + ' Skill · ' + outputCount + ' ' + t('outputs'))))
                     : h('div', null,
                       h('div', { className: 'uxbp-taskline' },
                         h('strong', null, t('task')),
