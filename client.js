@@ -153,7 +153,7 @@ window.__ModuleLoader__.load({
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
       .uxbp-cards { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 238px; height: 304px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-card { position: relative; width: 238px; height: 330px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -244,7 +244,7 @@ window.__ModuleLoader__.load({
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
         .uxbp-body { margin: 10px; }
         .uxbp-brand .uxbp-title { display: none; }
-        .uxbp-card { width: 190px; height: 258px; }
+        .uxbp-card { width: 190px; height: 300px; }
         .uxbp-plane { padding: 4px 10px 16px; }
         .uxbp-picker > span { max-width: 100px; }
       }
