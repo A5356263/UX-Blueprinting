@@ -109,14 +109,15 @@ window.__ModuleLoader__.load({
         --radius-sm: var(--dsw-radius-sm, 8px);
         --shadow: var(--dsw-elevation-soft, 0 3px 12px rgb(59 44 29 / .06));
         --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", "宋体", Georgia, serif;
+        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
         --ease: cubic-bezier(.2, .8, .2, 1);
         position: relative; height: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;
         overflow: hidden; color: var(--ink); background: var(--bg);
-        font: 14px/1.5 var(--serif);
+        font: 14px/1.5 var(--sans);
         container-type: inline-size;
       }
       .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
-      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select { font-family: var(--serif); }
+      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select { font-family: var(--sans); }
       .uxbp-top {
         position: absolute; z-index: 30; top: 14px; left: 18px; right: 320px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -127,11 +128,11 @@ window.__ModuleLoader__.load({
       .uxbp-mark { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 11px;
         color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
       .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
-      .uxbp-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: var(--glass);
-        backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
-      .uxbp-tab { height: 32px; border: 0; border-radius: 10px; padding: 0 14px; background: transparent; color: var(--muted);
-        font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
-      .uxbp-tab[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
+        border: .5px solid var(--line-strong); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+      .uxbp-tab { height: 34px; border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
+        font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
+      .uxbp-tab[data-on="true"] { background: var(--ink); color: var(--card); box-shadow: none; }
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
       .uxbp-top .uxbp-btn { background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
       .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
@@ -157,12 +158,12 @@ window.__ModuleLoader__.load({
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; scrollbar-gutter: stable; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 6px 18px 100px; min-width: max-content; }
-      .uxbp-group { margin-bottom: 26px; }
+      .uxbp-plane { padding: 28px 40px 160px; width: max-content; min-width: calc(100% + 96px); min-height: calc(100% + 96px); }
+      .uxbp-group { margin-bottom: 34px; }
       .uxbp-group:last-child { margin-bottom: 0; }
-      .uxbp-group h2 { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
-      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 176px; height: 256px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
+      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; max-width: 1500px; }
+      .uxbp-card { position: relative; width: 176px; height: 224px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -173,20 +174,20 @@ window.__ModuleLoader__.load({
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
       .uxbp-art { flex: none; aspect-ratio: 4 / 3; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
       .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); }
-      .uxbp-card-body { flex: 1; min-height: 0; padding: 8px 12px 0; display: flex; flex-direction: column; gap: 4px; }
-      .uxbp-card-body strong { font-size: 13px; line-height: 18px; font-weight: 600; display: -webkit-box;
+      .uxbp-card-body { flex: 1; min-height: 0; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 3px; }
+      .uxbp-card-body strong { font-size: 12.5px; line-height: 17px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11.5px; line-height: 17px; display: -webkit-box;
-        -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-foot { margin-top: auto; min-height: 32px; padding: 6px 12px 9px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-      .uxbp-card-foot code { color: var(--muted); font-size: 10.5px; line-height: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 2px 7px; background: var(--card);
-        color: var(--muted); font: inherit; font-size: 10.5px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11px; line-height: 16px; display: -webkit-box;
+        -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+      .uxbp-card-foot { margin-top: auto; min-height: 30px; padding: 5px 10px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+      .uxbp-card-foot code { color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 2px 6px; background: var(--card);
+        color: var(--muted); font: inherit; font-size: 10px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
       .uxbp-card:hover .uxbp-use, .uxbp-card[data-selected="true"] .uxbp-use { background: var(--dsw-alias-button-primary-fill, var(--accent));
         border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
       @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
         70% { transform: rotate(0) translateX(2px); } }
-      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(580px, calc(100% - 32px));
+      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(520px, calc(100% - 32px));
         bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent);
         border-radius: 20px; background: var(--glass); backdrop-filter: blur(24px) saturate(160%);
         box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
@@ -206,9 +207,9 @@ window.__ModuleLoader__.load({
       .uxbp-up input { position: absolute; width: 1px; height: 1px; opacity: 0; }
       .uxbp-error { margin: 0 2px; padding: 8px 10px; border-radius: 10px; color: var(--dsw-alias-state-error-primary, #a52c28);
         background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 9%, var(--card)); font-size: 12px; }
-      .uxbp-aside { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px;
+      .uxbp-aside { min-width: 0; min-height: 0; height: 100%; display: flex; flex-direction: column; gap: 10px;
         border-left: .5px solid var(--line); padding-left: 16px; }
-      .uxbp-panel { min-height: 0; display: flex; flex-direction: column; border: 0; border-radius: 0;
+      .uxbp-panel { min-height: 0; height: 100%; display: flex; flex-direction: column; border: 0; border-radius: 0;
         background: transparent; box-shadow: none; overflow: hidden; }
       .uxbp-panel-head { flex: none; padding: 0 0 12px; border-bottom: .5px solid var(--line); }
       .uxbp-taskline { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
@@ -220,7 +221,7 @@ window.__ModuleLoader__.load({
       .uxbp-subtab { height: 28px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: var(--muted);
         font: inherit; font-size: 12px; cursor: pointer; }
       .uxbp-subtab[data-on="true"] { background: var(--soft); color: var(--ink); font-weight: 650; }
-      .uxbp-scroll { flex: 1; min-height: 0; overflow: auto; padding: 10px 0; }
+      .uxbp-scroll { flex: 1 1 auto; min-height: 160px; overflow: auto; padding: 10px 0; }
       .uxbp-node { padding: 9px 0; border-bottom: .5px solid color-mix(in srgb, var(--line) 65%, transparent); }
       .uxbp-node:last-child { border-bottom: 0; }
       .uxbp-node-head { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
@@ -229,7 +230,7 @@ window.__ModuleLoader__.load({
         font: 11.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
       .uxbp-msg { padding: 7px 0; font-size: 12.5px; line-height: 20px; white-space: pre-wrap; overflow-wrap: anywhere; }
       .uxbp-msg b { color: var(--muted); font-size: 11px; font-weight: 650; }
-      .uxbp-next { flex: none; max-height: 38%; overflow: auto; padding: 12px 0 0; border-top: .5px solid var(--line); }
+      .uxbp-next { flex: 0 0 26%; min-height: 120px; overflow: auto; padding: 12px 0 0; border-top: .5px solid var(--line); }
       .uxbp-next h3 { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 650; }
       .uxbp-next-main { width: 100%; text-align: left; padding: 11px; border: .5px solid color-mix(in srgb, var(--accent) 40%, var(--line-strong));
         border-radius: 11px; background: color-mix(in srgb, var(--accent) 8%, var(--card)); color: var(--ink);
@@ -270,8 +271,8 @@ window.__ModuleLoader__.load({
         .uxbp-body { margin: 10px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
-        .uxbp-card { width: 160px; height: 236px; }
-        .uxbp-plane { padding: 4px 10px 100px; }
+        .uxbp-card { width: 160px; height: 214px; }
+        .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
     `
@@ -859,9 +860,6 @@ window.__ModuleLoader__.load({
                 files.length > 0 && h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap', padding: '2px 4px' } },
                   ...files.map((file, index) => h('span', { key: index, className: 'uxbp-file' }, file.name,
                     h('button', { type: 'button', 'aria-label': t('remove'), onClick: () => setFiles(items => items.filter((_, i) => i !== index)) }, '×')))),
-                skill && h('div', { style: { padding: '2px 4px 0' } },
-                  h('span', { className: 'uxbp-chip' }, h('span', null, 'Skill: ' + nameOf(skill)),
-                    h('button', { type: 'button', 'aria-label': t('remove'), onClick: () => setSkill('') }, '×'))),
                 h('textarea', {
                   ref: inputRef, className: 'uxbp-input', value: text, placeholder: t('placeholder'), disabled: sending,
                   onChange: event => setText(event.target.value),
@@ -880,15 +878,6 @@ window.__ModuleLoader__.load({
                       } }),
                       h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' }),
                       h('span', null, t('attach'))),
-                    h('div', { className: 'uxbp-picker' },
-                      h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'skill', onClick: () => setOpenMenu(openMenu === 'skill' ? '' : 'skill') },
-                        h(Icon, { path: 'M12 2 14.5 9.5 22 12 14.5 14.5 12 22 9.5 14.5 2 12 9.5 9.5Z' }),
-                        t('skill')),
-                      openMenu === 'skill' && h('div', { className: 'uxbp-menu' },
-                        ...catalog.map(item => h('button', {
-                          key: item.id, type: 'button', className: 'uxbp-option', 'data-on': skill === item.id,
-                          onClick: () => { setSkill(item.id); setOpenMenu('') },
-                        }, item.name, h('span', { className: 'uxbp-meta' }, '/' + item.id))))),
                     h('div', { className: 'uxbp-picker' },
                       h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'session', disabled: Boolean(task), title: task ? t('session') : sessionTitle, onClick: () => setOpenMenu(openMenu === 'session' ? '' : 'session') },
                         h(Icon, { path: 'M4 5h16v11H9l-5 4V5Z' }),
@@ -920,8 +909,7 @@ window.__ModuleLoader__.load({
                         h('button', { className: 'uxbp-btn', onClick: () => void newTask() }, t('newTask'))),
                       h('div', { className: 'uxbp-progress' },
                         h('div', { className: 'uxbp-progress-head' },
-                          h('strong', null, t('progress')),
-                          h('span', { className: 'uxbp-meta' }, status)),
+                          h('strong', null, t('progress'))),
                         h('div', { className: 'uxbp-progress-track' },
                           h('div', { className: 'uxbp-progress-fill', style: { width: progress + '%' } })),
                         h('div', { className: 'uxbp-progress-meta' },
@@ -931,9 +919,6 @@ window.__ModuleLoader__.load({
                         h('strong', null, t('task')),
                         h('span', { className: 'uxbp-status' }, t('idle'))))),
                 !task && h('div', { className: 'uxbp-progress' },
-                  h('div', { className: 'uxbp-progress-head' },
-                    h('strong', null, t('progress')),
-                    h('span', { className: 'uxbp-meta' }, t('idle'))),
                   h('div', { className: 'uxbp-progress-track' },
                     h('div', { className: 'uxbp-progress-fill', style: { width: '0%' } })),
                   h('div', { className: 'uxbp-progress-meta' }, '0 Skill · 0 ' + t('outputs'))),
