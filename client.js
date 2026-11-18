@@ -108,14 +108,15 @@ window.__ModuleLoader__.load({
         --radius-md: var(--dsw-radius-md, 12px);
         --radius-sm: var(--dsw-radius-sm, 8px);
         --shadow: var(--dsw-elevation-soft, 0 3px 12px rgb(59 44 29 / .06));
-        --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+        --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", "宋体", Georgia, serif;
         --ease: cubic-bezier(.2, .8, .2, 1);
         position: relative; height: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;
         overflow: hidden; color: var(--ink); background: var(--bg);
-        font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+        font: 14px/1.5 var(--serif);
         container-type: inline-size;
       }
       .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
+      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select { font-family: var(--serif); }
       .uxbp-top {
         position: absolute; z-index: 30; top: 14px; left: 18px; right: 320px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -240,6 +241,8 @@ window.__ModuleLoader__.load({
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+      .uxbp-sediment-overlay { position: absolute; z-index: 20; top: 14px; left: 18px; right: 320px; bottom: 16px;
+        display: flex; flex-direction: column; padding: 52px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-taskcard { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border: 0;
         border-radius: 16px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; text-align: left; }
       .uxbp-taskcard:hover { box-shadow: 0 14px 34px -16px rgb(0 0 0 / .24); }
@@ -260,6 +263,7 @@ window.__ModuleLoader__.load({
         .uxbp-body { grid-template-columns: minmax(0, 1fr); margin: 62px 18px 16px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-aside { max-height: 42vh; border-left: 0; border-top: .5px solid var(--line); padding: 12px 0 0; }
+        .uxbp-sediment-overlay { right: 18px; }
       }
       @container (max-width: 700px) {
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
@@ -822,8 +826,7 @@ window.__ModuleLoader__.load({
 
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
 
-        tab === 'task'
-          ? h('div', { className: 'uxbp-body' },
+        h('div', { className: 'uxbp-body' },
             h('section', { className: 'uxbp-left' },
               h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
@@ -927,7 +930,14 @@ window.__ModuleLoader__.load({
                       h('div', { className: 'uxbp-taskline' },
                         h('strong', null, t('task')),
                         h('span', { className: 'uxbp-status' }, t('idle'))))),
-                task && h('div', { className: 'uxbp-subtabs' },
+                !task && h('div', { className: 'uxbp-progress' },
+                  h('div', { className: 'uxbp-progress-head' },
+                    h('strong', null, t('progress')),
+                    h('span', { className: 'uxbp-meta' }, t('idle'))),
+                  h('div', { className: 'uxbp-progress-track' },
+                    h('div', { className: 'uxbp-progress-fill', style: { width: '0%' } })),
+                  h('div', { className: 'uxbp-progress-meta' }, '0 Skill · 0 ' + t('outputs'))),
+                h('div', { className: 'uxbp-subtabs' },
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dynamics', onClick: () => setRightTab('dynamics') }, t('dynamics')),
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dialogue', onClick: () => setRightTab('dialogue') }, t('dialogue'))),
                 h('div', { className: 'uxbp-scroll' },
@@ -955,7 +965,7 @@ window.__ModuleLoader__.load({
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
                   h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
-          : h('section', { className: 'uxbp-panel', style: { flex: 1, minHeight: 0 } },
+          , tab === 'sediment' && h('section', { className: 'uxbp-sediment-overlay' },
             h('div', { className: 'uxbp-panel-head', style: { display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' } },
               h('input', { className: 'uxbp-btn', style: { minWidth: 180, flex: '1 1 200px' }, placeholder: t('search'), value: search, onChange: event => setSearch(event.target.value) }),
               ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
