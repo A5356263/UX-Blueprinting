@@ -884,7 +884,7 @@ window.__ModuleLoader__.load({
                   h('div', { className: 'uxbp-tools-right' },
                     running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
-                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute')))))),
+                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute'))))))),
             h('aside', { className: 'uxbp-aside' },
               h('section', { className: 'uxbp-panel' },
                 h('div', { className: 'uxbp-panel-head' },
@@ -930,7 +930,7 @@ window.__ModuleLoader__.load({
                         item.name, h('span', null, item.reason)))),
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
-                  h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content)))))
+                  h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
           : h('section', { className: 'uxbp-panel', style: { flex: 1, minHeight: 0 } },
             h('div', { className: 'uxbp-panel-head', style: { display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' } },
               h('input', { className: 'uxbp-btn', style: { minWidth: 180, flex: '1 1 200px' }, placeholder: t('search'), value: search, onChange: event => setSearch(event.target.value) }),
