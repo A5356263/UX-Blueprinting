@@ -1,6 +1,6 @@
 {
   "name": "dsh-ux-blueprinting",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "个人设计工作台：Skill 卡片、任务动态、沉淀与按任务覆盖的 Markdown 产物。",
   "type": "module",
   "engines": {
