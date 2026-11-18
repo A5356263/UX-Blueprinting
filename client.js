@@ -113,18 +113,20 @@ window.__ModuleLoader__.load({
       .uxbp-top {
         position: absolute; z-index: 30; top: 14px; left: 18px; right: 18px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 7px 10px; border-radius: var(--radius); background: var(--glass);
-        backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow);
+        padding: 0; background: transparent; pointer-events: none;
       }
+      .uxbp-top > * { pointer-events: auto; }
       .uxbp-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
       .uxbp-mark { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 11px;
         color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
       .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
-      .uxbp-tabs { display: flex; gap: 2px; padding: 3px; border-radius: var(--radius-md); background: var(--glass); }
-      .uxbp-tab { height: 32px; border: 0; border-radius: 9px; padding: 0 13px; background: transparent; color: var(--muted);
+      .uxbp-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: var(--glass);
+        backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+      .uxbp-tab { height: 32px; border: 0; border-radius: 10px; padding: 0 14px; background: transparent; color: var(--muted);
         font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
       .uxbp-tab[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+      .uxbp-top .uxbp-btn { background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
       .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
         padding: 0 13px; border: .5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--card);
         color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .25s var(--ease); }
@@ -142,18 +144,18 @@ window.__ModuleLoader__.load({
         border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
-      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 348px; gap: 14px; margin: 70px 18px 16px; }
-      .uxbp-left { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; margin: 70px 18px 16px; }
+      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; scrollbar-gutter: stable; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 6px 18px 24px; min-width: max-content; }
+      .uxbp-plane { padding: 6px 18px 120px; min-width: max-content; }
       .uxbp-group { margin-bottom: 26px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
-      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 238px; height: 330px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; max-width: 1500px; }
+      .uxbp-card { position: relative; width: 198px; height: 276px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -167,8 +169,8 @@ window.__ModuleLoader__.load({
       .uxbp-card-body { flex: 1; min-height: 0; padding: 10px 14px 0; display: flex; flex-direction: column; gap: 5px; }
       .uxbp-card-body strong { font-size: 13px; line-height: 19px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 20px; display: -webkit-box;
-        -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 12px; line-height: 18px; display: -webkit-box;
+        -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       .uxbp-card-foot { margin-top: auto; min-height: 36px; padding: 8px 14px 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
       .uxbp-card-foot code { color: var(--muted); font-size: 11.5px; line-height: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 3px 8px; background: var(--card);
@@ -177,8 +179,9 @@ window.__ModuleLoader__.load({
         border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
       @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
         70% { transform: rotate(0) translateX(2px); } }
-      .uxbp-composer { flex: none; margin: 0 2px 2px; padding: 8px; border: .5px solid var(--line-strong); border-radius: 18px;
-        background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-composer { position: absolute; z-index: 8; left: 12px; right: 12px; bottom: 12px; margin: 0; padding: 8px;
+        border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent); border-radius: 22px;
+        background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: 0 12px 36px -10px rgb(0 0 0 / .18); }
       .uxbp-composer:focus-within { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
       .uxbp-input { display: block; width: 100%; min-height: 48px; max-height: 130px; resize: vertical; padding: 7px 8px;
         border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; line-height: 20px; outline: none; }
@@ -236,16 +239,16 @@ window.__ModuleLoader__.load({
       .uxbp-status { flex: none; padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
       .uxbp-status[data-status="active"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
       .uxbp-status[data-status="completed"] { color: #216b51; background: #edf7f1; }
-      @container (max-width: 1080px) {
-        .uxbp-body { grid-template-columns: minmax(0, 1fr); margin-top: 88px; }
+      @container (max-width: 900px) {
+        .uxbp-body { grid-template-columns: minmax(0, 1fr); margin-top: 84px; }
         .uxbp-aside { max-height: 42vh; }
       }
       @container (max-width: 700px) {
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
         .uxbp-body { margin: 10px; }
-        .uxbp-brand .uxbp-title { display: none; }
-        .uxbp-card { width: 190px; height: 300px; }
-        .uxbp-plane { padding: 4px 10px 16px; }
+        .uxbp-title { display: none; }
+        .uxbp-card { width: 174px; height: 252px; }
+        .uxbp-plane { padding: 4px 10px 110px; }
         .uxbp-picker > span { max-width: 100px; }
       }
     `
@@ -779,8 +782,6 @@ window.__ModuleLoader__.load({
         h('style', null, styles),
         h('header', { className: 'uxbp-top' },
           h('div', { className: 'uxbp-brand' },
-            h('span', { className: 'uxbp-mark' }, h(PanelIcon)),
-            h('h1', { className: 'uxbp-title' }, t('title')),
             h('div', { className: 'uxbp-tabs', role: 'group' },
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('task')),
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'sediment', onClick: () => setTab('sediment') }, t('sediment')))),
@@ -848,12 +849,13 @@ window.__ModuleLoader__.load({
                 }),
                 h('div', { className: 'uxbp-tools' },
                   h('div', { className: 'uxbp-tools-left' },
-                    h('label', { className: 'uxbp-btn uxbp-icon uxbp-up', title: t('attach'), 'aria-label': t('attach') },
+                    h('label', { className: 'uxbp-btn uxbp-up', title: t('attach'), 'aria-label': t('attach') },
                       h('input', { type: 'file', multiple: true, onChange: event => {
                         setFiles(items => [...items, ...Array.from(event.currentTarget.files ?? [])])
                         event.currentTarget.value = ''
                       } }),
-                      h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' })),
+                      h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' }),
+                      h('span', null, t('attach'))),
                     h('div', { className: 'uxbp-picker' },
                       h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'skill', onClick: () => setOpenMenu(openMenu === 'skill' ? '' : 'skill') },
                         h(Icon, { path: 'M12 2 14.5 9.5 22 12 14.5 14.5 12 22 9.5 14.5 2 12 9.5 9.5Z' }),
