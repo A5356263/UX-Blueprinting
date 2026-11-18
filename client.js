@@ -48,6 +48,7 @@ window.__ModuleLoader__.load({
       board: 'Board',
       list: 'List',
       searchTasks: 'Search tasks',
+      noSessions: 'No conversations yet.',
       running: 'Running…',
       openTask: 'Open',
       view: 'View',
@@ -95,6 +96,7 @@ window.__ModuleLoader__.load({
       board: '看板',
       list: '表格',
       searchTasks: '搜索任务',
+      noSessions: '还没有会话。',
       running: '执行中…',
       openTask: '打开',
       view: '查看',
@@ -159,6 +161,15 @@ window.__ModuleLoader__.load({
       .uxbp-menu { position: absolute; z-index: 40; top: calc(100% + 5px); right: 0; min-width: 220px; max-height: 300px;
         overflow: auto; padding: 5px; border-radius: var(--radius-md); background: var(--card);
         backdrop-filter: blur(24px) saturate(160%); box-shadow: 0 16px 40px rgb(20 14 8 / .18); }
+      .uxbp-wsmenu { width: 520px; max-width: calc(100vw - 36px); display: grid; grid-template-columns: 190px minmax(0, 1fr);
+        gap: 4px; padding: 6px; overflow: hidden; }
+      .uxbp-wspane, .uxbp-sessionpane { max-height: 320px; overflow: auto; }
+      .uxbp-wspane { border-right: .5px solid var(--line); padding-right: 6px; }
+      .uxbp-sessionpane { padding-left: 6px; }
+      .uxbp-menu-title { padding: 6px 9px; color: var(--faint); font-size: 11px; }
+      .uxbp-new-session { color: var(--accent); }
+      .uxbp-option:disabled { opacity: .42; cursor: not-allowed; }
+      .uxbp-option:disabled:hover { background: transparent; color: var(--ink); }
       .uxbp-option { display: flex; justify-content: space-between; gap: 8px; width: 100%; padding: 8px 10px;
         border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
         text-align: left; cursor: pointer; }
@@ -576,8 +587,11 @@ window.__ModuleLoader__.load({
       const [dialogue, setDialogue] = useState([])
       const [running, setRunning] = useState(false)
       const [search, setSearch] = useState('')
-      const [view, setView] = useState('board')
+      const [filter, setFilter] = useState('all')
       const [openMenu, setOpenMenu] = useState('')
+      const [menuWorkspace, setMenuWorkspace] = useState('')
+      const [menuSessions, setMenuSessions] = useState([])
+      const [menuLoading, setMenuLoading] = useState(false)
       const [art, setArt] = useState({})
       const [shake, setShake] = useState('')
       const canvasRef = useRef(null)
@@ -601,6 +615,7 @@ window.__ModuleLoader__.load({
         { label: '分析与证据', items: catalog.filter(item => groupOf(item.phase) === 2) },
       ]
       const filteredTasks = tasks.filter(item => {
+        if (filter !== 'all' && item.status !== filter) return false
         const query = search.trim().toLowerCase()
         return !query || item.title.toLowerCase().includes(query) || item.id.toLowerCase().includes(query)
       })
@@ -730,6 +745,47 @@ window.__ModuleLoader__.load({
         }
       }, [openMenu])
 
+      useEffect(() => {
+        if (openMenu !== 'workspace' || !menuWorkspace) return
+        let disposed = false
+        setMenuLoading(true)
+        api({ workspace: menuWorkspace }).then(data => {
+          if (disposed) return
+          setMenuSessions(data.sessions ?? [])
+          setMenuLoading(false)
+        }).catch(() => {
+          if (!disposed) { setMenuSessions([]); setMenuLoading(false) }
+        })
+        return () => { disposed = true }
+      }, [openMenu, menuWorkspace])
+
+      function openWorkspaceMenu() {
+        if (openMenu === 'workspace') { setOpenMenu(''); return }
+        const target = workspace || workspaces[0]?.id || ''
+        setMenuWorkspace(target)
+        setMenuSessions(target === workspace ? conversations : [])
+        setOpenMenu('workspace')
+      }
+
+      function previewWorkspace(id) {
+        setMenuWorkspace(id)
+        if (id === workspace) setMenuSessions(conversations)
+      }
+
+      function chooseSession(wsId, sid) {
+        if (!wsId) return
+        if (task && (wsId !== workspace || sid !== task.sessionId)) return
+        setOpenMenu('')
+        if (wsId !== workspace) {
+          setWorkspace(wsId)
+          setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([])
+          setSessionId(sid || '')
+          save({ workspace: wsId, sessionId: sid || '', activeTaskId: '' })
+        } else {
+          setSessionId(sid || '')
+          save({ workspace, sessionId: sid || '', activeTaskId: task?.id ?? '' })
+        }
+      }
 
       function useSkill(skillId) {
         setSkill(skillId)
@@ -919,15 +975,32 @@ window.__ModuleLoader__.load({
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'sediment', onClick: () => setTab('sediment') }, t('sediment')))),
           h('div', { className: 'uxbp-right-top' },
             h('div', { className: 'uxbp-picker' },
-              h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'workspace', onClick: () => setOpenMenu(openMenu === 'workspace' ? '' : 'workspace') },
+              h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'workspace', title: sessionTitle, onClick: openWorkspaceMenu },
                 h(Icon, { path: 'M4 6h16v12H4z M4 7l8 6 8-6' }),
                 h('span', null, workspaces.find(item => item.id === workspace)?.title ?? t('workspace')),
                 h(Icon, { path: 'm7 10 5 5 5-5' })),
-              openMenu === 'workspace' && h('div', { className: 'uxbp-menu' },
-                ...workspaces.map(item => h('button', {
-                  key: item.id, type: 'button', className: 'uxbp-option', 'data-on': item.id === workspace,
-                  onClick: () => { setOpenMenu(''); selectWorkspace(item.id) },
-                }, item.title)))),
+              openMenu === 'workspace' && h('div', { className: 'uxbp-menu uxbp-wsmenu' },
+                h('div', { className: 'uxbp-wspane' },
+                  h('div', { className: 'uxbp-menu-title' }, t('workspace')),
+                  ...workspaces.map(item => h('button', {
+                    key: item.id, type: 'button', className: 'uxbp-option', 'data-on': item.id === menuWorkspace,
+                    onMouseEnter: () => previewWorkspace(item.id),
+                    onClick: () => previewWorkspace(item.id),
+                  }, item.title))),
+                h('div', { className: 'uxbp-sessionpane' },
+                  h('div', { className: 'uxbp-menu-title' }, t('session')),
+                  h('button', {
+                    type: 'button', className: 'uxbp-option uxbp-new-session', disabled: Boolean(task),
+                    onClick: () => chooseSession(menuWorkspace, ''),
+                  }, '+ ' + t('newSession')),
+                  menuLoading && h('p', { className: 'uxbp-empty' }, '…'),
+                  !menuLoading && menuSessions.length === 0 && h('p', { className: 'uxbp-empty' }, t('noSessions')),
+                  ...menuSessions.map(item => h('button', {
+                    key: item.id, type: 'button', className: 'uxbp-option',
+                    'data-on': menuWorkspace === workspace && item.id === sessionId,
+                    disabled: Boolean(task) && (menuWorkspace !== workspace || item.id !== task.sessionId),
+                    onClick: () => chooseSession(menuWorkspace, item.id),
+                  }, item.title))))),
             h('button', { type: 'button', className: 'uxbp-btn uxbp-icon', title: t('reset'), 'aria-label': t('reset'), onClick: resetAll },
               h(Icon, { path: 'M20 12a8 8 0 1 1-2.3-5.7M20 4v6h-6' })))),
 
@@ -983,22 +1056,12 @@ window.__ModuleLoader__.load({
                         event.currentTarget.value = ''
                       } }),
                       h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' }),
-                      h('span', null, t('attach'))),
-                    h('div', { className: 'uxbp-picker' },
-                      h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'session', disabled: Boolean(task), title: task ? t('session') : sessionTitle, onClick: () => setOpenMenu(openMenu === 'session' ? '' : 'session') },
-                        h(Icon, { path: 'M4 5h16v11H9l-5 4V5Z' }),
-                        h('span', null, sessionTitle),
-                        h(Icon, { path: 'm7 10 5 5 5-5' })),
-                      openMenu === 'session' && h('div', { className: 'uxbp-menu' },
-                        h('button', { type: 'button', className: 'uxbp-option', 'data-on': !sessionId, onClick: () => { setSessionId(''); setOpenMenu(''); save({ workspace, sessionId: '', activeTaskId: task?.id ?? '' }) } }, t('newSession')),
-                        ...conversations.map(item => h('button', {
-                          key: item.id, type: 'button', className: 'uxbp-option', 'data-on': item.id === sessionId,
-                          onClick: () => { setSessionId(item.id); setOpenMenu(''); save({ workspace, sessionId: item.id, activeTaskId: task?.id ?? '' }) },
-                        }, item.title))))),
+                      h('span', null, t('attach')))),
                   h('div', { className: 'uxbp-tools-right' },
                     running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
-                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute'))))))),
+                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute'))))))
+            ),
             h('aside', { className: 'uxbp-aside' },
               h('section', { className: 'uxbp-panel' },
                 h('div', { className: 'uxbp-panel-head' },
@@ -1065,30 +1128,18 @@ window.__ModuleLoader__.load({
                   h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
                   h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) })),
                 h('div', { className: 'uxbp-seg' },
-                  h('button', { type: 'button', 'data-on': view === 'board', onClick: () => setView('board') }, t('board')),
-                  h('button', { type: 'button', 'data-on': view === 'list', onClick: () => setView('list') }, t('list'))))),
-            view === 'board'
-              ? h('div', { className: 'uxbp-sediment-board' },
-                  filteredTasks.length === 0
-                    ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
-                    : filteredTasks.map(item => h('button', {
-                        key: item.id, type: 'button', className: 'uxbp-sediment-card', onClick: () => void openTask(item),
-                      },
-                      h('div', { className: 'uxbp-sediment-card-head' },
-                        h('strong', null, item.title),
-                        h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status))),
-                      h('div', { className: 'uxbp-meta' }, item.id),
-                      h('div', { className: 'uxbp-sediment-skills' }, (item.skills ?? []).map(nameOf).join(' → ')))))
-              : h('div', { className: 'uxbp-sediment' },
-                  filteredTasks.length === 0
-                    ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
-                    : filteredTasks.map(item => h('button', {
-                        key: item.id, type: 'button', className: 'uxbp-taskcard', onClick: () => void openTask(item),
-                      },
-                      h('span', { className: 'uxbp-taskcard-main' },
-                        h('strong', null, item.title),
-                        h('span', null, item.id + ' · ' + (item.skills ?? []).map(nameOf).join(' → '))),
-                      h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)))))))
+                  ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
+                    key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
+                  }, item === 'all' ? t('all') : statusLabel(item)))))),
+            h('div', { className: 'uxbp-sediment' },
+              filteredTasks.length === 0 && h('p', { className: 'uxbp-empty' }, t('emptySediment')),
+              ...filteredTasks.map(item => h('button', {
+                key: item.id, type: 'button', className: 'uxbp-taskcard', onClick: () => void openTask(item),
+              },
+              h('span', { className: 'uxbp-taskcard-main' },
+                h('strong', null, item.title),
+                h('span', null, item.id + ' · ' + (item.skills ?? []).map(nameOf).join(' → '))),
+              h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)))))))
     }
 
     return {
