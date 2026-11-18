@@ -144,18 +144,19 @@ window.__ModuleLoader__.load({
         border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
-      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; margin: 70px 18px 16px; }
+      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 288px; gap: 14px; margin: 70px 18px 16px; }
+      .uxbp-body[data-empty="true"] { grid-template-columns: minmax(0, 1fr); }
       .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; scrollbar-gutter: stable; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 6px 18px 120px; min-width: max-content; }
+      .uxbp-plane { padding: 6px 18px 100px; min-width: max-content; }
       .uxbp-group { margin-bottom: 26px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
-      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 198px; height: 276px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; max-width: 1500px; }
+      .uxbp-card { position: relative; width: 176px; height: 256px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -166,27 +167,30 @@ window.__ModuleLoader__.load({
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
       .uxbp-art { flex: none; aspect-ratio: 4 / 3; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
       .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); }
-      .uxbp-card-body { flex: 1; min-height: 0; padding: 10px 14px 0; display: flex; flex-direction: column; gap: 5px; }
-      .uxbp-card-body strong { font-size: 13px; line-height: 19px; font-weight: 600; display: -webkit-box;
+      .uxbp-card-body { flex: 1; min-height: 0; padding: 8px 12px 0; display: flex; flex-direction: column; gap: 4px; }
+      .uxbp-card-body strong { font-size: 13px; line-height: 18px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 12px; line-height: 18px; display: -webkit-box;
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11.5px; line-height: 17px; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-foot { margin-top: auto; min-height: 36px; padding: 8px 14px 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-      .uxbp-card-foot code { color: var(--muted); font-size: 11.5px; line-height: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 3px 8px; background: var(--card);
-        color: var(--muted); font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-card-foot { margin-top: auto; min-height: 32px; padding: 6px 12px 9px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+      .uxbp-card-foot code { color: var(--muted); font-size: 10.5px; line-height: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 2px 7px; background: var(--card);
+        color: var(--muted); font: inherit; font-size: 10.5px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
       .uxbp-card:hover .uxbp-use, .uxbp-card[data-selected="true"] .uxbp-use { background: var(--dsw-alias-button-primary-fill, var(--accent));
         border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
       @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
         70% { transform: rotate(0) translateX(2px); } }
-      .uxbp-composer { position: absolute; z-index: 8; left: 12px; right: 12px; bottom: 12px; margin: 0; padding: 8px;
-        border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent); border-radius: 22px;
-        background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: 0 12px 36px -10px rgb(0 0 0 / .18); }
+      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(660px, calc(100% - 32px));
+        bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent);
+        border-radius: 20px; background: var(--glass); backdrop-filter: blur(24px) saturate(160%);
+        box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
       .uxbp-composer:focus-within { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
-      .uxbp-input { display: block; width: 100%; min-height: 48px; max-height: 130px; resize: vertical; padding: 7px 8px;
-        border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; line-height: 20px; outline: none; }
+      .uxbp-input { display: block; width: 100%; min-height: 36px; max-height: 84px; resize: none; padding: 4px 6px;
+        border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; outline: none; }
       .uxbp-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
-      .uxbp-tools-left, .uxbp-tools-right { display: flex; align-items: center; gap: 5px; min-width: 0; }
+      .uxbp-tools-left, .uxbp-tools-right { display: flex; align-items: center; gap: 4px; min-width: 0; }
+      .uxbp-composer .uxbp-btn { min-height: 30px; padding: 0 9px; font-size: 11.5px; border-radius: 9px; }
+      .uxbp-composer .uxbp-tools-right .uxbp-primary { padding: 0 12px; }
       .uxbp-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 8px;
         background: var(--soft); color: var(--ink); font-size: 11px; }
       .uxbp-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -239,7 +243,7 @@ window.__ModuleLoader__.load({
       .uxbp-status { flex: none; padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
       .uxbp-status[data-status="active"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
       .uxbp-status[data-status="completed"] { color: #216b51; background: #edf7f1; }
-      @container (max-width: 900px) {
+      @container (max-width: 760px) {
         .uxbp-body { grid-template-columns: minmax(0, 1fr); margin-top: 84px; }
         .uxbp-aside { max-height: 42vh; }
       }
@@ -247,8 +251,8 @@ window.__ModuleLoader__.load({
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
         .uxbp-body { margin: 10px; }
         .uxbp-title { display: none; }
-        .uxbp-card { width: 174px; height: 252px; }
-        .uxbp-plane { padding: 4px 10px 110px; }
+        .uxbp-card { width: 160px; height: 236px; }
+        .uxbp-plane { padding: 4px 10px 100px; }
         .uxbp-picker > span { max-width: 100px; }
       }
     `
@@ -802,7 +806,7 @@ window.__ModuleLoader__.load({
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
 
         tab === 'task'
-          ? h('div', { className: 'uxbp-body' },
+          ? h('div', { className: 'uxbp-body', 'data-empty': !task },
             h('section', { className: 'uxbp-left' },
               h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
@@ -880,7 +884,7 @@ window.__ModuleLoader__.load({
                     running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
                     h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute')))))),
-            h('aside', { className: 'uxbp-aside' },
+            task && h('aside', { className: 'uxbp-aside' },
               h('section', { className: 'uxbp-panel' },
                 h('div', { className: 'uxbp-panel-head' },
                   task
