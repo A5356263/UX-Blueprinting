@@ -40,6 +40,7 @@ window.__ModuleLoader__.load({
       active: 'In progress',
       paused: 'Paused',
       completed: 'Completed',
+      idle: 'Not started',
       running: 'Running…',
       openTask: 'Open',
       view: 'View',
@@ -79,6 +80,7 @@ window.__ModuleLoader__.load({
       active: '进行中',
       paused: '已暂停',
       completed: '已完成',
+      idle: '未开始',
       running: '执行中…',
       openTask: '打开',
       view: '查看',
@@ -145,7 +147,6 @@ window.__ModuleLoader__.load({
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
       .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 288px; gap: 14px; margin: 70px 18px 16px; }
-      .uxbp-body[data-empty="true"] { grid-template-columns: minmax(0, 1fr); }
       .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
@@ -806,7 +807,7 @@ window.__ModuleLoader__.load({
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
 
         tab === 'task'
-          ? h('div', { className: 'uxbp-body', 'data-empty': !task },
+          ? h('div', { className: 'uxbp-body' },
             h('section', { className: 'uxbp-left' },
               h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
@@ -884,7 +885,7 @@ window.__ModuleLoader__.load({
                     running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
                     h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute')))))),
-            task && h('aside', { className: 'uxbp-aside' },
+            h('aside', { className: 'uxbp-aside' },
               h('section', { className: 'uxbp-panel' },
                 h('div', { className: 'uxbp-panel-head' },
                   task
@@ -898,12 +899,14 @@ window.__ModuleLoader__.load({
                         h('button', { className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
                         h('button', { className: 'uxbp-btn', onClick: () => void rename() }, t('rename')),
                         h('button', { className: 'uxbp-btn', onClick: () => void newTask() }, t('newTask'))))
-                    : h('div', null, h('strong', null, t('noTask')), h('div', { className: 'uxbp-meta' }, taskId))),
+                    : h('div', null,
+                      h('div', { className: 'uxbp-taskline' },
+                        h('strong', null, t('task')),
+                        h('span', { className: 'uxbp-status' }, t('idle'))))),
                 task && h('div', { className: 'uxbp-subtabs' },
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dynamics', onClick: () => setRightTab('dynamics') }, t('dynamics')),
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dialogue', onClick: () => setRightTab('dialogue') }, t('dialogue'))),
                 h('div', { className: 'uxbp-scroll' },
-                  !task && h('p', { className: 'uxbp-empty' }, t('noTask')),
                   task && rightTab === 'dynamics' && (flow.length
                     ? flow.map((node, index) => h('div', { key: index, className: 'uxbp-node' },
                       h('div', { className: 'uxbp-node-head' },
@@ -912,15 +915,15 @@ window.__ModuleLoader__.load({
                         node.detail && h('span', { className: 'uxbp-meta' }, node.detail)),
                       node.markdown && node.latest && h('pre', null, node.markdown),
                       node.text && h('div', { className: 'uxbp-msg' }, node.text)))
-                    : h('p', { className: 'uxbp-empty' }, t('noTask'))),
+                    : null),
                   task && rightTab === 'dialogue' && (dialogue.length
                     ? dialogue.map((row, index) => h('div', { key: index, className: 'uxbp-msg' },
                         h('b', null, row.role === 'user' ? '你' : 'AI'), ' ', row.text))
                     : h('p', { className: 'uxbp-empty' }, t('noDialogue'))))),
                 h('div', { className: 'uxbp-next' },
                   h('h3', null, t('next')),
-                  next.length === 0 && h('p', { className: 'uxbp-empty' }, t('noNext')),
-                  ...next.slice(0, 3).map((item, index) => index === 0
+                  task && next.length === 0 && h('p', { className: 'uxbp-empty' }, t('noNext')),
+                  ...(task ? next.slice(0, 3) : []).map((item, index) => index === 0
                     ? h('button', { key: item.id, className: 'uxbp-next-main', onClick: () => useSkill(item.id) },
                         h('strong', null, item.name), h('span', null, item.reason))
                     : h('button', { key: item.id, className: 'uxbp-next-alt', onClick: () => useSkill(item.id) },
