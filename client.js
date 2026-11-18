@@ -180,7 +180,7 @@ window.__ModuleLoader__.load({
         border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
       @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
         70% { transform: rotate(0) translateX(2px); } }
-      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(660px, calc(100% - 32px));
+      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(580px, calc(100% - 32px));
         bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent);
         border-radius: 20px; background: var(--glass); backdrop-filter: blur(24px) saturate(160%);
         box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
