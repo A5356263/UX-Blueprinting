@@ -43,6 +43,11 @@ window.__ModuleLoader__.load({
       idle: 'Not started',
       progress: 'Progress',
       outputs: 'outputs',
+      total: 'Total',
+      items: 'items',
+      board: 'Board',
+      list: 'List',
+      searchTasks: 'Search tasks',
       running: 'Running…',
       openTask: 'Open',
       view: 'View',
@@ -85,6 +90,11 @@ window.__ModuleLoader__.load({
       idle: '未开始',
       progress: '任务进度',
       outputs: '产物',
+      total: '共',
+      items: '条',
+      board: '看板',
+      list: '表格',
+      searchTasks: '搜索任务',
       running: '执行中…',
       openTask: '打开',
       view: '查看',
@@ -129,14 +139,15 @@ window.__ModuleLoader__.load({
         color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
       .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
       .uxbp-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
-        border: .5px solid var(--line-strong); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+        border: .5px solid var(--line); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
       .uxbp-tab { height: 34px; border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
         font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
+      .uxbp-tab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
       .uxbp-tab[data-on="true"] { background: var(--ink); color: var(--card); box-shadow: none; }
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
       .uxbp-top .uxbp-btn { background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
       .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
-        padding: 0 13px; border: .5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--card);
+        padding: 0 13px; border: .5px solid var(--line); border-radius: var(--radius-md); background: var(--card);
         color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .25s var(--ease); }
       .uxbp-btn:hover:not(:disabled) { background: var(--soft); }
       .uxbp-btn:active:not(:disabled) { transform: scale(.97); }
@@ -181,17 +192,19 @@ window.__ModuleLoader__.load({
         -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
       .uxbp-card-foot { margin-top: auto; min-height: 30px; padding: 5px 10px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
       .uxbp-card-foot code { color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .uxbp-use { border: .5px solid var(--line-strong); border-radius: 999px; padding: 2px 6px; background: var(--card);
+      .uxbp-use { border: .5px solid var(--line); border-radius: 999px; padding: 2px 6px; background: var(--card);
         color: var(--muted); font: inherit; font-size: 10px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-use:hover { background: var(--soft); color: var(--ink); }
       .uxbp-card:hover .uxbp-use, .uxbp-card[data-selected="true"] .uxbp-use { background: var(--dsw-alias-button-primary-fill, var(--accent));
         border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
       @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
         70% { transform: rotate(0) translateX(2px); } }
       .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(520px, calc(100% - 32px));
-        bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid color-mix(in srgb, var(--line-strong) 80%, transparent);
+        bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid var(--line);
         border-radius: 20px; background: var(--glass); backdrop-filter: blur(24px) saturate(160%);
         box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
-      .uxbp-composer:focus-within { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+      .uxbp-composer:focus-within { border-color: var(--line-strong); }
+      .uxbp-composer .uxbp-menu { top: auto; bottom: calc(100% + 6px); }
       .uxbp-input { display: block; width: 100%; min-height: 36px; max-height: 84px; resize: none; padding: 4px 6px;
         border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; outline: none; }
       .uxbp-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
@@ -221,6 +234,7 @@ window.__ModuleLoader__.load({
       .uxbp-subtab { height: 28px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: var(--muted);
         font: inherit; font-size: 12px; cursor: pointer; }
       .uxbp-subtab[data-on="true"] { background: var(--soft); color: var(--ink); font-weight: 650; }
+      .uxbp-subtab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
       .uxbp-scroll { flex: 1 1 auto; min-height: 160px; overflow: auto; padding: 10px 0; }
       .uxbp-node { padding: 9px 0; border-bottom: .5px solid color-mix(in srgb, var(--line) 65%, transparent); }
       .uxbp-node:last-child { border-bottom: 0; }
@@ -232,21 +246,47 @@ window.__ModuleLoader__.load({
       .uxbp-msg b { color: var(--muted); font-size: 11px; font-weight: 650; }
       .uxbp-next { flex: 0 0 26%; min-height: 120px; overflow: auto; padding: 12px 0 0; border-top: .5px solid var(--line); }
       .uxbp-next h3 { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 650; }
-      .uxbp-next-main { width: 100%; text-align: left; padding: 11px; border: .5px solid color-mix(in srgb, var(--accent) 40%, var(--line-strong));
+      .uxbp-next-main { width: 100%; text-align: left; padding: 11px; border: .5px solid color-mix(in srgb, var(--accent) 40%, var(--line));
         border-radius: 11px; background: color-mix(in srgb, var(--accent) 8%, var(--card)); color: var(--ink);
         font: inherit; cursor: pointer; }
+      .uxbp-next-main:hover { background: color-mix(in srgb, var(--accent) 13%, var(--card)); }
       .uxbp-next-main strong { display: block; font-size: 13px; font-weight: 600; }
       .uxbp-next-main span { display: block; margin-top: 4px; color: var(--muted); font-size: 11.5px; line-height: 18px; }
       .uxbp-next-alt { width: 100%; text-align: left; padding: 8px 4px; border: 0; border-bottom: .5px solid var(--line);
         background: transparent; color: var(--ink); font: inherit; font-size: 12px; cursor: pointer; }
+      .uxbp-next-alt:hover { background: var(--soft); }
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
       .uxbp-sediment-overlay { position: absolute; z-index: 20; top: 14px; left: 18px; right: 320px; bottom: 16px;
         display: flex; flex-direction: column; padding: 52px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;
+        padding: 0 0 18px; border-bottom: .5px solid var(--line); }
+      .uxbp-sediment-heading h1 { margin: 0; font-size: 34px; line-height: 1.15; font-weight: 500; letter-spacing: -.02em; }
+      .uxbp-sediment-heading p { margin: 6px 0 0; color: var(--muted); font-size: 12.5px; }
+      .uxbp-sediment-tools { display: flex; align-items: center; gap: 8px; flex: none; }
+      .uxbp-search { display: flex; align-items: center; gap: 7px; width: 280px; height: 38px; padding: 0 11px;
+        border: .5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--muted); }
+      .uxbp-search:focus-within { border-color: var(--line-strong); }
+      .uxbp-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+      .uxbp-search input::placeholder { color: var(--faint); }
+      .uxbp-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--soft); }
+      .uxbp-seg button { height: 30px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted);
+        font: inherit; font-size: 12px; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-seg button:hover { color: var(--ink); background: color-mix(in srgb, var(--card) 55%, transparent); }
+      .uxbp-seg button[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-sediment-board { flex: 1; min-height: 0; overflow: auto; padding: 16px 0; display: grid; gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); align-content: start; }
+      .uxbp-sediment-card { display: flex; flex-direction: column; gap: 8px; min-height: 150px; padding: 15px;
+        border: 0; border-radius: 16px; background: var(--card); box-shadow: var(--shadow); color: var(--ink);
+        text-align: left; font: inherit; cursor: pointer; transition: background .18s, box-shadow .18s; }
+      .uxbp-sediment-card:hover { background: color-mix(in srgb, var(--soft) 62%, var(--card)); box-shadow: 0 14px 34px -16px rgb(0 0 0 / .24); }
+      .uxbp-sediment-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      .uxbp-sediment-card-head strong { font-size: 14px; line-height: 21px; font-weight: 600; }
+      .uxbp-sediment-skills { margin-top: auto; color: var(--muted); font-size: 12px; line-height: 18px; }
       .uxbp-taskcard { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border: 0;
         border-radius: 16px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; text-align: left; }
-      .uxbp-taskcard:hover { box-shadow: 0 14px 34px -16px rgb(0 0 0 / .24); }
+      .uxbp-taskcard:hover { background: var(--soft); box-shadow: none; }
       .uxbp-taskcard-main { flex: 1; min-width: 0; }
       .uxbp-taskcard-main strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
       .uxbp-taskcard-main span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
@@ -480,8 +520,8 @@ window.__ModuleLoader__.load({
       const [flow, setFlow] = useState([])
       const [dialogue, setDialogue] = useState([])
       const [running, setRunning] = useState(false)
-      const [filter, setFilter] = useState('all')
       const [search, setSearch] = useState('')
+      const [view, setView] = useState('board')
       const [openMenu, setOpenMenu] = useState('')
       const [art, setArt] = useState({})
       const [shake, setShake] = useState('')
@@ -506,10 +546,21 @@ window.__ModuleLoader__.load({
         { label: '分析与证据', items: catalog.filter(item => groupOf(item.phase) === 2) },
       ]
       const filteredTasks = tasks.filter(item => {
-        if (filter !== 'all' && item.status !== filter) return false
         const query = search.trim().toLowerCase()
         return !query || item.title.toLowerCase().includes(query) || item.id.toLowerCase().includes(query)
       })
+      const counts = {
+        all: tasks.length,
+        active: tasks.filter(item => item.status === 'active').length,
+        paused: tasks.filter(item => item.status === 'paused').length,
+        completed: tasks.filter(item => item.status === 'completed').length,
+      }
+      const sedimentStats = [
+        counts.all ? t('total') + ' ' + counts.all + ' ' + t('items') : '',
+        counts.active ? counts.active + ' ' + t('active') : '',
+        counts.paused ? counts.paused + ' ' + t('paused') : '',
+        counts.completed ? counts.completed + ' ' + t('completed') : '',
+      ].filter(Boolean)
 
       function save(value) {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(value)) } catch {}
@@ -920,8 +971,7 @@ window.__ModuleLoader__.load({
                         h('span', { className: 'uxbp-status' }, t('idle'))))),
                 !task && h('div', { className: 'uxbp-progress' },
                   h('div', { className: 'uxbp-progress-track' },
-                    h('div', { className: 'uxbp-progress-fill', style: { width: '0%' } })),
-                  h('div', { className: 'uxbp-progress-meta' }, '0 Skill · 0 ' + t('outputs'))),
+                    h('div', { className: 'uxbp-progress-fill', style: { width: '0%' } }))),
                 h('div', { className: 'uxbp-subtabs' },
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dynamics', onClick: () => setRightTab('dynamics') }, t('dynamics')),
                   h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dialogue', onClick: () => setRightTab('dialogue') }, t('dialogue'))),
@@ -951,21 +1001,39 @@ window.__ModuleLoader__.load({
                   h('h3', null, nameOf(art.skill)),
                   h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
           , tab === 'sediment' && h('section', { className: 'uxbp-sediment-overlay' },
-            h('div', { className: 'uxbp-panel-head', style: { display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' } },
-              h('input', { className: 'uxbp-btn', style: { minWidth: 180, flex: '1 1 200px' }, placeholder: t('search'), value: search, onChange: event => setSearch(event.target.value) }),
-              ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
-                key: item, type: 'button', className: 'uxbp-btn', 'data-on': filter === item,
-                onClick: () => setFilter(item),
-              }, item === 'all' ? t('all') : statusLabel(item)))),
-            h('div', { className: 'uxbp-sediment' },
-              filteredTasks.length === 0 && h('p', { className: 'uxbp-empty' }, t('emptySediment')),
-              ...filteredTasks.map(item => h('button', {
-                key: item.id, type: 'button', className: 'uxbp-taskcard', onClick: () => void openTask(item),
-              },
-              h('span', { className: 'uxbp-taskcard-main' },
-                h('strong', null, item.title),
-                h('span', null, item.id + ' · ' + (item.skills ?? []).map(nameOf).join(' → '))),
-              h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)))))))
+            h('div', { className: 'uxbp-sediment-head' },
+              h('div', { className: 'uxbp-sediment-heading' },
+                h('h1', null, t('sediment')),
+                sedimentStats.length > 0 && h('p', null, sedimentStats.join(' · '))),
+              h('div', { className: 'uxbp-sediment-tools' },
+                h('label', { className: 'uxbp-search' },
+                  h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
+                  h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) })),
+                h('div', { className: 'uxbp-seg' },
+                  h('button', { type: 'button', 'data-on': view === 'board', onClick: () => setView('board') }, t('board')),
+                  h('button', { type: 'button', 'data-on': view === 'list', onClick: () => setView('list') }, t('list'))))),
+            view === 'board'
+              ? h('div', { className: 'uxbp-sediment-board' },
+                  filteredTasks.length === 0
+                    ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
+                    : filteredTasks.map(item => h('button', {
+                        key: item.id, type: 'button', className: 'uxbp-sediment-card', onClick: () => void openTask(item),
+                      },
+                      h('div', { className: 'uxbp-sediment-card-head' },
+                        h('strong', null, item.title),
+                        h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status))),
+                      h('div', { className: 'uxbp-meta' }, item.id),
+                      h('div', { className: 'uxbp-sediment-skills' }, (item.skills ?? []).map(nameOf).join(' → ')))))
+              : h('div', { className: 'uxbp-sediment' },
+                  filteredTasks.length === 0
+                    ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
+                    : filteredTasks.map(item => h('button', {
+                        key: item.id, type: 'button', className: 'uxbp-taskcard', onClick: () => void openTask(item),
+                      },
+                      h('span', { className: 'uxbp-taskcard-main' },
+                        h('strong', null, item.title),
+                        h('span', null, item.id + ' · ' + (item.skills ?? []).map(nameOf).join(' → '))),
+                      h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)))))))
     }
 
     return {
