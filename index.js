@@ -19,15 +19,16 @@ export function apply(ctx) {
   const workbench = createWorkbench(ctx, catalog)
   ctx.effect(() => ctx.tools.register({
     name: 'submit_design_artifact',
-    description: '登记本轮完成的 Markdown 产物。模型完成产物后调用；插件按当前会话和 Skill 记录版本。',
+    description: '登记本轮完成的 Markdown 产物。模型完成产物后调用；插件按任务和 Skill 记录当前产物。',
     parameters: {
       type: 'object',
       properties: {
+        taskId: { type: 'string', description: '任务 ID，来自本轮任务指令' },
         skill: { type: 'string', description: '本轮 Skill id' },
         markdown: { type: 'string', description: '完整 Markdown 产物' },
-        title: { type: 'string', description: 'AI 生成的任务名，可省略' },
+        title: { type: 'string', description: '产物标题，可省略' },
       },
-      required: ['skill', 'markdown'],
+      required: ['taskId', 'skill', 'markdown'],
       additionalProperties: false,
     },
     output: {
@@ -35,17 +36,18 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           registered: { type: 'boolean' },
+          taskId: { type: 'string' },
           skill: { type: 'string' },
           path: { type: 'string' },
           stale: { type: 'array', items: { type: 'string' } },
           next: { type: 'object', additionalProperties: true },
         },
-        required: ['registered', 'skill', 'path', 'next'],
+        required: ['registered', 'taskId', 'skill', 'path', 'next'],
         additionalProperties: false,
       },
       render: (_, value) => [{
         type: 'text',
-        text: '已登记 ' + value.skill + ' 产物：' + value.path +
+        text: '已登记任务 ' + value.taskId + ' 的 ' + value.skill + ' 产物：' + value.path +
           (value.stale?.length ? '；下游可能过期：' + value.stale.join('、') : ''),
       }],
     },

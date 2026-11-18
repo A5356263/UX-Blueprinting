@@ -1,8 +1,9 @@
-export function emptyManifest(workspaceId, sessionId) {
+export function emptyManifest(workspaceId, taskId, sessionId) {
   return {
     version: 1,
     workspaceId,
-    sessionId,
+    taskId,
+    sessionId: sessionId || '',
     updatedAt: new Date().toISOString(),
     skills: {},
   }

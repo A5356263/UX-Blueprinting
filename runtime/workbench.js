@@ -1,12 +1,13 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { completedFor, emptyManifest } from './state.js'
 import { validateMarkdown } from './artifacts.js'
 import { recommendHandoff } from './orchestration.js'
 
 const limit = 320_000
-const sessionPattern = /^[A-Za-z0-9._-]{8,100}$/
+const sessionPattern = /^[A-Za-z0-9._-]{8,120}$/
+const taskPattern = /^T-[A-Za-z0-9-]{4,100}$/
 const digest = data => createHash('sha256').update(data).digest('hex')
 
 function contained(root, path) {
@@ -49,11 +50,11 @@ export function createWorkbench(ctx, catalog) {
   }
 
   const baseDir = (workspace, create) => directory(workspace.path, ['spark-output', 'design-workbench'], create)
-
-  function windowDir(workspace, sessionId, create) {
-    if (!sessionPattern.test(sessionId)) throw new Error('无效的规划窗口标识')
-    return directory(workspace.path, ['spark-output', 'design-workbench', sessionId], create)
+  const taskDir = (workspace, taskId, create) => {
+    if (!taskPattern.test(taskId)) throw new Error('无效的任务标识')
+    return directory(workspace.path, ['spark-output', 'design-workbench', taskId], create)
   }
+  const indexFile = workspace => join(baseDir(workspace, false), 'tasks.json')
 
   function atomicWrite(dir, name, bytes) {
     const target = join(dir, name)
@@ -71,58 +72,24 @@ export function createWorkbench(ctx, catalog) {
     }
   }
 
-  function oldRuns(workspace, sessionId) {
+  function readIndexFile(workspace) {
     try {
-      const file = join(baseDir(workspace, false), 'runs.json')
+      const file = indexFile(workspace)
       const info = lstatSync(file)
-      if (info.isSymbolicLink() || !info.isFile()) return []
-      const rows = JSON.parse(readFileSync(file, 'utf8'))
-      if (!Array.isArray(rows)) return []
-      const latest = new Map()
-      for (const run of rows) {
-        if (run?.sessionId !== sessionId || !run.skill || !run.artifactPath) continue
-        const previous = latest.get(run.skill)
-        if (!previous || (Number(run.version) || 0) > (Number(previous.version) || 0)) latest.set(run.skill, run)
-      }
-      return [...latest.values()].map(run => ({
-        skill: run.skill,
-        path: run.artifactPath,
-        sha256: run.sha256,
-        title: run.title,
-        updatedAt: run.createdAt ?? new Date().toISOString(),
-        stale: false,
-        staleSince: null,
-      }))
-    } catch { return [] }
-  }
-
-  function loadManifest(workspace, sessionId) {
-    try {
-      const file = join(windowDir(workspace, sessionId, false), 'manifest.json')
-      const info = lstatSync(file)
-      if (info.isSymbolicLink() || !info.isFile()) return emptyManifest(workspace.id, sessionId)
+      if (info.isSymbolicLink() || !info.isFile()) return null
       const parsed = JSON.parse(readFileSync(file, 'utf8'))
-      if (!parsed || parsed.sessionId !== sessionId || typeof parsed.skills !== 'object' || parsed.skills === null) {
-        return emptyManifest(workspace.id, sessionId)
-      }
+      if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.tasks)) return null
       return {
         version: 1,
-        workspaceId: workspace.id,
-        sessionId,
-        updatedAt: parsed.updatedAt ?? new Date().toISOString(),
-        skills: parsed.skills,
+        next: Number.isSafeInteger(parsed.next) && parsed.next > 0 ? parsed.next : 1,
+        legacyMigrated: parsed.legacyMigrated === true,
+        tasks: parsed.tasks.filter(task => task && taskPattern.test(task.id)),
       }
-    } catch {
-      const manifest = emptyManifest(workspace.id, sessionId)
-      for (const entry of oldRuns(workspace, sessionId)) manifest.skills[entry.skill] = entry
-      return manifest
-    }
+    } catch { return null }
   }
 
-  function saveManifest(workspace, sessionId, manifest) {
-    manifest.updatedAt = new Date().toISOString()
-    const dir = windowDir(workspace, sessionId, true)
-    atomicWrite(dir, 'manifest.json', JSON.stringify(manifest))
+  function saveIndex(workspace, index) {
+    atomicWrite(baseDir(workspace, true), 'tasks.json', JSON.stringify(index))
   }
 
   async function listSessions(workspace) {
@@ -172,25 +139,279 @@ export function createWorkbench(ctx, catalog) {
     throw new Error('该会话不属于任何已登记工作区')
   }
 
-  async function submit({ skill, markdown, title }, callerSessionId) {
+  function seqOf(sessionId) {
+    const live = ctx.sessions?.get?.(sessionId)
+    return Number.isSafeInteger(live?.seq) ? live.seq : 0
+  }
+
+  function taskPath(workspace, taskId, skill) {
+    const dir = taskDir(workspace, taskId, true)
+    return join(dir, skill + '.md')
+  }
+
+  function loadManifest(workspace, taskId) {
+    try {
+      const file = join(taskDir(workspace, taskId, false), 'manifest.json')
+      const info = lstatSync(file)
+      if (info.isSymbolicLink() || !info.isFile()) return emptyManifest(workspace.id, taskId)
+      const parsed = JSON.parse(readFileSync(file, 'utf8'))
+      if (!parsed || parsed.taskId !== taskId || typeof parsed.skills !== 'object' || parsed.skills === null) {
+        return emptyManifest(workspace.id, taskId)
+      }
+      return {
+        version: 1,
+        workspaceId: workspace.id,
+        taskId,
+        sessionId: parsed.sessionId ?? '',
+        updatedAt: parsed.updatedAt ?? new Date().toISOString(),
+        skills: parsed.skills,
+      }
+    } catch { return emptyManifest(workspace.id, taskId) }
+  }
+
+  function saveManifest(workspace, taskId, manifest) {
+    manifest.updatedAt = new Date().toISOString()
+    atomicWrite(taskDir(workspace, taskId, true), 'manifest.json', JSON.stringify(manifest))
+  }
+
+  function latestSkill(manifest) {
+    return Object.values(manifest.skills).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]?.skill
+  }
+
+  function summary(task) {
+    return {
+      id: task.id,
+      title: task.title,
+      status: task.status,
+      sessionId: task.sessionId,
+      segments: task.segments,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+      skills: task.skills ?? [],
+      lastSkill: task.lastSkill ?? null,
+    }
+  }
+
+  function migrateLegacy(workspace, index) {
+    if (index.legacyMigrated) return false
+    let changed = false
+    let entries
+    try { entries = readdirSync(baseDir(workspace, false), { withFileTypes: true }) }
+    catch { index.legacyMigrated = true; return true }
+    for (const entry of entries) {
+      if (!entry.isDirectory() || taskPattern.test(entry.name)) continue
+      const legacyId = 'T-legacy-' + createHash('sha1').update(entry.name).digest('hex').slice(0, 8)
+      if (index.tasks.some(task => task.id === legacyId)) continue
+      const source = join(baseDir(workspace, false), entry.name)
+      const target = taskDir(workspace, legacyId, true)
+      try {
+        for (const child of readdirSync(source, { withFileTypes: true })) {
+          cpSync(join(source, child.name), join(target, child.name), { recursive: true, force: true })
+        }
+      } catch { continue }
+      const manifestFile = join(target, 'manifest.json')
+      const manifest = emptyManifest(workspace.id, legacyId, entry.name)
+      let files = []
+      try { files = readdirSync(target).filter(name => name.endsWith('.md')) } catch {}
+      if (existsSync(manifestFile)) {
+        try {
+          const parsed = JSON.parse(readFileSync(manifestFile, 'utf8'))
+          if (parsed && typeof parsed.skills === 'object') {
+            for (const [skill, value] of Object.entries(parsed.skills)) {
+              if (!knownSkills.has(skill) || !value?.path) continue
+              const name = String(value.path).split(/[\\/]/).pop()
+              const file = join(target, name)
+              if (!existsSync(file)) continue
+              const bytes = readFileSync(file)
+              manifest.skills[skill] = {
+                skill,
+                path: relative(workspace.path, file).split(sep).join('/'),
+                sha256: digest(bytes),
+                title: value.title ?? '',
+                updatedAt: value.updatedAt ?? new Date().toISOString(),
+                stale: false,
+                staleSince: null,
+              }
+            }
+          }
+        } catch {}
+      }
+      for (const name of files) {
+        const skill = name.replace(/\.md$/, '')
+        if (!knownSkills.has(skill) || manifest.skills[skill]) continue
+        const bytes = readFileSync(join(target, name))
+        manifest.skills[skill] = {
+          skill,
+          path: relative(workspace.path, join(target, name)).split(sep).join('/'),
+          sha256: digest(bytes),
+          title: '',
+          updatedAt: new Date().toISOString(),
+          stale: false,
+          staleSince: null,
+        }
+      }
+      saveManifest(workspace, legacyId, manifest)
+      const skills = Object.keys(manifest.skills)
+      index.tasks.push({
+        id: legacyId,
+        title: '历史任务 · ' + entry.name.slice(-8),
+        status: 'completed',
+        sessionId: entry.name,
+        segments: [{ startSeq: 0, endSeq: 0 }],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        skills,
+        lastSkill: latestSkill(manifest) ?? null,
+      })
+      changed = true
+    }
+    index.legacyMigrated = true
+    return true
+  }
+
+  function loadIndex(workspace) {
+    let index = readIndexFile(workspace)
+    if (!index) index = { version: 1, next: 1, legacyMigrated: false, tasks: [] }
+    const changed = migrateLegacy(workspace, index)
+    if (changed) saveIndex(workspace, index)
+    return index
+  }
+
+  function pauseOthers(workspace, index, exceptId) {
+    let changed = false
+    const now = new Date().toISOString()
+    for (const task of index.tasks) {
+      if (task.id === exceptId || task.status !== 'active') continue
+      const last = task.segments?.[task.segments.length - 1]
+      if (last && last.endSeq === null) last.endSeq = seqOf(task.sessionId)
+      task.status = 'paused'
+      task.updatedAt = now
+      changed = true
+    }
+    return changed
+  }
+
+  function promptFor(task, skill, text) {
+    return [
+      '【设计工作台任务 ' + task.id + '】',
+      '任务：' + task.title,
+      '本轮 Skill：' + skill + '（' + catalog.name(skill) + '）',
+      '',
+      String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
+      '',
+      '完成后必须调用 submit_design_artifact 登记产物：',
+      '  taskId: ' + task.id,
+      '  skill: ' + skill,
+      '  markdown: 完整 Markdown 正文',
+    ].join('\n')
+  }
+
+  async function createTask(workspace, body) {
+    const skill = String(body.skill ?? '')
+    if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
+    const sessionId = String(body.sessionId ?? '')
+    if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
+    const sessions = await listSessions(workspace)
+    if (!sessions.some(session => session.id === sessionId)) throw new Error('所选会话不属于当前工作区')
+    const index = loadIndex(workspace)
+    pauseOthers(workspace, index, '')
+    const now = new Date().toISOString()
+    const date = now.slice(0, 10).replace(/-/g, '')
+    let id = `T-${date}-${String(index.next).padStart(2, '0')}`
+    while (existsSync(join(baseDir(workspace, false), id))) {
+      index.next += 1
+      id = `T-${date}-${String(index.next).padStart(2, '0')}`
+    }
+    index.next += 1
+    const task = {
+      id,
+      title: String(body.title ?? '').trim().slice(0, 80) || catalog.name(skill),
+      status: 'active',
+      sessionId,
+      segments: [{ startSeq: seqOf(sessionId), endSeq: null }],
+      createdAt: now,
+      updatedAt: now,
+      skills: [skill],
+      lastSkill: skill,
+    }
+    taskDir(workspace, id, true)
+    saveManifest(workspace, id, emptyManifest(workspace.id, id, sessionId))
+    index.tasks.push(task)
+    saveIndex(workspace, index)
+    return { task: summary(task), prompt: promptFor(task, skill, body.text) }
+  }
+
+  function findTask(index, taskId) {
+    const task = index.tasks.find(item => item.id === taskId)
+    if (!task) throw new Error('找不到该任务')
+    return task
+  }
+
+  async function changeTask(workspace, body, action) {
+    const index = loadIndex(workspace)
+    const task = findTask(index, String(body.taskId ?? ''))
+    const now = new Date().toISOString()
+    if (action === 'pause') {
+      const last = task.segments?.[task.segments.length - 1]
+      if (last && last.endSeq === null) last.endSeq = seqOf(task.sessionId)
+      task.status = 'paused'
+    } else if (action === 'complete') {
+      const last = task.segments?.[task.segments.length - 1]
+      if (last && last.endSeq === null) last.endSeq = seqOf(task.sessionId)
+      task.status = 'completed'
+    } else if (action === 'resume') {
+      pauseOthers(workspace, index, task.id)
+      task.segments = Array.isArray(task.segments) ? task.segments : []
+      task.segments.push({ startSeq: seqOf(task.sessionId), endSeq: null })
+      task.status = 'active'
+    } else if (action === 'rename') {
+      const title = String(body.title ?? '').trim().slice(0, 80)
+      if (!title) throw new Error('任务名不能为空')
+      task.title = title
+    }
+    task.updatedAt = now
+    saveIndex(workspace, index)
+    return summary(task)
+  }
+
+  async function promptTask(workspace, body) {
+    const index = loadIndex(workspace)
+    const task = findTask(index, String(body.taskId ?? ''))
+    if (task.status !== 'active') throw new Error('任务当前不是进行中，请先恢复')
+    const skill = String(body.skill ?? '')
+    if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
+    task.skills = Array.isArray(task.skills) ? task.skills : []
+    if (!task.skills.includes(skill)) {
+      task.skills.push(skill)
+      task.lastSkill = skill
+      task.updatedAt = new Date().toISOString()
+      saveIndex(workspace, index)
+    }
+    return { prompt: promptFor(task, skill, body.text) }
+  }
+
+  async function submit({ taskId, skill, markdown, title }, callerSessionId) {
     if (!callerSessionId) throw new Error('无法确认调用会话')
     if (!knownSkills.has(skill)) throw new Error('未知 Skill：' + skill)
     const workspace = await workspaceForSession(callerSessionId)
-    validateMarkdown(skill, markdown)
-    const bytes = Buffer.from(markdown)
-    if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
-    return serialize(workspace.id, () => {
-      const dir = windowDir(workspace, callerSessionId, true)
-      const name = skill + '.md'
-      atomicWrite(dir, name, bytes)
-      const manifest = loadManifest(workspace, callerSessionId)
-      const now = new Date().toISOString()
+    return serialize(workspace.id + ':' + taskId, () => {
+      const index = loadIndex(workspace)
+      const task = findTask(index, taskId)
+      if (task.status !== 'active') throw new Error('任务不是进行中，不能登记产物')
+      if (task.sessionId !== callerSessionId) throw new Error('产物必须由任务绑定的会话登记')
+      validateMarkdown(skill, markdown)
+      const bytes = Buffer.from(markdown)
+      if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
+      const file = taskPath(workspace, taskId, skill)
+      atomicWrite(taskDir(workspace, taskId, true), skill + '.md', bytes)
+      const manifest = loadManifest(workspace, taskId)
       const sha256 = digest(bytes)
       const previous = manifest.skills[skill]
       const changed = !previous || previous.sha256 !== sha256
+      const now = new Date().toISOString()
       manifest.skills[skill] = {
         skill,
-        path: relative(workspace.path, join(dir, name)).split(sep).join('/'),
+        path: relative(workspace.path, file).split(sep).join('/'),
         sha256,
         title: title?.trim() || previous?.title || '',
         updatedAt: now,
@@ -217,13 +438,18 @@ export function createWorkbench(ctx, catalog) {
           }
         }
       }
-      saveManifest(workspace, callerSessionId, manifest)
+      saveManifest(workspace, taskId, manifest)
+      task.skills = [...new Set([...(task.skills ?? []), skill])]
+      task.lastSkill = skill
+      task.updatedAt = now
+      saveIndex(workspace, index)
       return {
         registered: true,
+        taskId,
         skill,
         path: manifest.skills[skill].path,
         stale: Object.entries(manifest.skills).filter(([, entry]) => entry.stale).map(([id]) => id),
-        next: catalog.recommend(completedFor(manifest), skill),
+        next: recommendHandoff(completedFor(manifest), skill),
       }
     })
   }
@@ -247,30 +473,38 @@ export function createWorkbench(ctx, catalog) {
       if (!workspace) throw new Error('请选择已在 Harness 登记的工作区')
       if (request.method === 'POST') {
         if (body.action === 'create-session') return json({ sessionId: await createSession(workspace) })
+        if (body.action === 'create-task') return json(await createTask(workspace, body))
+        if (body.action === 'prompt') return json(await promptTask(workspace, body))
+        if (['pause', 'complete', 'resume', 'rename'].includes(body.action)) {
+          return json({ task: await changeTask(workspace, body, body.action) })
+        }
         throw new Error('未知操作')
       }
-      const sessionId = url.searchParams.get('session') ?? ''
-      if (url.searchParams.has('skill')) {
-        if (!sessionId) throw new Error('缺少规划窗口')
-        const manifest = loadManifest(workspace, sessionId)
-        const entry = manifest.skills[url.searchParams.get('skill')]
-        if (!entry) throw new Error('该 Skill 尚未在本窗口登记产物')
-        const requested = resolve(workspace.path, entry.path)
-        contained(workspace.path, requested)
-        const real = realpathSync(requested)
-        contained(workspace.path, real)
-        const info = lstatSync(real)
-        if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
-        const bytes = readFileSync(real)
-        if (digest(bytes) !== entry.sha256) throw new Error('已登记产物被修改')
-        return json({ content: bytes.toString('utf8'), artifact: entry })
+      const taskId = url.searchParams.get('task') ?? ''
+      if (taskId) {
+        const index = loadIndex(workspace)
+        const task = findTask(index, taskId)
+        const manifest = loadManifest(workspace, taskId)
+        if (url.searchParams.has('skill')) {
+          const entry = manifest.skills[url.searchParams.get('skill')]
+          if (!entry) throw new Error('该 Skill 尚未登记产物')
+          const requested = resolve(workspace.path, entry.path)
+          contained(workspace.path, requested)
+          const real = realpathSync(requested)
+          contained(workspace.path, real)
+          const info = lstatSync(real)
+          if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
+          const bytes = readFileSync(real)
+          if (digest(bytes) !== entry.sha256) throw new Error('产物被修改')
+          return json({ content: bytes.toString('utf8'), artifact: entry })
+        }
+        return json({
+          task: summary(task),
+          manifest,
+          next: task.lastSkill ? recommendHandoff(completedFor(manifest), task.lastSkill) : [],
+        })
       }
-      const manifest = sessionId ? loadManifest(workspace, sessionId) : null
-      const latest = manifest
-        ? Object.values(manifest.skills).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]
-        : undefined
-      const next = latest ? recommendHandoff(completedFor(manifest), latest.skill) : []
-      return json({ sessions: await listSessions(workspace), manifest, next })
+      return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace).tasks.map(summary) })
     } catch (error) {
       return json({ error: error?.message || '工作台请求失败' }, 400)
     }
