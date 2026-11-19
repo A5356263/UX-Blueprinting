@@ -1281,6 +1281,8 @@ window.__ModuleLoader__.load({
                 files.length > 0 && h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap', padding: '2px 4px' } },
                   ...files.map((file, index) => h('span', { key: index, className: 'uxbp-file' }, file.name,
                     h('button', { type: 'button', 'aria-label': t('remove'), onClick: () => setFiles(items => items.filter((_, i) => i !== index)) }, '×')))),
+                skill && h('div', { style: { padding: '2px 4px 0' } },
+                  h('span', { className: 'uxbp-chip' }, h('span', null, t('skill') + ': ' + nameOf(skill)))),
                 h('textarea', {
                   ref: inputRef, className: 'uxbp-input', value: text, placeholder: t('placeholder'), disabled: sending,
                   onChange: event => setText(event.target.value),
