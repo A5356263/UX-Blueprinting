@@ -29,7 +29,7 @@
 - Outcome Validation：可读方案引用、价值相关指标和估值窗口；不得把预测收益当效果证据。
 - Data Visualization：可表达 Case、派生链、情景和敏感性；不得重算。
 - Evidence Archive：仅人工允许后保存脱敏决策快照和血缘；不得写 Evidence/Baseline Store。
-- Knowledge Wiki：不消费项目估值；稳定规则另行审阅。
+- 知识维护审阅：不消费项目估值；稳定规则另行审阅。
 - Evidence Govern、Root Cause：不得读取本包改变证据或因果结论。
 
 使用 `downstream_handoffs[]` 明确目标技能、Payload 与 allowed/forbidden uses，默认最小权限。

@@ -7,7 +7,7 @@
 - `business-impact`：问题机制、限制和指标方向，不包含估值；
 - `outcome-validation-recheck`：候选根因与验证假设；必须另有正式 Intervention Contract；
 - `data-visualization`：只展示候选机制链；
-- `knowledge-wiki`：仅跨案例模式候选，且 publication review pending；
+- 知识维护审阅：仅跨案例模式候选，且 publication review pending；
 - `evidence-archive`：显式授权的最小候选快照。
 
 缺客观、主观或启发式证据时只向 Evidence Govern 提交补证需求，不直接回跳来源技能。人工审核放入 `manual_review_requests[]`，不得伪装成 Skill。

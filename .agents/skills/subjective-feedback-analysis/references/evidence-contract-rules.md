@@ -57,6 +57,6 @@ reported_error
 - Evidence Govern：只读正式 Evidence 及其来源、范围、限制和用途边界。
 - Business Impact：可读 evidence；finding 仅作低成熟度 problem signal。
 - Data Visualization：显式请求时只展示 analysis results、finding 和 evidence。
-- Knowledge Wiki：治理放行或用户明确审阅时只读 knowledge candidates。
+- 知识维护审阅：治理放行或用户明确审阅时只读 knowledge candidates。
 - Outcome Validation：具备根因与干预契约时读取 comparison。
 - Evidence Archive：满足治理门禁后归档正式包。

@@ -19,20 +19,20 @@ execution_critical: true
 
 “运营复核完成”只表示经过人工整理，不证明答案正确、仍然有效或获得官方确认。必须检查来源角色、适用版本、业务规则依据、冲突、过期和 workaround。
 
-## Knowledge Wiki 消费
+## 知识核对
 
-按 `index → 必要 README/单一 raw → 命中章节 → 最小充分即停止` 定向核对。index 和 README 只负责路由，raw 是正式事实。未命中时记录知识缺口，不遍历 raw，不补造答案。
+按候选所涉对象、动作、范围和例外检索正式事实。命中线索时追查原文及会改变判断的条件。未命中时记录缺口，不补造答案。
 
 ## 审阅请求
 
 不输出会被误解为已发生正式交接的 `knowledge_wiki_handoff`。使用 `handoff.knowledge_review_request` 表达候选数量、candidate refs、阻断风险和门禁状态。
 
-只有两种情况 Knowledge Wiki 可以读取候选：`evidence-govern` 明确放行；用户明确要求审阅或沉淀本次候选。
+候选只在证据治理明确放行，或用户明确要求审阅或沉淀本次候选时，交由知识维护人员审阅。
 
 ## 禁止
 
 - 不输出 approved knowledge、正式 FAQ、最终引导文案或客服话术。
 - 不把 workaround 包装成正式规则。
-- 不自动创建或修改 Knowledge Wiki raw。
+- 候选只随主观分析报告交付，正式知识写入由维护者按审阅结果处理。
 - 不让“流程已完成”代替事实有效性校验。
 

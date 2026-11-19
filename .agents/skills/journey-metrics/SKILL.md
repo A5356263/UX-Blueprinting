@@ -30,7 +30,7 @@ Prefer inputs in this order:
 - 只有 JSON、Markdown 缺失或 Markdown 未读完时，不得生成旅程节点、埋点需求或异常追踪需求。
 - 本门禁不改变先由用户确认任务或场景范围的现有入口规则。
 
-如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则从萃知检索直接相关的埋点方法、业务对象或状态。两者均无法提供充分依据时，在定案参数与 API 细节前先索取或形成明确假设。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
+如宿主项目提供本地埋点方法文档，必须读取并以其完整规范为最高优先级；否则检索直接相关的埋点方法、业务对象或状态。两者均无法提供充分依据时，在定案参数与 API 细节前先索取或形成明确假设。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
 
 - 停止条件：命中局部知识后不得停止；问题涉及的主体、动作、条件、例外、结果及已触发依赖均有正式依据后再输出。
 - 封闭枚举：仅以完整正式清单作答；未命中完整清单时，不得把局部事实表述为全集。
@@ -65,7 +65,7 @@ Create `journey_visual.html` by default so the user can inspect the visual journ
 ## Workflow
 
 1. Ask the user which tasks or scenarios to generate. Do not infer the scope from files that happen to exist in the project.
-2. After scope confirmation, inspect the host structure. Identify available input files, existing outputs, knowledge path, templates, and preview code.
+2. 确认范围后核对本轮获准输入、可用输出位置和随包模板及渲染资源。涉及度量口径的知识按本 Skill 的检索规则补查。
 3. Determine the input priority level and record it in `journey_visual.md`.
 4. Generate the visual journey Markdown first. Every node must have a source label: `confirmed`, `inferred`, or `conflict`. Keep conflict scope narrow: field-level or parameter-level conflicts must not turn the whole journey node into `conflict` unless the node itself is contradicted.
 5. Immediately render `journey_visual.html` from `journey_visual.md`. Prefer the bundled deterministic renderer:
@@ -110,23 +110,11 @@ Before finishing, verify:
 - `TrackType.messageInfo` examples include required fields `cust_id`, non-empty user-visible `info`, and `info4`; `info2`, `info3`, `info5`, and `traceid` are optional enhancement fields.
 - The preview adapter, if present, does not silently depend on old field names that the generated Markdown changed.
 
-## Migration Guidance
-
-When porting this capability to a newer UXB project, read `references/migration-guide.md` first. Port the layers separately:
-
-- Bring the skill and templates as-is.
-- Reconcile `references/journey-metrics-contract.md` with the new UXB rule system.
-- Adapt preview parsing/rendering to the new preview model.
-- Treat `assets/fixtures/` as regression fixtures, not production inputs.
-- Add the CLI entrypoint only after the host command registry and packaging model are known.
-
 ## Bundled Resources
 
 - `references/journey-metrics-contract.md`: compact rule contract.
 - `references/adapter-contract.md`: host integration points for CLI, knowledge, and preview.
-- `references/migration-guide.md`: extraction and porting checklist.
 - `assets/templates/`: Markdown templates and the standalone `journey_visual.html.template`.
-- `assets/fixtures/demo-journey/`: known-good sample outputs.
 - `scripts/render_journey_visual_html.py`: render `journey_visual.html` from the Markdown appendix.
 - `scripts/validate_journey_metrics.py`: lightweight structural validator.
 

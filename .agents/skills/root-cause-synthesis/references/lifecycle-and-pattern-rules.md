@@ -29,7 +29,7 @@
 
 允许正向模式、负向模式、部分模式和情境依赖模式。案例不足时不生成正常 Pattern Candidate。
 
-Root Cause 是唯一的模式候选生成者，但不得自动发布。交给 Knowledge Wiki 前还要经过人工 publication review 和 ingestion gate。单次候选根因、未经回检机制和治理方向不得入库。
+Root Cause 负责生成模式候选。候选须由维护者完成人工发布审阅与入库核对。单次候选根因、未经回检机制和治理方向不得入库。
 
 ## 未来自动化
 

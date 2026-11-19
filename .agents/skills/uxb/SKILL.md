@@ -98,7 +98,7 @@ Stories 和 Journey 是体验证据，不覆盖正式主输入中的业务事实
 
 ## Step 2 · 定向消费知识并判断策略必要性
 
-读取 `references/knowledge_usage_guide.md`。只有本轮策略判断需要辨认现有机制、业务触点或对象与状态语义时，才按正式知识路由读取完整相关规则块；明确体验阻碍后，再读取直接支持决策的设计准则或策略级模式。读到足以判断即停，不遍历整个知识库。
+读取 `references/knowledge_usage_guide.md`。只有本轮策略判断需要辨认现有机制、业务触点或对象与状态语义时，才检索并核对完整相关规则；明确体验阻碍后，再检索直接支持决策的设计准则或策略级模式。依据足以判断即停。
 
 按 `references/experience_strategy_guide.md` 判断：同一问题是否改变多个角色、任务或触点的体验关系；一个核心任务是否需要先决定其业务承载、信息组织、风险认知或结果理解方式。单个页面问题也可能具有策略价值，但普通页面位置、组件和局部反馈不因此升格为独立策略。
 
@@ -143,7 +143,7 @@ Markdown 是唯一正式语义源。正式写入阶段只组织已确认内容�
 - 不为固定维度或数量补写策略。
 - 不让业务知识、Stories 或 Journey 覆盖本轮权威业务事实。
 - 不在 UXB 内处理 Page Spec 的页面方案。
-- 不修改 PRD Review、Stories、Journey、Problem Framing、Page Spec 或 `shared-workflow/`。
+- 不修改 PRD Review、Stories、Journey、Problem Framing或 Page Spec。
 
 ## 交付与下一步
 

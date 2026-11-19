@@ -29,7 +29,7 @@ Archive Handoff 只有同时满足以下条件时才可作为正式写入依据�
 - `required_review_ids[]` 均已有 approved Review Decision
 
 Archive Handoff 只描述可申请归档的范围，不等于长期写入批准。Evidence Archive 仍需验证本地 Archive Request 与明确授权。
-| Knowledge Wiki | 获准审阅的候选引用 | 直接发布、扩大范围、复制原始证据 |
+| 知识维护审阅 | 获准审阅的候选引用 | 直接发布、扩大范围、复制原始证据 |
 | Objective/Subjective/Heuristic | 精确补证或重分析请求 | 模糊要求“全部重跑” |
 
 ## Root Cause Readiness
@@ -43,7 +43,7 @@ insufficient              → blocked
 
 `single_source` 必须具备可追溯来源和安全解释所需范围；否则是 `insufficient`。
 
-## Knowledge Wiki 白名单
+## 知识维护审阅 白名单
 
 Evidence Govern 只放行 Subjective 的：
 
