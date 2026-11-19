@@ -142,10 +142,12 @@ window.__ModuleLoader__.load({
       .uxbp-mark { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 11px;
         color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
       .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
-      .uxbp-tabs { display: flex; height: 50px; align-items: stretch; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
+      .uxbp-tabs { display: flex; box-sizing: border-box; height: 50px; min-height: 50px; max-height: 50px; flex-shrink: 0;
+        align-items: stretch; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
         border: .5px solid var(--line); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
-      .uxbp-tab { border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
-        font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
+      .uxbp-tabs > .uxbp-tab { box-sizing: border-box; height: 100%; min-height: 0; max-height: 100%; display: inline-flex;
+        align-items: center; justify-content: center; margin: 0; border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
+        font: inherit; font-size: 14px; line-height: 20px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
       .uxbp-tab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
       .uxbp-tab[data-on="true"] { background: var(--ink); color: var(--card); box-shadow: none; }
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
