@@ -526,7 +526,76 @@ window.__ModuleLoader__.load({
       'data-visualization': 'M12 3a9 9 0 1 0 9 9h-9Z M12 3v9h9 M4 16l4-4 3 2 5-6',
     }
 
+    const pilotArt = {
+      'prd-review': {
+        background: '#e5eee7',
+        ink: '#385145',
+        scene: () => [
+          h('path', { d: 'M16 101H182M33 108H165M49 115H151', stroke: '#c5d6cc' }),
+          h('rect', { x: 54, y: 29, width: 74, height: 87, rx: 5, fill: '#cbded3', transform: 'rotate(-12 54 29)' }),
+          h('rect', { x: 69, y: 21, width: 75, height: 90, rx: 5, fill: '#f8fbf5', transform: 'rotate(7 69 21)' }),
+          h('rect', { x: 57, y: 27, width: 77, height: 89, rx: 5, fill: '#fffdf7' }),
+          h('path', { d: 'M69 41H107M69 47H92M84 62h35M84 78h27M84 94h31', strokeOpacity: .55 }),
+          h('rect', { x: 66, y: 69, width: 59, height: 16, rx: 3, fill: '#e5eee3', stroke: 'none' }),
+          h('path', { d: 'M70 62l2 2 5-5m-7 19 2 2 5-5m-8 22h7v-7h-7zM84 78h27', stroke: '#427761' }),
+          h('path', { d: 'M143 53h18v24l-5-4h-13z', fill: '#f3d9aa' }),
+          h('path', { d: 'M148 60h8m-8 5h5' }),
+          h('circle', { cx: 144, cy: 102, r: 15, fill: '#427761', stroke: '#e5eee7', strokeWidth: 3 }),
+          h('path', { d: 'm137 102 5 5 8-9', stroke: '#fffdf7', strokeWidth: 2.5 }),
+        ],
+      },
+      'problem-framing': {
+        background: '#eee7ef',
+        ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M24 23h151M24 117h151', stroke: '#d6c9dd', strokeDasharray: '2 5' }),
+          h('path', { d: 'M60 45c30 0 19 25 43 25M62 69h41M61 94c29 0 16-24 42-24', stroke: '#9c88ad' }),
+          h('rect', { x: 24, y: 32, width: 35, height: 23, rx: 4, fill: '#f9e2d6', transform: 'rotate(-8 24 32)' }),
+          h('rect', { x: 22, y: 58, width: 40, height: 22, rx: 4, fill: '#fffaf5' }),
+          h('rect', { x: 28, y: 85, width: 34, height: 22, rx: 4, fill: '#ded3ea', transform: 'rotate(6 28 85)' }),
+          h('path', { d: 'M33 39l14-2m-12 7 9-1m-12 22h12m-12 6h21m-15 24 14 2' }),
+          h('path', { d: 'm95 65 6 5-6 5' }),
+          h('rect', { x: 115, y: 38, width: 63, height: 69, rx: 6, fill: '#d6c9df', stroke: 'none' }),
+          h('rect', { x: 109, y: 33, width: 64, height: 69, rx: 6, fill: '#fdf9fb' }),
+          h('path', { d: 'M109 49h64', strokeOpacity: .55 }),
+          h('rect', { x: 121, y: 58, width: 40, height: 11, rx: 3, fill: '#a28cb4', stroke: 'none' }),
+          h('path', { d: 'M141 69v8m-13 6v-6h26v6' }),
+          h('rect', { x: 120, y: 82, width: 16, height: 10, rx: 2, fill: '#e7dbea' }),
+          h('rect', { x: 146, y: 82, width: 16, height: 10, rx: 2, fill: '#f6e3d8' }),
+        ],
+      },
+      'page-spec': {
+        background: '#e5ebf3',
+        ink: '#394f69',
+        scene: () => [
+          h('path', { d: 'M25 31v82m-4-76h8m-8 69h8M37 121h96m-93-4v8m89-8v8', stroke: '#8298b5' }),
+          h('rect', { x: 44, y: 34, width: 112, height: 76, rx: 6, fill: '#c7d4e5', stroke: 'none' }),
+          h('rect', { x: 38, y: 28, width: 112, height: 76, rx: 6, fill: '#fbfcff' }),
+          h('path', { d: 'M38 42h112M66 42v62', strokeOpacity: .6 }),
+          h('path', { d: 'M46 35h1m5 0h1m5 0h1m-13 19h12m-12 9h9m-9 9h10m18-19h29' }),
+          h('rect', { x: 74, y: 62, width: 60, height: 30, rx: 3, fill: '#e9eff7', stroke: '#7892b4', strokeDasharray: '3 3' }),
+          h('path', { d: 'M112 67l16-13m-16 36 16 7', stroke: '#6f8bad' }),
+          h('rect', { x: 126, y: 51, width: 56, height: 49, rx: 6, fill: '#fffdf8', stroke: '#5275a8', strokeWidth: 2 }),
+          h('rect', { x: 133, y: 58, width: 42, height: 14, rx: 3, fill: '#d3e0f2', stroke: 'none' }),
+          h('path', { d: 'M134 79h29m-29 5h20', strokeOpacity: .7 }),
+          h('rect', { x: 154, y: 88, width: 19, height: 6, rx: 2, fill: '#5275a8', stroke: 'none' }),
+        ],
+      },
+    }
+
     function SkillArt({ skillId }) {
+      const art = Object.hasOwn(pilotArt, skillId) ? pilotArt[skillId] : null
+      if (art) {
+        return h('svg', {
+          viewBox: '0 0 200 140',
+          'aria-hidden': true,
+          preserveAspectRatio: 'xMidYMid slice',
+        },
+          h('rect', { width: 200, height: 140, fill: art.background }),
+          h('g', { fill: 'none', stroke: art.ink, strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round' },
+            ...art.scene()),
+        )
+      }
       const icon = artIcons[skillId] ?? artIcons.uxb
       return h('svg', {
         viewBox: '0 0 200 140',
