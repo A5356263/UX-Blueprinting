@@ -17,7 +17,7 @@
 | `responsive` | 不同视口、设备、方向、溢出和触控线索 |
 | `feedback` | 操作反馈、进度、防重复、确认、撤销与恢复 |
 | `accessibility` | 可感知、可操作、可理解和语义健壮性的基础线索 |
-| `brief-consistency` | 与明确 Brief、UXB、Stories、验收条件蓝蓝图的偏离 |
+| `brief-consistency` | 与明确 Brief、UXS、Stories、验收条件蓝蓝图的偏离 |
 
 Nielsen 原则、视觉清晰度、WCAG 原则、平台和项目规则只写入 `heuristic_lenses[]` 蓝 `risk_tags[]`，不得生成第二条 Finding。
 

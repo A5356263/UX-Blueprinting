@@ -33,7 +33,7 @@ DeepSeek Harness 0.2.2-rc.1 组合包。个人设计工作台：用 Skill 卡片
 
 安装包包含 20 个可注册 Skill，全部只输出 Markdown：
 
-- 设计：board、edge、journey-analysis、journey-metrics、knowledge-wiki、page-spec、prd-review、problem-framing、solution-swimlane、stories、uxb。
+- 设计：board、edge、journey-analysis、journey-metrics、knowledge-wiki、page-spec、prd-review、problem-framing、solution-swimlane、stories、uxs。
 - 分析：objective-data-analysis、subjective-feedback-analysis、experience-heuristic-analysis、evidence-govern、root-cause-synthesis、business-impact、outcome-validation-recheck、evidence-archive、data-visualization。
 
 ## 工具

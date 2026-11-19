@@ -28,7 +28,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 14. `experience_decisions`
 15. `completion_criteria`
 
-不得增加 `recommendation`、`next_step`、`uxb`、`blueprint` 等流程推荐字段。
+不得增加 `recommendation`、`next_step`、`uxs`、`blueprint` 等流程推荐字段。
 
 ## 3. 根结构
 
@@ -162,7 +162,7 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 
 没有正式来源时省略，不写空字符串、空数组或猜测值。
 
-这些字段不能作为 UXB 条目或 Blueprint 页面条目的外键。
+这些字段不能作为 UXS 条目或 Blueprint 页面条目的外键。
 
 ## 8. 业务规则
 
@@ -316,4 +316,4 @@ Markdown 是唯一正式语义源。JSON 是给下游稳定读取的结构化投
 - 问题是否关闭。
 - 业务结论是否正确。
 - 文本中是否含“待确认”等词。
-- 是否应该进入 UXB。
+- 是否应该进入 UXS。

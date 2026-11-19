@@ -3,8 +3,8 @@ name: journey-analysis
 description: >
   旅程分析 Skill。按角色输出任务生命周期中的阶段、行动、触点、痛点、流失风险和设计机会。
   触发关键词：旅程图、journey map、用户旅程、角色旅程、体验旅程、用户生命周期、旅程分析、补全旅程、画旅程。
-  仅在用户明确要求分析角色任务生命周期、旅程阶段或旅程图时使用；不得仅因 UXB、用户故事或问题框定产物存在而自动触发。
-  排除：体验策略（用 uxb）、页面交互方案与交付规格（用 page-spec）、埋点度量（用 journey-metrics）。
+  仅在用户明确要求分析角色任务生命周期、旅程阶段或旅程图时使用；不得仅因 UXS、用户故事或问题框定产物存在而自动触发。
+  排除：体验策略（用 uxs）、页面交互方案与交付规格（用 page-spec）、埋点度量（用 journey-metrics）。
 ---
 
 # 旅程分析
@@ -45,7 +45,7 @@ description: >
 
 1. 先确认本 Skill 自身输入边界。
 2. 检查并完整读取 `spark-output/stories.md`；存在且同源时作为用户故事正式输入。
-3. 检查并完整读取 `spark-output/uxb_output.md`；存在且同源时作为 UXB 正式输入。
+3. 检查并完整读取 `spark-output/uxs_output.md`；存在且同源时作为 UXS 正式输入。
 4. 检查并完整读取 `spark-output/problem_framing.md`；存在且同源时作为问题框定正式输入。
 5. 上述正式上游均不可用时，读取用户明确提供的 `PRD`、需求文档、场景描述或口头需求。
 6. 如 `knowledge-wiki` 可用，从其 `knowledge/wiki/index.md` 进入实际入口；业务知识先按领域 README 选择正式文件，index 明确直达的单一设计知识直接进入，再按顶部导航只读与旅程角色、任务、状态、异常或回流直接相关的章节；条件依赖触发时补读后回到主域，不遍历 raw。
@@ -56,12 +56,12 @@ description: >
 
 读取约束：
 
-- Stories、UXB、Problem Framing 均以同源 Markdown 全文作为正式语义源，不能只读摘要或重点章节。
+- Stories、UXS、Problem Framing 均以同源 Markdown 全文作为正式语义源，不能只读摘要或重点章节。
 - 即使上游刚在同一会话生成、当前上下文仍保留内容，也不得替代本次正式文件读取。
 - 重点章节只决定二次核对优先级，不是正文白名单。
 - 未读完当前实际必需的正式输入，不得进入模式判断、旅程可生成性判断或旅程生成。
-- 同源 `stories.md` 存在时始终作为主要任务单元；同时存在的 `uxb_output.md` 或 `problem-framing` 只补充边界和约束，不替代用户故事。
-- 无同源 `stories.md`，但有同源 `uxb_output.md` 时，以 UXB 为主要输入；`problem-framing` 只作为补充。
+- 同源 `stories.md` 存在时始终作为主要任务单元；同时存在的 `uxs_output.md` 或 `problem-framing` 只补充边界和约束，不替代用户故事。
+- 无同源 `stories.md`，但有同源 `uxs_output.md` 时，以 UXS 为主要输入；`problem-framing` 只作为补充。
 - 禁止在读取前判断运行模式。
 
 ### Step 0.3 · 模式判断与降级
@@ -69,8 +69,8 @@ description: >
 完成 Step 0.2 后，按以下互斥优先级确定运行模式：
 
 1. 同源 `stories.md` 可读：进入 `stories-chain`。
-2. 无同源 `stories.md`，但同源 `uxb_output.md` 可用：进入 `uxb-chain`。
-3. 无同源 `stories.md` 和 `uxb_output.md`，但同源 `problem_framing.md` 可读：进入 `framing-chain`。
+2. 无同源 `stories.md`，但同源 `uxs_output.md` 可用：进入 `uxs-chain`。
+3. 无同源 `stories.md` 和 `uxs_output.md`，但同源 `problem_framing.md` 可读：进入 `framing-chain`。
 4. 上述正式上游均不可用：进入 `prd-standalone`，并等待用户提供或确认本次输入。
 
 #### `stories-chain`
@@ -80,26 +80,26 @@ description: >
 用途：
 
 - 基于用户故事结果做旅程深化。
-- 如同时存在 `uxb_output.md`，将 UXB Markdown 作为体验方向和约束补充，不替代 `stories` 的任务单元或正式业务事实。
+- 如同时存在 `uxs_output.md`，将 UXS Markdown 作为体验方向和约束补充，不替代 `stories` 的任务单元或正式业务事实。
 - 仍必须先做旅程可生成性判断；如缺少阶段、触点或关键角色，进入补问。
 
-#### `uxb-chain`
+#### `uxs-chain`
 
 触发条件：
 
-- 同源 `spark-output/uxb_output.md` 可读。
+- 同源 `spark-output/uxs_output.md` 可读。
 
 用途：
 
-- 基于 `UXB` 结果做旅程深化。
-- 即使存在 `UXB`，仍必须先做旅程可生成性判断。
-- 即使存在 `UXB`，如缺少关键结构，仍可进入补问。
+- 基于 `UXS` 结果做旅程深化。
+- 即使存在 `UXS`，仍必须先做旅程可生成性判断。
+- 即使存在 `UXS`，如缺少关键结构，仍可进入补问。
 
 #### `framing-chain`
 
 触发条件：
 
-- 同源 `stories.md` 与 `uxb_output.md` 均不可用；且
+- 同源 `stories.md` 与 `uxs_output.md` 均不可用；且
 - `spark-output/problem_framing.md` 可读。
 
 用途：
@@ -111,7 +111,7 @@ description: >
 
 触发条件：
 
-- 同源 `stories.md`、`uxb_output.md` 与 `problem_framing.md` 均不可用；且
+- 同源 `stories.md`、`uxs_output.md` 与 `problem_framing.md` 均不可用；且
 - 用户已经明确提供并确认了本次分析要使用的 `PRD`、需求文档、场景描述或口头需求。
 
 用途：
@@ -129,30 +129,30 @@ description: >
 
 用途：
 
-- 作为 `stories-chain`、`uxb-chain`、`framing-chain` 或 `prd-standalone` 下的补问执行态。
+- 作为 `stories-chain`、`uxs-chain`、`framing-chain` 或 `prd-standalone` 下的补问执行态。
 - 补问后必须回写结构化字段，再进入正式生成。
 
 约束：
 
 - `guided-completion` 是执行态，不是最终 `mode` 值。
-- 最终 `mode` 只记录 `stories-chain`、`uxb-chain`、`framing-chain` 或 `prd-standalone`。
+- 最终 `mode` 只记录 `stories-chain`、`uxs-chain`、`framing-chain` 或 `prd-standalone`。
 - 是否使用补问，通过 `completion_used: true | false` 记录。
 
 #### 输入确认硬门槛
 
 - 无论是否检测到上游，都必须先向用户说明当前状态并等待确认。
 - 如果检测到同源 `stories.md`，必须先确认“是否基于当前用户故事继续做旅程分析”。
-- 如果未检测到同源 `stories.md`，但检测到同源 `uxb_output.md`，必须先确认“是否基于当前 UXB 继续做旅程分析”。
-- 如果未检测到同源 `stories.md` 和 `uxb_output.md`，但检测到同源 `problem_framing.md`，必须先确认“是否基于当前问题框定继续做旅程分析”。
+- 如果未检测到同源 `stories.md`，但检测到同源 `uxs_output.md`，必须先确认“是否基于当前 UXS 继续做旅程分析”。
+- 如果未检测到同源 `stories.md` 和 `uxs_output.md`，但检测到同源 `problem_framing.md`，必须先确认“是否基于当前问题框定继续做旅程分析”。
 - 如果未检测到任何正式上游，必须先要求用户提供或确认本次要分析的需求材料。
 - 未收到用户确认前，不得进入 readiness 判断。
 - 未收到用户确认前，不得抽取旅程结构。
 - 未收到用户确认前，不得生成正式旅程，也不得生成骨架版旅程。
 - 未收到用户确认前，只允许停在“等待用户确认输入”的状态。
 
-#### UXB 读取规则
+#### UXS 读取规则
 
-- 完整读取同源 `uxb_output.md` 的策略前提、整体方向、必要局部策略、业务触点、承接约束、依赖、边界与来源；不得仅凭策略标题恢复角色、任务或状态，也不得把体验建议当作已确认业务事实。
+- 完整读取同源 `uxs_output.md` 的策略前提、整体方向、必要局部策略、业务触点、承接约束、依赖、边界与来源；不得仅凭策略标题恢复角色、任务或状态，也不得把体验建议当作已确认业务事实。
 - 缺少当前旅程必需信息时，不得从会话上下文补齐；按本 Skill 的补问或降级规则处理。
 
 #### Stories 读取规则
@@ -160,13 +160,13 @@ description: >
 - 完整读取同源 `stories.md` 的来源与方向、全部 Story 索引及详情、不进入 Story 的内容和待确认问题；不得只读取标题或功能名。
 - 各 Story 中的角色、场景、目标、用户任务、优先级、来源依据、完成标准、设计触点、风险和明确假设共同构成正式任务语义。
 - 缺少当前旅程必需信息时，不得自行恢复 Story 详情；按本 Skill 的补问或降级规则处理。
-- 如果同时存在 `uxb_output.md`，只将 UXB Markdown 作为体验方向和约束补充，不替代 Stories 的任务单元或正式业务事实。
+- 如果同时存在 `uxs_output.md`，只将 UXS Markdown 作为体验方向和约束补充，不替代 Stories 的任务单元或正式业务事实。
 
 #### Problem Framing 读取规则
 
 - 完整读取 `problem_framing.md` 中的正式问题、角色、目标结果、主推荐方案、约束、待确认问题、论证和下游承接要求。
 - `problem_framing.md` 可用时，正常进入 `framing-chain`。
-- 如果同时存在 `stories` 或 `uxb_output.md`，只将 `problem-framing` 作为问题方向和边界补充，不改变主要模式。
+- 如果同时存在 `stories` 或 `uxs_output.md`，只将 `problem-framing` 作为问题方向和边界补充，不改变主要模式。
 
 #### 原始需求读取规则
 
@@ -196,7 +196,7 @@ description: >
 ### Step 0.4 · 固定输入确认
 
 - 如处于 `stories-chain`，先输出用户故事确认话术并等待用户确认继续。
-- 如处于 `uxb-chain`，先输出 UXB 确认话术并等待用户确认继续。
+- 如处于 `uxs-chain`，先输出 UXS 确认话术并等待用户确认继续。
 - 如处于 `framing-chain`，先输出问题框定确认话术并等待用户确认继续。
 - 如处于 `prd-standalone`，先输出原始需求确认话术并等待用户确认输入材料。
 - 未确认前，不得进入 readiness 判断。
@@ -207,7 +207,7 @@ description: >
 
 ### 适用场景
 
-- 已有 `UXB` 产出，希望把定案结果深化为角色旅程。
+- 已有 `UXS` 产出，希望把定案结果深化为角色旅程。
 - `PRD` 不完整，希望从旅程视角反向暴露缺口并补齐结构。
 - 只有需求描述或场景描述，希望先得到旅程骨架或补全后的正式旅程。
 
@@ -327,13 +327,13 @@ description: >
 如果你确认本次基于这份用户故事继续做旅程分析，我再进入 readiness 判断。
 ```
 
-### 检测到 UXB 时
+### 检测到 UXS 时
 
 ```text
-已检测到 UXB 产出，本次将基于定案结果做旅程深化。
+已检测到 UXS 产出，本次将基于定案结果做旅程深化。
 我会先检查角色、旅程范围、阶段和断点信息是否足够。
 如果信息已经完整，我会直接生成旅程分析；如果缺少关键结构，我会先补几个必要问题。
-如果你确认本次基于这份 UXB 继续做旅程分析，我再进入 readiness 判断。
+如果你确认本次基于这份 UXS 继续做旅程分析，我再进入 readiness 判断。
 ```
 
 ### 检测到 Problem Framing 时
@@ -660,7 +660,7 @@ description: >
 
 建议下一步只允许：
 
-- 去 `UXB`
+- 去 `UXS`
 - 去 `probe`
 - 回到问题与业务方案重新确定方向
 - 补充更具体 `PRD`
@@ -677,7 +677,7 @@ description: >
 
 文档头部必须包含：
 
-- 运行模式：`stories-chain | uxb-chain | framing-chain | prd-standalone`
+- 运行模式：`stories-chain | uxs-chain | framing-chain | prd-standalone`
 - 是否使用补问：`是 | 否`
 - 数据来源：列出具体来源
 - 结果等级：`完整旅程 | 补全后旅程 | 旅程骨架`

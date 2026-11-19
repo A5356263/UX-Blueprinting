@@ -9,7 +9,7 @@ description: >
 
 # Journey Metrics
 
-Use this skill as a sidecar UXB capability. It can run after an page spec exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
+Use this skill as a sidecar UXS capability. It can run after an page spec exists, or independently from requirement materials and optional background materials when time is tight. Keep generation, validation, and preview integration separate.
 
 Do not automatically read existing project materials to decide the generation scope. When this skill is invoked, first ask the user which tasks or scenarios need visual journey and tracking requirement documents. Read files only after the user confirms the scope.
 
@@ -111,10 +111,10 @@ Before finishing, verify:
 
 ## Migration Guidance
 
-When porting this capability to a newer UXB project, read `references/migration-guide.md` first. Port the layers separately:
+When porting this capability to a newer UXS project, read `references/migration-guide.md` first. Port the layers separately:
 
 - Bring the skill and templates as-is.
-- Reconcile `references/journey-metrics-contract.md` with the new UXB rule system.
+- Reconcile `references/journey-metrics-contract.md` with the new UXS rule system.
 - Adapt preview parsing/rendering to the new preview model.
 - Treat `assets/fixtures/` as regression fixtures, not production inputs.
 - Add the CLI entrypoint only after the host command registry and packaging model are known.

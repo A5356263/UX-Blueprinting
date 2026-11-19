@@ -21,7 +21,7 @@ Fixtures are regression examples. Do not use them as runtime inputs.
 - Preview model field names and Markdown parser assumptions.
 - Knowledge base path and tracking method document.
 - Project directory layout.
-- Existing UXB route/mainline contracts.
+- Existing UXS route/mainline contracts.
 
 ## Current Snapshot Risks
 

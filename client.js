@@ -504,7 +504,7 @@ window.__ModuleLoader__.load({
     }
 
     const skillArt = {
-      uxb: {
+      uxs: {
         background: '#ece9df', ink: '#5c5743',
         scene: () => [
           h('path', { d: 'M26 105c35-13 25-48 67-48s35 35 76 13M93 57c23 0 26-27 64-27', stroke: '#b9b39a', strokeDasharray: '3 4' }),
@@ -796,7 +796,7 @@ window.__ModuleLoader__.load({
     }
 
     function SkillArt({ skillId }) {
-      const art = Object.hasOwn(skillArt, skillId) ? skillArt[skillId] : skillArt.uxb
+      const art = Object.hasOwn(skillArt, skillId) ? skillArt[skillId] : skillArt.uxs
       return h('svg', {
         viewBox: '0 0 200 140',
         'aria-hidden': true,
@@ -857,7 +857,7 @@ window.__ModuleLoader__.load({
       })())
       const restored = useRef(false)
 
-      const nameOf = value => catalog.find(item => item.id === value)?.name ?? value
+      const nameOf = value => catalog.find(item => item.id === (value === 'uxb' ? 'uxs' : value))?.name ?? value
       const taskId = task?.id ?? ''
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
       const segmentKey = JSON.stringify(task?.segments ?? [])

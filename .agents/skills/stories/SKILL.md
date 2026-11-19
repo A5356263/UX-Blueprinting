@@ -1,9 +1,9 @@
 ---
 name: stories
 description: >
-  用户故事 Skill。承接 uxb 或 problem-framing 的正式上游结论，把方向和承接要求拆成可设计、可验证的用户任务单元，输出用户故事文档。
+  用户故事 Skill。承接 uxs 或 problem-framing 的正式上游结论，把方向和承接要求拆成可设计、可验证的用户任务单元，输出用户故事文档。
   触发关键词：用户故事、stories、user story、故事拆解、拆任务、任务切片、把需求拆成故事、把方向拆成故事、设计故事、验收标准。
-  排除：问题尚未成形（用 problem-framing）、体验策略（用 uxb）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 page-spec）。
+  排除：问题尚未成形（用 problem-framing）、体验策略（用 uxs）、旅程阶段分析（用 journey-analysis）、交互流程和页面设计（用 page-spec）。
 ---
 
 # 用户故事
@@ -42,7 +42,7 @@ description: >
 
 启动后按当前 `SKILL.md` 的规则确认本 Skill 自身输入边界，再按以下顺序读取上游：
 
-1. 完整读取 `spark-output/uxb_output.md`（可用且同源时）。
+1. 完整读取 `spark-output/uxs_output.md`（可用且同源时）。
 2. 完整读取 `spark-output/problem_framing.md`（可用且同源时）。
 3. 用户当前对话中明确提供的方向、角色、任务背景。
 
@@ -58,12 +58,12 @@ description: >
 
 读取规则：
 
-- UXB Markdown 是同一轮体验定案的正式语义源。完整读取策略前提、整体方向、必要局部策略、业务触点、承接约束、真实依赖与边界；不得只基于策略标题生成 Story。
-- 如果 `uxb_output.md` 与 problem-framing 同时存在，优先以同源 UXB 作为正式上游来源。
+- UXS Markdown 是同一轮体验定案的正式语义源。完整读取策略前提、整体方向、必要局部策略、业务触点、承接约束、真实依赖与边界；不得只基于策略标题生成 Story。
+- 如果 `uxs_output.md` 与 problem-framing 同时存在，优先以同源 UXS 作为正式上游来源。
 - 如果有 `problem_framing.md`，允许正式运行。
 - 如果两者都不存在，但用户在当前对话中已经提供足够明确的方向、角色和任务背景，允许独立运行，并在`1. 来源与方向`中标注直接输入。
 - 如果上游没有明确方向、主角色和任务目标，不进入正式 Story 生成。
-- P0 Story 的业务规则、状态和异常必须来自已确认的业务事实来源；UXB 只提供体验方向和约束，不得据此补造业务条件。验收条件须能追溯到相应权威事实或已确认体验决定。
+- P0 Story 的业务规则、状态和异常必须来自已确认的业务事实来源；UXS 只提供体验方向和约束，不得据此补造业务条件。验收条件须能追溯到相应权威事实或已确认体验决定。
 
 当正式来源为 `problem-framing` 时，先检查其信息分层：
 
@@ -81,7 +81,7 @@ description: >
 
 用户故事负责：
 
-- 读取 `uxb` 或 `problem-framing` 的上游结论
+- 读取 `uxs` 或 `problem-framing` 的上游结论
 - 判断当前方向是主题、Epic 还是单个 Story
 - 输出 Story 索引
 - 生成每个 Story 的角色、场景、目标、验收标准和设计触点
@@ -99,14 +99,14 @@ description: >
 
 ### 适用场景
 
-- 已有 `uxb` 需求定案，希望拆成用户任务单元。
+- 已有 `uxs` 需求定案，希望拆成用户任务单元。
 - 已有 `problem-framing` 问题框定，希望把推荐方向拆成用户故事。
 - 设计前需要明确每个任务的完成标准和设计触点。
 
 ### 排除场景
 
 - 问题还未成形：用 `problem-framing`。
-- 已有明确 PRD 但尚未做需求定案：用 `uxb`。
+- 已有明确 PRD 但尚未做需求定案：用 `uxs`。
 - 需要旅程阶段、情绪、流失风险：用 `journey-analysis`。
 - 需要交互流程、页面设计、状态文案或页面生成规格：用 `page-spec`。
 
@@ -139,7 +139,7 @@ description: >
 
 明确本次 Story 来源：
 
-- `uxb`（同源 `uxb_output.md` 可用）
+- `uxs`（同源 `uxs_output.md` 可用）
 - `problem-framing`
 - `direct-input`
 
@@ -157,7 +157,7 @@ description: >
 该步骤只在以下条件全部满足时触发：
 
 - 正式来源为 `problem-framing`
-- `uxb_output.md` 不存在或不可用
+- `uxs_output.md` 不存在或不可用
 - 当前输入仍是 `theme` 或 `epic`
 - 主角色、核心任务目标、或本轮明确不做什么 这三类关键信息之一缺失或明显不稳定
 
@@ -312,9 +312,9 @@ Markdown 固定结构：
 
 ## 边界
 
-### 与 uxb
+### 与 uxs
 
-`stories` 不做需求定案，只消费 `uxb` 的定案结果。
+`stories` 不做需求定案，只消费 `uxs` 的定案结果。
 
 ### 与 problem-framing
 
@@ -352,6 +352,6 @@ Markdown 固定结构：
 - 不写页面结构方案。
 - 不写具体文案方案。
 - 不把工程实现项伪装成用户故事。
-- 不得用最小澄清停顿替代 `problem-framing` 或 `uxb`。
+- 不得用最小澄清停顿替代 `problem-framing` 或 `uxs`。
 - 不得把上游未确认项写成 `acceptance_criteria`。
 - 不得把 Story 写成页面规格或蓝图方案。

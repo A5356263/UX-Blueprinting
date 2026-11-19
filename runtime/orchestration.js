@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { normalizeSkillId } from './state.js'
 
 const graph = JSON.parse(readFileSync(new URL('../shared-workflow/skill-graph.json', import.meta.url), 'utf8'))
 const byId = new Map(graph.skills.map(skill => [skill.id, skill]))
@@ -25,15 +26,16 @@ export function skillCatalog() {
 }
 
 export function readsOf(id) {
-  return [...(byId.get(id)?.reads ?? [])]
+  return [...(byId.get(normalizeSkillId(id))?.reads ?? [])]
 }
 
 export function nameOf(id) {
-  return byId.get(id)?.name_zh ?? id
+  return byId.get(normalizeSkillId(id))?.name_zh ?? id
 }
 
 export function completedFromArtifacts(artifacts = {}) {
   return Object.entries(artifacts)
+    .map(([kind, artifact]) => [normalizeSkillId(kind), artifact])
     .filter(([kind, artifact]) => byId.has(kind) && artifact?.path)
     .map(([kind]) => kind)
 }
@@ -47,6 +49,7 @@ function isReady(skill, done) {
 }
 
 export function availableSkills(completed = []) {
+  completed = completed.map(normalizeSkillId)
   const done = new Set(completed.filter(id => byId.has(id)))
   return graph.skills
     .filter(skill => !done.has(skill.id) && isReady(skill, done))
@@ -54,6 +57,8 @@ export function availableSkills(completed = []) {
 }
 
 export function recommendHandoff(completed, currentSkill) {
+  completed = completed.map(normalizeSkillId)
+  currentSkill = normalizeSkillId(currentSkill)
   const current = byId.get(currentSkill)
   const done = new Set(completed)
   if (!current || !done.has(currentSkill)) return []
@@ -82,6 +87,8 @@ export function recommendHandoff(completed, currentSkill) {
 }
 
 export function recommendNext(completed = [], currentSkill) {
+  completed = completed.map(normalizeSkillId)
+  currentSkill = normalizeSkillId(currentSkill)
   const done = new Set(completed.filter(id => byId.has(id)))
   const current = byId.get(currentSkill)
   const preferred = (current?.next_hint?.preferred ?? []).map((id, index) => [id, index])

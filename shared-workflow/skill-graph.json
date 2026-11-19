@@ -9,7 +9,7 @@
     {
       "before": "page-spec",
       "skills": [
-        "uxb",
+        "uxs",
         "stories",
         "journey-analysis"
       ]
@@ -26,14 +26,14 @@
         "preferred": [
           "page-spec"
         ],
-        "reason": "正式需求基线完成后，进入页面规格生成完整交互流程和页面方案；UXB、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
+        "reason": "正式需求基线完成后，进入页面规格生成完整交互流程和页面方案；UXS、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
         "alternatives": []
       },
       "anchor": true,
       "requiredAny": []
     },
     {
-      "id": "uxb",
+      "id": "uxs",
       "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
       "name_zh": "体验策略",
       "phase": 1,
@@ -66,9 +66,9 @@
           "stories",
           "journey-analysis"
         ],
-        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXB 是可选的体验策略增强。",
+        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXS 是可选的体验策略增强。",
         "alternatives": [
-          "uxb"
+          "uxs"
         ]
       },
       "requiredAny": []
@@ -78,10 +78,10 @@
       "name_zh": "用户故事",
       "phase": 1,
       "standalone_usable": true,
-      "standalone_note": "可承接 uxb 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
+      "standalone_note": "可承接 uxs 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
       "anchor": false,
       "reads": [
-        "uxb",
+        "uxs",
         "problem-framing"
       ],
       "required": [],
@@ -98,7 +98,7 @@
     },
     {
       "id": "journey-analysis",
-      "_comment": "当前 Skill 可承接 stories，也可承接 uxb / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
+      "_comment": "当前 Skill 可承接 stories，也可承接 uxs / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
       "phase": 1,
       "standalone_usable": true,
@@ -106,7 +106,7 @@
       "anchor": false,
       "reads": [
         "stories",
-        "uxb",
+        "uxs",
         "problem-framing"
       ],
       "required": [],
@@ -144,7 +144,7 @@
       "reads": [
         "edge",
         "prd-review",
-        "uxb",
+        "uxs",
         "problem-framing",
         "stories",
         "journey-analysis"
@@ -245,7 +245,7 @@
       "standalone_usable": true,
       "direct_invocation_policy": "standalone",
       "reads": [
-        "uxb",
+        "uxs",
         "page-spec",
         "journey-metrics"
       ],
@@ -296,7 +296,7 @@
       "direct_invocation_policy": "standalone",
       "reads": [],
       "conditional_reads": [
-        "uxb",
+        "uxs",
         "page-spec",
         "journey-metrics",
         "knowledge-wiki"
@@ -335,7 +335,7 @@
       "standalone_usable": true,
       "direct_invocation_policy": "standalone_with_input",
       "reads": [
-        "uxb",
+        "uxs",
         "page-spec",
         "journey-analysis",
         "stories"
@@ -476,7 +476,7 @@
         "outcome-validation-recheck"
       ],
       "conditional_reads": [
-        "uxb",
+        "uxs",
         "journey-metrics",
         "knowledge-wiki"
       ],

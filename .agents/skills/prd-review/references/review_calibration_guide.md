@@ -252,12 +252,12 @@ PRD 已明确申请配置只包含角色和功能权限时，禁止再次询问�
 
 ## 6. Handoff 校准案例
 
-Handoff 固定以 Page Spec 为唯一推荐主链，UXB 和 Journey Analysis 为可选增强。
+Handoff 固定以 Page Spec 为唯一推荐主链，UXS 和 Journey Analysis 为可选增强。
 
 校准案例：
 
 - 不因需求大小、页面数量或复杂度改变 Page Spec 的推荐位置。
-- 不把 UXB 提升为主链必经阶段。
+- 不把 UXS 提升为主链必经阶段。
 - 不因任一增强产物存在而删除 Page Spec。
 - 不从校准案例生成新的路由规则。
 
@@ -392,7 +392,7 @@ Handoff 固定以 Page Spec 为唯一推荐主链，UXB 和 Journey Analysis 为
 
 - 正式知识能唯一证明缺失节点时，写为业务事实补充。
 - 否则形成待确认。
-- 不得因为后续可以由 UXB 设计而标记体验定案事项。
+- 不得因为后续可以由 UXS 设计而标记体验定案事项。
 
 ### 7.9 需求初识不补全事实
 

@@ -13,7 +13,7 @@
 只允许以下依据：
 
 - user_confirmed
-- uxb
+- uxs
 - business_config
 - upstream_requirement
 

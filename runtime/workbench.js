@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
-import { completedFor, emptyManifest } from './state.js'
+import { completedFor, emptyManifest, normalizeSkillId } from './state.js'
 import { validateMarkdown } from './artifacts.js'
 import { recommendHandoff } from './orchestration.js'
 
@@ -83,7 +83,11 @@ export function createWorkbench(ctx, catalog) {
         version: 1,
         next: Number.isSafeInteger(parsed.next) && parsed.next > 0 ? parsed.next : 1,
         legacyMigrated: parsed.legacyMigrated === true,
-        tasks: parsed.tasks.filter(task => task && taskPattern.test(task.id)),
+        tasks: parsed.tasks.filter(task => task && taskPattern.test(task.id)).map(task => ({
+          ...task,
+          skills: [...new Set((task.skills ?? []).map(normalizeSkillId))],
+          lastSkill: normalizeSkillId(task.lastSkill),
+        })),
       }
     } catch { return null }
   }
@@ -158,13 +162,18 @@ export function createWorkbench(ctx, catalog) {
       if (!parsed || parsed.taskId !== taskId || typeof parsed.skills !== 'object' || parsed.skills === null) {
         return emptyManifest(workspace.id, taskId)
       }
+      const skills = { ...parsed.skills }
+      if (skills.uxb) {
+        if (!skills.uxs) skills.uxs = { ...skills.uxb, skill: 'uxs' }
+        delete skills.uxb
+      }
       return {
         version: 1,
         workspaceId: workspace.id,
         taskId,
         sessionId: parsed.sessionId ?? '',
         updatedAt: parsed.updatedAt ?? new Date().toISOString(),
-        skills: parsed.skills,
+        skills,
       }
     } catch { return emptyManifest(workspace.id, taskId) }
   }
@@ -187,8 +196,8 @@ export function createWorkbench(ctx, catalog) {
       segments: task.segments,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
-      skills: task.skills ?? [],
-      lastSkill: task.lastSkill ?? null,
+      skills: [...new Set((task.skills ?? []).map(normalizeSkillId))],
+      lastSkill: task.lastSkill ? normalizeSkillId(task.lastSkill) : null,
     }
   }
 
@@ -217,7 +226,9 @@ export function createWorkbench(ctx, catalog) {
         try {
           const parsed = JSON.parse(readFileSync(manifestFile, 'utf8'))
           if (parsed && typeof parsed.skills === 'object') {
-            for (const [skill, value] of Object.entries(parsed.skills)) {
+            for (const [oldSkill, value] of Object.entries(parsed.skills)) {
+              const skill = normalizeSkillId(oldSkill)
+              if (oldSkill === 'uxb' && parsed.skills.uxs) continue
               if (!knownSkills.has(skill) || !value?.path) continue
               const name = String(value.path).split(/[\\/]/).pop()
               const file = join(target, name)
@@ -237,7 +248,8 @@ export function createWorkbench(ctx, catalog) {
         } catch {}
       }
       for (const name of files) {
-        const skill = name.replace(/\.md$/, '')
+        if (name === 'uxb.md' && files.includes('uxs.md')) continue
+        const skill = normalizeSkillId(name.replace(/\.md$/, ''))
         if (!knownSkills.has(skill) || manifest.skills[skill]) continue
         const bytes = readFileSync(join(target, name))
         manifest.skills[skill] = {
@@ -307,7 +319,7 @@ export function createWorkbench(ctx, catalog) {
   }
 
   async function createTask(workspace, body) {
-    const skill = String(body.skill ?? '')
+    const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
     const sessionId = String(body.sessionId ?? '')
     if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
@@ -378,9 +390,9 @@ export function createWorkbench(ctx, catalog) {
     const index = loadIndex(workspace)
     const task = findTask(index, String(body.taskId ?? ''))
     if (task.status !== 'active') throw new Error('任务当前不是进行中，请先恢复')
-    const skill = String(body.skill ?? '')
+    const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
-    task.skills = Array.isArray(task.skills) ? task.skills : []
+    task.skills = [...new Set((Array.isArray(task.skills) ? task.skills : []).map(normalizeSkillId))]
     if (!task.skills.includes(skill)) {
       task.skills.push(skill)
       task.lastSkill = skill
@@ -391,6 +403,7 @@ export function createWorkbench(ctx, catalog) {
   }
 
   async function submit({ taskId, skill, markdown, title }, callerSessionId) {
+    skill = normalizeSkillId(skill)
     if (!callerSessionId) throw new Error('无法确认调用会话')
     if (!knownSkills.has(skill)) throw new Error('未知 Skill：' + skill)
     const workspace = await workspaceForSession(callerSessionId)
@@ -439,7 +452,7 @@ export function createWorkbench(ctx, catalog) {
         }
       }
       saveManifest(workspace, taskId, manifest)
-      task.skills = [...new Set([...(task.skills ?? []), skill])]
+      task.skills = [...new Set([...(task.skills ?? []).map(normalizeSkillId), skill])]
       task.lastSkill = skill
       task.updatedAt = now
       saveIndex(workspace, index)
@@ -486,7 +499,7 @@ export function createWorkbench(ctx, catalog) {
         const task = findTask(index, taskId)
         const manifest = loadManifest(workspace, taskId)
         if (url.searchParams.has('skill')) {
-          const entry = manifest.skills[url.searchParams.get('skill')]
+          const entry = manifest.skills[normalizeSkillId(url.searchParams.get('skill'))]
           if (!entry) throw new Error('该 Skill 尚未登记产物')
           const requested = resolve(workspace.path, entry.path)
           contained(workspace.path, requested)

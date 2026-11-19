@@ -1,3 +1,7 @@
+export function normalizeSkillId(id) {
+  return id === 'uxb' ? 'uxs' : id
+}
+
 export function emptyManifest(workspaceId, taskId, sessionId) {
   return {
     version: 1,

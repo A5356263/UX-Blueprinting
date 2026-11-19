@@ -6,7 +6,7 @@ export const name = 'ux-blueprinting-reference-reader'
 export const inject = ['tools']
 
 const root = fileURLToPath(new URL('../.agents/skills/', import.meta.url))
-const allowed = ['prd-review/references', 'page-spec/references', 'uxb/references', 'journey-analysis/references', 'knowledge-wiki/knowledge']
+const allowed = ['prd-review/references', 'page-spec/references', 'uxs/references', 'journey-analysis/references', 'knowledge-wiki/knowledge']
 const inside = (dir, file) => {
   const path = relative(dir, file)
   return Boolean(path && path !== '..' && !path.startsWith('..' + sep) && !isAbsolute(path))
@@ -31,8 +31,11 @@ export function apply(ctx) {
       if (typeof args.path !== 'string' || !/\.(md|txt|json)$/i.test(args.path)) throw new Error('请选择随包的文本参考资料')
       const offset = args.offset ?? 1
       if (!Number.isSafeInteger(offset) || offset < 1) throw new Error('起始行无效')
+      const requested = args.path
+        .replace(/^\.agents[\\/]skills[\\/]uxb[\\/]/, '.agents/skills/uxs/')
+        .replace(/^uxb[\\/]/, 'uxs/')
       let file
-      try { file = realpathSync(resolve(root, args.path.replace(/^\.agents[\\/]skills[\\/]/, ''))) }
+      try { file = realpathSync(resolve(root, requested.replace(/^\.agents[\\/]skills[\\/]/, ''))) }
       catch { throw new Error('未找到随包参考资料') }
       if (!roots.some(dir => inside(dir, file))) throw new Error('只允许读取设计参考资料和正式知识')
       const info = statSync(file)
