@@ -493,40 +493,242 @@ window.__ModuleLoader__.load({
       return rows.slice(-120)
     }
 
-    function artStyle(skillId) {
-      let hash = 0
-      for (const char of skillId) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
-      const hue = hash % 360
-      return {
-        background: `linear-gradient(135deg, hsl(${hue} 20% 92%), hsl(${(hue + 34) % 360} 22% 84%))`,
-        color: '#3d362e',
-      }
-    }
-
-    const artIcons = {
-      uxb: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z M16 8l-2.4 5.6L8 16l2.4-5.6L16 8Z',
-      'prd-review': 'M6 2h8l4 4v16H6Z M14 2v4h4 M9 12l2 2 4-4 M9 17h6',
-      'problem-framing': 'M3 5h9v6H3Z M12 8h5 M17 5h4v6h-4 M7 15h10 M7 19h6',
-      stories: 'M4 4h6v6H4Z M14 4h6v6h-6Z M4 14h6v6H4Z M14 14h6v6h-6Z M6 7l2 2 2-3',
-      'journey-analysis': 'M4 18c4-9 8 0 12-7 2-4 4-4 4-4 M7 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z M17 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
-      'journey-metrics': 'M4 20V4 M4 20h16 M7 16l4-5 3 3 5-7',
-      'page-spec': 'M3 4h18v16H3Z M3 8h18 M8 8v12 M12 11h6 M12 15h6',
-      'board': 'M3 5h7v14H3Z M12 5h9v7h-9Z M12 14h9v5h-9Z M6 9h1 M6 13h1',
-      'edge': 'M6 4v6a4 4 0 0 0 4 4h8 M6 20v-4 M18 4v10 M16 12l2 2 2-2',
-      'solution-swimlane': 'M3 4h18v4H3Z M3 10h18v4H3Z M3 16h18v4H3Z M8 6h6 M12 12h5 M7 18h8',
-      'knowledge-wiki': 'M3 5c4-2 7-2 9 0v14c-2-2-5-2-9 0Z M21 5c-4-2-7-2-9 0v14c2-2 5-2 9 0Z',
-      'objective-data-analysis': 'M4 20V4 M4 20h16 M7 16v-5 M11 16V8 M15 16v-3 M19 16V6',
-      'subjective-feedback-analysis': 'M3 4h12v8H8l-3 3v-3H3Z M10 9h11v7h-4l2 3-3-3h-6Z',
-      'experience-heuristic-analysis': 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z M16 16l4 4 M7 8h8 M7 12h6',
-      'evidence-govern': 'M12 2l8 4v7c0 4-3 7-8 9-5-2-8-5-8-9V6Z M9 12l2 2 4-4',
-      'root-cause-synthesis': 'M12 21V9 M12 13 6 7 M12 13l6-6 M6 7 4 3 M6 7 2 8 M18 7l2-4 M18 7l4 1',
-      'business-impact': 'M3 20h18 M5 16l4-5 3 2 5-7 M16 6h4v4',
-      'outcome-validation-recheck': 'M20 12a8 8 0 1 1-2.3-5.7 M20 4v6h-6 M8 12l3 3 4-5',
-      'evidence-archive': 'M3 5h18v4H3Z M5 9h14v10H5Z M9 13h6',
-      'data-visualization': 'M12 3a9 9 0 1 0 9 9h-9Z M12 3v9h9 M4 16l4-4 3 2 5-6',
-    }
-
-    const pilotArt = {
+    const skillArt = {
+      uxb: {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('path', { d: 'M26 105c35-13 25-48 67-48s35 35 76 13M93 57c23 0 26-27 64-27', stroke: '#b9b39a', strokeDasharray: '3 4' }),
+          h('circle', { cx: 91, cy: 67, r: 38, fill: '#dbd5bf', stroke: 'none' }),
+          h('circle', { cx: 86, cy: 61, r: 34, fill: '#fffdf5' }),
+          h('path', { d: 'M86 32v7m0 44v7M57 61h7m44 0h7M65 40l5 5m33 33 5 5', stroke: '#b8ae91' }),
+          h('path', { d: 'm99 46-8 23-23 8 8-23z', fill: '#8e9268' }),
+          h('path', { d: 'm99 46-8 23-15-15z', fill: '#d3d7b5', stroke: 'none' }),
+          h('circle', { cx: 28, cy: 105, r: 5, fill: '#8e9268' }),
+          h('rect', { x: 146, y: 19, width: 30, height: 22, rx: 4, fill: '#faf8ef' }),
+          h('path', { d: 'm154 30 5 4 9-9M149 91h25m-25 6h18' }),
+        ],
+      },
+      stories: {
+        background: '#e5eee7', ink: '#385145',
+        scene: () => [
+          h('path', { d: 'M48 57h22m35 0h20M48 95h22', stroke: '#91b09f' }),
+          h('circle', { cx: 35, cy: 45, r: 12, fill: '#fffdf7' }),
+          h('circle', { cx: 35, cy: 41, r: 4, fill: '#9cb6a4', stroke: 'none' }),
+          h('path', { d: 'M28 52c0-9 14-9 14 0', fill: '#cbded3' }),
+          h('rect', { x: 62, y: 30, width: 50, height: 65, rx: 5, fill: '#cbded3', transform: 'rotate(-7 62 30)' }),
+          h('rect', { x: 68, y: 35, width: 50, height: 65, rx: 5, fill: '#fffdf7' }),
+          h('rect', { x: 75, y: 44, width: 21, height: 8, rx: 3, fill: '#aac5b1', stroke: 'none' }),
+          h('path', { d: 'M76 63h31m-31 7h25m-25 12h19' }),
+          h('rect', { x: 130, y: 53, width: 47, height: 60, rx: 5, fill: '#f8eee0' }),
+          h('path', { d: 'm138 67 3 3 5-6m-8 19 3 3 5-6M151 67h18m-18 16h13M34 88v14m-7-7h14' }),
+        ],
+      },
+      'journey-analysis': {
+        background: '#f0e8df', ink: '#67513f',
+        scene: () => [
+          h('rect', { x: 23, y: 25, width: 154, height: 89, rx: 6, fill: '#fffaf3' }),
+          h('path', { d: 'M35 46h130M71 46v57m44-57v57', stroke: '#d8c6b4', strokeDasharray: '3 4' }),
+          h('path', { d: 'M36 87c14-26 25-24 38-10s20 17 36-10 32-14 52-26', stroke: '#b77d54', strokeWidth: 2.5 }),
+          h('circle', { cx: 39, cy: 82, r: 5, fill: '#e4bf96' }),
+          h('circle', { cx: 94, cy: 81, r: 5, fill: '#c8b8a8' }),
+          h('circle', { cx: 150, cy: 48, r: 5, fill: '#8f9e78' }),
+          h('path', { d: 'M34 35h22m24 0h20m25 0h26M35 102h19m24 0h20m26 0h24', strokeOpacity: .5 }),
+          h('rect', { x: 123, y: 90, width: 54, height: 29, rx: 4, fill: '#e7d5bf' }),
+          h('path', { d: 'M132 101h34m-34 7h23' }),
+        ],
+      },
+      'solution-swimlane': {
+        background: '#eae5e0', ink: '#5f5247',
+        scene: () => [
+          h('rect', { x: 23, y: 26, width: 153, height: 89, rx: 5, fill: '#fffaf5' }),
+          h('path', { d: 'M23 55h153M23 85h153M47 26v89', stroke: '#c8bcb0' }),
+          h('circle', { cx: 35, cy: 40, r: 5, fill: '#d6c5b5' }),
+          h('circle', { cx: 35, cy: 70, r: 5, fill: '#b8c8bd' }),
+          h('circle', { cx: 35, cy: 100, r: 5, fill: '#c7c3d4' }),
+          h('path', { d: 'M81 41h26v30h22m14 9v20h-28m-32 0H62', stroke: '#94775c' }),
+          h('rect', { x: 57, y: 33, width: 25, height: 16, rx: 3, fill: '#e8cfb3' }),
+          h('rect', { x: 129, y: 63, width: 30, height: 16, rx: 3, fill: '#cbded3' }),
+          h('rect', { x: 84, y: 92, width: 31, height: 16, rx: 3, fill: '#ddd4e6' }),
+          h('path', { d: 'm123 67 5 4-5 4m-3 21-5 4 5 4M63 41h12m62 30h14m-60 29h17' }),
+        ],
+      },
+      edge: {
+        background: '#e9ecdf', ink: '#535d43',
+        scene: () => [
+          h('path', { d: 'M24 43h36q15 0 15 15v30q0 13 16 13h64', stroke: '#9aab86', strokeWidth: 2 }),
+          h('path', { d: 'M89 42h68m-6-5 6 5-6 5', stroke: '#b7bda9', strokeDasharray: '3 4' }),
+          h('rect', { x: 28, y: 31, width: 32, height: 25, rx: 4, fill: '#fffdf6' }),
+          h('rect', { x: 99, y: 20, width: 67, height: 58, rx: 5, fill: '#fffdf6' }),
+          h('path', { d: 'm132 30 9 17h-18z', fill: '#e7cea6', stroke: '#8a7654' }),
+          h('path', { d: 'M132 36v4m0 3v1M111 56h42m-36 6h28' }),
+          h('circle', { cx: 158, cy: 101, r: 13, fill: '#8b9b71' }),
+          h('path', { d: 'M153 96a7 7 0 1 1-1 8m0-6v6h6', stroke: '#fffdf6', strokeWidth: 2 }),
+          h('path', { d: 'M31 96h23m-23 6h16', strokeOpacity: .5 }),
+        ],
+      },
+      board: {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 32, y: 25, width: 112, height: 87, rx: 5, fill: '#c7d4e5', transform: 'rotate(-5 32 25)', stroke: 'none' }),
+          h('rect', { x: 42, y: 22, width: 112, height: 88, rx: 5, fill: '#fffdf8' }),
+          h('rect', { x: 51, y: 31, width: 40, height: 45, rx: 3, fill: '#cdd9e7', stroke: 'none' }),
+          h('path', { d: 'm51 69 16-18 13 11 11-9v23H51z', fill: '#8ca5bc', stroke: 'none' }),
+          h('circle', { cx: 79, cy: 42, r: 5, fill: '#fff7e4', stroke: 'none' }),
+          h('path', { d: 'M103 40h38m-38 8h27m-27 13h32m-32 6h18' }),
+          h('rect', { x: 54, y: 87, width: 21, height: 13, rx: 2, fill: '#9caf9c', stroke: 'none' }),
+          h('rect', { x: 80, y: 87, width: 21, height: 13, rx: 2, fill: '#d5b999', stroke: 'none' }),
+          h('rect', { x: 106, y: 87, width: 21, height: 13, rx: 2, fill: '#b6a7c2', stroke: 'none' }),
+          h('path', { d: 'm143 80 27 6-8 30-27-6z', fill: '#e4d7c2' }),
+          h('path', { d: 'm146 100 9-10 3 13m-11-5 10 3' }),
+        ],
+      },
+      'knowledge-wiki': {
+        background: '#eee9dd', ink: '#635a43',
+        scene: () => [
+          h('rect', { x: 119, y: 28, width: 44, height: 67, rx: 4, fill: '#d9d0b7', transform: 'rotate(8 119 28)' }),
+          h('rect', { x: 124, y: 25, width: 40, height: 65, rx: 4, fill: '#fbf7ec' }),
+          h('path', { d: 'M132 38h23m-23 7h18' }),
+          h('path', { d: 'M28 48q32-12 64 2 32-14 64-2v61q-32-11-64 2-32-13-64-2z', fill: '#fffdf6' }),
+          h('path', { d: 'M92 50v61M39 62q21-6 42 1m-42 11q21-6 42 1m-42 11q21-6 31-1M104 63q21-6 40-1m-40 12q21-6 40-1m-40 12q21-6 31-3', stroke: '#a99d7f' }),
+          h('path', { d: 'M67 44v25l7-5 7 7V44', fill: '#a5b69a', stroke: 'none' }),
+          h('circle', { cx: 156, cy: 103, r: 15, fill: '#b5c1a5' }),
+          h('path', { d: 'M150 103h12m-6-6v12' }),
+        ],
+      },
+      'journey-metrics': {
+        background: '#e5ecec', ink: '#3d5c60',
+        scene: () => [
+          h('path', { d: 'M24 44h151M43 44v26m54-26v26m59-26v26', stroke: '#9bb9b9' }),
+          ...[43,97,156].map(cx => h('circle', { key: cx, cx, cy: 44, r: 6, fill: '#789f9f' })),
+          h('rect', { x: 29, y: 77, width: 141, height: 35, rx: 5, fill: '#fffdf7' }),
+          h('path', { d: 'M39 102h118', stroke: '#c4d7d3' }),
+          h('path', { d: 'm42 95 19-7 19 4 22-12 20 5 30-16', stroke: '#487b80', strokeWidth: 2 }),
+          h('rect', { x: 32, y: 20, width: 24, height: 11, rx: 3, fill: '#c2d7cf', stroke: 'none' }),
+          h('rect', { x: 85, y: 20, width: 24, height: 11, rx: 3, fill: '#e1c8ab', stroke: 'none' }),
+          h('rect', { x: 144, y: 20, width: 24, height: 11, rx: 3, fill: '#c4cddd', stroke: 'none' }),
+          h('circle', { cx: 152, cy: 69, r: 5, fill: '#f7eee0' }),
+        ],
+      },
+      'objective-data-analysis': {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 27, y: 31, width: 107, height: 81, rx: 5, fill: '#cad7e6', stroke: 'none' }),
+          h('rect', { x: 22, y: 25, width: 107, height: 81, rx: 5, fill: '#fbfcff' }),
+          h('path', { d: 'M22 41h107M33 33h34M35 91h79', stroke: '#9eafc5' }),
+          ...[22,40,31,51].map((height, index) => h('rect', { key: index, x: 39 + index * 19, y: 91 - height, width: 11, height, rx: 2, fill: index === 3 ? '#6386b1' : '#becfe3', stroke: 'none' })),
+          h('rect', { x: 139, y: 43, width: 37, height: 49, rx: 4, fill: '#f8f1e5' }),
+          h('path', { d: 'M145 54h24m-24 9h24m-24 9h24m-24 9h24m-12-29v31', stroke: '#b3a58d' }),
+          h('path', { d: 'M142 103h30m-30 6h21', strokeOpacity: .5 }),
+        ],
+      },
+      'subjective-feedback-analysis': {
+        background: '#eee7ef', ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M70 54h24q10 0 10 14v21m32-30h-22q-10 0-10 30', stroke: '#af9bb8', strokeDasharray: '3 4' }),
+          h('path', { d: 'M25 27h57v35H56l-12 10v-10H25z', fill: '#fffaf7' }),
+          h('path', { d: 'M118 30h55v36h-11v9l-13-9h-31z', fill: '#dfd1e9' }),
+          h('path', { d: 'M35 39h34m-34 9h22m72-5h33m-33 9h22' }),
+          h('rect', { x: 62, y: 85, width: 85, height: 30, rx: 5, fill: '#fffaf7' }),
+          h('circle', { cx: 76, cy: 100, r: 6, fill: '#b7c8b5', stroke: 'none' }),
+          h('circle', { cx: 96, cy: 100, r: 6, fill: '#e4c3a3', stroke: 'none' }),
+          h('circle', { cx: 116, cy: 100, r: 6, fill: '#b8a3cb', stroke: 'none' }),
+          h('path', { d: 'M131 96v8m-4-4h8' }),
+        ],
+      },
+      'experience-heuristic-analysis': {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('rect', { x: 26, y: 27, width: 102, height: 79, rx: 5, fill: '#fffdf6' }),
+          h('path', { d: 'M26 43h102M36 35h18M37 54h29m-29 9h21', strokeOpacity: .55 }),
+          h('rect', { x: 37, y: 75, width: 45, height: 20, rx: 3, fill: '#d3d9c4', stroke: 'none' }),
+          h('circle', { cx: 123, cy: 68, r: 27, fill: '#f7f5ec', fillOpacity: .95, strokeWidth: 2 }),
+          h('path', { d: 'm143 88 24 24', stroke: '#8b9273', strokeWidth: 9 }),
+          h('path', { d: 'm143 88 24 24', strokeWidth: 1.4 }),
+          h('rect', { x: 109, y: 59, width: 27, height: 17, rx: 3, fill: '#ecd1ad' }),
+          h('path', { d: 'M123 63v5m0 4v1M37 114h46', strokeOpacity: .6 }),
+        ],
+      },
+      'evidence-govern': {
+        background: '#e5eee7', ink: '#385145',
+        scene: () => [
+          h('rect', { x: 28, y: 29, width: 56, height: 70, rx: 4, fill: '#c8dbcf', transform: 'rotate(-8 28 29)' }),
+          h('rect', { x: 37, y: 32, width: 56, height: 70, rx: 4, fill: '#fffdf7' }),
+          h('path', { d: 'M47 45h34m-34 8h23M47 67h34m-34 8h23m-23 14h20', strokeOpacity: .65 }),
+          h('path', { d: 'M97 68h18m-5-4 5 4-5 4', stroke: '#8daa96' }),
+          h('path', { d: 'm144 37 29 10v25q0 23-29 34-29-11-29-34V47z', fill: '#d0e2d5' }),
+          h('path', { d: 'm144 44 22 8v20q0 17-22 27-22-10-22-27V52z', stroke: '#8baa94' }),
+          h('path', { d: 'm132 70 8 8 16-20', stroke: '#427761', strokeWidth: 3 }),
+          h('rect', { x: 43, y: 109, width: 44, height: 7, rx: 3, fill: '#e2c8a7', stroke: 'none' }),
+        ],
+      },
+      'root-cause-synthesis': {
+        background: '#eee7ef', ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M40 41h31l28 32m59-32h-31L99 73m-59 1h59m59 0H99m0 0v24', stroke: '#ab95b8', strokeWidth: 2 }),
+          ...[[25,28],[144,28],[21,61],[148,61]].map(([x,y], index) => h('rect', { key: index, x, y, width: 30, height: 24, rx: 4, fill: index % 2 ? '#dfd1e9' : '#fffaf6' })),
+          h('circle', { cx: 99, cy: 73, r: 15, fill: '#fffaf6', stroke: '#8c72a4', strokeWidth: 2 }),
+          h('circle', { cx: 99, cy: 73, r: 5, fill: '#a58ab9', stroke: 'none' }),
+          h('rect', { x: 72, y: 101, width: 54, height: 18, rx: 4, fill: '#d4c2e1' }),
+          h('path', { d: 'M83 110h31M33 39h14m105 0h14M29 73h14m113 0h14' }),
+          h('path', { d: 'M51 117h10m76 0h13', strokeOpacity: .4 }),
+        ],
+      },
+      'business-impact': {
+        background: '#f0e8df', ink: '#67513f',
+        scene: () => [
+          h('rect', { x: 28, y: 28, width: 118, height: 80, rx: 5, fill: '#fffaf3' }),
+          h('path', { d: 'M41 94h92M41 43v51', stroke: '#bba58c' }),
+          h('rect', { x: 52, y: 75, width: 15, height: 19, rx: 2, fill: '#dccaaf', stroke: 'none' }),
+          h('rect', { x: 78, y: 62, width: 15, height: 32, rx: 2, fill: '#c6b18e', stroke: 'none' }),
+          h('rect', { x: 104, y: 49, width: 15, height: 45, rx: 2, fill: '#b38d66', stroke: 'none' }),
+          h('path', { d: 'm51 67 28-17 24 1 21-15m-8 0h8v8', stroke: '#92704d', strokeWidth: 2 }),
+          h('circle', { cx: 151, cy: 93, r: 21, fill: '#d8c29a' }),
+          h('circle', { cx: 151, cy: 93, r: 14, stroke: '#f8efdc' }),
+          h('path', { d: 'm147 86 4 6 4-6m-4 6v9m-5-7h10m-10 4h10' }),
+          h('path', { d: 'M40 117h78', strokeOpacity: .4 }),
+        ],
+      },
+      'outcome-validation-recheck': {
+        background: '#e5ecec', ink: '#3d5c60',
+        scene: () => [
+          h('rect', { x: 24, y: 37, width: 63, height: 65, rx: 5, fill: '#fffdf7' }),
+          h('rect', { x: 114, y: 37, width: 63, height: 65, rx: 5, fill: '#f7faf6' }),
+          h('path', { d: 'M34 49h31m-31 7h20m90-7h20m-40 7h31', strokeOpacity: .55 }),
+          h('path', { d: 'm34 87 12-7 12 4 18-12', stroke: '#b7a58a', strokeWidth: 2 }),
+          h('path', { d: 'm124 87 12-10 12 2 18-15', stroke: '#5b8d80', strokeWidth: 2 }),
+          h('path', { d: 'M88 66h21m-5-4 5 4-5 4' }),
+          h('path', { d: 'M53 29c26-21 58-21 88-2m-7-9 7 9-11 1', stroke: '#9bb9b4' }),
+          h('circle', { cx: 148, cy: 105, r: 14, fill: '#6f9a88' }),
+          h('path', { d: 'm141 105 5 5 9-11', stroke: '#fffdf7', strokeWidth: 2 }),
+        ],
+      },
+      'evidence-archive': {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('rect', { x: 51, y: 22, width: 49, height: 65, rx: 4, fill: '#d5c7b1', transform: 'rotate(-10 51 22)' }),
+          h('rect', { x: 72, y: 19, width: 49, height: 64, rx: 4, fill: '#fffdf6' }),
+          h('path', { d: 'M81 32h28m-28 8h21m-21 8h26', strokeOpacity: .6 }),
+          h('path', { d: 'M41 71h111v44H41z', fill: '#c8d0b4' }),
+          h('rect', { x: 35, y: 63, width: 123, height: 14, rx: 4, fill: '#e2e5d5' }),
+          h('rect', { x: 75, y: 85, width: 43, height: 17, rx: 3, fill: '#fffdf6' }),
+          h('path', { d: 'M84 94h25M162 37v19m-5-5 5 5 5-5' }),
+          h('path', { d: 'M26 121h147', strokeOpacity: .3 }),
+        ],
+      },
+      'data-visualization': {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 25, y: 25, width: 150, height: 90, rx: 5, fill: '#fbfcff' }),
+          h('path', { d: 'M25 40h150M36 32h29', stroke: '#a7b8cd' }),
+          h('circle', { cx: 64, cy: 76, r: 24, fill: '#d5dfed', stroke: 'none' }),
+          h('path', { d: 'M64 52a24 24 0 0 1 24 24H64z', fill: '#7593b8', stroke: 'none' }),
+          h('circle', { cx: 64, cy: 76, r: 12, fill: '#fbfcff', stroke: 'none' }),
+          h('rect', { x: 105, y: 53, width: 52, height: 7, rx: 3, fill: '#c0cddf', stroke: 'none' }),
+          h('rect', { x: 105, y: 66, width: 36, height: 7, rx: 3, fill: '#d9c6ab', stroke: 'none' }),
+          h('path', { d: 'M105 101h54M105 88l13 7 14-13 13 3 13-10', stroke: '#7392b7', strokeWidth: 2 }),
+          h('path', { d: 'M44 106h15m10 0h15', stroke: '#a7b8cd' }),
+        ],
+      },
       'prd-review': {
         background: '#e5eee7',
         ink: '#385145',
@@ -584,44 +786,15 @@ window.__ModuleLoader__.load({
     }
 
     function SkillArt({ skillId }) {
-      const art = Object.hasOwn(pilotArt, skillId) ? pilotArt[skillId] : null
-      if (art) {
-        return h('svg', {
-          viewBox: '0 0 200 140',
-          'aria-hidden': true,
-          preserveAspectRatio: 'xMidYMid slice',
-        },
-          h('rect', { width: 200, height: 140, fill: art.background }),
-          h('g', { fill: 'none', stroke: art.ink, strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round' },
-            ...art.scene()),
-        )
-      }
-      const icon = artIcons[skillId] ?? artIcons.uxb
+      const art = Object.hasOwn(skillArt, skillId) ? skillArt[skillId] : skillArt.uxb
       return h('svg', {
         viewBox: '0 0 200 140',
-        role: 'img',
-        'aria-label': skillId + ' illustration',
+        'aria-hidden': true,
         preserveAspectRatio: 'xMidYMid slice',
       },
-        h('circle', { cx: 160, cy: 25, r: 42, fill: 'var(--accent)', fillOpacity: .08 }),
-        h('circle', { cx: 34, cy: 122, r: 48, fill: 'currentColor', fillOpacity: .035 }),
-        h('path', {
-          d: 'M14 116c26-18 44 6 70-5s44-37 102-25',
-          fill: 'none', stroke: 'currentColor', strokeOpacity: .22, strokeWidth: 1,
-          strokeDasharray: '2 6', strokeLinecap: 'round',
-        }),
-        h('g', {
-          transform: 'translate(50 22) scale(4)',
-          fill: 'none', stroke: 'currentColor', strokeWidth: .9,
-          strokeLinecap: 'round', strokeLinejoin: 'round',
-        }, ...icon.split(' M').map((part, index) => h('path', {
-          key: index,
-          d: (index === 0 ? '' : 'M') + part,
-        }))),
-        h('circle', { cx: 158, cy: 104, r: 13, fill: 'none', stroke: 'currentColor', strokeOpacity: .35, strokeWidth: 1 }),
-        h('circle', { cx: 158, cy: 104, r: 4, fill: 'var(--accent)', fillOpacity: .75 }),
-        h('path', { d: 'M120 128h56', stroke: 'var(--accent)', strokeOpacity: .4, strokeWidth: 1, strokeLinecap: 'round' }),
-        h('path', { d: 'M20 24h22 M20 30h13', stroke: 'currentColor', strokeOpacity: .24, strokeWidth: 1, strokeLinecap: 'round' }),
+        h('rect', { width: 200, height: 140, fill: art.background }),
+        h('g', { fill: 'none', stroke: art.ink, strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round' },
+          ...art.scene()),
       )
     }
 
@@ -1096,7 +1269,7 @@ window.__ModuleLoader__.load({
                       onFocus: () => shakeCard(item.id),
                       onDoubleClick: () => useSkill(item.id),
                     },
-                    h('span', { className: 'uxbp-art', style: artStyle(item.id) }, h(SkillArt, { skillId: item.id })),
+                    h('span', { className: 'uxbp-art' }, h(SkillArt, { skillId: item.id })),
                     h('span', { className: 'uxbp-card-body' },
                       h('strong', null, item.name),
                       h('p', null, item.id + ' · ' + (item.phase === 1 ? '探索与定义' : item.phase === 2 ? '设计与交付' : '分析与证据'))),
