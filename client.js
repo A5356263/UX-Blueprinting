@@ -145,7 +145,7 @@ window.__ModuleLoader__.load({
       .uxbp-tabs { display: flex; box-sizing: border-box; height: 50px; min-height: 50px; max-height: 50px; flex-shrink: 0;
         align-items: stretch; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
         border: .5px solid var(--line); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
-      .uxbp-tabs > .uxbp-tab { box-sizing: border-box; height: 100%; min-height: 0; max-height: 100%; display: inline-flex;
+      .uxbp-tabs > .uxbp-tab { box-sizing: border-box; height: 40px; min-height: 40px; max-height: 40px; align-self: center; display: inline-flex;
         align-items: center; justify-content: center; margin: 0; border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
         font: inherit; font-size: 14px; line-height: 20px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
       .uxbp-tab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
@@ -179,7 +179,7 @@ window.__ModuleLoader__.load({
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
       .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 1px 306px; grid-template-rows: minmax(0, 1fr); gap: 0; }
-      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 74px 0 16px 18px; }
+      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 0 0 16px 18px; }
       .uxbp-divider { min-width: 0; min-height: 0; background: var(--line); }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius) 0 0 var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
