@@ -226,10 +226,13 @@ window.__ModuleLoader__.load({
       .uxbp-tools-left, .uxbp-tools-right { display: flex; align-items: center; gap: 4px; min-width: 0; }
       .uxbp-composer .uxbp-btn { min-height: 30px; padding: 0 9px; font-size: 11.5px; border-radius: 9px; }
       .uxbp-composer .uxbp-tools-right .uxbp-primary { padding: 0 12px; }
-      .uxbp-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 8px;
+      .uxbp-chip { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 8px;
         background: var(--soft); color: var(--ink); font-size: 11px; }
       .uxbp-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .uxbp-chip button { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 0; }
+      .uxbp-chip button { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; width: 14px; height: 14px;
+        padding: 0; border: .5px solid var(--line); border-radius: 50%; background: var(--card); color: var(--muted);
+        font: 10px/1 var(--sans); cursor: pointer; }
+      .uxbp-chip button:hover { background: var(--soft); color: var(--ink); }
       .uxbp-file { display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border-radius: 6px; background: var(--soft); font-size: 11px; }
       .uxbp-up { position: relative; overflow: hidden; }
       .uxbp-up input { position: absolute; width: 1px; height: 1px; opacity: 0; }
@@ -1287,7 +1290,9 @@ window.__ModuleLoader__.load({
                   ...files.map((file, index) => h('span', { key: index, className: 'uxbp-file' }, file.name,
                     h('button', { type: 'button', 'aria-label': t('remove'), onClick: () => setFiles(items => items.filter((_, i) => i !== index)) }, '×')))),
                 skill && h('div', { style: { padding: '2px 4px 0' } },
-                  h('span', { className: 'uxbp-chip' }, h('span', null, t('skill') + ': ' + nameOf(skill)))),
+                  h('span', { className: 'uxbp-chip' },
+                    h('span', null, t('skill') + ': ' + nameOf(skill)),
+                    h('button', { type: 'button', 'aria-label': t('remove'), title: t('remove'), onClick: () => setSkill('') }, '×'))),
                 h('textarea', {
                   ref: inputRef, className: 'uxbp-input', value: text, placeholder: t('placeholder'), disabled: sending,
                   onChange: event => setText(event.target.value),
