@@ -1308,7 +1308,8 @@ window.__ModuleLoader__.load({
                   h('div', { className: 'uxbp-tools-left' },
                     h('label', { className: 'uxbp-btn uxbp-up', title: t('attach'), 'aria-label': t('attach') },
                       h('input', { type: 'file', multiple: true, onChange: event => {
-                        setFiles(items => [...items, ...Array.from(event.currentTarget.files ?? [])])
+                        const picked = Array.from(event.currentTarget.files ?? [])
+                        setFiles(items => [...items, ...picked])
                         event.currentTarget.value = ''
                       } }),
                       h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' }),
