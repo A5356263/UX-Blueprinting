@@ -129,20 +129,22 @@ window.__ModuleLoader__.load({
         container-type: inline-size;
       }
       .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
+      .uxbp-root, .uxbp-root * { scrollbar-width: none; }
+      .uxbp-root::-webkit-scrollbar, .uxbp-root *::-webkit-scrollbar { display: none; width: 0; height: 0; }
       .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select { font-family: var(--sans); }
       .uxbp-top {
-        position: absolute; z-index: 30; top: 14px; left: 18px; right: 320px;
+        position: absolute; z-index: 30; top: 14px; left: 18px; right: 325px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 0; background: transparent; pointer-events: none;
+        padding: 0; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; pointer-events: none;
       }
       .uxbp-top > * { pointer-events: auto; }
-      .uxbp-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .uxbp-brand { display: flex; align-items: center; gap: 10px; min-width: 0; background: transparent; border: 0; box-shadow: none; }
       .uxbp-mark { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 11px;
         color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
       .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
-      .uxbp-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
+      .uxbp-tabs { display: flex; height: 50px; align-items: stretch; gap: 2px; padding: 4px; border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent);
         border: .5px solid var(--line); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
-      .uxbp-tab { height: 34px; border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
+      .uxbp-tab { border: 0; border-radius: 12px; padding: 0 16px; background: transparent; color: var(--muted);
         font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
       .uxbp-tab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
       .uxbp-tab[data-on="true"] { background: var(--ink); color: var(--card); box-shadow: none; }
@@ -174,11 +176,12 @@ window.__ModuleLoader__.load({
         border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
         text-align: left; cursor: pointer; }
       .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
-      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 288px; gap: 14px; margin: 14px 18px 16px; }
-      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding-top: 52px; }
-      .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius);
+      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 1px 306px; grid-template-rows: minmax(0, 1fr); gap: 0; }
+      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 74px 0 16px 18px; }
+      .uxbp-divider { min-width: 0; min-height: 0; background: var(--line); }
+      .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius) 0 0 var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
-        background-size: 18px 18px; cursor: grab; scrollbar-gutter: stable; }
+        background-size: 18px 18px; cursor: grab; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
       .uxbp-plane { padding: 28px 40px 160px; width: max-content; min-width: calc(100% + 96px); min-height: calc(100% + 96px); }
       .uxbp-group { margin-bottom: 34px; }
@@ -233,7 +236,7 @@ window.__ModuleLoader__.load({
       .uxbp-error { margin: 0 2px; padding: 8px 10px; border-radius: 10px; color: var(--dsw-alias-state-error-primary, #a52c28);
         background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 9%, var(--card)); font-size: 12px; }
       .uxbp-aside { min-width: 0; min-height: 0; height: 100%; display: flex; flex-direction: column; gap: 10px;
-        border-left: .5px solid var(--line); padding-left: 16px; }
+        padding: 14px 18px 16px 16px; }
       .uxbp-panel { min-height: 0; height: 100%; display: flex; flex-direction: column; border: 0; border-radius: 0;
         background: transparent; box-shadow: none; overflow: hidden; }
       .uxbp-panel-head { flex: none; padding: 0 0 12px; border-bottom: .5px solid var(--line); }
@@ -313,14 +316,16 @@ window.__ModuleLoader__.load({
       .uxbp-progress-meta { color: var(--faint); font-size: 10.5px; }
       @container (max-width: 760px) {
         .uxbp-top { right: 18px; }
-        .uxbp-body { grid-template-columns: minmax(0, 1fr); margin: 62px 18px 16px; }
-        .uxbp-left { padding-top: 0; }
-        .uxbp-aside { max-height: 42vh; border-left: 0; border-top: .5px solid var(--line); padding: 12px 0 0; }
+        .uxbp-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 1px minmax(0, 42%); padding-top: 74px; }
+        .uxbp-left { padding: 0 18px 12px; }
+        .uxbp-aside { padding: 12px 18px 16px; }
         .uxbp-sediment-overlay { right: 18px; }
       }
       @container (max-width: 700px) {
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
-        .uxbp-body { margin: 10px; }
+        .uxbp-body { padding-top: 10px; }
+        .uxbp-left { padding-inline: 10px; }
+        .uxbp-aside { padding-inline: 10px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
         .uxbp-card { width: 160px; height: 214px; }
@@ -1306,6 +1311,7 @@ window.__ModuleLoader__.load({
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
                     h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute'))))))
             ),
+            h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             h('aside', { className: 'uxbp-aside' },
               h('section', { className: 'uxbp-panel' },
                 h('div', { className: 'uxbp-panel-head' },
