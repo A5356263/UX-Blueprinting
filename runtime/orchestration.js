@@ -12,6 +12,7 @@ export function skillCatalog() {
   return graph.skills.map(skill => ({
     id: skill.id,
     name: skill.name_zh ?? skill.id,
+    description: skill.description ?? '',
     phase: skill.phase ?? 2,
     anchor: skill.anchor === true,
     required: [...(skill.required ?? [])],

@@ -19,6 +19,7 @@
     {
       "id": "prd-review",
       "name_zh": "需求审核与基线",
+      "description": "检查业务遗漏与流程断点，生成业务闭环、各状态完善的 PRD。",
       "phase": 1,
       "reads": [],
       "required": [],
@@ -36,6 +37,7 @@
       "id": "uxs",
       "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
       "name_zh": "体验策略",
+      "description": "基于需求或体验问题，明确体验方向，输出体验方案。",
       "phase": 1,
       "reads": [],
       "required": [],
@@ -55,6 +57,7 @@
     {
       "id": "problem-framing",
       "name_zh": "问题与业务方案",
+      "description": "明确要解决的问题，比较业务方案，给出推荐方向及依据。",
       "phase": 1,
       "standalone_usable": true,
       "standalone_note": "用于已形成的问题描述、问题证据或正式问题结论；输出正式问题、主推荐业务方案和下游承接要求。",
@@ -76,6 +79,7 @@
     {
       "id": "stories",
       "name_zh": "用户故事",
+      "description": "将既定方向拆成用户任务，明确角色、目标与验收条件。",
       "phase": 1,
       "standalone_usable": true,
       "standalone_note": "可承接 uxs 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
@@ -100,6 +104,7 @@
       "id": "journey-analysis",
       "_comment": "当前 Skill 可承接 stories，也可承接 uxs / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
       "name_zh": "用户旅程",
+      "description": "梳理角色的任务全过程，识别关键触点、痛点与改善机会。",
       "phase": 1,
       "standalone_usable": true,
       "standalone_note": "可独立使用；在 PRD 主链中作为 Page Spec 前的可选旅程增强。",
@@ -123,6 +128,7 @@
       "id": "solution-swimlane",
       "_comment": "只承接正式页面规格 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在页面规格完成后优先展示本节点；required 仍保证它不会提前就绪。",
       "name_zh": "业务泳道图",
+      "description": "将页面规格转成泳道图，展示角色职责、流程交接与异常分支。",
       "phase": 2,
       "reads": [
         "page-spec"
@@ -140,6 +146,7 @@
       "id": "page-spec",
       "_comment": "以 page-spec 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
       "name_zh": "页面规格",
+      "description": "将需求转成页面结构、交互流程与规则，形成可交付设计文档。",
       "phase": 2,
       "reads": [
         "edge",
@@ -164,6 +171,7 @@
     {
       "id": "edge",
       "name_zh": "异常态",
+      "description": "补齐加载、空白、报错与边界状态，明确反馈和恢复方式。",
       "phase": 2,
       "preview_hidden": true,
       "reads": [
@@ -183,6 +191,7 @@
     {
       "id": "board",
       "name_zh": "视觉情绪板",
+      "description": "探索并比较视觉风格，选定后整理配色、字体等设计变量。",
       "phase": 2,
       "preview_hidden": true,
       "reads": [
@@ -202,6 +211,7 @@
     {
       "id": "knowledge-wiki",
       "name_zh": "知识库",
+      "description": "查询业务与设计知识，整理多种材料入库，并维护已有内容。",
       "type": "infrastructure",
       "reads": [],
       "required": [],
@@ -217,6 +227,7 @@
     {
       "id": "journey-metrics",
       "name_zh": "旅程埋点与度量需求",
+      "description": "梳理关键行为、埋点与异常追踪要求，形成可落地的度量规格。",
       "phase": 2,
       "reads": [
         "page-spec"
@@ -238,6 +249,7 @@
     {
       "id": "objective-data-analysis",
       "name_zh": "客观数据分析",
+      "description": "分析埋点与日志中的指标、漏斗、路径和报错，形成客观报告。",
       "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
@@ -288,6 +300,7 @@
     {
       "id": "subjective-feedback-analysis",
       "name_zh": "主观反馈分析",
+      "description": "整理工单、评论与访谈，识别反馈主题、情绪和待验证问题。",
       "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
@@ -328,6 +341,7 @@
     {
       "id": "experience-heuristic-analysis",
       "name_zh": "体验启发式分析",
+      "description": "走查页面、原型或代码，定位体验风险并形成有依据的报告。",
       "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
@@ -367,6 +381,7 @@
     {
       "id": "evidence-govern",
       "name_zh": "证据处理与治理",
+      "description": "核对证据来源、重复与冲突，明确使用范围和下游放行条件。",
       "phase": 3,
       "preview_visibility": "internal",
       "direct_invocation_policy": "gate_required",
@@ -427,6 +442,7 @@
     {
       "id": "root-cause-synthesis",
       "name_zh": "候选根因综合",
+      "description": "综合已放行证据，提出候选根因，说明依据与待验证假设。",
       "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
@@ -458,6 +474,7 @@
     {
       "id": "business-impact",
       "name_zh": "业务影响评估",
+      "description": "评估问题影响与损失，分析方案收益和投入，支持优先级决策。",
       "phase": 3,
       "workflow_stage": "explore",
       "preview_visibility": "user_facing",
@@ -515,6 +532,7 @@
     {
       "id": "outcome-validation-recheck",
       "name_zh": "效果验证与回检",
+      "description": "检查验证条件、实际改善与副作用，给出推广或持续监测建议。",
       "phase": 3,
       "preview_visibility": "user_facing",
       "repeatable": true,
@@ -550,6 +568,7 @@
     {
       "id": "data-visualization",
       "name_zh": "数据可视化",
+      "description": "将已有结论或数据转成图表规格与报告，表达趋势、差异和关联。",
       "type": "support",
       "workflow_stage": "support",
       "preview_visibility": "user_facing",
@@ -584,6 +603,7 @@
     {
       "id": "evidence-archive",
       "name_zh": "证据归档",
+      "description": "将获准保存的证据与结论固化为快照，方便后续查找和复核。",
       "type": "support",
       "workflow_stage": "support",
       "preview_visibility": "user_facing",

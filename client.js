@@ -191,7 +191,7 @@ window.__ModuleLoader__.load({
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
       .uxbp-cards { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 176px; height: 224px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-card { position: relative; width: 160px; min-height: 210px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -200,17 +200,17 @@ window.__ModuleLoader__.load({
         box-shadow: 0 24px 48px -16px rgb(0 0 0 / .28); outline: none; }
       .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 0 0 1.5px var(--ink), 0 22px 54px -14px rgb(0 0 0 / .28); }
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
-      .uxbp-art { flex: none; aspect-ratio: 4 / 3; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
+      .uxbp-art { flex: none; aspect-ratio: 8 / 5; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
       .uxbp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
       .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); pointer-events: none; }
       .uxbp-card-body { flex: 1; min-height: 0; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 3px; }
       .uxbp-card-body strong { font-size: 12.5px; line-height: 17px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11px; line-height: 16px; display: -webkit-box;
-        -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11px; line-height: 16px;
+        white-space: normal; overflow-wrap: anywhere; }
       .uxbp-card-foot { margin-top: auto; min-height: 30px; padding: 5px 10px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-      .uxbp-card-foot code { color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .uxbp-use { border: .5px solid var(--line); border-radius: 999px; padding: 2px 6px; background: var(--card);
+      .uxbp-card-foot code { min-width: 0; color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-use { flex-shrink: 0; white-space: nowrap; border: .5px solid var(--line); border-radius: 999px; padding: 2px 6px; background: var(--card);
         color: var(--muted); font: inherit; font-size: 10px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
       .uxbp-use:hover { background: var(--soft); color: var(--ink); }
       .uxbp-card:hover .uxbp-use, .uxbp-card[data-selected="true"] .uxbp-use { background: var(--dsw-alias-button-primary-fill, var(--accent));
@@ -335,7 +335,7 @@ window.__ModuleLoader__.load({
         .uxbp-aside { padding-inline: 10px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
-        .uxbp-card { width: 160px; height: 214px; }
+        .uxbp-card { width: 148px; min-height: 204px; }
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
@@ -1284,7 +1284,7 @@ window.__ModuleLoader__.load({
                     h('span', { className: 'uxbp-art' }, h(SkillArt, { skillId: item.id })),
                     h('span', { className: 'uxbp-card-body' },
                       h('strong', null, item.name),
-                      h('p', null, item.id + ' · ' + (item.phase === 1 ? '探索与定义' : item.phase === 2 ? '设计与交付' : '分析与证据'))),
+                      h('p', null, item.description)),
                     h('span', { className: 'uxbp-card-foot' },
                       h('code', null, '/' + item.id),
                       h('span', { className: 'uxbp-use', role: 'button', tabIndex: 0, onClick: event => { event.stopPropagation(); shakeCard(item.id); useSkill(item.id) } }, t('useSkill'))))
