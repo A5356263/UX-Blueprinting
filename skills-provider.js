@@ -30,7 +30,14 @@ export function readBundledSkills() {
         },
         content: body + '\n\n## Harness 插件环境\n\nSkill 资源根：' + dir +
           '\n插件资源根：' + root +
-          '\n随包资料只从上述绝对路径读取；用户工作区里的同名目录不属于随包资料。用户输入和 spark-output/ 位于用户选定的工作区。\n',
+          '\n随包资料只从上述绝对路径读取；用户工作区里的同名目录不属于随包资料。用户输入和 spark-output/ 位于用户选定的工作区。\n' +
+          '\n## 工作台任务输出约定\n\n' +
+          '当任务消息包含【设计工作台任务 <taskId>】时：\n' +
+          '- 任务目录为 spark-output/design-workbench/<taskId>/；\n' +
+          '- 禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记；\n' +
+          '- 需要读取上游时，优先读取任务目录中的同名产物；不要读取根目录副本；\n' +
+          '- PRD 审核记录文件名为 prd-review-record.md，正式需求基线为 prd-review.md；\n' +
+          '- 确实需要辅助文件时，只写任务目录，不创建根目录副本。\n',
       }
     })
 }

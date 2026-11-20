@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { completedFor, emptyManifest, normalizeSkillId } from './state.js'
 import { classifyPrdReview, validateMarkdown } from './artifacts.js'
@@ -82,7 +82,6 @@ export function createWorkbench(ctx, catalog) {
       return {
         version: 1,
         next: Number.isSafeInteger(parsed.next) && parsed.next > 0 ? parsed.next : 1,
-        legacyMigrated: parsed.legacyMigrated === true,
         tasks: parsed.tasks.filter(task => task && taskPattern.test(task.id)).map(task => ({
           ...task,
           skills: [...new Set((task.skills ?? []).map(normalizeSkillId))],
@@ -262,92 +261,9 @@ export function createWorkbench(ctx, catalog) {
       })
   }
 
-  function migrateLegacy(workspace, index) {
-    if (index.legacyMigrated) return false
-    let changed = false
-    let entries
-    try { entries = readdirSync(baseDir(workspace, false), { withFileTypes: true }) }
-    catch { index.legacyMigrated = true; return true }
-    for (const entry of entries) {
-      if (!entry.isDirectory() || taskPattern.test(entry.name)) continue
-      const legacyId = 'T-legacy-' + createHash('sha1').update(entry.name).digest('hex').slice(0, 8)
-      if (index.tasks.some(task => task.id === legacyId)) continue
-      const source = join(baseDir(workspace, false), entry.name)
-      const target = taskDir(workspace, legacyId, true)
-      try {
-        for (const child of readdirSync(source, { withFileTypes: true })) {
-          cpSync(join(source, child.name), join(target, child.name), { recursive: true, force: true })
-        }
-      } catch { continue }
-      const manifestFile = join(target, 'manifest.json')
-      const manifest = emptyManifest(workspace.id, legacyId, entry.name)
-      let files = []
-      try { files = readdirSync(target).filter(name => name.endsWith('.md')) } catch {}
-      if (existsSync(manifestFile)) {
-        try {
-          const parsed = JSON.parse(readFileSync(manifestFile, 'utf8'))
-          if (parsed && typeof parsed.skills === 'object') {
-            for (const [oldSkill, value] of Object.entries(parsed.skills)) {
-              const skill = normalizeSkillId(oldSkill)
-              if (oldSkill === 'uxb' && parsed.skills.uxs) continue
-              if (!knownSkills.has(skill) || !value?.path) continue
-              const name = String(value.path).split(/[\\/]/).pop()
-              const file = join(target, name)
-              if (!existsSync(file)) continue
-              const bytes = readFileSync(file)
-              manifest.skills[skill] = {
-                skill,
-                path: relative(workspace.path, file).split(sep).join('/'),
-                sha256: digest(bytes),
-                title: value.title ?? '',
-                updatedAt: value.updatedAt ?? new Date().toISOString(),
-                stale: false,
-                staleSince: null,
-              }
-            }
-          }
-        } catch {}
-      }
-      for (const name of files) {
-        if (name === 'uxb.md' && files.includes('uxs.md')) continue
-        const skill = normalizeSkillId(name.replace(/\.md$/, ''))
-        if (!knownSkills.has(skill) || manifest.skills[skill]) continue
-        const bytes = readFileSync(join(target, name))
-        manifest.skills[skill] = {
-          skill,
-          path: relative(workspace.path, join(target, name)).split(sep).join('/'),
-          sha256: digest(bytes),
-          title: '',
-          updatedAt: new Date().toISOString(),
-          stale: false,
-          staleSince: null,
-        }
-      }
-      saveManifest(workspace, legacyId, manifest)
-      const skills = Object.keys(manifest.skills)
-      index.tasks.push({
-        id: legacyId,
-        title: '历史任务 · ' + entry.name.slice(-8),
-        status: 'completed',
-        sessionId: entry.name,
-        segments: [{ startSeq: 0, endSeq: 0 }],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        skills,
-        lastSkill: latestSkill(manifest) ?? null,
-      })
-      changed = true
-    }
-    index.legacyMigrated = true
-    return true
-  }
-
   function loadIndex(workspace) {
-    let index = readIndexFile(workspace)
-    if (!index) index = { version: 1, next: 1, legacyMigrated: false, tasks: [] }
-    const changed = migrateLegacy(workspace, index)
-    if (changed) saveIndex(workspace, index)
-    return index
+    baseDir(workspace, true)
+    return readIndexFile(workspace) ?? { version: 1, next: 1, tasks: [] }
   }
 
   function pauseOthers(workspace, index, exceptId) {
@@ -369,6 +285,9 @@ export function createWorkbench(ctx, catalog) {
       '【设计工作台任务 ' + task.id + '】',
       '任务：' + task.title,
       '本轮 Skill：' + skill + '（' + catalog.name(skill) + '）',
+      '任务目录：spark-output/design-workbench/' + task.id + '/',
+      '禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记。',
+      '读取上游时优先读任务目录内文件，不要读写 spark-output/ 根目录副本。',
       '',
       String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
       '',

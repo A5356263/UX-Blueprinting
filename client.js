@@ -1125,9 +1125,13 @@ window.__ModuleLoader__.load({
                 await loadTask(target)
                 setViewMode(stored?.viewMode === 'detail' ? 'detail' : 'canvas')
               } catch {}
-            } else if (stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)) {
-              setSessionId(stored.sessionId)
-              save({ workspace, sessionId: stored.sessionId, activeTaskId: '' })
+            } else {
+              const session = stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)
+                ? stored.sessionId
+                : ''
+              setSessionId(session)
+              setViewMode('canvas')
+              save({ workspace, sessionId: session, activeTaskId: '', viewMode: 'canvas' })
             }
           }
         }).catch(e => { if (!disposed) setError(e.message) })
