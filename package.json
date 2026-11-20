@@ -49,6 +49,9 @@
     ".agents/skills/uxs/",
     "shared-workflow/skill-graph.json"
   ],
+  "scripts": {
+    "pack:plugin": "node scripts/pack-plugin.mjs"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
