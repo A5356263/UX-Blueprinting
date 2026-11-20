@@ -126,6 +126,7 @@ window.__ModuleLoader__.load({
         --radius: var(--dsw-radius-xl, 20px);
         --radius-md: var(--dsw-radius-md, 12px);
         --radius-sm: var(--dsw-radius-sm, 8px);
+        --uxbp-card-width: 160px;
         --shadow: var(--dsw-elevation-soft, 0 3px 12px rgb(59 44 29 / .06));
         --serif: var(--sans);
         --sans: "UXBP Source Han Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -174,9 +175,9 @@ window.__ModuleLoader__.load({
       .uxbp-menu { position: absolute; z-index: 40; top: calc(100% + 5px); right: 0; min-width: 220px; max-height: 300px;
         overflow: auto; padding: 5px; border-radius: var(--radius-md); background: var(--card);
         backdrop-filter: blur(24px) saturate(160%); box-shadow: 0 16px 40px rgb(20 14 8 / .18); }
-      .uxbp-wsmenu { width: 520px; max-width: calc(100vw - 36px); display: grid; grid-template-columns: 190px minmax(0, 1fr);
+      .uxbp-wsmenu { width: 400px; max-width: calc(100vw - 36px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 4px; padding: 6px; overflow: hidden; }
-      .uxbp-wspane, .uxbp-sessionpane { max-height: 320px; overflow: auto; }
+      .uxbp-wspane, .uxbp-sessionpane { min-width: 0; max-height: 320px; overflow: auto; overflow-wrap: anywhere; }
       .uxbp-wspane { border-right: .5px solid var(--line); padding-right: 6px; }
       .uxbp-sessionpane { padding-left: 6px; }
       .uxbp-menu-title { padding: 6px 9px; color: var(--faint); font-size: 11px; }
@@ -194,19 +195,20 @@ window.__ModuleLoader__.load({
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 72px 40px 160px; width: max-content; min-width: calc(100% + 96px); min-height: calc(100% + 96px); }
+      .uxbp-plane { padding: 72px 40px 160px; width: 100%; min-height: calc(100% + 96px); }
       .uxbp-group { margin-bottom: 34px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
-      .uxbp-cards { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 160px; min-height: 184px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-cards { display: grid; grid-template-columns: repeat(auto-fill, var(--uxbp-card-width)); gap: 24px;
+        align-items: start; max-width: calc(6 * var(--uxbp-card-width) + 120px); }
+      .uxbp-card { position: relative; width: var(--uxbp-card-width); min-height: 184px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
         transition: transform .5s cubic-bezier(.2, 1.3, .4, 1), box-shadow .3s var(--ease); }
       .uxbp-card:hover, .uxbp-card:focus-visible { transform: rotate(0deg) translateY(-4px) scale(1.025);
         box-shadow: 0 24px 48px -16px rgb(0 0 0 / .28); outline: none; }
-      .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 0 0 1.5px var(--ink), 0 22px 54px -14px rgb(0 0 0 / .28); }
+      .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 22px 54px -14px rgb(0 0 0 / .28); }
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
       .uxbp-art { flex: none; aspect-ratio: 2 / 1; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
       .uxbp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -337,13 +339,14 @@ window.__ModuleLoader__.load({
         .uxbp-sediment-overlay { right: 18px; }
       }
       @container (max-width: 700px) {
+        .uxbp-left { --uxbp-card-width: 148px; }
         .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
         .uxbp-body { padding-top: 10px; }
         .uxbp-left { padding-inline: 10px; }
         .uxbp-aside { padding-inline: 10px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
-        .uxbp-card { width: 148px; min-height: 178px; }
+        .uxbp-card { min-height: 178px; }
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
@@ -819,9 +822,10 @@ window.__ModuleLoader__.load({
       )
     }
 
-    function groupOf(phase) {
-      if (phase === 1) return 0
-      if (phase === 2) return 1
+    function groupOf(item) {
+      if (item.displayGroup === 'foundation') return 3
+      if (item.phase === 1) return 0
+      if (item.phase === 2) return 1
       return 2
     }
 
@@ -873,9 +877,10 @@ window.__ModuleLoader__.load({
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
       const segmentKey = JSON.stringify(task?.segments ?? [])
       const groups = [
-        { label: '探索与定义', items: catalog.filter(item => groupOf(item.phase) === 0) },
-        { label: '设计与交付', items: catalog.filter(item => groupOf(item.phase) === 1) },
-        { label: '分析与证据', items: catalog.filter(item => groupOf(item.phase) === 2) },
+        { label: '探索与定义', items: catalog.filter(item => groupOf(item) === 0) },
+        { label: '设计与交付', items: catalog.filter(item => groupOf(item) === 1) },
+        { label: '分析与证据', items: catalog.filter(item => groupOf(item) === 2) },
+        { label: '基础能力', items: catalog.filter(item => groupOf(item) === 3) },
       ]
       const filteredTasks = tasks.filter(item => {
         if (filter !== 'all' && item.status !== filter) return false
@@ -1239,7 +1244,7 @@ window.__ModuleLoader__.load({
           h('div', { className: 'uxbp-right-top' },
             h('div', { className: 'uxbp-picker' },
               h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'workspace', title: sessionTitle, onClick: openWorkspaceMenu },
-                h(Icon, { path: 'M4 6h16v12H4z M4 7l8 6 8-6' }),
+                h(Icon, { path: 'M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z M3 9h18' }),
                 h('span', null, workspaces.find(item => item.id === workspace)?.title ?? t('workspace')),
                 h(Icon, { path: 'm7 10 5 5 5-5' })),
               openMenu === 'workspace' && h('div', { className: 'uxbp-menu uxbp-wsmenu' },

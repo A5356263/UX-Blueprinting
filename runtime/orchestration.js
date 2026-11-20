@@ -13,6 +13,7 @@ export function skillCatalog() {
     id: skill.id,
     name: skill.name_zh ?? skill.id,
     description: skill.description ?? '',
+    displayGroup: skill.display_group ?? '',
     phase: skill.phase ?? 2,
     anchor: skill.anchor === true,
     required: [...(skill.required ?? [])],

@@ -210,6 +210,7 @@
     },
     {
       "id": "knowledge-wiki",
+      "display_group": "foundation",
       "name_zh": "知识库",
       "description": "查询业务与设计知识，整理多种材料入库，并维护已有内容。",
       "type": "infrastructure",
@@ -567,6 +568,7 @@
     },
     {
       "id": "data-visualization",
+      "display_group": "foundation",
       "name_zh": "数据可视化",
       "description": "将已有结论或数据转成图表规格与报告，表达趋势、差异和关联。",
       "type": "support",
