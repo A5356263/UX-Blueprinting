@@ -193,14 +193,14 @@ window.__ModuleLoader__.load({
       .uxbp-divider { min-width: 0; min-height: 0; background: var(--line); }
       .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius) 0 0 var(--radius);
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
-        background-size: 18px 18px; cursor: grab; }
+        background-size: 18px 18px; cursor: grab; touch-action: none; user-select: none; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 72px 40px 160px; width: 100%; min-height: calc(100% + 96px); }
+      .uxbp-plane { padding: 72px 40px 160px; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
       .uxbp-group { margin-bottom: 34px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
-      .uxbp-cards { display: grid; grid-template-columns: repeat(auto-fill, var(--uxbp-card-width)); gap: 24px;
-        align-items: start; max-width: calc(6 * var(--uxbp-card-width) + 120px); }
+      .uxbp-cards { display: grid; grid-template-columns: repeat(6, var(--uxbp-card-width)); gap: 24px;
+        align-items: start; width: calc(6 * var(--uxbp-card-width) + 120px); }
       .uxbp-card { position: relative; width: var(--uxbp-card-width); min-height: 184px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
@@ -1211,15 +1211,21 @@ window.__ModuleLoader__.load({
         const dy = event.clientY - drag.current.y
         if (Math.abs(dx) + Math.abs(dy) > 5) drag.current.moved = true
         if (drag.current.moved) {
+          if (!canvas.hasPointerCapture(event.pointerId)) canvas.setPointerCapture(event.pointerId)
+          event.preventDefault()
           canvas.scrollLeft = drag.current.left - dx
           canvas.scrollTop = drag.current.top - dy
         }
       }
 
-      function onPointerUp() {
+      function onPointerUp(event) {
         if (!drag.current.down) return
         drag.current.down = false
-        if (canvasRef.current) delete canvasRef.current.dataset.drag
+        const canvas = canvasRef.current
+        if (canvas) {
+          delete canvas.dataset.drag
+          if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId)
+        }
       }
 
       function cardClick(item) {
@@ -1278,7 +1284,13 @@ window.__ModuleLoader__.load({
             h('section', { className: 'uxbp-left' },
               h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
-                onPointerDown, onPointerMove, onPointerUp, onPointerLeave: onPointerUp,
+                onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp,
+                onClickCapture: event => {
+                  if (!drag.current.moved) return
+                  drag.current.moved = false
+                  event.preventDefault()
+                  event.stopPropagation()
+                },
               },
               h('div', { className: 'uxbp-plane' },
                 ...groups.map((group, groupIndex) => h('section', { key: group.label, className: 'uxbp-group' },
