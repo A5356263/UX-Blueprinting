@@ -14,5 +14,7 @@ export function emptyManifest(workspaceId, taskId, sessionId) {
 }
 
 export function completedFor(manifest) {
-  return Object.keys(manifest?.skills ?? {})
+  return Object.entries(manifest?.skills ?? {})
+    .filter(([key, entry]) => key !== 'prd-review-record' && entry?.artifactKind !== 'review-record')
+    .map(([key]) => key)
 }

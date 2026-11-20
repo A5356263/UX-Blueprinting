@@ -19,7 +19,7 @@ export function apply(ctx) {
   const workbench = createWorkbench(ctx, catalog)
   ctx.effect(() => ctx.tools.register({
     name: 'submit_design_artifact',
-    description: '登记本轮完成的 Markdown 产物。模型完成产物后调用；插件按任务和 Skill 记录当前产物。',
+    description: '登记本轮完成的 Markdown 产物。模型完成产物后调用；插件按任务和 Skill 记录当前产物。prd-review 的审核记录和正式基线都使用 skill=prd-review，插件按 Markdown 类型分别保存。',
     parameters: {
       type: 'object',
       properties: {
@@ -38,9 +38,11 @@ export function apply(ctx) {
           registered: { type: 'boolean' },
           taskId: { type: 'string' },
           skill: { type: 'string' },
+          artifactKind: { type: 'string' },
+          reviewStatus: { type: 'string' },
           path: { type: 'string' },
           stale: { type: 'array', items: { type: 'string' } },
-          next: { type: 'object', additionalProperties: true },
+          next: { type: 'array', items: { type: 'object', additionalProperties: true } },
         },
         required: ['registered', 'taskId', 'skill', 'path', 'next'],
         additionalProperties: false,
@@ -48,6 +50,7 @@ export function apply(ctx) {
       render: (_, value) => [{
         type: 'text',
         text: '已登记任务 ' + value.taskId + ' 的 ' + value.skill + ' 产物：' + value.path +
+          (value.reviewStatus ? '（' + value.reviewStatus + '）' : '') +
           (value.stale?.length ? '；下游可能过期：' + value.stale.join('、') : ''),
       }],
     },

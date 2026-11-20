@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { completedFor, emptyManifest, normalizeSkillId } from './state.js'
-import { validateMarkdown } from './artifacts.js'
+import { classifyPrdReview, validateMarkdown } from './artifacts.js'
 import { recommendHandoff } from './orchestration.js'
 
 const limit = 320_000
@@ -187,6 +187,21 @@ export function createWorkbench(ctx, catalog) {
     return Object.values(manifest.skills).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]?.skill
   }
 
+  function nextForTask(task, manifest) {
+    const record = manifest.skills['prd-review-record']
+    if (!manifest.skills['prd-review'] && record &&
+        ['waiting_response', 'no_confirmation_required'].includes(record.reviewStatus)) {
+      return [{
+        id: 'prd-review',
+        name: catalog.name('prd-review'),
+        reason: record.reviewStatus === 'waiting_response'
+          ? '先回复并关闭审核记录中的待确认项，再复核生成正式基线。'
+          : '审核记录已无阻断，复核后生成正式基线。',
+      }]
+    }
+    return task?.lastSkill ? recommendHandoff(completedFor(manifest), task.lastSkill) : []
+  }
+
   function summary(task) {
     return {
       id: task.id,
@@ -311,10 +326,11 @@ export function createWorkbench(ctx, catalog) {
       '',
       String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
       '',
-      '完成后必须调用 submit_design_artifact 登记产物：',
+      '完成任务后必须调用 submit_design_artifact 登记产物：',
       '  taskId: ' + task.id,
       '  skill: ' + skill,
       '  markdown: 完整 Markdown 正文',
+      skill === 'prd-review' ? '若存在阻断或建议，按「PRD 审核记录」格式提交；工作台会保存为 prd-review-record.md，正式基线仍写入 prd-review.md。' : '',
     ].join('\n')
   }
 
@@ -415,15 +431,20 @@ export function createWorkbench(ctx, catalog) {
       validateMarkdown(skill, markdown)
       const bytes = Buffer.from(markdown)
       if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
-      const file = taskPath(workspace, taskId, skill)
-      atomicWrite(taskDir(workspace, taskId, true), skill + '.md', bytes)
+      const review = skill === 'prd-review' ? classifyPrdReview(markdown) : null
+      const artifactKind = review?.kind === 'review-record' ? 'review-record' : review?.kind === 'baseline' ? 'baseline' : 'artifact'
+      const artifactKey = artifactKind === 'review-record' ? 'prd-review-record' : skill
+      const file = taskPath(workspace, taskId, artifactKey)
+      atomicWrite(taskDir(workspace, taskId, true), artifactKey + '.md', bytes)
       const manifest = loadManifest(workspace, taskId)
       const sha256 = digest(bytes)
-      const previous = manifest.skills[skill]
+      const previous = manifest.skills[artifactKey]
       const changed = !previous || previous.sha256 !== sha256
       const now = new Date().toISOString()
-      manifest.skills[skill] = {
+      manifest.skills[artifactKey] = {
         skill,
+        artifactKind,
+        reviewStatus: review?.status ?? '',
         path: relative(workspace.path, file).split(sep).join('/'),
         sha256,
         title: title?.trim() || previous?.title || '',
@@ -432,15 +453,15 @@ export function createWorkbench(ctx, catalog) {
         staleSince: null,
       }
       if (changed) {
-        const affected = new Set([skill])
+        const affected = new Set([artifactKey])
         for (const [id, entry] of Object.entries(manifest.skills)) {
-          if (id !== skill && entry.stale) affected.add(id)
+          if (id !== artifactKey && entry.stale) affected.add(id)
         }
         let found = true
         while (found) {
           found = false
           for (const [id, entry] of Object.entries(manifest.skills)) {
-            if (id === skill || entry.stale) continue
+            if (id === artifactKey || entry.stale) continue
             const reads = typeof catalog.reads === 'function' ? (catalog.reads(id) ?? []) : []
             if (reads.some(dep => affected.has(dep))) {
               entry.stale = true
@@ -460,9 +481,11 @@ export function createWorkbench(ctx, catalog) {
         registered: true,
         taskId,
         skill,
-        path: manifest.skills[skill].path,
+        artifactKind,
+        reviewStatus: review?.status ?? '',
+        path: manifest.skills[artifactKey].path,
         stale: Object.entries(manifest.skills).filter(([, entry]) => entry.stale).map(([id]) => id),
-        next: recommendHandoff(completedFor(manifest), skill),
+        next: nextForTask(task, manifest),
       }
     })
   }
@@ -514,7 +537,7 @@ export function createWorkbench(ctx, catalog) {
         return json({
           task: summary(task),
           manifest,
-          next: task.lastSkill ? recommendHandoff(completedFor(manifest), task.lastSkill) : [],
+          next: nextForTask(task, manifest),
         })
       }
       return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace).tasks.map(summary) })
