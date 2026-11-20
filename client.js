@@ -105,6 +105,13 @@ window.__ModuleLoader__.load({
     }
 
     const styles = `
+      @font-face {
+        font-family: "UXBP Source Han Medium";
+        src: local("Source Han Sans SC Medium"), local("SourceHanSansSC-Medium"), local("思源黑体 Medium");
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+      }
       .uxbp-root {
         --bg: var(--dsw-alias-bg-base, #f7f6f3);
         --card: var(--dsw-alias-bg-layer-2, #fff);
@@ -120,18 +127,19 @@ window.__ModuleLoader__.load({
         --radius-md: var(--dsw-radius-md, 12px);
         --radius-sm: var(--dsw-radius-sm, 8px);
         --shadow: var(--dsw-elevation-soft, 0 3px 12px rgb(59 44 29 / .06));
-        --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", "宋体", Georgia, serif;
-        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+        --serif: var(--sans);
+        --sans: "UXBP Source Han Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
         --ease: cubic-bezier(.2, .8, .2, 1);
         position: relative; height: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;
         overflow: hidden; color: var(--ink); background: var(--bg);
-        font: 14px/1.5 var(--sans);
+        font: 500 14px/1.5 var(--sans);
+        font-synthesis: none;
         container-type: inline-size;
       }
       .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
       .uxbp-root, .uxbp-root * { scrollbar-width: none; }
       .uxbp-root::-webkit-scrollbar, .uxbp-root *::-webkit-scrollbar { display: none; width: 0; height: 0; }
-      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select { font-family: var(--sans); }
+      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select, .uxbp-root code, .uxbp-root pre { font-family: var(--sans); }
       .uxbp-top {
         position: absolute; z-index: 30; top: 14px; left: 18px; right: 325px;
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -191,7 +199,7 @@ window.__ModuleLoader__.load({
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
       .uxbp-cards { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; max-width: 1500px; }
-      .uxbp-card { position: relative; width: 160px; min-height: 210px; padding: 0; overflow: hidden; display: flex;
+      .uxbp-card { position: relative; width: 160px; min-height: 184px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
         transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
@@ -200,13 +208,13 @@ window.__ModuleLoader__.load({
         box-shadow: 0 24px 48px -16px rgb(0 0 0 / .28); outline: none; }
       .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 0 0 1.5px var(--ink), 0 22px 54px -14px rgb(0 0 0 / .28); }
       .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
-      .uxbp-art { flex: none; aspect-ratio: 8 / 5; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
+      .uxbp-art { flex: none; aspect-ratio: 2 / 1; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
       .uxbp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
       .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); pointer-events: none; }
       .uxbp-card-body { flex: 1; min-height: 0; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 3px; }
       .uxbp-card-body strong { font-size: 12.5px; line-height: 17px; font-weight: 600; display: -webkit-box;
         -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 11px; line-height: 16px;
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 10px; line-height: 15px;
         white-space: normal; overflow-wrap: anywhere; }
       .uxbp-card-foot { margin-top: auto; min-height: 30px; padding: 5px 10px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
       .uxbp-card-foot code { min-width: 0; color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -335,7 +343,7 @@ window.__ModuleLoader__.load({
         .uxbp-aside { padding-inline: 10px; }
         .uxbp-left { padding-top: 0; }
         .uxbp-title { display: none; }
-        .uxbp-card { width: 148px; min-height: 204px; }
+        .uxbp-card { width: 148px; min-height: 178px; }
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
@@ -802,7 +810,8 @@ window.__ModuleLoader__.load({
       return h('svg', {
         viewBox: '0 0 200 140',
         'aria-hidden': true,
-        preserveAspectRatio: 'xMidYMid slice',
+        preserveAspectRatio: 'xMidYMid meet',
+        style: { background: art.background },
       },
         h('rect', { width: 200, height: 140, fill: art.background }),
         h('g', { fill: 'none', stroke: art.ink, strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round' },
