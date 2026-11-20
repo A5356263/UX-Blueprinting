@@ -23,10 +23,10 @@ window.__ModuleLoader__.load({
       skill: 'Skill',
       session: 'Conversation',
       newSession: 'New conversation',
-      attach: 'Attach files',
+      attach: 'Files',
       placeholder: 'Describe the task, or paste a path / URL…',
       execute: 'Run task',
-      enter: 'Open conversation',
+      enter: 'Go to conversation',
       stop: 'Stop',
       dynamics: 'Activity',
       dialogue: 'Conversation',
@@ -71,10 +71,10 @@ window.__ModuleLoader__.load({
       skill: '技能',
       session: '会话',
       newSession: '新会话',
-      attach: '上传附件',
+      attach: '文件',
       placeholder: '描述这次任务，或直接贴路径 / URL……',
       execute: '执行任务',
-      enter: '进入会话',
+      enter: '跳转至会话',
       stop: '停止',
       dynamics: '动态',
       dialogue: '对话',
@@ -230,7 +230,8 @@ window.__ModuleLoader__.load({
         70% { transform: rotate(0) translateX(2px); } }
       .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(520px, calc(100% - 32px));
         bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid var(--line);
-        border-radius: 20px; background: var(--glass); backdrop-filter: blur(24px) saturate(160%);
+        border-radius: 28px; background: color-mix(in srgb, var(--card) 60%, transparent);
+        backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%);
         box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
       .uxbp-composer:focus-within { border-color: var(--line-strong); }
       .uxbp-composer .uxbp-menu { top: auto; bottom: calc(100% + 6px); }
@@ -239,7 +240,7 @@ window.__ModuleLoader__.load({
       .uxbp-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
       .uxbp-tools-left, .uxbp-tools-right { display: flex; align-items: center; gap: 4px; min-width: 0; }
       .uxbp-composer .uxbp-btn { min-height: 30px; padding: 0 9px; font-size: 11.5px; border-radius: 9px; }
-      .uxbp-composer .uxbp-tools-right .uxbp-primary { padding: 0 12px; }
+      .uxbp-composer .uxbp-tools-right .uxbp-run { width: 32px; height: 32px; min-height: 32px; padding: 0; border-radius: 50%; }
       .uxbp-chip { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 8px;
         background: var(--soft); color: var(--ink); font-size: 11px; }
       .uxbp-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -1359,12 +1360,14 @@ window.__ModuleLoader__.load({
                         setFiles(items => [...items, ...picked])
                         event.currentTarget.value = ''
                       } }),
-                      h(Icon, { path: 'M20 11 11 20a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8' }),
-                      h('span', null, t('attach')))),
+                      h('span', null, t('attach'))),
+                    h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter'))),
                   h('div', { className: 'uxbp-tools-right' },
                     running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
-                    h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter')),
-                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute() }, t('execute'))))))
+                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run',
+                      title: t('execute'), 'aria-label': t('execute'),
+                      disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute(),
+                    }, h(Icon, { path: 'M12 19V5m-6 6 6-6 6 6' }))))))
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             h('aside', { className: 'uxbp-aside' },
