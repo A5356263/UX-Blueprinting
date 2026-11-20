@@ -204,7 +204,8 @@ window.__ModuleLoader__.load({
       .uxbp-card { position: relative; width: var(--uxbp-card-width); min-height: 184px; padding: 0; overflow: hidden; display: flex;
         flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
         color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
-        transform: rotate(var(--rot, 0deg)) translateY(var(--off, 0px));
+        transform-origin: center;
+        transform: translateY(var(--off, 0px)) rotate(var(--rot, 0deg));
         transition: transform .5s cubic-bezier(.2, 1.3, .4, 1), box-shadow .3s var(--ease); }
       .uxbp-card:hover, .uxbp-card:focus-visible { transform: rotate(0deg) translateY(-4px) scale(1.025);
         box-shadow: 0 24px 48px -16px rgb(0 0 0 / .28); outline: none; }
@@ -822,6 +823,26 @@ window.__ModuleLoader__.load({
       )
     }
 
+    function cardPoses(items) {
+      const poses = []
+      for (let start = 0; start < items.length; start += 6) {
+        const row = items.slice(start, start + 6).map(item => {
+          let hash = 2166136261
+          for (const char of item.id) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0
+          return { rotation: (hash % 601 - 300) / 100, offset: ((hash >>> 16) % 1601 - 800) / 100 }
+        })
+        const meanRotation = row.reduce((sum, pose) => sum + pose.rotation, 0) / row.length
+        const meanOffset = row.reduce((sum, pose) => sum + pose.offset, 0) / row.length
+        const rotationScale = Math.max(1, ...row.map(pose => Math.abs(pose.rotation - meanRotation) / 3))
+        const offsetScale = Math.max(1, ...row.map(pose => Math.abs(pose.offset - meanOffset) / 8))
+        poses.push(...row.map(pose => ({
+          '--rot': ((pose.rotation - meanRotation) / rotationScale).toFixed(2) + 'deg',
+          '--off': ((pose.offset - meanOffset) / offsetScale).toFixed(2) + 'px',
+        })))
+      }
+      return poses
+    }
+
     function groupOf(item) {
       if (item.displayGroup === 'foundation') return 3
       if (item.phase === 1) return 0
@@ -881,7 +902,7 @@ window.__ModuleLoader__.load({
         { label: '设计与交付', items: catalog.filter(item => groupOf(item) === 1) },
         { label: '分析与证据', items: catalog.filter(item => groupOf(item) === 2) },
         { label: '基础能力', items: catalog.filter(item => groupOf(item) === 3) },
-      ]
+      ].map(group => ({ ...group, poses: cardPoses(group.items) }))
       const filteredTasks = tasks.filter(item => {
         if (filter !== 'all' && item.status !== filter) return false
         const query = search.trim().toLowerCase()
@@ -1296,11 +1317,9 @@ window.__ModuleLoader__.load({
                 ...groups.map((group, groupIndex) => h('section', { key: group.label, className: 'uxbp-group' },
                   h('h2', null, group.label + '  ' + group.items.length),
                   h('div', { className: 'uxbp-cards' }, ...group.items.map((item, index) => {
-                    const rot = ((index % 3) - 1) * 1.6
-                    const off = (index % 2) * 10
                     return h('button', {
                       key: item.id, type: 'button', className: 'uxbp-card',
-                      style: { '--rot': rot + 'deg', '--off': off + 'px' },
+                      style: group.poses[index],
                       'data-shake': shake === item.id,
                       'data-selected': skill === item.id,
                       onClick: () => cardClick(item),
