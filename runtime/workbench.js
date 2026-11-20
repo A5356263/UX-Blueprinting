@@ -216,6 +216,52 @@ export function createWorkbench(ctx, catalog) {
     }
   }
 
+  function artifactLabel(key, entry) {
+    if (key === 'prd-review-record') return '需求审核记录'
+    if (key === 'prd-review') return '正式需求基线'
+    return catalog.name(entry.skill ?? key)
+  }
+
+  function artifactEditable(task, manifest, key, entry) {
+    return task.status === 'active' &&
+      key === 'prd-review-record' &&
+      entry.artifactKind === 'review-record' &&
+      !manifest.skills['prd-review']
+  }
+
+  function artifactMeta(workspace, task, manifest, key, entry) {
+    return {
+      key,
+      skill: entry.skill ?? key,
+      label: artifactLabel(key, entry),
+      artifactKind: entry.artifactKind ?? 'artifact',
+      reviewStatus: entry.reviewStatus ?? '',
+      editable: artifactEditable(task, manifest, key, entry),
+      manualLock: entry.manualLock === true,
+      origin: entry.origin ?? 'model',
+      stale: entry.stale === true,
+      updatedAt: entry.updatedAt ?? '',
+      sha256: entry.sha256 ?? '',
+      title: entry.title ?? '',
+    }
+  }
+
+  function artifactList(workspace, task, manifest) {
+    return Object.entries(manifest.skills)
+      .filter(([, entry]) => {
+        try {
+          const file = resolve(workspace.path, entry.path)
+          contained(workspace.path, file)
+          return lstatSync(file).isFile()
+        } catch { return false }
+      })
+      .map(([key, entry]) => ({ ...artifactMeta(workspace, task, manifest, key, entry), key }))
+      .sort((a, b) => {
+        const rank = key => key === 'prd-review-record' ? 0 : key === 'prd-review' ? 1 : 2
+        return rank(a.key) - rank(b.key) || String(b.updatedAt).localeCompare(String(a.updatedAt))
+      })
+  }
+
   function migrateLegacy(workspace, index) {
     if (index.legacyMigrated) return false
     let changed = false
@@ -418,6 +464,69 @@ export function createWorkbench(ctx, catalog) {
     return { prompt: promptFor(task, skill, body.text) }
   }
 
+  async function updateArtifact(workspace, body) {
+    const index = loadIndex(workspace)
+    const task = findTask(index, String(body.taskId ?? ''))
+    if (task.status !== 'active') throw Object.assign(new Error('任务不是进行中，不能编辑产物'), { status: 400 })
+    const manifest = loadManifest(workspace, task.id)
+    const key = String(body.artifactKey ?? '')
+    const entry = manifest.skills[key]
+    if (!entry) throw Object.assign(new Error('找不到该产物'), { status: 404 })
+    if (!artifactEditable(task, manifest, key, entry)) {
+      throw Object.assign(new Error('该产物当前不可编辑'), { status: 400 })
+    }
+    if (!body.baseSha || body.baseSha !== entry.sha256) {
+      throw Object.assign(new Error('产物已被更新，请重新加载后再保存'), { status: 409 })
+    }
+    const skill = normalizeSkillId(entry.skill ?? key)
+    validateMarkdown(skill, body.markdown)
+    const review = skill === 'prd-review' ? classifyPrdReview(body.markdown) : null
+    if (entry.artifactKind === 'review-record' && review?.kind !== 'review-record') {
+      throw Object.assign(new Error('审核记录必须保持「PRD 审核记录」格式'), { status: 400 })
+    }
+    const bytes = Buffer.from(body.markdown)
+    if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
+    const file = taskPath(workspace, task.id, key)
+    atomicWrite(taskDir(workspace, task.id, true), key + '.md', bytes)
+    const now = new Date().toISOString()
+    manifest.skills[key] = {
+      ...entry,
+      sha256: digest(bytes),
+      updatedAt: now,
+      origin: 'user',
+      editedAt: now,
+      manualLock: true,
+      reviewStatus: review?.status ?? entry.reviewStatus ?? '',
+      path: relative(workspace.path, file).split(sep).join('/'),
+      stale: false,
+      staleSince: null,
+    }
+    saveManifest(workspace, task.id, manifest)
+    task.skills = [...new Set([...(task.skills ?? []).map(normalizeSkillId), skill])]
+    task.lastSkill = skill
+    task.updatedAt = now
+    saveIndex(workspace, index)
+    return { artifact: artifactMeta(workspace, task, manifest, key, manifest.skills[key]), next: nextForTask(task, manifest) }
+  }
+
+  async function message(workspace, body) {
+    const index = loadIndex(workspace)
+    const task = findTask(index, String(body.taskId ?? ''))
+    if (task.status !== 'active') throw new Error('任务不是进行中，不能发送消息')
+    const key = String(body.artifactKey ?? '')
+    if (key) {
+      const manifest = loadManifest(workspace, task.id)
+      const entry = manifest.skills[key]
+      if (entry?.manualLock) {
+        entry.manualLock = false
+        saveManifest(workspace, task.id, manifest)
+        task.updatedAt = new Date().toISOString()
+        saveIndex(workspace, index)
+      }
+    }
+    return { ok: true }
+  }
+
   async function submit({ taskId, skill, markdown, title }, callerSessionId) {
     skill = normalizeSkillId(skill)
     if (!callerSessionId) throw new Error('无法确认调用会话')
@@ -429,22 +538,28 @@ export function createWorkbench(ctx, catalog) {
       if (task.status !== 'active') throw new Error('任务不是进行中，不能登记产物')
       if (task.sessionId !== callerSessionId) throw new Error('产物必须由任务绑定的会话登记')
       validateMarkdown(skill, markdown)
-      const bytes = Buffer.from(markdown)
-      if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
       const review = skill === 'prd-review' ? classifyPrdReview(markdown) : null
       const artifactKind = review?.kind === 'review-record' ? 'review-record' : review?.kind === 'baseline' ? 'baseline' : 'artifact'
       const artifactKey = artifactKind === 'review-record' ? 'prd-review-record' : skill
+      const manifest = loadManifest(workspace, taskId)
+      const previous = manifest.skills[artifactKey]
+      if (previous?.manualLock) {
+        throw new Error('该产物已被人工编辑，请先通过任务页底部输入框发送下一条消息，再继续')
+      }
+      const bytes = Buffer.from(markdown)
+      if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
       const file = taskPath(workspace, taskId, artifactKey)
       atomicWrite(taskDir(workspace, taskId, true), artifactKey + '.md', bytes)
-      const manifest = loadManifest(workspace, taskId)
       const sha256 = digest(bytes)
-      const previous = manifest.skills[artifactKey]
       const changed = !previous || previous.sha256 !== sha256
       const now = new Date().toISOString()
       manifest.skills[artifactKey] = {
         skill,
         artifactKind,
         reviewStatus: review?.status ?? '',
+        origin: 'model',
+        manualLock: false,
+        editedAt: null,
         path: relative(workspace.path, file).split(sep).join('/'),
         sha256,
         title: title?.trim() || previous?.title || '',
@@ -511,6 +626,8 @@ export function createWorkbench(ctx, catalog) {
         if (body.action === 'create-session') return json({ sessionId: await createSession(workspace) })
         if (body.action === 'create-task') return json(await createTask(workspace, body))
         if (body.action === 'prompt') return json(await promptTask(workspace, body))
+        if (body.action === 'update-artifact') return json(await updateArtifact(workspace, body))
+        if (body.action === 'message') return json(await message(workspace, body))
         if (['pause', 'complete', 'resume', 'rename'].includes(body.action)) {
           return json({ task: await changeTask(workspace, body, body.action) })
         }
@@ -521,9 +638,10 @@ export function createWorkbench(ctx, catalog) {
         const index = loadIndex(workspace)
         const task = findTask(index, taskId)
         const manifest = loadManifest(workspace, taskId)
-        if (url.searchParams.has('skill')) {
-          const entry = manifest.skills[normalizeSkillId(url.searchParams.get('skill'))]
-          if (!entry) throw new Error('该 Skill 尚未登记产物')
+        if (url.searchParams.has('artifact') || url.searchParams.has('skill')) {
+          const requestedKey = url.searchParams.get('artifact') ?? normalizeSkillId(url.searchParams.get('skill'))
+          const entry = manifest.skills[requestedKey]
+          if (!entry) throw new Error('该产物尚未登记')
           const requested = resolve(workspace.path, entry.path)
           contained(workspace.path, requested)
           const real = realpathSync(requested)
@@ -532,17 +650,18 @@ export function createWorkbench(ctx, catalog) {
           if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
           const bytes = readFileSync(real)
           if (digest(bytes) !== entry.sha256) throw new Error('产物被修改')
-          return json({ content: bytes.toString('utf8'), artifact: entry })
+          return json({ content: bytes.toString('utf8'), artifact: artifactMeta(workspace, task, manifest, requestedKey, entry) })
         }
         return json({
           task: summary(task),
           manifest,
+          artifacts: artifactList(workspace, task, manifest),
           next: nextForTask(task, manifest),
         })
       }
       return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace).tasks.map(summary) })
     } catch (error) {
-      return json({ error: error?.message || '工作台请求失败' }, 400)
+      return json({ error: error?.message || '工作台请求失败' }, error?.status || 400)
     }
   }
 

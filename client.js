@@ -54,6 +54,17 @@ window.__ModuleLoader__.load({
       view: 'View',
       remove: 'Remove',
       history: 'History',
+      detailPlaceholder: 'Message this task…',
+      detailDisabled: 'Continue the task to send a message.',
+      noArtifacts: 'No artifacts yet.',
+      editArtifact: 'Edit',
+      save: 'Save',
+      cancel: 'Cancel',
+      manualEdited: 'Edited by user',
+      loading: 'Loading…',
+      send: 'Send',
+      backToTasks: 'Back to task canvas',
+      stale: 'May be stale',
     }
 
     const zh = {
@@ -102,6 +113,17 @@ window.__ModuleLoader__.load({
       view: '查看',
       remove: '移除',
       history: '历史任务',
+      detailPlaceholder: '输入消息，发送到当前任务会话……',
+      detailDisabled: '继续任务后才能发送消息。',
+      noArtifacts: '还没有产物。',
+      editArtifact: '编辑',
+      save: '保存',
+      cancel: '取消',
+      manualEdited: '已手动编辑',
+      loading: '加载中…',
+      send: '发送',
+      backToTasks: '返回任务画布',
+      stale: '可能过期',
     }
 
     const styles = `
@@ -290,6 +312,45 @@ window.__ModuleLoader__.load({
       .uxbp-next-alt:hover { background: var(--soft); }
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+      .uxbp-task-detail { position: absolute; z-index: 24; top: 14px; left: 18px; right: 320px; bottom: 16px; display: flex; flex-direction: column;
+        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+      .uxbp-detail-heading { min-width: 0; }
+      .uxbp-detail-back { margin: 0 0 8px; padding: 0; border: 0; background: transparent; color: var(--muted);
+        font: inherit; font-size: 12px; cursor: pointer; }
+      .uxbp-detail-heading h1 { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; }
+      .uxbp-detail-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-detail-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+      .uxbp-detail-actions .uxbp-btn { min-height: 28px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
+      .uxbp-artifact-tabs { flex: none; display: flex; gap: 2px; margin: 14px 0 10px; padding: 3px; overflow-x: auto;
+        border-radius: 10px; background: var(--soft); scrollbar-width: none; }
+      .uxbp-artifact-tab { flex: none; height: 30px; padding: 0 11px; border: 0; border-radius: 7px; background: transparent;
+        color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
+      .uxbp-artifact-tab:hover { color: var(--ink); }
+      .uxbp-artifact-tab[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-artifact-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+        border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        padding: 10px 14px; border-bottom: .5px solid var(--line); }
+      .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
+      .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
+      .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 16px 20px; }
+      .uxbp-artifact-edit { flex: 1; min-height: 0; width: 100%; resize: none; padding: 16px 20px; border: 0; outline: 0;
+        background: var(--card); color: var(--ink); font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-artifact-error { flex: none; margin: 0 14px 8px; padding: 7px 9px; border-radius: 8px; color: var(--dsw-alias-state-error-primary, #a52c28);
+        background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 8%, var(--card)); font-size: 11px; }
+      .uxbp-detail-composer { flex: none; display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; padding: 7px 8px;
+        border: .5px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-detail-composer textarea { flex: 1; min-height: 38px; max-height: 90px; resize: none; padding: 5px 6px; border: 0; outline: 0;
+        background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; }
+      .uxbp-md { color: var(--ink); font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+      .uxbp-md h1, .uxbp-md h2, .uxbp-md h3, .uxbp-md h4 { margin: 1.1em 0 .45em; line-height: 1.35; }
+      .uxbp-md h1 { font-size: 20px; } .uxbp-md h2 { font-size: 16px; } .uxbp-md h3 { font-size: 14px; } .uxbp-md h4 { font-size: 13px; }
+      .uxbp-md p { margin: .55em 0; white-space: pre-wrap; }
+      .uxbp-md ul, .uxbp-md ol { margin: .5em 0; padding-left: 1.4em; }
+      .uxbp-md li { margin: .2em 0; }
+      .uxbp-md pre { margin: .8em 0; padding: 10px; overflow: auto; border-radius: 8px; background: var(--soft); font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-md .uxbp-md-table { white-space: pre; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
       .uxbp-sediment-overlay { position: absolute; z-index: 20; top: 14px; left: 18px; right: 320px; bottom: 16px;
         display: flex; flex-direction: column; padding: 52px 18px 16px; background: var(--bg); overflow: hidden; }
@@ -339,6 +400,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding-top: 24px; }
         .uxbp-aside { padding: 12px 18px 16px; }
         .uxbp-sediment-overlay { right: 18px; }
+        .uxbp-task-detail { right: 18px; }
       }
       @container (max-width: 700px) {
         .uxbp-left { --uxbp-card-width: 148px; }
@@ -844,6 +906,70 @@ window.__ModuleLoader__.load({
       return poses
     }
 
+    function MarkdownView({ content }) {
+      const lines = String(content ?? '').split(/\r?\n/)
+      const blocks = []
+      let paragraph = []
+      let list = null
+      let table = null
+      const flushParagraph = () => {
+        if (paragraph.length) { blocks.push(h('p', { key: 'p' + blocks.length }, paragraph.join('\n'))); paragraph = [] }
+      }
+      const flushList = () => {
+        if (!list) return
+        blocks.push(h(list.ordered ? 'ol' : 'ul', { key: 'l' + blocks.length },
+          ...list.items.map((item, index) => h('li', { key: index }, item))))
+        list = null
+      }
+      const flushTable = () => {
+        if (table) { blocks.push(h('pre', { key: 't' + blocks.length, className: 'uxbp-md-table' }, table.join('\n'))); table = null }
+      }
+      for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i]
+        if (/^```/.test(line)) {
+          flushParagraph(); flushList(); flushTable()
+          const code = []
+          i += 1
+          while (i < lines.length && !/^```/.test(lines[i])) { code.push(lines[i]); i += 1 }
+          blocks.push(h('pre', { key: 'c' + blocks.length }, code.join('\n')))
+          continue
+        }
+        if (!line.trim()) { flushParagraph(); flushList(); flushTable(); continue }
+        if (/^\|.*\|$/.test(line.trim())) {
+          flushParagraph(); flushList()
+          table = table ?? []
+          table.push(line)
+          continue
+        }
+        flushTable()
+        const heading = line.match(/^(#{1,6})\s+(.*)$/)
+        if (heading) {
+          flushParagraph(); flushList()
+          const level = heading[1].length
+          blocks.push(h('h' + level, { key: 'h' + blocks.length }, heading[2]))
+          continue
+        }
+        const bullet = line.match(/^\s*[-*]\s+(.*)$/)
+        if (bullet) {
+          flushParagraph(); flushTable()
+          if (!list || list.ordered) { flushList(); list = { ordered: false, items: [] } }
+          list.items.push(bullet[1])
+          continue
+        }
+        const ordered = line.match(/^\s*\d+\.\s+(.*)$/)
+        if (ordered) {
+          flushParagraph(); flushTable()
+          if (!list || !list.ordered) { flushList(); list = { ordered: true, items: [] } }
+          list.items.push(ordered[1])
+          continue
+        }
+        flushList()
+        paragraph.push(line)
+      }
+      flushParagraph(); flushList(); flushTable()
+      return h('div', { className: 'uxbp-md' }, ...(blocks.length ? blocks : [h('p', { key: 'empty' }, '—')]))
+    }
+
     function groupOf(item) {
       if (item.displayGroup === 'foundation') return 3
       if (item.phase === 1) return 0
@@ -883,6 +1009,17 @@ window.__ModuleLoader__.load({
       const [menuLoading, setMenuLoading] = useState(false)
       const [art, setArt] = useState({})
       const [shake, setShake] = useState('')
+      const [viewMode, setViewMode] = useState('canvas')
+      const [artifacts, setArtifacts] = useState([])
+      const [selectedArtifactKey, setSelectedArtifactKey] = useState('')
+      const [artifactContent, setArtifactContent] = useState('')
+      const [artifactLoading, setArtifactLoading] = useState(false)
+      const [artifactEditing, setArtifactEditing] = useState(false)
+      const [artifactDraft, setArtifactDraft] = useState('')
+      const [artifactSaving, setArtifactSaving] = useState(false)
+      const [artifactError, setArtifactError] = useState('')
+      const [messageText, setMessageText] = useState('')
+      const [messageSending, setMessageSending] = useState(false)
       const canvasRef = useRef(null)
       const inputRef = useRef(null)
       const binding = useRef(null)
@@ -896,6 +1033,7 @@ window.__ModuleLoader__.load({
 
       const nameOf = value => catalog.find(item => item.id === (value === 'uxb' ? 'uxs' : value))?.name ?? value
       const taskId = task?.id ?? ''
+      const selectedArtifact = artifacts.find(item => item.key === selectedArtifactKey) ?? null
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
       const segmentKey = JSON.stringify(task?.segments ?? [])
       const groups = [
@@ -923,7 +1061,11 @@ window.__ModuleLoader__.load({
       ].filter(Boolean)
 
       function save(value) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(value)) } catch {}
+        try {
+          let current = {}
+          try { current = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') } catch {}
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...current, ...value }))
+        } catch {}
       }
 
       async function loadWorkspaceData(target = workspace) {
@@ -935,11 +1077,15 @@ window.__ModuleLoader__.load({
       }
 
       async function loadTask(id) {
-        if (!id) { setTask(null); setManifest(null); setNext([]); return }
+        if (!id) { setTask(null); setManifest(null); setNext([]); setArtifacts([]); setSelectedArtifactKey(''); return }
         const data = await api({ workspace, task: id })
         setTask(data.task)
         setManifest(data.manifest)
+        setArtifacts(data.artifacts ?? [])
         setNext(data.next ?? [])
+        setSelectedArtifactKey(current => (data.artifacts ?? []).some(item => item.key === current)
+          ? current
+          : (data.artifacts?.[0]?.key ?? ''))
         setSessionId(data.task.sessionId)
         save({ workspace, sessionId: data.task.sessionId, activeTaskId: id })
         return data
@@ -975,7 +1121,10 @@ window.__ModuleLoader__.load({
               ? stored.activeTaskId
               : ''
             if (target) {
-              try { await loadTask(target) } catch {}
+              try {
+                await loadTask(target)
+                setViewMode(stored?.viewMode === 'detail' ? 'detail' : 'canvas')
+              } catch {}
             } else if (stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)) {
               setSessionId(stored.sessionId)
               save({ workspace, sessionId: stored.sessionId, activeTaskId: '' })
@@ -1020,6 +1169,34 @@ window.__ModuleLoader__.load({
           try { ref?.release() } catch {}
         }
       }, [sessionId, taskId, segmentKey])
+
+      useEffect(() => {
+        if (!task?.id || !selectedArtifactKey) {
+          setArtifactContent('')
+          setArtifactLoading(false)
+          return
+        }
+        if (artifactEditing) return
+        let disposed = false
+        setArtifactLoading(true)
+        setArtifactError('')
+        api({ workspace, task: task.id, artifact: selectedArtifactKey }).then(data => {
+          if (disposed) return
+          setArtifactContent(data.content ?? '')
+          setArtifactLoading(false)
+        }).catch(e => {
+          if (!disposed) { setArtifactError(e.message); setArtifactLoading(false) }
+        })
+        return () => { disposed = true }
+      }, [workspace, task?.id, selectedArtifactKey, manifest?.updatedAt, artifactEditing])
+
+      useEffect(() => {
+        if (artifactEditing && selectedArtifact && !selectedArtifact.editable) {
+          setArtifactEditing(false)
+          setArtifactDraft('')
+          setArtifactError('')
+        }
+      }, [artifactEditing, selectedArtifact?.editable])
 
       refreshRef.current = refreshTask
 
@@ -1069,8 +1246,9 @@ window.__ModuleLoader__.load({
         if (wsId !== workspace) {
           setWorkspace(wsId)
           setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([])
+          setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
           setSessionId(sid || '')
-          save({ workspace: wsId, sessionId: sid || '', activeTaskId: '' })
+          save({ workspace: wsId, sessionId: sid || '', activeTaskId: '', viewMode: 'canvas' })
         } else {
           setSessionId(sid || '')
           save({ workspace, sessionId: sid || '', activeTaskId: task?.id ?? '' })
@@ -1092,8 +1270,8 @@ window.__ModuleLoader__.load({
         if (id === workspace) return
         setWorkspace(id)
         setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([]); setSessionId('')
-        setArt({}); setOpenMenu('')
-        save({ workspace: id, sessionId: '', activeTaskId: '' })
+        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas'); setArt({}); setOpenMenu('')
+        save({ workspace: id, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
       }
 
       function resetAll() {
@@ -1101,6 +1279,7 @@ window.__ModuleLoader__.load({
         saved.current = null
         setWorkspace(''); setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([])
         setSessionId(''); setFlow([]); setDialogue([]); setSkill(''); setText(''); setFiles([]); setError('')
+        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
         setTab('task'); setOpenMenu('')
       }
 
@@ -1154,6 +1333,8 @@ window.__ModuleLoader__.load({
           } finally { ref.release() }
           setText('')
           setFiles([])
+          setViewMode('detail')
+          save({ workspace, sessionId: targetSession, activeTaskId: current.id, viewMode: 'detail' })
           await loadTask(current.id)
           await loadWorkspaceData(workspace)
         } catch (e) {
@@ -1170,9 +1351,8 @@ window.__ModuleLoader__.load({
           await api(null, { action: name, workspaceId: workspace, taskId: task.id, ...payload })
           if (name === 'complete') {
             setTask(null); setManifest(null); setNext([]); setSessionId('')
-            save({ workspace, sessionId: '', activeTaskId: '' })
-          } else if (name === 'pause') {
-            await loadTask(task.id)
+            setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
+            save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
           } else {
             await loadTask(task.id)
           }
@@ -1196,6 +1376,8 @@ window.__ModuleLoader__.load({
           }
           await loadTask(item.id)
           setTab('task')
+          setViewMode('detail')
+          save({ workspace, activeTaskId: item.id, viewMode: 'detail' })
           await loadWorkspaceData(workspace)
         } catch (e) { setError(e.message) }
       }
@@ -1205,8 +1387,84 @@ window.__ModuleLoader__.load({
           try { await api(null, { action: 'pause', workspaceId: workspace, taskId: task.id }) } catch (e) { setError(e.message); return }
         }
         setTask(null); setManifest(null); setNext([]); setSessionId('')
-        save({ workspace, sessionId: '', activeTaskId: '' })
+        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
+        save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
         await loadWorkspaceData(workspace)
+      }
+
+      function backToCanvas() {
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        setArtifactEditing(false)
+        setArtifactDraft('')
+        setViewMode('canvas')
+        save({ viewMode: 'canvas' })
+      }
+
+      function selectArtifact(key) {
+        if (key === selectedArtifactKey) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        setArtifactEditing(false)
+        setArtifactDraft('')
+        setArtifactError('')
+        setSelectedArtifactKey(key)
+      }
+
+      function startEdit() {
+        if (!selectedArtifact?.editable) return
+        setArtifactDraft(artifactContent)
+        setArtifactEditing(true)
+        setArtifactError('')
+      }
+
+      function cancelEdit() {
+        setArtifactEditing(false)
+        setArtifactDraft('')
+        setArtifactError('')
+      }
+
+      async function saveArtifact() {
+        if (!task || !selectedArtifact || artifactSaving) return
+        if (!artifactDraft.trim()) { setArtifactError('产物不能为空'); return }
+        setArtifactSaving(true)
+        setArtifactError('')
+        try {
+          await api(null, {
+            action: 'update-artifact', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifact.key, markdown: artifactDraft, baseSha: selectedArtifact.sha256,
+          })
+          setArtifactEditing(false)
+          setArtifactContent(artifactDraft)
+          await loadTask(task.id)
+        } catch (e) {
+          setArtifactError(e.message)
+        } finally {
+          setArtifactSaving(false)
+        }
+      }
+
+      async function sendMessage() {
+        if (!task || task.status !== 'active' || messageSending || !messageText.trim()) return
+        setMessageSending(true)
+        setError('')
+        const content = messageText
+        try {
+          await api(null, {
+            action: 'message', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifactKey, text: content,
+          })
+          const ref = sessions.retain(task.sessionId, { source: 'controllerOperation' })
+          const value = await ref.ready
+          try {
+            const result = await value.session.prompt([{ type: 'text', text: content }], 'queue')
+            if (result?.ok === false) throw new Error(result.error?.message || '发送失败')
+          } finally { ref.release() }
+          setMessageText('')
+          await loadTask(task.id)
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          setMessageSending(false)
+        }
       }
 
       async function viewArtifact(skillId) {
@@ -1255,6 +1513,73 @@ window.__ModuleLoader__.load({
         shakeCard(item.id)
         useSkill(item.id)
         setArt({})
+      }
+
+      function renderTaskDetail() {
+        if (!task) return null
+        const meta = selectedArtifact
+        const detailStatus = meta?.manualLock
+          ? t('manualEdited')
+          : [meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
+        const artifactPanel = artifacts.length === 0
+          ? h('div', { className: 'uxbp-artifact-panel' }, h('p', { className: 'uxbp-empty' }, t('noArtifacts')))
+          : h('div', { className: 'uxbp-artifact-panel' },
+              h('div', { className: 'uxbp-artifact-toolbar' },
+                h('div', { className: 'uxbp-artifact-meta' },
+                  h('strong', null, meta?.label ?? ''),
+                  detailStatus && h('span', null, detailStatus),
+                  meta?.origin === 'user' && !meta?.manualLock && h('span', null, t('manualEdited'))),
+                h('div', { style: { display: 'flex', gap: 5 } },
+                  artifactEditing
+                    ? h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: () => void saveArtifact() }, artifactSaving ? t('loading') : t('save'))
+                    : meta?.editable && h('button', { type: 'button', className: 'uxbp-btn', onClick: startEdit }, t('editArtifact')),
+                  artifactEditing && h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: cancelEdit }, t('cancel')))),
+              artifactError && h('p', { className: 'uxbp-artifact-error', role: 'alert' }, artifactError),
+              artifactEditing
+                ? h('textarea', {
+                    className: 'uxbp-artifact-edit', value: artifactDraft, spellCheck: false,
+                    onChange: event => setArtifactDraft(event.target.value),
+                  })
+                : artifactLoading
+                  ? h('div', { className: 'uxbp-artifact-scroll' }, h('p', { className: 'uxbp-empty' }, t('loading')))
+                  : h('div', { className: 'uxbp-artifact-scroll' }, h(MarkdownView, { content: artifactContent })))
+
+        return h('section', { className: 'uxbp-task-detail' },
+          h('div', { className: 'uxbp-detail-head' },
+            h('div', { className: 'uxbp-detail-heading' },
+              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas }, '← ' + t('backToTasks')),
+              h('h1', null, task.id),
+              h('p', null, task.title)),
+            h('div', { className: 'uxbp-detail-actions' },
+              task.status === 'active'
+                ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
+                : h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('resume') }, t('resume')),
+              h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
+              h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void rename() }, t('rename')))),
+          artifacts.length > 0 && h('div', { className: 'uxbp-artifact-tabs', role: 'tablist' },
+            ...artifacts.map(item => h('button', {
+              key: item.key, type: 'button', role: 'tab', className: 'uxbp-artifact-tab',
+              'data-on': item.key === selectedArtifactKey, 'aria-selected': item.key === selectedArtifactKey,
+              onClick: () => selectArtifact(item.key),
+            }, item.label))),
+          artifactPanel,
+          h('div', { className: 'uxbp-detail-composer' },
+            h('textarea', {
+              value: messageText, placeholder: task.status === 'active' ? t('detailPlaceholder') : t('detailDisabled'),
+              disabled: task.status !== 'active' || messageSending,
+              onChange: event => setMessageText(event.target.value),
+              onKeyDown: event => {
+                if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                  event.preventDefault()
+                  void sendMessage()
+                }
+              },
+            }),
+            h('button', {
+              type: 'button', className: 'uxbp-btn uxbp-primary',
+              disabled: task.status !== 'active' || messageSending || !messageText.trim(),
+              onClick: () => void sendMessage(),
+            }, messageSending ? t('loading') : t('send'))))
       }
 
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
@@ -1429,6 +1754,7 @@ window.__ModuleLoader__.load({
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
                   h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
+          , tab === 'task' && viewMode === 'detail' && task && renderTaskDetail()
           , tab === 'sediment' && h('section', { className: 'uxbp-sediment-overlay' },
             h('div', { className: 'uxbp-sediment-head' },
               h('div', { className: 'uxbp-sediment-heading' },
