@@ -95,7 +95,7 @@ export function createWorkbench(ctx, catalog) {
     atomicWrite(baseDir(workspace, true), 'tasks.json', JSON.stringify(index))
   }
 
-  async function listSessions(workspace) {
+  async function listSessions(workspace, includeBlank = false) {
     const controller = ctx.sessionController
     if (typeof controller?.list !== 'function') return []
     let value
@@ -113,8 +113,9 @@ export function createWorkbench(ctx, catalog) {
         origin: row?.origin ?? null,
         blank: row?.blank === true,
       }))
-      .filter(row => row.id && row.origin !== 'subagent' && !row.blank && !archived.has(row.id) &&
-        (workspace.sessionIds?.includes(row.id) ?? false))
+      .filter(row => row.id && row.origin !== 'subagent' && (includeBlank || !row.blank) && !archived.has(row.id) &&
+        (workspace.sessionIds?.includes(row.id) ||
+          Boolean(row.cwd && sameDirectory(workspace.path, row.cwd))))
       .sort((a, b) => (Number(b.updatedAt) || Date.parse(b.updatedAt) || 0) - (Number(a.updatedAt) || Date.parse(a.updatedAt) || 0))
   }
 
@@ -123,6 +124,15 @@ export function createWorkbench(ctx, catalog) {
     const created = value?.ok === true ? value.value : value
     if (!created?.sessionId) throw new Error(value?.error?.message || '无法创建会话')
     return created.sessionId
+  }
+
+  async function sessionBelongs(workspace, sessionId) {
+    if (workspace.sessionIds?.includes(sessionId)) return true
+    const live = ctx.sessions?.get?.(sessionId)
+    const cwd = live?.header?.cwd ?? live?.cwd
+    if (cwd && sameDirectory(workspace.path, cwd)) return true
+    const sessions = await listSessions(workspace, true)
+    return sessions.some(session => session.id === sessionId)
   }
 
   async function workspaceForSession(sessionId) {
@@ -304,8 +314,7 @@ export function createWorkbench(ctx, catalog) {
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
     const sessionId = String(body.sessionId ?? '')
     if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
-    const sessions = await listSessions(workspace)
-    if (!sessions.some(session => session.id === sessionId)) throw new Error('所选会话不属于当前工作区')
+    if (!await sessionBelongs(workspace, sessionId)) throw new Error('所选会话不属于当前工作区')
     const index = loadIndex(workspace)
     pauseOthers(workspace, index, '')
     const now = new Date().toISOString()
