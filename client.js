@@ -1671,6 +1671,7 @@ window.__ModuleLoader__.load({
       const outputCount = Object.keys(manifest?.skills ?? {}).length
       const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
       const leftView = tab === 'sediment' ? 'sediment' : viewMode === 'detail' && task ? 'detail' : 'canvas'
+      const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
