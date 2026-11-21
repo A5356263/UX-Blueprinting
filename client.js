@@ -1746,6 +1746,7 @@ window.__ModuleLoader__.load({
                       h('code', null, '/' + item.id),
                       h('span', { className: 'uxbp-use', role: 'button', tabIndex: 0, onClick: event => { event.stopPropagation(); shakeCard(item.id); useSkill(item.id) } }, t('useSkill'))))
                   }))))),
+              ),
               h('div', { className: 'uxbp-composer' },
                 (skill || files.length > 0) && h('div', { className: 'uxbp-chips' },
                   skill && h('span', { className: 'uxbp-chip' },
@@ -1784,8 +1785,7 @@ window.__ModuleLoader__.load({
                         if (!running) { void execute(); return }
                         try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
                       },
-                    }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))))
-              ),
+                    }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))),
               tab === 'task' && viewMode === 'detail' && task && renderTaskDetail(),
               tab === 'sediment' && renderSedimentPage()
             ),
@@ -1845,7 +1845,7 @@ window.__ModuleLoader__.load({
                         item.name, h('span', null, item.reason)))),
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
-                  h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
+                  h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content)))))
     }
 
     return {
