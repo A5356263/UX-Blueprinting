@@ -54,7 +54,7 @@ window.__ModuleLoader__.load({
       view: 'View',
       remove: 'Remove',
       history: 'History',
-      detailPlaceholder: 'Message this task…',
+      detailPlaceholder: 'Add context or request a change to this task…',
       detailDisabled: 'Continue the task to send a message.',
       noArtifacts: 'No artifacts yet.',
       editArtifact: 'Edit',
@@ -65,6 +65,9 @@ window.__ModuleLoader__.load({
       send: 'Send',
       backToTasks: 'Back to task canvas',
       stale: 'May be stale',
+      recordedAt: 'Recorded',
+      taskName: 'Task',
+      status: 'Status',
     }
 
     const zh = {
@@ -113,7 +116,7 @@ window.__ModuleLoader__.load({
       view: '查看',
       remove: '移除',
       history: '历史任务',
-      detailPlaceholder: '输入消息，发送到当前任务会话……',
+      detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
       detailDisabled: '继续任务后才能发送消息。',
       noArtifacts: '还没有产物。',
       editArtifact: '编辑',
@@ -124,6 +127,9 @@ window.__ModuleLoader__.load({
       send: '发送',
       backToTasks: '返回任务画布',
       stale: '可能过期',
+      recordedAt: '记录于',
+      taskName: '任务',
+      status: '状态',
     }
 
     const styles = `
@@ -312,8 +318,8 @@ window.__ModuleLoader__.load({
       .uxbp-next-alt:hover { background: var(--soft); }
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-      .uxbp-task-detail { position: absolute; z-index: 24; top: 14px; left: 18px; right: 320px; bottom: 16px; display: flex; flex-direction: column;
-        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
+        padding: 20px 24px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
       .uxbp-detail-heading { min-width: 0; }
       .uxbp-detail-back { margin: 0 0 8px; padding: 0; border: 0; background: transparent; color: var(--muted);
@@ -329,21 +335,23 @@ window.__ModuleLoader__.load({
       .uxbp-artifact-tab:hover { color: var(--ink); }
       .uxbp-artifact-tab[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
       .uxbp-artifact-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
-        border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+        border: 0; border-radius: 0; background: transparent; box-shadow: none; }
       .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-        padding: 10px 14px; border-bottom: .5px solid var(--line); }
+        padding: 10px 0; }
       .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
       .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
-      .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 16px 20px; }
-      .uxbp-artifact-edit { flex: 1; min-height: 0; width: 100%; resize: none; padding: 16px 20px; border: 0; outline: 0;
-        background: var(--card); color: var(--ink); font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
-      .uxbp-artifact-error { flex: none; margin: 0 14px 8px; padding: 7px 9px; border-radius: 8px; color: var(--dsw-alias-state-error-primary, #a52c28);
+      .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 8px 0 20px; }
+      .uxbp-artifact-edit { flex: 1; min-height: 0; width: 100%; resize: none; padding: 8px 0 20px; border: 0; outline: 0;
+        background: transparent; color: var(--ink); font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-artifact-error { flex: none; margin: 0 0 8px; padding: 7px 9px; border-radius: 8px; color: var(--dsw-alias-state-error-primary, #a52c28);
         background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 8%, var(--card)); font-size: 11px; }
-      .uxbp-detail-composer { flex: none; display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; padding: 7px 8px;
-        border: .5px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
-      .uxbp-detail-composer textarea { flex: 1; min-height: 38px; max-height: 90px; resize: none; padding: 5px 6px; border: 0; outline: 0;
+      .uxbp-detail-composer { flex: none; align-self: center; width: min(440px, 100%); display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; padding: 6px 8px;
+        border: .5px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-detail-composer textarea { flex: 1; min-width: 0; min-height: 28px; max-height: 90px; field-sizing: content; resize: none; padding: 4px 6px; border: 0; outline: 0;
         background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; }
       .uxbp-md { color: var(--ink); font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+      .uxbp-md > :first-child { margin-top: 0; }
+      .uxbp-detail-composer .uxbp-run { flex: none; width: 28px; height: 28px; min-height: 28px; padding: 0; border-radius: 50%; }
       .uxbp-md h1, .uxbp-md h2, .uxbp-md h3, .uxbp-md h4 { margin: 1.1em 0 .45em; line-height: 1.35; }
       .uxbp-md h1 { font-size: 20px; } .uxbp-md h2 { font-size: 16px; } .uxbp-md h3 { font-size: 14px; } .uxbp-md h4 { font-size: 13px; }
       .uxbp-md p { margin: .55em 0; white-space: pre-wrap; }
@@ -378,6 +386,20 @@ window.__ModuleLoader__.load({
       .uxbp-sediment-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
       .uxbp-sediment-card-head strong { font-size: 14px; line-height: 21px; font-weight: 600; }
       .uxbp-sediment-skills { margin-top: auto; color: var(--muted); font-size: 12px; line-height: 18px; }
+      .uxbp-sediment-table { flex: 1; min-height: 0; overflow: auto; border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-sediment-table-head, .uxbp-sediment-row { display: grid; grid-template-columns: minmax(0, 1.7fr) 90px minmax(0, 1fr) 112px;
+        gap: 14px; align-items: center; width: 100%; padding: 0 16px; }
+      .uxbp-sediment-table-head { position: sticky; top: 0; z-index: 1; min-height: 38px; color: var(--muted);
+        font-size: 11px; background: var(--card); border-bottom: .5px solid var(--line); }
+      .uxbp-sediment-row { min-height: 58px; border: 0; border-bottom: .5px solid var(--line); border-radius: 0;
+        background: var(--card); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+      .uxbp-sediment-row:last-child { border-bottom: 0; }
+      .uxbp-sediment-row:hover { background: var(--soft); }
+      .uxbp-sediment-task { min-width: 0; }
+      .uxbp-sediment-task strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+      .uxbp-sediment-task span { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--faint); font-size: 10.5px; }
+      .uxbp-sediment-skill { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11.5px; }
+      .uxbp-sediment-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
       .uxbp-taskcard { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border: 0;
         border-radius: 16px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; text-align: left; }
       .uxbp-taskcard:hover { background: var(--soft); box-shadow: none; }
@@ -400,7 +422,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding-top: 24px; }
         .uxbp-aside { padding: 12px 18px 16px; }
         .uxbp-sediment-overlay { right: 18px; }
-        .uxbp-task-detail { right: 18px; }
+        .uxbp-task-detail { padding: 16px; }
       }
       @container (max-width: 700px) {
         .uxbp-left { --uxbp-card-width: 148px; }
@@ -1032,6 +1054,19 @@ window.__ModuleLoader__.load({
       const restored = useRef(false)
 
       const nameOf = value => catalog.find(item => item.id === (value === 'uxb' ? 'uxs' : value))?.name ?? value
+      const formatWhen = value => {
+        const date = new Date(value)
+        if (Number.isNaN(date.getTime())) return '—'
+        return new Intl.DateTimeFormat(undefined, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date)
+      }
+      const deriveTaskTitle = (skillId, value, attachments) => {
+        const label = nameOf(skillId)
+        const line = String(value ?? '').trim().split(/\r?\n/)[0].replace(/\s+/g, ' ')
+        const subject = line.length > 36 ? line.slice(0, 35) + '…' : line
+        if (subject) return label + ' · ' + subject
+        const file = attachments?.[0]?.name?.replace(/\.[^.]+$/, '')
+        return file ? label + ' · ' + file : label
+      }
       const taskId = task?.id ?? ''
       const selectedArtifact = artifacts.find(item => item.key === selectedArtifactKey) ?? null
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
@@ -1314,7 +1349,7 @@ window.__ModuleLoader__.load({
           if (!current) {
             const data = await api(null, {
               action: 'create-task', workspaceId: workspace, sessionId: targetSession, skill,
-              title: text.trim().slice(0, 40), text,
+              title: deriveTaskTitle(skill, text, files), text,
             })
             current = data.task
             prompt = data.prompt
@@ -1553,7 +1588,7 @@ window.__ModuleLoader__.load({
             h('div', { className: 'uxbp-detail-heading' },
               h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas }, '← ' + t('backToTasks')),
               h('h1', null, task.id),
-              h('p', null, task.title)),
+              h('p', null, task.title + ' · ' + formatWhen(task.createdAt))),
             h('div', { className: 'uxbp-detail-actions' },
               task.status === 'active'
                 ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
@@ -1569,6 +1604,7 @@ window.__ModuleLoader__.load({
           artifactPanel,
           h('div', { className: 'uxbp-detail-composer' },
             h('textarea', {
+              rows: 1, 'aria-label': t('detailPlaceholder'),
               value: messageText, placeholder: task.status === 'active' ? t('detailPlaceholder') : t('detailDisabled'),
               disabled: task.status !== 'active' || messageSending,
               onChange: event => setMessageText(event.target.value),
@@ -1580,16 +1616,23 @@ window.__ModuleLoader__.load({
               },
             }),
             h('button', {
-              type: 'button', className: 'uxbp-btn uxbp-primary',
+              type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run', title: t('send'), 'aria-label': t('send'),
               disabled: task.status !== 'active' || messageSending || !messageText.trim(),
               onClick: () => void sendMessage(),
-            }, messageSending ? t('loading') : t('send'))))
+            }, h(Icon, { path: 'M12 19V5m-6 6 6-6 6 6' }))))
       }
 
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
       const status = task ? statusLabel(task.status) : ''
       const outputCount = Object.keys(manifest?.skills ?? {}).length
       const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
+
+      if (tab === 'task' && viewMode === 'detail' && task) {
+        return h('main', { className: 'uxbp-root' },
+          h('style', null, styles),
+          error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
+          renderTaskDetail())
+      }
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
@@ -1695,11 +1738,14 @@ window.__ModuleLoader__.load({
                       h('span', null, t('attach'))),
                     h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter'))),
                   h('div', { className: 'uxbp-tools-right' },
-                    running && h('button', { type: 'button', className: 'uxbp-btn', onClick: () => binding.current?.session.cancel() }, t('stop')),
                     h('button', { type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run',
-                      title: t('execute'), 'aria-label': t('execute'),
-                      disabled: sending || !skill || (!text.trim() && !files.length), onClick: () => void execute(),
-                    }, h(Icon, { path: 'M12 19V5m-6 6 6-6 6 6' }))))))
+                      title: t(running ? 'pause' : 'execute'), 'aria-label': t(running ? 'pause' : 'execute'),
+                      disabled: !running && (sending || !skill || (!text.trim() && !files.length)),
+                      onClick: async () => {
+                        if (!running) { void execute(); return }
+                        try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
+                      },
+                    }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))))
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             h('aside', { className: 'uxbp-aside' },
@@ -1758,7 +1804,6 @@ window.__ModuleLoader__.load({
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
                   h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
-          , tab === 'task' && viewMode === 'detail' && task && renderTaskDetail()
           , tab === 'sediment' && h('section', { className: 'uxbp-sediment-overlay' },
             h('div', { className: 'uxbp-sediment-head' },
               h('div', { className: 'uxbp-sediment-heading' },
@@ -1772,15 +1817,23 @@ window.__ModuleLoader__.load({
                   ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
                     key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
                   }, item === 'all' ? t('all') : statusLabel(item)))))),
-            h('div', { className: 'uxbp-sediment' },
-              filteredTasks.length === 0 && h('p', { className: 'uxbp-empty' }, t('emptySediment')),
-              ...filteredTasks.map(item => h('button', {
-                key: item.id, type: 'button', className: 'uxbp-taskcard', onClick: () => void openTask(item),
-              },
-              h('span', { className: 'uxbp-taskcard-main' },
-                h('strong', null, item.title),
-                h('span', null, item.id + ' · ' + (item.skills ?? []).map(nameOf).join(' → '))),
-              h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)))))))
+            h('div', { className: 'uxbp-sediment-table' },
+              h('div', { className: 'uxbp-sediment-table-head' },
+                h('span', null, t('taskName')),
+                h('span', null, t('status')),
+                h('span', null, t('skill')),
+                h('span', null, t('recordedAt'))),
+              filteredTasks.length === 0
+                ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
+                : filteredTasks.map(item => h('button', {
+                    key: item.id, type: 'button', className: 'uxbp-sediment-row', onClick: () => void openTask(item),
+                  },
+                  h('span', { className: 'uxbp-sediment-task' },
+                    h('strong', null, item.title),
+                    h('span', null, item.id)),
+                  h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)),
+                  h('span', { className: 'uxbp-sediment-skill' }, (item.skills ?? []).map(nameOf).join(' → ') || '—'),
+                  h('span', { className: 'uxbp-sediment-time' }, formatWhen(item.updatedAt || item.createdAt)))))))
     }
 
     return {
