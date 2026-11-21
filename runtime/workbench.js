@@ -273,7 +273,9 @@ export function createWorkbench(ctx, catalog) {
 
   function loadIndex(workspace) {
     baseDir(workspace, true)
-    return readIndexFile(workspace) ?? { version: 1, next: 1, tasks: [] }
+    const index = readIndexFile(workspace) ?? { version: 1, next: 1, tasks: [] }
+    if (backfillTaskTitles(workspace, index)) saveIndex(workspace, index)
+    return index
   }
 
   function pauseOthers(workspace, index, exceptId) {
@@ -305,9 +307,50 @@ export function createWorkbench(ctx, catalog) {
       '  taskId: ' + task.id,
       '  skill: ' + skill,
       '  markdown: 完整 Markdown 正文',
+      '  title: 用一句话清晰命名本次任务（可省略）',
       skill === 'prd-review' ? '若存在阻断或建议，按「PRD 审核记录」格式提交；工作台会保存为 prd-review-record.md，正式基线仍写入 prd-review.md。' : '',
     ].join('\n')
   }
+
+  function taskTitleFromArtifact(skill, title, markdown) {
+    const label = catalog.name(skill)
+    let source = String(title ?? '').trim()
+    if (!source) source = String(markdown ?? '').match(/^#\s+(.+)$/m)?.[1]?.trim() ?? ''
+    source = source.replace(/^#+\s*/, '')
+    source = source.replace(/^(正式需求基线|PRD 审核记录|需求确认记录|页面生成规格|体验策略|需求审核与基线|页面规格)\s*[：:·\-]?\s*/, '')
+    source = source.replace(/\s+/g, ' ').trim()
+    if (!source || source === label) return ''
+    return label + ' · ' + source.slice(0, 80)
+  }
+
+  function backfillTaskTitles(workspace, index) {
+    let changed = false
+    const skillNames = new Set(catalog.list().map(item => item.name))
+    for (const task of index.tasks) {
+      if (task.titleSource === 'manual') continue
+      const generic = !task.title || skillNames.has(task.title) ||
+        task.title === catalog.name(task.lastSkill) ||
+        task.title === catalog.name(task.skills?.[0])
+      if (!task.titleSource && !generic) {
+        task.titleSource = 'manual'
+        changed = true
+        continue
+      }
+      if (!generic) continue
+      const manifest = loadManifest(workspace, task.id)
+      const latest = Object.values(manifest.skills)
+        .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]
+      if (!latest) continue
+      const title = taskTitleFromArtifact(latest.skill ?? task.lastSkill, latest.title, '')
+      if (!title) continue
+      task.title = title
+      task.titleSource = 'ai'
+      task.updatedAt = new Date().toISOString()
+      changed = true
+    }
+    return changed
+  }
+
 
   async function createTask(workspace, body) {
     const skill = normalizeSkillId(String(body.skill ?? ''))
@@ -328,6 +371,7 @@ export function createWorkbench(ctx, catalog) {
     const task = {
       id,
       title: String(body.title ?? '').trim().slice(0, 80) || catalog.name(skill),
+      titleSource: 'auto',
       status: 'active',
       sessionId,
       segments: [{ startSeq: seqOf(sessionId), endSeq: null }],
@@ -370,6 +414,7 @@ export function createWorkbench(ctx, catalog) {
       const title = String(body.title ?? '').trim().slice(0, 80)
       if (!title) throw new Error('任务名不能为空')
       task.title = title
+      task.titleSource = 'manual'
     }
     task.updatedAt = now
     saveIndex(workspace, index)
@@ -518,6 +563,13 @@ export function createWorkbench(ctx, catalog) {
       saveManifest(workspace, taskId, manifest)
       task.skills = [...new Set([...(task.skills ?? []).map(normalizeSkillId), skill])]
       task.lastSkill = skill
+      if (task.titleSource !== 'manual') {
+        const nextTitle = taskTitleFromArtifact(skill, title, markdown)
+        if (nextTitle) {
+          task.title = nextTitle
+          task.titleSource = 'ai'
+        }
+      }
       task.updatedAt = now
       saveIndex(workspace, index)
       return {

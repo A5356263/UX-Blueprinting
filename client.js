@@ -64,6 +64,7 @@ window.__ModuleLoader__.load({
       loading: 'Loading…',
       send: 'Send',
       backToTasks: 'Back to task canvas',
+      backToSediment: 'Back to recents',
       stale: 'May be stale',
       recordedAt: 'Recorded',
       taskName: 'Task',
@@ -126,6 +127,7 @@ window.__ModuleLoader__.load({
       loading: '加载中…',
       send: '发送',
       backToTasks: '返回任务画布',
+      backToSediment: '返回沉淀',
       stale: '可能过期',
       recordedAt: '记录于',
       taskName: '任务',
@@ -319,7 +321,13 @@ window.__ModuleLoader__.load({
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
-        padding: 20px 24px 16px; background: var(--bg); overflow: hidden; }
+        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
+        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-left[data-view="detail"] .uxbp-canvas,
+      .uxbp-left[data-view="detail"] .uxbp-composer,
+      .uxbp-left[data-view="sediment"] .uxbp-canvas,
+      .uxbp-left[data-view="sediment"] .uxbp-composer { display: none; }
       .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
       .uxbp-detail-heading { min-width: 0; }
       .uxbp-detail-back { margin: 0 0 8px; padding: 0; border: 0; background: transparent; color: var(--muted);
@@ -360,8 +368,6 @@ window.__ModuleLoader__.load({
       .uxbp-md pre { margin: .8em 0; padding: 10px; overflow: auto; border-radius: 8px; background: var(--soft); font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
       .uxbp-md .uxbp-md-table { white-space: pre; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
-      .uxbp-sediment-overlay { position: absolute; z-index: 20; top: 14px; left: 18px; right: 320px; bottom: 16px;
-        display: flex; flex-direction: column; padding: 52px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;
         padding: 0 0 18px; border-bottom: .5px solid var(--line); }
       .uxbp-sediment-heading h1 { margin: 0; font-size: 34px; line-height: 1.15; font-weight: 500; letter-spacing: -.02em; }
@@ -421,8 +427,7 @@ window.__ModuleLoader__.load({
         .uxbp-left { padding: 0 18px 12px; }
         .uxbp-plane { padding-top: 24px; }
         .uxbp-aside { padding: 12px 18px 16px; }
-        .uxbp-sediment-overlay { right: 18px; }
-        .uxbp-task-detail { padding: 16px; }
+        .uxbp-task-detail, .uxbp-sediment-page { padding: 64px 12px 12px; }
       }
       @container (max-width: 700px) {
         .uxbp-left { --uxbp-card-width: 148px; }
@@ -1032,6 +1037,7 @@ window.__ModuleLoader__.load({
       const [art, setArt] = useState({})
       const [shake, setShake] = useState('')
       const [viewMode, setViewMode] = useState('canvas')
+      const [detailOrigin, setDetailOrigin] = useState('task')
       const [artifacts, setArtifacts] = useState([])
       const [selectedArtifactKey, setSelectedArtifactKey] = useState('')
       const [artifactContent, setArtifactContent] = useState('')
@@ -1159,6 +1165,7 @@ window.__ModuleLoader__.load({
               try {
                 await loadTask(target)
                 setViewMode(stored?.viewMode === 'detail' ? 'detail' : 'canvas')
+                setDetailOrigin(stored?.detailOrigin === 'sediment' ? 'sediment' : 'task')
               } catch {}
             } else {
               const session = stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)
@@ -1373,7 +1380,8 @@ window.__ModuleLoader__.load({
           setText('')
           setFiles([])
           setViewMode('detail')
-          save({ workspace, sessionId: targetSession, activeTaskId: current.id, viewMode: 'detail' })
+          setDetailOrigin('task')
+          save({ workspace, sessionId: targetSession, activeTaskId: current.id, viewMode: 'detail', detailOrigin: 'task' })
           await loadTask(current.id)
           await loadWorkspaceData(workspace)
         } catch (e) {
@@ -1416,7 +1424,8 @@ window.__ModuleLoader__.load({
           await loadTask(item.id)
           setTab('task')
           setViewMode('detail')
-          save({ workspace, activeTaskId: item.id, viewMode: 'detail' })
+          setDetailOrigin('sediment')
+          save({ workspace, activeTaskId: item.id, viewMode: 'detail', detailOrigin: 'sediment' })
           await loadWorkspaceData(workspace)
         } catch (e) { setError(e.message) }
       }
@@ -1435,8 +1444,10 @@ window.__ModuleLoader__.load({
         if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
         setArtifactEditing(false)
         setArtifactDraft('')
+        const nextTab = detailOrigin === 'sediment' ? 'sediment' : 'task'
+        setTab(nextTab)
         setViewMode('canvas')
-        save({ viewMode: 'canvas' })
+        save({ viewMode: 'canvas', detailOrigin, tab: nextTab })
       }
 
       function selectArtifact(key) {
@@ -1586,7 +1597,7 @@ window.__ModuleLoader__.load({
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
             h('div', { className: 'uxbp-detail-heading' },
-              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas }, '← ' + t('backToTasks')),
+              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas }, '← ' + (detailOrigin === 'sediment' ? t('backToSediment') : t('backToTasks'))),
               h('h1', null, task.id),
               h('p', null, task.title + ' · ' + formatWhen(task.createdAt))),
             h('div', { className: 'uxbp-detail-actions' },
@@ -1622,17 +1633,44 @@ window.__ModuleLoader__.load({
             }, h(Icon, { path: 'M12 19V5m-6 6 6-6 6 6' }))))
       }
 
-      const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
+      function renderSedimentPage() {
+        return h('section', { className: 'uxbp-sediment-page' },
+          h('div', { className: 'uxbp-sediment-head' },
+            h('div', { className: 'uxbp-sediment-heading' },
+              h('h1', null, t('sediment')),
+              sedimentStats.length > 0 && h('p', null, sedimentStats.join(' · '))),
+            h('div', { className: 'uxbp-sediment-tools' },
+              h('label', { className: 'uxbp-search' },
+                h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
+                h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) })),
+              h('div', { className: 'uxbp-seg' },
+                ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
+                  key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
+                }, item === 'all' ? t('all') : statusLabel(item)))))),
+          h('div', { className: 'uxbp-sediment-table' },
+            h('div', { className: 'uxbp-sediment-table-head' },
+              h('span', null, t('taskName')),
+              h('span', null, t('status')),
+              h('span', null, t('skill')),
+              h('span', null, t('recordedAt'))),
+            filteredTasks.length === 0
+              ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
+              : filteredTasks.map(item => h('button', {
+                  key: item.id, type: 'button', className: 'uxbp-sediment-row', onClick: () => void openTask(item),
+                },
+                h('span', { className: 'uxbp-sediment-task' },
+                  h('strong', null, item.title),
+                  h('span', null, item.id)),
+                h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)),
+                h('span', { className: 'uxbp-sediment-skill' }, (item.skills ?? []).map(nameOf).join(' → ') || '—'),
+                h('span', { className: 'uxbp-sediment-time' }, formatWhen(item.updatedAt || item.createdAt))))))
+      }
+
+
       const status = task ? statusLabel(task.status) : ''
       const outputCount = Object.keys(manifest?.skills ?? {}).length
       const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
-
-      if (tab === 'task' && viewMode === 'detail' && task) {
-        return h('main', { className: 'uxbp-root' },
-          h('style', null, styles),
-          error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
-          renderTaskDetail())
-      }
+      const leftView = tab === 'sediment' ? 'sediment' : viewMode === 'detail' && task ? 'detail' : 'canvas'
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
@@ -1675,7 +1713,7 @@ window.__ModuleLoader__.load({
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
 
         h('div', { className: 'uxbp-body' },
-            h('section', { className: 'uxbp-left' },
+            h('section', { className: 'uxbp-left', 'data-view': leftView },
               h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
                 onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp,
@@ -1746,6 +1784,9 @@ window.__ModuleLoader__.load({
                         try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
                       },
                     }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))))
+              ),
+              tab === 'task' && viewMode === 'detail' && task && renderTaskDetail(),
+              tab === 'sediment' && renderSedimentPage()
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             h('aside', { className: 'uxbp-aside' },
@@ -1804,36 +1845,6 @@ window.__ModuleLoader__.load({
                 art.content && h('div', { className: 'uxbp-next' },
                   h('h3', null, nameOf(art.skill)),
                   h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content))))
-          , tab === 'sediment' && h('section', { className: 'uxbp-sediment-overlay' },
-            h('div', { className: 'uxbp-sediment-head' },
-              h('div', { className: 'uxbp-sediment-heading' },
-                h('h1', null, t('sediment')),
-                sedimentStats.length > 0 && h('p', null, sedimentStats.join(' · '))),
-              h('div', { className: 'uxbp-sediment-tools' },
-                h('label', { className: 'uxbp-search' },
-                  h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
-                  h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) })),
-                h('div', { className: 'uxbp-seg' },
-                  ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
-                    key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
-                  }, item === 'all' ? t('all') : statusLabel(item)))))),
-            h('div', { className: 'uxbp-sediment-table' },
-              h('div', { className: 'uxbp-sediment-table-head' },
-                h('span', null, t('taskName')),
-                h('span', null, t('status')),
-                h('span', null, t('skill')),
-                h('span', null, t('recordedAt'))),
-              filteredTasks.length === 0
-                ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
-                : filteredTasks.map(item => h('button', {
-                    key: item.id, type: 'button', className: 'uxbp-sediment-row', onClick: () => void openTask(item),
-                  },
-                  h('span', { className: 'uxbp-sediment-task' },
-                    h('strong', null, item.title),
-                    h('span', null, item.id)),
-                  h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)),
-                  h('span', { className: 'uxbp-sediment-skill' }, (item.skills ?? []).map(nameOf).join(' → ') || '—'),
-                  h('span', { className: 'uxbp-sediment-time' }, formatWhen(item.updatedAt || item.createdAt)))))))
     }
 
     return {
