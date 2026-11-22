@@ -56,6 +56,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: 'Add context or request a change to this task…',
       detailDisabled: 'Continue the task to send a message.',
       noArtifacts: 'No artifacts yet.',
+      artifactSteps: 'Artifact steps',
       editArtifact: 'Edit',
       save: 'Save',
       cancel: 'Cancel',
@@ -118,6 +119,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
       detailDisabled: '继续任务后才能发送消息。',
       noArtifacts: '还没有产物。',
+      artifactSteps: '产物步骤',
       editArtifact: '编辑',
       save: '保存',
       cancel: '取消',
@@ -323,21 +325,29 @@ window.__ModuleLoader__.load({
         padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
-      .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-      .uxbp-detail-heading { min-width: 0; }
-      .uxbp-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; margin: 0 0 8px;
+      .uxbp-detail-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
+      .uxbp-detail-controls, .uxbp-detail-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px 16px; }
+      .uxbp-detail-summary { flex-wrap: wrap; align-items: center; }
+      .uxbp-detail-heading { flex: 1 1 200px; min-width: 0; }
+      .uxbp-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 28px;
         padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 16px; cursor: pointer; }
       .uxbp-detail-back svg { flex: none; width: 20px; height: 20px; }
       .uxbp-detail-heading h1 { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; overflow-wrap: anywhere; }
       .uxbp-detail-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .uxbp-detail-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
       .uxbp-detail-actions .uxbp-btn { min-height: 28px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
-      .uxbp-artifact-tabs { flex: none; display: flex; gap: 2px; margin: 14px 0 10px; padding: 3px; overflow-x: auto;
-        border-radius: 10px; background: var(--soft); scrollbar-width: none; }
-      .uxbp-artifact-tab { flex: none; height: 30px; padding: 0 11px; border: 0; border-radius: 7px; background: transparent;
-        color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
-      .uxbp-artifact-tab:hover { color: var(--ink); }
-      .uxbp-artifact-tab[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-artifact-steps { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px;
+        min-width: 0; max-width: 100%; margin: 0 0 0 auto; padding: 0; list-style: none; }
+      .uxbp-artifact-steps > li { display: flex; align-items: center; gap: 4px; min-width: 0; max-width: 100%; }
+      .uxbp-artifact-steps > li > svg { flex: none; width: 12px; height: 12px; color: var(--faint); }
+      .uxbp-artifact-step { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; min-width: 0; padding: 3px 8px;
+        border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: 12px;
+        text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+      .uxbp-artifact-step:hover { background: var(--soft); color: var(--ink); }
+      .uxbp-artifact-step-number { display: grid; flex: none; place-items: center; min-width: 20px; height: 20px; padding: 0 4px;
+        border-radius: 999px; background: var(--soft); font-size: 11px; font-variant-numeric: tabular-nums; }
+      .uxbp-artifact-step[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 10%, var(--card)); color: var(--ink); }
+      .uxbp-artifact-step[aria-pressed="true"] .uxbp-artifact-step-number { background: var(--ink); color: var(--card); }
       .uxbp-artifact-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
         border: 0; border-radius: 0; background: transparent; box-shadow: none; }
       .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
@@ -1562,6 +1572,16 @@ window.__ModuleLoader__.load({
 
       function renderTaskDetail() {
         if (!task) return null
+        const skillOrder = new Map((task.skills ?? []).map((skill, index) => [skill, index]))
+        const rank = item => skillOrder.get(item.key === 'prd-review-record' ? 'prd-review' : item.skill) ?? skillOrder.size
+        const steps = [...artifacts].sort((a, b) => rank(a) - rank(b))
+        const artifactSteps = steps.length > 0 && h('ol', { className: 'uxbp-artifact-steps', role: 'list', 'aria-label': t('artifactSteps') },
+          ...steps.map((item, index) => h('li', { key: item.key },
+            index > 0 && h(Icon, { path: 'm9 6 6 6-6 6' }),
+            h('button', {
+              type: 'button', className: 'uxbp-artifact-step', 'aria-pressed': item.key === selectedArtifactKey,
+              onClick: () => selectArtifact(item.key),
+            }, h('span', { className: 'uxbp-artifact-step-number', 'aria-hidden': true }, index + 1), h('span', null, item.label)))))
         const meta = selectedArtifact
         const detailStatus = meta?.manualLock
           ? t('manualEdited')
@@ -1591,24 +1611,21 @@ window.__ModuleLoader__.load({
 
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
-            h('div', { className: 'uxbp-detail-heading' },
+            h('div', { className: 'uxbp-detail-controls' },
               h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas },
                 h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }),
                 detailOrigin === 'sediment' ? t('backToSediment') : t('backToTasks')),
-              h('h1', null, task.title || t('taskName')),
-              h('p', null, task.id + ' · ' + formatWhen(task.createdAt))),
-            h('div', { className: 'uxbp-detail-actions' },
-              task.status === 'active'
-                ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
-                : h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('resume') }, t('resume')),
-              h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
-              h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void rename() }, t('rename')))),
-          artifacts.length > 0 && h('div', { className: 'uxbp-artifact-tabs', role: 'tablist' },
-            ...artifacts.map(item => h('button', {
-              key: item.key, type: 'button', role: 'tab', className: 'uxbp-artifact-tab',
-              'data-on': item.key === selectedArtifactKey, 'aria-selected': item.key === selectedArtifactKey,
-              onClick: () => selectArtifact(item.key),
-            }, item.label))),
+              h('div', { className: 'uxbp-detail-actions' },
+                task.status === 'active'
+                  ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
+                  : h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('resume') }, t('resume')),
+                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
+                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void rename() }, t('rename')))),
+            h('div', { className: 'uxbp-detail-summary' },
+              h('div', { className: 'uxbp-detail-heading' },
+                h('h1', null, task.title || t('taskName')),
+                h('p', null, task.id + ' · ' + formatWhen(task.createdAt))),
+              artifactSteps)),
           artifactPanel,
           h('div', { className: 'uxbp-detail-composer' },
             h('textarea', {
