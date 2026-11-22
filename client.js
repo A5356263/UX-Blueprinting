@@ -1,7 +1,7 @@
 window.__ModuleLoader__.load({
   id: 'dsh-ux-blueprinting',
   factory(require) {
-    const { createElement: h, useEffect, useRef, useState, useSyncExternalStore } = require('react')
+    const { createElement: h, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } = require('react')
 
     const id = 'ux-blueprinting'
     const endpoint = '/api/ux-blueprinting/workbench'
@@ -320,14 +320,11 @@ window.__ModuleLoader__.load({
       .uxbp-next-alt:hover { background: var(--soft); }
       .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+      .uxbp-left[data-view="detail"] { padding: 0; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
-        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+        padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
-      .uxbp-left[data-view="detail"] .uxbp-canvas,
-      .uxbp-left[data-view="detail"] .uxbp-composer,
-      .uxbp-left[data-view="sediment"] .uxbp-canvas,
-      .uxbp-left[data-view="sediment"] .uxbp-composer { display: none; }
       .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
       .uxbp-detail-heading { min-width: 0; }
       .uxbp-detail-back { margin: 0 0 8px; padding: 0; border: 0; background: transparent; color: var(--muted);
@@ -427,7 +424,8 @@ window.__ModuleLoader__.load({
         .uxbp-left { padding: 0 18px 12px; }
         .uxbp-plane { padding-top: 24px; }
         .uxbp-aside { padding: 12px 18px 16px; }
-        .uxbp-task-detail, .uxbp-sediment-page { padding: 64px 12px 12px; }
+        .uxbp-task-detail { padding-inline: 12px; }
+        .uxbp-sediment-page { padding: 64px 12px 12px; }
       }
       @container (max-width: 700px) {
         .uxbp-left { --uxbp-card-width: 148px; }
@@ -441,6 +439,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
+      .uxbp-body[data-view="detail"] { padding-top: 0; }
     `
 
     function button(active) {
@@ -1049,6 +1048,9 @@ window.__ModuleLoader__.load({
       const [messageText, setMessageText] = useState('')
       const [messageSending, setMessageSending] = useState(false)
       const canvasRef = useRef(null)
+      const sedimentRef = useRef(null)
+      const canvasScroll = useRef({ left: 0, top: 0 })
+      const sedimentScroll = useRef(0)
       const inputRef = useRef(null)
       const binding = useRef(null)
       const submitting = useRef(false)
@@ -1058,6 +1060,12 @@ window.__ModuleLoader__.load({
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') } catch { return null }
       })())
       const restored = useRef(false)
+      const leftView = viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
+
+      useLayoutEffect(() => {
+        if (leftView === 'canvas') canvasRef.current?.scrollTo(canvasScroll.current)
+        if (leftView === 'sediment' && sedimentRef.current) sedimentRef.current.scrollTop = sedimentScroll.current
+      }, [leftView])
 
       const nameOf = value => catalog.find(item => item.id === (value === 'uxb' ? 'uxs' : value))?.name ?? value
       const formatWhen = value => {
@@ -1158,14 +1166,19 @@ window.__ModuleLoader__.load({
           if (!restored.current) {
             restored.current = true
             const stored = saved.current
+            setTab(stored?.tab === 'sediment' ? 'sediment' : 'task')
             const target = stored?.activeTaskId && (data.tasks ?? []).some(item => item.id === stored.activeTaskId)
               ? stored.activeTaskId
               : ''
             if (target) {
               try {
                 await loadTask(target)
-                setViewMode(stored?.viewMode === 'detail' ? 'detail' : 'canvas')
-                setDetailOrigin(stored?.detailOrigin === 'sediment' ? 'sediment' : 'task')
+                if (stored?.viewMode === 'detail') {
+                  const origin = stored.detailOrigin === 'sediment' ? 'sediment' : 'task'
+                  setTab(origin)
+                  setDetailOrigin(origin)
+                  setViewMode('detail')
+                }
               } catch {}
             } else {
               const session = stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)
@@ -1303,7 +1316,7 @@ window.__ModuleLoader__.load({
 
       function useSkill(skillId) {
         setSkill(skillId)
-        setTab('task')
+        if (leftView !== 'detail') setTab('task')
         inputRef.current?.focus()
       }
 
@@ -1422,9 +1435,8 @@ window.__ModuleLoader__.load({
             await api(null, { action: 'resume', workspaceId: workspace, taskId: item.id })
           }
           await loadTask(item.id)
-          setTab('task')
-          setViewMode('detail')
           setDetailOrigin('sediment')
+          setViewMode('detail')
           save({ workspace, activeTaskId: item.id, viewMode: 'detail', detailOrigin: 'sediment' })
           await loadWorkspaceData(workspace)
         } catch (e) { setError(e.message) }
@@ -1647,7 +1659,10 @@ window.__ModuleLoader__.load({
                 ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
                   key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
                 }, item === 'all' ? t('all') : statusLabel(item)))))),
-          h('div', { className: 'uxbp-sediment-table' },
+          h('div', {
+            className: 'uxbp-sediment-table', ref: sedimentRef,
+            onScroll: event => { sedimentScroll.current = event.currentTarget.scrollTop },
+          },
             h('div', { className: 'uxbp-sediment-table-head' },
               h('span', null, t('taskName')),
               h('span', null, t('status')),
@@ -1670,12 +1685,11 @@ window.__ModuleLoader__.load({
       const status = task ? statusLabel(task.status) : ''
       const outputCount = Object.keys(manifest?.skills ?? {}).length
       const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
-      const leftView = tab === 'sediment' ? 'sediment' : viewMode === 'detail' && task ? 'detail' : 'canvas'
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
-        h('header', { className: 'uxbp-top' },
+        leftView !== 'detail' && h('header', { className: 'uxbp-top' },
           h('div', { className: 'uxbp-brand' },
             h('div', { className: 'uxbp-tabs', role: 'group' },
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('task')),
@@ -1713,10 +1727,13 @@ window.__ModuleLoader__.load({
 
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
 
-        h('div', { className: 'uxbp-body' },
+        h('div', { className: 'uxbp-body', 'data-view': leftView },
             h('section', { className: 'uxbp-left', 'data-view': leftView },
-              h('div', {
+              leftView === 'canvas' && h('div', {
                 ref: canvasRef, className: 'uxbp-canvas',
+                onScroll: event => {
+                  canvasScroll.current = { left: event.currentTarget.scrollLeft, top: event.currentTarget.scrollTop }
+                },
                 onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp,
                 onClickCapture: event => {
                   if (!drag.current.moved) return
@@ -1747,7 +1764,7 @@ window.__ModuleLoader__.load({
                       h('span', { className: 'uxbp-use', role: 'button', tabIndex: 0, onClick: event => { event.stopPropagation(); shakeCard(item.id); useSkill(item.id) } }, t('useSkill'))))
                   }))))),
               ),
-              h('div', { className: 'uxbp-composer' },
+              leftView === 'canvas' && h('div', { className: 'uxbp-composer' },
                 (skill || files.length > 0) && h('div', { className: 'uxbp-chips' },
                   skill && h('span', { className: 'uxbp-chip' },
                     h('span', null, t('skill') + ': ' + nameOf(skill)),
@@ -1786,8 +1803,8 @@ window.__ModuleLoader__.load({
                         try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
                       },
                     }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))),
-              tab === 'task' && viewMode === 'detail' && task && renderTaskDetail(),
-              tab === 'sediment' && renderSedimentPage()
+              leftView === 'detail' && renderTaskDetail(),
+              leftView === 'sediment' && renderSedimentPage()
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             h('aside', { className: 'uxbp-aside' },
