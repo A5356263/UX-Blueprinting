@@ -39,7 +39,9 @@ function directory(root, parts, create) {
 
 export function createWorkbench(ctx, catalog) {
   const registry = ctx.workspaceRegistry
-  const knownSkills = new Set(catalog.list().map(skill => skill.id))
+  const skills = catalog.list()
+  const knownSkills = new Set(skills.map(skill => skill.id))
+  const skillNames = new Set(skills.map(skill => skill.name))
   const queues = new Map()
 
   function serialize(key, task) {
@@ -274,7 +276,7 @@ export function createWorkbench(ctx, catalog) {
   function loadIndex(workspace) {
     baseDir(workspace, true)
     const index = readIndexFile(workspace) ?? { version: 1, next: 1, tasks: [] }
-    if (backfillTaskTitles(workspace, index)) saveIndex(workspace, index)
+    if (migrateTaskTitles(index)) saveIndex(workspace, index)
     return index
   }
 
@@ -307,50 +309,39 @@ export function createWorkbench(ctx, catalog) {
       '  taskId: ' + task.id,
       '  skill: ' + skill,
       '  markdown: 完整 Markdown 正文',
-      '  title: 用一句话清晰命名本次任务（可省略）',
+      '  title: 当前产物的名称（可省略）',
       skill === 'prd-review' ? '若存在阻断或建议，按「PRD 审核记录」格式提交；工作台会保存为 prd-review-record.md，正式基线仍写入 prd-review.md。' : '',
     ].join('\n')
   }
 
-  function taskTitleFromArtifact(skill, title, markdown) {
-    const label = catalog.name(skill)
-    let source = String(title ?? '').trim()
-    if (!source) source = String(markdown ?? '').match(/^#\s+(.+)$/m)?.[1]?.trim() ?? ''
-    source = source.replace(/^#+\s*/, '')
-    source = source.replace(/^(正式需求基线|PRD 审核记录|需求确认记录|页面生成规格|体验策略|需求审核与基线|页面规格)\s*[：:·\-]?\s*/, '')
-    source = source.replace(/\s+/g, ' ').trim()
-    if (!source || source === label) return ''
-    return label + ' · ' + source.slice(0, 80)
+  function stripLegacySkillTitle(value) {
+    const title = typeof value === 'string' ? value.trim() : ''
+    if (skillNames.has(title)) return ''
+    const separator = title.indexOf(' · ')
+    if (separator >= 0 && skillNames.has(title.slice(0, separator))) {
+      return title.slice(separator + 3).trim()
+    }
+    return title
   }
 
-  function backfillTaskTitles(workspace, index) {
+  function migrateTaskTitles(index) {
     let changed = false
-    const skillNames = new Set(catalog.list().map(item => item.name))
     for (const task of index.tasks) {
-      if (task.titleSource === 'manual') continue
-      const generic = !task.title || skillNames.has(task.title) ||
-        task.title === catalog.name(task.lastSkill) ||
-        task.title === catalog.name(task.skills?.[0])
-      if (!task.titleSource && !generic) {
-        task.titleSource = 'manual'
-        changed = true
-        continue
-      }
-      if (!generic) continue
-      const manifest = loadManifest(workspace, task.id)
-      const latest = Object.values(manifest.skills)
-        .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0]
-      if (!latest) continue
-      const title = taskTitleFromArtifact(latest.skill ?? task.lastSkill, latest.title, '')
-      if (!title) continue
-      task.title = title
-      task.titleSource = 'ai'
-      task.updatedAt = new Date().toISOString()
+      if (task.titleSource !== 'auto' && task.titleSource !== 'ai') continue
+      task.title = stripLegacySkillTitle(task.title) || task.id
+      task.titleSource = 'legacy'
       changed = true
     }
     return changed
   }
 
+  function titleFromInput(body, taskId) {
+    const firstLine = typeof body.text === 'string' ? body.text.trim().split(/\r\n?|\n/, 1)[0].trim().replace(/\s+/g, ' ') : ''
+    const fileName = typeof body.fileName === 'string' ? body.fileName.trim() : ''
+    const title = firstLine || fileName || stripLegacySkillTitle(body.title) || taskId
+    const chars = Array.from(title)
+    return chars.length > 36 ? chars.slice(0, 35).join('') + '…' : title
+  }
 
   async function createTask(workspace, body) {
     const skill = normalizeSkillId(String(body.skill ?? ''))
@@ -370,8 +361,8 @@ export function createWorkbench(ctx, catalog) {
     index.next += 1
     const task = {
       id,
-      title: String(body.title ?? '').trim().slice(0, 80) || catalog.name(skill),
-      titleSource: 'auto',
+      title: titleFromInput(body, id),
+      titleSource: 'input',
       status: 'active',
       sessionId,
       segments: [{ startSeq: seqOf(sessionId), endSeq: null }],
@@ -563,13 +554,6 @@ export function createWorkbench(ctx, catalog) {
       saveManifest(workspace, taskId, manifest)
       task.skills = [...new Set([...(task.skills ?? []).map(normalizeSkillId), skill])]
       task.lastSkill = skill
-      if (task.titleSource !== 'manual') {
-        const nextTitle = taskTitleFromArtifact(skill, title, markdown)
-        if (nextTitle) {
-          task.title = nextTitle
-          task.titleSource = 'ai'
-        }
-      }
       task.updatedAt = now
       saveIndex(workspace, index)
       return {

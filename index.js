@@ -26,7 +26,7 @@ export function apply(ctx) {
         taskId: { type: 'string', description: '任务 ID，来自本轮任务指令' },
         skill: { type: 'string', description: '本轮 Skill id' },
         markdown: { type: 'string', description: '完整 Markdown 产物' },
-        title: { type: 'string', description: '建议用一句清晰的任务/产物名称，可省略' },
+        title: { type: 'string', description: '当前产物的名称，可省略' },
       },
       required: ['taskId', 'skill', 'markdown'],
       additionalProperties: false,

@@ -11,7 +11,8 @@ window.__ModuleLoader__.load({
     const en = {
       title: 'Design workbench',
       task: 'Tasks',
-      sediment: 'Recents',
+      skillsTab: 'Skills',
+      sediment: 'Artifacts',
       workspace: 'Workspace',
       reset: 'Reset workbench',
       useSkill: 'Use skill',
@@ -43,8 +44,6 @@ window.__ModuleLoader__.load({
       idle: 'Not started',
       progress: 'Progress',
       outputs: 'outputs',
-      total: 'Total',
-      items: 'items',
       board: 'Board',
       list: 'List',
       searchTasks: 'Search tasks',
@@ -64,7 +63,7 @@ window.__ModuleLoader__.load({
       loading: 'Loading…',
       send: 'Send',
       backToTasks: 'Back to task canvas',
-      backToSediment: 'Back to recents',
+      backToSediment: 'Back to artifacts',
       stale: 'May be stale',
       recordedAt: 'Recorded',
       taskName: 'Task',
@@ -74,7 +73,8 @@ window.__ModuleLoader__.load({
     const zh = {
       title: '设计工作台',
       task: '任务',
-      sediment: '沉淀',
+      skillsTab: '技能',
+      sediment: '产物',
       workspace: '工作区',
       reset: '重置工作台',
       useSkill: '使用 Skill',
@@ -97,7 +97,7 @@ window.__ModuleLoader__.load({
       noTask: '选择一张技能卡片开始。',
       noDialogue: '这个任务还没有对话。',
       noNext: '暂无后续建议。',
-      emptySediment: '还没有沉淀的任务。',
+      emptySediment: '还没有任务记录。',
       search: '搜索任务',
       all: '全部',
       active: '进行中',
@@ -106,8 +106,6 @@ window.__ModuleLoader__.load({
       idle: '未开始',
       progress: '任务进度',
       outputs: '产物',
-      total: '共',
-      items: '条',
       board: '看板',
       list: '表格',
       searchTasks: '搜索任务',
@@ -127,7 +125,7 @@ window.__ModuleLoader__.load({
       loading: '加载中…',
       send: '发送',
       backToTasks: '返回任务画布',
-      backToSediment: '返回沉淀',
+      backToSediment: '返回产物',
       stale: '可能过期',
       recordedAt: '记录于',
       taskName: '任务',
@@ -365,21 +363,19 @@ window.__ModuleLoader__.load({
       .uxbp-md pre { margin: .8em 0; padding: 10px; overflow: auto; border-radius: 8px; background: var(--soft); font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
       .uxbp-md .uxbp-md-table { white-space: pre; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
-      .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;
-        padding: 0 0 18px; border-bottom: .5px solid var(--line); }
-      .uxbp-sediment-heading h1 { margin: 0; font-size: 34px; line-height: 1.15; font-weight: 500; letter-spacing: -.02em; }
-      .uxbp-sediment-heading p { margin: 6px 0 0; color: var(--muted); font-size: 12.5px; }
-      .uxbp-sediment-tools { display: flex; align-items: center; gap: 8px; flex: none; }
-      .uxbp-search { display: flex; align-items: center; gap: 7px; width: 280px; height: 38px; padding: 0 11px;
+      .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-bottom: 12px; }
+      .uxbp-search { display: flex; align-items: center; gap: 7px; box-sizing: border-box; width: 280px; max-width: 100%; height: 38px;
+        margin-inline-start: auto; padding: 0 11px;
         border: .5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--muted); }
       .uxbp-search:focus-within { border-color: var(--line-strong); }
       .uxbp-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
       .uxbp-search input::placeholder { color: var(--faint); }
-      .uxbp-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--soft); }
+      .uxbp-seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 10px; background: var(--soft); }
       .uxbp-seg button { height: 30px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted);
-        font: inherit; font-size: 12px; cursor: pointer; transition: background .18s, color .18s; }
+        font: inherit; font-size: 12px; white-space: nowrap; cursor: pointer; transition: background .18s, color .18s; }
       .uxbp-seg button:hover { color: var(--ink); background: color-mix(in srgb, var(--card) 55%, transparent); }
       .uxbp-seg button[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-seg-count { margin-inline-start: 6px; opacity: .75; font-variant-numeric: tabular-nums; }
       .uxbp-sediment-board { flex: 1; min-height: 0; overflow: auto; padding: 16px 0; display: grid; gap: 14px;
         grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); align-content: start; }
       .uxbp-sediment-card { display: flex; flex-direction: column; gap: 8px; min-height: 150px; padding: 15px;
@@ -1073,14 +1069,6 @@ window.__ModuleLoader__.load({
         if (Number.isNaN(date.getTime())) return '—'
         return new Intl.DateTimeFormat(undefined, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date)
       }
-      const deriveTaskTitle = (skillId, value, attachments) => {
-        const label = nameOf(skillId)
-        const line = String(value ?? '').trim().split(/\r?\n/)[0].replace(/\s+/g, ' ')
-        const subject = line.length > 36 ? line.slice(0, 35) + '…' : line
-        if (subject) return label + ' · ' + subject
-        const file = attachments?.[0]?.name?.replace(/\.[^.]+$/, '')
-        return file ? label + ' · ' + file : label
-      }
       const taskId = task?.id ?? ''
       const selectedArtifact = artifacts.find(item => item.key === selectedArtifactKey) ?? null
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
@@ -1102,12 +1090,6 @@ window.__ModuleLoader__.load({
         paused: tasks.filter(item => item.status === 'paused').length,
         completed: tasks.filter(item => item.status === 'completed').length,
       }
-      const sedimentStats = [
-        counts.all ? t('total') + ' ' + counts.all + ' ' + t('items') : '',
-        counts.active ? counts.active + ' ' + t('active') : '',
-        counts.paused ? counts.paused + ' ' + t('paused') : '',
-        counts.completed ? counts.completed + ' ' + t('completed') : '',
-      ].filter(Boolean)
 
       function save(value) {
         try {
@@ -1369,7 +1351,7 @@ window.__ModuleLoader__.load({
           if (!current) {
             const data = await api(null, {
               action: 'create-task', workspaceId: workspace, sessionId: targetSession, skill,
-              title: deriveTaskTitle(skill, text, files), text,
+              text, fileName: files[0]?.name,
             })
             current = data.task
             prompt = data.prompt
@@ -1648,17 +1630,13 @@ window.__ModuleLoader__.load({
       function renderSedimentPage() {
         return h('section', { className: 'uxbp-sediment-page' },
           h('div', { className: 'uxbp-sediment-head' },
-            h('div', { className: 'uxbp-sediment-heading' },
-              h('h1', null, t('sediment')),
-              sedimentStats.length > 0 && h('p', null, sedimentStats.join(' · '))),
-            h('div', { className: 'uxbp-sediment-tools' },
-              h('label', { className: 'uxbp-search' },
-                h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
-                h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) })),
-              h('div', { className: 'uxbp-seg' },
-                ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
-                  key: item, type: 'button', 'data-on': filter === item, onClick: () => setFilter(item),
-                }, item === 'all' ? t('all') : statusLabel(item)))))),
+            h('div', { className: 'uxbp-seg' },
+              ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
+                key: item, type: 'button', 'data-on': filter === item, 'aria-pressed': filter === item, onClick: () => setFilter(item),
+              }, (item === 'all' ? t('all') : statusLabel(item)) + ' ', h('span', { className: 'uxbp-seg-count' }, counts[item])))),
+            h('label', { className: 'uxbp-search' },
+              h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
+              h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) }))),
           h('div', {
             className: 'uxbp-sediment-table', ref: sedimentRef,
             onScroll: event => { sedimentScroll.current = event.currentTarget.scrollTop },
@@ -1692,7 +1670,7 @@ window.__ModuleLoader__.load({
         leftView !== 'detail' && h('header', { className: 'uxbp-top' },
           h('div', { className: 'uxbp-brand' },
             h('div', { className: 'uxbp-tabs', role: 'group' },
-              h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('task')),
+              h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('skillsTab')),
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'sediment', onClick: () => setTab('sediment') }, t('sediment')))),
           h('div', { className: 'uxbp-right-top' },
             h('div', { className: 'uxbp-picker' },
