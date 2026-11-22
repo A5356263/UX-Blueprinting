@@ -322,12 +322,13 @@ window.__ModuleLoader__.load({
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
-        padding: 64px 18px 16px; background: var(--bg); overflow: hidden; }
+        padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
       .uxbp-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
       .uxbp-detail-heading { min-width: 0; }
-      .uxbp-detail-back { margin: 0 0 8px; padding: 0; border: 0; background: transparent; color: var(--muted);
-        font: inherit; font-size: 12px; cursor: pointer; }
-      .uxbp-detail-heading h1 { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; }
+      .uxbp-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; margin: 0 0 8px;
+        padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 16px; cursor: pointer; }
+      .uxbp-detail-back svg { flex: none; width: 20px; height: 20px; }
+      .uxbp-detail-heading h1 { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; overflow-wrap: anywhere; }
       .uxbp-detail-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .uxbp-detail-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
       .uxbp-detail-actions .uxbp-btn { min-height: 28px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
@@ -385,7 +386,7 @@ window.__ModuleLoader__.load({
       .uxbp-sediment-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
       .uxbp-sediment-card-head strong { font-size: 14px; line-height: 21px; font-weight: 600; }
       .uxbp-sediment-skills { margin-top: auto; color: var(--muted); font-size: 12px; line-height: 18px; }
-      .uxbp-sediment-table { flex: 1; min-height: 0; overflow: auto; border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-sediment-table { flex: 1; min-height: 0; overflow: auto; border: .5px solid var(--line); border-radius: 16px; background: var(--card); }
       .uxbp-sediment-table-head, .uxbp-sediment-row { display: grid; grid-template-columns: minmax(0, 1.7fr) 90px minmax(0, 1fr) 112px;
         gap: 14px; align-items: center; width: 100%; padding: 0 16px; }
       .uxbp-sediment-table-head { position: sticky; top: 0; z-index: 1; min-height: 38px; color: var(--muted);
@@ -421,7 +422,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding-top: 24px; }
         .uxbp-aside { padding: 12px 18px 16px; }
         .uxbp-task-detail { padding-inline: 12px; }
-        .uxbp-sediment-page { padding: 64px 12px 12px; }
+        .uxbp-sediment-page { padding-right: 12px; padding-bottom: 12px; }
       }
       @container (max-width: 700px) {
         .uxbp-left { --uxbp-card-width: 148px; }
@@ -1591,9 +1592,11 @@ window.__ModuleLoader__.load({
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
             h('div', { className: 'uxbp-detail-heading' },
-              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas }, '← ' + (detailOrigin === 'sediment' ? t('backToSediment') : t('backToTasks'))),
-              h('h1', null, task.id),
-              h('p', null, task.title + ' · ' + formatWhen(task.createdAt))),
+              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas },
+                h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }),
+                detailOrigin === 'sediment' ? t('backToSediment') : t('backToTasks')),
+              h('h1', null, task.title || t('taskName')),
+              h('p', null, task.id + ' · ' + formatWhen(task.createdAt))),
             h('div', { className: 'uxbp-detail-actions' },
               task.status === 'active'
                 ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
