@@ -16,7 +16,6 @@ window.__ModuleLoader__.load({
       workspace: 'Workspace',
       reset: 'Reset workbench',
       useSkill: 'Use skill',
-      newTask: 'New task',
       pause: 'Pause',
       resume: 'Resume',
       rename: 'Rename',
@@ -59,16 +58,15 @@ window.__ModuleLoader__.load({
       backToTasks: 'Back to task canvas',
       backToSediment: 'Back to artifacts',
       latestTask: 'Latest task',
-      currentStage: 'Current stage',
+      currentStage: 'Steps',
       taskActions: 'Task actions',
       finishTask: 'End task',
       continueTask: 'Continue task',
-      taskEnded: 'Task ended',
       finishQuestion: 'End this task?',
       artifactReady: ' is ready',
-      workingOn: 'Running ',
-      awaiting: 'Waiting for confirmation · ',
-      awaitingOutput: 'Awaiting output · ',
+      workingOn: 'Running',
+      awaiting: 'Pending confirmation',
+      awaitingOutput: 'Awaiting output',
       viewPending: 'View pending item',
       confirmOutput: 'Confirm artifact',
       needsReview: 'Needs review',
@@ -88,7 +86,6 @@ window.__ModuleLoader__.load({
       workspace: '工作区',
       reset: '重置工作台',
       useSkill: '使用 Skill',
-      newTask: '新建任务',
       pause: '暂停',
       resume: '恢复',
       rename: '重命名',
@@ -131,16 +128,15 @@ window.__ModuleLoader__.load({
       backToTasks: '返回任务画布',
       backToSediment: '返回产物',
       latestTask: '最新任务',
-      currentStage: '做到哪一步',
+      currentStage: '步骤',
       taskActions: '任务操作',
       finishTask: '结束任务',
       continueTask: '继续任务',
-      taskEnded: '任务已结束',
       finishQuestion: '是否结束任务？',
       artifactReady: '已生成',
       workingOn: '正在执行',
-      awaiting: '等待确认 · ',
-      awaitingOutput: '等待产物 · ',
+      awaiting: '待确认',
+      awaitingOutput: '待产出',
       viewPending: '查看待确认项',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
@@ -305,21 +301,37 @@ window.__ModuleLoader__.load({
         padding: 14px 18px 16px 16px; }
       .uxbp-panel-head { flex: none; display: grid; gap: 5px; padding-bottom: 12px; border-bottom: .5px solid var(--line); }
       .uxbp-overview-top, .uxbp-taskline { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-      .uxbp-overview-top { align-items: center; }
-      .uxbp-overview-label, .uxbp-overview-section h3 { margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+      .uxbp-overview-heading { min-width: 0; }
+      .uxbp-overview-section h3 { margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+      .uxbp-taskline { justify-content: flex-start; align-items: baseline; flex-wrap: wrap; gap: 4px 6px; }
       .uxbp-taskline h2 { margin: 0; min-width: 0; font-size: 17px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-taskline .uxbp-status { font-size: 10px; }
+      .uxbp-overview-heading .uxbp-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
       .uxbp-meta { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
       .uxbp-overview-actions .uxbp-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; }
       .uxbp-overview-actions .uxbp-menu { min-width: 136px; }
       .uxbp-overview-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 16px; }
       .uxbp-overview-section { flex: none; padding-top: 4px; }
       .uxbp-overview-section h3 { margin-bottom: 7px; }
-      .uxbp-current-stage { margin: 0; color: var(--ink); font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
-      .uxbp-next-card { padding: 12px; border: .5px solid color-mix(in srgb, var(--accent) 22%, var(--line)); border-radius: 12px;
-        background: color-mix(in srgb, var(--accent) 6%, var(--card)); }
-      .uxbp-next-card strong { display: block; font-size: 14px; font-weight: 600; }
-      .uxbp-next-card p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-      .uxbp-next-card .uxbp-btn { margin-top: 10px; min-height: 30px; font-size: 12px; }
+      .uxbp-step-list { list-style: none; margin: 0; padding: 0; }
+      .uxbp-step-list li { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: 7px;
+        min-height: 30px; padding: 3px 2px; font-size: 13px; overflow-wrap: anywhere; }
+      .uxbp-step-list svg { width: 14px; height: 14px; color: var(--faint); }
+      .uxbp-step-list [data-done="true"] svg { color: #216b51; }
+      .uxbp-step-list [aria-current="step"] { border-radius: 6px; background: var(--soft); }
+      .uxbp-step-list [aria-current="step"] svg { color: var(--accent); }
+      .uxbp-next-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden;
+        border: .5px solid var(--line); border-radius: 14px; background: var(--card); }
+      .uxbp-next-card .uxbp-art { aspect-ratio: 2.6 / 1; border-radius: 10px; }
+      .uxbp-next-card .uxbp-card-body { padding: 8px 10px 0; }
+      .uxbp-next-card .uxbp-card-body strong { display: block; font-size: 14px; line-height: 20px; }
+      .uxbp-next-card .uxbp-card-body p { display: block; font-size: 12px; line-height: 17px; }
+      .uxbp-next-card .uxbp-card-foot { gap: 6px; padding-top: 9px; }
+      .uxbp-next-card .uxbp-card-foot code { font-size: 11px; }
+      .uxbp-next-card .uxbp-use { margin-inline-start: auto; background: var(--ink); color: var(--card);
+        border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
+      .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
+      .uxbp-next-card .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
       .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
       .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto 12px; gap: 7px; align-items: center;
         padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
@@ -1286,7 +1298,14 @@ window.__ModuleLoader__.load({
       }
 
       function useSkill(skillId) {
-        if (handoff?.skill !== skillId) setHandoff(null)
+        if (submitting.current) return
+        if (task) {
+          clearTask()
+          browseReturn.current = null
+          setSessionId('')
+          save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas', tab: 'task' })
+        }
+        setHandoff(null)
         setSkill(skillId)
         if (leftView !== 'detail') setTab('task')
         inputRef.current?.focus()
@@ -1368,6 +1387,7 @@ window.__ModuleLoader__.load({
           } finally { ref.release() }
           setText('')
           setFiles([])
+          setSkill('')
           setHandoff(null)
           browseReturn.current = null
           setViewMode('detail')
@@ -1432,19 +1452,6 @@ window.__ModuleLoader__.load({
           save({ tab: 'task', viewMode: 'canvas' })
           requestAnimationFrame(() => inputRef.current?.focus())
         } catch (e) { setError(e.message) }
-      }
-
-      async function newTask() {
-        if (artifactSaving || messageSending || sending) return
-        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
-        clearTask()
-        browseReturn.current = null
-        cancelEdit()
-        setHandoff(null); setSessionId('')
-        setViewMode('canvas')
-        setTab('task')
-        save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas', tab: 'task' })
-        await loadWorkspaceData(workspace)
       }
 
       async function respondToFinish(complete) {
@@ -1612,49 +1619,64 @@ window.__ModuleLoader__.load({
         const closed = latest?.status === 'completed'
         const paused = latest?.status === 'paused'
         const recommendation = overview?.next?.[0]
-        const stageName = nameOf(latest?.round?.skill || latest?.lastSkill || '')
-        const current = overview?.output ?? overview?.artifacts?.reduce((recent, item) =>
-          !item.stale && !isPending(item) && (!recent || item.updatedAt >= recent.updatedAt) ? item : recent, null)
-        const ready = current && (!latest?.round || overview?.output)
-        const stage = closed ? t('taskEnded') : paused ? t('paused') : latestRunning === true
-          ? t('workingOn') + stageName : pending
-            ? t('awaiting') + pending.label : ready
-              ? current.label + t('artifactReady') : t('awaitingOutput') + stageName
+        const currentSkill = latest?.round?.skill || latest?.lastSkill
+        const recorded = overview?.artifacts ?? []
+        const steps = (latest?.skills ?? []).map(id => {
+          const artifact = recorded.find(item => item.key !== 'prd-review-record' && item.skill === id)
+          const current = !closed && id === currentSkill
+          const executing = current && !paused && latestRunning === true
+          const waiting = (pending?.skill ?? (pending?.key === 'prd-review-record' ? 'prd-review' : pending?.key)) === id
+          const awaitingRound = current && latest.round && !overview.output
+          const done = Boolean(artifact && !artifact.stale && !isPending(artifact) && !executing && !awaitingRound)
+          const status = executing ? 'workingOn' : waiting ? 'awaiting' : done ? 'completed'
+            : artifact?.stale ? 'needsReview' : current && paused ? 'paused' : 'awaitingOutput'
+          return { id, current, done, status }
+        })
         const origin = leftView === 'detail' ? detailOrigin : tab
         const done = (overview?.artifacts ?? []).filter(item => !isPending(item) ||
           (item.key === 'prd-review-record' && overview.artifacts.some(artifact => artifact.key === 'prd-review')))
         return h('aside', { className: 'uxbp-aside', 'aria-label': t('latestTask') },
           h('header', { className: 'uxbp-panel-head' },
             h('div', { className: 'uxbp-overview-top' },
-              h('span', { className: 'uxbp-overview-label' }, t('latestTask')),
-              latest && h('div', { className: 'uxbp-picker uxbp-overview-actions' },
+              h('div', { className: 'uxbp-overview-heading' },
+                h('div', { className: 'uxbp-taskline' },
+                  h('h2', null, latest?.title ?? t('latestTask')),
+                  latest && h('span', { className: 'uxbp-status' }, t('latestTask'))),
+                latest && h('div', { className: 'uxbp-meta' }, latest.id,
+                  h('span', { className: 'uxbp-status', 'data-status': latest.status }, statusLabel(latest.status)))),
+              latest && !closed && h('div', { className: 'uxbp-picker uxbp-overview-actions' },
                 h('button', { type: 'button', className: 'uxbp-btn', 'aria-label': t('taskActions'),
                   'aria-expanded': openMenu === 'task-actions',
                   onClick: () => setOpenMenu(openMenu === 'task-actions' ? '' : 'task-actions') },
                 h(Icon, { path: 'M5 12h.1m6.9 0h.1m6.9 0h.1' })),
                 openMenu === 'task-actions' && h('div', { className: 'uxbp-menu' },
-                  !closed && h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                  h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
                     onClick: () => { setOpenMenu(''); void action(paused ? 'resume' : 'pause', {}, latest) } }, t(paused ? 'resume' : 'pause')),
-                  !closed && h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
-                    onClick: () => { setOpenMenu(''); void action('complete', {}, latest) } }, t('finishTask')),
-                  h('button', { type: 'button', className: 'uxbp-option',
-                    onClick: () => { setOpenMenu(''); void newTask() } }, t('newTask'))))),
-            latest && h('div', { className: 'uxbp-taskline' },
-              h('h2', null, latest.title), h('span', { className: 'uxbp-status', 'data-status': latest.status }, statusLabel(latest.status))),
-            latest && h('div', { className: 'uxbp-meta' }, latest.id)),
+                  h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                    onClick: () => { setOpenMenu(''); void action('complete', {}, latest) } }, t('finishTask')))))),
           h('div', { className: 'uxbp-overview-body' },
             overviewError && h('p', { className: 'uxbp-empty', role: 'status' }, t('overviewUnavailable')),
             !latest && !overviewError && h('p', { className: 'uxbp-empty' }, t('noTask')),
-            latest && h('section', { className: 'uxbp-overview-section' },
-              h('h3', null, t('currentStage')), h('p', { className: 'uxbp-current-stage', role: 'status' }, stage)),
+            steps.length > 0 && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('currentStage')),
+              h('ol', { className: 'uxbp-step-list', role: 'list' },
+                ...steps.map(step => h('li', {
+                  key: step.id, 'data-done': step.done, 'aria-current': step.current ? 'step' : undefined,
+                }, h(Icon, { path: step.done ? 'm5 12 4 4L19 6' : 'M16 12a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z' }),
+                h('span', null, nameOf(step.id)),
+                h('span', { className: 'uxbp-meta' }, t(step.status)))))),
             latest && !closed && (pending || recommendation) && h('section', { className: 'uxbp-overview-section' },
               h('h3', null, t('next')),
               h('div', { className: 'uxbp-next-card' },
-                h('strong', null, pending?.label ?? recommendation.name),
-                !pending && h('p', null, recommendation.reason),
-                h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: !pending && latestBusy,
-                  onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
-                t(pending ? 'viewPending' : 'useSkill')))),
+                !pending && h('div', { className: 'uxbp-art' }, h(SkillArt, { skillId: recommendation.id })),
+                h('div', { className: 'uxbp-card-body' },
+                  h('strong', null, pending?.label ?? recommendation.name),
+                  !pending && h('p', null, recommendation.reason)),
+                h('div', { className: 'uxbp-card-foot' },
+                  !pending && h('code', null, '/' + recommendation.id),
+                  h('button', { type: 'button', className: 'uxbp-use', disabled: !pending && latestBusy,
+                    onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
+                  t(pending ? 'viewPending' : 'useSkill'))))),
             latest && h('section', { className: 'uxbp-overview-section' },
               h('h3', null, t('completed')),
               done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))
