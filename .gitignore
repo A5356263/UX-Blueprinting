@@ -10,6 +10,7 @@
 !/input/
 !/skill/
 !/spec/
+!/myguize.md
 
 __pycache__/
 *.pyc
@@ -26,5 +27,4 @@ test/
 spark-output/
 out/
 plugin/
-myguize.md
 V0.2User Manual.md
