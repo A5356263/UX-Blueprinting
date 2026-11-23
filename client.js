@@ -18,7 +18,6 @@ window.__ModuleLoader__.load({
       useSkill: 'Use skill',
       newTask: 'New task',
       pause: 'Pause',
-      end: 'Finish',
       resume: 'Resume',
       rename: 'Rename',
       skill: 'Skill',
@@ -29,12 +28,8 @@ window.__ModuleLoader__.load({
       execute: 'Run task',
       enter: 'Go to conversation',
       stop: 'Stop',
-      dynamics: 'Activity',
-      dialogue: 'Conversation',
       next: 'Next',
       noTask: 'Pick a skill card to start.',
-      noDialogue: 'No messages in this task yet.',
-      noNext: 'No suggestion yet.',
       emptySediment: 'No tasks yet.',
       search: 'Search tasks',
       all: 'All',
@@ -42,8 +37,6 @@ window.__ModuleLoader__.load({
       paused: 'Paused',
       completed: 'Completed',
       idle: 'Not started',
-      progress: 'Progress',
-      outputs: 'outputs',
       board: 'Board',
       list: 'List',
       searchTasks: 'Search tasks',
@@ -65,6 +58,22 @@ window.__ModuleLoader__.load({
       send: 'Send',
       backToTasks: 'Back to task canvas',
       backToSediment: 'Back to artifacts',
+      latestTask: 'Latest task',
+      currentStage: 'Current stage',
+      taskActions: 'Task actions',
+      finishTask: 'End task',
+      continueTask: 'Continue task',
+      taskEnded: 'Task ended',
+      finishQuestion: 'End this task?',
+      artifactReady: ' is ready',
+      workingOn: 'Running ',
+      awaiting: 'Waiting for confirmation · ',
+      awaitingOutput: 'Awaiting output · ',
+      viewPending: 'View pending item',
+      confirmOutput: 'Confirm artifact',
+      needsReview: 'Needs review',
+      handoff: 'Continue ',
+      overviewUnavailable: 'Unable to load the latest task.',
       stale: 'May be stale',
       recordedAt: 'Recorded',
       taskName: 'Task',
@@ -81,7 +90,6 @@ window.__ModuleLoader__.load({
       useSkill: '使用 Skill',
       newTask: '新建任务',
       pause: '暂停',
-      end: '结束',
       resume: '恢复',
       rename: '重命名',
       skill: '技能',
@@ -92,12 +100,8 @@ window.__ModuleLoader__.load({
       execute: '执行任务',
       enter: '跳转至会话',
       stop: '停止',
-      dynamics: '动态',
-      dialogue: '对话',
       next: '下一步',
       noTask: '选择一张技能卡片开始。',
-      noDialogue: '这个任务还没有对话。',
-      noNext: '暂无后续建议。',
       emptySediment: '还没有任务记录。',
       search: '搜索任务',
       all: '全部',
@@ -105,8 +109,6 @@ window.__ModuleLoader__.load({
       paused: '已暂停',
       completed: '已完成',
       idle: '未开始',
-      progress: '任务进度',
-      outputs: '产物',
       board: '看板',
       list: '表格',
       searchTasks: '搜索任务',
@@ -128,6 +130,22 @@ window.__ModuleLoader__.load({
       send: '发送',
       backToTasks: '返回任务画布',
       backToSediment: '返回产物',
+      latestTask: '最新任务',
+      currentStage: '做到哪一步',
+      taskActions: '任务操作',
+      finishTask: '结束任务',
+      continueTask: '继续任务',
+      taskEnded: '任务已结束',
+      finishQuestion: '是否结束任务？',
+      artifactReady: '已生成',
+      workingOn: '正在执行',
+      awaiting: '等待确认 · ',
+      awaitingOutput: '等待产物 · ',
+      viewPending: '查看待确认项',
+      confirmOutput: '确认此产物',
+      needsReview: '待复核',
+      handoff: '承接任务 ',
+      overviewUnavailable: '暂时无法加载最新任务。',
       stale: '可能过期',
       recordedAt: '记录于',
       taskName: '任务',
@@ -285,40 +303,40 @@ window.__ModuleLoader__.load({
         background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 9%, var(--card)); font-size: 12px; }
       .uxbp-aside { min-width: 0; min-height: 0; height: 100%; display: flex; flex-direction: column; gap: 10px;
         padding: 14px 18px 16px 16px; }
-      .uxbp-panel { min-height: 0; height: 100%; display: flex; flex-direction: column; border: 0; border-radius: 0;
-        background: transparent; box-shadow: none; overflow: hidden; }
-      .uxbp-panel-head { flex: none; padding: 0 0 12px; border-bottom: .5px solid var(--line); }
-      .uxbp-taskline { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
-      .uxbp-taskline strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
-      .uxbp-meta { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-      .uxbp-actions { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
-      .uxbp-actions .uxbp-btn { min-height: 27px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
-      .uxbp-subtabs { display: flex; gap: 3px; margin-top: 9px; }
-      .uxbp-subtab { height: 28px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: var(--muted);
-        font: inherit; font-size: 12px; cursor: pointer; }
-      .uxbp-subtab[data-on="true"] { background: var(--soft); color: var(--ink); font-weight: 650; }
-      .uxbp-subtab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
-      .uxbp-scroll { flex: 1 1 auto; min-height: 160px; overflow: auto; padding: 10px 0; }
-      .uxbp-node { padding: 9px 0; border-bottom: .5px solid color-mix(in srgb, var(--line) 65%, transparent); }
-      .uxbp-node:last-child { border-bottom: 0; }
-      .uxbp-node-head { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
-      .uxbp-node-head strong { font-size: 12.5px; font-weight: 600; }
-      .uxbp-node pre { margin: 7px 0 0; max-height: 260px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere;
-        font: 11.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
-      .uxbp-msg { padding: 7px 0; font-size: 12.5px; line-height: 20px; white-space: pre-wrap; overflow-wrap: anywhere; }
-      .uxbp-msg b { color: var(--muted); font-size: 11px; font-weight: 650; }
-      .uxbp-next { flex: 0 0 26%; min-height: 120px; overflow: auto; padding: 12px 0 0; border-top: .5px solid var(--line); }
-      .uxbp-next h3 { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 650; }
-      .uxbp-next-main { width: 100%; text-align: left; padding: 11px; border: .5px solid color-mix(in srgb, var(--accent) 40%, var(--line));
-        border-radius: 11px; background: color-mix(in srgb, var(--accent) 8%, var(--card)); color: var(--ink);
-        font: inherit; cursor: pointer; }
-      .uxbp-next-main:hover { background: color-mix(in srgb, var(--accent) 13%, var(--card)); }
-      .uxbp-next-main strong { display: block; font-size: 13px; font-weight: 600; }
-      .uxbp-next-main span { display: block; margin-top: 4px; color: var(--muted); font-size: 11.5px; line-height: 18px; }
-      .uxbp-next-alt { width: 100%; text-align: left; padding: 8px 4px; border: 0; border-bottom: .5px solid var(--line);
-        background: transparent; color: var(--ink); font: inherit; font-size: 12px; cursor: pointer; }
-      .uxbp-next-alt:hover { background: var(--soft); }
-      .uxbp-next-alt span { display: block; color: var(--muted); font-size: 11px; line-height: 17px; }
+      .uxbp-panel-head { flex: none; display: grid; gap: 5px; padding-bottom: 12px; border-bottom: .5px solid var(--line); }
+      .uxbp-overview-top, .uxbp-taskline { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      .uxbp-overview-top { align-items: center; }
+      .uxbp-overview-label, .uxbp-overview-section h3 { margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+      .uxbp-taskline h2 { margin: 0; min-width: 0; font-size: 17px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-meta { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+      .uxbp-overview-actions .uxbp-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; }
+      .uxbp-overview-actions .uxbp-menu { min-width: 136px; }
+      .uxbp-overview-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 16px; }
+      .uxbp-overview-section { flex: none; padding-top: 4px; }
+      .uxbp-overview-section h3 { margin-bottom: 7px; }
+      .uxbp-current-stage { margin: 0; color: var(--ink); font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-next-card { padding: 12px; border: .5px solid color-mix(in srgb, var(--accent) 22%, var(--line)); border-radius: 12px;
+        background: color-mix(in srgb, var(--accent) 6%, var(--card)); }
+      .uxbp-next-card strong { display: block; font-size: 14px; font-weight: 600; }
+      .uxbp-next-card p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .uxbp-next-card .uxbp-btn { margin-top: 10px; min-height: 30px; font-size: 12px; }
+      .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
+      .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto 12px; gap: 7px; align-items: center;
+        padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
+        font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+      .uxbp-output-row:hover { background: var(--soft); }
+      .uxbp-output-row > span { overflow-wrap: anywhere; }
+      .uxbp-output-row > svg { width: 13px; height: 13px; color: var(--muted); }
+      .uxbp-output-row > svg:first-child { color: #216b51; }
+      .uxbp-output-row .uxbp-status { font-size: 10.5px; white-space: nowrap; }
+      .uxbp-finish-dialog { width: min(370px, calc(100% - 32px)); padding: 20px; border: .5px solid var(--line); border-radius: 16px;
+        color: var(--ink); background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-finish-dialog::backdrop { background: rgb(20 23 26 / .27); }
+      .uxbp-finish-dialog h2 { margin: 0; font-size: 17px; }
+      .uxbp-finish-dialog p { margin: 6px 0 16px; color: var(--muted); font-size: 13px; }
+      .uxbp-finish-actions { display: flex; gap: 8px; justify-content: flex-end; }
+      .uxbp-handoff { margin: 4px 6px 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+      .uxbp-artifact-html { flex: 1; min-height: 0; width: 100%; border: 0; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
       .uxbp-left[data-view="detail"] { padding: 0; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
@@ -419,12 +437,6 @@ window.__ModuleLoader__.load({
       .uxbp-status { flex: none; padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
       .uxbp-status[data-status="active"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
       .uxbp-status[data-status="completed"] { color: #216b51; background: #edf7f1; }
-      .uxbp-progress { padding: 10px 0 12px; border-bottom: .5px solid var(--line); }
-      .uxbp-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-      .uxbp-progress-head strong { font-size: 11px; font-weight: 650; color: var(--muted); }
-      .uxbp-progress-track { height: 4px; margin: 7px 0 5px; overflow: hidden; border-radius: 999px; background: var(--soft); }
-      .uxbp-progress-fill { height: 100%; border-radius: inherit; background: var(--accent); transition: width .3s var(--ease); }
-      .uxbp-progress-meta { color: var(--faint); font-size: 10.5px; }
       @container (max-width: 760px) {
         .uxbp-top { right: 18px; }
         .uxbp-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 1px minmax(0, 42%); padding-top: 74px; }
@@ -485,132 +497,6 @@ window.__ModuleLoader__.load({
       const result = await response.json()
       if (!result.ok || !result.value?.receiptId) throw new Error(file.name + ' · ' + (result.error?.message || '上传失败'))
       return { type: 'file', receiptId: result.value.receiptId }
-    }
-
-    function textOf(value) {
-      const out = []
-      const walk = (value, depth = 0) => {
-        if (value == null || depth > 7) return
-        if (typeof value === 'string') { if (value.trim()) out.push(value); return }
-        if (Array.isArray(value)) { value.forEach(item => walk(item, depth + 1)); return }
-        if (typeof value !== 'object') return
-        if (typeof value.text === 'string') { out.push(value.text); return }
-        for (const key of ['data', 'content', 'message', 'chunk', 'blocks', 'delta', 'value']) {
-          if (key in value) walk(value[key], depth + 1)
-        }
-      }
-      walk(value)
-      return out.join('\n').trim()
-    }
-
-    function toolCallsOf(value, out = [], depth = 0) {
-      if (value == null || depth > 8) return out
-      if (Array.isArray(value)) { value.forEach(item => toolCallsOf(item, out, depth + 1)); return out }
-      if (typeof value !== 'object') return out
-      if (value.type === 'tool-call') { out.push(value); return out }
-      for (const key of ['data', 'message', 'content', 'blocks']) if (key in value) toolCallsOf(value[key], out, depth + 1)
-      return out
-    }
-
-    function argsOf(call) {
-      const value = call?.arguments ?? call?.input
-      if (typeof value === 'string') { try { return JSON.parse(value) } catch { return {} } }
-      return value && typeof value === 'object' ? value : {}
-    }
-
-    function short(value, limit = 80) {
-      const text = String(value ?? '').replace(/\s+/g, ' ').trim()
-      return text.length > limit ? text.slice(0, limit - 1) + '…' : text
-    }
-
-    function baseName(value) {
-      const parts = String(value ?? '').split(/[\\/]/)
-      return parts[parts.length - 1] || String(value ?? '')
-    }
-
-    function inSegments(seq, segments) {
-      return (segments ?? []).some(segment => seq > segment.startSeq && (segment.endSeq == null || seq <= segment.endSeq))
-    }
-
-    const toolLabels = {
-      skill: ['加载技能', 'name'], read: ['阅读材料', 'file_path'], glob: ['查找材料', 'pattern'], grep: ['查找材料', 'pattern'],
-      read_design_reference: ['查知识', 'path'], web_search: ['查资料', 'query'], web_fetch: ['查资料', 'url'],
-      submit_design_artifact: ['当前阶段输出', 'skill'], design_next_steps: ['计算下一步', ''],
-      write: ['写入文件', 'file_path'], edit: ['修改文件', 'file_path'], pwsh: ['执行命令', 'description'],
-    }
-
-    function callNode(call) {
-      const name = String(call?.name ?? 'tool')
-      const args = argsOf(call)
-      const mapped = toolLabels[name] ?? ['执行工具', '']
-      const detail = mapped[1] ? short(args[mapped[1]], 60) : name
-      if (name === 'read' || name === 'glob' || name === 'grep') return { kind: 'read', label: mapped[0], detail: baseName(detail), status: 'running' }
-      if (name === 'submit_design_artifact') return {
-        kind: 'output', label: '当前阶段输出', detail: short(args.skill, 50), status: 'running',
-        markdown: typeof args.markdown === 'string' ? args.markdown : '',
-      }
-      return { kind: 'tool', label: mapped[0], detail, status: 'running' }
-    }
-
-    function buildFlow(entries, segments) {
-      const nodes = []
-      const byCall = new Map()
-      const push = node => { nodes.push(node); return nodes.length - 1 }
-      for (const entry of entries) {
-        const event = entry.event
-        if (!event || !inSegments(event.seq ?? 0, segments)) continue
-        if (event.type === 'user/message') {
-          const kind = event.data?.source?.kind
-          if (kind && kind !== 'user' && kind !== 'user-question-reply') continue
-          const text = textOf(event.data)
-          if (text) push({ kind: 'task', label: '接收任务', detail: short(text.replace(/^【技能：[^\n]*】\s*/, '')), status: 'done' })
-        } else if (event.type === 'assistant/message') {
-          const calls = toolCallsOf(event.data)
-          if (calls.length) {
-            for (const call of calls) {
-              const index = push(callNode(call))
-              if (call.id) byCall.set(call.id, index)
-            }
-          } else {
-            const text = textOf(event.data)
-            if (text) push({ kind: 'assistant', label: '生成结果', detail: short(text), text: text.slice(0, 2000), status: 'done' })
-          }
-        } else if (event.type === 'tool/result') {
-          const index = byCall.get(event.data?.toolCallId ?? event.data?.message?.toolCallId)
-          if (index === undefined) continue
-          const text = textOf(event.data)
-          nodes[index].status = /error|failed|失败|拒绝/i.test(text.slice(0, 160)) ? 'failed' : 'done'
-        }
-      }
-      const merged = []
-      for (const node of nodes) {
-        const prev = merged[merged.length - 1]
-        if (prev && prev.kind === node.kind && node.kind === 'assistant') { prev.text = node.text; prev.detail = node.detail; continue }
-        if (prev && prev.kind === node.kind && ['read', 'tool'].includes(node.kind)) { prev.count = (prev.count ?? 1) + 1; prev.detail = prev.count + ' 项'; continue }
-        merged.push(node)
-      }
-      let latest = -1
-      merged.forEach((node, index) => { if (node.kind === 'output') latest = index })
-      merged.forEach((node, index) => { node.latest = index === latest })
-      return merged
-    }
-
-    function dialogueRows(entries, segments) {
-      const rows = []
-      for (const entry of entries) {
-        const event = entry.event
-        if (!event || !inSegments(event.seq ?? 0, segments)) continue
-        if (event.type === 'user/message') {
-          const kind = event.data?.source?.kind
-          if (kind && kind !== 'user' && kind !== 'user-question-reply') continue
-          const text = textOf(event.data)
-          if (text) rows.push({ role: 'user', text })
-        } else if (event.type === 'assistant/message') {
-          const text = textOf(event.data)
-          if (text) rows.push({ role: 'assistant', text })
-        }
-      }
-      return rows.slice(-120)
     }
 
     const skillArt = {
@@ -1022,17 +908,19 @@ window.__ModuleLoader__.load({
       const [tasks, setTasks] = useState([])
       const [task, setTask] = useState(null)
       const [manifest, setManifest] = useState(null)
-      const [next, setNext] = useState([])
+      const [overview, setOverview] = useState(null)
+      const [overviewError, setOverviewError] = useState(false)
+      const [latestRun, setLatestRun] = useState(null)
+      const [handoff, setHandoff] = useState(null)
+      const [finishPrompt, setFinishPrompt] = useState(null)
+      const [finishing, setFinishing] = useState(false)
       const [sessionId, setSessionId] = useState('')
       const [tab, setTab] = useState('task')
-      const [rightTab, setRightTab] = useState('dynamics')
       const [text, setText] = useState('')
       const [files, setFiles] = useState([])
       const [skill, setSkill] = useState('')
       const [error, setError] = useState('')
       const [sending, setSending] = useState(false)
-      const [flow, setFlow] = useState([])
-      const [dialogue, setDialogue] = useState([])
       const [running, setRunning] = useState(false)
       const [search, setSearch] = useState('')
       const [filter, setFilter] = useState('all')
@@ -1040,7 +928,6 @@ window.__ModuleLoader__.load({
       const [menuWorkspace, setMenuWorkspace] = useState('')
       const [menuSessions, setMenuSessions] = useState([])
       const [menuLoading, setMenuLoading] = useState(false)
-      const [art, setArt] = useState({})
       const [shake, setShake] = useState('')
       const [viewMode, setViewMode] = useState('canvas')
       const [detailOrigin, setDetailOrigin] = useState('task')
@@ -1060,6 +947,13 @@ window.__ModuleLoader__.load({
       const sedimentScroll = useRef(0)
       const inputRef = useRef(null)
       const binding = useRef(null)
+      const overviewRefresh = useRef(() => {})
+      const loadVersion = useRef(0)
+      const requestedTask = useRef('')
+      const browseReturn = useRef(null)
+      const workspaceRef = useRef(workspace)
+      const finishDialog = useRef(null)
+      const shownNotices = useRef(new Set())
       const submitting = useRef(false)
       const drag = useRef({ down: false, moved: false, x: 0, y: 0, left: 0, top: 0 })
       const refreshRef = useRef(() => {})
@@ -1067,6 +961,7 @@ window.__ModuleLoader__.load({
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') } catch { return null }
       })())
       const restored = useRef(false)
+      workspaceRef.current = workspace
       const leftView = viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
 
       useLayoutEffect(() => {
@@ -1083,7 +978,11 @@ window.__ModuleLoader__.load({
       const taskId = task?.id ?? ''
       const selectedArtifact = artifacts.find(item => item.key === selectedArtifactKey) ?? null
       const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
-      const segmentKey = JSON.stringify(task?.segments ?? [])
+      const latest = overview?.workspace === workspace ? overview.task : null
+      const latestSessionId = latest?.sessionId
+      const latestRunning = latestRun?.id === latestSessionId ? latestRun?.running : null
+      const latestBusy = latestRunning !== false || sending || messageSending
+      const canHandoff = handoff?.skill === skill && handoff?.taskId === taskId
       const groups = [
         { label: '探索与定义', items: catalog.filter(item => groupOf(item) === 0) },
         { label: '设计与交付', items: catalog.filter(item => groupOf(item) === 1) },
@@ -1113,29 +1012,43 @@ window.__ModuleLoader__.load({
       async function loadWorkspaceData(target = workspace) {
         if (!target) return
         const data = await api({ workspace: target })
+        if (workspaceRef.current !== target) return data
         setConversations(data.sessions ?? [])
         setTasks(data.tasks ?? [])
+        overviewRefresh.current()
         return data
       }
 
-      async function loadTask(id) {
-        if (!id) { setTask(null); setManifest(null); setNext([]); setArtifacts([]); setSelectedArtifactKey(''); return }
+      async function loadTask(id, artifactKey, background = false) {
+        if (background && requestedTask.current !== id) return null
+        if (!background) { requestedTask.current = id; loadVersion.current += 1 }
+        const version = loadVersion.current
         const data = await api({ workspace, task: id })
+        if (version !== loadVersion.current || workspaceRef.current !== workspace) return null
+        if (!background && (id !== taskId || (artifactKey && artifactKey !== selectedArtifactKey))) {
+          setArtifactContent('')
+          setArtifactLoading(Boolean(data.artifacts?.length))
+        }
         setTask(data.task)
         setManifest(data.manifest)
         setArtifacts(data.artifacts ?? [])
-        setNext(data.next ?? [])
-        setSelectedArtifactKey(current => (data.artifacts ?? []).some(item => item.key === current)
-          ? current
+        setSelectedArtifactKey(current => (data.artifacts ?? []).some(item => item.key === (artifactKey ?? current))
+          ? (artifactKey ?? current)
           : (data.artifacts?.[0]?.key ?? ''))
         setSessionId(data.task.sessionId)
-        save({ workspace, sessionId: data.task.sessionId, activeTaskId: id })
+        if (!background) save({ workspace, sessionId: data.task.sessionId, activeTaskId: id })
         return data
       }
 
       async function refreshTask() {
         if (!task?.id) return
-        try { await loadTask(task.id) } catch {}
+        try { await loadTask(task.id, undefined, true) } catch {}
+      }
+
+      function clearTask() {
+        requestedTask.current = ''
+        loadVersion.current += 1
+        setTask(null); setManifest(null); setArtifacts([]); setSelectedArtifactKey('')
       }
 
       useEffect(() => {
@@ -1187,7 +1100,32 @@ window.__ModuleLoader__.load({
       }, [workspace])
 
       useEffect(() => {
-        if (!sessionId) { setFlow([]); setDialogue([]); setRunning(false); return }
+        setOverview(null)
+        setOverviewError(false)
+        if (!workspace) return
+        const controller = new AbortController()
+        let loading = false
+        const refresh = async () => {
+          if (loading || controller.signal.aborted) return
+          loading = true
+          try {
+            const data = await api({ workspace, latest: '1' }, null, controller.signal)
+            if (!controller.signal.aborted) { setOverview(data ? { ...data, workspace } : null); setOverviewError(false) }
+          } catch {
+            if (!controller.signal.aborted) setOverviewError(true)
+          } finally {
+            loading = false
+          }
+        }
+        overviewRefresh.current = refresh
+        void refresh()
+        const timer = setInterval(refresh, 2000)
+        return () => { controller.abort(); clearInterval(timer) }
+      }, [workspace])
+
+      useEffect(() => {
+        setRunning(false)
+        if (!sessionId) return
         let disposed = false
         let offEvents
         let offSession
@@ -1199,14 +1137,9 @@ window.__ModuleLoader__.load({
           binding.current = value
           const update = () => {
             if (disposed) return
-            const entries = value.eventSource.getSnapshot().entries ?? []
-            setFlow(buildFlow(entries, task?.segments ?? []))
-            setDialogue(dialogueRows(entries, task?.segments ?? []))
             setRunning(Boolean(value.session.getSnapshot().running))
-            if (entries.some(entry => entry.event?.type === 'tool/result')) {
-              clearTimeout(refreshTimer)
-              refreshTimer = setTimeout(() => refreshRef.current(), 400)
-            }
+            clearTimeout(refreshTimer)
+            if (taskId) refreshTimer = setTimeout(() => refreshRef.current(), 400)
           }
           offEvents = value.eventSource.subscribe(update)
           offSession = value.session.subscribe(update)
@@ -1220,7 +1153,51 @@ window.__ModuleLoader__.load({
           binding.current = null
           try { ref?.release() } catch {}
         }
-      }, [sessionId, taskId, segmentKey])
+      }, [sessionId, taskId])
+
+      useEffect(() => {
+        setLatestRun(null)
+        if (!latestSessionId) return
+        let disposed = false
+        let unsubscribe
+        let ref
+        try { ref = sessions.retain(latestSessionId, { source: 'controllerOperation' }) } catch { return }
+        ref.ready.then(value => {
+          if (disposed) return
+          const update = () => {
+            if (disposed) return
+            const running = value.session.getSnapshot().running
+            setLatestRun({ id: latestSessionId, running })
+            if (running === false) overviewRefresh.current()
+          }
+          unsubscribe = value.session.subscribe(update)
+          update()
+        }).catch(() => {})
+        return () => { disposed = true; unsubscribe?.(); ref.release() }
+      }, [workspace, latestSessionId])
+
+      useEffect(() => {
+        const item = overview?.finish
+        if (!item || !latest || latestBusy || finishPrompt || artifactEditing || overviewError) return
+        const key = STORAGE_KEY + ':finish:' + encodeURIComponent(workspace) + ':' + latest.id + ':' + item.skill
+        if (shownNotices.current.has(key)) return
+        try { if (localStorage.getItem(key)) return } catch {}
+        shownNotices.current.add(key)
+        try { localStorage.setItem(key, '1') } catch {}
+        setFinishPrompt({ workspace, taskId: latest.id, roundId: latest.round?.id, label: item.label })
+      }, [workspace, overview, latestBusy, finishPrompt, artifactEditing, overviewError])
+
+      useEffect(() => {
+        const dialog = finishDialog.current
+        if (finishPrompt && dialog && !dialog.open) dialog.showModal()
+      }, [finishPrompt])
+
+      useEffect(() => {
+        if (finishPrompt && overview?.workspace === workspace &&
+            (latest?.id !== finishPrompt.taskId || latest?.round?.id !== finishPrompt.roundId || !overview.finish)) {
+          setFinishPrompt(null)
+        }
+      }, [workspace, overview, finishPrompt])
 
       useEffect(() => {
         if (!task?.id || !selectedArtifactKey) {
@@ -1297,8 +1274,9 @@ window.__ModuleLoader__.load({
         setOpenMenu('')
         if (wsId !== workspace) {
           setWorkspace(wsId)
-          setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([])
-          setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
+          clearTask()
+          browseReturn.current = null
+          setHandoff(null); setTasks([]); setConversations([]); setViewMode('canvas')
           setSessionId(sid || '')
           save({ workspace: wsId, sessionId: sid || '', activeTaskId: '', viewMode: 'canvas' })
         } else {
@@ -1308,6 +1286,7 @@ window.__ModuleLoader__.load({
       }
 
       function useSkill(skillId) {
+        if (handoff?.skill !== skillId) setHandoff(null)
         setSkill(skillId)
         if (leftView !== 'detail') setTab('task')
         inputRef.current?.focus()
@@ -1321,17 +1300,21 @@ window.__ModuleLoader__.load({
       function selectWorkspace(id) {
         if (id === workspace) return
         setWorkspace(id)
-        setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([]); setSessionId('')
-        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas'); setArt({}); setOpenMenu('')
+        clearTask()
+        browseReturn.current = null
+        setHandoff(null); setTasks([]); setConversations([]); setSessionId('')
+        setViewMode('canvas'); setOpenMenu(''); setFinishPrompt(null)
         save({ workspace: id, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
       }
 
       function resetAll() {
         try { localStorage.removeItem(STORAGE_KEY) } catch {}
         saved.current = null
-        setWorkspace(''); setTask(null); setManifest(null); setNext([]); setTasks([]); setConversations([])
-        setSessionId(''); setFlow([]); setDialogue([]); setSkill(''); setText(''); setFiles([]); setError('')
-        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
+        clearTask()
+        browseReturn.current = null
+        setWorkspace(''); setHandoff(null); setTasks([]); setConversations([])
+        setSessionId(''); setSkill(''); setText(''); setFiles([]); setError(''); setFinishPrompt(null)
+        setViewMode('canvas')
         setTab('task'); setOpenMenu('')
       }
 
@@ -1345,7 +1328,7 @@ window.__ModuleLoader__.load({
       }
 
       async function execute() {
-        if (submitting.current || !workspace || !skill || (!text.trim() && !files.length)) return
+        if (submitting.current || !workspace || !skill || (!text.trim() && !files.length && !canHandoff)) return
         submitting.current = true
         setSending(true)
         setError('')
@@ -1385,6 +1368,8 @@ window.__ModuleLoader__.load({
           } finally { ref.release() }
           setText('')
           setFiles([])
+          setHandoff(null)
+          browseReturn.current = null
           setViewMode('detail')
           setDetailOrigin('task')
           save({ workspace, sessionId: targetSession, activeTaskId: current.id, viewMode: 'detail', detailOrigin: 'task' })
@@ -1398,19 +1383,15 @@ window.__ModuleLoader__.load({
         }
       }
 
-      async function action(name, payload = {}) {
-        if (!task) return
+      async function action(name, payload = {}, target = task) {
+        if (!target) return false
         try {
-          await api(null, { action: name, workspaceId: workspace, taskId: task.id, ...payload })
-          if (name === 'complete') {
-            setTask(null); setManifest(null); setNext([]); setSessionId('')
-            setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
-            save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
-          } else {
-            await loadTask(task.id)
-          }
+          await api(null, { action: name, workspaceId: workspace, taskId: target.id, ...payload })
+          if (workspaceRef.current !== workspace) return true
+          if (target.id === requestedTask.current) await loadTask(target.id, undefined, true)
           await loadWorkspaceData(workspace)
-        } catch (e) { setError(e.message) }
+          return true
+        } catch (e) { setError(e.message); return false }
       }
 
       async function rename() {
@@ -1419,40 +1400,86 @@ window.__ModuleLoader__.load({
         if (title && title.trim()) await action('rename', { title: title.trim() })
       }
 
-      async function openTask(item) {
+      async function openTask(item, artifactKey, origin = 'sediment') {
+        if (artifactSaving || messageSending || sending) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
         try {
-          if (task && task.id !== item.id && task.status === 'active') {
-            await api(null, { action: 'pause', workspaceId: workspace, taskId: task.id })
-          }
-          if (item.status === 'paused') {
-            await api(null, { action: 'resume', workspaceId: workspace, taskId: item.id })
-          }
-          await loadTask(item.id)
-          setDetailOrigin('sediment')
+          if (!await loadTask(item.id, artifactKey)) return
+          browseReturn.current ??= { taskId, sessionId }
+          cancelEdit()
+          setMessageText('')
+          setHandoff(null)
+          setDetailOrigin(origin)
           setViewMode('detail')
-          save({ workspace, activeTaskId: item.id, viewMode: 'detail', detailOrigin: 'sediment' })
-          await loadWorkspaceData(workspace)
+          save({ workspace, activeTaskId: item.id, viewMode: 'detail', detailOrigin: origin })
+        } catch (e) { setError(e.message) }
+      }
+
+      async function prepareHandoff(item) {
+        if (!latest || latestBusy || artifactSaving) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        const draftTaskId = browseReturn.current?.taskId ?? taskId
+        if (draftTaskId !== latest.id && (text.trim() || files.length) && !window.confirm('切换任务并清空当前输入？')) return
+        try {
+          if (!await loadTask(latest.id)) return
+          if (draftTaskId !== latest.id) { setText(''); setFiles([]) }
+          browseReturn.current = null
+          cancelEdit()
+          setHandoff({ skill: item.id, taskId: latest.id })
+          setSkill(item.id)
+          setTab('task')
+          setViewMode('canvas')
+          save({ tab: 'task', viewMode: 'canvas' })
+          requestAnimationFrame(() => inputRef.current?.focus())
         } catch (e) { setError(e.message) }
       }
 
       async function newTask() {
-        if (task?.status === 'active') {
-          try { await api(null, { action: 'pause', workspaceId: workspace, taskId: task.id }) } catch (e) { setError(e.message); return }
-        }
-        setTask(null); setManifest(null); setNext([]); setSessionId('')
-        setArtifacts([]); setSelectedArtifactKey(''); setViewMode('canvas')
-        save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
+        if (artifactSaving || messageSending || sending) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        clearTask()
+        browseReturn.current = null
+        cancelEdit()
+        setHandoff(null); setSessionId('')
+        setViewMode('canvas')
+        setTab('task')
+        save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas', tab: 'task' })
         await loadWorkspaceData(workspace)
       }
 
-      function backToCanvas() {
+      async function respondToFinish(complete) {
+        if (!finishPrompt || finishing) return
+        if (complete) {
+          if (latestBusy || !overview?.finish || latest?.id !== finishPrompt.taskId ||
+              latest?.round?.id !== finishPrompt.roundId || finishPrompt.workspace !== workspace) return
+          setError('')
+          setFinishing(true)
+          const ended = await action('complete', {}, latest)
+          setFinishing(false)
+          if (!ended) return
+        }
+        finishDialog.current?.close()
+        setFinishPrompt(null)
+      }
+
+      async function backToCanvas() {
         if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
-        setArtifactEditing(false)
-        setArtifactDraft('')
+        cancelEdit()
+        const returnTo = browseReturn.current
+        if (returnTo) {
+          browseReturn.current = null
+          if (returnTo.taskId && returnTo.taskId !== taskId) {
+            try { if (!await loadTask(returnTo.taskId)) return } catch (e) { setError(e.message); return }
+          } else if (!returnTo.taskId) {
+            clearTask()
+            setSessionId(returnTo.sessionId)
+          }
+        }
         const nextTab = detailOrigin === 'sediment' ? 'sediment' : 'task'
         setTab(nextTab)
         setViewMode('canvas')
-        save({ viewMode: 'canvas', detailOrigin, tab: nextTab })
+        save({ viewMode: 'canvas', detailOrigin, tab: nextTab,
+          ...(returnTo ? { activeTaskId: returnTo.taskId, sessionId: returnTo.sessionId } : {}) })
       }
 
       function selectArtifact(key) {
@@ -1461,6 +1488,8 @@ window.__ModuleLoader__.load({
         setArtifactEditing(false)
         setArtifactDraft('')
         setArtifactError('')
+        setArtifactContent('')
+        setArtifactLoading(true)
         setSelectedArtifactKey(key)
       }
 
@@ -1503,18 +1532,19 @@ window.__ModuleLoader__.load({
         setError('')
         const content = messageText
         try {
-          await api(null, {
+          const data = await api(null, {
             action: 'message', workspaceId: workspace, taskId: task.id,
             artifactKey: selectedArtifactKey, text: content,
           })
           const ref = sessions.retain(task.sessionId, { source: 'controllerOperation' })
           const value = await ref.ready
           try {
-            const result = await value.session.prompt([{ type: 'text', text: content }], 'queue')
+            const result = await value.session.prompt([{ type: 'text', text: data.prompt ?? content }], 'queue')
             if (result?.ok === false) throw new Error(result.error?.message || '发送失败')
           } finally { ref.release() }
           setMessageText('')
-          await loadTask(task.id)
+          await loadTask(task.id, undefined, true)
+          overviewRefresh.current()
         } catch (e) {
           setError(e.message)
         } finally {
@@ -1522,12 +1552,16 @@ window.__ModuleLoader__.load({
         }
       }
 
-      async function viewArtifact(skillId) {
+      async function confirmOutput() {
+        if (!task || !selectedArtifact || artifactSaving || running || messageSending) return
+        setArtifactSaving(true)
         try {
-          const data = await api({ workspace, task: task.id, skill: skillId })
-          setArt({ skill: skillId, content: data.content })
-          setRightTab('dynamics')
-        } catch (e) { setError(e.message) }
+          await api(null, { action: 'confirm-artifact', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifact.key, baseSha: selectedArtifact.sha256 })
+          await loadTask(task.id, undefined, true)
+          overviewRefresh.current()
+        } catch (e) { setArtifactError(e.message) }
+        finally { setArtifactSaving(false) }
       }
 
       function onPointerDown(event) {
@@ -1567,25 +1601,86 @@ window.__ModuleLoader__.load({
         if (drag.current.moved) return
         shakeCard(item.id)
         useSkill(item.id)
-        setArt({})
+      }
+
+      function isPending(item) {
+        return ['waiting_response', 'ready_for_confirmation'].includes(item?.reviewStatus)
+      }
+
+      function renderOverview() {
+        const pending = overview?.pending
+        const closed = latest?.status === 'completed'
+        const paused = latest?.status === 'paused'
+        const recommendation = overview?.next?.[0]
+        const stageName = nameOf(latest?.round?.skill || latest?.lastSkill || '')
+        const current = overview?.output ?? overview?.artifacts?.reduce((recent, item) =>
+          !item.stale && !isPending(item) && (!recent || item.updatedAt >= recent.updatedAt) ? item : recent, null)
+        const ready = current && (!latest?.round || overview?.output)
+        const stage = closed ? t('taskEnded') : paused ? t('paused') : latestRunning === true
+          ? t('workingOn') + stageName : pending
+            ? t('awaiting') + pending.label : ready
+              ? current.label + t('artifactReady') : t('awaitingOutput') + stageName
+        const origin = leftView === 'detail' ? detailOrigin : tab
+        const done = (overview?.artifacts ?? []).filter(item => !isPending(item) ||
+          (item.key === 'prd-review-record' && overview.artifacts.some(artifact => artifact.key === 'prd-review')))
+        return h('aside', { className: 'uxbp-aside', 'aria-label': t('latestTask') },
+          h('header', { className: 'uxbp-panel-head' },
+            h('div', { className: 'uxbp-overview-top' },
+              h('span', { className: 'uxbp-overview-label' }, t('latestTask')),
+              latest && h('div', { className: 'uxbp-picker uxbp-overview-actions' },
+                h('button', { type: 'button', className: 'uxbp-btn', 'aria-label': t('taskActions'),
+                  'aria-expanded': openMenu === 'task-actions',
+                  onClick: () => setOpenMenu(openMenu === 'task-actions' ? '' : 'task-actions') },
+                h(Icon, { path: 'M5 12h.1m6.9 0h.1m6.9 0h.1' })),
+                openMenu === 'task-actions' && h('div', { className: 'uxbp-menu' },
+                  !closed && h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                    onClick: () => { setOpenMenu(''); void action(paused ? 'resume' : 'pause', {}, latest) } }, t(paused ? 'resume' : 'pause')),
+                  !closed && h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                    onClick: () => { setOpenMenu(''); void action('complete', {}, latest) } }, t('finishTask')),
+                  h('button', { type: 'button', className: 'uxbp-option',
+                    onClick: () => { setOpenMenu(''); void newTask() } }, t('newTask'))))),
+            latest && h('div', { className: 'uxbp-taskline' },
+              h('h2', null, latest.title), h('span', { className: 'uxbp-status', 'data-status': latest.status }, statusLabel(latest.status))),
+            latest && h('div', { className: 'uxbp-meta' }, latest.id)),
+          h('div', { className: 'uxbp-overview-body' },
+            overviewError && h('p', { className: 'uxbp-empty', role: 'status' }, t('overviewUnavailable')),
+            !latest && !overviewError && h('p', { className: 'uxbp-empty' }, t('noTask')),
+            latest && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('currentStage')), h('p', { className: 'uxbp-current-stage', role: 'status' }, stage)),
+            latest && !closed && (pending || recommendation) && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('next')),
+              h('div', { className: 'uxbp-next-card' },
+                h('strong', null, pending?.label ?? recommendation.name),
+                !pending && h('p', null, recommendation.reason),
+                h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: !pending && latestBusy,
+                  onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
+                t(pending ? 'viewPending' : 'useSkill')))),
+            latest && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('completed')),
+              done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))
+                : h('ul', { className: 'uxbp-done-list', role: 'list' },
+                    ...done.map(item => h('li', { key: item.key },
+                      h('button', { type: 'button', className: 'uxbp-output-row', onClick: () => void openTask(latest, item.key, origin) },
+                        h(Icon, { path: item.stale ? 'M12 7v5m0 4h.1' : 'm5 12 4 4L19 6' }),
+                        h('span', null, item.label),
+                        h('span', { className: 'uxbp-status', 'data-status': item.stale ? undefined : 'completed' }, t(item.stale ? 'needsReview' : 'completed')),
+                        h(Icon, { path: 'm9 6 6 6-6 6' }))))))))
       }
 
       function renderTaskDetail() {
         if (!task) return null
-        const skillOrder = new Map((task.skills ?? []).map((skill, index) => [skill, index]))
-        const rank = item => skillOrder.get(item.key === 'prd-review-record' ? 'prd-review' : item.skill) ?? skillOrder.size
-        const steps = [...artifacts].sort((a, b) => rank(a) - rank(b))
-        const artifactSteps = steps.length > 0 && h('ol', { className: 'uxbp-artifact-steps', role: 'list', 'aria-label': t('artifactSteps') },
-          ...steps.map((item, index) => h('li', { key: item.key },
+        const artifactSteps = artifacts.length > 0 && h('ol', { className: 'uxbp-artifact-steps', role: 'list', 'aria-label': t('artifactSteps') },
+          ...artifacts.map((item, index) => h('li', { key: item.key },
             index > 0 && h(Icon, { path: 'm9 6 6 6-6 6' }),
             h('button', {
               type: 'button', className: 'uxbp-artifact-step', 'aria-pressed': item.key === selectedArtifactKey,
               onClick: () => selectArtifact(item.key),
             }, h('span', { className: 'uxbp-artifact-step-number', 'aria-hidden': true }, index + 1), h('span', null, item.label)))))
         const meta = selectedArtifact
+        const canConfirm = task.status === 'active' && meta?.reviewStatus === 'ready_for_confirmation' && !meta.stale
         const detailStatus = meta?.manualLock
           ? t('manualEdited')
-          : [meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
+          : [isPending(meta) ? t('needsReview') : meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
         const artifactPanel = artifacts.length === 0
           ? h('div', { className: 'uxbp-artifact-panel' }, h('p', { className: 'uxbp-empty' }, t('noArtifacts')))
           : h('div', { className: 'uxbp-artifact-panel' },
@@ -1598,6 +1693,9 @@ window.__ModuleLoader__.load({
                   artifactEditing
                     ? h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: () => void saveArtifact() }, artifactSaving ? t('loading') : t('save'))
                     : meta?.editable && h('button', { type: 'button', className: 'uxbp-btn', onClick: startEdit }, t('editArtifact')),
+                  canConfirm && h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
+                    disabled: artifactSaving || artifactLoading || Boolean(artifactError) || running || messageSending,
+                    onClick: () => void confirmOutput() }, t('confirmOutput')),
                   artifactEditing && h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: cancelEdit }, t('cancel')))),
               artifactError && h('p', { className: 'uxbp-artifact-error', role: 'alert' }, artifactError),
               artifactEditing
@@ -1607,7 +1705,10 @@ window.__ModuleLoader__.load({
                   })
                 : artifactLoading
                   ? h('div', { className: 'uxbp-artifact-scroll' }, h('p', { className: 'uxbp-empty' }, t('loading')))
-                  : h('div', { className: 'uxbp-artifact-scroll' }, h(MarkdownView, { content: artifactContent })))
+                  : meta?.format === 'html' && !artifactError && artifactContent
+                    ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
+                        srcDoc: artifactContent.replace(/^\s*<!doctype html>/i, '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; base-uri \'none\'; form-action \'none\'">') })
+                    : h('div', { className: 'uxbp-artifact-scroll' }, h(MarkdownView, { content: artifactContent })))
 
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
@@ -1619,7 +1720,8 @@ window.__ModuleLoader__.load({
                 task.status === 'active'
                   ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
                   : h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('resume') }, t('resume')),
-                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
+                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'),
+                  disabled: task.status === 'completed' || running || messageSending }, t('finishTask')),
                 h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void rename() }, t('rename')))),
             h('div', { className: 'uxbp-detail-summary' },
               h('div', { className: 'uxbp-detail-heading' },
@@ -1680,9 +1782,6 @@ window.__ModuleLoader__.load({
       }
 
 
-      const status = task ? statusLabel(task.status) : ''
-      const outputCount = Object.keys(manifest?.skills ?? {}).length
-      const progress = !task ? 0 : task.status === 'completed' ? 100 : task.status === 'paused' ? 50 : outputCount ? 78 : flow.length ? 48 : 22
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
 
       return h('main', { className: 'uxbp-root' },
@@ -1763,6 +1862,7 @@ window.__ModuleLoader__.load({
                   }))))),
               ),
               leftView === 'canvas' && h('div', { className: 'uxbp-composer' },
+                 canHandoff && h('p', { className: 'uxbp-handoff' }, t('handoff') + task.title),
                 (skill || files.length > 0) && h('div', { className: 'uxbp-chips' },
                   skill && h('span', { className: 'uxbp-chip' },
                     h('span', null, t('skill') + ': ' + nameOf(skill)),
@@ -1795,7 +1895,7 @@ window.__ModuleLoader__.load({
                   h('div', { className: 'uxbp-tools-right' },
                     h('button', { type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run',
                       title: t(running ? 'pause' : 'execute'), 'aria-label': t(running ? 'pause' : 'execute'),
-                      disabled: !running && (sending || !skill || (!text.trim() && !files.length)),
+                      disabled: !running && (sending || !skill || (!text.trim() && !files.length && !canHandoff)),
                       onClick: async () => {
                         if (!running) { void execute(); return }
                         try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
@@ -1805,62 +1905,19 @@ window.__ModuleLoader__.load({
               leftView === 'sediment' && renderSedimentPage()
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
-            h('aside', { className: 'uxbp-aside' },
-              h('section', { className: 'uxbp-panel' },
-                h('div', { className: 'uxbp-panel-head' },
-                  task
-                    ? h('div', null,
-                      h('div', { className: 'uxbp-taskline' },
-                        h('strong', null, task.title), h('span', { className: 'uxbp-status', 'data-status': task.status }, status)),
-                      h('div', { className: 'uxbp-meta' }, task.id),
-                      h('div', { className: 'uxbp-actions' },
-                        h('button', { className: 'uxbp-btn', onClick: () => void action('pause'), disabled: task.status !== 'active' }, t('pause')),
-                        h('button', { className: 'uxbp-btn', onClick: () => void action('resume'), disabled: task.status === 'active' }, t('resume')),
-                        h('button', { className: 'uxbp-btn', onClick: () => void action('complete'), disabled: task.status === 'completed' }, t('end')),
-                        h('button', { className: 'uxbp-btn', onClick: () => void rename() }, t('rename')),
-                        h('button', { className: 'uxbp-btn', onClick: () => void newTask() }, t('newTask'))),
-                      h('div', { className: 'uxbp-progress' },
-                        h('div', { className: 'uxbp-progress-head' },
-                          h('strong', null, t('progress'))),
-                        h('div', { className: 'uxbp-progress-track' },
-                          h('div', { className: 'uxbp-progress-fill', style: { width: progress + '%' } })),
-                        h('div', { className: 'uxbp-progress-meta' },
-                          (task.skills?.length ?? 0) + ' Skill · ' + outputCount + ' ' + t('outputs'))))
-                    : h('div', null,
-                      h('div', { className: 'uxbp-taskline' },
-                        h('strong', null, t('task')),
-                        h('span', { className: 'uxbp-status' }, t('idle'))))),
-                !task && h('div', { className: 'uxbp-progress' },
-                  h('div', { className: 'uxbp-progress-track' },
-                    h('div', { className: 'uxbp-progress-fill', style: { width: '0%' } }))),
-                h('div', { className: 'uxbp-subtabs' },
-                  h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dynamics', onClick: () => setRightTab('dynamics') }, t('dynamics')),
-                  h('button', { className: 'uxbp-subtab', 'data-on': rightTab === 'dialogue', onClick: () => setRightTab('dialogue') }, t('dialogue'))),
-                h('div', { className: 'uxbp-scroll' },
-                  task && rightTab === 'dynamics' && (flow.length
-                    ? flow.map((node, index) => h('div', { key: index, className: 'uxbp-node' },
-                      h('div', { className: 'uxbp-node-head' },
-                        h('span', { 'aria-hidden': true, style: { color: node.status === 'failed' ? 'var(--dsw-alias-state-error-primary, #a52c28)' : 'var(--muted)' } }, node.status === 'running' ? '●' : node.status === 'failed' ? '✕' : '✓'),
-                        h('strong', null, node.label),
-                        node.detail && h('span', { className: 'uxbp-meta' }, node.detail)),
-                      node.markdown && node.latest && h('pre', null, node.markdown),
-                      node.text && h('div', { className: 'uxbp-msg' }, node.text)))
-                    : null),
-                  task && rightTab === 'dialogue' && (dialogue.length
-                    ? dialogue.map((row, index) => h('div', { key: index, className: 'uxbp-msg' },
-                        h('b', null, row.role === 'user' ? '你' : 'AI'), ' ', row.text))
-                    : h('p', { className: 'uxbp-empty' }, t('noDialogue'))))),
-                h('div', { className: 'uxbp-next' },
-                  h('h3', null, t('next')),
-                  task && next.length === 0 && h('p', { className: 'uxbp-empty' }, t('noNext')),
-                  ...(task ? next.slice(0, 3) : []).map((item, index) => index === 0
-                    ? h('button', { key: item.id, className: 'uxbp-next-main', onClick: () => useSkill(item.id) },
-                        h('strong', null, item.name), h('span', null, item.reason))
-                    : h('button', { key: item.id, className: 'uxbp-next-alt', onClick: () => useSkill(item.id) },
-                        item.name, h('span', null, item.reason)))),
-                art.content && h('div', { className: 'uxbp-next' },
-                  h('h3', null, nameOf(art.skill)),
-                  h('pre', { style: { maxHeight: 180, overflow: 'auto', whiteSpace: 'pre-wrap', fontSize: 11 } }, art.content)))))
+            renderOverview()),
+        finishPrompt?.workspace === workspace && h('dialog', {
+          ref: finishDialog, className: 'uxbp-finish-dialog', 'aria-labelledby': 'uxbp-finish-title',
+          onCancel: event => { event.preventDefault(); void respondToFinish(false) },
+        }, h('h2', { id: 'uxbp-finish-title' }, t('finishQuestion')),
+          h('p', null, finishPrompt.label + t('artifactReady')),
+          error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
+          h('div', { className: 'uxbp-finish-actions' },
+            h('button', { type: 'button', className: 'uxbp-btn', disabled: finishing,
+              onClick: () => void respondToFinish(false) }, t('continueTask')),
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
+              disabled: finishing || latestBusy || latest?.id !== finishPrompt.taskId,
+              onClick: () => void respondToFinish(true) }, t('finishTask')))))
     }
 
     return {

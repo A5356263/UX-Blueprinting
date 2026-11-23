@@ -27,6 +27,7 @@ export function apply(ctx) {
         skill: { type: 'string', description: '本轮 Skill id' },
         markdown: { type: 'string', description: '完整 Markdown 产物' },
         title: { type: 'string', description: '当前产物的名称，可省略' },
+        stage: { type: 'string', enum: ['proposal', 'confirmation'], description: '仅用于 UXS 和视觉情绪板。proposal 是仍需补充或选择的提案，confirmation 是可由用户在工作台确认的完整稿件。' },
       },
       required: ['taskId', 'skill', 'markdown'],
       additionalProperties: false,

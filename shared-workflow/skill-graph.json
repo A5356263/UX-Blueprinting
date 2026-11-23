@@ -159,11 +159,12 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "solution-swimlane",
-          "journey-metrics"
+          "solution-swimlane"
         ],
-        "reason": "页面设计文档已输出，目前 design skill 正在建设中，可让 agent 根据文档直接生成 HTML 原型。",
-        "alternatives": []
+        "reason": "把页面规格里的角色职责、流程交接和异常分支整理成一张协同图。",
+        "alternatives": [
+          { "id": "journey-metrics", "reason": "据页面规格补齐埋点、度量口径和异常追踪要求。" }
+        ]
       },
       "anchor": true,
       "requiredAny": []

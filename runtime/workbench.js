@@ -9,6 +9,10 @@ const limit = 320_000
 const sessionPattern = /^[A-Za-z0-9._-]{8,120}$/
 const taskPattern = /^T-[A-Za-z0-9-]{4,100}$/
 const digest = data => createHash('sha256').update(data).digest('hex')
+const confirmationSkills = new Set(['uxs', 'board'])
+const closingSkills = new Set(['uxs', 'page-spec', 'solution-swimlane', 'edge', 'board'])
+const swimlanePath = 'solution-swimlane/solution_swimlane.html'
+const pendingStatuses = ['waiting_response', 'ready_for_confirmation']
 
 function contained(root, path) {
   const local = relative(root, path)
@@ -224,6 +228,7 @@ export function createWorkbench(ctx, catalog) {
       updatedAt: task.updatedAt,
       skills: [...new Set((task.skills ?? []).map(normalizeSkillId))],
       lastSkill: task.lastSkill ? normalizeSkillId(task.lastSkill) : null,
+      round: task.round ?? null,
     }
   }
 
@@ -254,7 +259,19 @@ export function createWorkbench(ctx, catalog) {
       updatedAt: entry.updatedAt ?? '',
       sha256: entry.sha256 ?? '',
       title: entry.title ?? '',
+      format: entry.format ?? 'markdown',
     }
+  }
+
+  function readArtifact(workspace, taskId, entry) {
+    const dir = taskDir(workspace, taskId, false)
+    const requested = resolve(workspace.path, entry.path)
+    contained(dir, realpathSync(requested))
+    const info = lstatSync(requested)
+    if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
+    const bytes = readFileSync(requested)
+    if (digest(bytes) !== entry.sha256) throw new Error('产物被修改')
+    return bytes
   }
 
   function artifactList(workspace, task, manifest) {
@@ -262,15 +279,37 @@ export function createWorkbench(ctx, catalog) {
       .filter(([, entry]) => {
         try {
           const file = resolve(workspace.path, entry.path)
-          contained(workspace.path, file)
+          contained(taskDir(workspace, task.id, false), realpathSync(file))
           return lstatSync(file).isFile()
         } catch { return false }
       })
       .map(([key, entry]) => ({ ...artifactMeta(workspace, task, manifest, key, entry), key }))
       .sort((a, b) => {
-        const rank = key => key === 'prd-review-record' ? 0 : key === 'prd-review' ? 1 : 2
-        return rank(a.key) - rank(b.key) || String(b.updatedAt).localeCompare(String(a.updatedAt))
+        const order = task.skills ?? []
+        const rank = item => {
+          const index = order.indexOf(normalizeSkillId(item.key === 'prd-review-record' ? 'prd-review' : item.skill))
+          return index < 0 ? order.length : index
+        }
+        return rank(a) - rank(b) || Number(b.key === 'prd-review-record') - Number(a.key === 'prd-review-record')
       })
+  }
+
+  function taskDetail(workspace, task, manifest) {
+    const artifacts = artifactList(workspace, task, manifest)
+    const pending = artifacts.find(item => !item.stale && pendingStatuses.includes(item.reviewStatus) &&
+      (item.key !== 'prd-review-record' || !manifest.skills['prd-review'])) ?? null
+    const current = artifacts.find(item => item.key === task.round?.skill ||
+      (task.round?.skill === 'prd-review' && item.key === 'prd-review-record' && !manifest.skills['prd-review']))
+    const entry = current && manifest.skills[current.key]
+    let output = null
+    if (current && !current.stale && entry?.roundId === task.round?.id) {
+      try { readArtifact(workspace, task.id, entry); output = current } catch {}
+    }
+    const finish = task.status === 'active' && !pending && output && closingSkills.has(output.skill) &&
+      (!confirmationSkills.has(output.skill) || output.reviewStatus === 'formal') &&
+      (output.skill !== 'solution-swimlane' || output.format === 'html') ? output : null
+    return { task: summary(task), manifest, artifacts, pending, output, finish,
+      next: pending ? [] : nextForTask(task, manifest) }
   }
 
   function loadIndex(workspace) {
@@ -294,7 +333,7 @@ export function createWorkbench(ctx, catalog) {
     return changed
   }
 
-  function promptFor(task, skill, text) {
+  function promptFor(task, skill, text, upstream = []) {
     return [
       '【设计工作台任务 ' + task.id + '】',
       '任务：' + task.title,
@@ -302,6 +341,8 @@ export function createWorkbench(ctx, catalog) {
       '任务目录：spark-output/design-workbench/' + task.id + '/',
       '禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记。',
       '读取上游时优先读任务目录内文件，不要读写 spark-output/ 根目录副本。',
+      ...upstream.map(entry => '本轮已登记上游产物：' + entry.path),
+      skill === 'solution-swimlane' ? '本次工作台任务使用已登记的页面规格作为输入。将泳道图 HTML 与 .work 输出定位到本任务目录下的 solution-swimlane/，保留 Skill 中的渲染和校验。只在 HTML 校验通过后登记产物。' : '',
       '',
       String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
       '',
@@ -311,6 +352,8 @@ export function createWorkbench(ctx, catalog) {
       '  markdown: 完整 Markdown 正文',
       '  title: 当前产物的名称（可省略）',
       skill === 'prd-review' ? '若存在阻断或建议，按「PRD 审核记录」格式提交；工作台会保存为 prd-review-record.md，正式基线仍写入 prd-review.md。' : '',
+      skill === 'uxs' ? '将完整可确认的策略稿登记为 stage=confirmation，待用户在工作台确认；若仍需补资料，使用 stage=proposal。' : '',
+      skill === 'board' ? '多方案提案登记为 stage=proposal。用户选定方案且完整设计变量已写入后，登记为 stage=confirmation，由用户在工作台确认。' : '',
     ].join('\n')
   }
 
@@ -370,6 +413,7 @@ export function createWorkbench(ctx, catalog) {
       updatedAt: now,
       skills: [skill],
       lastSkill: skill,
+      round: { id: randomUUID(), skill, startedAt: Date.now() },
     }
     taskDir(workspace, id, true)
     saveManifest(workspace, id, emptyManifest(workspace.id, id, sessionId))
@@ -418,14 +462,20 @@ export function createWorkbench(ctx, catalog) {
     if (task.status !== 'active') throw new Error('任务当前不是进行中，请先恢复')
     const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
+    const manifest = loadManifest(workspace, task.id)
+    const done = completedFor(manifest)
+    const upstream = (catalog.reads?.(skill) ?? []).filter(id => done.includes(id)).map(id => {
+      const entry = manifest.skills[id]
+      readArtifact(workspace, task.id, entry)
+      return entry
+    })
     task.skills = [...new Set((Array.isArray(task.skills) ? task.skills : []).map(normalizeSkillId))]
-    if (!task.skills.includes(skill)) {
-      task.skills.push(skill)
-      task.lastSkill = skill
-      task.updatedAt = new Date().toISOString()
-      saveIndex(workspace, index)
-    }
-    return { prompt: promptFor(task, skill, body.text) }
+    if (!task.skills.includes(skill)) task.skills.push(skill)
+    task.lastSkill = skill
+    task.round = { id: randomUUID(), skill, startedAt: Date.now() }
+    task.updatedAt = new Date().toISOString()
+    saveIndex(workspace, index)
+    return { prompt: promptFor(task, skill, body.text, upstream) }
   }
 
   async function updateArtifact(workspace, body) {
@@ -478,20 +528,40 @@ export function createWorkbench(ctx, catalog) {
     const task = findTask(index, String(body.taskId ?? ''))
     if (task.status !== 'active') throw new Error('任务不是进行中，不能发送消息')
     const key = String(body.artifactKey ?? '')
+    const manifest = loadManifest(workspace, task.id)
     if (key) {
-      const manifest = loadManifest(workspace, task.id)
       const entry = manifest.skills[key]
       if (entry?.manualLock) {
         entry.manualLock = false
         saveManifest(workspace, task.id, manifest)
-        task.updatedAt = new Date().toISOString()
-        saveIndex(workspace, index)
       }
     }
-    return { ok: true }
+    const skill = normalizeSkillId(manifest.skills[key]?.skill ?? task.lastSkill)
+    task.round = { id: randomUUID(), skill, startedAt: Date.now() }
+    task.lastSkill = skill
+    task.updatedAt = new Date().toISOString()
+    saveIndex(workspace, index)
+    return { prompt: promptFor(task, skill, body.text) }
   }
 
-  async function submit({ taskId, skill, markdown, title }, callerSessionId) {
+  async function confirmArtifact(workspace, body) {
+    return serialize(workspace.id + ':' + body.taskId, () => {
+      const task = findTask(loadIndex(workspace), String(body.taskId ?? ''))
+      const manifest = loadManifest(workspace, task.id)
+      const entry = manifest.skills[body.artifactKey]
+      if (task.status !== 'active' || !confirmationSkills.has(entry?.skill) || entry.stale ||
+          entry.reviewStatus !== 'ready_for_confirmation' || entry.sha256 !== body.baseSha) {
+        throw Object.assign(new Error('产物状态已变更，请重新打开后再确认'), { status: 409 })
+      }
+      readArtifact(workspace, task.id, entry)
+      entry.reviewStatus = 'formal'
+      entry.confirmedAt = new Date().toISOString()
+      saveManifest(workspace, task.id, manifest)
+      return { ok: true }
+    })
+  }
+
+  async function submit({ taskId, skill, markdown, title, stage }, callerSessionId) {
     skill = normalizeSkillId(skill)
     if (!callerSessionId) throw new Error('无法确认调用会话')
     if (!knownSkills.has(skill)) throw new Error('未知 Skill：' + skill)
@@ -510,17 +580,35 @@ export function createWorkbench(ctx, catalog) {
       if (previous?.manualLock) {
         throw new Error('该产物已被人工编辑，请先通过任务页底部输入框发送下一条消息，再继续')
       }
-      const bytes = Buffer.from(markdown)
-      if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
-      const file = taskPath(workspace, taskId, artifactKey)
-      atomicWrite(taskDir(workspace, taskId, true), artifactKey + '.md', bytes)
+      const dir = taskDir(workspace, task.id, false)
+      let file = taskPath(workspace, taskId, artifactKey)
+      let bytes = Buffer.from(markdown)
+      let format = 'markdown'
+      if (skill === 'solution-swimlane') {
+        file = join(dir, swimlanePath)
+        contained(dir, realpathSync(file))
+        const info = lstatSync(file)
+        if (!info.isFile() || info.size > 2_000_000) throw new Error('泳道图必须是 2 MB 以内的正式 HTML 文件')
+        if (task.round?.startedAt && info.mtimeMs < task.round.startedAt) throw new Error('请先生成并校验本轮的泳道图')
+        bytes = readFileSync(file)
+        if (!/^<!doctype html>/i.test(bytes.toString('utf8').trimStart())) throw new Error('泳道图 HTML 格式无效')
+        format = 'html'
+      } else {
+        if (!bytes.length || bytes.length > limit) throw new Error('产物为空或超过 320 KB')
+        atomicWrite(dir, artifactKey + '.md', bytes)
+      }
       const sha256 = digest(bytes)
-      const changed = !previous || previous.sha256 !== sha256
+      const reviewStatus = confirmationSkills.has(skill)
+        ? stage === 'confirmation' ? 'ready_for_confirmation' : 'waiting_response'
+        : review?.status ?? ''
+      const changed = !previous || previous.sha256 !== sha256 || previous.reviewStatus !== reviewStatus
       const now = new Date().toISOString()
       manifest.skills[artifactKey] = {
         skill,
         artifactKind,
-        reviewStatus: review?.status ?? '',
+        reviewStatus,
+        format,
+        roundId: task.round?.skill === skill ? task.round.id : null,
         origin: 'model',
         manualLock: false,
         editedAt: null,
@@ -561,7 +649,7 @@ export function createWorkbench(ctx, catalog) {
         taskId,
         skill,
         artifactKind,
-        reviewStatus: review?.status ?? '',
+        reviewStatus,
         path: manifest.skills[artifactKey].path,
         stale: Object.entries(manifest.skills).filter(([, entry]) => entry.stale).map(([id]) => id),
         next: nextForTask(task, manifest),
@@ -591,11 +679,17 @@ export function createWorkbench(ctx, catalog) {
         if (body.action === 'create-task') return json(await createTask(workspace, body))
         if (body.action === 'prompt') return json(await promptTask(workspace, body))
         if (body.action === 'update-artifact') return json(await updateArtifact(workspace, body))
+        if (body.action === 'confirm-artifact') return json(await confirmArtifact(workspace, body))
         if (body.action === 'message') return json(await message(workspace, body))
         if (['pause', 'complete', 'resume', 'rename'].includes(body.action)) {
           return json({ task: await changeTask(workspace, body, body.action) })
         }
         throw new Error('未知操作')
+      }
+      if (url.searchParams.has('latest')) {
+        const task = loadIndex(workspace).tasks.reduce((latest, item) =>
+          !latest || String(item.createdAt) >= String(latest.createdAt) ? item : latest, null)
+        return json(task ? taskDetail(workspace, task, loadManifest(workspace, task.id)) : null)
       }
       const taskId = url.searchParams.get('task') ?? ''
       if (taskId) {
@@ -606,22 +700,10 @@ export function createWorkbench(ctx, catalog) {
           const requestedKey = url.searchParams.get('artifact') ?? normalizeSkillId(url.searchParams.get('skill'))
           const entry = manifest.skills[requestedKey]
           if (!entry) throw new Error('该产物尚未登记')
-          const requested = resolve(workspace.path, entry.path)
-          contained(workspace.path, requested)
-          const real = realpathSync(requested)
-          contained(workspace.path, real)
-          const info = lstatSync(real)
-          if (!info.isFile() || info.isSymbolicLink()) throw new Error('产物必须是普通文件')
-          const bytes = readFileSync(real)
-          if (digest(bytes) !== entry.sha256) throw new Error('产物被修改')
+          const bytes = readArtifact(workspace, taskId, entry)
           return json({ content: bytes.toString('utf8'), artifact: artifactMeta(workspace, task, manifest, requestedKey, entry) })
         }
-        return json({
-          task: summary(task),
-          manifest,
-          artifacts: artifactList(workspace, task, manifest),
-          next: nextForTask(task, manifest),
-        })
+        return json(taskDetail(workspace, task, manifest))
       }
       return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace).tasks.map(summary) })
     } catch (error) {
