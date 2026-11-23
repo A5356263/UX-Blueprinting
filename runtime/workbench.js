@@ -296,6 +296,19 @@ export function createWorkbench(ctx, catalog) {
 
   function taskDetail(workspace, task, manifest) {
     const artifacts = artifactList(workspace, task, manifest)
+    const record = artifacts.find(item => item.key === 'prd-review-record')
+    let reviewReplyReceived = false
+    if (record) {
+      try {
+        const markdown = readArtifact(workspace, task.id, manifest.skills[record.key]).toString('utf8')
+        const fields = markdown.matchAll(/^[ \t]*[-*][ \t]+产品回复[：:][ \t]*([^\r\n]*)((?:\r?\n[ \t]+\d+[.)][ \t]+[^\r\n]+)*)/gm)
+        reviewReplyReceived = [...fields].some(([, inline, items]) =>
+          [inline, ...items.split(/\r?\n/).map(line => line.replace(/^\s*\d+[.)]\s*/, ''))].some(value => {
+            const reply = value.trim().replace(/^[`*_]+|[`*_]+$/g, '').trim()
+            return reply && !/^(?:无|(?:待|未|尚未|暂无|没有)(?:产品|用户)?(?:回复|确认|提供)|不适用|(?:未|待)填写|[-—…。\.]+)[。.]?$/.test(reply)
+          }))
+      } catch {}
+    }
     const pending = artifacts.find(item => !item.stale && pendingStatuses.includes(item.reviewStatus) &&
       (item.key !== 'prd-review-record' || !manifest.skills['prd-review'])) ?? null
     const current = artifacts.find(item => item.key === task.round?.skill ||
@@ -308,7 +321,7 @@ export function createWorkbench(ctx, catalog) {
     const finish = task.status === 'active' && !pending && output && closingSkills.has(output.skill) &&
       (!confirmationSkills.has(output.skill) || output.reviewStatus === 'formal') &&
       (output.skill !== 'solution-swimlane' || output.format === 'html') ? output : null
-    return { task: summary(task), manifest, artifacts, pending, output, finish,
+    return { task: summary(task), manifest, artifacts, pending, output, finish, reviewReplyReceived,
       next: pending ? [] : nextForTask(task, manifest) }
   }
 
