@@ -4,7 +4,7 @@ const baselineSections = [
   '做成后应该看到什么结果', '这些结论来自哪里',
 ]
 
-const reviewRecordSections = ['需求初识', '审核结论', '场景审核']
+const reviewRecordSections = ['需求初识', '审核结论']
 
 export function classifyPrdReview(markdown) {
   if (typeof markdown !== 'string') return { kind: 'unknown', status: '' }
@@ -29,8 +29,9 @@ export function validateMarkdown(skill, markdown) {
     if (review.kind === 'review-record') {
       if (!review.status ||
           !reviewRecordSections.every(title => sections.includes(title)) ||
+          sections.includes('场景审核') ||
           !sections.some(title => title.startsWith('你还需要补充什么吗'))) {
-        throw new Error('PRD 审核记录缺少状态、需求初识、审核结论、场景审核或补充入口')
+        throw new Error('PRD 审核记录须采用新版格式，保留有效状态、需求初识、审核结论和补充入口，内容统一写入审核结论')
       }
     } else if (review.kind === 'baseline') {
       if (baselineSections.some((title, i) => sections[i] !== '§' + i + ' ' + title) ||
