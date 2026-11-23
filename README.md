@@ -21,14 +21,29 @@
 
 正式 Markdown 按任务保存到 `spark-output/design-workbench/<taskId>/`。例如 PRD 审核记录为 `prd-review-record.md`，正式需求基线为 `prd-review.md`。任务目录中的 `manifest.json` 保存工作台记录。
 
-## 项目结构
+## 项目文件与发布边界
 
-| 路径 | 用途 |
-| --- | --- |
-| `index.js`、`client.js` | 宿主入口和工作台界面 |
-| `runtime/`、`skills-provider.js` | 任务、产物、交接和 Skill 注册 |
-| `.agents/skills/`、`shared-workflow/` | 随包 Skill 和工作流信息 |
-| `scripts/pack-plugin.mjs` | 插件打包与版本处理 |
-| `spec/` | 插件规格与实施文档 |
+Git 跟踪范围和 DSH 插件包范围各自独立。插件包由 [package.json](package.json) 的 `files` 清单和 npm 的固定随包文件决定。
 
-可用 `npm pack --dry-run --json --ignore-scripts` 检查打包清单。发布文件范围以 [package.json](package.json) 的 `files` 为准。
+| 文件或目录 | 职责 | 随插件发布 |
+| --- | --- | --- |
+| `index.js`、`client.js`、`skills-provider.js` | 宿主入口、工作台界面、Skill 注册 | 是 |
+| `runtime/` | 任务、产物、交接、预览和参考资料读取 | 仅清单中列出的运行文件 |
+| `cordis.patch.yml`、`locale/*.json`、`icon.svg` | 宿主配置、翻译与图标 | 是 |
+| `.agents/skills/`、`shared-workflow/` | Skill 资源与工作流信息 | 仅清单中的 Skill 目录和 `shared-workflow/skill-graph.json` |
+| `package.json`、`README.md` | 插件元数据和使用说明 | 是 |
+| `scripts/pack-plugin.mjs` | 源码仓库中的打包和版本工具 | 否 |
+| `spec/`、`AGENTS.md`、`myguize.md` | 项目规格、AI 执行规则和讨论模板 | 否 |
+| `out/`、`spark-output/` | 本地安装包和任务产物 | 否 |
+
+## 打包与更新
+
+打包或安装更新前，在仓库根目录运行：
+
+```sh
+npm pack --dry-run --json --ignore-scripts
+```
+
+检查输出的 `files` 清单，确保包含本次所需的插件运行文件及资源。增加运行依赖的文件时，同步核对 `package.json` 的 `files`。仓库文档纳入 Git 时，继续沿用上述发布清单。
+
+`npm run pack:plugin` 默认递增补丁版本并写入 `package.json`，再将安装包输出到 `out/`。只需按当前版本生成验收包时加 `--no-bump`。生成后在 Harness 中选择对应的 `.tgz`。
