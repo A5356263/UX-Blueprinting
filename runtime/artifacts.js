@@ -18,6 +18,17 @@ export function classifyPrdReview(markdown) {
   return { kind: 'unknown', status: '' }
 }
 
+function hasBaselineSections(sections) {
+  const numbered = baselineSections.map((title, index) => `§${index} ${title}`)
+  const legacy = numbered.every((heading, index) => sections[index] === heading)
+  if (legacy) return true
+
+  const current = numbered.slice(1, -1)
+  const experience = numbered[10]
+  const expected = sections.includes(experience) ? current : current.filter(heading => heading !== experience)
+  return sections.length === expected.length && expected.every((heading, index) => sections[index] === heading)
+}
+
 export function validateMarkdown(skill, markdown) {
   if (typeof markdown !== 'string') throw new Error('产物必须是 Markdown 文本')
   const lines = markdown.trim().split(/\r?\n/)
@@ -34,7 +45,7 @@ export function validateMarkdown(skill, markdown) {
         throw new Error('PRD 审核记录须采用新版格式，保留有效状态、需求初识、审核结论和补充入口，内容统一写入审核结论')
       }
     } else if (review.kind === 'baseline') {
-      if (baselineSections.some((title, i) => sections[i] !== '§' + i + ' ' + title) ||
+      if (!hasBaselineSections(sections) ||
           !/^\s*[-*]?\s*基线状态[：:]\s*`?formal`?\s*$/m.test(markdown)) {
         throw new Error('正式需求基线缺少规定的章节或 formal 标记')
       }
