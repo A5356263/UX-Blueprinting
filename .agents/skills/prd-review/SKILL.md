@@ -72,8 +72,8 @@ description: >
 
 只根据本轮用户明确输入判断运行模式：
 
-- `initial-review`：读取本轮 PRD 与相关正式知识。
-- `response-finalization`：重新读取原始 PRD、相关正式知识、原问题单和本轮产品回复。
+- `initial-review`：读取本轮 PRD，核对审查所需的正式知识依据。
+- `response-finalization`：重新读取原始 PRD、原问题单和本轮产品回复，按回复重新核对相关正式知识依据。
 
 不得根据旧产物或历史聊天自动切换模式。
 
@@ -148,14 +148,14 @@ INIT
 1. 完整读取本轮 PRD 或正式需求描述。
 2. 读取 `references/review_rules.md`。
 3. 读取 `references/knowledge_usage_guide.md`。
-4. 按知识协议读取全部相关正式知识。
+4. 按知识协议核对完成本轮业务审查所需的正式依据。
 5. 完成候选问题的初步事实回查后，按当前领域和风险读取 `references/review_calibration_guide.md` 的相关章节。
 6. 准备写入问题单或需求基线时，读取 `references/output_structure_guide.md`。
 
 ### `response-finalization`
 
 1. 重新完整读取原始 PRD。
-2. 重新读取相关正式知识。
+2. 根据本轮回复重新核对相关正式知识依据。
 3. 完整读取 `spark-output/prd_review_questions.md`。
 4. 读取本轮产品回复。
 5. 读取 `references/review_rules.md`。

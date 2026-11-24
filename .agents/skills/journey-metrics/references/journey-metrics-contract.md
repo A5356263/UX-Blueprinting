@@ -36,7 +36,7 @@ Keep conflict scope narrow. If only a field limit, parameter value, copy rule, o
 
 ## Tracking API Contract
 
-宿主项目存在本地埋点方法文档时，将其作为最高优先级的本地规范；否则检索直接相关的埋点方法、业务对象或状态。 核对适用条件、例外及可定位的正式出处；证据不足时记录缺口。
+本轮已确认适用的埋点规范优先。规范无法覆盖本轮判断时，核对相关埋点方法、业务对象或状态的正式依据。核对适用条件、例外和出处；证据不足时记录缺口。
 
 User journey rules:
 
