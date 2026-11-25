@@ -1,0 +1,12 @@
+.xft-statistic-card-grid { display: inline-flex; justify-self: start; width: fit-content; max-width: 100%; height: 40px; overflow-x: auto; overflow-y: hidden; border: 1px solid var(--alias-divider-neutral); border-radius: 8px; background: var(--alias-surface-container-bright); }
+.xft-statistic-card-grid__item { position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; height: 40px; margin: -1px 0; padding: 0 16px; border: 0; border-right: 1px solid var(--alias-divider-neutral); border-radius: 0; outline: 0; background: var(--alias-surface-container-bright); color: var(--alias-text-secondary); font: inherit; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: default; gap: 8px; }
+.xft-statistic-card-grid__item:last-child { border-right: 0; }
+.xft-statistic-card-grid__item > strong { color: var(--alias-text-default); font-size: 16px; font-weight: 400; line-height: 22px; }
+.xft-statistic-card-grid__item.is-active { background: var(--ant-color-primary-bg-hover); color: var(--alias-text-accent); }
+.xft-statistic-card-grid__item.is-active > strong { color: var(--alias-text-accent); }
+.xft-statistic-card-grid__item.is-active::before { position: absolute; top: 0; right: 0; width: 16px; height: 16px; background: var(--alias-text-accent); clip-path: polygon(0 0, 100% 0, 100% 100%, 56% 54%); content: ""; }
+.xft-statistic-card-grid__item.is-active::after { position: absolute; top: 0; right: 1px; z-index: 1; color: var(--alias-surface-container-bright); content: "✓"; font-family: Arial, sans-serif; font-size: 10px; font-weight: 700; line-height: 12px; }
+.xft-statistic-card-grid--interactive .xft-statistic-card-grid__item:not(:disabled) { cursor: pointer; }
+.xft-statistic-card-grid--interactive .xft-statistic-card-grid__item:not(:disabled):hover { background: var(--alias-surface-accent-tint-hover); color: var(--alias-text-accent-hover); }
+.xft-statistic-card-grid--interactive .xft-statistic-card-grid__item:not(:disabled):hover > strong { color: var(--alias-text-accent-hover); }
+.xft-statistic-card-grid--interactive .xft-statistic-card-grid__item:focus-visible { z-index: 2; outline: 2px solid var(--ant-color-primary-border); outline-offset: -2px; }

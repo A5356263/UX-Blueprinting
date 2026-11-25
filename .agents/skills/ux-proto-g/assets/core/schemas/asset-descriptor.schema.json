@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/asset-descriptor-v4.json",
+  "oneOf": [
+    { "$ref": "#/$defs/pattern" },
+    { "$ref": "#/$defs/knowledge" },
+    { "$ref": "#/$defs/template" },
+    { "$ref": "#/$defs/component" }
+  ],
+  "$defs": {
+    "assetId": { "type": "string", "pattern": "^(knowledge|pattern|template|component)\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "nonEmptyString": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "identifier": { "type": "string", "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$" },
+    "relativePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\\\)(?!\\.\\.?(?:/|$))(?!.*\\/\\.\\.?(?:\\/|$))(?!.*\\/\\/)(?!.*\\/$).+$" },
+    "typescriptPath": { "allOf": [{ "$ref": "#/$defs/relativePath" }, { "pattern": "\\.tsx?$" }] },
+    "jsonValue": {
+      "anyOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        {
+          "type": "object",
+          "properties": {
+            "assetLink": { "$ref": "#/$defs/assetId" },
+            "load": { "const": "full" }
+          },
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" },
+          "anyOf": [
+            { "not": { "required": ["load"] } },
+            { "required": ["assetLink"] }
+          ]
+        }
+      ]
+    },
+    "semanticContent": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "assetLink": { "$ref": "#/$defs/assetId" },
+        "load": { "const": "full" }
+      },
+      "additionalProperties": { "$ref": "#/$defs/jsonValue" },
+      "anyOf": [
+        { "not": { "required": ["load"] } },
+        { "required": ["assetLink"] }
+      ]
+    },
+    "pattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "abstract", "content"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^pattern\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "kind": { "const": "Pattern" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "abstract": { "$ref": "#/$defs/nonEmptyString" },
+        "content": { "$ref": "#/$defs/semanticContent" }
+      }
+    },
+    "knowledge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "abstract", "content"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^knowledge\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "kind": { "const": "Knowledge" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "abstract": { "$ref": "#/$defs/nonEmptyString" },
+        "content": { "$ref": "#/$defs/semanticContent" }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "purpose", "binding"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "name"],
+          "properties": {
+            "type": { "const": "prop" },
+            "name": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    },
+    "configurationBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "purpose", "help", "default", "keptResult", "removedResult"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "label": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "help": { "$ref": "#/$defs/nonEmptyString" },
+        "default": { "type": "boolean" },
+        "keptResult": { "$ref": "#/$defs/nonEmptyString" },
+        "removedResult": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "configurator", "blocks", "constraints", "presets", "nonConfigurableBoundary"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "configurator": { "type": "object", "additionalProperties": false, "required": ["entry", "export", "assertionExport"], "properties": { "entry": { "$ref": "#/$defs/relativePath" }, "export": { "$ref": "#/$defs/identifier" }, "assertionExport": { "$ref": "#/$defs/identifier" } } },
+        "blocks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/configurationBlock" } },
+        "constraints": { "type": "array" },
+        "presets": { "type": "array" },
+        "nonConfigurableBoundary": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "apiRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "required", "default", "description"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "type": { "$ref": "#/$defs/nonEmptyString" },
+        "required": { "type": "boolean" },
+        "default": { "type": ["string", "number", "boolean", "null"] },
+        "description": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "api": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mainExport", "properties", "types"],
+      "properties": {
+        "mainExport": { "$ref": "#/$defs/identifier" },
+        "properties": { "type": "array", "items": { "$ref": "#/$defs/apiRow" } },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "properties"],
+            "properties": {
+              "name": { "$ref": "#/$defs/identifier" },
+              "properties": { "type": "array", "items": { "$ref": "#/$defs/apiRow" } }
+            }
+          }
+        }
+      }
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "abstract", "entry", "artifacts", "authoring"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^template\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "kind": { "const": "Template" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "abstract": { "$ref": "#/$defs/nonEmptyString" },
+        "entry": { "$ref": "#/$defs/typescriptPath" },
+        "artifacts": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/relativePath" } },
+        "authoring": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mainExport", "customizationSurfaces"],
+          "properties": {
+            "mainExport": { "$ref": "#/$defs/identifier" },
+            "customizationSurfaces": { "type": "array", "items": { "$ref": "#/$defs/surface" } }
+          }
+        }
+        ,"configuration": { "$ref": "#/$defs/configuration" }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "abstract", "entry", "artifacts", "api", "usage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^component\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "kind": { "const": "Pack Component" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "abstract": { "$ref": "#/$defs/nonEmptyString" },
+        "entry": { "$ref": "#/$defs/typescriptPath" },
+        "artifacts": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/relativePath" } },
+        "api": { "$ref": "#/$defs/api" },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["componentOwns", "consumerProvides", "doesNotOwn"],
+          "properties": {
+            "componentOwns": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "consumerProvides": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "doesNotOwn": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmptyString" } }
+          }
+        }
+      }
+    }
+  }
+}

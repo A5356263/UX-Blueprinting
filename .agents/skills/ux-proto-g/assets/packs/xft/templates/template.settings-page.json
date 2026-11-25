@@ -1,0 +1,31 @@
+{
+  "id": "template.settings-page",
+  "kind": "Template",
+  "title": "XFT 设置页",
+  "abstract": "提供可折叠的设置组，支持设置项操作和分区定位。",
+  "entry": "XftSettingsPage.tsx",
+  "artifacts": [
+    "XftSettingsPage.css"
+  ],
+  "authoring": {
+    "mainExport": "XftSettingsPage",
+    "customizationSurfaces": [
+      {
+        "id": "settings-groups",
+        "purpose": "每个具名主题对应一组，传入 key、title 和按需求排序的 items。每项提供 key，title 和 body 承载设置项内容。按需传 description（说明）、action（跳转或即时修改入口）、control（如启停开关）或 details（依赖当前状态的附加内容）。页面即时处理修改和反馈，并决定 details 的显隐。模板按分组生成默认展开的折叠组。",
+        "binding": {
+          "type": "prop",
+          "name": "groups"
+        }
+      },
+      {
+        "id": "render-anchor",
+        "purpose": "设置页默认不显示分区锚点。仅当需求明确要求按具名分区跳转定位时，传入 renderAnchor，并将模板提供的 items、getContainer 和 onNavigate 原样传给分区锚点。",
+        "binding": {
+          "type": "prop",
+          "name": "renderAnchor"
+        }
+      }
+    ]
+  }
+}

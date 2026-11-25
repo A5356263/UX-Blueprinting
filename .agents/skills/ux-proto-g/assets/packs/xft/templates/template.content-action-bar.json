@@ -1,0 +1,61 @@
+{
+  "id": "template.content-action-bar",
+  "kind": "Template",
+  "title": "XFT 内容操作栏",
+  "abstract": "集中展示当前对象或任务的操作，支持同时呈现汇总信息。",
+  "entry": "content-action-bar/XftContentActionBar.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftContentActionBar",
+    "customizationSurfaces": [
+      {
+        "id": "children",
+        "purpose": "传入当前对象或任务的操作按钮，按钮顺序、权限和回调由页面决定。独立操作区按需求给出的顺序排列。未指定时主操作放在左侧，有汇总时其余操作按需求出现顺序排列。嵌入窗口底部时按从辅助到主要排列，主操作放在右侧。",
+        "binding": {
+          "type": "prop",
+          "name": "children"
+        }
+      },
+      {
+        "id": "summary",
+        "purpose": "需要在同一操作区展示汇总值时传入。每项提供 key、label 和 value，有单位时传 unit。",
+        "binding": {
+          "type": "prop",
+          "name": "summary"
+        }
+      },
+      {
+        "id": "layout",
+        "purpose": "汇总与操作的排列方式，默认 inline（同行）。需要汇总在上、操作在下时传 stacked。",
+        "binding": {
+          "type": "prop",
+          "name": "layout"
+        }
+      },
+      {
+        "id": "aria-label",
+        "purpose": "操作区的无障碍名称，默认「内容操作」。",
+        "binding": {
+          "type": "prop",
+          "name": "ariaLabel"
+        }
+      },
+      {
+        "id": "align",
+        "purpose": "默认 center。普通操作区可用 start、center 或 end 对齐。上下布局时控制整体对齐。汇总与操作同行时由模板分置两侧。",
+        "binding": {
+          "type": "prop",
+          "name": "align"
+        }
+      },
+      {
+        "id": "embedded",
+        "purpose": "放入 Drawer 或 Modal 的原生 footer 时传 true，由窗口承载底部布局。默认 false，由操作栏提供粘性底部外壳和贯穿所在容器的顶部边界。",
+        "binding": {
+          "type": "prop",
+          "name": "embedded"
+        }
+      }
+    ]
+  }
+}

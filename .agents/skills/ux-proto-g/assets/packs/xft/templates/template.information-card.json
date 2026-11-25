@@ -1,0 +1,93 @@
+{
+  "id": "template.information-card",
+  "kind": "Template",
+  "title": "XFT 信息卡片",
+  "abstract": "在单张卡片中展示一条记录的标题和详情，支持图标或图片及记录操作。",
+  "entry": "information-card/XftInformationCard.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftInformationCard",
+    "customizationSurfaces": [
+      {
+        "id": "variant",
+        "purpose": "默认 detail-actions。需要在标题旁展示图片或图标时用 icon-details-actions，并传 icon。",
+        "binding": {
+          "type": "prop",
+          "name": "variant"
+        }
+      },
+      {
+        "id": "title",
+        "purpose": "卡片对应记录的标题。",
+        "binding": {
+          "type": "prop",
+          "name": "title"
+        }
+      },
+      {
+        "id": "description",
+        "purpose": "标题下的一行说明。",
+        "binding": {
+          "type": "prop",
+          "name": "description"
+        }
+      },
+      {
+        "id": "icon",
+        "purpose": "在 icon-details-actions 变体中传入图片或图标，模板提供 40px 视觉位置。",
+        "binding": {
+          "type": "prop",
+          "name": "icon"
+        }
+      },
+      {
+        "id": "tags",
+        "purpose": "标题旁的标签，按传入顺序最多展示前三项。",
+        "binding": {
+          "type": "prop",
+          "name": "tags"
+        }
+      },
+      {
+        "id": "details",
+        "purpose": "记录详情列表，每项提供 key、label 和 value。",
+        "binding": {
+          "type": "prop",
+          "name": "details"
+        }
+      },
+      {
+        "id": "actions",
+        "purpose": "卡片底部的记录操作。每项提供 key、label 和相应回调，可设 disabled。前三项直接显示，其余收纳到更多菜单。",
+        "binding": {
+          "type": "prop",
+          "name": "actions"
+        }
+      },
+      {
+        "id": "extra",
+        "purpose": "标题行右侧的补充操作。",
+        "binding": {
+          "type": "prop",
+          "name": "extra"
+        }
+      },
+      {
+        "id": "interactive",
+        "purpose": "需要卡片悬浮反馈时传 true，默认关闭。此属性提供悬浮样式。",
+        "binding": {
+          "type": "prop",
+          "name": "interactive"
+        }
+      },
+      {
+        "id": "selected",
+        "purpose": "需要显示当前记录已选中时传 true，默认 false。选中状态由页面维护。",
+        "binding": {
+          "type": "prop",
+          "name": "selected"
+        }
+      }
+    ]
+  }
+}

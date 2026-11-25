@@ -1,0 +1,53 @@
+{
+  "id": "template.section-heading",
+  "kind": "Template",
+  "title": "XFT 分组标题",
+  "abstract": "提供分组标题和标记线，可附加说明或操作。",
+  "entry": "section-heading/XftSectionHeading.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftSectionHeading",
+    "customizationSurfaces": [
+      {
+        "id": "title",
+        "purpose": "分组标题内容。",
+        "binding": {
+          "type": "prop",
+          "name": "title"
+        }
+      },
+      {
+        "id": "description",
+        "purpose": "有补充说明时传入，显示在标题下方。",
+        "binding": {
+          "type": "prop",
+          "name": "description"
+        }
+      },
+      {
+        "id": "title-actions",
+        "purpose": "与标题直接关联的操作，显示在标题旁，例如控制本组折叠。",
+        "binding": {
+          "type": "prop",
+          "name": "titleActions"
+        }
+      },
+      {
+        "id": "actions",
+        "purpose": "显示在标题行右侧的分组操作。",
+        "binding": {
+          "type": "prop",
+          "name": "actions"
+        }
+      },
+      {
+        "id": "marker",
+        "purpose": "标题左侧默认显示强调标记线。需要隐藏时传 false。",
+        "binding": {
+          "type": "prop",
+          "name": "marker"
+        }
+      }
+    ]
+  }
+}

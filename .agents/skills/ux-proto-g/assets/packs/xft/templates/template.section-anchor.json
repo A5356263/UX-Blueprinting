@@ -1,0 +1,45 @@
+{
+  "id": "template.section-anchor",
+  "kind": "Template",
+  "title": "XFT 分区锚点",
+  "abstract": "提供分区导航、点击定位和当前分区高亮。",
+  "entry": "section-anchor/XftSectionAnchor.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftSectionAnchor",
+    "customizationSurfaces": [
+      {
+        "id": "items",
+        "purpose": "按分区顺序传入导航项。每项提供唯一 key、显示标题 title，以及指向目标元素 id 的 href（#id）。",
+        "binding": {
+          "type": "prop",
+          "name": "items"
+        }
+      },
+      {
+        "id": "get-container",
+        "purpose": "内容在页面内部容器滚动时，传入返回实际滚动容器的函数。省略时使用 window。",
+        "binding": {
+          "type": "prop",
+          "name": "getContainer"
+        }
+      },
+      {
+        "id": "on-navigate",
+        "purpose": "点击锚点时先回传目标 key，再由模板定位。使用详情或设置页提供的锚点参数时，原样传入该回调以协助展开目标分区。",
+        "binding": {
+          "type": "prop",
+          "name": "onNavigate"
+        }
+      },
+      {
+        "id": "aria-label",
+        "purpose": "导航区域的无障碍名称，默认「分区导航」。",
+        "binding": {
+          "type": "prop",
+          "name": "ariaLabel"
+        }
+      }
+    ]
+  }
+}

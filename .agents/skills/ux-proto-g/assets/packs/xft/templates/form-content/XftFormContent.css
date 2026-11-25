@@ -1,0 +1,178 @@
+.xft-form-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  --xft-form-section-gap: 20px;
+  --xft-form-heading-gap: 16px;
+  --xft-form-row-gap: 16px;
+}
+
+.xft-form-content[data-label-layout="vertical"] {
+  --xft-form-section-gap: 24px;
+  --xft-form-heading-gap: 20px;
+  --xft-form-row-gap: 20px;
+}
+
+.xft-form-content__sections {
+  display: grid;
+  gap: var(--xft-form-section-gap);
+}
+
+.xft-form-content__section {
+  min-width: 0;
+}
+
+.xft-form-content__heading {
+  margin-block-end: var(--xft-form-heading-gap);
+}
+
+.xft-form-content__fields {
+  display: grid;
+  grid-template-columns: repeat(var(--xft-form-columns), minmax(0, min(100%, var(--xft-form-column-width))));
+  align-items: start;
+  column-gap: var(--xft-form-column-gap);
+  row-gap: var(--xft-form-row-gap);
+}
+
+.xft-form-content .xft-form-content__field {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.xft-form-content .xft-form-content__field > .ant-form-item-row > .ant-form-item-label {
+  min-width: 0;
+  padding: 0;
+}
+
+.xft-form-content .xft-form-content__field > .ant-form-item-row > .ant-form-item-label > label {
+  max-width: 100%;
+}
+
+.xft-form-content .xft-form-content__field .ant-form-item-label > label.ant-form-item-required::before {
+  flex: none;
+  margin-inline-end: 4px;
+}
+
+.xft-form-content .xft-form-content__field .ant-form-item-label > label.ant-form-item-no-colon::after {
+  display: none;
+  content: none;
+}
+
+.xft-form-content .xft-form-content__field .ant-form-item-tooltip {
+  flex: none;
+  margin-inline-start: 2px;
+}
+
+.xft-form-content__label {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.xft-form-content[data-label-layout="horizontal"] .xft-form-content__field > .ant-form-item-row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  column-gap: var(--xft-form-label-gap);
+}
+
+.xft-form-content[data-label-layout="horizontal"] .xft-form-content__field > .ant-form-item-row > .ant-form-item-label {
+  flex: 0 0 var(--xft-form-label-width);
+  width: var(--xft-form-label-width);
+  max-width: var(--xft-form-label-width);
+  text-align: end;
+}
+
+.xft-form-content[data-label-layout="horizontal"] .xft-form-content__field .ant-form-item-label > label {
+  width: 100%;
+  height: 32px;
+  justify-content: flex-end;
+  text-align: end;
+}
+
+.xft-form-content[data-label-layout="horizontal"] .xft-form-content__label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 16px;
+}
+
+.xft-form-content[data-label-layout="horizontal"] label:has(> .xft-form-content__label[data-wrapped])::before {
+  align-self: flex-start;
+  line-height: 16px;
+}
+
+.xft-form-content[data-label-layout="horizontal"] label:has(> .xft-form-content__label[data-wrapped]) > .ant-form-item-tooltip {
+  align-self: flex-end;
+  line-height: 16px;
+}
+
+.xft-form-content[data-label-layout="horizontal"] .xft-form-content__field > .ant-form-item-row > .ant-form-item-control {
+  flex: 0 1 var(--xft-form-field-width, var(--xft-form-control-width));
+  width: var(--xft-form-field-width, var(--xft-form-control-width));
+  max-width: 100%;
+  min-width: 0;
+}
+
+.xft-form-content[data-label-layout="vertical"] .xft-form-content__field > .ant-form-item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.xft-form-content[data-label-layout="vertical"] .xft-form-content__field > .ant-form-item-row > .ant-form-item-label {
+  width: 100%;
+  max-width: 100%;
+  flex: none;
+  text-align: start;
+}
+
+.xft-form-content[data-label-layout="vertical"] .xft-form-content__field .ant-form-item-label > label {
+  height: 22px;
+}
+
+.xft-form-content[data-label-layout="vertical"] .xft-form-content__label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 22px;
+}
+
+.xft-form-content[data-label-layout="vertical"] .xft-form-content__field > .ant-form-item-row > .ant-form-item-control {
+  flex: none;
+  width: var(--xft-form-field-width, var(--xft-form-control-width));
+  max-width: 100%;
+  min-width: 0;
+}
+
+.xft-form-content[data-measuring-labels] .xft-form-content__field .ant-form-item-label > label {
+  width: max-content;
+  max-width: none;
+}
+
+.xft-form-content[data-measuring-labels] .xft-form-content__label {
+  display: block;
+  white-space: nowrap;
+}
+
+.xft-form-content .xft-form-content__field .ant-form-item-control-input {
+  min-height: 32px;
+}
+
+.xft-form-content .xft-form-content__field .ant-form-item-extra {
+  min-height: 0;
+}
+
+.xft-form-content .xft-form-content__field.ant-form-item-has-error .ant-form-item-explain + .ant-form-item-extra {
+  margin-block-start: 4px;
+}
+
+.xft-form-content .ant-input,
+.xft-form-content .ant-input-number,
+.xft-form-content .ant-picker,
+.xft-form-content .ant-select {
+  width: 100%;
+}

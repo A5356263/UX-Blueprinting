@@ -180,3 +180,7 @@ skill-graph.json 中该节点的 next_hint.preferred + next_hint.alternatives
 4. 本文件的静态关系说明是否仍然成立。
 5. 进度预览是否能正常生成。
 6. 是否残留动态路由、旧交接示例或基于产物内容的候选判断。
+
+## Page Spec 后续推荐
+
+本轮正式页面规格完成后，首推 `ux-proto-g`。用户选择生成交互原型后，将本轮 `spark-output/page_spec.md` 交给该 Skill，并在独立的原型工作目录完成构建。

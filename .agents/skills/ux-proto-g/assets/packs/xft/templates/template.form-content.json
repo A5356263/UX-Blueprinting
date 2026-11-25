@@ -1,0 +1,69 @@
+{
+  "id": "template.form-content",
+  "kind": "Template",
+  "title": "XFT 表单内容",
+  "abstract": "提供表单字段分组、标签对齐、校验和提交。",
+  "entry": "form-content/XftFormContent.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftFormContent",
+    "customizationSurfaces": [
+      {
+        "id": "sections",
+        "purpose": "按业务主题分组。没有具名主题时，传一个无标题组。每组提供 key 和 fields。字段组默认不显示标题。需求明确要求显示组标题时，传 heading。每个字段提供 key、name、label 和 control。校验规则传 rules，输入说明传 extra，标签解释传 tooltip，需要隐藏字段时传 hidden: true。",
+        "binding": {
+          "type": "prop",
+          "name": "sections"
+        }
+      },
+      {
+        "id": "columns",
+        "purpose": "默认双列。需求明确要求整个表单每行只排一个字段时，传 1。仅个别字段需要独占一行时，为该字段传 span=\"full\"。",
+        "binding": {
+          "type": "prop",
+          "name": "columns"
+        }
+      },
+      {
+        "id": "label-layout",
+        "purpose": "默认使用左右结构。仅当需求明确要求标签放在控件上方时，传 vertical。",
+        "binding": {
+          "type": "prop",
+          "name": "labelLayout"
+        }
+      },
+      {
+        "id": "initial-values",
+        "purpose": "表单初始化值，键名与字段的 name 对应。",
+        "binding": {
+          "type": "prop",
+          "name": "initialValues"
+        }
+      },
+      {
+        "id": "loading",
+        "purpose": "需要暂时禁用表单控件时传 true，默认 false。",
+        "binding": {
+          "type": "prop",
+          "name": "loading"
+        }
+      },
+      {
+        "id": "on-finish",
+        "purpose": "表单校验通过后收到完整字段值，由页面处理保存或提交。",
+        "binding": {
+          "type": "prop",
+          "name": "onFinish"
+        }
+      },
+      {
+        "id": "form",
+        "binding": {
+          "type": "prop",
+          "name": "form"
+        },
+        "purpose": "需要从表单外触发校验与提交时，由页面持有并传入 Ant Design Form 实例。窗口 footer 或页面操作栏可调用该实例的 submit。"
+      }
+    ]
+  }
+}

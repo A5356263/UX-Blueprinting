@@ -1,0 +1,20 @@
+.xft-approval-agree__title { display: inline-flex; align-items: center; gap: 8px; }
+.xft-approval-agree__title .anticon { color: var(--alias-surface-success-solid); }
+.xft-approval-agree__body { display: flex; flex-direction: column; gap: var(--alias-space-4); max-height: calc(80vh - 132px); overflow-y: auto; }
+.xft-approval-agree__body .ant-input-textarea textarea { max-height: 160px; overflow-y: auto; }
+.xft-approval-agree__opinion { display: flex; flex-direction: column; gap: 4px; }
+.xft-approval-agree__toolbar { display: flex; align-items: center; gap: 4px; }
+.xft-approval-agree__toolbar-divider { height: 20px; margin-inline: 8px; border-color: var(--alias-divider-neutral); }
+.xft-approval-agree__toolbar > :last-child { margin-left: auto; }
+.xft-approval-agree__images { display: flex; gap: 12px; flex-wrap: wrap; }
+.xft-approval-agree__images > div { position: relative; }
+.xft-approval-agree__images .ant-btn { position: absolute; right: 0; top: 0; background: white; }
+.xft-approval-agree__files > div { display: flex; align-items: center; gap: 8px; min-height: 30px; background: var(--alias-surface-region-muted); }
+.xft-approval-agree__files span:not(.anticon) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.xft-approval-agree__signature { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.xft-approval-agree__signature-preview { position: relative; box-sizing: border-box; width: max-content; padding: 4px; border: 1px solid var(--alias-border-neutral); border-radius: 6px; }
+.xft-approval-agree__signature-preview .ant-image { display: block; }
+.xft-approval-agree__signature-remove { position: absolute; top: -8px; right: -8px; z-index: 1; padding: 0; color: var(--alias-text-muted); background: var(--alias-surface-container-bright); border-radius: 50%; }
+.xft-approval-agree__error { font-size: 12px; }
+.xft-approval-agree__invalid { border-color: var(--alias-surface-error-solid) !important; }
+.xft-approval-signature canvas { display: block; width: 100%; height: 280px; background: var(--alias-surface-region-muted); touch-action: none; }

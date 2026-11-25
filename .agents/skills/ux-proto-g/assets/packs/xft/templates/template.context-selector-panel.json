@@ -1,0 +1,109 @@
+{
+  "id": "template.context-selector-panel",
+  "kind": "Template",
+  "title": "XFT 范围选择面板",
+  "abstract": "提供业务范围浏览与选择，支持面板内搜索、折叠和宽度调整。",
+  "entry": "context-selector-panel/XftContextSelectorPanel.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftContextSelectorPanel",
+    "customizationSurfaces": [
+      {
+        "id": "directory-content",
+        "purpose": "传入范围选择内容。层级范围用树，平级范围按需求用单选或多选列表。页面维护选中状态，折叠后仍可恢复当前选择。相邻结果区的数据更新由页面处理。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryContent"
+        }
+      },
+      {
+        "id": "directory-width",
+        "purpose": "展开时的面板宽度，单位为 px，默认 200。模板根据父容器限制宽度，通常不超过其一半，上限为 384，最窄为 48。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryWidth"
+        }
+      },
+      {
+        "id": "on-directory-width-change",
+        "purpose": "拖拽调整时返回约束后的宽度。需要跨折叠保留宽度时，把返回值写回 directoryWidth。",
+        "binding": {
+          "type": "prop",
+          "name": "onDirectoryWidthChange"
+        }
+      },
+      {
+        "id": "directory-header",
+        "purpose": "面板顶部的标题内容。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryHeader"
+        }
+      },
+      {
+        "id": "directory-search-value",
+        "purpose": "页面受控搜索时传入当前关键词，并用 onDirectorySearchChange 更新。省略时面板自行维护输入值。",
+        "binding": {
+          "type": "prop",
+          "name": "directorySearchValue"
+        }
+      },
+      {
+        "id": "on-directory-search-change",
+        "purpose": "传入此回调才显示搜索框。用返回的关键词过滤面板中的范围选项，结果区查询由结果区处理。",
+        "binding": {
+          "type": "prop",
+          "name": "onDirectorySearchChange"
+        }
+      },
+      {
+        "id": "directory-search-placeholder",
+        "purpose": "搜索框提示语，默认「搜索」。搜索框启用时生效。",
+        "binding": {
+          "type": "prop",
+          "name": "directorySearchPlaceholder"
+        }
+      },
+      {
+        "id": "directory-actions",
+        "purpose": "面板内作用于范围选项的操作。作用于结果集的操作放在结果区。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryActions"
+        }
+      },
+      {
+        "id": "directory-footer",
+        "purpose": "面板展开时显示的底部内容。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryFooter"
+        }
+      },
+      {
+        "id": "directory-collapsible",
+        "purpose": "需要显示折叠或展开按钮时传 true，默认不显示。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryCollapsible"
+        }
+      },
+      {
+        "id": "directory-collapsed",
+        "purpose": "由页面控制展开状态时传入。省略时面板自行维护，初始为展开。",
+        "binding": {
+          "type": "prop",
+          "name": "directoryCollapsed"
+        }
+      },
+      {
+        "id": "on-directory-collapsed-change",
+        "purpose": "用户切换时返回下一折叠状态。传入 directoryCollapsed 时，通过此回调更新它。",
+        "binding": {
+          "type": "prop",
+          "name": "onDirectoryCollapsedChange"
+        }
+      }
+    ]
+  }
+}

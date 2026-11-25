@@ -99,10 +99,30 @@
       ],
       "required": [],
       "next_hint": {
-        "preferred": [],
-        "reason": "页面设计文档已输出，目前 design skill 正在建设中，可让 agent 根据文档直接生成 HTML 原型。",
+        "preferred": [
+          "ux-proto-g"
+        ],
+        "reason": "基于本轮正式页面规格生成可交互的原型。",
         "alternatives": []
       }
+    },
+    {
+      "id": "ux-proto-g",
+      "name_zh": "交互原型",
+      "description": "将页面规格生成可交互的 React 原型，构建并交付预览。",
+      "phase": 3,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [
+        "page-spec"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "alternatives": []
+      },
+      "anchor": false,
+      "requiredAny": []
     },
     {
       "id": "knowledge-wiki",

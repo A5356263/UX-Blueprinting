@@ -466,7 +466,9 @@ ASCII 线框既是结构来源，也是正式主体内容。页面规格主体�
 
 ```text
 页面设计文档已输出。
-目前 design skill 正在建设中，你可以让 agent 根据文档直接生成 HTML 原型。
+下一步推荐：使用 ux-proto-g，基于本轮 spark-output/page_spec.md 生成交互原型。
 ```
+
+仅在用户明确选择生成原型时交接。本轮已完成的 Page Spec 是设计输入，原型写入独立的原型工作目录，由 ux-proto-g 按其发行流程构建和报告结果。
 
 **硬规则：正式产物写入并校验通过后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**

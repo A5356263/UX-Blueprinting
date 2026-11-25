@@ -1,0 +1,48 @@
+.xft-frame { height: 100vh; overflow: hidden; background: var(--alias-surface-region-muted); }
+.xft-frame__body { min-height: 0; flex: 1; overflow: hidden; }
+.xft-frame__sider { height: 100%; overflow: auto; padding: var(--alias-space-3) 0; background: var(--alias-surface-container-bright) !important; border-right: 1px solid var(--alias-border-neutral); }
+.xft-frame__workspace { display: flex; min-width: 0; min-height: 0; flex-direction: column; overflow: hidden; background: var(--alias-surface-region-muted); }
+.xft-frame__workspace-top { flex: none; min-height: 36px; background: var(--alias-surface-container-bright); }
+.xft-frame__content-viewport { display: flex; min-height: 0; flex: 1; flex-direction: column; overflow: hidden; }
+.xft-frame__content-viewport[hidden] { display: none; }
+.xft-frame__subpage-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--alias-space-3);
+  min-width: 0;
+  padding: var(--alias-space-3) var(--alias-space-4);
+  font-size: var(--alias-font-size-caption);
+  line-height: 16px;
+}
+.xft-frame__subpage-back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--alias-text-secondary);
+  font: inherit;
+  cursor: pointer;
+}
+.xft-frame__subpage-back svg { display: block; inline-size: 16px; block-size: 16px; }
+.xft-frame__subpage-back svg path {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.513, 0.589);
+}
+.xft-frame__subpage-divider { flex: none; inline-size: 1px; block-size: var(--alias-space-3); background: var(--alias-border-neutral); }
+.xft-frame__subpage-title { min-width: 0; overflow: hidden; color: var(--alias-text-default); white-space: nowrap; text-overflow: ellipsis; }
+.xft-frame__subpage-header + .xft-frame__canvas { padding-block-start: 0; }
+.xft-frame__canvas { box-sizing: border-box; display: flex; min-width: 0; min-height: 0; height: 100%; flex: 1; flex-direction: column; padding: var(--alias-space-4); overflow: auto; }
+.xft-frame__canvas:has(.xft-frame__content > [data-xft-scroll-owner="template"]), .xft-frame__canvas:has(.xft-frame__content > * > [data-xft-scroll-owner="template"]) { overflow-y: hidden; }
+.xft-frame__work-surface { display: flex; min-width: 0; min-height: 0; height: 100%; flex: 1; flex-direction: column; overflow: hidden; background: var(--alias-surface-container-bright); border-radius: var(--alias-radius-regular); }
+.xft-frame__content { display: flex; box-sizing: border-box; min-width: 0; min-height: 0; height: 100%; flex: 1; flex-direction: column; padding: var(--alias-space-4); }
+.xft-frame__content:has(> [data-xft-workspace-layout="managed"]), .xft-frame__content:has(> * > [data-xft-workspace-layout="managed"]) { padding: 0; }
+.xft-frame__content > [data-xft-workspace-layout="managed"], .xft-frame__content > *:has(> [data-xft-workspace-layout="managed"]) { min-width: 0; min-height: 0; flex: 1; }
+
+/* 连续内容撑开唯一白色表面，由框架 canvas 滚动，避免固定高度的内层裁掉正文。 */
+.xft-frame__canvas:not(:has(.xft-frame__content > [data-xft-scroll-owner="template"], .xft-frame__content > * > [data-xft-scroll-owner="template"])) > .xft-frame__work-surface { flex: 0 0 auto; min-height: 100%; height: auto; overflow: visible; }
+.xft-frame__canvas:not(:has(.xft-frame__content > [data-xft-scroll-owner="template"], .xft-frame__content > * > [data-xft-scroll-owner="template"])) .xft-frame__content { height: auto; min-height: 100%; }
