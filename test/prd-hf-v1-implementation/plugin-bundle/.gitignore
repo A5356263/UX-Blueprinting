@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+Thumbs.db
+.playwright-mcp/
+.tmp/
+.agents/temp/
+.agents/worktrees/
+docs/
+input/
+test/
+spark-output/
+out/
+plugin/
+V0.2User Manual.md

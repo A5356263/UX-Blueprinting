@@ -10,6 +10,7 @@
 !/input/
 !/skill/
 !/spec/
+!/test/
 !/myguize.md
 
 __pycache__/
@@ -23,7 +24,6 @@ Thumbs.db
 .agents/temp/
 .agents/worktrees/
 docs/
-test/
 spark-output/
 out/
 plugin/

@@ -1,0 +1,1984 @@
+window.__ModuleLoader__.load({
+  id: 'dsh-ux-blueprinting',
+  factory(require) {
+    const { createElement: h, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } = require('react')
+
+    const id = 'ux-blueprinting'
+    const endpoint = '/api/ux-blueprinting/workbench'
+    const STORAGE_KEY = 'uxbp:workbench:v2'
+    const NS = 'ux-blueprinting'
+
+    const en = {
+      title: 'Design workbench',
+      task: 'Tasks',
+      skillsTab: 'Skills',
+      sediment: 'Artifacts',
+      workspace: 'Workspace',
+      reset: 'Reset workbench',
+      useSkill: 'Use skill',
+      pause: 'Pause',
+      resume: 'Resume',
+      rename: 'Rename',
+      skill: 'Skill',
+      session: 'Conversation',
+      newSession: 'New conversation',
+      attach: 'Files',
+      placeholder: 'Describe the task, or paste a path / URL…',
+      execute: 'Run task',
+      enter: 'Go to conversation',
+      stop: 'Stop',
+      next: 'Next',
+      noTask: 'Pick a skill card to start.',
+      emptySediment: 'No tasks yet.',
+      search: 'Search tasks',
+      all: 'All',
+      active: 'In progress',
+      paused: 'Paused',
+      completed: 'Completed',
+      idle: 'Not started',
+      board: 'Board',
+      list: 'List',
+      searchTasks: 'Search tasks',
+      noSessions: 'No conversations yet.',
+      running: 'Running…',
+      openTask: 'Open',
+      view: 'View',
+      remove: 'Remove',
+      history: 'History',
+      detailPlaceholder: 'Add context or request a change to this task…',
+      detailDisabled: 'Continue the task to send a message.',
+      noArtifacts: 'No artifacts yet.',
+      artifactSteps: 'Artifact steps',
+      editArtifact: 'Edit',
+      save: 'Save',
+      cancel: 'Cancel',
+      manualEdited: 'Edited by user',
+      loading: 'Loading…',
+      send: 'Send',
+      backToTasks: 'Back to task canvas',
+      backToSediment: 'Back to artifacts',
+      latestTask: 'Latest task',
+      currentStage: 'Steps',
+      userReply: 'User reply',
+      requirementsBaseline: 'Requirements baseline',
+      taskFiles: 'Files',
+      taskActions: 'Task actions',
+      finishTask: 'End task',
+      continueTask: 'Continue task',
+      finishQuestion: 'End this task?',
+      artifactReady: ' is ready',
+      workingOn: 'Running',
+      awaiting: 'Pending confirmation',
+      awaitingOutput: 'Awaiting output',
+      viewPending: 'View pending item',
+      confirmOutput: 'Confirm artifact',
+      needsReview: 'Needs review',
+      handoff: 'Continue ',
+      overviewUnavailable: 'Unable to load the latest task.',
+      stale: 'May be stale',
+      recordedAt: 'Recorded',
+      taskName: 'Task',
+      status: 'Status',
+    }
+
+    const zh = {
+      title: '设计工作台',
+      task: '任务',
+      skillsTab: '技能',
+      sediment: '产物',
+      workspace: '工作区',
+      reset: '重置工作台',
+      useSkill: '使用 Skill',
+      pause: '暂停',
+      resume: '恢复',
+      rename: '重命名',
+      skill: '技能',
+      session: '会话',
+      newSession: '新会话',
+      attach: '文件',
+      placeholder: '描述这次任务，或直接贴路径 / URL……',
+      execute: '执行任务',
+      enter: '跳转至会话',
+      stop: '停止',
+      next: '下一步',
+      noTask: '选择一张技能卡片开始。',
+      emptySediment: '还没有任务记录。',
+      search: '搜索任务',
+      all: '全部',
+      active: '进行中',
+      paused: '已暂停',
+      completed: '已完成',
+      idle: '未开始',
+      board: '看板',
+      list: '表格',
+      searchTasks: '搜索任务',
+      noSessions: '还没有会话。',
+      running: '执行中…',
+      openTask: '打开',
+      view: '查看',
+      remove: '移除',
+      history: '历史任务',
+      detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
+      detailDisabled: '继续任务后才能发送消息。',
+      noArtifacts: '还没有产物。',
+      artifactSteps: '产物步骤',
+      editArtifact: '编辑',
+      save: '保存',
+      cancel: '取消',
+      manualEdited: '已手动编辑',
+      loading: '加载中…',
+      send: '发送',
+      backToTasks: '返回任务画布',
+      backToSediment: '返回产物',
+      latestTask: '最新任务',
+      currentStage: '步骤',
+      userReply: '用户回复',
+      requirementsBaseline: '正式需求基线',
+      taskFiles: '文件',
+      taskActions: '任务操作',
+      finishTask: '结束任务',
+      continueTask: '继续任务',
+      finishQuestion: '是否结束任务？',
+      artifactReady: '已生成',
+      workingOn: '正在执行',
+      awaiting: '待确认',
+      awaitingOutput: '待产出',
+      viewPending: '查看待确认项',
+      confirmOutput: '确认此产物',
+      needsReview: '待复核',
+      handoff: '承接任务 ',
+      overviewUnavailable: '暂时无法加载最新任务。',
+      stale: '可能过期',
+      recordedAt: '记录于',
+      taskName: '任务',
+      status: '状态',
+    }
+
+    const styles = `
+      @font-face {
+        font-family: "UXBP Source Han Medium";
+        src: local("Source Han Sans SC Medium"), local("SourceHanSansSC-Medium"), local("思源黑体 Medium");
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+      }
+      .uxbp-root {
+        --bg: var(--dsw-alias-bg-base, #f7f6f3);
+        --card: var(--dsw-alias-bg-layer-2, #fff);
+        --line: var(--dsw-alias-border-l2, #e6e1da);
+        --line-strong: var(--dsw-alias-border-l4, #d4cec6);
+        --ink: var(--dsw-alias-label-primary, #27231f);
+        --muted: var(--dsw-alias-label-secondary, #686159);
+        --faint: var(--dsw-alias-label-tertiary, #8a8279);
+        --accent: var(--dsw-alias-link, #a8481e);
+        --soft: var(--dsw-alias-interactive-bg-hover, #f4f3f0);
+        --glass: color-mix(in srgb, var(--card) 72%, transparent);
+        --radius: var(--dsw-radius-xl, 20px);
+        --radius-md: var(--dsw-radius-md, 12px);
+        --radius-sm: var(--dsw-radius-sm, 8px);
+        --uxbp-card-width: 160px;
+        --shadow: var(--dsw-elevation-soft, 0 3px 12px rgb(59 44 29 / .06));
+        --serif: var(--sans);
+        --sans: "UXBP Source Han Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+        --ease: cubic-bezier(.2, .8, .2, 1);
+        position: relative; height: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;
+        overflow: hidden; color: var(--ink); background: var(--bg);
+        font: 500 14px/1.5 var(--sans);
+        font-synthesis: none;
+        container-type: inline-size;
+      }
+      .uxbp-root *, .uxbp-root *::before, .uxbp-root *::after { box-sizing: border-box; }
+      .uxbp-root, .uxbp-root * { scrollbar-width: none; }
+      .uxbp-root::-webkit-scrollbar, .uxbp-root *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+      .uxbp-root button, .uxbp-root input, .uxbp-root textarea, .uxbp-root select, .uxbp-root code, .uxbp-root pre { font-family: var(--sans); }
+      .uxbp-top {
+        position: absolute; z-index: 30; top: 14px; left: 18px; right: 325px;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 0; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; pointer-events: none;
+      }
+      .uxbp-top > * { pointer-events: auto; }
+      .uxbp-brand { display: flex; align-items: center; gap: 10px; min-width: 0; background: transparent; border: 0; box-shadow: none; }
+      .uxbp-mark { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 11px;
+        color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
+      .uxbp-title { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
+      .uxbp-tabs { display: flex; box-sizing: border-box; height: 34px; min-height: 34px; max-height: 34px; flex-shrink: 0;
+        align-items: stretch; gap: 2px; padding: 3px; border-radius: 12px; background: color-mix(in srgb, var(--card) 92%, transparent);
+        border: .5px solid var(--line); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+      .uxbp-tabs > .uxbp-tab { box-sizing: border-box; height: 100%; min-height: 0; max-height: 100%; display: inline-flex;
+        align-items: center; justify-content: center; margin: 0; border: 0; border-radius: 8px; padding: 0 14px; background: transparent; color: var(--muted);
+        font: inherit; font-size: 13px; line-height: 20px; font-weight: 500; cursor: pointer; transition: background .18s var(--ease), color .18s var(--ease); }
+      .uxbp-tab:hover:not([data-on="true"]) { background: var(--soft); color: var(--ink); }
+      .uxbp-tab[data-on="true"] { background: var(--ink); color: var(--card); box-shadow: none; }
+      .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+      .uxbp-top .uxbp-btn { box-sizing: border-box; height: 34px; min-height: 34px; max-height: 34px;
+        background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+      .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
+        padding: 0 13px; border: .5px solid var(--line); border-radius: var(--radius-md); background: var(--card);
+        color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .25s var(--ease); }
+      .uxbp-btn:hover:not(:disabled) { background: var(--soft); }
+      .uxbp-btn:active:not(:disabled) { transform: scale(.97); }
+      .uxbp-btn:disabled { opacity: .5; cursor: not-allowed; }
+      .uxbp-icon { width: 34px; padding: 0; }
+      .uxbp-primary { background: var(--dsw-alias-button-primary-fill, var(--accent)); border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
+      .uxbp-picker { position: relative; }
+      .uxbp-picker > span { min-width: 0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-menu { position: absolute; z-index: 40; top: calc(100% + 5px); right: 0; min-width: 220px; max-height: 300px;
+        overflow: auto; padding: 5px; border-radius: var(--radius-md); background: var(--card);
+        backdrop-filter: blur(24px) saturate(160%); box-shadow: 0 16px 40px rgb(20 14 8 / .18); }
+      .uxbp-wsmenu { width: 400px; max-width: calc(100vw - 36px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px; padding: 6px; overflow: hidden; }
+      .uxbp-wspane, .uxbp-sessionpane { min-width: 0; max-height: 320px; overflow: auto; overflow-wrap: anywhere; }
+      .uxbp-wspane { border-right: .5px solid var(--line); padding-right: 6px; }
+      .uxbp-sessionpane { padding-left: 6px; }
+      .uxbp-menu-title { padding: 6px 9px; color: var(--faint); font-size: 11px; }
+      .uxbp-new-session { color: var(--accent); }
+      .uxbp-option:disabled { opacity: .42; cursor: not-allowed; }
+      .uxbp-option:disabled:hover { background: transparent; color: var(--ink); }
+      .uxbp-option { display: flex; justify-content: space-between; gap: 8px; width: 100%; padding: 8px 10px;
+        border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px;
+        text-align: left; cursor: pointer; }
+      .uxbp-option:hover, .uxbp-option[data-on="true"] { background: var(--soft); color: var(--accent); }
+      .uxbp-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 1px 306px; grid-template-rows: minmax(0, 1fr); gap: 0; }
+      .uxbp-left { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 0 0 16px 18px; }
+      .uxbp-divider { min-width: 0; min-height: 0; background: var(--line); }
+      .uxbp-canvas { flex: 1; min-height: 0; overflow: auto; border-radius: var(--radius) 0 0 var(--radius);
+        background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
+        background-size: 18px 18px; cursor: grab; touch-action: none; user-select: none; }
+      .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
+      .uxbp-plane { padding: 72px 40px 160px; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
+      .uxbp-group { margin-bottom: 34px; }
+      .uxbp-group:last-child { margin-bottom: 0; }
+      .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
+      .uxbp-cards { display: grid; grid-template-columns: repeat(6, var(--uxbp-card-width)); gap: 24px;
+        align-items: start; width: calc(6 * var(--uxbp-card-width) + 120px); }
+      .uxbp-card { position: relative; width: var(--uxbp-card-width); min-height: 184px; padding: 0; overflow: hidden; display: flex;
+        flex-direction: column; border: 0; border-radius: var(--radius); background: var(--card);
+        color: var(--ink); text-align: left; box-shadow: var(--shadow); cursor: pointer;
+        transform-origin: center;
+        transform: translateY(var(--off, 0px)) rotate(var(--rot, 0deg));
+        transition: transform .5s cubic-bezier(.2, 1.3, .4, 1), box-shadow .3s var(--ease); }
+      .uxbp-card:hover, .uxbp-card:focus-visible { transform: rotate(0deg) translateY(-4px) scale(1.025);
+        box-shadow: 0 24px 48px -16px rgb(0 0 0 / .28); outline: none; }
+      .uxbp-card[data-selected="true"] { transform: rotate(0deg); box-shadow: 0 22px 54px -14px rgb(0 0 0 / .28); }
+      .uxbp-card[data-shake="true"] { animation: uxbp-shake .22s ease; }
+      .uxbp-art { flex: none; aspect-ratio: 2 / 1; margin: 6px 6px 0; border-radius: 14px; position: relative; overflow: hidden; }
+      .uxbp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+      .uxbp-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgb(255 255 255 / .18)); pointer-events: none; }
+      .uxbp-card-body { flex: 1; min-height: 0; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 3px; }
+      .uxbp-card-body strong { font-size: 12.5px; line-height: 17px; font-weight: 600; display: -webkit-box;
+        -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .uxbp-card-body p { margin: 0; color: var(--muted); font-size: 10px; line-height: 15px;
+        white-space: normal; overflow-wrap: anywhere; }
+      .uxbp-card-foot { margin-top: auto; min-height: 30px; padding: 5px 10px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+      .uxbp-card-foot code { min-width: 0; color: var(--muted); font-size: 10px; line-height: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-use { flex-shrink: 0; white-space: nowrap; border: .5px solid var(--line); border-radius: 999px; padding: 2px 6px; background: var(--card);
+        color: var(--muted); font: inherit; font-size: 10px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-use:hover { background: var(--soft); color: var(--ink); }
+      .uxbp-card:hover .uxbp-use, .uxbp-card[data-selected="true"] .uxbp-use { background: var(--dsw-alias-button-primary-fill, var(--accent));
+        border-color: transparent; color: var(--dsw-alias-label-primary-inverted, #fff); }
+      @keyframes uxbp-shake { 0%,100% { transform: rotate(0) translateX(0); } 35% { transform: rotate(0) translateX(-2px); }
+        70% { transform: rotate(0) translateX(2px); } }
+      .uxbp-composer { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); width: min(520px, calc(100% - 32px));
+        bottom: 12px; margin: 0; padding: 6px 8px; border: .5px solid var(--line);
+        border-radius: 28px; background: color-mix(in srgb, var(--card) 60%, transparent);
+        backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%);
+        box-shadow: 0 12px 34px -10px rgb(0 0 0 / .16); }
+      .uxbp-composer:focus-within { border-color: var(--line-strong); }
+      .uxbp-composer .uxbp-menu { top: auto; bottom: calc(100% + 6px); }
+      .uxbp-input { display: block; width: 100%; min-height: 36px; max-height: 84px; resize: none; padding: 4px 6px;
+        border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; outline: none; }
+      .uxbp-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+      .uxbp-tools-left, .uxbp-tools-right { display: flex; align-items: center; gap: 4px; min-width: 0; }
+      .uxbp-composer .uxbp-btn { min-height: 30px; padding: 0 9px; font-size: 11.5px; border-radius: 9px; }
+      .uxbp-composer .uxbp-tools-right .uxbp-run { width: 32px; height: 32px; min-height: 32px; padding: 0; border-radius: 50%; }
+      .uxbp-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 4px 2px; }
+      .uxbp-chip { position: relative; display: inline-flex; flex: 0 1 auto; min-width: 0; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 8px;
+        background: var(--soft); color: var(--ink); font-size: 11px; }
+      .uxbp-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-chip button { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; width: 14px; height: 14px;
+        padding: 0; border: .5px solid var(--line); border-radius: 50%; background: var(--card); color: var(--muted);
+        font: 10px/1 var(--sans); cursor: pointer; }
+      .uxbp-chip button:hover { background: var(--soft); color: var(--ink); }
+      .uxbp-up { position: relative; overflow: hidden; }
+      .uxbp-up input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+      .uxbp-error { margin: 0 2px; padding: 8px 10px; border-radius: 10px; color: var(--dsw-alias-state-error-primary, #a52c28);
+        background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 9%, var(--card)); font-size: 12px; }
+      .uxbp-aside { min-width: 0; min-height: 0; height: 100%; display: flex; flex-direction: column; gap: 10px;
+        padding: 14px 18px 16px 16px; }
+      .uxbp-panel-head { flex: none; display: grid; gap: 5px; padding-bottom: 12px; border-bottom: .5px solid var(--line); }
+      .uxbp-overview-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .uxbp-overview-section h3 { margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+      .uxbp-taskline { display: flex; min-width: 0; align-items: center; flex-wrap: wrap; gap: 4px 6px; }
+      .uxbp-taskline h2 { margin: 0; min-width: 0; font-size: 17px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-taskline .uxbp-status { font-size: 10px; }
+      .uxbp-overview-meta { display: flex; align-items: flex-start; gap: 8px; }
+      .uxbp-overview-meta time { display: block; margin-top: 2px; color: var(--faint); }
+      .uxbp-task-state { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; border-radius: 999px; font-size: 11px; white-space: nowrap;
+        background: var(--soft); color: var(--muted); }
+      .uxbp-task-state::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+      .uxbp-task-state[data-status="active"] { background: color-mix(in srgb, var(--accent) 9%, var(--card)); color: var(--accent); }
+      .uxbp-task-state[data-status="completed"] { background: #edf7f1; color: #216b51; }
+      .uxbp-meta { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+      .uxbp-overview-actions .uxbp-btn { width: 26px; height: 26px; min-height: 26px; padding: 0; border: 0; background: transparent; }
+      .uxbp-overview-actions .uxbp-menu { min-width: 136px; }
+      .uxbp-overview-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 16px; }
+      .uxbp-overview-section { flex: none; padding-top: 4px; }
+      .uxbp-overview-section h3 { margin-bottom: 7px; }
+      .uxbp-step-list { list-style: none; margin: 0; padding: 0; }
+      .uxbp-step-list li { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: center; gap: 7px;
+        min-height: 27px; padding: 2px; font-size: 13px; overflow-wrap: anywhere; }
+      .uxbp-step-list svg { width: 14px; height: 14px; color: var(--faint); }
+      .uxbp-step-list [data-done="true"] svg { color: #216b51; }
+      .uxbp-step-list [aria-current="step"] { font-weight: 600; }
+      .uxbp-next-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 6px 8px; padding: 8px; overflow: hidden;
+        border: .5px solid var(--line); border-radius: 14px; background: var(--card); }
+      .uxbp-next-card .uxbp-art { width: 64px; height: 48px; margin: 0; border-radius: 7px; }
+      .uxbp-next-card .uxbp-card-body { grid-column: 2; padding: 0; }
+      .uxbp-next-card .uxbp-card-body strong { display: block; font-size: 13px; line-height: 17px; }
+      .uxbp-next-card .uxbp-card-body p { display: block; font-size: 11px; line-height: 15px; }
+      .uxbp-next-card .uxbp-card-foot { grid-column: 1 / -1; min-height: 0; gap: 6px; padding: 0; }
+      .uxbp-next-card .uxbp-card-foot code { font-size: 11px; }
+      .uxbp-next-card .uxbp-use { margin-inline-start: auto; background: var(--ink); color: var(--card);
+        border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
+      .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
+      .uxbp-next-card .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
+      .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
+      .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; gap: 7px; align-items: center;
+        padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
+        font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+      .uxbp-output-row:hover { background: var(--soft); }
+      .uxbp-output-row > span { overflow-wrap: anywhere; }
+      .uxbp-output-row > svg { width: 13px; height: 13px; color: var(--muted); }
+      .uxbp-output-row > svg:first-child { color: #216b51; }
+      .uxbp-finish-dialog { width: min(370px, calc(100% - 32px)); padding: 20px; border: .5px solid var(--line); border-radius: 16px;
+        color: var(--ink); background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-finish-dialog::backdrop { background: rgb(20 23 26 / .27); }
+      .uxbp-finish-dialog h2 { margin: 0; font-size: 17px; }
+      .uxbp-finish-dialog p { margin: 6px 0 16px; color: var(--muted); font-size: 13px; }
+      .uxbp-finish-actions { display: flex; gap: 8px; justify-content: flex-end; }
+      .uxbp-handoff { margin: 4px 6px 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+      .uxbp-artifact-html { flex: 1; min-height: 0; width: 100%; border: 0; }
+      .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+      .uxbp-left[data-view="detail"] { padding: 0; }
+      .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
+        padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
+        padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
+      .uxbp-detail-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
+      .uxbp-detail-controls, .uxbp-detail-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px 16px; }
+      .uxbp-detail-summary { flex-wrap: wrap; align-items: center; }
+      .uxbp-detail-heading { flex: 1 1 200px; min-width: 0; }
+      .uxbp-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 28px;
+        padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 16px; cursor: pointer; }
+      .uxbp-detail-back svg { flex: none; width: 20px; height: 20px; }
+      .uxbp-detail-heading h1 { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; overflow-wrap: anywhere; }
+      .uxbp-detail-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .uxbp-detail-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+      .uxbp-detail-actions .uxbp-btn { min-height: 28px; padding: 0 8px; font-size: 11px; border-radius: 8px; }
+      .uxbp-artifact-steps { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px;
+        min-width: 0; max-width: 100%; margin: 0 0 0 auto; padding: 0; list-style: none; }
+      .uxbp-artifact-steps > li { display: flex; align-items: center; gap: 4px; min-width: 0; max-width: 100%; }
+      .uxbp-artifact-steps > li > svg { flex: none; width: 12px; height: 12px; color: var(--faint); }
+      .uxbp-artifact-step { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; min-width: 0; padding: 3px 8px;
+        border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: 12px;
+        text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+      .uxbp-artifact-step:hover { background: var(--soft); color: var(--ink); }
+      .uxbp-artifact-step-number { display: grid; flex: none; place-items: center; min-width: 20px; height: 20px; padding: 0 4px;
+        border-radius: 999px; background: var(--soft); font-size: 11px; font-variant-numeric: tabular-nums; }
+      .uxbp-artifact-step[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 10%, var(--card)); color: var(--ink); }
+      .uxbp-artifact-step[aria-pressed="true"] .uxbp-artifact-step-number { background: var(--ink); color: var(--card); }
+      .uxbp-artifact-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+        border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+      .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        padding: 10px 0; }
+      .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
+      .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
+      .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 8px 0 20px; }
+      .uxbp-artifact-edit { flex: 1; min-height: 0; width: 100%; resize: none; padding: 8px 0 20px; border: 0; outline: 0;
+        background: transparent; color: var(--ink); font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-artifact-error { flex: none; margin: 0 0 8px; padding: 7px 9px; border-radius: 8px; color: var(--dsw-alias-state-error-primary, #a52c28);
+        background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #a52c28) 8%, var(--card)); font-size: 11px; }
+      .uxbp-detail-composer { flex: none; align-self: center; width: min(440px, 100%); display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; padding: 6px 8px;
+        border: .5px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); }
+      .uxbp-detail-composer textarea { flex: 1; min-width: 0; min-height: 28px; max-height: 90px; field-sizing: content; resize: none; padding: 4px 6px; border: 0; outline: 0;
+        background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; }
+      .uxbp-md { color: var(--ink); font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+      .uxbp-md > :first-child { margin-top: 0; }
+      .uxbp-detail-composer .uxbp-run { flex: none; width: 28px; height: 28px; min-height: 28px; padding: 0; border-radius: 50%; }
+      .uxbp-md h1, .uxbp-md h2, .uxbp-md h3, .uxbp-md h4 { margin: 1.1em 0 .45em; line-height: 1.35; }
+      .uxbp-md h1 { font-size: 20px; } .uxbp-md h2 { font-size: 16px; } .uxbp-md h3 { font-size: 14px; } .uxbp-md h4 { font-size: 13px; }
+      .uxbp-md p { margin: .55em 0; white-space: pre-wrap; }
+      .uxbp-md ul, .uxbp-md ol { margin: .5em 0; padding-left: 1.4em; }
+      .uxbp-md li { margin: .2em 0; }
+      .uxbp-md pre { margin: .8em 0; padding: 10px; overflow: auto; border-radius: 8px; background: var(--soft); font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-md .uxbp-md-table { white-space: pre; }
+      .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+      .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-bottom: 12px; }
+      .uxbp-search { display: flex; align-items: center; gap: 7px; box-sizing: border-box; width: 280px; max-width: 100%; height: 38px;
+        margin-inline-start: auto; padding: 0 11px;
+        border: .5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--muted); }
+      .uxbp-search:focus-within { border-color: var(--line-strong); }
+      .uxbp-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+      .uxbp-search input::placeholder { color: var(--faint); }
+      .uxbp-seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 10px; background: var(--soft); }
+      .uxbp-seg button { height: 30px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted);
+        font: inherit; font-size: 12px; white-space: nowrap; cursor: pointer; transition: background .18s, color .18s; }
+      .uxbp-seg button:hover { color: var(--ink); background: color-mix(in srgb, var(--card) 55%, transparent); }
+      .uxbp-seg button[data-on="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+      .uxbp-seg-count { margin-inline-start: 6px; opacity: .75; font-variant-numeric: tabular-nums; }
+      .uxbp-sediment-board { flex: 1; min-height: 0; overflow: auto; padding: 16px 0; display: grid; gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); align-content: start; }
+      .uxbp-sediment-card { display: flex; flex-direction: column; gap: 8px; min-height: 150px; padding: 15px;
+        border: 0; border-radius: 16px; background: var(--card); box-shadow: var(--shadow); color: var(--ink);
+        text-align: left; font: inherit; cursor: pointer; transition: background .18s, box-shadow .18s; }
+      .uxbp-sediment-card:hover { background: color-mix(in srgb, var(--soft) 62%, var(--card)); box-shadow: 0 14px 34px -16px rgb(0 0 0 / .24); }
+      .uxbp-sediment-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      .uxbp-sediment-card-head strong { font-size: 14px; line-height: 21px; font-weight: 600; }
+      .uxbp-sediment-skills { margin-top: auto; color: var(--muted); font-size: 12px; line-height: 18px; }
+      .uxbp-sediment-table { flex: 1; min-height: 0; overflow: auto; border: .5px solid var(--line); border-radius: 16px; background: var(--card); }
+      .uxbp-sediment-table-head, .uxbp-sediment-row { display: grid; grid-template-columns: minmax(0, 1.7fr) 90px minmax(0, 1fr) 112px;
+        gap: 14px; align-items: center; width: 100%; padding: 0 16px; }
+      .uxbp-sediment-table-head { position: sticky; top: 0; z-index: 1; min-height: 38px; color: var(--muted);
+        font-size: 11px; background: var(--card); border-bottom: .5px solid var(--line); }
+      .uxbp-sediment-row { min-height: 58px; border: 0; border-bottom: .5px solid var(--line); border-radius: 0;
+        background: var(--card); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+      .uxbp-sediment-row:last-child { border-bottom: 0; }
+      .uxbp-sediment-row:hover { background: var(--soft); }
+      .uxbp-sediment-task { min-width: 0; }
+      .uxbp-sediment-task strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+      .uxbp-sediment-task span { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--faint); font-size: 10.5px; }
+      .uxbp-sediment-skill { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11.5px; }
+      .uxbp-sediment-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
+      .uxbp-taskcard { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border: 0;
+        border-radius: 16px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; text-align: left; }
+      .uxbp-taskcard:hover { background: var(--soft); box-shadow: none; }
+      .uxbp-taskcard-main { flex: 1; min-width: 0; }
+      .uxbp-taskcard-main strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+      .uxbp-taskcard-main span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+      .uxbp-status { flex: none; padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
+      .uxbp-status[data-status="active"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+      .uxbp-status[data-status="completed"] { color: #216b51; background: #edf7f1; }
+      @container (max-width: 760px) {
+        .uxbp-top { right: 18px; }
+        .uxbp-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 1px minmax(0, 42%); padding-top: 74px; }
+        .uxbp-left { padding: 0 18px 12px; }
+        .uxbp-plane { padding-top: 24px; }
+        .uxbp-aside { padding: 12px 18px 16px; }
+        .uxbp-task-detail { padding-inline: 12px; }
+        .uxbp-sediment-page { padding-right: 12px; padding-bottom: 12px; }
+      }
+      @container (max-width: 700px) {
+        .uxbp-left { --uxbp-card-width: 148px; }
+        .uxbp-top { position: relative; top: auto; left: auto; right: auto; margin: 10px 10px 0; }
+        .uxbp-body { padding-top: 10px; }
+        .uxbp-left { padding-inline: 10px; }
+        .uxbp-aside { padding-inline: 10px; }
+        .uxbp-left { padding-top: 0; }
+        .uxbp-title { display: none; }
+        .uxbp-card { min-height: 178px; }
+        .uxbp-plane { padding: 16px 20px 120px; }
+        .uxbp-picker > span { max-width: 100px; }
+      }
+      .uxbp-body[data-view="detail"] { padding-top: 0; }
+    `
+
+    function button(active) {
+      return { background: active ? 'var(--accent)' : undefined, color: active ? '#fff' : undefined }
+    }
+
+    function PanelIcon() {
+      return h('svg', { viewBox: '0 0 24 24', width: 18, height: 18, 'aria-hidden': true },
+        h('path', { d: 'M12 2.5 21.5 12 12 21.5 2.5 12Z', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinejoin: 'round' }),
+        h('circle', { cx: 12, cy: 12, r: 2, fill: 'currentColor' }))
+    }
+
+    function Icon({ path }) {
+      return h('svg', { viewBox: '0 0 24 24', width: 15, height: 15, 'aria-hidden': true },
+        h('path', { d: path, fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }))
+    }
+
+    async function api(query, body, signal) {
+      const response = await fetch(endpoint + (query ? '?' + new URLSearchParams(query) : ''), body ? {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal,
+      } : { signal })
+      const raw = await response.text()
+      let data = {}
+      try { data = raw ? JSON.parse(raw) : {} } catch { data = {} }
+      if (!response.ok) throw new Error(data.error || ('HTTP ' + response.status))
+      return data
+    }
+
+    async function uploadFile(sessionId, file) {
+      const query = new URLSearchParams({ sessionId, name: file.name })
+      if (['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(file.type)) query.set('mediaType', file.type)
+      const url = new URL('api/session/uploadFileBinary', document.baseURI)
+      url.search = query.toString()
+      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: file, credentials: 'include' })
+      if (!response.ok) throw new Error(file.name + ' · HTTP ' + response.status)
+      const result = await response.json()
+      if (!result.ok || !result.value?.receiptId) throw new Error(file.name + ' · ' + (result.error?.message || '上传失败'))
+      return { type: 'file', receiptId: result.value.receiptId }
+    }
+
+    const skillArt = {
+      uxs: {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('path', { d: 'M26 105c35-13 25-48 67-48s35 35 76 13M93 57c23 0 26-27 64-27', stroke: '#b9b39a', strokeDasharray: '3 4' }),
+          h('circle', { cx: 91, cy: 67, r: 38, fill: '#dbd5bf', stroke: 'none' }),
+          h('circle', { cx: 86, cy: 61, r: 34, fill: '#fffdf5' }),
+          h('path', { d: 'M86 32v7m0 44v7M57 61h7m44 0h7M65 40l5 5m33 33 5 5', stroke: '#b8ae91' }),
+          h('path', { d: 'm99 46-8 23-23 8 8-23z', fill: '#8e9268' }),
+          h('path', { d: 'm99 46-8 23-15-15z', fill: '#d3d7b5', stroke: 'none' }),
+          h('circle', { cx: 28, cy: 105, r: 5, fill: '#8e9268' }),
+          h('rect', { x: 146, y: 19, width: 30, height: 22, rx: 4, fill: '#faf8ef' }),
+          h('path', { d: 'm154 30 5 4 9-9M149 91h25m-25 6h18' }),
+        ],
+      },
+      stories: {
+        background: '#e5eee7', ink: '#385145',
+        scene: () => [
+          h('path', { d: 'M48 57h22m35 0h20M48 95h22', stroke: '#91b09f' }),
+          h('circle', { cx: 35, cy: 45, r: 12, fill: '#fffdf7' }),
+          h('circle', { cx: 35, cy: 41, r: 4, fill: '#9cb6a4', stroke: 'none' }),
+          h('path', { d: 'M28 52c0-9 14-9 14 0', fill: '#cbded3' }),
+          h('rect', { x: 62, y: 30, width: 50, height: 65, rx: 5, fill: '#cbded3', transform: 'rotate(-7 62 30)' }),
+          h('rect', { x: 68, y: 35, width: 50, height: 65, rx: 5, fill: '#fffdf7' }),
+          h('rect', { x: 75, y: 44, width: 21, height: 8, rx: 3, fill: '#aac5b1', stroke: 'none' }),
+          h('path', { d: 'M76 63h31m-31 7h25m-25 12h19' }),
+          h('rect', { x: 130, y: 53, width: 47, height: 60, rx: 5, fill: '#f8eee0' }),
+          h('path', { d: 'm138 67 3 3 5-6m-8 19 3 3 5-6M151 67h18m-18 16h13M34 88v14m-7-7h14' }),
+        ],
+      },
+      'journey-analysis': {
+        background: '#f0e8df', ink: '#67513f',
+        scene: () => [
+          h('rect', { x: 23, y: 25, width: 154, height: 89, rx: 6, fill: '#fffaf3' }),
+          h('path', { d: 'M35 46h130M71 46v57m44-57v57', stroke: '#d8c6b4', strokeDasharray: '3 4' }),
+          h('path', { d: 'M36 87c14-26 25-24 38-10s20 17 36-10 32-14 52-26', stroke: '#b77d54', strokeWidth: 2.5 }),
+          h('circle', { cx: 39, cy: 82, r: 5, fill: '#e4bf96' }),
+          h('circle', { cx: 94, cy: 81, r: 5, fill: '#c8b8a8' }),
+          h('circle', { cx: 150, cy: 48, r: 5, fill: '#8f9e78' }),
+          h('path', { d: 'M34 35h22m24 0h20m25 0h26M35 102h19m24 0h20m26 0h24', strokeOpacity: .5 }),
+          h('rect', { x: 123, y: 90, width: 54, height: 29, rx: 4, fill: '#e7d5bf' }),
+          h('path', { d: 'M132 101h34m-34 7h23' }),
+        ],
+      },
+      'solution-swimlane': {
+        background: '#eae5e0', ink: '#5f5247',
+        scene: () => [
+          h('rect', { x: 23, y: 26, width: 153, height: 89, rx: 5, fill: '#fffaf5' }),
+          h('path', { d: 'M23 55h153M23 85h153M47 26v89', stroke: '#c8bcb0' }),
+          h('circle', { cx: 35, cy: 40, r: 5, fill: '#d6c5b5' }),
+          h('circle', { cx: 35, cy: 70, r: 5, fill: '#b8c8bd' }),
+          h('circle', { cx: 35, cy: 100, r: 5, fill: '#c7c3d4' }),
+          h('path', { d: 'M81 41h26v30h22m14 9v20h-28m-32 0H62', stroke: '#94775c' }),
+          h('rect', { x: 57, y: 33, width: 25, height: 16, rx: 3, fill: '#e8cfb3' }),
+          h('rect', { x: 129, y: 63, width: 30, height: 16, rx: 3, fill: '#cbded3' }),
+          h('rect', { x: 84, y: 92, width: 31, height: 16, rx: 3, fill: '#ddd4e6' }),
+          h('path', { d: 'm123 67 5 4-5 4m-3 21-5 4 5 4M63 41h12m62 30h14m-60 29h17' }),
+        ],
+      },
+      edge: {
+        background: '#e9ecdf', ink: '#535d43',
+        scene: () => [
+          h('path', { d: 'M24 43h36q15 0 15 15v30q0 13 16 13h64', stroke: '#9aab86', strokeWidth: 2 }),
+          h('path', { d: 'M89 42h68m-6-5 6 5-6 5', stroke: '#b7bda9', strokeDasharray: '3 4' }),
+          h('rect', { x: 28, y: 31, width: 32, height: 25, rx: 4, fill: '#fffdf6' }),
+          h('rect', { x: 99, y: 20, width: 67, height: 58, rx: 5, fill: '#fffdf6' }),
+          h('path', { d: 'm132 30 9 17h-18z', fill: '#e7cea6', stroke: '#8a7654' }),
+          h('path', { d: 'M132 36v4m0 3v1M111 56h42m-36 6h28' }),
+          h('circle', { cx: 158, cy: 101, r: 13, fill: '#8b9b71' }),
+          h('path', { d: 'M153 96a7 7 0 1 1-1 8m0-6v6h6', stroke: '#fffdf6', strokeWidth: 2 }),
+          h('path', { d: 'M31 96h23m-23 6h16', strokeOpacity: .5 }),
+        ],
+      },
+      board: {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 32, y: 25, width: 112, height: 87, rx: 5, fill: '#c7d4e5', transform: 'rotate(-5 32 25)', stroke: 'none' }),
+          h('rect', { x: 42, y: 22, width: 112, height: 88, rx: 5, fill: '#fffdf8' }),
+          h('rect', { x: 51, y: 31, width: 40, height: 45, rx: 3, fill: '#cdd9e7', stroke: 'none' }),
+          h('path', { d: 'm51 69 16-18 13 11 11-9v23H51z', fill: '#8ca5bc', stroke: 'none' }),
+          h('circle', { cx: 79, cy: 42, r: 5, fill: '#fff7e4', stroke: 'none' }),
+          h('path', { d: 'M103 40h38m-38 8h27m-27 13h32m-32 6h18' }),
+          h('rect', { x: 54, y: 87, width: 21, height: 13, rx: 2, fill: '#9caf9c', stroke: 'none' }),
+          h('rect', { x: 80, y: 87, width: 21, height: 13, rx: 2, fill: '#d5b999', stroke: 'none' }),
+          h('rect', { x: 106, y: 87, width: 21, height: 13, rx: 2, fill: '#b6a7c2', stroke: 'none' }),
+          h('path', { d: 'm143 80 27 6-8 30-27-6z', fill: '#e4d7c2' }),
+          h('path', { d: 'm146 100 9-10 3 13m-11-5 10 3' }),
+        ],
+      },
+      'knowledge-wiki': {
+        background: '#eee9dd', ink: '#635a43',
+        scene: () => [
+          h('rect', { x: 119, y: 28, width: 44, height: 67, rx: 4, fill: '#d9d0b7', transform: 'rotate(8 119 28)' }),
+          h('rect', { x: 124, y: 25, width: 40, height: 65, rx: 4, fill: '#fbf7ec' }),
+          h('path', { d: 'M132 38h23m-23 7h18' }),
+          h('path', { d: 'M28 48q32-12 64 2 32-14 64-2v61q-32-11-64 2-32-13-64-2z', fill: '#fffdf6' }),
+          h('path', { d: 'M92 50v61M39 62q21-6 42 1m-42 11q21-6 42 1m-42 11q21-6 31-1M104 63q21-6 40-1m-40 12q21-6 40-1m-40 12q21-6 31-3', stroke: '#a99d7f' }),
+          h('path', { d: 'M67 44v25l7-5 7 7V44', fill: '#a5b69a', stroke: 'none' }),
+          h('circle', { cx: 156, cy: 103, r: 15, fill: '#b5c1a5' }),
+          h('path', { d: 'M150 103h12m-6-6v12' }),
+        ],
+      },
+      'journey-metrics': {
+        background: '#e5ecec', ink: '#3d5c60',
+        scene: () => [
+          h('path', { d: 'M24 44h151M43 44v26m54-26v26m59-26v26', stroke: '#9bb9b9' }),
+          ...[43,97,156].map(cx => h('circle', { key: cx, cx, cy: 44, r: 6, fill: '#789f9f' })),
+          h('rect', { x: 29, y: 77, width: 141, height: 35, rx: 5, fill: '#fffdf7' }),
+          h('path', { d: 'M39 102h118', stroke: '#c4d7d3' }),
+          h('path', { d: 'm42 95 19-7 19 4 22-12 20 5 30-16', stroke: '#487b80', strokeWidth: 2 }),
+          h('rect', { x: 32, y: 20, width: 24, height: 11, rx: 3, fill: '#c2d7cf', stroke: 'none' }),
+          h('rect', { x: 85, y: 20, width: 24, height: 11, rx: 3, fill: '#e1c8ab', stroke: 'none' }),
+          h('rect', { x: 144, y: 20, width: 24, height: 11, rx: 3, fill: '#c4cddd', stroke: 'none' }),
+          h('circle', { cx: 152, cy: 69, r: 5, fill: '#f7eee0' }),
+        ],
+      },
+      'objective-data-analysis': {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 27, y: 31, width: 107, height: 81, rx: 5, fill: '#cad7e6', stroke: 'none' }),
+          h('rect', { x: 22, y: 25, width: 107, height: 81, rx: 5, fill: '#fbfcff' }),
+          h('path', { d: 'M22 41h107M33 33h34M35 91h79', stroke: '#9eafc5' }),
+          ...[22,40,31,51].map((height, index) => h('rect', { key: index, x: 39 + index * 19, y: 91 - height, width: 11, height, rx: 2, fill: index === 3 ? '#6386b1' : '#becfe3', stroke: 'none' })),
+          h('rect', { x: 139, y: 43, width: 37, height: 49, rx: 4, fill: '#f8f1e5' }),
+          h('path', { d: 'M145 54h24m-24 9h24m-24 9h24m-24 9h24m-12-29v31', stroke: '#b3a58d' }),
+          h('path', { d: 'M142 103h30m-30 6h21', strokeOpacity: .5 }),
+        ],
+      },
+      'subjective-feedback-analysis': {
+        background: '#eee7ef', ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M70 54h24q10 0 10 14v21m32-30h-22q-10 0-10 30', stroke: '#af9bb8', strokeDasharray: '3 4' }),
+          h('path', { d: 'M25 27h57v35H56l-12 10v-10H25z', fill: '#fffaf7' }),
+          h('path', { d: 'M118 30h55v36h-11v9l-13-9h-31z', fill: '#dfd1e9' }),
+          h('path', { d: 'M35 39h34m-34 9h22m72-5h33m-33 9h22' }),
+          h('rect', { x: 62, y: 85, width: 85, height: 30, rx: 5, fill: '#fffaf7' }),
+          h('circle', { cx: 76, cy: 100, r: 6, fill: '#b7c8b5', stroke: 'none' }),
+          h('circle', { cx: 96, cy: 100, r: 6, fill: '#e4c3a3', stroke: 'none' }),
+          h('circle', { cx: 116, cy: 100, r: 6, fill: '#b8a3cb', stroke: 'none' }),
+          h('path', { d: 'M131 96v8m-4-4h8' }),
+        ],
+      },
+      'experience-heuristic-analysis': {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('rect', { x: 26, y: 27, width: 102, height: 79, rx: 5, fill: '#fffdf6' }),
+          h('path', { d: 'M26 43h102M36 35h18M37 54h29m-29 9h21', strokeOpacity: .55 }),
+          h('rect', { x: 37, y: 75, width: 45, height: 20, rx: 3, fill: '#d3d9c4', stroke: 'none' }),
+          h('circle', { cx: 123, cy: 68, r: 27, fill: '#f7f5ec', fillOpacity: .95, strokeWidth: 2 }),
+          h('path', { d: 'm143 88 24 24', stroke: '#8b9273', strokeWidth: 9 }),
+          h('path', { d: 'm143 88 24 24', strokeWidth: 1.4 }),
+          h('rect', { x: 109, y: 59, width: 27, height: 17, rx: 3, fill: '#ecd1ad' }),
+          h('path', { d: 'M123 63v5m0 4v1M37 114h46', strokeOpacity: .6 }),
+        ],
+      },
+      'evidence-govern': {
+        background: '#e5eee7', ink: '#385145',
+        scene: () => [
+          h('rect', { x: 28, y: 29, width: 56, height: 70, rx: 4, fill: '#c8dbcf', transform: 'rotate(-8 28 29)' }),
+          h('rect', { x: 37, y: 32, width: 56, height: 70, rx: 4, fill: '#fffdf7' }),
+          h('path', { d: 'M47 45h34m-34 8h23M47 67h34m-34 8h23m-23 14h20', strokeOpacity: .65 }),
+          h('path', { d: 'M97 68h18m-5-4 5 4-5 4', stroke: '#8daa96' }),
+          h('path', { d: 'm144 37 29 10v25q0 23-29 34-29-11-29-34V47z', fill: '#d0e2d5' }),
+          h('path', { d: 'm144 44 22 8v20q0 17-22 27-22-10-22-27V52z', stroke: '#8baa94' }),
+          h('path', { d: 'm132 70 8 8 16-20', stroke: '#427761', strokeWidth: 3 }),
+          h('rect', { x: 43, y: 109, width: 44, height: 7, rx: 3, fill: '#e2c8a7', stroke: 'none' }),
+        ],
+      },
+      'root-cause-synthesis': {
+        background: '#eee7ef', ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M40 41h31l28 32m59-32h-31L99 73m-59 1h59m59 0H99m0 0v24', stroke: '#ab95b8', strokeWidth: 2 }),
+          ...[[25,28],[144,28],[21,61],[148,61]].map(([x,y], index) => h('rect', { key: index, x, y, width: 30, height: 24, rx: 4, fill: index % 2 ? '#dfd1e9' : '#fffaf6' })),
+          h('circle', { cx: 99, cy: 73, r: 15, fill: '#fffaf6', stroke: '#8c72a4', strokeWidth: 2 }),
+          h('circle', { cx: 99, cy: 73, r: 5, fill: '#a58ab9', stroke: 'none' }),
+          h('rect', { x: 72, y: 101, width: 54, height: 18, rx: 4, fill: '#d4c2e1' }),
+          h('path', { d: 'M83 110h31M33 39h14m105 0h14M29 73h14m113 0h14' }),
+          h('path', { d: 'M51 117h10m76 0h13', strokeOpacity: .4 }),
+        ],
+      },
+      'business-impact': {
+        background: '#f0e8df', ink: '#67513f',
+        scene: () => [
+          h('rect', { x: 28, y: 28, width: 118, height: 80, rx: 5, fill: '#fffaf3' }),
+          h('path', { d: 'M41 94h92M41 43v51', stroke: '#bba58c' }),
+          h('rect', { x: 52, y: 75, width: 15, height: 19, rx: 2, fill: '#dccaaf', stroke: 'none' }),
+          h('rect', { x: 78, y: 62, width: 15, height: 32, rx: 2, fill: '#c6b18e', stroke: 'none' }),
+          h('rect', { x: 104, y: 49, width: 15, height: 45, rx: 2, fill: '#b38d66', stroke: 'none' }),
+          h('path', { d: 'm51 67 28-17 24 1 21-15m-8 0h8v8', stroke: '#92704d', strokeWidth: 2 }),
+          h('circle', { cx: 151, cy: 93, r: 21, fill: '#d8c29a' }),
+          h('circle', { cx: 151, cy: 93, r: 14, stroke: '#f8efdc' }),
+          h('path', { d: 'm147 86 4 6 4-6m-4 6v9m-5-7h10m-10 4h10' }),
+          h('path', { d: 'M40 117h78', strokeOpacity: .4 }),
+        ],
+      },
+      'outcome-validation-recheck': {
+        background: '#e5ecec', ink: '#3d5c60',
+        scene: () => [
+          h('rect', { x: 24, y: 37, width: 63, height: 65, rx: 5, fill: '#fffdf7' }),
+          h('rect', { x: 114, y: 37, width: 63, height: 65, rx: 5, fill: '#f7faf6' }),
+          h('path', { d: 'M34 49h31m-31 7h20m90-7h20m-40 7h31', strokeOpacity: .55 }),
+          h('path', { d: 'm34 87 12-7 12 4 18-12', stroke: '#b7a58a', strokeWidth: 2 }),
+          h('path', { d: 'm124 87 12-10 12 2 18-15', stroke: '#5b8d80', strokeWidth: 2 }),
+          h('path', { d: 'M88 66h21m-5-4 5 4-5 4' }),
+          h('path', { d: 'M53 29c26-21 58-21 88-2m-7-9 7 9-11 1', stroke: '#9bb9b4' }),
+          h('circle', { cx: 148, cy: 105, r: 14, fill: '#6f9a88' }),
+          h('path', { d: 'm141 105 5 5 9-11', stroke: '#fffdf7', strokeWidth: 2 }),
+        ],
+      },
+      'evidence-archive': {
+        background: '#ece9df', ink: '#5c5743',
+        scene: () => [
+          h('rect', { x: 51, y: 22, width: 49, height: 65, rx: 4, fill: '#d5c7b1', transform: 'rotate(-10 51 22)' }),
+          h('rect', { x: 72, y: 19, width: 49, height: 64, rx: 4, fill: '#fffdf6' }),
+          h('path', { d: 'M81 32h28m-28 8h21m-21 8h26', strokeOpacity: .6 }),
+          h('path', { d: 'M41 71h111v44H41z', fill: '#c8d0b4' }),
+          h('rect', { x: 35, y: 63, width: 123, height: 14, rx: 4, fill: '#e2e5d5' }),
+          h('rect', { x: 75, y: 85, width: 43, height: 17, rx: 3, fill: '#fffdf6' }),
+          h('path', { d: 'M84 94h25M162 37v19m-5-5 5 5 5-5' }),
+          h('path', { d: 'M26 121h147', strokeOpacity: .3 }),
+        ],
+      },
+      'data-visualization': {
+        background: '#e5ebf3', ink: '#394f69',
+        scene: () => [
+          h('rect', { x: 25, y: 25, width: 150, height: 90, rx: 5, fill: '#fbfcff' }),
+          h('path', { d: 'M25 40h150M36 32h29', stroke: '#a7b8cd' }),
+          h('circle', { cx: 64, cy: 76, r: 24, fill: '#d5dfed', stroke: 'none' }),
+          h('path', { d: 'M64 52a24 24 0 0 1 24 24H64z', fill: '#7593b8', stroke: 'none' }),
+          h('circle', { cx: 64, cy: 76, r: 12, fill: '#fbfcff', stroke: 'none' }),
+          h('rect', { x: 105, y: 53, width: 52, height: 7, rx: 3, fill: '#c0cddf', stroke: 'none' }),
+          h('rect', { x: 105, y: 66, width: 36, height: 7, rx: 3, fill: '#d9c6ab', stroke: 'none' }),
+          h('path', { d: 'M105 101h54M105 88l13 7 14-13 13 3 13-10', stroke: '#7392b7', strokeWidth: 2 }),
+          h('path', { d: 'M44 106h15m10 0h15', stroke: '#a7b8cd' }),
+        ],
+      },
+      'prd-review': {
+        background: '#e5eee7',
+        ink: '#385145',
+        scene: () => [
+          h('path', { d: 'M16 101H182M33 108H165M49 115H151', stroke: '#c5d6cc' }),
+          h('rect', { x: 54, y: 29, width: 74, height: 87, rx: 5, fill: '#cbded3', transform: 'rotate(-12 54 29)' }),
+          h('rect', { x: 69, y: 21, width: 75, height: 90, rx: 5, fill: '#f8fbf5', transform: 'rotate(7 69 21)' }),
+          h('rect', { x: 57, y: 27, width: 77, height: 89, rx: 5, fill: '#fffdf7' }),
+          h('path', { d: 'M69 41H107M69 47H92M84 62h35M84 78h27M84 94h31', strokeOpacity: .55 }),
+          h('rect', { x: 66, y: 69, width: 59, height: 16, rx: 3, fill: '#e5eee3', stroke: 'none' }),
+          h('path', { d: 'M70 62l2 2 5-5m-7 19 2 2 5-5m-8 22h7v-7h-7zM84 78h27', stroke: '#427761' }),
+          h('path', { d: 'M143 53h18v24l-5-4h-13z', fill: '#f3d9aa' }),
+          h('path', { d: 'M148 60h8m-8 5h5' }),
+          h('circle', { cx: 144, cy: 102, r: 15, fill: '#427761', stroke: '#e5eee7', strokeWidth: 3 }),
+          h('path', { d: 'm137 102 5 5 8-9', stroke: '#fffdf7', strokeWidth: 2.5 }),
+        ],
+      },
+      'problem-framing': {
+        background: '#eee7ef',
+        ink: '#5a4968',
+        scene: () => [
+          h('path', { d: 'M24 23h151M24 117h151', stroke: '#d6c9dd', strokeDasharray: '2 5' }),
+          h('path', { d: 'M60 45c30 0 19 25 43 25M62 69h41M61 94c29 0 16-24 42-24', stroke: '#9c88ad' }),
+          h('rect', { x: 24, y: 32, width: 35, height: 23, rx: 4, fill: '#f9e2d6', transform: 'rotate(-8 24 32)' }),
+          h('rect', { x: 22, y: 58, width: 40, height: 22, rx: 4, fill: '#fffaf5' }),
+          h('rect', { x: 28, y: 85, width: 34, height: 22, rx: 4, fill: '#ded3ea', transform: 'rotate(6 28 85)' }),
+          h('path', { d: 'M33 39l14-2m-12 7 9-1m-12 22h12m-12 6h21m-15 24 14 2' }),
+          h('path', { d: 'm95 65 6 5-6 5' }),
+          h('rect', { x: 115, y: 38, width: 63, height: 69, rx: 6, fill: '#d6c9df', stroke: 'none' }),
+          h('rect', { x: 109, y: 33, width: 64, height: 69, rx: 6, fill: '#fdf9fb' }),
+          h('path', { d: 'M109 49h64', strokeOpacity: .55 }),
+          h('rect', { x: 121, y: 58, width: 40, height: 11, rx: 3, fill: '#a28cb4', stroke: 'none' }),
+          h('path', { d: 'M141 69v8m-13 6v-6h26v6' }),
+          h('rect', { x: 120, y: 82, width: 16, height: 10, rx: 2, fill: '#e7dbea' }),
+          h('rect', { x: 146, y: 82, width: 16, height: 10, rx: 2, fill: '#f6e3d8' }),
+        ],
+      },
+      'page-spec': {
+        background: '#e5ebf3',
+        ink: '#394f69',
+        scene: () => [
+          h('path', { d: 'M25 31v82m-4-76h8m-8 69h8M37 121h96m-93-4v8m89-8v8', stroke: '#8298b5' }),
+          h('rect', { x: 44, y: 34, width: 112, height: 76, rx: 6, fill: '#c7d4e5', stroke: 'none' }),
+          h('rect', { x: 38, y: 28, width: 112, height: 76, rx: 6, fill: '#fbfcff' }),
+          h('path', { d: 'M38 42h112M66 42v62', strokeOpacity: .6 }),
+          h('path', { d: 'M46 35h1m5 0h1m5 0h1m-13 19h12m-12 9h9m-9 9h10m18-19h29' }),
+          h('rect', { x: 74, y: 62, width: 60, height: 30, rx: 3, fill: '#e9eff7', stroke: '#7892b4', strokeDasharray: '3 3' }),
+          h('path', { d: 'M112 67l16-13m-16 36 16 7', stroke: '#6f8bad' }),
+          h('rect', { x: 126, y: 51, width: 56, height: 49, rx: 6, fill: '#fffdf8', stroke: '#5275a8', strokeWidth: 2 }),
+          h('rect', { x: 133, y: 58, width: 42, height: 14, rx: 3, fill: '#d3e0f2', stroke: 'none' }),
+          h('path', { d: 'M134 79h29m-29 5h20', strokeOpacity: .7 }),
+          h('rect', { x: 154, y: 88, width: 19, height: 6, rx: 2, fill: '#5275a8', stroke: 'none' }),
+        ],
+      },
+    }
+
+    function SkillArt({ skillId }) {
+      const art = Object.hasOwn(skillArt, skillId) ? skillArt[skillId] : skillArt.uxs
+      return h('svg', {
+        viewBox: '0 0 200 140',
+        'aria-hidden': true,
+        preserveAspectRatio: 'xMidYMid meet',
+        style: { background: art.background },
+      },
+        h('rect', { width: 200, height: 140, fill: art.background }),
+        h('g', { fill: 'none', stroke: art.ink, strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round' },
+          ...art.scene()),
+      )
+    }
+
+    function cardPoses(items) {
+      const poses = []
+      for (let start = 0; start < items.length; start += 6) {
+        const row = items.slice(start, start + 6).map(item => {
+          let hash = 2166136261
+          for (const char of item.id) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0
+          return { rotation: (hash % 601 - 300) / 100, offset: ((hash >>> 16) % 1601 - 800) / 100 }
+        })
+        const meanRotation = row.reduce((sum, pose) => sum + pose.rotation, 0) / row.length
+        const meanOffset = row.reduce((sum, pose) => sum + pose.offset, 0) / row.length
+        const rotationScale = Math.max(1, ...row.map(pose => Math.abs(pose.rotation - meanRotation) / 3))
+        const offsetScale = Math.max(1, ...row.map(pose => Math.abs(pose.offset - meanOffset) / 8))
+        poses.push(...row.map(pose => ({
+          '--rot': ((pose.rotation - meanRotation) / rotationScale).toFixed(2) + 'deg',
+          '--off': ((pose.offset - meanOffset) / offsetScale).toFixed(2) + 'px',
+        })))
+      }
+      return poses
+    }
+
+    function MarkdownView({ content }) {
+      const lines = String(content ?? '').split(/\r?\n/)
+      const blocks = []
+      let paragraph = []
+      let list = null
+      let table = null
+      const flushParagraph = () => {
+        if (paragraph.length) { blocks.push(h('p', { key: 'p' + blocks.length }, paragraph.join('\n'))); paragraph = [] }
+      }
+      const flushList = () => {
+        if (!list) return
+        blocks.push(h(list.ordered ? 'ol' : 'ul', { key: 'l' + blocks.length },
+          ...list.items.map((item, index) => h('li', { key: index }, item))))
+        list = null
+      }
+      const flushTable = () => {
+        if (table) { blocks.push(h('pre', { key: 't' + blocks.length, className: 'uxbp-md-table' }, table.join('\n'))); table = null }
+      }
+      for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i]
+        if (/^```/.test(line)) {
+          flushParagraph(); flushList(); flushTable()
+          const code = []
+          i += 1
+          while (i < lines.length && !/^```/.test(lines[i])) { code.push(lines[i]); i += 1 }
+          blocks.push(h('pre', { key: 'c' + blocks.length }, code.join('\n')))
+          continue
+        }
+        if (!line.trim()) { flushParagraph(); flushList(); flushTable(); continue }
+        if (/^\|.*\|$/.test(line.trim())) {
+          flushParagraph(); flushList()
+          table = table ?? []
+          table.push(line)
+          continue
+        }
+        flushTable()
+        const heading = line.match(/^(#{1,6})\s+(.*)$/)
+        if (heading) {
+          flushParagraph(); flushList()
+          const level = heading[1].length
+          blocks.push(h('h' + level, { key: 'h' + blocks.length }, heading[2]))
+          continue
+        }
+        const bullet = line.match(/^\s*[-*]\s+(.*)$/)
+        if (bullet) {
+          flushParagraph(); flushTable()
+          if (!list || list.ordered) { flushList(); list = { ordered: false, items: [] } }
+          list.items.push(bullet[1])
+          continue
+        }
+        const ordered = line.match(/^\s*\d+\.\s+(.*)$/)
+        if (ordered) {
+          flushParagraph(); flushTable()
+          if (!list || !list.ordered) { flushList(); list = { ordered: true, items: [] } }
+          list.items.push(ordered[1])
+          continue
+        }
+        flushList()
+        paragraph.push(line)
+      }
+      flushParagraph(); flushList(); flushTable()
+      return h('div', { className: 'uxbp-md' }, ...(blocks.length ? blocks : [h('p', { key: 'empty' }, '—')]))
+    }
+
+    function groupOf(item) {
+      if (item.displayGroup === 'foundation') return 3
+      if (item.phase === 1) return 0
+      if (item.phase === 2) return 1
+      return 2
+    }
+
+    function Workbench({ translate: t, locale, sessions, uiWorkspace }) {
+      const subscribe = callback => locale.subscribe(callback)
+      const snapshot = () => locale.getSnapshot()
+      useSyncExternalStore(subscribe, snapshot, snapshot)
+
+      const [workspaces, setWorkspaces] = useState([])
+      const [catalog, setCatalog] = useState([])
+      const [workspace, setWorkspace] = useState('')
+      const [conversations, setConversations] = useState([])
+      const [tasks, setTasks] = useState([])
+      const [task, setTask] = useState(null)
+      const [manifest, setManifest] = useState(null)
+      const [overview, setOverview] = useState(null)
+      const [overviewError, setOverviewError] = useState(false)
+      const [latestRun, setLatestRun] = useState(null)
+      const [handoff, setHandoff] = useState(null)
+      const [finishPrompt, setFinishPrompt] = useState(null)
+      const [finishing, setFinishing] = useState(false)
+      const [sessionId, setSessionId] = useState('')
+      const [tab, setTab] = useState('task')
+      const [text, setText] = useState('')
+      const [files, setFiles] = useState([])
+      const [skill, setSkill] = useState('')
+      const [error, setError] = useState('')
+      const [sending, setSending] = useState(false)
+      const [running, setRunning] = useState(false)
+      const [search, setSearch] = useState('')
+      const [filter, setFilter] = useState('all')
+      const [openMenu, setOpenMenu] = useState('')
+      const [menuWorkspace, setMenuWorkspace] = useState('')
+      const [menuSessions, setMenuSessions] = useState([])
+      const [menuLoading, setMenuLoading] = useState(false)
+      const [shake, setShake] = useState('')
+      const [viewMode, setViewMode] = useState('canvas')
+      const [detailOrigin, setDetailOrigin] = useState('task')
+      const [artifacts, setArtifacts] = useState([])
+      const [selectedArtifactKey, setSelectedArtifactKey] = useState('')
+      const [artifactContent, setArtifactContent] = useState('')
+      const [artifactLoading, setArtifactLoading] = useState(false)
+      const [artifactEditing, setArtifactEditing] = useState(false)
+      const [artifactDraft, setArtifactDraft] = useState('')
+      const [artifactSaving, setArtifactSaving] = useState(false)
+      const [artifactError, setArtifactError] = useState('')
+      const [messageText, setMessageText] = useState('')
+      const [messageSending, setMessageSending] = useState(false)
+      const canvasRef = useRef(null)
+      const sedimentRef = useRef(null)
+      const canvasScroll = useRef({ left: 0, top: 0 })
+      const sedimentScroll = useRef(0)
+      const inputRef = useRef(null)
+      const binding = useRef(null)
+      const overviewRefresh = useRef(() => {})
+      const loadVersion = useRef(0)
+      const requestedTask = useRef('')
+      const browseReturn = useRef(null)
+      const workspaceRef = useRef(workspace)
+      const finishDialog = useRef(null)
+      const shownNotices = useRef(new Set())
+      const submitting = useRef(false)
+      const drag = useRef({ down: false, moved: false, x: 0, y: 0, left: 0, top: 0 })
+      const refreshRef = useRef(() => {})
+      const saved = useRef((() => {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') } catch { return null }
+      })())
+      const restored = useRef(false)
+      workspaceRef.current = workspace
+      const leftView = viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
+
+      useLayoutEffect(() => {
+        if (leftView === 'canvas') canvasRef.current?.scrollTo(canvasScroll.current)
+        if (leftView === 'sediment' && sedimentRef.current) sedimentRef.current.scrollTop = sedimentScroll.current
+      }, [leftView])
+
+      const nameOf = value => catalog.find(item => item.id === (value === 'uxb' ? 'uxs' : value))?.name ?? value
+      const formatWhen = value => {
+        const date = new Date(value)
+        if (Number.isNaN(date.getTime())) return '—'
+        return new Intl.DateTimeFormat(undefined, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date)
+      }
+      const taskId = task?.id ?? ''
+      const selectedArtifact = artifacts.find(item => item.key === selectedArtifactKey) ?? null
+      const statusLabel = status => status === 'active' ? t('active') : status === 'paused' ? t('paused') : t('completed')
+      const latest = overview?.workspace === workspace ? overview.task : null
+      const latestSessionId = latest?.sessionId
+      const latestRunning = latestRun?.id === latestSessionId ? latestRun?.running : null
+      const latestBusy = latestRunning !== false || sending || messageSending
+      const canHandoff = handoff?.skill === skill && handoff?.taskId === taskId
+      const groups = [
+        { label: '探索与定义', items: catalog.filter(item => groupOf(item) === 0) },
+        { label: '设计与交付', items: catalog.filter(item => groupOf(item) === 1) },
+        { label: '分析与证据', items: catalog.filter(item => groupOf(item) === 2) },
+        { label: '基础能力', items: catalog.filter(item => groupOf(item) === 3) },
+      ].map(group => ({ ...group, poses: cardPoses(group.items) }))
+      const filteredTasks = tasks.filter(item => {
+        if (filter !== 'all' && item.status !== filter) return false
+        const query = search.trim().toLowerCase()
+        return !query || item.title.toLowerCase().includes(query) || item.id.toLowerCase().includes(query)
+      })
+      const counts = {
+        all: tasks.length,
+        active: tasks.filter(item => item.status === 'active').length,
+        paused: tasks.filter(item => item.status === 'paused').length,
+        completed: tasks.filter(item => item.status === 'completed').length,
+      }
+
+      function save(value) {
+        try {
+          let current = {}
+          try { current = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') } catch {}
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...current, ...value }))
+        } catch {}
+      }
+
+      async function loadWorkspaceData(target = workspace) {
+        if (!target) return
+        const data = await api({ workspace: target })
+        if (workspaceRef.current !== target) return data
+        setConversations(data.sessions ?? [])
+        setTasks(data.tasks ?? [])
+        overviewRefresh.current()
+        return data
+      }
+
+      async function loadTask(id, artifactKey, background = false) {
+        if (background && requestedTask.current !== id) return null
+        if (!background) { requestedTask.current = id; loadVersion.current += 1 }
+        const version = loadVersion.current
+        const data = await api({ workspace, task: id })
+        if (version !== loadVersion.current || workspaceRef.current !== workspace) return null
+        if (!background && (id !== taskId || (artifactKey && artifactKey !== selectedArtifactKey))) {
+          setArtifactContent('')
+          setArtifactLoading(Boolean(data.artifacts?.length))
+        }
+        setTask(data.task)
+        setManifest(data.manifest)
+        setArtifacts(data.artifacts ?? [])
+        setSelectedArtifactKey(current => (data.artifacts ?? []).some(item => item.key === (artifactKey ?? current))
+          ? (artifactKey ?? current)
+          : (data.artifacts?.[0]?.key ?? ''))
+        setSessionId(data.task.sessionId)
+        if (!background) save({ workspace, sessionId: data.task.sessionId, activeTaskId: id })
+        return data
+      }
+
+      async function refreshTask() {
+        if (!task?.id) return
+        try { await loadTask(task.id, undefined, true) } catch {}
+      }
+
+      function clearTask() {
+        requestedTask.current = ''
+        loadVersion.current += 1
+        setTask(null); setManifest(null); setArtifacts([]); setSelectedArtifactKey('')
+      }
+
+      useEffect(() => {
+        const controller = new AbortController()
+        api(null, null, controller.signal).then(data => {
+          const list = data.workspaces ?? []
+          const stored = saved.current
+          const preferred = stored?.workspace && list.some(item => item.id === stored.workspace) ? stored.workspace : list[0]?.id
+          setWorkspaces(list)
+          setCatalog(data.catalog ?? [])
+          setWorkspace(current => current || preferred || '')
+        }).catch(e => { if (!controller.signal.aborted) setError(e.message) })
+        return () => controller.abort()
+      }, [])
+
+      useEffect(() => {
+        if (!workspace) return
+        let disposed = false
+        loadWorkspaceData(workspace).then(async data => {
+          if (disposed) return
+          if (!restored.current) {
+            restored.current = true
+            const stored = saved.current
+            setTab(stored?.tab === 'sediment' ? 'sediment' : 'task')
+            const target = stored?.activeTaskId && (data.tasks ?? []).some(item => item.id === stored.activeTaskId)
+              ? stored.activeTaskId
+              : ''
+            if (target) {
+              try {
+                await loadTask(target)
+                if (stored?.viewMode === 'detail') {
+                  const origin = stored.detailOrigin === 'sediment' ? 'sediment' : 'task'
+                  setTab(origin)
+                  setDetailOrigin(origin)
+                  setViewMode('detail')
+                }
+              } catch {}
+            } else {
+              const session = stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)
+                ? stored.sessionId
+                : ''
+              setSessionId(session)
+              setViewMode('canvas')
+              save({ workspace, sessionId: session, activeTaskId: '', viewMode: 'canvas' })
+            }
+          }
+        }).catch(e => { if (!disposed) setError(e.message) })
+        return () => { disposed = true }
+      }, [workspace])
+
+      useEffect(() => {
+        setOverview(null)
+        setOverviewError(false)
+        if (!workspace) return
+        const controller = new AbortController()
+        let loading = false
+        const refresh = async () => {
+          if (loading || controller.signal.aborted) return
+          loading = true
+          try {
+            const data = await api({ workspace, latest: '1' }, null, controller.signal)
+            if (!controller.signal.aborted) { setOverview(data ? { ...data, workspace } : null); setOverviewError(false) }
+          } catch {
+            if (!controller.signal.aborted) setOverviewError(true)
+          } finally {
+            loading = false
+          }
+        }
+        overviewRefresh.current = refresh
+        void refresh()
+        const timer = setInterval(refresh, 2000)
+        return () => { controller.abort(); clearInterval(timer) }
+      }, [workspace])
+
+      useEffect(() => {
+        setRunning(false)
+        if (!sessionId) return
+        let disposed = false
+        let offEvents
+        let offSession
+        let ref
+        let refreshTimer
+        try { ref = sessions.retain(sessionId, { source: 'controllerOperation' }) } catch (e) { setError(e.message); return }
+        ref.ready.then(value => {
+          if (disposed) return
+          binding.current = value
+          const update = () => {
+            if (disposed) return
+            setRunning(Boolean(value.session.getSnapshot().running))
+            clearTimeout(refreshTimer)
+            if (taskId) refreshTimer = setTimeout(() => refreshRef.current(), 400)
+          }
+          offEvents = value.eventSource.subscribe(update)
+          offSession = value.session.subscribe(update)
+          update()
+        }).catch(e => { if (!disposed) setError(e.message) })
+        return () => {
+          disposed = true
+          clearTimeout(refreshTimer)
+          if (offEvents) offEvents()
+          if (offSession) offSession()
+          binding.current = null
+          try { ref?.release() } catch {}
+        }
+      }, [sessionId, taskId])
+
+      useEffect(() => {
+        setLatestRun(null)
+        if (!latestSessionId) return
+        let disposed = false
+        let unsubscribe
+        let ref
+        try { ref = sessions.retain(latestSessionId, { source: 'controllerOperation' }) } catch { return }
+        ref.ready.then(value => {
+          if (disposed) return
+          const update = () => {
+            if (disposed) return
+            const running = value.session.getSnapshot().running
+            setLatestRun({ id: latestSessionId, running })
+            if (running === false) overviewRefresh.current()
+          }
+          unsubscribe = value.session.subscribe(update)
+          update()
+        }).catch(() => {})
+        return () => { disposed = true; unsubscribe?.(); ref.release() }
+      }, [workspace, latestSessionId])
+
+      useEffect(() => {
+        const item = overview?.finish
+        if (!item || !latest || latestBusy || finishPrompt || artifactEditing || overviewError) return
+        const key = STORAGE_KEY + ':finish:' + encodeURIComponent(workspace) + ':' + latest.id + ':' + item.skill
+        if (shownNotices.current.has(key)) return
+        try { if (localStorage.getItem(key)) return } catch {}
+        shownNotices.current.add(key)
+        try { localStorage.setItem(key, '1') } catch {}
+        setFinishPrompt({ workspace, taskId: latest.id, roundId: latest.round?.id, label: item.label })
+      }, [workspace, overview, latestBusy, finishPrompt, artifactEditing, overviewError])
+
+      useEffect(() => {
+        const dialog = finishDialog.current
+        if (finishPrompt && dialog && !dialog.open) dialog.showModal()
+      }, [finishPrompt])
+
+      useEffect(() => {
+        if (finishPrompt && overview?.workspace === workspace &&
+            (latest?.id !== finishPrompt.taskId || latest?.round?.id !== finishPrompt.roundId || !overview.finish)) {
+          setFinishPrompt(null)
+        }
+      }, [workspace, overview, finishPrompt])
+
+      useEffect(() => {
+        if (!task?.id || !selectedArtifactKey) {
+          setArtifactContent('')
+          setArtifactLoading(false)
+          return
+        }
+        if (artifactEditing) return
+        let disposed = false
+        setArtifactLoading(true)
+        setArtifactError('')
+        api({ workspace, task: task.id, artifact: selectedArtifactKey }).then(data => {
+          if (disposed) return
+          setArtifactContent(data.content ?? '')
+          setArtifactLoading(false)
+        }).catch(e => {
+          if (!disposed) { setArtifactError(e.message); setArtifactLoading(false) }
+        })
+        return () => { disposed = true }
+      }, [workspace, task?.id, selectedArtifactKey, manifest?.updatedAt, artifactEditing])
+
+      useEffect(() => {
+        if (artifactEditing && selectedArtifact && !selectedArtifact.editable) {
+          setArtifactEditing(false)
+          setArtifactDraft('')
+          setArtifactError('')
+        }
+      }, [artifactEditing, selectedArtifact?.editable])
+
+      refreshRef.current = refreshTask
+
+      useEffect(() => {
+        if (!openMenu) return
+        const close = event => { if (!event.target.closest('.uxbp-picker')) setOpenMenu('') }
+        const esc = event => { if (event.key === 'Escape') setOpenMenu('') }
+        document.addEventListener('pointerdown', close)
+        document.addEventListener('keydown', esc)
+        return () => {
+          document.removeEventListener('pointerdown', close)
+          document.removeEventListener('keydown', esc)
+        }
+      }, [openMenu])
+
+      useEffect(() => {
+        if (openMenu !== 'workspace' || !menuWorkspace) return
+        let disposed = false
+        setMenuLoading(true)
+        api({ workspace: menuWorkspace }).then(data => {
+          if (disposed) return
+          setMenuSessions(data.sessions ?? [])
+          setMenuLoading(false)
+        }).catch(() => {
+          if (!disposed) { setMenuSessions([]); setMenuLoading(false) }
+        })
+        return () => { disposed = true }
+      }, [openMenu, menuWorkspace])
+
+      function openWorkspaceMenu() {
+        if (openMenu === 'workspace') { setOpenMenu(''); return }
+        const target = workspace || workspaces[0]?.id || ''
+        setMenuWorkspace(target)
+        setMenuSessions(target === workspace ? conversations : [])
+        setOpenMenu('workspace')
+      }
+
+      function previewWorkspace(id) {
+        setMenuWorkspace(id)
+        if (id === workspace) setMenuSessions(conversations)
+      }
+
+      function chooseSession(wsId, sid) {
+        if (!wsId) return
+        if (task && (wsId !== workspace || sid !== task.sessionId)) return
+        setOpenMenu('')
+        if (wsId !== workspace) {
+          setWorkspace(wsId)
+          clearTask()
+          browseReturn.current = null
+          setHandoff(null); setTasks([]); setConversations([]); setViewMode('canvas')
+          setSessionId(sid || '')
+          save({ workspace: wsId, sessionId: sid || '', activeTaskId: '', viewMode: 'canvas' })
+        } else {
+          setSessionId(sid || '')
+          save({ workspace, sessionId: sid || '', activeTaskId: task?.id ?? '' })
+        }
+      }
+
+      function useSkill(skillId) {
+        if (submitting.current) return
+        if (task) {
+          clearTask()
+          browseReturn.current = null
+          setSessionId('')
+          save({ workspace, sessionId: '', activeTaskId: '', viewMode: 'canvas', tab: 'task' })
+        }
+        setHandoff(null)
+        setSkill(skillId)
+        if (leftView !== 'detail') setTab('task')
+        inputRef.current?.focus()
+      }
+
+      function shakeCard(skillId) {
+        setShake(skillId)
+        setTimeout(() => setShake(current => current === skillId ? '' : current), 240)
+      }
+
+      function selectWorkspace(id) {
+        if (id === workspace) return
+        setWorkspace(id)
+        clearTask()
+        browseReturn.current = null
+        setHandoff(null); setTasks([]); setConversations([]); setSessionId('')
+        setViewMode('canvas'); setOpenMenu(''); setFinishPrompt(null)
+        save({ workspace: id, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
+      }
+
+      function resetAll() {
+        try { localStorage.removeItem(STORAGE_KEY) } catch {}
+        saved.current = null
+        clearTask()
+        browseReturn.current = null
+        setWorkspace(''); setHandoff(null); setTasks([]); setConversations([])
+        setSessionId(''); setSkill(''); setText(''); setFiles([]); setError(''); setFinishPrompt(null)
+        setViewMode('canvas')
+        setTab('task'); setOpenMenu('')
+      }
+
+      async function ensureSession() {
+        if (sessionId) return sessionId
+        if (!workspace) throw new Error('请先选择工作区')
+        const data = await api(null, { action: 'create-session', workspaceId: workspace })
+        setSessionId(data.sessionId)
+        setConversations(current => [{ id: data.sessionId, title: t('session'), updatedAt: Date.now() }, ...current])
+        return data.sessionId
+      }
+
+      async function execute() {
+        if (submitting.current || !workspace || !skill || (!text.trim() && !files.length && !canHandoff)) return
+        submitting.current = true
+        setSending(true)
+        setError('')
+        try {
+          const targetSession = task?.sessionId || await ensureSession()
+          let current = task
+          if (current?.status === 'completed') throw new Error('任务已完成，请先恢复任务再执行')
+          if (current?.status === 'paused') {
+            const data = await api(null, { action: 'resume', workspaceId: workspace, taskId: current.id })
+            current = data.task
+            setTask(current)
+          }
+          let prompt
+          if (!current) {
+            const data = await api(null, {
+              action: 'create-task', workspaceId: workspace, sessionId: targetSession, skill,
+              text, fileName: files[0]?.name,
+            })
+            current = data.task
+            prompt = data.prompt
+            setTask(current)
+            setTasks(items => [current, ...items.filter(item => item.id !== current.id)])
+            setSessionId(targetSession)
+            save({ workspace, sessionId: targetSession, activeTaskId: current.id })
+          } else {
+            const data = await api(null, { action: 'prompt', workspaceId: workspace, taskId: current.id, skill, text })
+            prompt = data.prompt
+          }
+          const ref = sessions.retain(targetSession, { source: 'controllerOperation' })
+          const value = await ref.ready
+          try {
+            const content = []
+            for (const file of files) content.push(await uploadFile(targetSession, file))
+            content.push({ type: 'text', text: prompt })
+            const result = await value.session.prompt(content, 'queue')
+            if (result?.ok === false) throw new Error(result.error?.message || '执行失败')
+          } finally { ref.release() }
+          setText('')
+          setFiles([])
+          setSkill('')
+          setHandoff(null)
+          browseReturn.current = null
+          setViewMode('detail')
+          setDetailOrigin('task')
+          save({ workspace, sessionId: targetSession, activeTaskId: current.id, viewMode: 'detail', detailOrigin: 'task' })
+          await loadTask(current.id)
+          await loadWorkspaceData(workspace)
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          submitting.current = false
+          setSending(false)
+        }
+      }
+
+      async function action(name, payload = {}, target = task) {
+        if (!target) return false
+        try {
+          await api(null, { action: name, workspaceId: workspace, taskId: target.id, ...payload })
+          if (workspaceRef.current !== workspace) return true
+          if (target.id === requestedTask.current) await loadTask(target.id, undefined, true)
+          await loadWorkspaceData(workspace)
+          return true
+        } catch (e) { setError(e.message); return false }
+      }
+
+      async function rename() {
+        if (!task) return
+        const title = window.prompt(t('rename'), task.title)
+        if (title && title.trim()) await action('rename', { title: title.trim() })
+      }
+
+      async function openTask(item, artifactKey, origin = 'sediment') {
+        if (artifactSaving || messageSending || sending) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        try {
+          if (!await loadTask(item.id, artifactKey)) return
+          browseReturn.current ??= { taskId, sessionId }
+          cancelEdit()
+          setMessageText('')
+          setHandoff(null)
+          setDetailOrigin(origin)
+          setViewMode('detail')
+          save({ workspace, activeTaskId: item.id, viewMode: 'detail', detailOrigin: origin })
+        } catch (e) { setError(e.message) }
+      }
+
+      async function prepareHandoff(item) {
+        if (!latest || latestBusy || artifactSaving) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        const draftTaskId = browseReturn.current?.taskId ?? taskId
+        if (draftTaskId !== latest.id && (text.trim() || files.length) && !window.confirm('切换任务并清空当前输入？')) return
+        try {
+          if (!await loadTask(latest.id)) return
+          if (draftTaskId !== latest.id) { setText(''); setFiles([]) }
+          browseReturn.current = null
+          cancelEdit()
+          setHandoff({ skill: item.id, taskId: latest.id })
+          setSkill(item.id)
+          setTab('task')
+          setViewMode('canvas')
+          save({ tab: 'task', viewMode: 'canvas' })
+          requestAnimationFrame(() => inputRef.current?.focus())
+        } catch (e) { setError(e.message) }
+      }
+
+      async function respondToFinish(complete) {
+        if (!finishPrompt || finishing) return
+        if (complete) {
+          if (latestBusy || !overview?.finish || latest?.id !== finishPrompt.taskId ||
+              latest?.round?.id !== finishPrompt.roundId || finishPrompt.workspace !== workspace) return
+          setError('')
+          setFinishing(true)
+          const ended = await action('complete', {}, latest)
+          setFinishing(false)
+          if (!ended) return
+        }
+        finishDialog.current?.close()
+        setFinishPrompt(null)
+      }
+
+      async function backToCanvas() {
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        cancelEdit()
+        const returnTo = browseReturn.current
+        if (returnTo) {
+          browseReturn.current = null
+          if (returnTo.taskId && returnTo.taskId !== taskId) {
+            try { if (!await loadTask(returnTo.taskId)) return } catch (e) { setError(e.message); return }
+          } else if (!returnTo.taskId) {
+            clearTask()
+            setSessionId(returnTo.sessionId)
+          }
+        }
+        const nextTab = detailOrigin === 'sediment' ? 'sediment' : 'task'
+        setTab(nextTab)
+        setViewMode('canvas')
+        save({ viewMode: 'canvas', detailOrigin, tab: nextTab,
+          ...(returnTo ? { activeTaskId: returnTo.taskId, sessionId: returnTo.sessionId } : {}) })
+      }
+
+      function selectArtifact(key) {
+        if (key === selectedArtifactKey) return
+        if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
+        setArtifactEditing(false)
+        setArtifactDraft('')
+        setArtifactError('')
+        setArtifactContent('')
+        setArtifactLoading(true)
+        setSelectedArtifactKey(key)
+      }
+
+      function startEdit() {
+        if (!selectedArtifact?.editable) return
+        setArtifactDraft(artifactContent)
+        setArtifactEditing(true)
+        setArtifactError('')
+      }
+
+      function cancelEdit() {
+        setArtifactEditing(false)
+        setArtifactDraft('')
+        setArtifactError('')
+      }
+
+      async function saveArtifact() {
+        if (!task || !selectedArtifact || artifactSaving) return
+        if (!artifactDraft.trim()) { setArtifactError('产物不能为空'); return }
+        setArtifactSaving(true)
+        setArtifactError('')
+        try {
+          await api(null, {
+            action: 'update-artifact', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifact.key, markdown: artifactDraft, baseSha: selectedArtifact.sha256,
+          })
+          setArtifactEditing(false)
+          setArtifactContent(artifactDraft)
+          await loadTask(task.id)
+        } catch (e) {
+          setArtifactError(e.message)
+        } finally {
+          setArtifactSaving(false)
+        }
+      }
+
+      async function sendMessage() {
+        if (!task || task.status !== 'active' || messageSending || !messageText.trim()) return
+        setMessageSending(true)
+        setError('')
+        const content = messageText
+        try {
+          const data = await api(null, {
+            action: 'message', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifactKey, text: content,
+          })
+          const ref = sessions.retain(task.sessionId, { source: 'controllerOperation' })
+          const value = await ref.ready
+          try {
+            const result = await value.session.prompt([{ type: 'text', text: data.prompt ?? content }], 'queue')
+            if (result?.ok === false) throw new Error(result.error?.message || '发送失败')
+          } finally { ref.release() }
+          setMessageText('')
+          await loadTask(task.id, undefined, true)
+          overviewRefresh.current()
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          setMessageSending(false)
+        }
+      }
+
+      async function confirmOutput() {
+        if (!task || !selectedArtifact || artifactSaving || running || messageSending) return
+        setArtifactSaving(true)
+        try {
+          await api(null, { action: 'confirm-artifact', workspaceId: workspace, taskId: task.id,
+            artifactKey: selectedArtifact.key, baseSha: selectedArtifact.sha256 })
+          await loadTask(task.id, undefined, true)
+          overviewRefresh.current()
+        } catch (e) { setArtifactError(e.message) }
+        finally { setArtifactSaving(false) }
+      }
+
+      function onPointerDown(event) {
+        if (event.button !== 0) return
+        const canvas = canvasRef.current
+        if (!canvas) return
+        drag.current = { down: true, moved: false, x: event.clientX, y: event.clientY, left: canvas.scrollLeft, top: canvas.scrollTop }
+        canvas.dataset.drag = 'true'
+      }
+
+      function onPointerMove(event) {
+        if (!drag.current.down) return
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const dx = event.clientX - drag.current.x
+        const dy = event.clientY - drag.current.y
+        if (Math.abs(dx) + Math.abs(dy) > 5) drag.current.moved = true
+        if (drag.current.moved) {
+          if (!canvas.hasPointerCapture(event.pointerId)) canvas.setPointerCapture(event.pointerId)
+          event.preventDefault()
+          canvas.scrollLeft = drag.current.left - dx
+          canvas.scrollTop = drag.current.top - dy
+        }
+      }
+
+      function onPointerUp(event) {
+        if (!drag.current.down) return
+        drag.current.down = false
+        const canvas = canvasRef.current
+        if (canvas) {
+          delete canvas.dataset.drag
+          if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId)
+        }
+      }
+
+      function cardClick(item) {
+        if (drag.current.moved) return
+        shakeCard(item.id)
+        useSkill(item.id)
+      }
+
+      function isPending(item) {
+        return ['waiting_response', 'ready_for_confirmation'].includes(item?.reviewStatus)
+      }
+
+      function renderOverview() {
+        const pending = overview?.pending
+        const closed = latest?.status === 'completed'
+        const paused = latest?.status === 'paused'
+        const recommendation = overview?.next?.[0]
+        const currentSkill = latest?.round?.skill || latest?.lastSkill
+        const recorded = overview?.artifacts ?? []
+        const reviewRecord = recorded.find(item => item.key === 'prd-review-record')
+        const steps = (latest?.skills ?? []).flatMap(id => {
+          const artifact = recorded.find(item => item.key !== 'prd-review-record' && item.skill === id)
+          const current = !closed && id === currentSkill
+          const executing = current && !paused && latestRunning === true
+          const waiting = (pending?.skill ?? (pending?.key === 'prd-review-record' ? 'prd-review' : pending?.key)) === id
+          const awaitingRound = current && latest.round && !overview.output
+          const done = Boolean(artifact && !artifact.stale && !isPending(artifact) && !executing && !awaitingRound)
+          const status = executing ? 'workingOn' : waiting ? 'awaiting' : done ? 'completed'
+            : artifact?.stale ? 'needsReview' : current && paused ? 'paused' : 'awaitingOutput'
+          const skillStep = { id, label: artifact?.key === 'prd-review' ? artifact.label
+            : id === 'prd-review' && reviewRecord ? t('requirementsBaseline') : nameOf(id), current, done, status }
+          if (id !== 'prd-review' || !reviewRecord) return [skillStep]
+          const replied = overview.reviewReplyReceived
+          return [
+            { id: reviewRecord.key, label: reviewRecord.label, done: !reviewRecord.stale, status: reviewRecord.stale ? 'needsReview' : 'completed' },
+            ...(replied || isPending(reviewRecord)
+              ? [{ id: 'prd-review-reply', label: t('userReply'), done: replied,
+                  current: current && !replied && !artifact, status: replied ? 'completed' : 'awaiting' }]
+              : []),
+            { ...skillStep, current: current && !(isPending(reviewRecord) && !replied && !artifact) },
+          ]
+        })
+        const origin = leftView === 'detail' ? detailOrigin : tab
+        const done = (overview?.artifacts ?? []).filter(item => !isPending(item) ||
+          (item.key === 'prd-review-record' && overview.artifacts.some(artifact => artifact.key === 'prd-review')))
+        return h('aside', { className: 'uxbp-aside', 'aria-label': t('latestTask') },
+          h('header', { className: 'uxbp-panel-head' },
+            h('div', { className: 'uxbp-overview-top' },
+              h('div', { className: 'uxbp-taskline' },
+                h('h2', null, latest?.title ?? t('latestTask')),
+                latest && h('span', { className: 'uxbp-status' }, t('latestTask'))),
+              latest && !closed && h('div', { className: 'uxbp-picker uxbp-overview-actions' },
+                h('button', { type: 'button', className: 'uxbp-btn', 'aria-label': t('taskActions'),
+                  'aria-expanded': openMenu === 'task-actions',
+                  onClick: () => setOpenMenu(openMenu === 'task-actions' ? '' : 'task-actions') },
+                h(Icon, { path: 'M5 12h.1m6.9 0h.1m6.9 0h.1' })),
+                openMenu === 'task-actions' && h('div', { className: 'uxbp-menu' },
+                  h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                    onClick: () => { setOpenMenu(''); void action(paused ? 'resume' : 'pause', {}, latest) } }, t(paused ? 'resume' : 'pause')),
+                  h('button', { type: 'button', className: 'uxbp-option', disabled: latestBusy,
+                    onClick: () => { setOpenMenu(''); void action('complete', {}, latest) } }, t('finishTask'))))),
+            latest && h('div', { className: 'uxbp-overview-meta' },
+              h('div', { className: 'uxbp-meta' }, latest.id,
+                h('time', { dateTime: latest.createdAt }, formatWhen(latest.createdAt))),
+              h('span', { className: 'uxbp-task-state', 'data-status': latest.status }, statusLabel(latest.status)))),
+          h('div', { className: 'uxbp-overview-body' },
+            overviewError && h('p', { className: 'uxbp-empty', role: 'status' }, t('overviewUnavailable')),
+            !latest && !overviewError && h('p', { className: 'uxbp-empty' }, t('noTask')),
+            steps.length > 0 && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('currentStage')),
+              h('ol', { className: 'uxbp-step-list', role: 'list' },
+                ...steps.map(step => h('li', {
+                  key: step.id, 'data-done': step.done, 'aria-current': step.current ? 'step' : undefined,
+                  title: t(step.status), 'aria-label': step.label + ' · ' + t(step.status),
+                }, h(Icon, { path: step.done ? 'm5 12 4 4L19 6' : 'M16 12a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z' }),
+                h('span', null, step.label))))),
+            latest && !closed && (pending || recommendation) && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('next')),
+              h('div', { className: 'uxbp-next-card' },
+                !pending && h('div', { className: 'uxbp-art' }, h(SkillArt, { skillId: recommendation.id })),
+                h('div', { className: 'uxbp-card-body' },
+                  h('strong', null, pending?.label ?? recommendation.name),
+                  !pending && h('p', null, recommendation.reason)),
+                h('div', { className: 'uxbp-card-foot' },
+                  !pending && h('code', null, '/' + recommendation.id),
+                  h('button', { type: 'button', className: 'uxbp-use', disabled: !pending && latestBusy,
+                    onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
+                  t(pending ? 'viewPending' : 'useSkill'))))),
+            latest && h('section', { className: 'uxbp-overview-section' },
+              h('h3', null, t('taskFiles')),
+              done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))
+                : h('ul', { className: 'uxbp-done-list', role: 'list' },
+                    ...done.map(item => h('li', { key: item.key },
+                      h('button', { type: 'button', className: 'uxbp-output-row', title: item.stale ? t('needsReview') : undefined,
+                        onClick: () => void openTask(latest, item.key, origin) },
+                        h(Icon, { path: item.stale ? 'M12 7v5m0 4h.1' : 'm5 12 4 4L19 6' }),
+                        h('span', null, item.label),
+                        h(Icon, { path: 'm9 6 6 6-6 6' }))))))))
+      }
+
+      function renderTaskDetail() {
+        if (!task) return null
+        const artifactSteps = artifacts.length > 0 && h('ol', { className: 'uxbp-artifact-steps', role: 'list', 'aria-label': t('artifactSteps') },
+          ...artifacts.map((item, index) => h('li', { key: item.key },
+            index > 0 && h(Icon, { path: 'm9 6 6 6-6 6' }),
+            h('button', {
+              type: 'button', className: 'uxbp-artifact-step', 'aria-pressed': item.key === selectedArtifactKey,
+              onClick: () => selectArtifact(item.key),
+            }, h('span', { className: 'uxbp-artifact-step-number', 'aria-hidden': true }, index + 1), h('span', null, item.label)))))
+        const meta = selectedArtifact
+        const canConfirm = task.status === 'active' && meta?.reviewStatus === 'ready_for_confirmation' && !meta.stale
+        const detailStatus = meta?.manualLock
+          ? t('manualEdited')
+          : [isPending(meta) ? t('needsReview') : meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
+        const artifactPanel = artifacts.length === 0
+          ? h('div', { className: 'uxbp-artifact-panel' }, h('p', { className: 'uxbp-empty' }, t('noArtifacts')))
+          : h('div', { className: 'uxbp-artifact-panel' },
+              h('div', { className: 'uxbp-artifact-toolbar' },
+                h('div', { className: 'uxbp-artifact-meta' },
+                  h('strong', null, meta?.label ?? ''),
+                  detailStatus && h('span', null, detailStatus),
+                  meta?.origin === 'user' && !meta?.manualLock && h('span', null, t('manualEdited'))),
+                h('div', { style: { display: 'flex', gap: 5 } },
+                  artifactEditing
+                    ? h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: () => void saveArtifact() }, artifactSaving ? t('loading') : t('save'))
+                    : meta?.editable && h('button', { type: 'button', className: 'uxbp-btn', onClick: startEdit }, t('editArtifact')),
+                  canConfirm && h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
+                    disabled: artifactSaving || artifactLoading || Boolean(artifactError) || running || messageSending,
+                    onClick: () => void confirmOutput() }, t('confirmOutput')),
+                  artifactEditing && h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: cancelEdit }, t('cancel')))),
+              artifactError && h('p', { className: 'uxbp-artifact-error', role: 'alert' }, artifactError),
+              artifactEditing
+                ? h('textarea', {
+                    className: 'uxbp-artifact-edit', value: artifactDraft, spellCheck: false,
+                    onChange: event => setArtifactDraft(event.target.value),
+                  })
+                : artifactLoading
+                  ? h('div', { className: 'uxbp-artifact-scroll' }, h('p', { className: 'uxbp-empty' }, t('loading')))
+                  : meta?.format === 'html' && !artifactError && artifactContent
+                    ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
+                        srcDoc: artifactContent.replace(/^\s*<!doctype html>/i, '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; base-uri \'none\'; form-action \'none\'">') })
+                    : h('div', { className: 'uxbp-artifact-scroll' }, h(MarkdownView, { content: artifactContent })))
+
+        return h('section', { className: 'uxbp-task-detail' },
+          h('div', { className: 'uxbp-detail-head' },
+            h('div', { className: 'uxbp-detail-controls' },
+              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: backToCanvas },
+                h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }),
+                detailOrigin === 'sediment' ? t('backToSediment') : t('backToTasks')),
+              h('div', { className: 'uxbp-detail-actions' },
+                task.status === 'active'
+                  ? h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('pause') }, t('pause'))
+                  : h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('resume') }, t('resume')),
+                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void action('complete'),
+                  disabled: task.status === 'completed' || running || messageSending }, t('finishTask')),
+                h('button', { type: 'button', className: 'uxbp-btn', onClick: () => void rename() }, t('rename')))),
+            h('div', { className: 'uxbp-detail-summary' },
+              h('div', { className: 'uxbp-detail-heading' },
+                h('h1', null, task.title || t('taskName')),
+                h('p', null, task.id + ' · ' + formatWhen(task.createdAt))),
+              artifactSteps)),
+          artifactPanel,
+          h('div', { className: 'uxbp-detail-composer' },
+            h('textarea', {
+              rows: 1, 'aria-label': t('detailPlaceholder'),
+              value: messageText, placeholder: task.status === 'active' ? t('detailPlaceholder') : t('detailDisabled'),
+              disabled: task.status !== 'active' || messageSending,
+              onChange: event => setMessageText(event.target.value),
+              onKeyDown: event => {
+                if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                  event.preventDefault()
+                  void sendMessage()
+                }
+              },
+            }),
+            h('button', {
+              type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run', title: t('send'), 'aria-label': t('send'),
+              disabled: task.status !== 'active' || messageSending || !messageText.trim(),
+              onClick: () => void sendMessage(),
+            }, h(Icon, { path: 'M12 19V5m-6 6 6-6 6 6' }))))
+      }
+
+      function renderSedimentPage() {
+        return h('section', { className: 'uxbp-sediment-page' },
+          h('div', { className: 'uxbp-sediment-head' },
+            h('div', { className: 'uxbp-seg' },
+              ...['all', 'active', 'paused', 'completed'].map(item => h('button', {
+                key: item, type: 'button', 'data-on': filter === item, 'aria-pressed': filter === item, onClick: () => setFilter(item),
+              }, (item === 'all' ? t('all') : statusLabel(item)) + ' ', h('span', { className: 'uxbp-seg-count' }, counts[item])))),
+            h('label', { className: 'uxbp-search' },
+              h(Icon, { path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.4-4.4' }),
+              h('input', { placeholder: t('searchTasks'), value: search, onChange: event => setSearch(event.target.value) }))),
+          h('div', {
+            className: 'uxbp-sediment-table', ref: sedimentRef,
+            onScroll: event => { sedimentScroll.current = event.currentTarget.scrollTop },
+          },
+            h('div', { className: 'uxbp-sediment-table-head' },
+              h('span', null, t('taskName')),
+              h('span', null, t('status')),
+              h('span', null, t('skill')),
+              h('span', null, t('recordedAt'))),
+            filteredTasks.length === 0
+              ? h('p', { className: 'uxbp-empty' }, t('emptySediment'))
+              : filteredTasks.map(item => h('button', {
+                  key: item.id, type: 'button', className: 'uxbp-sediment-row', onClick: () => void openTask(item),
+                },
+                h('span', { className: 'uxbp-sediment-task' },
+                  h('strong', null, item.title),
+                  h('span', null, item.id)),
+                h('span', { className: 'uxbp-status', 'data-status': item.status }, statusLabel(item.status)),
+                h('span', { className: 'uxbp-sediment-skill' }, (item.skills ?? []).map(nameOf).join(' → ') || '—'),
+                h('span', { className: 'uxbp-sediment-time' }, formatWhen(item.updatedAt || item.createdAt))))))
+      }
+
+
+      const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
+
+      return h('main', { className: 'uxbp-root' },
+        h('style', null, styles),
+        leftView !== 'detail' && h('header', { className: 'uxbp-top' },
+          h('div', { className: 'uxbp-brand' },
+            h('div', { className: 'uxbp-tabs', role: 'group' },
+              h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('skillsTab')),
+              h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'sediment', onClick: () => setTab('sediment') }, t('sediment')))),
+          h('div', { className: 'uxbp-right-top' },
+            h('div', { className: 'uxbp-picker' },
+              h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'workspace', title: sessionTitle, onClick: openWorkspaceMenu },
+                h(Icon, { path: 'M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z M3 9h18' }),
+                h('span', null, workspaces.find(item => item.id === workspace)?.title ?? t('workspace')),
+                h(Icon, { path: 'm7 10 5 5 5-5' })),
+              openMenu === 'workspace' && h('div', { className: 'uxbp-menu uxbp-wsmenu' },
+                h('div', { className: 'uxbp-wspane' },
+                  h('div', { className: 'uxbp-menu-title' }, t('workspace')),
+                  ...workspaces.map(item => h('button', {
+                    key: item.id, type: 'button', className: 'uxbp-option', 'data-on': item.id === menuWorkspace,
+                    onMouseEnter: () => previewWorkspace(item.id),
+                    onClick: () => previewWorkspace(item.id),
+                  }, item.title))),
+                h('div', { className: 'uxbp-sessionpane' },
+                  h('div', { className: 'uxbp-menu-title' }, t('session')),
+                  h('button', {
+                    type: 'button', className: 'uxbp-option uxbp-new-session', disabled: Boolean(task),
+                    onClick: () => chooseSession(menuWorkspace, ''),
+                  }, '+ ' + t('newSession')),
+                  menuLoading && h('p', { className: 'uxbp-empty' }, '…'),
+                  !menuLoading && menuSessions.length === 0 && h('p', { className: 'uxbp-empty' }, t('noSessions')),
+                  ...menuSessions.map(item => h('button', {
+                    key: item.id, type: 'button', className: 'uxbp-option',
+                    'data-on': menuWorkspace === workspace && item.id === sessionId,
+                    disabled: Boolean(task) && (menuWorkspace !== workspace || item.id !== task.sessionId),
+                    onClick: () => chooseSession(menuWorkspace, item.id),
+                  }, item.title))))),
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-icon', title: t('reset'), 'aria-label': t('reset'), onClick: resetAll },
+              h(Icon, { path: 'M20 12a8 8 0 1 1-2.3-5.7M20 4v6h-6' })))),
+
+        error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
+
+        h('div', { className: 'uxbp-body', 'data-view': leftView },
+            h('section', { className: 'uxbp-left', 'data-view': leftView },
+              leftView === 'canvas' && h('div', {
+                ref: canvasRef, className: 'uxbp-canvas',
+                onScroll: event => {
+                  canvasScroll.current = { left: event.currentTarget.scrollLeft, top: event.currentTarget.scrollTop }
+                },
+                onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp,
+                onClickCapture: event => {
+                  if (!drag.current.moved) return
+                  drag.current.moved = false
+                  event.preventDefault()
+                  event.stopPropagation()
+                },
+              },
+              h('div', { className: 'uxbp-plane' },
+                ...groups.map((group, groupIndex) => h('section', { key: group.label, className: 'uxbp-group' },
+                  h('h2', null, group.label + '  ' + group.items.length),
+                  h('div', { className: 'uxbp-cards' }, ...group.items.map((item, index) => {
+                    return h('button', {
+                      key: item.id, type: 'button', className: 'uxbp-card',
+                      style: group.poses[index],
+                      'data-shake': shake === item.id,
+                      'data-selected': skill === item.id,
+                      onClick: () => cardClick(item),
+                      onFocus: () => shakeCard(item.id),
+                      onDoubleClick: () => useSkill(item.id),
+                    },
+                    h('span', { className: 'uxbp-art' }, h(SkillArt, { skillId: item.id })),
+                    h('span', { className: 'uxbp-card-body' },
+                      h('strong', null, item.name),
+                      h('p', null, item.description)),
+                    h('span', { className: 'uxbp-card-foot' },
+                      h('code', null, '/' + item.id),
+                      h('span', { className: 'uxbp-use', role: 'button', tabIndex: 0, onClick: event => { event.stopPropagation(); shakeCard(item.id); useSkill(item.id) } }, t('useSkill'))))
+                  }))))),
+              ),
+              leftView === 'canvas' && h('div', { className: 'uxbp-composer' },
+                 canHandoff && h('p', { className: 'uxbp-handoff' }, t('handoff') + task.title),
+                (skill || files.length > 0) && h('div', { className: 'uxbp-chips' },
+                  skill && h('span', { className: 'uxbp-chip' },
+                    h('span', null, t('skill') + ': ' + nameOf(skill)),
+                    h('button', { type: 'button', 'aria-label': t('remove') + ' ' + nameOf(skill), title: t('remove'), onClick: () => setSkill('') }, '×')),
+                  ...files.map((file, index) => h('span', { key: index, className: 'uxbp-chip uxbp-file' },
+                    h('span', { title: file.name }, file.name),
+                    h('button', {
+                      type: 'button', 'aria-label': t('remove') + ' ' + file.name, title: t('remove'),
+                      onClick: () => setFiles(items => items.filter((_, i) => i !== index)),
+                    }, '×')))),
+                h('textarea', {
+                  ref: inputRef, className: 'uxbp-input', value: text, placeholder: t('placeholder'), disabled: sending,
+                  onChange: event => setText(event.target.value),
+                  onKeyDown: event => {
+                    if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                      event.preventDefault(); void execute()
+                    }
+                  },
+                }),
+                h('div', { className: 'uxbp-tools' },
+                  h('div', { className: 'uxbp-tools-left' },
+                    h('label', { className: 'uxbp-btn uxbp-up', title: t('attach'), 'aria-label': t('attach') },
+                      h('input', { type: 'file', multiple: true, onChange: event => {
+                        const picked = Array.from(event.currentTarget.files ?? [])
+                        setFiles(items => [...items, ...picked])
+                        event.currentTarget.value = ''
+                      } }),
+                      h('span', null, t('attach'))),
+                    h('button', { type: 'button', className: 'uxbp-btn', disabled: !sessionId, onClick: () => sessionId && uiWorkspace.openSession(sessionId) }, t('enter'))),
+                  h('div', { className: 'uxbp-tools-right' },
+                    h('button', { type: 'button', className: 'uxbp-btn uxbp-primary uxbp-run',
+                      title: t(running ? 'pause' : 'execute'), 'aria-label': t(running ? 'pause' : 'execute'),
+                      disabled: !running && (sending || !skill || (!text.trim() && !files.length && !canHandoff)),
+                      onClick: async () => {
+                        if (!running) { void execute(); return }
+                        try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
+                      },
+                    }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))),
+              leftView === 'detail' && renderTaskDetail(),
+              leftView === 'sediment' && renderSedimentPage()
+            ),
+            h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
+            renderOverview()),
+        finishPrompt?.workspace === workspace && h('dialog', {
+          ref: finishDialog, className: 'uxbp-finish-dialog', 'aria-labelledby': 'uxbp-finish-title',
+          onCancel: event => { event.preventDefault(); void respondToFinish(false) },
+        }, h('h2', { id: 'uxbp-finish-title' }, t('finishQuestion')),
+          h('p', null, finishPrompt.label + t('artifactReady')),
+          error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
+          h('div', { className: 'uxbp-finish-actions' },
+            h('button', { type: 'button', className: 'uxbp-btn', disabled: finishing,
+              onClick: () => void respondToFinish(false) }, t('continueTask')),
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
+              disabled: finishing || latestBusy || latest?.id !== finishPrompt.taskId,
+              onClick: () => void respondToFinish(true) }, t('finishTask')))))
+    }
+
+    return {
+      inject: ['slots', 'locale', 'sessions', 'uiWorkspace'],
+      apply(ctx) {
+        const disposers = [
+          ctx.locale.register(NS, 'en', en),
+          ctx.locale.register(NS, 'zh', zh),
+        ]
+        ctx.effect(() => () => { for (const dispose of disposers) dispose() })
+        const t = ctx.locale.bind(NS)
+        ctx.slots.inject('sidebar.panellist', () =>
+          ctx.slots.register({ name: 'sidebar.panellist', id, order: 20, label: () => t('title') }, PanelIcon))
+        ctx.slots.inject('main', () =>
+          ctx.slots.register({ name: 'main', key: id }, (props) =>
+            h(Workbench, { ...props, translate: t, locale: ctx.locale, sessions: ctx.sessions, uiWorkspace: ctx.uiWorkspace })))
+      },
+    }
+  },
+})

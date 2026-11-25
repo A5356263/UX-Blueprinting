@@ -1,0 +1,639 @@
+{
+  "version": "1.4.0",
+  "_comment": "本文档只作为 Skill 静态拓扑、进度预览和人工查看的数据源；Artifact Registry 负责新分析产物路径和版本，消费者本地 Schema 与校验脚本负责实际准入门禁。本文档不参与当前 Skill 的启动路由，不覆盖用户显式意图，不作为运行时动态 Handoff 的权威规则。当前 Skill 的执行逻辑以用户显式意图和对应 SKILL.md 为准。main_chain、enhancements、reads、required、next_hint 及其他字段只用于静态展示、进度预览和人工参考。",
+  "main_chain": [
+    "prd-review",
+    "page-spec"
+  ],
+  "enhancements": [
+    {
+      "before": "page-spec",
+      "skills": [
+        "uxs",
+        "stories",
+        "journey-analysis"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "prd-review",
+      "name_zh": "需求审核与基线",
+      "description": "检查业务遗漏与流程断点，生成业务闭环、各状态完善的 PRD。",
+      "phase": 1,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "page-spec"
+        ],
+        "reason": "正式需求基线完成后，进入页面规格生成完整交互流程和页面方案；UXS、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
+        "alternatives": []
+      },
+      "anchor": true,
+      "requiredAny": []
+    },
+    {
+      "id": "uxs",
+      "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
+      "name_zh": "体验策略",
+      "description": "基于需求或体验问题，明确体验方向，输出体验方案。",
+      "phase": 1,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "journey-analysis"
+        ],
+        "reason": "需求定案已完成，优先进入用户旅程，把需求结论收拢为阶段、触点和体验断点；用户故事可作为可选任务拆解补充。",
+        "alternatives": [
+          "stories",
+          "page-spec"
+        ]
+      },
+      "anchor": true,
+      "requiredAny": []
+    },
+    {
+      "id": "problem-framing",
+      "name_zh": "问题与业务方案",
+      "description": "明确要解决的问题，比较业务方案，给出推荐方向及依据。",
+      "phase": 1,
+      "standalone_usable": true,
+      "standalone_note": "用于已形成的问题描述、问题证据或正式问题结论；输出正式问题、主推荐业务方案和下游承接要求。",
+      "anchor": false,
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "stories",
+          "journey-analysis"
+        ],
+        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXS 是可选的体验策略增强。",
+        "alternatives": [
+          "uxs"
+        ]
+      },
+      "requiredAny": []
+    },
+    {
+      "id": "stories",
+      "name_zh": "用户故事",
+      "description": "将既定方向拆成用户任务，明确角色、目标与验收条件。",
+      "phase": 1,
+      "standalone_usable": true,
+      "standalone_note": "可承接 uxs 或 problem-framing，也可在用户直接提供明确方向、角色和任务目标时独立使用。",
+      "anchor": false,
+      "reads": [
+        "uxs",
+        "problem-framing"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "journey-analysis"
+        ],
+        "reason": "用户故事已拆出任务单元，进入用户旅程可以把任务放入阶段、触点和流失风险中继续深化。",
+        "alternatives": [
+          "page-spec"
+        ]
+      },
+      "requiredAny": []
+    },
+    {
+      "id": "journey-analysis",
+      "_comment": "当前 Skill 可承接 stories，也可承接 uxs / problem-framing 或独立读取 PRD、场景描述做 standalone / guided-completion。多源承接规则写在 SKILL.md 内，skill-graph 不发明或条件语法。",
+      "name_zh": "用户旅程",
+      "description": "梳理角色的任务全过程，识别关键触点、痛点与改善机会。",
+      "phase": 1,
+      "standalone_usable": true,
+      "standalone_note": "可独立使用；在 PRD 主链中作为 Page Spec 前的可选旅程增强。",
+      "anchor": false,
+      "reads": [
+        "stories",
+        "uxs",
+        "problem-framing"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "page-spec"
+        ],
+        "reason": "旅程分析已就位，进入页面规格可以把旅程洞察转化为具体的交互流程和页面设计。",
+        "alternatives": []
+      },
+      "requiredAny": []
+    },
+    {
+      "id": "solution-swimlane",
+      "_comment": "只承接正式页面规格 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在页面规格完成后优先展示本节点；required 仍保证它不会提前就绪。",
+      "name_zh": "业务泳道图",
+      "description": "将页面规格转成泳道图，展示角色职责、流程交接与异常分支。",
+      "phase": 2,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "方案协同图已完成，当前无固定下一步推荐。",
+        "alternatives": []
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "page-spec",
+      "_comment": "以 Page Spec 的最终 Markdown 为正式语义源。绑定同源正式基线后，设计前提取内部页面事实，首次登记前逐项核对并提交完整 Markdown。Edge 仍为可选状态补强。",
+      "name_zh": "页面规格",
+      "description": "将需求转成页面结构、交互流程与规则，形成可交付设计文档。",
+      "phase": 2,
+      "reads": [
+        "edge",
+        "prd-review",
+        "uxs",
+        "problem-framing",
+        "stories",
+        "journey-analysis"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "solution-swimlane"
+        ],
+        "reason": "把页面规格里的角色职责、流程交接和异常分支整理成一张协同图。",
+        "alternatives": [
+          { "id": "journey-metrics", "reason": "据页面规格补齐埋点、度量口径和异常追踪要求。" }
+        ]
+      },
+      "anchor": true,
+      "requiredAny": []
+    },
+    {
+      "id": "edge",
+      "name_zh": "异常态",
+      "description": "补齐加载、空白、报错与边界状态，明确反馈和恢复方式。",
+      "phase": 2,
+      "preview_hidden": true,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [
+        "page-spec"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "异常态补充完成后，当前无固定下游推荐；后续由用户显式指定是否进入页面规格、走查或页面生成。",
+        "alternatives": []
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "board",
+      "name_zh": "视觉情绪板",
+      "description": "探索并比较视觉风格，选定后整理配色、字体等设计变量。",
+      "phase": 2,
+      "preview_hidden": true,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [
+        "page-spec"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "当前链路终点，无下游 Skill。",
+        "alternatives": []
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "knowledge-wiki",
+      "display_group": "foundation",
+      "name_zh": "知识库",
+      "description": "查询业务与设计知识，整理多种材料入库，并维护已有内容。",
+      "type": "infrastructure",
+      "reads": [],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "基础设施型 Skill，按需调用，不参与主链流转。",
+        "alternatives": []
+      },
+      "phase": 2,
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "journey-metrics",
+      "name_zh": "旅程埋点与度量需求",
+      "description": "梳理关键行为、埋点与异常追踪要求，形成可落地的度量规格。",
+      "phase": 2,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [
+          "objective-data-analysis"
+        ],
+        "reason": "旅程节点和度量口径已就位，可进入客观数据分析；有用户声音或界面材料时，也可按需进入主观反馈或体验启发式分析。",
+        "alternatives": [
+          "subjective-feedback-analysis",
+          "experience-heuristic-analysis"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "objective-data-analysis",
+      "name_zh": "客观数据分析",
+      "description": "分析埋点与日志中的指标、漏斗、路径和报错，形成客观报告。",
+      "phase": 3,
+      "workflow_stage": "explore",
+      "preview_visibility": "user_facing",
+      "preview_order": 100,
+      "standalone_usable": true,
+      "direct_invocation_policy": "standalone",
+      "reads": [
+        "uxs",
+        "page-spec",
+        "journey-metrics"
+      ],
+      "conditional_reads": [
+        "subjective-feedback-analysis",
+        "knowledge-wiki"
+      ],
+      "conditional_read_purposes": {
+        "subjective-feedback-analysis": [
+          "objective_validation_request_only"
+        ],
+        "knowledge-wiki": [
+          "explicit_business_rule_ref_only"
+        ]
+      },
+      "context_policy": {
+        "independent": "user_inputs_only",
+        "chain_context": "explicit_refs_only",
+        "forbidden_direct_upstream": [
+          "product-analysis"
+        ]
+      },
+      "required": [],
+      "artifacts": [
+        "objective"
+      ],
+      "next_hint": {
+        "preferred": [
+          "evidence-govern"
+        ],
+        "reason": "客观证据包就位后，进入 Evidence Govern 完成标准化、关联和治理放行。",
+        "alternatives": [
+          "data-visualization",
+          "evidence-archive"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "subjective-feedback-analysis",
+      "name_zh": "主观反馈分析",
+      "description": "整理工单、评论与访谈，识别反馈主题、情绪和待验证问题。",
+      "phase": 3,
+      "workflow_stage": "explore",
+      "preview_visibility": "user_facing",
+      "preview_order": 110,
+      "standalone_usable": true,
+      "direct_invocation_policy": "standalone",
+      "reads": [],
+      "conditional_reads": [
+        "uxs",
+        "page-spec",
+        "journey-metrics",
+        "knowledge-wiki"
+      ],
+      "context_policy": {
+        "independent": "user_inputs_only",
+        "chain_context": "explicit_refs_only",
+        "knowledge_wiki": "conditional_minimum_sufficient",
+        "historical_feedback": "explicit_refs_only"
+      },
+      "required": [],
+      "artifacts": [
+        "subjective"
+      ],
+      "next_hint": {
+        "preferred": [
+          "evidence-govern"
+        ],
+        "reason": "主观证据包就位后，进入 Evidence Govern 完成标准化与跨源治理。",
+        "alternatives": [
+          "business-impact",
+          "data-visualization",
+          "evidence-archive"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "experience-heuristic-analysis",
+      "name_zh": "体验启发式分析",
+      "description": "走查页面、原型或代码，定位体验风险并形成有依据的报告。",
+      "phase": 3,
+      "workflow_stage": "explore",
+      "preview_visibility": "user_facing",
+      "preview_order": 120,
+      "standalone_usable": true,
+      "direct_invocation_policy": "standalone_with_input",
+      "reads": [
+        "uxs",
+        "page-spec",
+        "journey-analysis",
+        "stories"
+      ],
+      "conditional_reads": [
+        "knowledge-wiki"
+      ],
+      "context_policy": {
+        "independent": "user_inputs_only",
+        "chain_context": "explicit_refs_only",
+        "knowledge_wiki": "conditional_minimum_sufficient"
+      },
+      "required": [],
+      "artifacts": [
+        "heuristic"
+      ],
+      "next_hint": {
+        "preferred": [
+          "evidence-govern"
+        ],
+        "reason": "启发式风险证据就位后，进入 Evidence Govern 完成标准化、证据关联和治理放行。",
+        "alternatives": [
+          "data-visualization"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "evidence-govern",
+      "name_zh": "证据处理与治理",
+      "description": "核对证据来源、重复与冲突，明确使用范围和下游放行条件。",
+      "phase": 3,
+      "preview_visibility": "internal",
+      "direct_invocation_policy": "gate_required",
+      "reads": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis",
+        "outcome-validation-recheck"
+      ],
+      "read_purposes": {
+        "outcome-validation-recheck": [
+          "evidence_change_feedback_only"
+        ]
+      },
+      "required": [],
+      "required_any": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis",
+        "outcome-validation-recheck"
+      ],
+      "internal_phases": [
+        {
+          "id": "normalization",
+          "name_zh": "输入标准化"
+        },
+        {
+          "id": "evidence-linking-context",
+          "name_zh": "证据关联与情境评估"
+        },
+        {
+          "id": "governance-release",
+          "name_zh": "治理、审核与放行"
+        }
+      ],
+      "artifacts": [
+        "governed"
+      ],
+      "next_hint": {
+        "preferred": [
+          "root-cause-synthesis"
+        ],
+        "reason": "治理门禁通过后，可按消费者专属 Handoff 进入候选根因综合。",
+        "alternatives": [
+          "business-impact",
+          "evidence-archive",
+          "knowledge-wiki",
+          "data-visualization"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis"
+      ]
+    },
+    {
+      "id": "root-cause-synthesis",
+      "name_zh": "候选根因综合",
+      "description": "综合已放行证据，提出候选根因，说明依据与待验证假设。",
+      "phase": 3,
+      "workflow_stage": "explore",
+      "preview_visibility": "user_facing",
+      "preview_order": 130,
+      "direct_invocation_policy": "gate_required",
+      "reads": [
+        "evidence-govern"
+      ],
+      "required": [
+        "evidence-govern"
+      ],
+      "artifacts": [
+        "root-cause"
+      ],
+      "next_hint": {
+        "preferred": [
+          "problem-framing"
+        ],
+        "reason": "经审核且达到设计就绪的干预方向进入现有 Problem Framing；实际承接仍由该技能自身规则决定。",
+        "alternatives": [
+          "outcome-validation-recheck",
+          "data-visualization",
+          "evidence-archive"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "business-impact",
+      "name_zh": "业务影响评估",
+      "description": "评估问题影响与损失，分析方案收益和投入，支持优先级决策。",
+      "phase": 3,
+      "workflow_stage": "explore",
+      "preview_visibility": "user_facing",
+      "preview_order": 140,
+      "standalone_usable": true,
+      "optional": true,
+      "repeatable": true,
+      "direct_invocation_policy": "standalone_with_input",
+      "reads": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis",
+        "evidence-govern",
+        "root-cause-synthesis",
+        "page-spec",
+        "outcome-validation-recheck"
+      ],
+      "conditional_reads": [
+        "uxs",
+        "journey-metrics",
+        "knowledge-wiki"
+      ],
+      "context_policy": {
+        "independent": "user_inputs_only",
+        "chain_context": "explicit_refs_only",
+        "knowledge_wiki": "conditional_minimum_sufficient",
+        "prior_valuation": "explicit_ref_only"
+      },
+      "mode_requirements": {
+        "solution_value_chain": [
+          "page-spec"
+        ],
+        "validated_revaluation": [
+          "outcome-validation-recheck"
+        ]
+      },
+      "required": [],
+      "artifacts": [
+        "business-impact"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "业务影响评估可按当前材料独立或重复执行，后续由本次状态和用户意图决定。",
+        "alternatives": [
+          "root-cause-synthesis",
+          "page-spec",
+          "outcome-validation-recheck",
+          "data-visualization",
+          "evidence-archive"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "outcome-validation-recheck",
+      "name_zh": "效果验证与回检",
+      "description": "检查验证条件、实际改善与副作用，给出推广或持续监测建议。",
+      "phase": 3,
+      "preview_visibility": "user_facing",
+      "repeatable": true,
+      "direct_invocation_policy": "gate_required",
+      "reads": [
+        "root-cause-synthesis",
+        "evidence-govern"
+      ],
+      "conditional_reads": [
+        "page-spec",
+        "business-impact"
+      ],
+      "required": [
+        "root-cause-synthesis"
+      ],
+      "artifacts": [
+        "outcome"
+      ],
+      "next_hint": {
+        "preferred": [
+          "evidence-govern"
+        ],
+        "reason": "回检结果返回 Evidence Govern 吸收证据变更；需要效果后价值重估时可显式进入 Business Impact。",
+        "alternatives": [
+          "business-impact",
+          "evidence-archive",
+          "data-visualization"
+        ]
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "data-visualization",
+      "display_group": "foundation",
+      "name_zh": "数据可视化",
+      "description": "将已有结论或数据转成图表规格与报告，表达趋势、差异和关联。",
+      "type": "support",
+      "workflow_stage": "support",
+      "preview_visibility": "user_facing",
+      "preview_order": 610,
+      "standalone_usable": true,
+      "optional": true,
+      "direct_invocation_policy": "standalone_with_input",
+      "reads": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis",
+        "evidence-govern",
+        "root-cause-synthesis",
+        "problem-framing",
+        "page-spec",
+        "outcome-validation-recheck",
+        "business-impact"
+      ],
+      "required": [],
+      "artifacts": [
+        "visualization"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "数据可视化只表达正式上游结论，不改变分析主链状态。",
+        "alternatives": []
+      },
+      "phase": 3,
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "evidence-archive",
+      "name_zh": "证据归档",
+      "description": "将获准保存的证据与结论固化为快照，方便后续查找和复核。",
+      "type": "support",
+      "workflow_stage": "support",
+      "preview_visibility": "user_facing",
+      "preview_order": 620,
+      "standalone_usable": true,
+      "direct_invocation_policy": "standalone_with_input",
+      "reads": [
+        "objective-data-analysis",
+        "subjective-feedback-analysis",
+        "experience-heuristic-analysis",
+        "evidence-govern",
+        "root-cause-synthesis",
+        "business-impact",
+        "outcome-validation-recheck"
+      ],
+      "required": [],
+      "artifacts": [
+        "archive-summary"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "reason": "证据归档只在显式授权后保存不可变历史快照，不自动推进主链或发布知识。",
+        "alternatives": []
+      },
+      "phase": 3,
+      "anchor": false,
+      "requiredAny": []
+    }
+  ]
+}

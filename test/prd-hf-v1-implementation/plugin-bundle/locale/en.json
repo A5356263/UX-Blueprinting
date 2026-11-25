@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Design workbench",
+    "description": "Runs the design stages for one workspace, records confirmations, and registers the formal Markdown deliverables."
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "name": "dsh-ux-blueprinting",
+  "version": "0.7.13",
+  "description": "个人设计工作台：Skill 卡片、任务动态、沉淀与按任务覆盖的 Markdown 产物。",
+  "type": "module",
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./reference-reader": "./runtime/reference-reader.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "skills-provider.js",
+    "runtime/state.js",
+    "runtime/artifacts.js",
+    "runtime/workbench.js",
+    "runtime/reference-reader.js",
+    "runtime/orchestration.js",
+    "runtime/preview.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    ".agents/skills/board/",
+    ".agents/skills/business-impact/",
+    ".agents/skills/data-visualization/",
+    ".agents/skills/edge/",
+    ".agents/skills/evidence-archive/",
+    ".agents/skills/evidence-govern/",
+    ".agents/skills/experience-heuristic-analysis/",
+    ".agents/skills/journey-analysis/",
+    ".agents/skills/journey-metrics/",
+    ".agents/skills/knowledge-wiki/",
+    ".agents/skills/objective-data-analysis/",
+    ".agents/skills/outcome-validation-recheck/",
+    ".agents/skills/page-spec/",
+    ".agents/skills/prd-review/",
+    ".agents/skills/problem-framing/",
+    ".agents/skills/root-cause-synthesis/",
+    ".agents/skills/solution-swimlane/",
+    ".agents/skills/stories/",
+    ".agents/skills/subjective-feedback-analysis/",
+    ".agents/skills/uxs/",
+    "shared-workflow/skill-graph.json"
+  ],
+  "scripts": {
+    "pack:plugin": "node scripts/pack-plugin.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  }
+}
