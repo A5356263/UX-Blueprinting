@@ -4,6 +4,7 @@
 !/shared-workflow/
 !/README.md
 !/.gitignore
+!/.gitattributes
 !/.mcp.json
 !/AGENTS.md
 !/skills-lock.json
@@ -11,6 +12,7 @@
 !/skill/
 !/spec/
 !/test/
+!/spark-output/
 !/myguize.md
 
 __pycache__/
@@ -24,7 +26,6 @@ Thumbs.db
 .agents/temp/
 .agents/worktrees/
 docs/
-spark-output/
 out/
 plugin/
 V0.2User Manual.md
