@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/distribution-receipt-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "name", "version", "commonInstructionDigest", "runtimeLockDigest", "core", "files", "contentDigest"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "kind": { "const": "ux-proto-distribution-receipt" },
+    "name": { "enum": ["ux-proto", "ux-proto-g", "ux-proto-assets-builder"] },
+    "version": { "const": "1.3.2" },
+    "commonInstructionDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "runtimeLockDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "core": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "contentDigest"],
+      "properties": {
+        "version": { "const": "1.3.2" },
+        "contentDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "contentDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "template.application-frame",
+  "kind": "Template",
+  "title": "XFT 应用框架",
+  "abstract": "提供顶部导航、工作区标签、统一的工作内容区和下级页面返回栏。",
+  "entry": "XftApplicationFrame.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftApplicationFrame",
+    "customizationSurfaces": [
+      {
+        "id": "top-bar",
+        "purpose": "默认省略 topBar 或使用 variant=global。页面明确属于智能记账应用时传 smart-accounting；明确属于其他下级应用时传 sub-application。两个下级应用变体均通过 brandName 传入实际应用名称。仅 sub-application 支持一级菜单，默认隐藏；需求明确要求显示时传 showPrimaryNav=true，并由页面提供菜单项、当前项和切换回调。globalActions 仅在 global 变体显示；框架级 globalActions 优先于 topBar.globalActions。",
+        "binding": {
+          "type": "prop",
+          "name": "topBar"
+        }
+      },
+      {
+        "id": "workspace-content",
+        "purpose": "传入工作区正文。框架提供唯一白色工作面，正文保持透明，不再叠加整页白底。普通页面沿用框架提供的正文内边距，不重复添加同一层内边距。设置页或需求明确要求自行管理完整正文布局时，由页面负责正文内边距，并在正文根标记 data-xft-workspace-layout=\"managed\"。框架也识别正文根下一层的标记。贴边区域、正文和底部操作由页面组织。底部操作放在正文内边距之外。工作区默认由框架承担纵向滚动。由主数据区承担唯一纵向滚动时，在正文根标记 data-xft-scroll-owner=\"template\"，并提供可收缩的高度链。工作区默认不显示返回栏。内容区操作进入同一工作区标签内的下级页面时，通过 children 的渲染函数获取 openSubpage，并在点击回调中传入点击事件和下级正文。框架使用该操作的显示文案作为标题，点击返回时恢复上一级正文。无可见文案的入口提供 aria-label。",
+        "binding": {
+          "type": "prop",
+          "name": "children"
+        }
+      },
+      {
+        "id": "workspace-tabs",
+        "purpose": "传入工作区标签栏的状态和回调。tabs 至少保留一项，activeKey 对应当前标签。通过 onActivate、onClose、onNavigate 和 onCloseAll 处理切换、关闭、相邻导航和关闭全部。",
+        "binding": {
+          "type": "prop",
+          "name": "workspaceTabBar"
+        }
+      },
+      {
+        "id": "side-navigation-change",
+        "purpose": "侧栏菜单点击时返回菜单项 key。页面据此同步 activeSideNavigationKey，并打开或激活对应工作区标签。菜单项表示稳定的模块入口，页面内的视图切换留在正文。",
+        "binding": {
+          "type": "prop",
+          "name": "onSideNavigationChange"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "template.filter-bar",
+  "kind": "Template",
+  "title": "XFT 筛选栏",
+  "abstract": "支持组合筛选条件、统一查询、重置和展开更多条件。",
+  "entry": "filter-bar/XftFilterBar.tsx",
+  "artifacts": [
+    "filter-bar/XftFilterBar.model.ts"
+  ],
+  "authoring": {
+    "mainExport": "XftFilterBar",
+    "customizationSurfaces": [
+      {
+        "id": "fields",
+        "purpose": "按展示优先级传入筛选字段，每项提供 key 和 label。省略 type 时用文本输入，选择项用 select 并提供 options，单日期用 date，日期区间用 range。超过三项时默认仅展示前三项，其余由更多筛选展开。",
+        "binding": {
+          "type": "prop",
+          "name": "fields"
+        }
+      },
+      {
+        "id": "value",
+        "purpose": "当前受控筛选值，以字段 key 为索引。文本和选项值使用字符串，日期使用 Dayjs，区间使用起止日期二元组。",
+        "binding": {
+          "type": "prop",
+          "name": "value"
+        }
+      },
+      {
+        "id": "default-value",
+        "purpose": "点击重置时恢复的值，以字段 key 为索引。页面需要同一组初始值时，用它初始化 value。",
+        "binding": {
+          "type": "prop",
+          "name": "defaultValue"
+        }
+      },
+      {
+        "id": "on-change",
+        "purpose": "字段变化或重置时返回完整的下一组筛选值，页面将它写回 value。",
+        "binding": {
+          "type": "prop",
+          "name": "onChange"
+        }
+      },
+      {
+        "id": "on-query",
+        "purpose": "点击查询时返回当前完整筛选值，由页面执行查询。",
+        "binding": {
+          "type": "prop",
+          "name": "onQuery"
+        }
+      },
+      {
+        "id": "on-reset",
+        "purpose": "需要在重置时执行额外动作时传入。它在 onChange 后收到同一组重置值。",
+        "binding": {
+          "type": "prop",
+          "name": "onReset"
+        }
+      }
+    ]
+  }
+}

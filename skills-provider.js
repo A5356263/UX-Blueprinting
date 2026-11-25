@@ -37,7 +37,11 @@ export function readBundledSkills() {
           '- 禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记；\n' +
           '- 需要读取上游时，优先读取任务目录中的同名产物；不要读取根目录副本；\n' +
           '- PRD 审核记录文件名为 prd-review-record.md，正式需求基线为 prd-review.md；\n' +
-          '- 确实需要辅助文件时，只写任务目录，不创建根目录副本。\n',
+          '- 确实需要辅助文件时，只写任务目录，不创建根目录副本。\n' +
+          (name === 'ux-proto-g'
+            ? '- 在工作台任务中，用 node "' + join(root, 'runtime/bootstrap-ux-proto-g.mjs') +
+              '" "<当前任务目录>/ux-proto-g" 代替发行说明的 bootstrap 命令。后续命令在该原型目录执行。\n'
+            : ''),
       }
     })
 }

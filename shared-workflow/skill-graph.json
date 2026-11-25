@@ -125,24 +125,6 @@
       "requiredAny": []
     },
     {
-      "id": "solution-swimlane",
-      "_comment": "只承接正式页面规格 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在页面规格完成后优先展示本节点；required 仍保证它不会提前就绪。",
-      "name_zh": "业务泳道图",
-      "description": "将页面规格转成泳道图，展示角色职责、流程交接与异常分支。",
-      "phase": 2,
-      "reads": [
-        "page-spec"
-      ],
-      "required": [],
-      "next_hint": {
-        "preferred": [],
-        "reason": "方案协同图已完成，当前无固定下一步推荐。",
-        "alternatives": []
-      },
-      "anchor": false,
-      "requiredAny": []
-    },
-    {
       "id": "page-spec",
       "_comment": "以 Page Spec 的最终 Markdown 为正式语义源。绑定同源正式基线后，设计前提取内部页面事实，首次登记前逐项核对并提交完整 Markdown。Edge 仍为可选状态补强。",
       "name_zh": "页面规格",
@@ -159,14 +141,57 @@
       "required": [],
       "next_hint": {
         "preferred": [
-          "solution-swimlane"
+          "ux-proto-g"
         ],
-        "reason": "把页面规格里的角色职责、流程交接和异常分支整理成一张协同图。",
+        "reason": "基于本轮正式页面规格生成可交互的原型。",
         "alternatives": [
-          { "id": "journey-metrics", "reason": "据页面规格补齐埋点、度量口径和异常追踪要求。" }
+          {
+            "id": "solution-swimlane",
+            "reason": "把页面规格里的角色职责、流程交接和异常分支整理成一张协同图。"
+          },
+          {
+            "id": "journey-metrics",
+            "reason": "据页面规格补齐埋点、度量口径和异常追踪要求。"
+          }
         ]
       },
       "anchor": true,
+      "requiredAny": []
+    },
+    {
+      "id": "ux-proto-g",
+      "name_zh": "交互原型",
+      "description": "将页面规格生成可交互的 React 原型，构建并交付预览。",
+      "phase": 2,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [
+        "page-spec"
+      ],
+      "next_hint": {
+        "preferred": [],
+        "alternatives": []
+      },
+      "anchor": false,
+      "requiredAny": []
+    },
+    {
+      "id": "solution-swimlane",
+      "_comment": "只承接正式页面规格 Markdown 与 JSON，输出单文件 HTML。phase 2.4 仅用于进度预览在页面规格完成后优先展示本节点；required 仍保证它不会提前就绪。",
+      "name_zh": "业务泳道图",
+      "description": "将页面规格转成泳道图，展示角色职责、流程交接与异常分支。",
+      "phase": 2,
+      "reads": [
+        "page-spec"
+      ],
+      "required": [],
+      "next_hint": {
+        "preferred": [],
+        "reason": "方案协同图已完成，当前无固定下一步推荐。",
+        "alternatives": []
+      },
+      "anchor": false,
       "requiredAny": []
     },
     {

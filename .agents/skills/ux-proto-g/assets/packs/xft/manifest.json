@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 5,
+  "id": "xft",
+  "version": "2.7.1",
+  "entrypoints": [
+    {
+      "assetLink": "pattern.xft-design-foundations",
+      "load": "full"
+    },
+    {
+      "assetLink": "pattern.xft-page-template-selection",
+      "load": "full"
+    }
+  ],
+  "review": [
+    {
+      "assetLink": "knowledge.scroll-ownership-by-page-type",
+      "load": "full"
+    },
+    {
+      "assetLink": "knowledge.action-emphasis-by-intent",
+      "load": "full"
+    },
+    {
+      "assetLink": "knowledge.action-availability-by-constraint",
+      "load": "full"
+    }
+  ],
+  "runtimeTheme": {
+    "artifacts": [
+      "theme/presets/default/alias-vars.generated.css",
+      "theme/presets/default/antd.generated.css",
+      "theme/presets/default/theme-config.generated.mjs"
+    ]
+  },
+  "uiConfig": {
+    "stylesheet": "ui-config/components.css",
+    "antdVersion": "6.5.0"
+  }
+}

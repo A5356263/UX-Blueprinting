@@ -1,0 +1,69 @@
+{
+  "id": "template.table-action-bar",
+  "kind": "Template",
+  "title": "XFT 表格操作栏",
+  "abstract": "提供表格结果集操作，以及刷新、排序和显示列的入口。",
+  "entry": "table-action-bar/XftTableActionBar.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftTableActionBar",
+    "customizationSurfaces": [
+      {
+        "id": "actions",
+        "purpose": "按业务顺序传入结果集操作。每项提供 key、label 和回调，可设 disabled。默认使用普通按钮；需要突出主操作时将该项设为 priority=primary。最多直接显示五项，超出项和标记 priority=overflow 的项进入更多菜单。查看、编辑或删除单条记录的入口放在对应行。",
+        "binding": {
+          "type": "prop",
+          "name": "actions"
+        }
+      },
+      {
+        "id": "on-sort",
+        "purpose": "需要整表排序入口时传入，页面在回调中处理排序。",
+        "binding": {
+          "type": "prop",
+          "name": "onSort"
+        }
+      },
+      {
+        "id": "on-column-settings",
+        "purpose": "表头设置图标默认显示，未传回调时禁用。页面负责打开列设置、保存选择，并将更新后的 columns 传给受管表格。",
+        "binding": {
+          "type": "prop",
+          "name": "onColumnSettings"
+        }
+      },
+      {
+        "id": "on-refresh",
+        "purpose": "刷新图标默认显示。页面传入回调，使用当前已生效的筛选条件重新查询；未传回调时图标保持可见但禁用。",
+        "binding": {
+          "type": "prop",
+          "name": "onRefresh"
+        }
+      },
+      {
+        "id": "extra-utilities",
+        "purpose": "按业务需要追加展开、显示方式等工具；排序通过 onSort 提供。",
+        "binding": {
+          "type": "prop",
+          "name": "extraUtilities"
+        }
+      },
+      {
+        "id": "layout",
+        "purpose": "默认 split，业务按钮居左，工具居右。需要将业务按钮与工具作为整体靠右时传 right。与筛选工作区组合时，由筛选工作区决定操作栏所在区域。",
+        "binding": {
+          "type": "prop",
+          "name": "layout"
+        }
+      },
+      {
+        "id": "section",
+        "purpose": "默认 all，显示完整操作栏。仅需业务按钮时传 actions，仅需工具时传 utilities。",
+        "binding": {
+          "type": "prop",
+          "name": "section"
+        }
+      }
+    ]
+  }
+}

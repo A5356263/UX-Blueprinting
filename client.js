@@ -810,6 +810,22 @@ window.__ModuleLoader__.load({
           h('rect', { x: 154, y: 88, width: 19, height: 6, rx: 2, fill: '#5275a8', stroke: 'none' }),
         ],
       },
+      'ux-proto-g': {
+        background: '#e4eeeb',
+        ink: '#41665f',
+        scene: () => [
+          h('rect', { x: 40, y: 37, width: 124, height: 76, rx: 7, fill: '#bfd5ce', stroke: 'none' }),
+          h('rect', { x: 34, y: 31, width: 124, height: 76, rx: 7, fill: '#fcfffc' }),
+          h('path', { d: 'M34 47h124M60 47v60M43 39h1m5 0h1m5 0h1m-12 19h8m-8 9h10m-10 9h7' }),
+          h('rect', { x: 69, y: 57, width: 77, height: 17, rx: 3, fill: '#daebe1', stroke: 'none' }),
+          h('path', { d: 'M76 63h37m-37 5h23' }),
+          h('rect', { x: 69, y: 81, width: 29, height: 16, rx: 3, fill: '#f0e5cf', stroke: 'none' }),
+          h('rect', { x: 105, y: 81, width: 41, height: 16, rx: 3, fill: '#d7e6ee', stroke: 'none' }),
+          h('circle', { cx: 155, cy: 94, r: 18, fill: '#fffaf0', stroke: '#658c7c', strokeWidth: 2 }),
+          h('path', { d: 'M152 87v14l10-7z', fill: '#658c7c', stroke: 'none' }),
+          h('path', { d: 'M172 70v-5m6 10h5m-7-8 4-4', stroke: '#9a7b50' }),
+        ],
+      },
     }
 
     function SkillArt({ skillId }) {
@@ -1308,6 +1324,16 @@ window.__ModuleLoader__.load({
 
       function useSkill(skillId) {
         if (submitting.current) return
+        if (skillId === 'ux-proto-g') {
+          if (latest?.status === 'active' && overview?.artifacts?.some(
+            item => item.key === 'page-spec' && !item.stale
+          )) {
+            void prepareHandoff({ id: skillId })
+          } else {
+            setError('请打开已有正式页面规格的进行中任务，再使用交互原型。')
+          }
+          return
+        }
         if (task) {
           clearTask()
           browseReturn.current = null

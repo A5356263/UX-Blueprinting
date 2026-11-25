@@ -1,0 +1,61 @@
+{
+  "id": "template.approval-agree-dialog",
+  "kind": "Template",
+  "title": "XFT 审批同意弹窗",
+  "abstract": "提供审批意见输入，支持图片、附件、常用语和手写签名。",
+  "entry": "approval-agree-dialog/XftApprovalAgreeDialog.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftApprovalAgreeDialog",
+    "customizationSurfaces": [
+      {
+        "id": "open",
+        "purpose": "弹窗是否打开，由调用方维护。",
+        "binding": {
+          "type": "prop",
+          "name": "open"
+        }
+      },
+      {
+        "id": "on-cancel",
+        "purpose": "取消或关闭时调用。由调用方更新 open。",
+        "binding": {
+          "type": "prop",
+          "name": "onCancel"
+        }
+      },
+      {
+        "id": "on-agree",
+        "purpose": "必填校验通过后返回去掉首尾空白的意见、图片、附件及可选签名。文件项含 name 和 dataUrl。审批提交、文件持久化和关闭由调用方处理。",
+        "binding": {
+          "type": "prop",
+          "name": "onAgree"
+        }
+      },
+      {
+        "id": "opinion-required",
+        "purpose": "默认 false。业务要求填写同意意见时传 true，空白意见会阻止提交。",
+        "binding": {
+          "type": "prop",
+          "name": "opinionRequired"
+        }
+      },
+      {
+        "id": "signature-mode",
+        "purpose": "默认 optional，显示签名入口但允许留空。无需显示签名入口时用 hidden，业务要求签名才能提交时用 required。",
+        "binding": {
+          "type": "prop",
+          "name": "signatureMode"
+        }
+      },
+      {
+        "id": "common-phrases",
+        "purpose": "需要提供常用语时传入字符串列表。选择后追加到意见，未传或为空时常用语入口禁用。",
+        "binding": {
+          "type": "prop",
+          "name": "commonPhrases"
+        }
+      }
+    ]
+  }
+}

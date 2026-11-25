@@ -1,0 +1,39 @@
+
+.xft-context-selector-panel__directory { display: flex; flex-direction: column; min-height: 100%; gap: var(--alias-space-3); }
+
+.xft-context-selector-panel__directory-header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: var(--alias-space-2); }
+
+
+.xft-context-selector-panel__directory-title { min-width: 0; }
+
+
+.xft-context-selector-panel__directory-toggle { display: inline-flex; flex: 0 0 auto; width: 24px; height: 24px; align-items: center; justify-content: center; padding: 0; color: var(--alias-text-secondary); background: transparent; border: 0; border-radius: var(--alias-radius-small); cursor: pointer; }
+
+.xft-context-selector-panel__directory-toggle:hover { background: var(--alias-surface-container-muted-hover); }
+
+
+.xft-context-selector-panel__directory-search { flex: 0 0 auto; min-width: 0; }
+
+
+
+.xft-context-selector-panel__directory-actions { display: flex; width: 100%; gap: var(--alias-space-2); }
+
+.xft-context-selector-panel__directory-actions > .ant-btn { flex: 1 1 0; min-width: 0; }
+
+.xft-context-selector-panel__directory-actions > .ant-space { display: flex; flex: 1 1 0; width: 100%; }
+
+.xft-context-selector-panel__directory-actions > .ant-space > .ant-space-item { flex: 1 1 0; min-width: 0; }
+
+.xft-context-selector-panel__directory-actions > .ant-space > .ant-space-item > .ant-btn { width: 100%; }
+
+
+.xft-context-selector-panel__directory-content { flex: 1 1 0%; min-width: 0; min-height: 0; overflow: auto; }
+
+
+.xft-context-selector-panel__directory-footer { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: var(--alias-space-2); margin-top: auto; }
+
+
+.xft-context-selector-panel__directory--collapsed { width: 48px; min-width: 48px; align-items: center; justify-content: flex-start; margin: calc(-1 * var(--alias-space-4)); padding: var(--alias-space-4) var(--alias-space-3); }
+.xft-context-selector-panel { position: relative; box-sizing: border-box; flex: none; min-height: 0; padding: var(--alias-space-4); border-right: 1px solid var(--alias-divider-neutral); }
+.xft-context-selector-panel__directory { height: 100%; min-height: 0; }
+.xft-context-selector-panel__resize-handle { position: absolute; top: 0; bottom: 0; right: -4px; width: 8px; cursor: col-resize; }

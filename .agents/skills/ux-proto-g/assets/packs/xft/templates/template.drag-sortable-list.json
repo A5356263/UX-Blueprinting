@@ -1,0 +1,37 @@
+{
+  "id": "template.drag-sortable-list",
+  "kind": "Template",
+  "title": "XFT 拖拽排序列表",
+  "abstract": "提供纵向列表拖拽排序，返回调整后的条目顺序。",
+  "entry": "drag-sortable-list/XftDragSortableList.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftDragSortableList",
+    "customizationSurfaces": [
+      {
+        "id": "items",
+        "purpose": "按当前顺序传入排序项，每项含稳定唯一的 key 和展示内容 content。排序入口和窗口由调用方提供。",
+        "binding": {
+          "type": "prop",
+          "name": "items"
+        }
+      },
+      {
+        "id": "on-order-change",
+        "purpose": "拖拽完成或键盘换位后返回新的 key 顺序。页面按需处理顺序保存和失败反馈。",
+        "binding": {
+          "type": "prop",
+          "name": "onOrderChange"
+        }
+      },
+      {
+        "id": "handle-icon",
+        "purpose": "需要替换拖拽手柄时传入图标，默认使用六点拖拽图标。",
+        "binding": {
+          "type": "prop",
+          "name": "handleIcon"
+        }
+      }
+    ]
+  }
+}

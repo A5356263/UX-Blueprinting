@@ -1,0 +1,29 @@
+{
+  "id": "template.statistic-card-grid",
+  "kind": "Template",
+  "title": "XFT 统计卡片区",
+  "abstract": "展示各类别的统计值，支持只读汇总和类别切换。",
+  "entry": "statistic-card-grid/XftStatisticCardGrid.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftStatisticCardGrid",
+    "customizationSurfaces": [
+      {
+        "id": "items",
+        "purpose": "按展示顺序传入统计项，每项提供 key、label 和 value。交互模式用 active 表示当前选中项，并用 onClick 通知页面切换结果范围。",
+        "binding": {
+          "type": "prop",
+          "name": "items"
+        }
+      },
+      {
+        "id": "mode",
+        "purpose": "默认 interactive，用于可切换类别的统计项。仅展示只读统计时传 summary，此时只展示标签和值。统计口径和结果查询由页面负责。",
+        "binding": {
+          "type": "prop",
+          "name": "mode"
+        }
+      }
+    ]
+  }
+}

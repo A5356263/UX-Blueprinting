@@ -10,7 +10,7 @@ const sessionPattern = /^[A-Za-z0-9._-]{8,120}$/
 const taskPattern = /^T-[A-Za-z0-9-]{4,100}$/
 const digest = data => createHash('sha256').update(data).digest('hex')
 const confirmationSkills = new Set(['uxs', 'board'])
-const closingSkills = new Set(['uxs', 'page-spec', 'solution-swimlane', 'edge', 'board'])
+const closingSkills = new Set(['uxs', 'ux-proto-g', 'solution-swimlane', 'edge', 'board'])
 const swimlanePath = 'solution-swimlane/solution_swimlane.html'
 const pendingStatuses = ['waiting_response', 'ready_for_confirmation']
 
@@ -355,6 +355,7 @@ export function createWorkbench(ctx, catalog) {
       '禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记。',
       '读取上游时优先读任务目录内文件，不要读写 spark-output/ 根目录副本。',
       ...upstream.map(entry => '本轮已登记上游产物：' + entry.path),
+      skill === 'ux-proto-g' ? '使用本任务已登记的正式页面规格。独立原型工作区固定为本任务目录下的 ux-proto-g/。按发行流程完成本轮构建，成功或降级后提交构建摘要；工作台以 .ux-proto/build-report.json 为准。构建失败时向用户报告失败原因和恢复步骤。' : '',
       skill === 'solution-swimlane' ? '本次工作台任务使用已登记的页面规格作为输入。将泳道图 HTML 与 .work 输出定位到本任务目录下的 solution-swimlane/，保留 Skill 中的渲染和校验。只在 HTML 校验通过后登记产物。' : '',
       '',
       String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
@@ -402,6 +403,7 @@ export function createWorkbench(ctx, catalog) {
   async function createTask(workspace, body) {
     const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
+    if (skill === 'ux-proto-g') throw new Error('请在已有正式页面规格的任务中使用「交互原型」')
     const sessionId = String(body.sessionId ?? '')
     if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
     if (!await sessionBelongs(workspace, sessionId)) throw new Error('所选会话不属于当前工作区')
@@ -477,6 +479,9 @@ export function createWorkbench(ctx, catalog) {
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
     const manifest = loadManifest(workspace, task.id)
     const done = completedFor(manifest)
+    if (skill === 'ux-proto-g' && !done.includes('page-spec')) {
+      throw new Error('请先登记本任务的正式页面规格，再生成交互原型')
+    }
     const upstream = (catalog.reads?.(skill) ?? []).filter(id => done.includes(id)).map(id => {
       const entry = manifest.skills[id]
       readArtifact(workspace, task.id, entry)
@@ -597,6 +602,45 @@ export function createWorkbench(ctx, catalog) {
       let file = taskPath(workspace, taskId, artifactKey)
       let bytes = Buffer.from(markdown)
       let format = 'markdown'
+      if (skill === 'ux-proto-g') {
+        if (task.round?.skill !== skill || !completedFor(manifest).includes('page-spec')) {
+          throw new Error('请在本任务的交互原型轮次登记构建结果')
+        }
+        readArtifact(workspace, task.id, manifest.skills['page-spec'])
+        const proofPath = 'ux-proto-g/.ux-proto/build-report.json'
+        const proof = join(dir, proofPath)
+        if (!existsSync(proof)) throw new Error('找不到本轮原型构建回执')
+        contained(dir, realpathSync(proof))
+        const info = lstatSync(proof)
+        if (!info.isFile() || info.isSymbolicLink() || info.size > limit || info.mtimeMs < task.round.startedAt) {
+          throw new Error('请先完成本轮原型构建，再登记产物')
+        }
+        const report = JSON.parse(readFileSync(proof, 'utf8'))
+        if (report.schemaVersion !== 1 || !['normal', 'degraded'].includes(report.completionStatus) ||
+            report.runtimePreview !== 'usable' || report.executionSafety !== 'verified' ||
+            !/^sha256:[0-9a-f]{64}$/.test(report.sourceDigest) ||
+            (report.completionStatus === 'normal' && report.staticPreview !== 'usable')) {
+          throw new Error('原型构建回执未确认存在可用预览')
+        }
+        const list = items => items.length ? items.join('，') : '无'
+        bytes = Buffer.from([
+          '# 交互原型构建结果',
+          '',
+          '- 构建：' + report.completionStatus,
+          '- 运行时／静态预览：' + report.runtimePreview + '／' + report.staticPreview,
+          '- 执行安全：' + report.executionSafety,
+          '- Pack 快照：' + (report.snapshotDigest ?? '无'),
+          '- 源码摘要：' + report.sourceDigest,
+          '- 已实例化资产：' + list(report.materializedAssets ?? []),
+          '- 实际引用资产：' + list((report.observedReusableAssets ?? []).map(item => item.id)),
+          '- 构建告警：' + list((report.warnings ?? []).map(item => JSON.stringify(item))),
+          ...(report.error ? ['- 降级原因：' + report.error.message] : []),
+          '- 运行时入口：`ux-proto-g/index.html`',
+          ...(report.staticPreview === 'usable' ? ['- 静态入口：`ux-proto-g/index.static.html`'] : []),
+          '- 构建回执：`' + proofPath + '`',
+          '',
+        ].join('\n'))
+      }
       if (skill === 'solution-swimlane') {
         file = join(dir, swimlanePath)
         contained(dir, realpathSync(file))

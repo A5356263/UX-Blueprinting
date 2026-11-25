@@ -1,0 +1,151 @@
+{
+  "id": "template.filter-workbench",
+  "kind": "Template",
+  "title": "XFT 筛选工作区",
+  "abstract": "提供筛选面板、表头筛选、当前条件和常用方案，管理待查询条件与已生效条件。",
+  "entry": "filter-workbench/XftFilterWorkbench.tsx",
+  "artifacts": [
+    "filter-workbench/XftFilterWorkbench.model.ts"
+  ],
+  "authoring": {
+    "mainExport": "XftFilterWorkbench",
+    "customizationSurfaces": [
+      {
+        "id": "mode",
+        "purpose": "必填。明确要求表头列筛选时用 header，确认后应用该列条件；同时需要顶部快捷字段时仍用 header，并传 headerLayout=quick。没有表头筛选时，智能记账选择方案即更新结果用 realtime-scheme，先设置会计期间等前置条件再查询用 precondition；集团财务选择方案仅回填、随后点击查询才应用时用 group-finance。仅有直接更新结果的顶部快捷条件时用 quick。若需求同时指定多套互斥的查询时序，先确认主查询流程，再选择一个 mode。",
+        "binding": {
+          "type": "prop",
+          "name": "mode"
+        }
+      },
+      {
+        "id": "fields",
+        "purpose": "必填。页面按业务提供字段 key、label、控件类型、选项及必填规则。快捷搜索使用 search；自定义控件用 render。表头筛选字段 key 必须对应受管表格的列筛选键。",
+        "binding": {
+          "type": "prop",
+          "name": "fields"
+        }
+      },
+      {
+        "id": "initial-values",
+        "purpose": "省略时使用空条件。传入页面初始条件；例如前置查询所需的默认会计期间。",
+        "binding": {
+          "type": "prop",
+          "name": "initialValues"
+        }
+      },
+      {
+        "id": "schemes",
+        "purpose": "页面提供方案的稳定 id、名称、条件值及可选默认标记。默认由页面管理数据和持久化；realtime-scheme 点击方案后立即应用并更新结果，group-finance 仅回填待查询字段、点击查询后再更新结果。header 是否显示方案由 schemesEnabled 控制。",
+        "binding": {
+          "type": "prop",
+          "name": "schemes"
+        }
+      },
+      {
+        "id": "schemes-enabled",
+        "purpose": "仅用于 header。省略时按是否传入非空 schemes 决定是否启用；显式传 false 时隐藏方案栏、保存和管理入口，显式传 true 时允许使用方案能力。",
+        "binding": {
+          "type": "prop",
+          "name": "schemesEnabled"
+        }
+      },
+      {
+        "id": "header-layout",
+        "purpose": "仅用于 header，默认 standard：业务按钮在方案与当前条件上方；传 quick 时，快捷字段与操作区位于同一顶部行。选定 quick 排列后，当前条件栏默认排除顶部快捷字段，也可用 summaryFieldKeys 指定展示范围。",
+        "binding": {
+          "type": "prop",
+          "name": "headerLayout"
+        }
+      },
+      {
+        "id": "quick-field-keys",
+        "purpose": "按顺序指定顶部快捷字段。quick 模式省略时使用 fields 的全部字段；显式传空数组时左侧不显示筛选字段，右侧操作区仍居右。左侧宽度不足时，放不下的完整控件进入「更多筛选」。",
+        "binding": {
+          "type": "prop",
+          "name": "quickFieldKeys"
+        }
+      },
+      {
+        "id": "summary-field-keys",
+        "purpose": "指定当前条件栏展示的字段，查询仍使用完整条件。header 默认排除顶部快捷字段与 summarySearchKey；header quick 可传入表头筛选字段以限定展示范围。",
+        "binding": {
+          "type": "prop",
+          "name": "summaryFieldKeys"
+        }
+      },
+      {
+        "id": "summary-search-key",
+        "purpose": "header 标准排列中，指定显示在当前筛选条件右侧的搜索字段 key。",
+        "binding": {
+          "type": "prop",
+          "name": "summarySearchKey"
+        }
+      },
+      {
+        "id": "header-primary-actions",
+        "purpose": "仅用于 header 的 standard 排列，放在方案及当前条件上方。可传节点或操作渲染函数。只需要业务按钮时，表格操作栏传 section=actions。",
+        "binding": {
+          "type": "prop",
+          "name": "headerPrimaryActions"
+        }
+      },
+      {
+        "id": "summary-toolbar-actions",
+        "purpose": "仅用于 header 的 standard 排列，放在当前条件右侧。可传节点或操作渲染函数。只需要刷新、表头设置等工具时，表格操作栏传 section=utilities。",
+        "binding": {
+          "type": "prop",
+          "name": "summaryToolbarActions"
+        }
+      },
+      {
+        "id": "on-schemes-change",
+        "purpose": "方案列表发生保存变更时，向页面返回最新列表。页面负责持久化。",
+        "binding": {
+          "type": "prop",
+          "name": "onSchemesChange"
+        }
+      },
+      {
+        "id": "on-query",
+        "purpose": "页面用完整条件查询并更新结果；成功后更新已生效条件。quick 模式日期和选择项变更后查询，搜索在回车或点击搜索图标后查询；快速连续变更时以最后一次条件为准。",
+        "binding": {
+          "type": "prop",
+          "name": "onQuery"
+        }
+      },
+      {
+        "id": "on-clear",
+        "purpose": "实时方案模式清空当前条件时通知页面清空结果；此操作不执行查询。",
+        "binding": {
+          "type": "prop",
+          "name": "onClear"
+        }
+      },
+      {
+        "id": "toolbar-actions",
+        "purpose": "用于 realtime-scheme、precondition、group-finance、quick 和 header 的 quick 排列。传节点或渲染函数。三个操作区的渲染函数均接收已生效条件 applied、查询状态 hasQueried 和 busy，以及 refresh 和 openPanel。与筛选内容同排并整体靠右时，表格操作栏传 layout=right。",
+        "binding": {
+          "type": "prop",
+          "name": "toolbarActions"
+        }
+      },
+      {
+        "id": "render-group-scheme-table",
+        "purpose": "仅在 group-finance 模式使用。需要显示常用方案设置时，将收到的绑定参数传给受管表格导出的 XftSchemeManagerTable。工作区维护方案状态，页面负责持久化。",
+        "binding": {
+          "type": "prop",
+          "name": "renderGroupSchemeTable"
+        }
+      },
+      {
+        "id": "children",
+        "purpose": "必填。通过渲染函数承载结果区。使用受管表格时，将 filterValues 和 renderColumnFilter 传给表格；表头样式、列定义和合计行按受管表格全文配置。",
+        "binding": {
+          "type": "prop",
+          "name": "children"
+        }
+      }
+    ]
+  }
+}

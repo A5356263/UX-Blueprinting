@@ -1,0 +1,29 @@
+{
+  "id": "template.selection-pagination-bar",
+  "kind": "Template",
+  "title": "XFT 选择统计与分页栏",
+  "abstract": "支持展示已选数量和切换列表页码。",
+  "entry": "selection-pagination-bar/XftSelectionPaginationBar.tsx",
+  "artifacts": [],
+  "authoring": {
+    "mainExport": "XftSelectionPaginationBar",
+    "customizationSurfaces": [
+      {
+        "id": "selected-count",
+        "purpose": "需要显示已选数量时传入，0 也会显示。页面负责维护选中记录和跨页策略。",
+        "binding": {
+          "type": "prop",
+          "name": "selectedCount"
+        }
+      },
+      {
+        "id": "pagination",
+        "purpose": "需要分页时传入 current、total 和 onChange，可选 pageSize 默认 10。页面收到页码和每页条数后更新分页状态及当前数据。",
+        "binding": {
+          "type": "prop",
+          "name": "pagination"
+        }
+      }
+    ]
+  }
+}

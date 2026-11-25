@@ -47,3 +47,7 @@ npm pack --dry-run --json --ignore-scripts
 检查输出的 `files` 清单，确保包含本次所需的插件运行文件及资源。增加运行依赖的文件时，同步核对 `package.json` 的 `files`。仓库文档纳入 Git 时，继续沿用上述发布清单。
 
 `npm run pack:plugin` 默认递增补丁版本并写入 `package.json`，再将安装包输出到 `out/`。只需按当前版本生成验收包时加 `--no-bump`。生成后在 Harness 中选择对应的 `.tgz`。
+
+## 交互原型
+
+`ux-proto-g` 1.3.2 随插件打包，包含发行件自带的 XFT Pack。页面规格登记后，可在同一任务选择「交互原型」。原型与构建回执写入任务目录下的 `ux-proto-g/`，工作台登记构建摘要。插件打包范围以 `package.json` 的 `files` 为准。
