@@ -127,7 +127,6 @@ INIT
                     → RESPONSE_REVIEW
                     → BASELINE_GATE
 → BASELINE_GENERATION
-→ PAGE_FACT_PROJECTION
 → HANDOFF
 ```
 
@@ -139,7 +138,6 @@ INIT
 - `references/knowledge_usage_guide.md`
 - `references/review_calibration_guide.md`
 - `references/output_structure_guide.md`
-- `references/page_generation_handoff.md`
 
 ## 先读什么
 
@@ -286,17 +284,11 @@ Markdown 是正式语义源。
 
 需求基线是下游唯一正式业务语义源，不是 PRD 摘要或审查报告。
 
+冻结前在现有基线自检中按输出规范核对页面事实；该检查同样适用于零阻断直出和产品回复后生成基线。
+
 任务事实中只有在 PRD、正式知识、已确认现有系统结构或产品回复已经证明时，才记录现有任务位置、页面载体和入口。
 
 不得推测现有页面，也不得在基线中设计新页面。
-
-## 页面事实后置投影
-
-需求基线冻结后，读取 `references/page_generation_handoff.md`，生成：
-
-- `spark-output/context/page-generation-handoff.md`
-
-该产物只供 Page Spec 消费。生成失败不影响需求基线，也不阻断 UXB 或 Page Spec。
 
 **硬规则：正式产物写入并完成本 Skill 自检后，必须执行 `node shared-workflow/generate-progress-preview.js`；失败仅告警，不得阻断 Handoff。**
 
@@ -349,7 +341,7 @@ Markdown 是正式语义源。
 - 不把当前知识当成新需求的限制条件。
 - 建议新增和建议修改必须有唯一事实依据，不能包含产品决策。
 - 不输出体验策略。
-- 不输出页面、组件、布局或具体文案。
+- PRD Review 保留正式来源已确认、会影响操作或验收的页面事实，包括选项、字段、默认值、交互条件和固定文案。未经确认的控件选型、页面排版、交互方案和文案，由 Page Spec 在设计阶段确定。原型中的示意内容不能作为已确认要求。
 - 不自动触发。
 - 不让脚本执行语义判断。
 - 不允许下游读取问题单恢复需求事实。
