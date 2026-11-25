@@ -144,7 +144,7 @@
     },
     {
       "id": "page-spec",
-      "_comment": "以 page-spec 作为体验设计权威；JSON 只用于定位，Markdown 必须全文读取并作为正式语义源。page-spec 必须先按原有蓝图链路写入完整 Markdown，再读取 page-generation-handoff.md，对同一文件只做定点追加和必要的嵌套实体单向升级；禁止重写、删除、降级或重排原有内容。Context JSON 基于补漏后的最终 Markdown 生成。edge 仍为可选状态补强，该后置补漏不改变 required 与 next_hint。",
+      "_comment": "以 Page Spec 的最终 Markdown 为正式语义源。绑定同源正式基线后，设计前提取内部页面事实，首次登记前逐项核对并提交完整 Markdown。Edge 仍为可选状态补强。",
       "name_zh": "页面规格",
       "description": "将需求转成页面结构、交互流程与规则，形成可交付设计文档。",
       "phase": 2,
