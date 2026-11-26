@@ -1,7 +1,7 @@
 window.__ModuleLoader__.load({
   id: 'dsh-ux-blueprinting',
   factory(require) {
-    const { createElement: h, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } = require('react')
+    const { createElement: h, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } = require('react')
 
     const id = 'ux-blueprinting'
     const endpoint = '/api/ux-blueprinting/workbench'
@@ -69,6 +69,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: 'Add context or request a change to this task…',
       detailDisabled: 'Continue the task to send a message.',
       noArtifacts: 'No artifacts yet.',
+      documentOutline: 'Document sections',
       artifactSteps: 'Artifact steps',
       editArtifact: 'Edit',
       save: 'Save',
@@ -188,6 +189,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
       detailDisabled: '继续任务后才能发送消息。',
       noArtifacts: '还没有产物。',
+      documentOutline: '文档章节',
       artifactSteps: '产物步骤',
       editArtifact: '编辑',
       save: '保存',
@@ -309,9 +311,7 @@ window.__ModuleLoader__.load({
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
       .uxbp-top .uxbp-btn { box-sizing: border-box; height: 34px; min-height: 34px; max-height: 34px;
         background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
-      .uxbp-top .uxbp-guide-entry { background: var(--ink); color: var(--card); border-color: transparent;
-        padding-inline: 10px; font-size: 11.5px; box-shadow: none; }
-      .uxbp-top .uxbp-guide-entry:hover { background: color-mix(in srgb, var(--ink) 85%, var(--card)); }
+      .uxbp-top .uxbp-guide-entry { padding-inline: 9px; }
       .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
         padding: 0 13px; border: .5px solid var(--line); border-radius: var(--radius-md); background: var(--card);
         color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .25s var(--ease); }
@@ -442,8 +442,11 @@ window.__ModuleLoader__.load({
         border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
       .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
       .uxbp-next-card .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
-      .uxbp-next-card .uxbp-next-start { background: transparent; color: var(--muted); font-weight: 500; }
-      .uxbp-next-card .uxbp-next-start:hover:not(:disabled) { color: var(--ink); opacity: 1; text-decoration: underline; }
+      .uxbp-top .uxbp-guide-entry, .uxbp-next-card .uxbp-next-start {
+        background: transparent; border-color: transparent; color: var(--muted); font-size: 11px; font-weight: 500;
+        box-shadow: none; backdrop-filter: none; }
+      .uxbp-top .uxbp-guide-entry:hover:not(:disabled), .uxbp-next-card .uxbp-next-start:hover:not(:disabled) {
+        background: transparent; color: var(--ink); opacity: 1; text-decoration: underline; }
       .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
       .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; gap: 7px; align-items: center;
         padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
@@ -461,7 +464,7 @@ window.__ModuleLoader__.load({
       .uxbp-handoff { margin: 4px 6px 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
       .uxbp-artifact-html { flex: 1; min-height: 0; width: 100%; border: 0; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-      .uxbp-left[data-view="detail"], .uxbp-left[data-view="skill-detail"] { padding: 0; }
+      .uxbp-left[data-view="detail"], .uxbp-left[data-view="skill-detail"], .uxbp-left[data-view="guide"] { padding: 0; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
       .uxbp-skill-detail-header { flex: none; padding-bottom: 10px; }
@@ -552,7 +555,7 @@ window.__ModuleLoader__.load({
         .uxbp-related-edge svg, .uxbp-related-edge i { display: none; }
         .uxbp-related-edge .uxbp-flow-caption { position: static; display: block; width: auto; max-width: none; padding: 0; transform: none; text-align: left; }
       }
-      .uxbp-guide { flex: 1; min-height: 0; overflow: auto; background: var(--bg); }
+      .uxbp-guide { flex: 1; min-height: 0; overflow: auto; background: var(--bg); container: uxbp-guide / inline-size; }
       .uxbp-guide-inner { max-width: 1160px; margin-inline: auto; padding: 20px 24px 28px; }
       .uxbp-guide-head { margin-bottom: 17px; }
       .uxbp-guide-head h1 { margin: 7px 0 3px; font-size: 27px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em; }
@@ -588,15 +591,17 @@ window.__ModuleLoader__.load({
       .uxbp-guide-crossing .uxbp-guide-rail { min-height: 0; }
       .uxbp-guide-crossing p { font-size: 12px; }
       .uxbp-guide-support { margin-top: 14px; }
-      @container (max-width: 900px) {
+      @container uxbp-guide (max-width: 900px) {
         .uxbp-guide-lanes, .uxbp-guide-crossing { grid-template-columns: minmax(0, 1fr); }
         .uxbp-guide-lane[data-evidence="false"] .uxbp-guide-rail { min-height: 0; }
       }
-      @container (max-width: 540px) {
+      @container uxbp-guide (max-width: 540px) {
         .uxbp-guide-inner { padding: 12px 12px 20px; }
         .uxbp-guide-lane { padding: 10px; }
         .uxbp-guide-rail { grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr) 16px minmax(0, 1fr); }
         .uxbp-guide-rail .uxbp-guide-skill { flex-wrap: wrap; gap: 3px; }
+      }
+      @container (max-width: 540px) {
         .uxbp-top .uxbp-guide-entry { padding-inline: 6px; font-size: 10.5px; }
         .uxbp-top .uxbp-right-top .uxbp-picker > .uxbp-btn span { max-width: 48px; }
       }
@@ -632,6 +637,26 @@ window.__ModuleLoader__.load({
       .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
       .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
       .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 8px 0 20px; }
+      .uxbp-artifact-reading { position: relative; flex: 1; min-height: 0; display: flex; }
+      .uxbp-artifact-reading > .uxbp-artifact-scroll { position: relative; min-width: 0; }
+      .uxbp-artifact-reading[data-outline="true"] > .uxbp-artifact-scroll { padding-inline-end: 54px; }
+      .uxbp-artifact-outline { position: absolute; inset: 8px 0 8px auto; width: 44px; display: flex;
+        flex-direction: column; overflow: auto; }
+      .uxbp-artifact-outline > :first-child { margin-block-start: auto; }
+      .uxbp-artifact-outline > :last-child { margin-block-end: auto; }
+      .uxbp-outline-marker { flex: none; width: 100%; height: 24px; display: flex; align-items: center; justify-content: flex-end;
+        padding: 0 5px 0 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
+      .uxbp-outline-marker::after { content: ''; width: 15px; height: 4px; border-radius: 3px;
+        background: color-mix(in srgb, var(--faint) 55%, var(--card)); }
+      .uxbp-outline-marker[data-level="1"]::after { width: 24px; }
+      .uxbp-outline-marker[data-level="3"]::after { width: 10px; }
+      .uxbp-outline-marker[aria-current="location"]::after { background: var(--muted); }
+      .uxbp-outline-marker:is(:hover, :focus-visible)::after { background: var(--ink); }
+      .uxbp-outline-hint { position: absolute; z-index: 1; inset-inline-end: 44px; transform: translateY(-50%);
+        max-width: min(220px, calc(100% - 54px)); padding: 5px 10px; border: .5px solid var(--line-strong);
+        border-radius: 7px; background: var(--card); color: var(--ink); box-shadow: var(--shadow);
+        font-size: 12px; overflow-wrap: anywhere; pointer-events: none; }
+      @media (pointer: coarse) { .uxbp-outline-marker { height: 44px; } }
       .uxbp-artifact-edit { flex: 1; min-height: 0; width: 100%; resize: none; padding: 8px 0 20px; border: 0; outline: 0;
         background: transparent; color: var(--ink); font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
       .uxbp-artifact-error { flex: none; margin: 0 0 8px; padding: 7px 9px; border-radius: 8px; color: var(--dsw-alias-state-error-primary, #a52c28);
@@ -717,7 +742,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
-      .uxbp-body[data-view="detail"], .uxbp-body[data-view="skill-detail"] { padding-top: 0; }
+      .uxbp-body[data-view="detail"], .uxbp-body[data-view="skill-detail"], .uxbp-body[data-view="guide"] { padding-top: 0; }
     `
 
     function button(active) {
@@ -1100,9 +1125,10 @@ window.__ModuleLoader__.load({
       return poses
     }
 
-    function MarkdownView({ content }) {
+    function parseMarkdown(content) {
       const lines = String(content ?? '').split(/\r?\n/)
       const blocks = []
+      const headings = []
       let paragraph = []
       let list = null
       let table = null
@@ -1140,7 +1166,9 @@ window.__ModuleLoader__.load({
         if (heading) {
           flushParagraph(); flushList()
           const level = heading[1].length
-          blocks.push(h('h' + level, { key: 'h' + blocks.length }, heading[2]))
+          const index = blocks.length
+          blocks.push(h('h' + level, { key: 'h' + index, 'data-heading-index': index }, heading[2]))
+          if (level <= 3 && heading[2].trim()) headings.push({ index, level, label: heading[2].trim() })
           continue
         }
         const bullet = line.match(/^\s*[-*]\s+(.*)$/)
@@ -1161,7 +1189,80 @@ window.__ModuleLoader__.load({
         paragraph.push(line)
       }
       flushParagraph(); flushList(); flushTable()
-      return h('div', { className: 'uxbp-md' }, ...(blocks.length ? blocks : [h('p', { key: 'empty' }, '—')]))
+      const hasSections = headings.some(heading => heading.level === 2)
+      const multipleTopLevels = headings.filter(heading => heading.level === 1).length > 1
+      return {
+        blocks: blocks.length ? blocks : [h('p', { key: 'empty' }, '—')],
+        headings: headings.filter(({ level }) => level === 1 ? multipleTopLevels : level === 2 || !hasSections),
+      }
+    }
+
+    function MarkdownView({ content, outlineLabel }) {
+      const { blocks, headings } = useMemo(() => parseMarkdown(content), [content])
+      const readingRef = useRef(null)
+      const scrollRef = useRef(null)
+      const targetsRef = useRef([])
+      const jumpPosition = useRef(null)
+      const [hasScroll, setHasScroll] = useState(false)
+      const [active, setActive] = useState(null)
+      const [hint, setHint] = useState(null)
+
+      function updateActive() {
+        const scroll = scrollRef.current
+        const targets = targetsRef.current
+        if (!targets.length || jumpPosition.current === scroll.scrollTop) return
+        jumpPosition.current = null
+        const edge = scroll.scrollTop + 12
+        const atEnd = scroll.scrollTop > 0 && scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 1
+        const target = atEnd ? targets.at(-1) : targets.findLast(item => item.offsetTop <= edge) ?? targets[0]
+        setActive(Number(target.dataset.headingIndex))
+      }
+
+      useLayoutEffect(() => {
+        const scroll = scrollRef.current
+        targetsRef.current = headings.map(({ index }) => scroll.querySelector(`[data-heading-index="${index}"]`))
+        jumpPosition.current = null
+        setHint(null)
+        if (!headings.length) {
+          setHasScroll(false)
+          return
+        }
+        const measure = () => {
+          setHasScroll(scroll.scrollHeight > scroll.clientHeight)
+          updateActive()
+        }
+        measure()
+        const observer = new ResizeObserver(measure)
+        observer.observe(scroll)
+        observer.observe(scroll.firstElementChild)
+        return () => observer.disconnect()
+      }, [headings])
+
+      function showHint(event, label) {
+        const reading = readingRef.current.getBoundingClientRect()
+        const marker = event.currentTarget.getBoundingClientRect()
+        setHint({ label, top: marker.top - reading.top + marker.height / 2 })
+      }
+
+      const showOutline = hasScroll && headings.length > 0
+      return h('div', { ref: readingRef, className: 'uxbp-artifact-reading', 'data-outline': showOutline },
+        h('div', { ref: scrollRef, className: 'uxbp-artifact-scroll', onScroll: updateActive },
+          h('div', { className: 'uxbp-md' }, ...blocks)),
+        showOutline && h('nav', { className: 'uxbp-artifact-outline', 'aria-label': outlineLabel, onScroll: () => setHint(null) },
+          ...headings.map(({ index, level, label }, position) => h('button', {
+            key: index, type: 'button', className: 'uxbp-outline-marker', 'data-level': level, 'aria-label': label,
+            'aria-current': index === active ? 'location' : undefined,
+            onPointerEnter: event => showHint(event, label), onPointerLeave: () => setHint(null),
+            onFocus: event => showHint(event, label), onBlur: () => setHint(null),
+            onKeyDown: event => { if (event.key === 'Escape') setHint(null) },
+            onClick: () => {
+              const scroll = scrollRef.current
+              scroll.scrollTop = targetsRef.current[position].offsetTop - 8
+              jumpPosition.current = scroll.scrollTop
+              setActive(index)
+            },
+          }))),
+        showOutline && hint && h('span', { className: 'uxbp-outline-hint', 'aria-hidden': true, style: { top: hint.top } }, hint.label))
     }
 
     function groupOf(item) {
@@ -2155,7 +2256,7 @@ window.__ModuleLoader__.load({
                   : meta?.format === 'html' && !artifactError && artifactContent
                     ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
                         srcDoc: artifactContent.replace(/^\s*<!doctype html>/i, '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; base-uri \'none\'; form-action \'none\'">') })
-                    : h('div', { className: 'uxbp-artifact-scroll' }, h(MarkdownView, { content: artifactContent })))
+                    : h(MarkdownView, { key: selectedArtifactKey, content: artifactContent, outlineLabel: t('documentOutline') }))
 
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
@@ -2231,11 +2332,9 @@ window.__ModuleLoader__.load({
 
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
 
-      if (leftView === 'guide') return h('main', { className: 'uxbp-root' }, h('style', null, styles), renderWorkflowGuide())
-
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
-        leftView !== 'detail' && leftView !== 'skill-detail' && h('header', { className: 'uxbp-top' },
+        (leftView === 'canvas' || leftView === 'sediment') && h('header', { className: 'uxbp-top' },
           h('div', { className: 'uxbp-brand' },
             h('div', { className: 'uxbp-tabs', role: 'group' },
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('skillsTab')),
@@ -2354,6 +2453,7 @@ window.__ModuleLoader__.load({
                     }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))),
               leftView === 'skill-detail' && renderSkillDetail(),
               leftView === 'detail' && renderTaskDetail(),
+              leftView === 'guide' && renderWorkflowGuide(),
               leftView === 'sediment' && renderSedimentPage()
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
