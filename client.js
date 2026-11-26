@@ -72,6 +72,16 @@ window.__ModuleLoader__.load({
       awaitingOutput: 'Awaiting output',
       viewPending: 'View pending item',
       startNextSkill: 'Start',
+      backToSkills: 'Back to skills',
+      skillWhen: 'When to use it',
+      skillInput: 'What to prepare',
+      skillOutput: 'What you get',
+      skillNext: 'What can follow',
+      prdWhen: 'Use it when you have a draft PRD and want to catch missing rules, gaps in the flow or unhandled cases before designing.',
+      prdInput: 'Provide the PRD for this task. If you are following up on a review, also provide the original questions and your replies.',
+      prdOutput: 'If anything blocks the requirement, you get review questions. Once they are resolved, or if there are none, you get a formal requirements baseline.',
+      prdNextPage: 'Turn the formal baseline into page structure, interaction flows and interface rules.',
+      prdNextStrategy: 'If the experience direction is still open, use the formal baseline to decide the strategy first.',
       confirmOutput: 'Confirm artifact',
       needsReview: 'Needs review',
       handoff: 'Continue ',
@@ -146,6 +156,16 @@ window.__ModuleLoader__.load({
       awaitingOutput: '待产出',
       viewPending: '查看待确认项',
       startNextSkill: '开始执行',
+      backToSkills: '返回技能画布',
+      skillWhen: '什么时候用',
+      skillInput: '需要准备什么',
+      skillOutput: '会得到什么',
+      skillNext: '做完可以去哪',
+      prdWhen: '手上已有 PRD，想在做设计前查清业务遗漏、流程断点或没考虑到的异常时使用。',
+      prdInput: '提供这次要审核的 PRD。如果已经做过一轮审核，一并提供原问题和逐项回复。',
+      prdOutput: '有阻断问题时，先得到一份待确认问题单。问题全部解决后生成正式需求基线；没有阻断时直接生成。',
+      prdNextPage: '把正式需求基线转成页面结构、交互流程和界面规则。',
+      prdNextStrategy: '如果体验方向还没定，可以先基于正式需求基线明确体验策略。',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
       handoff: '承接任务 ',
@@ -363,9 +383,22 @@ window.__ModuleLoader__.load({
       .uxbp-handoff { margin: 4px 6px 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
       .uxbp-artifact-html { flex: 1; min-height: 0; width: 100%; border: 0; }
       .uxbp-empty { margin: 12px 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-      .uxbp-left[data-view="detail"] { padding: 0; }
+      .uxbp-left[data-view="detail"], .uxbp-left[data-view="skill-detail"] { padding: 0; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
+      .uxbp-skill-detail-header { flex: none; padding-bottom: 14px; border-bottom: .5px solid var(--line); }
+      .uxbp-skill-detail-intro { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+      .uxbp-skill-detail-intro .uxbp-art { width: 66px; height: 48px; margin: 0; border-radius: 8px; }
+      .uxbp-skill-detail-intro h1 { margin: 0; font-size: 21px; line-height: 1.25; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-skill-detail-intro .uxbp-btn { flex: none; margin-inline-start: auto; }
+      .uxbp-skill-detail-content { flex: 1; min-height: 0; overflow: auto; }
+      .uxbp-skill-detail-content section { max-width: 620px; padding: 14px 0; border-bottom: .5px solid var(--line); }
+      .uxbp-skill-detail-content section:last-child { border-bottom: 0; }
+      .uxbp-skill-detail-content h2 { margin: 0 0 5px; font-size: 13px; font-weight: 600; }
+      .uxbp-skill-detail-content p, .uxbp-skill-detail-content ul { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+      .uxbp-skill-detail-content ul { list-style: none; padding: 0; }
+      .uxbp-skill-detail-content li + li { margin-top: 7px; }
+      .uxbp-skill-detail-content strong { color: var(--ink); font-weight: 600; }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
       .uxbp-detail-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
@@ -483,7 +516,7 @@ window.__ModuleLoader__.load({
         .uxbp-plane { padding: 16px 20px 120px; }
         .uxbp-picker > span { max-width: 100px; }
       }
-      .uxbp-body[data-view="detail"] { padding-top: 0; }
+      .uxbp-body[data-view="detail"], .uxbp-body[data-view="skill-detail"] { padding-top: 0; }
     `
 
     function button(active) {
@@ -1003,7 +1036,8 @@ window.__ModuleLoader__.load({
       })())
       const restored = useRef(false)
       workspaceRef.current = workspace
-      const leftView = viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
+      const leftView = viewMode === 'skill-detail' ? 'skill-detail'
+        : viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
 
       useLayoutEffect(() => {
         if (leftView === 'canvas') canvasRef.current?.scrollTo(canvasScroll.current)
@@ -1638,8 +1672,37 @@ window.__ModuleLoader__.load({
 
       function cardClick(item) {
         if (drag.current.moved) return
+        if (item.id === 'prd-review') {
+          setViewMode('skill-detail')
+          return
+        }
         shakeCard(item.id)
         useSkill(item.id)
+      }
+
+      function renderSkillDetail() {
+        return h('section', { className: 'uxbp-task-detail' },
+          h('header', { className: 'uxbp-skill-detail-header' },
+            h('button', { type: 'button', className: 'uxbp-detail-back', onClick: () => setViewMode('canvas') },
+              h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }), t('backToSkills')),
+            h('div', { className: 'uxbp-skill-detail-intro' },
+              h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: 'prd-review' })),
+              h('h1', null, nameOf('prd-review')),
+              h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
+                onClick: () => {
+                  setViewMode('canvas')
+                  useSkill('prd-review')
+                  requestAnimationFrame(() => inputRef.current?.focus())
+                },
+              }, t('useSkill')))),
+          h('div', { className: 'uxbp-skill-detail-content' },
+            h('section', null, h('h2', null, t('skillWhen')), h('p', null, t('prdWhen'))),
+            h('section', null, h('h2', null, t('skillInput')), h('p', null, t('prdInput'))),
+            h('section', null, h('h2', null, t('skillOutput')), h('p', null, t('prdOutput'))),
+            h('section', null, h('h2', null, t('skillNext')),
+              h('ul', { role: 'list' },
+                h('li', null, h('strong', null, nameOf('page-spec')), ' · ' + t('prdNextPage')),
+                h('li', null, h('strong', null, nameOf('uxs')), ' · ' + t('prdNextStrategy'))))))
       }
 
       function isPending(item) {
@@ -1853,7 +1916,7 @@ window.__ModuleLoader__.load({
 
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
-        leftView !== 'detail' && h('header', { className: 'uxbp-top' },
+        leftView !== 'detail' && leftView !== 'skill-detail' && h('header', { className: 'uxbp-top' },
           h('div', { className: 'uxbp-brand' },
             h('div', { className: 'uxbp-tabs', role: 'group' },
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('skillsTab')),
@@ -1917,7 +1980,7 @@ window.__ModuleLoader__.load({
                       'data-selected': skill === item.id,
                       onClick: () => cardClick(item),
                       onFocus: () => shakeCard(item.id),
-                      onDoubleClick: () => useSkill(item.id),
+                      onDoubleClick: item.id === 'prd-review' ? undefined : () => useSkill(item.id),
                     },
                     h('span', { className: 'uxbp-art' }, h(SkillArt, { skillId: item.id })),
                     h('span', { className: 'uxbp-card-body' },
@@ -1968,6 +2031,7 @@ window.__ModuleLoader__.load({
                         try { await binding.current?.session.cancel() } catch (e) { setError(e.message) }
                       },
                     }, h(Icon, { path: running ? 'M8 6v12M16 6v12' : 'M12 19V5m-6 6 6-6 6 6' }))))),
+              leftView === 'skill-detail' && renderSkillDetail(),
               leftView === 'detail' && renderTaskDetail(),
               leftView === 'sediment' && renderSedimentPage()
             ),
