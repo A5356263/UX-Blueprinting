@@ -245,7 +245,7 @@ window.__ModuleLoader__.load({
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; touch-action: none; user-select: none; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 72px 40px 160px; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
+      .uxbp-plane { padding: 72px 40px 160px 0; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
       .uxbp-group { margin-bottom: 34px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
