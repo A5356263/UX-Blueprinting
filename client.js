@@ -1109,19 +1109,12 @@ window.__ModuleLoader__.load({
           if (!restored.current) {
             restored.current = true
             const stored = saved.current
-            setTab(stored?.tab === 'sediment' ? 'sediment' : 'task')
             const target = stored?.activeTaskId && (data.tasks ?? []).some(item => item.id === stored.activeTaskId)
               ? stored.activeTaskId
               : ''
             if (target) {
               try {
                 await loadTask(target)
-                if (stored?.viewMode === 'detail') {
-                  const origin = stored.detailOrigin === 'sediment' ? 'sediment' : 'task'
-                  setTab(origin)
-                  setDetailOrigin(origin)
-                  setViewMode('detail')
-                }
               } catch {}
             } else {
               const session = stored?.sessionId && (data.sessions ?? []).some(item => item.id === stored.sessionId)
