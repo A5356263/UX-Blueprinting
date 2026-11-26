@@ -71,6 +71,7 @@ window.__ModuleLoader__.load({
       awaiting: 'Pending confirmation',
       awaitingOutput: 'Awaiting output',
       viewPending: 'View pending item',
+      startNextSkill: 'Start',
       confirmOutput: 'Confirm artifact',
       needsReview: 'Needs review',
       handoff: 'Continue ',
@@ -144,6 +145,7 @@ window.__ModuleLoader__.load({
       awaiting: '待确认',
       awaitingOutput: '待产出',
       viewPending: '查看待确认项',
+      startNextSkill: '开始执行',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
       handoff: '承接任务 ',
@@ -245,7 +247,7 @@ window.__ModuleLoader__.load({
         background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--line) 65%, transparent) 1px, transparent 1px);
         background-size: 18px 18px; cursor: grab; touch-action: none; user-select: none; }
       .uxbp-canvas[data-drag="true"] { cursor: grabbing; user-select: none; }
-      .uxbp-plane { padding: 72px 40px 160px 0; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
+      .uxbp-plane { padding: 72px 40px 160px 10px; width: max-content; min-width: 100%; min-height: calc(100% + 96px); }
       .uxbp-group { margin-bottom: 34px; }
       .uxbp-group:last-child { margin-bottom: 0; }
       .uxbp-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: .02em; }
@@ -342,6 +344,8 @@ window.__ModuleLoader__.load({
         border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
       .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
       .uxbp-next-card .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
+      .uxbp-next-card .uxbp-next-start { background: transparent; color: var(--muted); font-weight: 500; }
+      .uxbp-next-card .uxbp-next-start:hover:not(:disabled) { color: var(--ink); opacity: 1; text-decoration: underline; }
       .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
       .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; gap: 7px; align-items: center;
         padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
@@ -1715,9 +1719,9 @@ window.__ModuleLoader__.load({
                   !pending && h('p', null, recommendation.reason)),
                 h('div', { className: 'uxbp-card-foot' },
                   !pending && h('code', null, '/' + recommendation.id),
-                  h('button', { type: 'button', className: 'uxbp-use', disabled: !pending && latestBusy,
+                  h('button', { type: 'button', className: pending ? 'uxbp-use' : 'uxbp-use uxbp-next-start', disabled: !pending && latestBusy,
                     onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
-                  t(pending ? 'viewPending' : 'useSkill'))))),
+                  t(pending ? 'viewPending' : 'startNextSkill'))))),
             latest && h('section', { className: 'uxbp-overview-section' },
               h('h3', null, t('taskFiles')),
               done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))
