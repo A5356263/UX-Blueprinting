@@ -76,12 +76,15 @@ window.__ModuleLoader__.load({
       skillWhen: 'When to use it',
       skillInput: 'What to prepare',
       skillOutput: 'What you get',
-      skillNext: 'What can follow',
+      skillNext: 'Related workflow',
+      skillFlowPrimary: 'Recommended',
+      skillFlowOptional: 'Optional',
       prdWhen: 'Use it when you have a draft PRD and want to catch missing rules, gaps in the flow or unhandled cases before designing.',
       prdInput: 'Provide the PRD for this task. If you are following up on a review, also provide the original questions and your replies.',
       prdOutput: 'If anything blocks the requirement, you get review questions. Once they are resolved, or if there are none, you get a formal requirements baseline.',
-      prdNextPage: 'Turn the formal baseline into page structure, interaction flows and interface rules.',
-      prdNextStrategy: 'If the experience direction is still open, use the formal baseline to decide the strategy first.',
+      prdNextPage: 'Turn the baseline into pages, flows and interaction rules.',
+      prdNextStrategy: 'Identify which experience problems to solve before designing.',
+      prdNextPrototype: 'Turn the page spec into an interactive preview.',
       confirmOutput: 'Confirm artifact',
       needsReview: 'Needs review',
       handoff: 'Continue ',
@@ -160,12 +163,15 @@ window.__ModuleLoader__.load({
       skillWhen: '什么时候用',
       skillInput: '需要准备什么',
       skillOutput: '会得到什么',
-      skillNext: '做完可以去哪',
+      skillNext: '相关工作流',
+      skillFlowPrimary: '主推荐',
+      skillFlowOptional: '可选推荐',
       prdWhen: '手上已有 PRD，想在做设计前查清业务遗漏、流程断点或没考虑到的异常时使用。',
       prdInput: '提供这次要审核的 PRD。如果已经做过一轮审核，一并提供原问题和逐项回复。',
       prdOutput: '有阻断问题时，先得到一份待确认问题单。问题全部解决后生成正式需求基线；没有阻断时直接生成。',
-      prdNextPage: '把正式需求基线转成页面结构、交互流程和界面规则。',
-      prdNextStrategy: '如果体验方向还没定，可以先基于正式需求基线明确体验策略。',
+      prdNextPage: '把需求基线拆成页面、流程和交互规则。',
+      prdNextStrategy: '先明确优先解决的体验问题，再进入页面设计。',
+      prdNextPrototype: '根据页面规格生成可点击的页面预览。',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
       handoff: '承接任务 ',
@@ -386,19 +392,48 @@ window.__ModuleLoader__.load({
       .uxbp-left[data-view="detail"], .uxbp-left[data-view="skill-detail"] { padding: 0; }
       .uxbp-task-detail { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 14px 18px 16px; background: var(--bg); overflow: hidden; }
-      .uxbp-skill-detail-header { flex: none; padding-bottom: 14px; border-bottom: .5px solid var(--line); }
+      .uxbp-skill-detail-header { flex: none; padding-bottom: 10px; }
       .uxbp-skill-detail-intro { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
       .uxbp-skill-detail-intro .uxbp-art { width: 66px; height: 48px; margin: 0; border-radius: 8px; }
       .uxbp-skill-detail-intro h1 { margin: 0; font-size: 21px; line-height: 1.25; font-weight: 600; overflow-wrap: anywhere; }
       .uxbp-skill-detail-intro .uxbp-btn { flex: none; margin-inline-start: auto; }
       .uxbp-skill-detail-content { flex: 1; min-height: 0; overflow: auto; }
-      .uxbp-skill-detail-content section { max-width: 620px; padding: 14px 0; border-bottom: .5px solid var(--line); }
-      .uxbp-skill-detail-content section:last-child { border-bottom: 0; }
+      .uxbp-skill-detail-content section { max-width: 620px; padding: 8px 0; }
       .uxbp-skill-detail-content h2 { margin: 0 0 5px; font-size: 13px; font-weight: 600; }
-      .uxbp-skill-detail-content p, .uxbp-skill-detail-content ul { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
-      .uxbp-skill-detail-content ul { list-style: none; padding: 0; }
-      .uxbp-skill-detail-content li + li { margin-top: 7px; }
-      .uxbp-skill-detail-content strong { color: var(--ink); font-weight: 600; }
+      .uxbp-skill-detail-content p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+      .uxbp-skill-detail-content .uxbp-skill-workflow { margin-top: 10px; }
+      .uxbp-skill-workflow h2 { margin-bottom: 12px; }
+      .uxbp-flow { --uxbp-flow-gap: 40px; display: grid;
+        grid-template-columns: minmax(0, 122px) clamp(62px, 16%, 86px) minmax(0, 179px) clamp(23px, 7%, 44px) minmax(0, 179px);
+        grid-template-rows: minmax(62px, 1fr) var(--uxbp-flow-gap) minmax(62px, 1fr); }
+      .uxbp-flow-card { display: flex; flex-wrap: wrap; align-content: center; align-items: center; gap: 4px 7px;
+        min-width: 0; padding: 6px 7px; border: .5px solid var(--line); border-radius: 10px; background: var(--card); }
+      .uxbp-flow-card .uxbp-art { width: 36px; height: 30px; margin: 0; border-radius: 5px; }
+      .uxbp-flow-card strong { display: block; font-size: 12px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+      .uxbp-flow-copy { flex: 1 1 62px; min-width: 0; }
+      .uxbp-flow-card p { display: -webkit-box; margin-top: 3px; font-size: 10.5px; line-height: 1.45; overflow-wrap: anywhere;
+        overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .uxbp-flow-source { grid-area: 1 / 1; align-self: center; }
+      .uxbp-flow-spec { grid-area: 1 / 3; }
+      .uxbp-flow-prototype { grid-area: 1 / 5; }
+      .uxbp-flow-strategy { grid-area: 3 / 3; }
+      .uxbp-flow-edge { position: relative; display: grid; place-items: center; min-width: 0; color: var(--accent); }
+      .uxbp-flow-edge::before { content: ''; position: absolute; inset-inline: 0; top: 50%; border-top: 1px solid currentColor; }
+      .uxbp-flow-edge span { position: relative; max-width: calc(100% - 8px); padding: 0 3px; background: var(--bg);
+        font-size: 10px; line-height: 1.3; text-align: center; }
+      .uxbp-flow-edge i { position: absolute; inset-inline-end: 2px; top: 50%; width: 5px; height: 5px;
+        border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: translateY(-50%) rotate(45deg); }
+      .uxbp-flow-main { grid-area: 1 / 2; z-index: 1; }
+      .uxbp-flow-main span { transform: translateY(-12px); }
+      .uxbp-flow-next { grid-area: 1 / 4; }
+      .uxbp-flow-optional { grid-area: 1 / 2 / 4 / 3; color: var(--muted); }
+      .uxbp-flow-optional::before, .uxbp-flow-return::before { content: none; }
+      .uxbp-flow-curve { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .uxbp-flow-optional .uxbp-flow-curve { inset-block: calc(25% - var(--uxbp-flow-gap) / 4); height: calc(50% + var(--uxbp-flow-gap) / 2); }
+      .uxbp-flow-optional span { justify-self: start; transform: translateY(9px); }
+      .uxbp-flow-optional i { top: auto; bottom: calc(25% - var(--uxbp-flow-gap) / 4); transform: translateY(50%) rotate(45deg); }
+      .uxbp-flow-return { grid-area: 2 / 3; color: var(--muted); }
+      .uxbp-flow-return i { top: 2px; inset-inline-end: auto; left: 44%; transform: translateX(-50%) rotate(-45deg); }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
       .uxbp-detail-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
@@ -1681,6 +1716,13 @@ window.__ModuleLoader__.load({
       }
 
       function renderSkillDetail() {
+        const flowCard = (id, position, reason) => h('div', { className: 'uxbp-flow-card uxbp-flow-' + position },
+          h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: id })),
+          h('div', { className: 'uxbp-flow-copy' }, h('strong', null, nameOf(id)), reason && h('p', { title: t(reason) }, t(reason))))
+        const flowEdge = (position, label, curve) => h('div', { className: 'uxbp-flow-edge uxbp-flow-' + position },
+          curve && h('svg', { className: 'uxbp-flow-curve', viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': true },
+            h('path', { d: curve, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
+          label && h('span', null, t(label)), h('i', { 'aria-hidden': true }))
         return h('section', { className: 'uxbp-task-detail' },
           h('header', { className: 'uxbp-skill-detail-header' },
             h('button', { type: 'button', className: 'uxbp-detail-back', onClick: () => setViewMode('canvas') },
@@ -1699,10 +1741,16 @@ window.__ModuleLoader__.load({
             h('section', null, h('h2', null, t('skillWhen')), h('p', null, t('prdWhen'))),
             h('section', null, h('h2', null, t('skillInput')), h('p', null, t('prdInput'))),
             h('section', null, h('h2', null, t('skillOutput')), h('p', null, t('prdOutput'))),
-            h('section', null, h('h2', null, t('skillNext')),
-              h('ul', { role: 'list' },
-                h('li', null, h('strong', null, nameOf('page-spec')), ' · ' + t('prdNextPage')),
-                h('li', null, h('strong', null, nameOf('uxs')), ' · ' + t('prdNextStrategy'))))))
+            h('section', { className: 'uxbp-skill-workflow' }, h('h2', { id: 'uxbp-skill-workflow-title' }, t('skillNext')),
+              h('div', { className: 'uxbp-flow', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title' },
+                flowCard('prd-review', 'source'),
+                flowEdge('main', 'skillFlowPrimary'),
+                flowCard('page-spec', 'spec', 'prdNextPage'),
+                flowEdge('next'),
+                flowCard('ux-proto-g', 'prototype', 'prdNextPrototype'),
+                flowEdge('optional', 'skillFlowOptional', 'M0 0 C55 0 45 100 100 100'),
+                flowCard('uxs', 'strategy', 'prdNextStrategy'),
+                flowEdge('return', null, 'M58 100 C58 56 44 44 44 0')))))
       }
 
       function isPending(item) {
