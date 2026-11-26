@@ -7,11 +7,32 @@ window.__ModuleLoader__.load({
     const endpoint = '/api/ux-blueprinting/workbench'
     const STORAGE_KEY = 'uxbp:workbench:v2'
     const NS = 'ux-blueprinting'
+    const skillDetails = {
+      'prd-review': ['prdWhen', 'prdInput', 'prdOutput'],
+      'page-spec': ['pageSpecWhen', 'pageSpecInput', 'pageSpecOutput'],
+      uxs: ['uxsWhen', 'uxsInput', 'uxsOutput'],
+    }
 
     const en = {
       title: 'Design workbench',
       task: 'Tasks',
       skillsTab: 'Skills',
+      workflowGuide: 'Workflow guide',
+      backToWorkbench: 'Back to workbench',
+      backToGuide: 'Back to workflow guide',
+      guideLead: 'Start from the material you have and see what each route can hand off.',
+      guideDesign: 'From requirements to design',
+      guideDesignLead: 'Start here with a requirement you can work from.',
+      guideEvidence: 'From evidence to improvement',
+      guideEvidenceLead: 'Start with data, feedback or findings from a walkthrough.',
+      guideBeforeSpec: 'Optional before page spec',
+      guideAfterSpec: 'Optional after page spec',
+      guideReviewLoop: 'After release, review the outcome and feed new evidence back in.',
+      guideAfterEvidence: 'Optional after analyzing the evidence',
+      guideCrossings: 'Where the routes connect',
+      guideAnalysisToDesign: 'When the problem is clear, choose a direction before designing.',
+      guideDesignToAnalysis: 'Define what to measure, then analyze data once it is available.',
+      guideSupport: 'Use as needed',
       sediment: 'Artifacts',
       workspace: 'Workspace',
       reset: 'Reset workbench',
@@ -85,6 +106,22 @@ window.__ModuleLoader__.load({
       prdNextPage: 'Turn the baseline into pages, flows and interaction rules.',
       prdNextStrategy: 'Identify which experience problems to solve before designing.',
       prdNextPrototype: 'Turn the page spec into an interactive preview.',
+      pageSpecWhen: 'Use it when the requirements are clear and you need to define the pages and interactions.',
+      pageSpecInput: 'Use the formal baseline or specify a PRD, screenshot or interaction draft. Add the confirmed experience strategy if it applies.',
+      pageSpecOutput: 'A Markdown specification covering pages, flows, rules and states, ready for design review or prototyping.',
+      uxsWhen: 'Use it when you need to choose which experience problem to solve and what direction to take.',
+      uxsInput: 'Provide a formal requirements baseline or describe the users, their task and where they get stuck.',
+      uxsOutput: 'A proposed experience strategy. Once confirmed, it can guide journey analysis, stories or page design.',
+      skillFlowBefore: 'Beforehand',
+      skillFlowBackToSpec: 'Continue to page spec',
+      skillFlowSeparator: ': ',
+      pageSpecBeforePrd: 'Clarify business rules and edge cases for a more complete spec.',
+      pageSpecBeforeUxs: 'Set the experience direction first so the page design has a clear rationale.',
+      pageSpecAfterPrototype: 'Use the page spec to generate a clickable prototype.',
+      uxsBeforePrd: 'Clarify the scope and rules so the strategy has clear boundaries.',
+      uxsAfterJourney: 'Show how the strategy applies to each stage and touchpoint.',
+      uxsAfterStories: 'Break the strategy into testable user tasks.',
+      uxsAfterPageSpec: 'Turn the confirmed strategy into page flows and interactions.',
       confirmOutput: 'Confirm artifact',
       needsReview: 'Needs review',
       handoff: 'Continue ',
@@ -99,6 +136,22 @@ window.__ModuleLoader__.load({
       title: '设计工作台',
       task: '任务',
       skillsTab: '技能',
+      workflowGuide: '工作流指南',
+      backToWorkbench: '返回工作台',
+      backToGuide: '返回工作流指南',
+      guideLead: '从手上的材料出发，看看该走哪条线，以及两条线怎么接起来。',
+      guideDesign: '从需求到设计',
+      guideDesignLead: '已经有明确需求，从这里把它落到页面。',
+      guideEvidence: '从证据到改进',
+      guideEvidenceLead: '手上有数据、反馈或走查发现，从这里梳理问题。',
+      guideBeforeSpec: '设计前按需补充',
+      guideAfterSpec: '页面规格完成后按需补充',
+      guideReviewLoop: '方案上线后，可以回检效果，把新证据带回分析。',
+      guideAfterEvidence: '已有分析结论时按需补充',
+      guideCrossings: '两条线怎么接',
+      guideAnalysisToDesign: '找到候选根因后，先定改进方向，再把方案落到页面。',
+      guideDesignToAnalysis: '先根据页面规格补埋点，有了实际行为数据再做分析。',
+      guideSupport: '按需使用',
       sediment: '产物',
       workspace: '工作区',
       reset: '重置工作台',
@@ -169,9 +222,25 @@ window.__ModuleLoader__.load({
       prdWhen: '手上已有 PRD，想在做设计前查清业务遗漏、流程断点或没考虑到的异常时使用。',
       prdInput: '提供这次要审核的 PRD。如果已经做过一轮审核，一并提供原问题和逐项回复。',
       prdOutput: '有阻断问题时，先得到一份待确认问题单。问题全部解决后生成正式需求基线；没有阻断时直接生成。',
-      prdNextPage: '把需求基线拆成页面、流程和交互规则。',
-      prdNextStrategy: '先明确优先解决的体验问题，再进入页面设计。',
-      prdNextPrototype: '根据页面规格生成可点击的页面预览。',
+      prdNextPage: '把基线转成页面和交互规则。',
+      prdNextStrategy: '先定体验方向，再接页面设计。',
+      prdNextPrototype: '按页面规格生成可点击原型。',
+      pageSpecWhen: '需求已经明确，准备把它落到具体页面和交互时使用。',
+      pageSpecInput: '提供本轮正式需求基线，或明确指定 PRD、截图、交互稿。有确认过的体验策略也可以一并交来。',
+      pageSpecOutput: '一份页面规格文档，写清页面结构、流程、规则和状态，可用于设计检查或生成原型。',
+      uxsWhen: '有明确的需求或体验问题，但还要决定优先解决什么、体验往哪走时使用。',
+      uxsInput: '提供正式需求基线，或说明用户是谁、要完成什么任务、卡在哪里。',
+      uxsOutput: '一份待确认的体验策略。确认后可以继续梳理旅程、拆用户故事，或把方向落实到页面。',
+      skillFlowBefore: '可先做',
+      skillFlowBackToSpec: '继续做页面规格',
+      skillFlowSeparator: '：',
+      pageSpecBeforePrd: '补齐规则和异常，让规格更完整。',
+      pageSpecBeforeUxs: '定清体验方向，让页面设计有依据。',
+      pageSpecAfterPrototype: '用页面规格生成可点击的原型。',
+      uxsBeforePrd: '厘清范围和规则，让策略有边界。',
+      uxsAfterJourney: '把体验方向落实到阶段和触点。',
+      uxsAfterStories: '把体验方向拆成可验证的用户任务。',
+      uxsAfterPageSpec: '把已确认的体验方向落实到页面和交互。',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
       handoff: '承接任务 ',
@@ -240,6 +309,9 @@ window.__ModuleLoader__.load({
       .uxbp-right-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
       .uxbp-top .uxbp-btn { box-sizing: border-box; height: 34px; min-height: 34px; max-height: 34px;
         background: var(--glass); backdrop-filter: blur(24px) saturate(160%); box-shadow: var(--shadow); }
+      .uxbp-top .uxbp-guide-entry { background: var(--ink); color: var(--card); border-color: transparent;
+        padding-inline: 10px; font-size: 11.5px; box-shadow: none; }
+      .uxbp-top .uxbp-guide-entry:hover { background: color-mix(in srgb, var(--ink) 85%, var(--card)); }
       .uxbp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
         padding: 0 13px; border: .5px solid var(--line); border-radius: var(--radius-md); background: var(--card);
         color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .25s var(--ease); }
@@ -404,36 +476,130 @@ window.__ModuleLoader__.load({
       .uxbp-skill-detail-content .uxbp-skill-workflow { margin-top: 10px; }
       .uxbp-skill-workflow h2 { margin-bottom: 12px; }
       .uxbp-flow { --uxbp-flow-gap: 40px; display: grid;
-        grid-template-columns: minmax(0, 122px) clamp(62px, 16%, 86px) minmax(0, 179px) clamp(23px, 7%, 44px) minmax(0, 179px);
+        grid-template-columns: 148px minmax(0, 1fr) 118px minmax(0, 1fr) 132px; align-items: center;
         grid-template-rows: minmax(62px, 1fr) var(--uxbp-flow-gap) minmax(62px, 1fr); }
-      .uxbp-flow-card { display: flex; flex-wrap: wrap; align-content: center; align-items: center; gap: 4px 7px;
-        min-width: 0; padding: 6px 7px; border: .5px solid var(--line); border-radius: 10px; background: var(--card); }
+      .uxbp-flow-card { display: flex; align-items: center; gap: 7px;
+        min-width: 0; min-height: 46px; padding: 6px 7px; border: .5px solid var(--line); border-radius: 10px; background: var(--card);
+        font: inherit; text-align: left; color: var(--ink); }
+      button.uxbp-flow-card { cursor: pointer; }
+      button.uxbp-flow-card:hover { border-color: var(--line-strong); background: var(--soft); }
+      .uxbp-flow-card[data-current="true"] { border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+        background: color-mix(in srgb, var(--accent) 5%, var(--card)); }
       .uxbp-flow-card .uxbp-art { width: 36px; height: 30px; margin: 0; border-radius: 5px; }
-      .uxbp-flow-card strong { display: block; font-size: 12px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
-      .uxbp-flow-copy { flex: 1 1 62px; min-width: 0; }
-      .uxbp-flow-card p { display: -webkit-box; margin-top: 3px; font-size: 10.5px; line-height: 1.45; overflow-wrap: anywhere;
-        overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .uxbp-flow-card strong { display: block; font-size: 12px; line-height: 1.35; font-weight: 600; white-space: nowrap; }
       .uxbp-flow-source { grid-area: 1 / 1; align-self: center; }
       .uxbp-flow-spec { grid-area: 1 / 3; }
       .uxbp-flow-prototype { grid-area: 1 / 5; }
       .uxbp-flow-strategy { grid-area: 3 / 3; }
-      .uxbp-flow-edge { position: relative; display: grid; place-items: center; min-width: 0; color: var(--accent); }
+      .uxbp-flow-edge { position: relative; display: grid; place-items: center; min-width: 0; align-self: stretch; color: var(--accent); }
       .uxbp-flow-edge::before { content: ''; position: absolute; inset-inline: 0; top: 50%; border-top: 1px solid currentColor; }
-      .uxbp-flow-edge span { position: relative; max-width: calc(100% - 8px); padding: 0 3px; background: var(--bg);
-        font-size: 10px; line-height: 1.3; text-align: center; }
+      .uxbp-flow-caption { position: relative; max-width: calc(100% - 14px); padding: 1px 4px; background: var(--bg);
+        font-size: 10.5px; line-height: 1.45; text-align: center; text-wrap: pretty; }
+      .uxbp-flow-caption b { font-weight: 600; white-space: nowrap; }
       .uxbp-flow-edge i { position: absolute; inset-inline-end: 2px; top: 50%; width: 5px; height: 5px;
         border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: translateY(-50%) rotate(45deg); }
       .uxbp-flow-main { grid-area: 1 / 2; z-index: 1; }
-      .uxbp-flow-main span { transform: translateY(-12px); }
+      .uxbp-flow-main .uxbp-flow-caption, .uxbp-flow-next .uxbp-flow-caption { transform: translateY(-16px); }
       .uxbp-flow-next { grid-area: 1 / 4; }
       .uxbp-flow-optional { grid-area: 1 / 2 / 4 / 3; color: var(--muted); }
       .uxbp-flow-optional::before, .uxbp-flow-return::before { content: none; }
       .uxbp-flow-curve { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-      .uxbp-flow-optional .uxbp-flow-curve { inset-block: calc(25% - var(--uxbp-flow-gap) / 4); height: calc(50% + var(--uxbp-flow-gap) / 2); }
-      .uxbp-flow-optional span { justify-self: start; transform: translateY(9px); }
-      .uxbp-flow-optional i { top: auto; bottom: calc(25% - var(--uxbp-flow-gap) / 4); transform: translateY(50%) rotate(45deg); }
+      .uxbp-flow-optional .uxbp-flow-curve {
+        inset-block: calc(25% - var(--uxbp-flow-gap) / 4); height: calc(50% + var(--uxbp-flow-gap) / 2); }
+      .uxbp-flow-optional .uxbp-flow-caption { transform: translateY(2px); }
+      .uxbp-flow-optional i { top: auto; bottom: calc(25% - var(--uxbp-flow-gap) / 4);
+        transform: translateY(50%) rotate(45deg); }
       .uxbp-flow-return { grid-area: 2 / 3; color: var(--muted); }
       .uxbp-flow-return i { top: 2px; inset-inline-end: auto; left: 44%; transform: translateX(-50%) rotate(-45deg); }
+      .uxbp-flow-return .uxbp-flow-caption { position: absolute; top: 50%; left: 62%; width: max-content; max-width: 245px;
+        text-align: left; transform: translateY(-50%); }
+      .uxbp-skill-detail-content .uxbp-skill-workflow {
+        max-width: 840px; container: uxbp-related-workflow / inline-size; }
+      .uxbp-related-map { display: grid; grid-template-columns: 148px minmax(0, 1fr) 118px minmax(0, 1fr) 132px;
+        grid-auto-rows: 76px; align-items: center; }
+      .uxbp-related-current { grid-column: 3; grid-row: var(--current-row); }
+      .uxbp-related-route { display: contents; }
+      .uxbp-related-route .uxbp-flow-card { grid-column: 5; grid-row: var(--card-row); }
+      .uxbp-related-route[data-before="true"] .uxbp-flow-card { grid-column: 1; }
+      .uxbp-related-edge { grid-column: 4; grid-row: var(--edge-rows); position: relative; align-self: stretch; color: var(--muted); }
+      .uxbp-related-edge[data-primary="true"] { color: var(--accent); }
+      .uxbp-related-route[data-before="true"] .uxbp-related-edge { grid-column: 2; }
+      .uxbp-related-edge svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .uxbp-related-route[data-before="true"] svg { transform: scaleX(-1); }
+      .uxbp-related-edge i { position: absolute; top: var(--target-y); right: 2px; width: 5px; height: 5px;
+        border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: translateY(-50%) rotate(45deg); }
+      .uxbp-related-route[data-before="true"] i { right: auto; left: 2px; transform: translateY(-50%) rotate(225deg); }
+      .uxbp-related-edge .uxbp-flow-caption { position: absolute; left: 50%; top: var(--label-y); width: max-content; transform: translate(-50%, -50%); }
+      @container uxbp-related-workflow (max-width: 640px) {
+        .uxbp-flow { grid-template-columns: 144px minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; gap: 9px 10px; }
+        .uxbp-flow-source { grid-area: 1 / 1; }
+        .uxbp-flow-spec { grid-area: 2 / 1; }
+        .uxbp-flow-prototype { grid-area: 3 / 1; }
+        .uxbp-flow-strategy { grid-area: 4 / 1; }
+        .uxbp-flow-main { grid-area: 2 / 2; }
+        .uxbp-flow-next { grid-area: 3 / 2; }
+        .uxbp-flow-optional { grid-area: 4 / 2; }
+        .uxbp-flow-return { grid-area: 5 / 2; }
+        .uxbp-flow-edge { display: block; align-self: center; }
+        .uxbp-flow-edge::before, .uxbp-flow-edge svg, .uxbp-flow-edge i { display: none; }
+        .uxbp-flow .uxbp-flow-edge .uxbp-flow-caption { position: static; display: block; max-width: none; width: auto;
+          padding: 0; text-align: left; transform: none; }
+        .uxbp-related-map { display: flex; flex-direction: column; align-items: stretch; gap: 9px; }
+        .uxbp-related-current { align-self: flex-start; }
+        .uxbp-related-route { display: grid; grid-template-columns: 144px minmax(0, 1fr); column-gap: 10px; align-items: center; }
+        .uxbp-related-route .uxbp-flow-card, .uxbp-related-route[data-before="true"] .uxbp-flow-card { grid-area: 1 / 1; }
+        .uxbp-related-route .uxbp-related-edge, .uxbp-related-route[data-before="true"] .uxbp-related-edge { grid-area: 1 / 2; align-self: center; }
+        .uxbp-related-edge svg, .uxbp-related-edge i { display: none; }
+        .uxbp-related-edge .uxbp-flow-caption { position: static; display: block; width: auto; max-width: none; padding: 0; transform: none; text-align: left; }
+      }
+      .uxbp-guide { flex: 1; min-height: 0; overflow: auto; background: var(--bg); }
+      .uxbp-guide-inner { max-width: 1160px; margin-inline: auto; padding: 20px 24px 28px; }
+      .uxbp-guide-head { margin-bottom: 17px; }
+      .uxbp-guide-head h1 { margin: 7px 0 3px; font-size: 27px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em; }
+      .uxbp-guide-head p, .uxbp-guide-lane p, .uxbp-guide-crossing p { margin: 0; color: var(--muted); font-size: 13px; }
+      .uxbp-guide-lanes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .uxbp-guide-lane { --uxbp-guide-tone: var(--accent); display: grid; align-content: start; gap: 13px; min-width: 0;
+        padding: 14px; border: .5px solid var(--line); border-radius: 14px;
+        background: color-mix(in srgb, var(--uxbp-guide-tone) 3%, var(--card)); }
+      .uxbp-guide-lane[data-evidence="true"] { --uxbp-guide-tone: #3f635d; }
+      .uxbp-guide h2 { margin: 0; font-size: 16px; font-weight: 600; }
+      .uxbp-guide-lane header p { margin-top: 3px; }
+      .uxbp-guide-rail { display: grid; grid-template-columns: minmax(0, 1fr) 21px minmax(0, 1fr) 21px minmax(0, 1fr);
+        min-height: 117px; align-items: center; }
+      .uxbp-guide-entry-stack, .uxbp-guide-branch, .uxbp-guide-support { display: grid; gap: 5px; }
+      .uxbp-guide-skill { display: flex; align-items: center; gap: 5px; min-width: 0; min-height: 37px; padding: 4px 6px;
+        border: .5px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink);
+        font: inherit; font-size: 11.5px; line-height: 1.35; text-align: left; overflow-wrap: anywhere; }
+      button.uxbp-guide-skill { cursor: pointer; }
+      button.uxbp-guide-skill:hover { border-color: var(--line-strong); background: var(--soft); }
+      .uxbp-guide-skill .uxbp-art { width: 29px; height: 23px; margin: 0; border-radius: 4px; }
+      .uxbp-guide-arrow { display: grid; place-items: center; color: var(--uxbp-guide-tone, var(--accent)); }
+      .uxbp-guide-arrow svg { width: 16px; height: 16px; }
+      .uxbp-guide-fan-in { align-self: stretch; color: var(--uxbp-guide-tone); }
+      .uxbp-guide-fan-in svg { width: 100%; height: 100%; }
+      .uxbp-guide-branch { padding-inline-start: 9px; border-inline-start: 1px dashed var(--line-strong); }
+      .uxbp-guide h3 { margin: 0; color: var(--muted); font-size: 11.5px; font-weight: 600; }
+      .uxbp-guide-skill-row { display: flex; flex-wrap: wrap; gap: 5px; }
+      .uxbp-guide-skill-row .uxbp-guide-skill { flex: 0 1 auto; }
+      .uxbp-guide-return { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+      .uxbp-guide-crossings { display: grid; gap: 6px; margin-top: 15px; }
+      .uxbp-guide-crossing { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: 14px;
+        padding: 7px 11px; border: .5px solid var(--line); border-radius: 10px; background: var(--card); }
+      .uxbp-guide-crossing .uxbp-guide-rail { min-height: 0; }
+      .uxbp-guide-crossing p { font-size: 12px; }
+      .uxbp-guide-support { margin-top: 14px; }
+      @container (max-width: 900px) {
+        .uxbp-guide-lanes, .uxbp-guide-crossing { grid-template-columns: minmax(0, 1fr); }
+        .uxbp-guide-lane[data-evidence="false"] .uxbp-guide-rail { min-height: 0; }
+      }
+      @container (max-width: 540px) {
+        .uxbp-guide-inner { padding: 12px 12px 20px; }
+        .uxbp-guide-lane { padding: 10px; }
+        .uxbp-guide-rail { grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr) 16px minmax(0, 1fr); }
+        .uxbp-guide-rail .uxbp-guide-skill { flex-wrap: wrap; gap: 3px; }
+        .uxbp-top .uxbp-guide-entry { padding-inline: 6px; font-size: 10.5px; }
+        .uxbp-top .uxbp-right-top .uxbp-picker > .uxbp-btn span { max-width: 48px; }
+      }
       .uxbp-sediment-page { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column;
         padding: 64px 18px 16px 0; background: var(--bg); overflow: hidden; }
       .uxbp-detail-head { flex: none; display: grid; gap: 8px; padding-bottom: 8px; }
@@ -1039,6 +1205,8 @@ window.__ModuleLoader__.load({
       const [menuLoading, setMenuLoading] = useState(false)
       const [shake, setShake] = useState('')
       const [viewMode, setViewMode] = useState('canvas')
+      const [detailSkillId, setDetailSkillId] = useState('prd-review')
+      const [skillFromGuide, setSkillFromGuide] = useState(false)
       const [detailOrigin, setDetailOrigin] = useState('task')
       const [artifacts, setArtifacts] = useState([])
       const [selectedArtifactKey, setSelectedArtifactKey] = useState('')
@@ -1071,8 +1239,9 @@ window.__ModuleLoader__.load({
       })())
       const restored = useRef(false)
       workspaceRef.current = workspace
-      const leftView = viewMode === 'skill-detail' ? 'skill-detail'
+      const leftView = viewMode === 'guide' || viewMode === 'skill-detail' ? viewMode
         : viewMode === 'detail' && task ? 'detail' : tab === 'sediment' ? 'sediment' : 'canvas'
+      const readingGuide = leftView === 'guide' || (leftView === 'skill-detail' && skillFromGuide)
 
       useLayoutEffect(() => {
         if (leftView === 'canvas') canvasRef.current?.scrollTo(canvasScroll.current)
@@ -1281,14 +1450,14 @@ window.__ModuleLoader__.load({
 
       useEffect(() => {
         const item = overview?.finish
-        if (!item || !latest || latestBusy || finishPrompt || artifactEditing || overviewError) return
+        if (!item || !latest || latestBusy || finishPrompt || artifactEditing || overviewError || readingGuide) return
         const key = STORAGE_KEY + ':finish:' + encodeURIComponent(workspace) + ':' + latest.id + ':' + item.skill
         if (shownNotices.current.has(key)) return
         try { if (localStorage.getItem(key)) return } catch {}
         shownNotices.current.add(key)
         try { localStorage.setItem(key, '1') } catch {}
         setFinishPrompt({ workspace, taskId: latest.id, roundId: latest.round?.id, label: item.label })
-      }, [workspace, overview, latestBusy, finishPrompt, artifactEditing, overviewError])
+      }, [workspace, overview, latestBusy, finishPrompt, artifactEditing, overviewError, readingGuide])
 
       useEffect(() => {
         const dialog = finishDialog.current
@@ -1707,7 +1876,9 @@ window.__ModuleLoader__.load({
 
       function cardClick(item) {
         if (drag.current.moved) return
-        if (item.id === 'prd-review') {
+        if (Object.hasOwn(skillDetails, item.id)) {
+          setDetailSkillId(item.id)
+          setSkillFromGuide(false)
           setViewMode('skill-detail')
           return
         }
@@ -1715,42 +1886,140 @@ window.__ModuleLoader__.load({
         useSkill(item.id)
       }
 
+      function renderWorkflowGuide() {
+        const guideSkill = id => {
+          const canOpen = Object.hasOwn(skillDetails, id)
+          return h(canOpen ? 'button' : 'div', {
+            key: id, className: 'uxbp-guide-skill', 'data-skill': id,
+            ...(canOpen ? { type: 'button', onClick: () => {
+              setDetailSkillId(id)
+              setSkillFromGuide(true)
+              setViewMode('skill-detail')
+            } } : {}),
+          }, h('span', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: id })), h('span', null, nameOf(id)))
+        }
+        const arrow = key => h('span', { key, className: 'uxbp-guide-arrow', 'aria-hidden': true },
+          h(Icon, { path: 'M4 12h15m-5-5 5 5-5 5' }))
+        const rail = (first, middle, last, fanIn = false) => h('div', { className: 'uxbp-guide-rail' }, first,
+          fanIn ? h('span', { className: 'uxbp-guide-fan-in', 'aria-hidden': true },
+            h('svg', { viewBox: '0 0 24 121', preserveAspectRatio: 'none' },
+              h('path', { d: 'M0 18.5C13 18.5 9 60.5 17 60.5M0 60.5H21M0 102.5C13 102.5 9 60.5 17 60.5M17 56.5l4 4-4 4',
+                fill: 'none', stroke: 'currentColor', strokeLinecap: 'round', strokeLinejoin: 'round', vectorEffect: 'non-scaling-stroke' }))) : arrow('first'),
+          middle, arrow('second'), last)
+        const skillRow = ids => h('div', { className: 'uxbp-guide-skill-row' }, ...ids.map(guideSkill))
+        const branch = (label, ids) => h('div', { className: 'uxbp-guide-branch' }, h('h3', null, t(label)), skillRow(ids))
+        const crossing = (ids, reason) => h('div', { className: 'uxbp-guide-crossing' },
+          rail(...ids.map(guideSkill)), h('p', null, t(reason)))
+        const entries = h('div', { className: 'uxbp-guide-entry-stack' },
+          ...['objective-data-analysis', 'subjective-feedback-analysis', 'experience-heuristic-analysis'].map(guideSkill))
+        return h('section', { className: 'uxbp-guide', 'aria-labelledby': 'uxbp-guide-title' },
+          h('div', { className: 'uxbp-guide-inner' },
+            h('header', { className: 'uxbp-guide-head' },
+              h('button', { type: 'button', className: 'uxbp-detail-back', onClick: () => setViewMode('canvas') },
+                h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }), t('backToWorkbench')),
+              h('h1', { id: 'uxbp-guide-title' }, t('workflowGuide')),
+              h('p', null, t('guideLead'))),
+            h('div', { className: 'uxbp-guide-lanes' },
+              h('section', { className: 'uxbp-guide-lane', 'data-evidence': false },
+                h('header', null, h('h2', null, t('guideDesign')), h('p', null, t('guideDesignLead'))),
+                rail(guideSkill('prd-review'), guideSkill('page-spec'), guideSkill('ux-proto-g')),
+                branch('guideBeforeSpec', ['uxs', 'stories', 'journey-analysis']),
+                branch('guideAfterSpec', ['solution-swimlane', 'edge', 'board'])),
+              h('section', { className: 'uxbp-guide-lane', 'data-evidence': true },
+                h('header', null, h('h2', null, t('guideEvidence')), h('p', null, t('guideEvidenceLead'))),
+                rail(entries, guideSkill('evidence-govern'), guideSkill('root-cause-synthesis'), true),
+                h('div', { className: 'uxbp-guide-branch' },
+                  h('p', null, t('guideReviewLoop')),
+                  h('div', { className: 'uxbp-guide-return' }, guideSkill('outcome-validation-recheck'), arrow('review'), guideSkill('evidence-govern'))),
+                branch('guideAfterEvidence', ['business-impact', 'evidence-archive']))),
+            h('section', { className: 'uxbp-guide-crossings' },
+              h('h2', null, t('guideCrossings')),
+              crossing(['root-cause-synthesis', 'problem-framing', 'page-spec'], 'guideAnalysisToDesign'),
+              crossing(['page-spec', 'journey-metrics', 'objective-data-analysis'], 'guideDesignToAnalysis')),
+            h('section', { className: 'uxbp-guide-support' },
+              h('h2', null, t('guideSupport')),
+              skillRow(['data-visualization', 'knowledge-wiki']))))
+      }
+
       function renderSkillDetail() {
-        const flowCard = (id, position, reason) => h('div', { className: 'uxbp-flow-card uxbp-flow-' + position },
-          h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: id })),
-          h('div', { className: 'uxbp-flow-copy' }, h('strong', null, nameOf(id)), reason && h('p', { title: t(reason) }, t(reason))))
-        const flowEdge = (position, label, curve) => h('div', { className: 'uxbp-flow-edge uxbp-flow-' + position },
+        const [when, input, output] = skillDetails[detailSkillId]
+        const reviewView = detailSkillId === 'prd-review'
+        const strategyView = detailSkillId === 'uxs'
+        const flowCard = (id, position) => {
+          const current = id === detailSkillId
+          const canOpen = !current && Object.hasOwn(skillDetails, id)
+          return h(canOpen ? 'button' : 'div', {
+            className: 'uxbp-flow-card ' + (position ? 'uxbp-flow-' + position : 'uxbp-related-current'), 'data-current': current,
+            'aria-current': current ? 'page' : undefined,
+            ...(canOpen ? { type: 'button', onClick: () => setDetailSkillId(id) } : {}),
+          }, h('span', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: id })),
+          h('strong', null, nameOf(id)))
+        }
+        const edgeCaption = (label, reason) => h('span', { className: 'uxbp-flow-caption' },
+          h('b', null, t(label) + t('skillFlowSeparator')), t(reason))
+        const flowEdge = (position, label, reason, curve) => h('div', { className: 'uxbp-flow-edge uxbp-flow-' + position },
           curve && h('svg', { className: 'uxbp-flow-curve', viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': true },
             h('path', { d: curve, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
-          label && h('span', null, t(label)), h('i', { 'aria-hidden': true }))
+          edgeCaption(label, reason), h('i', { 'aria-hidden': true }))
+        const relatedMap = () => {
+          const currentRow = strategyView ? 2 : 1
+          const routes = strategyView ? [
+            { id: 'prd-review', row: 2, before: true, reason: 'uxsBeforePrd' },
+            { id: 'journey-analysis', row: 2, primary: true, reason: 'uxsAfterJourney' },
+            { id: 'stories', row: 1, reason: 'uxsAfterStories' },
+            { id: 'page-spec', row: 3, reason: 'uxsAfterPageSpec' },
+          ] : [
+            { id: 'prd-review', row: 1, before: true, reason: 'pageSpecBeforePrd' },
+            { id: 'uxs', row: 2, before: true, reason: 'pageSpecBeforeUxs' },
+            { id: 'ux-proto-g', row: 1, primary: true, reason: 'pageSpecAfterPrototype' },
+          ]
+          return h('div', { className: 'uxbp-related-map', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title',
+            style: { '--current-row': currentRow } },
+          flowCard(detailSkillId),
+          ...routes.map(({ id, row, before, primary, reason }) => {
+            const fromY = row === currentRow ? 50 : row > currentRow ? 25 : 75
+            const toY = 100 - fromY
+            const path = fromY === toY ? 'M0 50H100' : `M0 ${fromY} C52 ${fromY} 48 ${toY} 100 ${toY}`
+            return h('div', { key: id, className: 'uxbp-related-route', 'data-before': Boolean(before),
+              style: { '--card-row': row, '--edge-rows': `${Math.min(row, currentRow)} / ${Math.max(row, currentRow) + 1}`,
+                '--target-y': toY + '%', '--label-y': fromY === toY ? 'calc(50% - 16px)' : row < currentRow ? '36%' : '64%' } },
+            h('div', { className: 'uxbp-related-edge', 'data-primary': Boolean(primary) },
+              h('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': true },
+                h('path', { d: path, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
+              h('i', { 'aria-hidden': true }),
+              edgeCaption(before ? 'skillFlowBefore' : primary ? 'skillFlowPrimary' : 'skillFlowOptional', reason)),
+            flowCard(id, 'target'))
+          }))
+        }
         return h('section', { className: 'uxbp-task-detail' },
           h('header', { className: 'uxbp-skill-detail-header' },
-            h('button', { type: 'button', className: 'uxbp-detail-back', onClick: () => setViewMode('canvas') },
-              h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }), t('backToSkills')),
+            h('button', { type: 'button', className: 'uxbp-detail-back', onClick: () => setViewMode(skillFromGuide ? 'guide' : 'canvas') },
+              h(Icon, { path: 'M20 12H4m6-6-6 6 6 6' }), t(skillFromGuide ? 'backToGuide' : 'backToSkills')),
             h('div', { className: 'uxbp-skill-detail-intro' },
-              h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: 'prd-review' })),
-              h('h1', null, nameOf('prd-review')),
+              h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: detailSkillId })),
+              h('h1', null, nameOf(detailSkillId)),
               h('button', { type: 'button', className: 'uxbp-btn uxbp-primary',
                 onClick: () => {
                   setViewMode('canvas')
-                  useSkill('prd-review')
+                  useSkill(detailSkillId)
                   requestAnimationFrame(() => inputRef.current?.focus())
                 },
               }, t('useSkill')))),
-          h('div', { className: 'uxbp-skill-detail-content' },
-            h('section', null, h('h2', null, t('skillWhen')), h('p', null, t('prdWhen'))),
-            h('section', null, h('h2', null, t('skillInput')), h('p', null, t('prdInput'))),
-            h('section', null, h('h2', null, t('skillOutput')), h('p', null, t('prdOutput'))),
-            h('section', { className: 'uxbp-skill-workflow' }, h('h2', { id: 'uxbp-skill-workflow-title' }, t('skillNext')),
-              h('div', { className: 'uxbp-flow', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title' },
+          h('div', { className: 'uxbp-skill-detail-content', key: detailSkillId },
+            h('section', null, h('h2', null, t('skillWhen')), h('p', null, t(when))),
+            h('section', null, h('h2', null, t('skillInput')), h('p', null, t(input))),
+            h('section', null, h('h2', null, t('skillOutput')), h('p', null, t(output))),
+            h('section', { className: 'uxbp-skill-workflow' },
+              h('h2', { id: 'uxbp-skill-workflow-title' }, t('skillNext')),
+              reviewView ? h('div', { className: 'uxbp-flow', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title' },
                 flowCard('prd-review', 'source'),
-                flowEdge('main', 'skillFlowPrimary'),
-                flowCard('page-spec', 'spec', 'prdNextPage'),
-                flowEdge('next'),
-                flowCard('ux-proto-g', 'prototype', 'prdNextPrototype'),
-                flowEdge('optional', 'skillFlowOptional', 'M0 0 C55 0 45 100 100 100'),
-                flowCard('uxs', 'strategy', 'prdNextStrategy'),
-                flowEdge('return', null, 'M58 100 C58 56 44 44 44 0')))))
+                flowEdge('main', 'skillFlowPrimary', 'prdNextPage'),
+                flowCard('page-spec', 'spec'),
+                flowEdge('next', 'skillFlowPrimary', 'prdNextPrototype'),
+                flowCard('ux-proto-g', 'prototype'),
+                flowEdge('optional', 'skillFlowOptional', 'prdNextStrategy', 'M0 0 C55 0 45 100 100 100'),
+                flowCard('uxs', 'strategy'),
+                flowEdge('return', 'skillFlowBackToSpec', 'uxsAfterPageSpec', 'M58 100 C58 56 44 44 44 0')) : relatedMap())))
       }
 
       function isPending(item) {
@@ -1962,6 +2231,8 @@ window.__ModuleLoader__.load({
 
       const sessionTitle = conversations.find(item => item.id === sessionId)?.title ?? (sessionId ? t('session') : t('newSession'))
 
+      if (leftView === 'guide') return h('main', { className: 'uxbp-root' }, h('style', null, styles), renderWorkflowGuide())
+
       return h('main', { className: 'uxbp-root' },
         h('style', null, styles),
         leftView !== 'detail' && leftView !== 'skill-detail' && h('header', { className: 'uxbp-top' },
@@ -1970,6 +2241,8 @@ window.__ModuleLoader__.load({
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'task', onClick: () => setTab('task') }, t('skillsTab')),
               h('button', { type: 'button', className: 'uxbp-tab', 'data-on': tab === 'sediment', onClick: () => setTab('sediment') }, t('sediment')))),
           h('div', { className: 'uxbp-right-top' },
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-guide-entry', disabled: sending || !catalog.length,
+              onClick: () => { setOpenMenu(''); setViewMode('guide') } }, t('workflowGuide')),
             h('div', { className: 'uxbp-picker' },
               h('button', { type: 'button', className: 'uxbp-btn', 'aria-expanded': openMenu === 'workspace', title: sessionTitle, onClick: openWorkspaceMenu },
                 h(Icon, { path: 'M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z M3 9h18' }),
@@ -2028,7 +2301,7 @@ window.__ModuleLoader__.load({
                       'data-selected': skill === item.id,
                       onClick: () => cardClick(item),
                       onFocus: () => shakeCard(item.id),
-                      onDoubleClick: item.id === 'prd-review' ? undefined : () => useSkill(item.id),
+                      onDoubleClick: Object.hasOwn(skillDetails, item.id) ? undefined : () => useSkill(item.id),
                     },
                     h('span', { className: 'uxbp-art' }, h(SkillArt, { skillId: item.id })),
                     h('span', { className: 'uxbp-card-body' },
