@@ -1,0 +1,188 @@
+{
+  "abstract": "提供表格结果集操作，以及刷新、排序和显示列的入口。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "actions",
+          "type": "prop"
+        },
+        "id": "actions",
+        "purpose": "按业务顺序传入结果集操作。每项提供 key、label 和回调，可设 disabled。默认使用普通按钮；需要突出主操作时将该项设为 priority=primary。最多直接显示五项，超出项和标记 priority=overflow 的项进入更多菜单。查看、编辑或删除单条记录的入口放在对应行。"
+      },
+      {
+        "binding": {
+          "name": "onSort",
+          "type": "prop"
+        },
+        "id": "on-sort",
+        "purpose": "需要整表排序入口时传入，页面在回调中处理排序。"
+      },
+      {
+        "binding": {
+          "name": "onColumnSettings",
+          "type": "prop"
+        },
+        "id": "on-column-settings",
+        "purpose": "表头设置图标默认显示，未传回调时禁用。页面负责打开列设置、保存选择，并将更新后的 columns 传给受管表格。"
+      },
+      {
+        "binding": {
+          "name": "onRefresh",
+          "type": "prop"
+        },
+        "id": "on-refresh",
+        "purpose": "刷新图标默认显示。页面传入回调，使用当前已生效的筛选条件重新查询；未传回调时图标保持可见但禁用。"
+      },
+      {
+        "binding": {
+          "name": "extraUtilities",
+          "type": "prop"
+        },
+        "id": "extra-utilities",
+        "purpose": "按业务需要追加展开、显示方式等工具；排序通过 onSort 提供。"
+      },
+      {
+        "binding": {
+          "name": "layout",
+          "type": "prop"
+        },
+        "id": "layout",
+        "purpose": "默认 split，业务按钮居左，工具居右。需要将业务按钮与工具作为整体靠右时传 right。与筛选工作区组合时，由筛选工作区决定操作栏所在区域。"
+      },
+      {
+        "binding": {
+          "name": "section",
+          "type": "prop"
+        },
+        "id": "section",
+        "purpose": "默认 all，显示完整操作栏。仅需业务按钮时传 actions，仅需工具时传 utilities。"
+      }
+    ],
+    "mainExport": "XftTableActionBar"
+  },
+  "entry": "table-action-bar/XftTableActionBar.tsx",
+  "files": [
+    {
+      "path": "files/template.table-action-bar/table-action-bar/XftTableActionBar.css",
+      "sha256": "1db32af273858b60de0f6e1ecdbeba237dec0a9e0019040cd061647ae21dafc5"
+    },
+    {
+      "path": "files/template.table-action-bar/table-action-bar/XftTableActionBar.tsx",
+      "sha256": "79a7c765ff5b3824c56a018937059d939d2cb12b1639e7bfa6f027be95994611"
+    }
+  ],
+  "guidanceDigest": "5a8e954ae4645dee8b68b4bdc221d91e21793c9fe0981f58d8e7645126c92260",
+  "id": "template.table-action-bar",
+  "identityDigest": "b506a6e76e95a5711189943716306f55ddaf6ec9c0d7381c65c3efc236a1f6e1",
+  "implementationDigest": "b7d0378ca32e2aa095cde37ea34244d1f223cf9ab6bab54bde4e2723a9fdf758",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftTableAction",
+        "XftTableActionBarProps"
+      ],
+      "values": [
+        "XftTableActionBar"
+      ]
+    },
+    "mainExport": "XftTableActionBar",
+    "namedTypes": [
+      {
+        "name": "XftTableAction",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "priority",
+            "required": false,
+            "type": "\"primary\" | \"secondary\" | \"overflow\""
+          },
+          {
+            "default": null,
+            "name": "disabled",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "danger",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": false,
+            "type": "() => void"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftTableActionBarProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "actions",
+          "required": false,
+          "type": "XftTableAction[]"
+        },
+        {
+          "default": null,
+          "name": "onRefresh",
+          "required": false,
+          "type": "() => void"
+        },
+        {
+          "default": null,
+          "name": "onSort",
+          "required": false,
+          "type": "() => void"
+        },
+        {
+          "default": null,
+          "name": "onColumnSettings",
+          "required": false,
+          "type": "() => void"
+        },
+        {
+          "default": null,
+          "name": "extraUtilities",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": "split",
+          "name": "layout",
+          "required": false,
+          "type": "\"split\" | \"right\""
+        },
+        {
+          "default": "all",
+          "name": "section",
+          "required": false,
+          "type": "\"all\" | \"actions\" | \"utilities\""
+        }
+      ]
+    }
+  },
+  "recordDigest": "ff79c4ad0bd55cb8eab70b1395affe53e1dbfc125027caf5cce60f20fad50052",
+  "semanticDigest": "f45120660a7b60addc5928a84950da894a2d6e88d3c5ac4fc8c36e65e2c619dc",
+  "templateSourceDigest": "9b468d6e780169706f4732b175289b389d84ff01857354cc7159533a4f55a1bc",
+  "title": "XFT 表格操作栏"
+}

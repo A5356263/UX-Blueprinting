@@ -1,0 +1,162 @@
+{
+  "abstract": "集中展示当前对象或任务的操作，支持同时呈现汇总信息。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "children",
+          "type": "prop"
+        },
+        "id": "children",
+        "purpose": "传入当前对象或任务的操作按钮，按钮顺序、权限和回调由页面决定。独立操作区按需求给出的顺序排列。未指定时主操作放在左侧，有汇总时其余操作按需求出现顺序排列。嵌入窗口底部时按从辅助到主要排列，主操作放在右侧。"
+      },
+      {
+        "binding": {
+          "name": "summary",
+          "type": "prop"
+        },
+        "id": "summary",
+        "purpose": "需要在同一操作区展示汇总值时传入。每项提供 key、label 和 value，有单位时传 unit。"
+      },
+      {
+        "binding": {
+          "name": "layout",
+          "type": "prop"
+        },
+        "id": "layout",
+        "purpose": "汇总与操作的排列方式，默认 inline（同行）。需要汇总在上、操作在下时传 stacked。"
+      },
+      {
+        "binding": {
+          "name": "ariaLabel",
+          "type": "prop"
+        },
+        "id": "aria-label",
+        "purpose": "操作区的无障碍名称，默认「内容操作」。"
+      },
+      {
+        "binding": {
+          "name": "align",
+          "type": "prop"
+        },
+        "id": "align",
+        "purpose": "默认 center。普通操作区可用 start、center 或 end 对齐。上下布局时控制整体对齐。汇总与操作同行时由模板分置两侧。"
+      },
+      {
+        "binding": {
+          "name": "embedded",
+          "type": "prop"
+        },
+        "id": "embedded",
+        "purpose": "放入 Drawer 或 Modal 的原生 footer 时传 true，由窗口承载底部布局。默认 false，由操作栏提供粘性底部外壳和贯穿所在容器的顶部边界。"
+      }
+    ],
+    "mainExport": "XftContentActionBar"
+  },
+  "entry": "content-action-bar/XftContentActionBar.tsx",
+  "files": [
+    {
+      "path": "files/template.content-action-bar/content-action-bar/XftContentActionBar.css",
+      "sha256": "dca302cd9b8e47b04cd8c708ef25232cce70054195dcffe783d20ff2f3585399"
+    },
+    {
+      "path": "files/template.content-action-bar/content-action-bar/XftContentActionBar.tsx",
+      "sha256": "f32ac7b4c588152eae208de15e321d6cb650a29ca4355ae036d05cc031e64bd2"
+    }
+  ],
+  "guidanceDigest": "84e4b5c9991e32788f0f4ed9a227ec4e0140a3f8a03817785f8888855dcbf460",
+  "id": "template.content-action-bar",
+  "identityDigest": "ebf5e4b9db89b4744287286d52f77e4e2776468959777434448293a7c656f4f3",
+  "implementationDigest": "2c2a831619663fc22fe9acfab6eecad0a6ab631432a3e3f5010d5a3dd5b440b5",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftContentActionBarProps",
+        "XftContentActionBarSummaryItem"
+      ],
+      "values": [
+        "XftContentActionBar"
+      ]
+    },
+    "mainExport": "XftContentActionBar",
+    "namedTypes": [
+      {
+        "name": "XftContentActionBarSummaryItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "unit",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftContentActionBarProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "children",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "summary",
+          "required": false,
+          "type": "XftContentActionBarSummaryItem[]"
+        },
+        {
+          "default": "inline",
+          "name": "layout",
+          "required": false,
+          "type": "\"inline\" | \"stacked\""
+        },
+        {
+          "default": "内容操作",
+          "name": "ariaLabel",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": "center",
+          "name": "align",
+          "required": false,
+          "type": "\"start\" | \"center\" | \"end\""
+        },
+        {
+          "default": false,
+          "name": "embedded",
+          "required": false,
+          "type": "boolean"
+        }
+      ]
+    }
+  },
+  "recordDigest": "9aab3a73ba755a9e05a6a1057f95c9958788abc24814c017de81fce6ce1cc931",
+  "semanticDigest": "13c8f06194755fbee59276de108fb728d9699e71f19dbb72a049b4f0adba13c8",
+  "templateSourceDigest": "e9ada8247a478625f8661e27bf5b77fd8a34eee96628801b5a82f8f8cf19fa45",
+  "title": "XFT 内容操作栏"
+}

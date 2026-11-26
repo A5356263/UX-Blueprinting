@@ -1,0 +1,17 @@
+{
+  "assetId": "template.governed-table",
+  "files": [
+    {
+      "artifactType": "text",
+      "path": "governed-table/XftGovernedTable.css",
+      "sourceHash": "eeb1a2830a1f42417e4eba5d6377ee8d7df699c2d5386d5618c7a75b457fb53b"
+    },
+    {
+      "artifactType": "text",
+      "path": "governed-table/XftGovernedTable.tsx",
+      "sourceHash": "b98bedace039560003938d4f572afc8471c9b061fec8a6774e527c8a0a20ab47"
+    }
+  ],
+  "kind": "ux-proto-template-provenance",
+  "schemaVersion": 1
+}

@@ -1,0 +1,23 @@
+{
+  "artifacts": [
+    {
+      "name": "alias-vars.generated.css",
+      "sha256": "72c684a40caec81b0076981f898bee07d0ea9ddfd95a06ae6f2b275aeac27965"
+    },
+    {
+      "name": "antd.generated.css",
+      "sha256": "a496e4f5ca80d5ec414f19b824c955f873c5c6137b5373bbb91ef98ab9d2f394"
+    },
+    {
+      "name": "theme-config.generated.mjs",
+      "sha256": "249e8c186ecca6dbf64221ba6b2a9fb16fcf482b63897f9fec918d6e074e38e0"
+    }
+  ],
+  "kind": "ux-proto-runtime-theme-receipt",
+  "pack": {
+    "id": "xft",
+    "version": "2.7.1"
+  },
+  "schemaVersion": 1,
+  "source": "pack"
+}

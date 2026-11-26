@@ -1,0 +1,1 @@
+.xft-selection-pagination-bar { display: flex; align-items: center; justify-content: flex-end; min-height: 32px; gap: var(--alias-space-4); color: var(--alias-text-value); }.xft-selection-pagination-bar--has-selection { justify-content: space-between; }

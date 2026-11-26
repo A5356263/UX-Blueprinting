@@ -1,0 +1,215 @@
+{
+  "abstract": "提供业务范围浏览与选择，支持面板内搜索、折叠和宽度调整。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "directoryContent",
+          "type": "prop"
+        },
+        "id": "directory-content",
+        "purpose": "传入范围选择内容。层级范围用树，平级范围按需求用单选或多选列表。页面维护选中状态，折叠后仍可恢复当前选择。相邻结果区的数据更新由页面处理。"
+      },
+      {
+        "binding": {
+          "name": "directoryWidth",
+          "type": "prop"
+        },
+        "id": "directory-width",
+        "purpose": "展开时的面板宽度，单位为 px，默认 200。模板根据父容器限制宽度，通常不超过其一半，上限为 384，最窄为 48。"
+      },
+      {
+        "binding": {
+          "name": "onDirectoryWidthChange",
+          "type": "prop"
+        },
+        "id": "on-directory-width-change",
+        "purpose": "拖拽调整时返回约束后的宽度。需要跨折叠保留宽度时，把返回值写回 directoryWidth。"
+      },
+      {
+        "binding": {
+          "name": "directoryHeader",
+          "type": "prop"
+        },
+        "id": "directory-header",
+        "purpose": "面板顶部的标题内容。"
+      },
+      {
+        "binding": {
+          "name": "directorySearchValue",
+          "type": "prop"
+        },
+        "id": "directory-search-value",
+        "purpose": "页面受控搜索时传入当前关键词，并用 onDirectorySearchChange 更新。省略时面板自行维护输入值。"
+      },
+      {
+        "binding": {
+          "name": "onDirectorySearchChange",
+          "type": "prop"
+        },
+        "id": "on-directory-search-change",
+        "purpose": "传入此回调才显示搜索框。用返回的关键词过滤面板中的范围选项，结果区查询由结果区处理。"
+      },
+      {
+        "binding": {
+          "name": "directorySearchPlaceholder",
+          "type": "prop"
+        },
+        "id": "directory-search-placeholder",
+        "purpose": "搜索框提示语，默认「搜索」。搜索框启用时生效。"
+      },
+      {
+        "binding": {
+          "name": "directoryActions",
+          "type": "prop"
+        },
+        "id": "directory-actions",
+        "purpose": "面板内作用于范围选项的操作。作用于结果集的操作放在结果区。"
+      },
+      {
+        "binding": {
+          "name": "directoryFooter",
+          "type": "prop"
+        },
+        "id": "directory-footer",
+        "purpose": "面板展开时显示的底部内容。"
+      },
+      {
+        "binding": {
+          "name": "directoryCollapsible",
+          "type": "prop"
+        },
+        "id": "directory-collapsible",
+        "purpose": "需要显示折叠或展开按钮时传 true，默认不显示。"
+      },
+      {
+        "binding": {
+          "name": "directoryCollapsed",
+          "type": "prop"
+        },
+        "id": "directory-collapsed",
+        "purpose": "由页面控制展开状态时传入。省略时面板自行维护，初始为展开。"
+      },
+      {
+        "binding": {
+          "name": "onDirectoryCollapsedChange",
+          "type": "prop"
+        },
+        "id": "on-directory-collapsed-change",
+        "purpose": "用户切换时返回下一折叠状态。传入 directoryCollapsed 时，通过此回调更新它。"
+      }
+    ],
+    "mainExport": "XftContextSelectorPanel"
+  },
+  "entry": "context-selector-panel/XftContextSelectorPanel.tsx",
+  "files": [
+    {
+      "path": "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.css",
+      "sha256": "7b7f473e7a1e8d2c1ba0b47e6e7326a63fb63517c93caa8873315d0d18c1ed72"
+    },
+    {
+      "path": "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.tsx",
+      "sha256": "224c306284a83d8edddd85947f91a5c59d2ff20a51b65a6138020fd71f5d0443"
+    }
+  ],
+  "guidanceDigest": "460b8cbd674b472cb30d22a448f593d00fc9700e18a7a50e00cabd4b35deb798",
+  "id": "template.context-selector-panel",
+  "identityDigest": "5f1f1d02d23dc784eb59b41505f7109b6a430369b62a4ae4c32cebdb0e199036",
+  "implementationDigest": "6c010b7832e84625b1550e1a06af19d25ac2e31eee0c848567728a170c7f232e",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftContextSelectorPanelProps"
+      ],
+      "values": [
+        "XftContextSelectorPanel"
+      ]
+    },
+    "mainExport": "XftContextSelectorPanel",
+    "namedTypes": [],
+    "props": {
+      "name": "XftContextSelectorPanelProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "directoryContent",
+          "required": true,
+          "type": "ReactNode"
+        },
+        {
+          "default": 200,
+          "name": "directoryWidth",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "default": null,
+          "name": "onDirectoryWidthChange",
+          "required": false,
+          "type": "(width: number) => void"
+        },
+        {
+          "default": null,
+          "name": "directoryHeader",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "directorySearchValue",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": null,
+          "name": "onDirectorySearchChange",
+          "required": false,
+          "type": "(value: string) => void"
+        },
+        {
+          "default": "搜索",
+          "name": "directorySearchPlaceholder",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": null,
+          "name": "directoryActions",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "directoryFooter",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": false,
+          "name": "directoryCollapsible",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "directoryCollapsed",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "onDirectoryCollapsedChange",
+          "required": false,
+          "type": "(collapsed: boolean) => void"
+        }
+      ]
+    }
+  },
+  "recordDigest": "e8b9898dcba55011101eb5858428a15ea3496c73c1f4e94fffaa475cbb945ab6",
+  "semanticDigest": "e0bc9e2698786cbbf3b04261c1d06d80a7c3830238fac6e23962c2316b4179ab",
+  "templateSourceDigest": "b2274d63e2d482feb1eb4de8de4a166fc2afef42cb8cefe829fdb3d3c88b5fa2",
+  "title": "XFT 范围选择面板"
+}

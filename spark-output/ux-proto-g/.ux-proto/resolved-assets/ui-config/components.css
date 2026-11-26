@@ -1,0 +1,88 @@
+/* XFT component-level visual configuration. Component behavior and page structure remain in the Pack. */
+.ant-modal-root .ant-modal-wrap:has(.ant-modal:not(.ant-modal-confirm)) { display: flex; align-items: center; justify-content: center; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) { top: 0 !important; padding-bottom: 0 !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-container { display: flex !important; flex-direction: column !important; max-height: 80vh !important; overflow: hidden; padding: 0 !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-header { box-sizing: border-box; display: flex !important; flex: none; align-items: center; min-height: 46px; margin: 0 !important; padding: 0 20px !important; border-bottom: 1px solid rgba(19, 34, 64, 0.1) !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-close { top: 11px !important; inset-inline-end: 12px !important; width: 24px !important; height: 24px !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-close-x { line-height: 24px !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-body { box-sizing: border-box; flex: 1 1 auto; min-height: 0; overflow: auto !important; padding: 20px !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-footer { box-sizing: border-box; display: flex !important; flex: none; align-items: center; justify-content: flex-end; min-height: 56px; margin: 0 !important; padding: 0 20px !important; border-top: 1px solid rgba(19, 34, 64, 0.1) !important; }
+/* Modal footer owns the chrome. A nested XFT action bar becomes content-only so spacing and dividers are not doubled. */
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-footer:has(.xft-content-action-bar) .xft-content-action-bar { position: static !important; display: flex !important; align-self: center !important; align-items: center !important; width: 100% !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+.ant-modal-root .ant-modal:not(.ant-modal-confirm) .ant-modal-footer:has(.xft-content-action-bar) .xft-content-action-bar__inner { display: flex !important; align-items: center !important; width: 100% !important; max-width: none !important; margin: 0 !important; }
+.ant-drawer .ant-drawer-header { box-sizing: border-box; display: flex; align-items: center; min-height: 46px; padding: 0 20px; border-bottom: 1px solid rgba(19, 34, 64, 0.1); }
+.ant-drawer .ant-drawer-header-title { display: flex; align-items: center; width: 100%; min-width: 0; }
+.ant-drawer .ant-drawer-title { order: 1; flex: 1 1 auto; min-width: 0; font-size: 16px; }
+.ant-drawer .ant-drawer-close { order: 2; flex: none; width: 24px; height: 24px; margin-inline: 8px 0; }
+.ant-drawer .ant-drawer-body { box-sizing: border-box; min-height: 0; overflow: auto !important; overscroll-behavior: contain; padding: 20px; }
+.ant-drawer .ant-drawer-footer { box-sizing: border-box; display: flex; align-items: center; justify-content: flex-end; min-height: 56px; margin: 0; padding: 0 20px; border-top: 1px solid rgba(19, 34, 64, 0.1); }
+.ant-drawer .ant-drawer-footer:has(.xft-content-action-bar) .xft-content-action-bar { position: static !important; display: flex !important; align-self: center !important; align-items: center !important; width: 100% !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+.ant-drawer .ant-drawer-footer:has(.xft-content-action-bar) .xft-content-action-bar__inner { display: flex !important; align-items: center !important; width: 100% !important; max-width: none !important; margin: 0 !important; }
+
+/* XFT Tabs baseline: component-internal layout spacing is zero; page/template spacing remains page-owned. */
+.ant-tabs { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+.ant-tabs > .ant-tabs-nav { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+.ant-tabs > .ant-tabs-content-holder,
+.ant-tabs > .ant-tabs-content { padding-bottom: 0 !important; }
+
+/* Ant Design Form appearance. XFT wrappers continue to provide measured label widths. */
+.ant-form-horizontal .ant-form-item-row { display: flex; align-items: flex-start; column-gap: var(--alias-space-2); }
+.ant-form-horizontal .ant-form-item-label { flex: 0 0 var(--xft-form-label-width, 72px); width: var(--xft-form-label-width, 72px); max-width: var(--xft-form-label-width, 72px); padding-inline-end: 0; }
+.ant-form-horizontal .ant-form-item-label > label { width: 100%; justify-content: flex-end; }
+.ant-form-horizontal .ant-form-item-label > label.ant-form-item-no-colon::after { display: none; content: none; }
+.ant-form-horizontal .ant-form-item-control { flex: 1 1 auto; min-width: 0; }
+
+/* Ant Design Result baseline shared by result states across templates. */
+.ant-result { padding-block: var(--alias-space-5); }
+
+/* Accessible disclosure buttons share a compact XFT control treatment. */
+.ant-btn[aria-controls][aria-expanded] { width: 24px; height: 24px; flex: 0 0 24px; padding: 0; color: var(--alias-text-secondary); }
+
+/* XFT read-only fields. Scope the presentation to the XFT field layouts. */
+.xft-descriptions { --xft-descriptions-label-width: 72px; width: 100%; }
+.xft-descriptions .ant-descriptions-item,
+.xft-descriptions .ant-descriptions-item-label,
+.xft-descriptions .ant-descriptions-item-content { text-align: left; vertical-align: top; }
+.xft-descriptions .ant-descriptions-row > th,
+.xft-descriptions .ant-descriptions-row > td { padding: 0 var(--alias-space-5) var(--alias-space-3) 0; }
+.xft-descriptions--horizontal .ant-descriptions-item-container { display: grid; grid-template-columns: var(--xft-descriptions-label-width) minmax(0, 1fr); column-gap: var(--alias-space-2); align-items: baseline; }
+.xft-descriptions--horizontal .ant-descriptions-item-label,
+.xft-descriptions--horizontal .ant-descriptions-item-content { display: block; min-width: 0; }
+.xft-descriptions--vertical .ant-descriptions-row > th { padding-bottom: 4px; }
+.xft-descriptions--vertical .ant-descriptions-row > td { padding-bottom: var(--alias-space-3); }
+.xft-descriptions__label,
+.xft-descriptions__value { font-size: 14px; font-weight: var(--alias-font-weight-regular); line-height: 22px; }
+.xft-descriptions__label { color: var(--alias-text-secondary); white-space: nowrap; }
+.xft-descriptions__value { color: var(--alias-text-value); overflow-wrap: anywhere; }
+.xft-detail-grid { display: grid; gap: 0; width: 100%; border: 1px solid var(--alias-divider-neutral); border-radius: var(--alias-radius-regular); overflow: hidden; background: var(--alias-surface-container-bright); }
+.xft-detail-grid--columns-1 { grid-template-columns: 1fr; }
+.xft-detail-grid--columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.xft-detail-grid--columns-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.xft-detail-grid--columns-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.xft-detail-grid__item { display: grid; grid-template-columns: 120px minmax(0, 1fr); min-width: 0; border: 0; border-right: 1px solid var(--alias-divider-neutral); border-bottom: 1px solid var(--alias-divider-neutral); overflow: hidden; }
+.xft-detail-grid__item--full { grid-column: 1 / -1; }
+.xft-detail-grid__item--last-column { border-right: 0; }
+.xft-detail-grid__item--last-row { border-bottom: 0; }
+.xft-detail-grid__label, .xft-detail-grid__value { min-height: 40px; padding: 10px var(--alias-space-3); line-height: 1.5; }
+.xft-detail-grid__label { background: var(--alias-surface-region-muted); color: var(--alias-text-secondary); font-weight: var(--alias-font-weight-semibold); }
+.xft-detail-grid__value { background: var(--alias-surface-container-bright); color: var(--alias-text-value); overflow-wrap: anywhere; }
+.xft-detail-grid--vertical .xft-detail-grid__item { grid-template-columns: 1fr; }
+.xft-detail-grid--vertical .xft-detail-grid__label { border-bottom: 1px solid var(--alias-divider-neutral); }
+@media (max-width: 560px) { .xft-detail-grid__item { grid-template-columns: 96px minmax(0, 1fr); } }
+
+/* Native read-only fields: plain descriptions and bordered detail grids. */
+.ant-descriptions > .ant-descriptions-view > table > tbody > .ant-descriptions-row > :is(th, td) { text-align: start; vertical-align: top; }
+.ant-descriptions > .ant-descriptions-view > table > tbody > .ant-descriptions-row :is(.ant-descriptions-item-label, .ant-descriptions-item-content) { font-size: 14px; line-height: 22px; }
+.ant-descriptions > .ant-descriptions-view > table > tbody > .ant-descriptions-row .ant-descriptions-item-label { color: var(--alias-text-secondary); }
+.ant-descriptions > .ant-descriptions-view > table > tbody > .ant-descriptions-row .ant-descriptions-item-content { min-width: 0; color: var(--alias-text-value); overflow-wrap: anywhere; }
+.ant-descriptions:not(.ant-descriptions-bordered) > .ant-descriptions-view > table > tbody > .ant-descriptions-row > .ant-descriptions-item { padding: 0 var(--alias-space-5) var(--alias-space-3) 0; }
+.ant-descriptions:not(.ant-descriptions-bordered) > .ant-descriptions-view > table > tbody > .ant-descriptions-row > th.ant-descriptions-item { padding-bottom: 4px; }
+.ant-descriptions:not(.ant-descriptions-bordered) > .ant-descriptions-view > table > tbody > .ant-descriptions-row > .ant-descriptions-item > .ant-descriptions-item-container:has(> .ant-descriptions-item-label + .ant-descriptions-item-content) { display: grid; grid-template-columns: var(--xft-descriptions-label-width, 72px) minmax(0, 1fr); column-gap: var(--alias-space-2); align-items: baseline; }
+.ant-descriptions:not(.ant-descriptions-bordered) .ant-descriptions-item-label { font-weight: var(--alias-font-weight-regular); }
+.ant-descriptions-bordered { --xft-detail-label-width: 120px; }
+.ant-descriptions-bordered > .ant-descriptions-view { border-color: var(--alias-divider-neutral); border-radius: var(--alias-radius-regular); overflow: hidden; }
+.ant-descriptions-bordered > .ant-descriptions-view > table > tbody > .ant-descriptions-row > :is(.ant-descriptions-item-label, .ant-descriptions-item-content) { height: 40px; padding: 10px var(--alias-space-3); border-color: var(--alias-divider-neutral); line-height: 1.5; }
+.ant-descriptions-bordered > .ant-descriptions-view > table > tbody > .ant-descriptions-row > .ant-descriptions-item-label { background: var(--alias-surface-region-muted); font-weight: var(--alias-font-weight-semibold); }
+.ant-descriptions-bordered > .ant-descriptions-view > table > tbody > .ant-descriptions-row > .ant-descriptions-item-label:has(+ .ant-descriptions-item-content) { width: var(--xft-detail-label-width); }
+.ant-descriptions-bordered > .ant-descriptions-view > table > tbody > .ant-descriptions-row > .ant-descriptions-item-content { background: var(--alias-surface-container-bright); }
+@media (max-width: 560px) { .ant-descriptions-bordered { --xft-detail-label-width: 96px; } }

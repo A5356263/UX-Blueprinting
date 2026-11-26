@@ -1,0 +1,25 @@
+{
+  "abstract": "根据当前任务意图和操作后果确定主操作和辅助操作的强调级别。",
+  "assetLinks": [],
+  "content": {
+    "判断规则": [
+      "需求明确指定主操作时，将该操作设为主操作，同一操作语境最多一个；需求未指定时不设主操作，所有操作使用次操作样式。",
+      "独立弹窗、抽屉等具有明确视觉边界的容器可拥有独立主操作；页面级辅助操作区不构成独立操作语境。",
+      "次操作使用默认按钮样式；弱操作使用文字链接样式或收入更多菜单。"
+    ],
+    "判断问题": "当前可见操作中，哪一个最能推进此刻的主要意图？",
+    "禁止": [
+      "不根据操作动词自动推断强调级别；需求未指定主次时所有操作使用次操作样式。",
+      "将当前主操作收进更多菜单，或仅因添加图标提高操作权重。"
+    ]
+  },
+  "files": [],
+  "guidanceDigest": "775754d4f502dab848c0267207d596b766c5f9f2e43481153ada8e2ed4a862f0",
+  "id": "knowledge.action-emphasis-by-intent",
+  "identityDigest": "16f36bf7b6c9c5b445e5b16d885f2287a8b037f0d06c724c53fa824ff24128cd",
+  "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+  "kind": "Knowledge",
+  "recordDigest": "b64e33bbff9c35501af035897608b8e70e3c0d4935e31aa8e52a62e4e256a960",
+  "semanticDigest": "3f13cecc53faf78f3c7f0b3de6fc90ca847dcf22628e04649d9e5e9b6ad27de8",
+  "title": "按当前意图确定操作强调"
+}

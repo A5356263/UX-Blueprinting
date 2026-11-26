@@ -1,0 +1,22 @@
+{
+  "assetId": "template.filter-bar",
+  "files": [
+    {
+      "artifactType": "text",
+      "path": "filter-bar/XftFilterBar.css",
+      "sourceHash": "fbba0b68700ecf2d582fbd23b73c69fe15b6b081d3a861dfc710b8045fac5d05"
+    },
+    {
+      "artifactType": "text",
+      "path": "filter-bar/XftFilterBar.model.ts",
+      "sourceHash": "675f5748225b76eab06d8f049feb922d7368ce045fc3c0fef83da46f9da403af"
+    },
+    {
+      "artifactType": "text",
+      "path": "filter-bar/XftFilterBar.tsx",
+      "sourceHash": "a45e8756e99c912ad5f0f73665016e5db04c6b35bbc66558fc39930672dff47d"
+    }
+  ],
+  "kind": "ux-proto-template-provenance",
+  "schemaVersion": 1
+}

@@ -1,0 +1,106 @@
+{
+  "abstract": "支持展示已选数量和切换列表页码。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "selectedCount",
+          "type": "prop"
+        },
+        "id": "selected-count",
+        "purpose": "需要显示已选数量时传入，0 也会显示。页面负责维护选中记录和跨页策略。"
+      },
+      {
+        "binding": {
+          "name": "pagination",
+          "type": "prop"
+        },
+        "id": "pagination",
+        "purpose": "需要分页时传入 current、total 和 onChange，可选 pageSize 默认 10。页面收到页码和每页条数后更新分页状态及当前数据。"
+      }
+    ],
+    "mainExport": "XftSelectionPaginationBar"
+  },
+  "entry": "selection-pagination-bar/XftSelectionPaginationBar.tsx",
+  "files": [
+    {
+      "path": "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.css",
+      "sha256": "abb37963ab0fe84277ae0e7d05e86b351a9b197a34a6adb07ab7da6d2f53098c"
+    },
+    {
+      "path": "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.tsx",
+      "sha256": "47cc7b6e58371ee0c0699baf568c3fa478e91e96491ddf466cb65b9194170a1e"
+    }
+  ],
+  "guidanceDigest": "d58abb2008b8b46a79f8ee08fe56322d37a56b322a4dffa8adbaf0c1b516cde6",
+  "id": "template.selection-pagination-bar",
+  "identityDigest": "1f7e38c574dea6f6940ad0db3b68e3549c79d766529ea9198c8aefd0de00ab24",
+  "implementationDigest": "be0e31354e3a90e18653ca22d24a0d9dafae7510a1d487137a60a8f8587df650",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftSelectionPagination",
+        "XftSelectionPaginationBarProps"
+      ],
+      "values": [
+        "XftSelectionPaginationBar"
+      ]
+    },
+    "mainExport": "XftSelectionPaginationBar",
+    "namedTypes": [
+      {
+        "name": "XftSelectionPagination",
+        "properties": [
+          {
+            "default": null,
+            "name": "current",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "default": null,
+            "name": "pageSize",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "default": null,
+            "name": "total",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "default": null,
+            "name": "onChange",
+            "required": true,
+            "type": "(page: number, pageSize: number) => void"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftSelectionPaginationBarProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "selectedCount",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "default": null,
+          "name": "pagination",
+          "required": false,
+          "type": "XftSelectionPagination"
+        }
+      ]
+    }
+  },
+  "recordDigest": "a99184f77d72c6eb913b6e589b789b987200ab16702ecdfb7be058dbddc84893",
+  "semanticDigest": "d8d2a7f486d00bf971f113e7279df568fa5d14f652da23d359b30e03ac200814",
+  "templateSourceDigest": "b5cec4da67ec4f23f58d5d9421128a71a8f14ce68dc1406bcbf3d70e338656fb",
+  "title": "XFT 选择统计与分页栏"
+}

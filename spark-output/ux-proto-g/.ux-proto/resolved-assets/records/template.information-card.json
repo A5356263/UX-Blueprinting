@@ -1,0 +1,242 @@
+{
+  "abstract": "在单张卡片中展示一条记录的标题和详情，支持图标或图片及记录操作。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "variant",
+          "type": "prop"
+        },
+        "id": "variant",
+        "purpose": "默认 detail-actions。需要在标题旁展示图片或图标时用 icon-details-actions，并传 icon。"
+      },
+      {
+        "binding": {
+          "name": "title",
+          "type": "prop"
+        },
+        "id": "title",
+        "purpose": "卡片对应记录的标题。"
+      },
+      {
+        "binding": {
+          "name": "description",
+          "type": "prop"
+        },
+        "id": "description",
+        "purpose": "标题下的一行说明。"
+      },
+      {
+        "binding": {
+          "name": "icon",
+          "type": "prop"
+        },
+        "id": "icon",
+        "purpose": "在 icon-details-actions 变体中传入图片或图标，模板提供 40px 视觉位置。"
+      },
+      {
+        "binding": {
+          "name": "tags",
+          "type": "prop"
+        },
+        "id": "tags",
+        "purpose": "标题旁的标签，按传入顺序最多展示前三项。"
+      },
+      {
+        "binding": {
+          "name": "details",
+          "type": "prop"
+        },
+        "id": "details",
+        "purpose": "记录详情列表，每项提供 key、label 和 value。"
+      },
+      {
+        "binding": {
+          "name": "actions",
+          "type": "prop"
+        },
+        "id": "actions",
+        "purpose": "卡片底部的记录操作。每项提供 key、label 和相应回调，可设 disabled。前三项直接显示，其余收纳到更多菜单。"
+      },
+      {
+        "binding": {
+          "name": "extra",
+          "type": "prop"
+        },
+        "id": "extra",
+        "purpose": "标题行右侧的补充操作。"
+      },
+      {
+        "binding": {
+          "name": "interactive",
+          "type": "prop"
+        },
+        "id": "interactive",
+        "purpose": "需要卡片悬浮反馈时传 true，默认关闭。此属性提供悬浮样式。"
+      },
+      {
+        "binding": {
+          "name": "selected",
+          "type": "prop"
+        },
+        "id": "selected",
+        "purpose": "需要显示当前记录已选中时传 true，默认 false。选中状态由页面维护。"
+      }
+    ],
+    "mainExport": "XftInformationCard"
+  },
+  "entry": "information-card/XftInformationCard.tsx",
+  "files": [
+    {
+      "path": "files/template.information-card/information-card/XftInformationCard.css",
+      "sha256": "8690e743222dc3dcf03c934eaaa525c9b12a259e148382075fa79b57bc812c7b"
+    },
+    {
+      "path": "files/template.information-card/information-card/XftInformationCard.tsx",
+      "sha256": "4dc705892676bac0c557b5f5dce1529c6306f0235bb8de55b3d008fa5f9956fe"
+    }
+  ],
+  "guidanceDigest": "4894859b7666d6d1e2d00249e689061dd915c5d606e025d67fb3cdc455f6d4d5",
+  "id": "template.information-card",
+  "identityDigest": "261dd431503b88e5d294c17780836a4c44f3e8decc47a0d053c68a1c1c39b32b",
+  "implementationDigest": "391f248c343d044dc128dc974830db80d79f78b51aff17faeaa5e698dc1f92d2",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftInformationCardAction",
+        "XftInformationCardDetail",
+        "XftInformationCardProps"
+      ],
+      "values": [
+        "XftInformationCard"
+      ]
+    },
+    "mainExport": "XftInformationCard",
+    "namedTypes": [
+      {
+        "name": "XftInformationCardAction",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "disabled",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": false,
+            "type": "() => void"
+          }
+        ]
+      },
+      {
+        "name": "XftInformationCardDetail",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "ReactNode"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftInformationCardProps",
+      "properties": [
+        {
+          "default": "detail-actions",
+          "name": "variant",
+          "required": false,
+          "type": "\"detail-actions\" | \"icon-details-actions\""
+        },
+        {
+          "default": null,
+          "name": "title",
+          "required": true,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "description",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "icon",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "tags",
+          "required": false,
+          "type": "ReactNode[]"
+        },
+        {
+          "default": null,
+          "name": "details",
+          "required": false,
+          "type": "XftInformationCardDetail[]"
+        },
+        {
+          "default": null,
+          "name": "actions",
+          "required": false,
+          "type": "XftInformationCardAction[]"
+        },
+        {
+          "default": null,
+          "name": "extra",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": false,
+          "name": "interactive",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": false,
+          "name": "selected",
+          "required": false,
+          "type": "boolean"
+        }
+      ]
+    }
+  },
+  "recordDigest": "5ea1f4a3e9c088f91d891334d8be05ad54fffac655e13442fde1791b1ce54913",
+  "semanticDigest": "7b34632f5d35c6bc907c788e78f9fbc2a1d244e46436ffc54d47a1eb36464ce9",
+  "templateSourceDigest": "b33d7027fcf9b58c9191f96b8f37211853bc796c5e66259e283368f5ad6440b0",
+  "title": "XFT 信息卡片"
+}

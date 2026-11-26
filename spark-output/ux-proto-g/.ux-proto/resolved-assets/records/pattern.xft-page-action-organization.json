@@ -1,0 +1,32 @@
+{
+  "abstract": "按操作作用范围确定操作区域，并规定必须外露的操作。",
+  "assetLinks": [],
+  "content": {
+    "区域规则": {
+      "内容操作区": "只作用于字段、区块或单条记录的操作，放在对应对象的操作区。单条记录的操作放在该行。",
+      "完成型操作区": "提交当前页面或窗口任务的整体结果时，放在该任务的完成型操作区。",
+      "数据操作区": "作用于当前结果集或所选记录集合的操作，放在数据操作区。",
+      "页面操作区": "其余作用于整个页面或当前对象的操作，放在页面操作区。"
+    },
+    "外露规则": [
+      "需求明确指定的主操作保持外露。",
+      "当前步骤的确认、取消和错误恢复入口保持外露。"
+    ],
+    "完成型操作承载": [
+      "独立页面由页面布局承载完成型操作。",
+      "弹窗和抽屉的完成型操作放在原生 footer。"
+    ],
+    "归属顺序": [
+      "每项操作按以下区域规则依次匹配，命中第一条即确定位置。"
+    ]
+  },
+  "files": [],
+  "guidanceDigest": "246403d08fdb236473e947427da5ba0ffc4b10be0f929df6c098102b69a625ef",
+  "id": "pattern.xft-page-action-organization",
+  "identityDigest": "8c9bb995a9cb70a313ea87d123b9dba760de231f935f1a0e3ef246609eb65a8a",
+  "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+  "kind": "Pattern",
+  "recordDigest": "e327fa0f68c6292e3e5e206b4ba3d0a147e9799c8480cbd67032f3b394e0eb13",
+  "semanticDigest": "26ae5fbfdb272fd766a027dab352c355137cdcb06cf328207ee0cb976e9ad941",
+  "title": "XFT 页面操作组织"
+}

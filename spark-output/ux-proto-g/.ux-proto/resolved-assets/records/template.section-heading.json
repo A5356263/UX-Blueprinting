@@ -1,0 +1,117 @@
+{
+  "abstract": "提供分组标题和标记线，可附加说明或操作。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "title",
+          "type": "prop"
+        },
+        "id": "title",
+        "purpose": "分组标题内容。"
+      },
+      {
+        "binding": {
+          "name": "description",
+          "type": "prop"
+        },
+        "id": "description",
+        "purpose": "有补充说明时传入，显示在标题下方。"
+      },
+      {
+        "binding": {
+          "name": "titleActions",
+          "type": "prop"
+        },
+        "id": "title-actions",
+        "purpose": "与标题直接关联的操作，显示在标题旁，例如控制本组折叠。"
+      },
+      {
+        "binding": {
+          "name": "actions",
+          "type": "prop"
+        },
+        "id": "actions",
+        "purpose": "显示在标题行右侧的分组操作。"
+      },
+      {
+        "binding": {
+          "name": "marker",
+          "type": "prop"
+        },
+        "id": "marker",
+        "purpose": "标题左侧默认显示强调标记线。需要隐藏时传 false。"
+      }
+    ],
+    "mainExport": "XftSectionHeading"
+  },
+  "entry": "section-heading/XftSectionHeading.tsx",
+  "files": [
+    {
+      "path": "files/template.section-heading/section-heading/XftSectionHeading.css",
+      "sha256": "1393174bdb3602039cc6a10b73e76e1750e05021d34a17be1a7ad4da6b30dca8"
+    },
+    {
+      "path": "files/template.section-heading/section-heading/XftSectionHeading.tsx",
+      "sha256": "65090a7758d4a0fffcb5370a34f8825998cfba10ec327082c05b1c47a410e641"
+    }
+  ],
+  "guidanceDigest": "9fe51a5222f74a69801cf2b9c94f9637269e85c7f9bb54eed03cf159b08c78c1",
+  "id": "template.section-heading",
+  "identityDigest": "1d1c9e4ce0227f2b4d46886509c8c1c5fed6d1ea7ed40e1b2c1ee1ed5d30599c",
+  "implementationDigest": "e785b5e5fb49da8cb2fc57debb158d83d1ddec9021556170356ce0e2bde83037",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftSectionHeadingProps"
+      ],
+      "values": [
+        "XftSectionHeading"
+      ]
+    },
+    "mainExport": "XftSectionHeading",
+    "namedTypes": [],
+    "props": {
+      "name": "XftSectionHeadingProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "title",
+          "required": true,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "description",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "titleActions",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "actions",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": true,
+          "name": "marker",
+          "required": false,
+          "type": "boolean"
+        }
+      ]
+    }
+  },
+  "recordDigest": "36d07dbb70591d46c0accd6812c9cfa4f60ef2877d6c7c7116353d3cced90f8e",
+  "semanticDigest": "ab143881e6c164145955b91b7dfb61ab1a71c044f7e09aa7459e3067a5d2d6c1",
+  "templateSourceDigest": "cbfe86ad90a022e0d7d1970ccb23aeea9e494fd04611a5a07b0a8687e6684695",
+  "title": "XFT 分组标题"
+}

@@ -1,0 +1,17 @@
+{
+  "assetId": "template.table-action-bar",
+  "files": [
+    {
+      "artifactType": "text",
+      "path": "table-action-bar/XftTableActionBar.css",
+      "sourceHash": "1db32af273858b60de0f6e1ecdbeba237dec0a9e0019040cd061647ae21dafc5"
+    },
+    {
+      "artifactType": "text",
+      "path": "table-action-bar/XftTableActionBar.tsx",
+      "sourceHash": "79a7c765ff5b3824c56a018937059d939d2cb12b1639e7bfa6f027be95994611"
+    }
+  ],
+  "kind": "ux-proto-template-provenance",
+  "schemaVersion": 1
+}

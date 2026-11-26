@@ -1,0 +1,4927 @@
+{
+  "catalog": [
+    {
+      "abstract": "根据限制原因确定操作可用性状态：隐藏、禁用、加载中或二次确认。",
+      "id": "knowledge.action-availability-by-constraint",
+      "kind": "Knowledge",
+      "title": "按限制原因确定操作可用性"
+    },
+    {
+      "abstract": "根据当前任务意图和操作后果确定主操作和辅助操作的强调级别。",
+      "id": "knowledge.action-emphasis-by-intent",
+      "kind": "Knowledge",
+      "title": "按当前意图确定操作强调"
+    },
+    {
+      "abstract": "根据连续内容页与数据操作页的任务事实，检查唯一主要纵向滚动容器及持续可用区域的位置。",
+      "id": "knowledge.scroll-ownership-by-page-type",
+      "kind": "Knowledge",
+      "title": "按页面类型检查滚动归属"
+    },
+    {
+      "abstract": "定义所有 XFT 页面共同遵守的结构规则，覆盖内容分组、操作、状态和反馈。",
+      "id": "pattern.xft-design-foundations",
+      "kind": "Pattern",
+      "title": "XFT 设计基础"
+    },
+    {
+      "abstract": "按操作作用范围确定操作区域，并规定必须外露的操作。",
+      "id": "pattern.xft-page-action-organization",
+      "kind": "Pattern",
+      "title": "XFT 页面操作组织"
+    },
+    {
+      "abstract": "依据需求中明确的使用条件选用 XFT 模板，不从模板反推页面应包含的模块。",
+      "id": "pattern.xft-page-template-selection",
+      "kind": "Pattern",
+      "title": "xft 模板选用指南"
+    },
+    {
+      "abstract": "规定选择任务的承载方式、临时值和确认回填行为。",
+      "id": "pattern.xft-selection-backfill",
+      "kind": "Pattern",
+      "title": "XFT 选择与回填交互"
+    },
+    {
+      "abstract": "提供顶部导航、工作区标签、统一的工作内容区和下级页面返回栏。",
+      "id": "template.application-frame",
+      "kind": "Template",
+      "title": "XFT 应用框架"
+    },
+    {
+      "abstract": "提供审批意见输入，支持图片、附件、常用语和手写签名。",
+      "id": "template.approval-agree-dialog",
+      "kind": "Template",
+      "title": "XFT 审批同意弹窗"
+    },
+    {
+      "abstract": "集中展示当前对象或任务的操作，支持同时呈现汇总信息。",
+      "id": "template.content-action-bar",
+      "kind": "Template",
+      "title": "XFT 内容操作栏"
+    },
+    {
+      "abstract": "提供业务范围浏览与选择，支持面板内搜索、折叠和宽度调整。",
+      "id": "template.context-selector-panel",
+      "kind": "Template",
+      "title": "XFT 范围选择面板"
+    },
+    {
+      "abstract": "提供纵向列表拖拽排序，返回调整后的条目顺序。",
+      "id": "template.drag-sortable-list",
+      "kind": "Template",
+      "title": "XFT 拖拽排序列表"
+    },
+    {
+      "abstract": "支持组合筛选条件、统一查询、重置和展开更多条件。",
+      "id": "template.filter-bar",
+      "kind": "Template",
+      "title": "XFT 筛选栏"
+    },
+    {
+      "abstract": "提供筛选面板、表头筛选、当前条件和常用方案，管理待查询条件与已生效条件。",
+      "id": "template.filter-workbench",
+      "kind": "Template",
+      "title": "XFT 筛选工作区"
+    },
+    {
+      "abstract": "提供表单字段分组、标签对齐、校验和提交。",
+      "id": "template.form-content",
+      "kind": "Template",
+      "title": "XFT 表单内容"
+    },
+    {
+      "abstract": "承载业务数据的表格，支持字段列、分组表头、列筛选、排序、行操作和表格滚动。",
+      "id": "template.governed-table",
+      "kind": "Template",
+      "title": "XFT 受管表格"
+    },
+    {
+      "abstract": "在单张卡片中展示一条记录的标题和详情，支持图标或图片及记录操作。",
+      "id": "template.information-card",
+      "kind": "Template",
+      "title": "XFT 信息卡片"
+    },
+    {
+      "abstract": "提供分区导航、点击定位和当前分区高亮。",
+      "id": "template.section-anchor",
+      "kind": "Template",
+      "title": "XFT 分区锚点"
+    },
+    {
+      "abstract": "提供分组标题和标记线，可附加说明或操作。",
+      "id": "template.section-heading",
+      "kind": "Template",
+      "title": "XFT 分组标题"
+    },
+    {
+      "abstract": "支持展示已选数量和切换列表页码。",
+      "id": "template.selection-pagination-bar",
+      "kind": "Template",
+      "title": "XFT 选择统计与分页栏"
+    },
+    {
+      "abstract": "提供可折叠的设置组，支持设置项操作和分区定位。",
+      "id": "template.settings-page",
+      "kind": "Template",
+      "title": "XFT 设置页"
+    },
+    {
+      "abstract": "展示各类别的统计值，支持只读汇总和类别切换。",
+      "id": "template.statistic-card-grid",
+      "kind": "Template",
+      "title": "XFT 统计卡片区"
+    },
+    {
+      "abstract": "集中展示对象或范围的标题、关键字段和统计值。",
+      "id": "template.summary-info",
+      "kind": "Template",
+      "title": "XFT 汇总信息"
+    },
+    {
+      "abstract": "提供表格结果集操作，以及刷新、排序和显示列的入口。",
+      "id": "template.table-action-bar",
+      "kind": "Template",
+      "title": "XFT 表格操作栏"
+    }
+  ],
+  "contentDigest": "13e95c854340efe98166dfe4d7e87c539195e8a059d290ad53b5d0a728301745",
+  "entrypoints": [
+    {
+      "assetLink": "pattern.xft-design-foundations",
+      "load": "full",
+      "pointer": "/entrypoints/0"
+    },
+    {
+      "assetLink": "pattern.xft-page-template-selection",
+      "load": "full",
+      "pointer": "/entrypoints/1"
+    }
+  ],
+  "files": {
+    "files/template.application-frame/XftApplicationFrame.css": "689dd47254852904f317716a70cd80adb77249a0269f97946fb6bc8a3e726a3c",
+    "files/template.application-frame/XftApplicationFrame.tsx": "0f5ed833016cd6f8aa27e9547976eb93ad72350e1888c04725da0ed19caed627",
+    "files/template.application-frame/application-frame/XftSubapplicationTopBar.assets.ts": "472b6f815e6c4aa16574e1cf4f88138a0daafafd8efe02ca3d8054cca4842384",
+    "files/template.application-frame/application-frame/XftSubapplicationTopBar.css": "4e7aa376f90a90bc2409ff08648f40a27dcd2b08e1ce49f48d8c0fd2706e73e1",
+    "files/template.application-frame/application-frame/XftSubapplicationTopBar.tsx": "d4d49e54e3bf33d49dea76ee6f624e33650bee7d208429160b15e9717a3da77f",
+    "files/template.application-frame/application-frame/XftTopBar.css": "2941ecd21a478ba983fbb2ded0939cca1252a22600abc1e509147db976cdc843",
+    "files/template.application-frame/application-frame/XftTopBar.tsx": "a21de169a1a6ed090f937035d74318bf0c2791d6c5a729e2535bd945d9760338",
+    "files/template.application-frame/application-frame/XftWorkspaceTabBar.css": "cfa1bd7bd0f800b47e5b6cdc8cf30643fd4a8f6552efab976ae211ef28222e3f",
+    "files/template.application-frame/application-frame/XftWorkspaceTabBar.tsx": "2d32813d272c0a60ee6a92613375e36f968ac933b3954efe1f6537b45f7b3e21",
+    "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.css": "98541d416cde5339d3d01611bd6ffe988a4076d575de17578f2f825aec3a87bc",
+    "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.tsx": "7b72213da1686fb0df9ad64cd20edc8c02657169b4dea15805d714f32d40e8db",
+    "files/template.content-action-bar/content-action-bar/XftContentActionBar.css": "dca302cd9b8e47b04cd8c708ef25232cce70054195dcffe783d20ff2f3585399",
+    "files/template.content-action-bar/content-action-bar/XftContentActionBar.tsx": "f32ac7b4c588152eae208de15e321d6cb650a29ca4355ae036d05cc031e64bd2",
+    "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.css": "7b7f473e7a1e8d2c1ba0b47e6e7326a63fb63517c93caa8873315d0d18c1ed72",
+    "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.tsx": "224c306284a83d8edddd85947f91a5c59d2ff20a51b65a6138020fd71f5d0443",
+    "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.css": "73cb886ac2282a6b06ca13e1ed0f1738fd0f89e1b7a41710f7040a6395f6217f",
+    "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.tsx": "1058f602de0885a237090c1ab79bac3c66652cef5458c83c6daa5f3d88f7d84d",
+    "files/template.filter-bar/filter-bar/XftFilterBar.css": "fbba0b68700ecf2d582fbd23b73c69fe15b6b081d3a861dfc710b8045fac5d05",
+    "files/template.filter-bar/filter-bar/XftFilterBar.model.ts": "675f5748225b76eab06d8f049feb922d7368ce045fc3c0fef83da46f9da403af",
+    "files/template.filter-bar/filter-bar/XftFilterBar.tsx": "a45e8756e99c912ad5f0f73665016e5db04c6b35bbc66558fc39930672dff47d",
+    "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.css": "0c27c524c28ef165c0d622fb0b45b6791b9b821f98427d40379392e6262ac591",
+    "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.model.ts": "5ed47601511476ff8c0011f6c00b9e3bdbe877e612d1b2dcfbaac3b49c2e2128",
+    "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.tsx": "638742fb3b9e5ba9c816b68c0b7e9e0e6a3b0626984dd6769c89f21d3537314e",
+    "files/template.form-content/form-content/XftFormContent.css": "a366f572462cacc6a59a4cc2de8e5aaec1677930f20e919dcbc1de79fc43200e",
+    "files/template.form-content/form-content/XftFormContent.tsx": "0c5774d7b3a405b6ee92e4b6ecd042a9ca83ae3f6e3d7789b1ec25f52d11b804",
+    "files/template.governed-table/governed-table/XftGovernedTable.css": "eeb1a2830a1f42417e4eba5d6377ee8d7df699c2d5386d5618c7a75b457fb53b",
+    "files/template.governed-table/governed-table/XftGovernedTable.tsx": "b98bedace039560003938d4f572afc8471c9b061fec8a6774e527c8a0a20ab47",
+    "files/template.information-card/information-card/XftInformationCard.css": "8690e743222dc3dcf03c934eaaa525c9b12a259e148382075fa79b57bc812c7b",
+    "files/template.information-card/information-card/XftInformationCard.tsx": "4dc705892676bac0c557b5f5dce1529c6306f0235bb8de55b3d008fa5f9956fe",
+    "files/template.section-anchor/section-anchor/XftSectionAnchor.css": "9be9e5b23aacfa9551695932e412efc5fcabe18ac5cb7cf3aed9eb0f5b3522e2",
+    "files/template.section-anchor/section-anchor/XftSectionAnchor.tsx": "864b388697f04e4ae5c019e25bd3245b38ed752606263d83743daec8097c42cc",
+    "files/template.section-heading/section-heading/XftSectionHeading.css": "1393174bdb3602039cc6a10b73e76e1750e05021d34a17be1a7ad4da6b30dca8",
+    "files/template.section-heading/section-heading/XftSectionHeading.tsx": "65090a7758d4a0fffcb5370a34f8825998cfba10ec327082c05b1c47a410e641",
+    "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.css": "abb37963ab0fe84277ae0e7d05e86b351a9b197a34a6adb07ab7da6d2f53098c",
+    "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.tsx": "47cc7b6e58371ee0c0699baf568c3fa478e91e96491ddf466cb65b9194170a1e",
+    "files/template.settings-page/XftSettingsPage.css": "22664508666017f92d6579908324b7df6e3be9466e3c898a5017945a7fded3e1",
+    "files/template.settings-page/XftSettingsPage.tsx": "8cafc2c140c81691ad21e236b8e70097fcbec1ff4b819d61946e8878465383f5",
+    "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.css": "d3b4879c999d9c32a562c9edb9cd996b07f5910c8a37f18fecf0b65a84fae74b",
+    "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.tsx": "cf1a2764d755d1f73bbdce74c7b0955e3dfe33a596067c90c0a62012afd8bfbd",
+    "files/template.summary-info/summary-info/XftSummaryInfo.css": "28e5786af8356c1b06947cb4ac06c1e1a942434984213e005643476e7d412871",
+    "files/template.summary-info/summary-info/XftSummaryInfo.tsx": "ebd2f61a0e2b54304785f058c7f9ab8658912ffc9807d3a33a23daed5e005761",
+    "files/template.table-action-bar/table-action-bar/XftTableActionBar.css": "1db32af273858b60de0f6e1ecdbeba237dec0a9e0019040cd061647ae21dafc5",
+    "files/template.table-action-bar/table-action-bar/XftTableActionBar.tsx": "79a7c765ff5b3824c56a018937059d939d2cb12b1639e7bfa6f027be95994611",
+    "public/import-map.json": "9075bf5c938674a9df85d5948c0522d0c8eabeef01489740e6a6faad3ce41cba",
+    "records/knowledge.action-availability-by-constraint.json": "f2f246de733f891c0cd7bde3e3e60969c23748b1e3a3ca70b6d768d0fab69b4a",
+    "records/knowledge.action-emphasis-by-intent.json": "a30e6810c1306ae4a8cbd79026bb5d27e103abf2ca875ee444fd6c103d8aab11",
+    "records/knowledge.scroll-ownership-by-page-type.json": "77c774721c89b9e07e2cf5adca1f8749d605ed4859e796d8e37e9db46901e085",
+    "records/pattern.xft-design-foundations.json": "2447cb7a363d7ec77069b9ccdc2d3e5087c2c514ce4cca70429ba0568c889c33",
+    "records/pattern.xft-page-action-organization.json": "7ef63256577ba2e998253e1442166e70ba9afc5496af56640d7dde64a66e44ea",
+    "records/pattern.xft-page-template-selection.json": "7ad656c4e04e7ba0e8960e86d9b448dd2d922ae4e55ff110004e4088e3e81038",
+    "records/pattern.xft-selection-backfill.json": "8cf14ca2ab8c07180bb978fdb29eea85e8be9e17a111a502564898c89ab14054",
+    "records/template.application-frame.json": "658ee9b64b66c9d3a47dcc0bd271c90c332778c486dad8ece4b3993936a5887f",
+    "records/template.approval-agree-dialog.json": "a4466c01c4b4c8756309ec15c86db2f92d90cf07f78334447c7431918674d195",
+    "records/template.content-action-bar.json": "d22cbb22da8a726267ead6b0d0e91d1b5e2a40952cec294c99407468ecd2e626",
+    "records/template.context-selector-panel.json": "b68748ea4339b9440db34349284ebdcd33a3f85037ba97769241c879142eed0c",
+    "records/template.drag-sortable-list.json": "9864fccaadd647a3d4b7ec892979f9545a54f8e513b25f39918274ffccc81a3b",
+    "records/template.filter-bar.json": "dc269200cd1f90d38c1b6a7a707f6e6644ff6f2c3e92e960178d6bcdbc265b33",
+    "records/template.filter-workbench.json": "d4e0ccef9c0fbe83a012a8f7b738554bda8eeb5bbae4d6efdabce9d61995e0a4",
+    "records/template.form-content.json": "ce3bd4240768e535328db40b203b2eed0094198cffe2e2dcfdf192ae68e5fcac",
+    "records/template.governed-table.json": "b8befce68be2984e0af834cd53b17eaf665708036a01d54c847f1a86ab55473e",
+    "records/template.information-card.json": "4a4e85e3ad31ef3ef11d2f81e7666da6951276e67b1da129de4b90d9aa0e4a83",
+    "records/template.section-anchor.json": "3fdbdbe481a37825fff97bbc58aa642567db691ca8ed731274fdc894b86601ec",
+    "records/template.section-heading.json": "dd0f3ed1bbd51fe78f6f8c75ca8af4010ea5f839dc50a2ede328036c692061f6",
+    "records/template.selection-pagination-bar.json": "93a7cd9734b29d86b1953a6ef5600d3932f4e30fe38d7c4b728a8cb6c44d8d3a",
+    "records/template.settings-page.json": "1735dc546faa125c4ae685cb8adc53b32284881c0582d5d950747af1de3fdedc",
+    "records/template.statistic-card-grid.json": "905e563da8262ade28c2393fecfa6a8602f80ff8dd829fa18ef6d104150a5382",
+    "records/template.summary-info.json": "7f8d10bc8ae3f33e84895b5af178448762b9932007fc3e6936e0f9906e26c73e",
+    "records/template.table-action-bar.json": "b75125ac9c9dcd3487f98bf8daa9f8e52af4ddd453d95bbd7f57fa221a6482bd",
+    "resolver-report.json": "bb1787b44df653972a25e50cfda1f20f6b4bd1ff35e958260b4d2011d8d165f0",
+    "ui-config/components.css": "e39fe610638a48ab1478397c7c1e10a520a0e98d1a6cd33082d990e1ffb5914e"
+  },
+  "generatorVersion": "1.3.2",
+  "kind": "ux-proto-resolved-assets",
+  "manifestBindingRecords": {
+    "entrypoints": [
+      {
+        "assetLink": "pattern.xft-design-foundations",
+        "index": 0,
+        "load": "full",
+        "pointer": "/entrypoints/0",
+        "rawBinding": {
+          "assetLink": "pattern.xft-design-foundations",
+          "load": "full"
+        },
+        "resolutionEligible": true,
+        "stage": "entrypoints",
+        "valid": true
+      },
+      {
+        "assetLink": "pattern.xft-page-template-selection",
+        "index": 1,
+        "load": "full",
+        "pointer": "/entrypoints/1",
+        "rawBinding": {
+          "assetLink": "pattern.xft-page-template-selection",
+          "load": "full"
+        },
+        "resolutionEligible": true,
+        "stage": "entrypoints",
+        "valid": true
+      }
+    ],
+    "review": [
+      {
+        "assetLink": "knowledge.scroll-ownership-by-page-type",
+        "index": 0,
+        "load": "full",
+        "pointer": "/review/0",
+        "rawBinding": {
+          "assetLink": "knowledge.scroll-ownership-by-page-type",
+          "load": "full"
+        },
+        "resolutionEligible": true,
+        "stage": "review",
+        "valid": true
+      },
+      {
+        "assetLink": "knowledge.action-emphasis-by-intent",
+        "index": 1,
+        "load": "full",
+        "pointer": "/review/1",
+        "rawBinding": {
+          "assetLink": "knowledge.action-emphasis-by-intent",
+          "load": "full"
+        },
+        "resolutionEligible": true,
+        "stage": "review",
+        "valid": true
+      },
+      {
+        "assetLink": "knowledge.action-availability-by-constraint",
+        "index": 2,
+        "load": "full",
+        "pointer": "/review/2",
+        "rawBinding": {
+          "assetLink": "knowledge.action-availability-by-constraint",
+          "load": "full"
+        },
+        "resolutionEligible": true,
+        "stage": "review",
+        "valid": true
+      }
+    ]
+  },
+  "pack": {
+    "digest": "8c535621088e005f564246ac4f52be08cbb2d9826a2ba07ca626ec37a6ec60d5",
+    "id": "xft",
+    "version": "2.7.1"
+  },
+  "projection": [
+    {
+      "load": null,
+      "pointer": "/content/独立任务入口/选择与回填/采用模式/assetLink",
+      "source": "pattern.xft-design-foundations",
+      "target": "pattern.xft-selection-backfill",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/页面操作/采用模式/assetLink",
+      "source": "pattern.xft-design-foundations",
+      "target": "pattern.xft-page-action-organization",
+      "type": "assetLink"
+    },
+    {
+      "load": "full",
+      "pointer": "/content/模板选用/0/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.application-frame",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/1/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.settings-page",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/10/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.section-heading",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/11/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.selection-pagination-bar",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/12/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.statistic-card-grid",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/13/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.summary-info",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/14/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.table-action-bar",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/15/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.context-selector-panel",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/16/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.form-content",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/2/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.approval-agree-dialog",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/3/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.content-action-bar",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/4/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.drag-sortable-list",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/5/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.filter-bar",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/6/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.filter-workbench",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/7/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.governed-table",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/8/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.information-card",
+      "type": "assetLink"
+    },
+    {
+      "load": null,
+      "pointer": "/content/模板选用/9/模板/assetLink",
+      "source": "pattern.xft-page-template-selection",
+      "target": "template.section-anchor",
+      "type": "assetLink"
+    }
+  ],
+  "publicSurface": [],
+  "records": [
+    {
+      "abstract": "根据限制原因确定操作可用性状态：隐藏、禁用、加载中或二次确认。",
+      "assetLinks": [],
+      "content": {
+        "决策规则": {
+          "权限限制": [
+            "用户无法获得权限时隐藏操作。",
+            "权限可以申请或满足时保留操作入口，禁用并说明获得方式。"
+          ],
+          "条件限制": [
+            "缺少前置条件的操作默认禁用并说明缺少什么；需求明确指定为点击后校验的操作时保持可点击，校验失败时定位问题。"
+          ],
+          "状态限制": [
+            "短时处理中使用 loading 并防止重复提交。",
+            "流程或数据状态持续限制操作时使用禁用或只读，并说明当前状态。 中止、重试或修复等入口以业务和后端实际支持为前提。"
+          ],
+          "风险限制": [
+            "操作允许执行但存在不可逆或数据损失后果时，保持可点击并在点击后弹出二次确认说明具体风险；不使用禁用阻止此类操作。"
+          ]
+        },
+        "判断问题": "当前操作为什么不能立即执行，用户是否能够解除限制？",
+        "必须": [
+          "限制原因无法从操作标签或页面上下文中直接推断时，在禁用状态旁说明原因和恢复方式。",
+          "限制解除后及时恢复操作，不保留失效的禁用状态。"
+        ],
+        "禁止": [
+          "用同一种禁用方式处理权限、状态、条件和风险。",
+          "隐藏用户完成当前任务不可缺少且能够获得的操作。"
+        ],
+        "责任边界": "页面提供限制原因和恢复策略；组件执行 disabled、loading 等基础状态呈现。"
+      },
+      "files": [],
+      "guidanceDigest": "314eb5d60039940b6c1ad25089b934ef44a7e316af0e6770c0d843c51b8841be",
+      "id": "knowledge.action-availability-by-constraint",
+      "identityDigest": "c9a9e3cb82683f792189634d3fc2e29aebbd03221fb083e0a0ced1a0a8e95acc",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Knowledge",
+      "recordDigest": "01009e827324cff15c52aef9c83b88577cd65300394a4eadf022e1953f623174",
+      "semanticDigest": "9c81ffce93da1b73ddb70b9c4a1bf684a04547c598089a7cbc20f25ba1131ea6",
+      "title": "按限制原因确定操作可用性"
+    },
+    {
+      "abstract": "根据当前任务意图和操作后果确定主操作和辅助操作的强调级别。",
+      "assetLinks": [],
+      "content": {
+        "判断规则": [
+          "需求明确指定主操作时，将该操作设为主操作，同一操作语境最多一个；需求未指定时不设主操作，所有操作使用次操作样式。",
+          "独立弹窗、抽屉等具有明确视觉边界的容器可拥有独立主操作；页面级辅助操作区不构成独立操作语境。",
+          "次操作使用默认按钮样式；弱操作使用文字链接样式或收入更多菜单。"
+        ],
+        "判断问题": "当前可见操作中，哪一个最能推进此刻的主要意图？",
+        "禁止": [
+          "不根据操作动词自动推断强调级别；需求未指定主次时所有操作使用次操作样式。",
+          "将当前主操作收进更多菜单，或仅因添加图标提高操作权重。"
+        ]
+      },
+      "files": [],
+      "guidanceDigest": "775754d4f502dab848c0267207d596b766c5f9f2e43481153ada8e2ed4a862f0",
+      "id": "knowledge.action-emphasis-by-intent",
+      "identityDigest": "16f36bf7b6c9c5b445e5b16d885f2287a8b037f0d06c724c53fa824ff24128cd",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Knowledge",
+      "recordDigest": "b64e33bbff9c35501af035897608b8e70e3c0d4935e31aa8e52a62e4e256a960",
+      "semanticDigest": "3f13cecc53faf78f3c7f0b3de6fc90ca847dcf22628e04649d9e5e9b6ad27de8",
+      "title": "按当前意图确定操作强调"
+    },
+    {
+      "abstract": "根据连续内容页与数据操作页的任务事实，检查唯一主要纵向滚动容器及持续可用区域的位置。",
+      "assetLinks": [],
+      "content": {
+        "先判断页面类型": [
+          "页面是否以长表单、详情、配置或说明的连续阅读和处理为主；满足时按连续内容页检查。",
+          "页面是否以表格、列表、树、日志或时间线等高容量可变数据为主要操作对象，并要求汇总、筛选、操作或分页持续可用；同时满足时按数据操作页检查。",
+          "无法根据任务事实确定时按连续内容页检查，不允许为了局部固定效果自行增加内部主要纵向滚动。"
+        ],
+        "冲突检查": [
+          "页面没有同时出现内容区滚动条和内部主要数据区滚动条。",
+          "多个高容量区域并存时已经确定唯一主数据区，其他同级区域没有竞争主要纵向滚动。"
+        ],
+        "局部表格与页面协作": [
+          "主要数据任务使用表格自身唯一纵向滚动与表头定位，父级提供 min-height:0 的可收缩高度链；控制和分页在数据滚动之外。",
+          "连续内容中表格使用 page 滚动模式，不建立第二个主要纵向滚动容器。",
+          "表格模块负责操作列宽与间距、单元格溢出和横向滚动；页面不重建同样行为。",
+          "设置页保留自身既有滚动，锚点使用该实际滚动容器。"
+        ],
+        "数据操作页检查": [
+          "高容量数据区是唯一主要纵向滚动容器，Application Frame 内容区不同时滚动。",
+          "页面标题、汇总、筛选、批量操作和分页位于数据滚动区之外。",
+          "只有数据内容进入滚动区，没有把整页容器或数据区外的控制区域一起放入滚动。",
+          "页面直接采用 Ant Design Table 时，选择 AntD scroll.y 或唯一外层纵向滚动容器承担主要纵向滚动，不同时启用两者。"
+        ],
+        "连续内容页检查": [
+          "Application Frame 内容区是唯一主要纵向滚动容器。",
+          "页面内部没有表格外壳、透明容器或其他区域再次承担主要纵向滚动。",
+          "页面内容按阅读或填写顺序随内容区连续滚动。"
+        ]
+      },
+      "files": [],
+      "guidanceDigest": "a901afee161dcd5e584155bef1def860cb64bbad58c4241e4783beb8703bdb45",
+      "id": "knowledge.scroll-ownership-by-page-type",
+      "identityDigest": "1d5b73b465d2add3480ca39b622e0119ba3399481926d3b0fdf82966a6b55a49",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Knowledge",
+      "recordDigest": "210248653339fea607cc600ea2faaa98d17e4e9ddd415c73e02ee3e9efc57cd5",
+      "semanticDigest": "0d26c533534120079ce5a998148990215a75cc09a4cafcd1a8d51503100dd47d",
+      "title": "按页面类型检查滚动归属"
+    },
+    {
+      "abstract": "定义所有 XFT 页面共同遵守的结构规则，覆盖内容分组、操作、状态和反馈。",
+      "assetLinks": [
+        {
+          "load": null,
+          "pointer": "/content/独立任务入口/选择与回填/采用模式/assetLink",
+          "source": "pattern.xft-design-foundations",
+          "target": "pattern.xft-selection-backfill"
+        },
+        {
+          "load": null,
+          "pointer": "/content/页面操作/采用模式/assetLink",
+          "source": "pattern.xft-design-foundations",
+          "target": "pattern.xft-page-action-organization"
+        }
+      ],
+      "content": {
+        "信息提示与反馈": {
+          "规则": [
+            "控件已经表达的状态不另加 Tag 或提示。",
+            "普通说明、默认行为和统计口径放在相关字段的说明或邻近辅助文案。",
+            "只有需求要求跨对象快速识别状态时才用 Tag。",
+            "校验失败或缺失项在对应字段或设置项附近展示原因和下一步。",
+            "页面和弹窗默认不显示 Alert。当前页面或弹窗的任务失败、因权限无法继续，或需求明确要求在继续操作前提示风险时，必须在该页面或弹窗的内容区顶部显示 Alert，并说明原因、影响范围和下一步。",
+            "操作成功后，结果已在当前界面可见时只更新原区域，否则提示一次。初始正常状态不显示成功提示。"
+          ]
+        },
+        "内容分组": {
+          "规则": [
+            "同一信息组的内容默认放在同一个透明布局容器中，由该容器统一定义组内排列、对齐和间距。分组容器不设置背景色、边框或阴影。各组通过标题和组间留白区分，不添加横向分割线。仅当需求明确要求独立容器，且明确该组具有独立状态、独立操作、权限边界或风险边界时，才使用 Card。组件内部的结构线由对应组件资产负责。"
+          ]
+        },
+        "独立任务入口": {
+          "选择与回填": {
+            "条件": "需求明确要求在独立界面完成选择，候选项由业务动态生成或可由用户维护，需求明确要求在独立界面搜索、筛选、分页或树形浏览，或需求明确要求在确认本次选择后才更新当前字段或区域时，必须先展开「选择与回填」，再设计选择交互。",
+            "采用模式": {
+              "assetLink": "pattern.xft-selection-backfill"
+            }
+          }
+        },
+        "生效范围": [
+          "生成 XFT 页面或窗口时，必须遵守本模式。"
+        ],
+        "页面操作": {
+          "规则": [
+            "需求明确要求提供用户操作入口时，必须先展开「页面操作组织」，再确定操作的放置位置。"
+          ],
+          "采用模式": {
+            "assetLink": "pattern.xft-page-action-organization"
+          }
+        },
+        "页面级上下文": {
+          "规则": [
+            "XFT 工作区页面默认不显示独立页面大标题。仅当需求明确要求在页面正文顶部显示标题时，才显示。"
+          ]
+        }
+      },
+      "files": [],
+      "guidanceDigest": "fff68adba06b3ee5d5e95daf13a961534c73151006347ef203469eb936dd13b5",
+      "id": "pattern.xft-design-foundations",
+      "identityDigest": "7c5eee39996a3f60eab4d22d450d1d43e32d80954d713b8862174c1d5f776166",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Pattern",
+      "recordDigest": "4b804b11711cab35e61e018088dde13a60148b2d85560931e4b5987ccc280c1f",
+      "semanticDigest": "b135b8ef4c06d6c98e4faab144ccff38780893e7fb4a77dab6473be151ea2e9e",
+      "title": "XFT 设计基础"
+    },
+    {
+      "abstract": "按操作作用范围确定操作区域，并规定必须外露的操作。",
+      "assetLinks": [],
+      "content": {
+        "区域规则": {
+          "内容操作区": "只作用于字段、区块或单条记录的操作，放在对应对象的操作区。单条记录的操作放在该行。",
+          "完成型操作区": "提交当前页面或窗口任务的整体结果时，放在该任务的完成型操作区。",
+          "数据操作区": "作用于当前结果集或所选记录集合的操作，放在数据操作区。",
+          "页面操作区": "其余作用于整个页面或当前对象的操作，放在页面操作区。"
+        },
+        "外露规则": [
+          "需求明确指定的主操作保持外露。",
+          "当前步骤的确认、取消和错误恢复入口保持外露。"
+        ],
+        "完成型操作承载": [
+          "独立页面由页面布局承载完成型操作。",
+          "弹窗和抽屉的完成型操作放在原生 footer。"
+        ],
+        "归属顺序": [
+          "每项操作按以下区域规则依次匹配，命中第一条即确定位置。"
+        ]
+      },
+      "files": [],
+      "guidanceDigest": "246403d08fdb236473e947427da5ba0ffc4b10be0f929df6c098102b69a625ef",
+      "id": "pattern.xft-page-action-organization",
+      "identityDigest": "8c9bb995a9cb70a313ea87d123b9dba760de231f935f1a0e3ef246609eb65a8a",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Pattern",
+      "recordDigest": "e327fa0f68c6292e3e5e206b4ba3d0a147e9799c8480cbd67032f3b394e0eb13",
+      "semanticDigest": "26ae5fbfdb272fd766a027dab352c355137cdcb06cf328207ee0cb976e9ad941",
+      "title": "XFT 页面操作组织"
+    },
+    {
+      "abstract": "依据需求中明确的使用条件选用 XFT 模板，不从模板反推页面应包含的模块。",
+      "assetLinks": [
+        {
+          "load": "full",
+          "pointer": "/content/模板选用/0/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.application-frame"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/1/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.settings-page"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/10/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.section-heading"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/11/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.selection-pagination-bar"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/12/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.statistic-card-grid"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/13/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.summary-info"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/14/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.table-action-bar"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/15/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.context-selector-panel"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/16/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.form-content"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/2/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.approval-agree-dialog"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/3/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.content-action-bar"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/4/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.drag-sortable-list"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/5/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.filter-bar"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/6/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.filter-workbench"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/7/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.governed-table"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/8/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.information-card"
+        },
+        {
+          "load": null,
+          "pointer": "/content/模板选用/9/模板/assetLink",
+          "source": "pattern.xft-page-template-selection",
+          "target": "template.section-anchor"
+        }
+      ],
+      "content": {
+        "模板选用": [
+          {
+            "标题": "XFT 应用框架",
+            "模板": {
+              "assetLink": "template.application-frame",
+              "load": "full"
+            },
+            "选用规则": [
+              "所有 XFT 工作区页面都使用应用框架。工作区内打开的弹窗、抽屉和局部模块沿用所在页面的框架。"
+            ]
+          },
+          {
+            "标题": "XFT 设置页",
+            "模板": {
+              "assetLink": "template.settings-page"
+            },
+            "选用规则": [
+              "需求明确有至少两个具名设置组，且各设置项修改后即时生效时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 审批同意弹窗",
+            "模板": {
+              "assetLink": "template.approval-agree-dialog"
+            },
+            "选用规则": [
+              "用户执行审批同意，且需求要求在弹窗内填写同意意见或补充材料时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 内容操作栏",
+            "模板": {
+              "assetLink": "template.content-action-bar"
+            },
+            "选用规则": [
+              "需求明确需要在独立操作区放置作用于整个当前对象的操作，或用于完成当前任务的保存、提交、确认时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 拖拽排序列表",
+            "模板": {
+              "assetLink": "template.drag-sortable-list"
+            },
+            "选用规则": [
+              "用户需要手动调整一组条目的先后顺序时使用。需求明确要求直接在表格内调整顺序时，按表格内排序处理。"
+            ]
+          },
+          {
+            "标题": "XFT 筛选栏",
+            "模板": {
+              "assetLink": "template.filter-bar"
+            },
+            "选用规则": [
+              "筛选条件平铺在页面上、统一点击查询后才应用，且不需要筛选面板、表头筛选或常用方案时，必须使用 XFT 筛选栏。"
+            ]
+          },
+          {
+            "标题": "XFT 筛选工作区",
+            "模板": {
+              "assetLink": "template.filter-workbench"
+            },
+            "选用规则": [
+              "需求明确需要在面板内设置查询条件、在表头筛选列、选用常用筛选方案，或通过顶部快捷条件直接更新结果时，必须使用 XFT 筛选工作区。"
+            ]
+          },
+          {
+            "标题": "XFT 受管表格",
+            "模板": {
+              "assetLink": "template.governed-table"
+            },
+            "选用规则": [
+              "只要需求明确需要用表格承载内容，就使用 XFT Pack 的受管表格，不直接使用 Ant Design 的 Table。"
+            ]
+          },
+          {
+            "标题": "XFT 信息卡片",
+            "模板": {
+              "assetLink": "template.information-card"
+            },
+            "选用规则": [
+              "需求明确以卡片列表或卡片视图逐条展示记录，且每张卡片对应一个可独立查看的对象时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 分区锚点",
+            "模板": {
+              "assetLink": "template.section-anchor"
+            },
+            "选用规则": [
+              "用户需要在同一份内容中按具名分区跳转定位时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 分组标题",
+            "模板": {
+              "assetLink": "template.section-heading"
+            },
+            "选用规则": [
+              "表单或详情中的一组字段需要用标题标识其分组时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 选择统计与分页栏",
+            "模板": {
+              "assetLink": "template.selection-pagination-bar"
+            },
+            "选用规则": [
+              "当前列表需要分页，或需要持续展示已选记录数量时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 统计卡片区",
+            "模板": {
+              "assetLink": "template.statistic-card-grid"
+            },
+            "选用规则": [
+              "同一结果集按类别展示统计值，且用户可按这些类别切换结果时使用。仅切换不同内容视图用标签页，仅切换同一内容的互斥显示模式用分段选择器。"
+            ]
+          },
+          {
+            "标题": "XFT 汇总信息",
+            "模板": {
+              "assetLink": "template.summary-info"
+            },
+            "选用规则": [
+              "需求明确要求把当前对象或范围的概况集中呈现为独立区块，并给出了具体摘要内容时使用。只有页面标题、单个状态字段，或正文已经展示的字段时，不新增汇总区。"
+            ]
+          },
+          {
+            "标题": "XFT 表格操作栏",
+            "模板": {
+              "assetLink": "template.table-action-bar"
+            },
+            "选用规则": [
+              "需求明确需要对当前表格结果集执行新建、导入、导出、批量处理或刷新，或调整整张表格的排序、显示列时，必须使用 XFT 表格操作栏。"
+            ]
+          },
+          {
+            "标题": "XFT 范围选择面板",
+            "模板": {
+              "assetLink": "template.context-selector-panel"
+            },
+            "选用规则": [
+              "用户需要从独立面板选择业务范围，且选中范围决定相邻区域展示哪一批数据时使用。"
+            ]
+          },
+          {
+            "标题": "XFT 表单内容",
+            "模板": {
+              "assetLink": "template.form-content"
+            },
+            "选用规则": [
+              "用户需要填写或编辑一组字段，并作为同一次任务进行校验、保存或提交时使用。"
+            ]
+          }
+        ]
+      },
+      "files": [],
+      "guidanceDigest": "2bd3af545c0242310208cc792fd12f1e158667777612299a2c39ba4e4e0a4bc5",
+      "id": "pattern.xft-page-template-selection",
+      "identityDigest": "5175f23407ad435ba41d6afc524500fbd526a4e4e446b6b93445acc55b50ee9a",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Pattern",
+      "recordDigest": "f8a04b6098bd12ca66a1c6492e97c625e1b49c88ce67011f9b1196aa6b3b7480",
+      "semanticDigest": "f6e9323c9df61f9403beb14bf048c68b2cdd7a440f3c85746249b07ef31c6aec",
+      "title": "xft 模板选用指南"
+    },
+    {
+      "abstract": "规定选择任务的承载方式、临时值和确认回填行为。",
+      "assetLinks": [],
+      "content": {
+        "候选组织": [
+          "候选有父子层级时使用树，平级候选使用列表。",
+          "单选或多选按需求指定。需求未明确时，先确认选择数量规则。",
+          "搜索、筛选、分页、已选摘要和总数仅在需求明确要求时提供。"
+        ],
+        "独立选择的页面边界": [
+          "当前页面展示已回填值和进入选择任务的入口，候选集合放在独立选择界面。"
+        ],
+        "确认回填": [
+          "使用独立选择界面，或需求明确要求确认本次选择后才更新当前字段或区域时，执行以下规则。",
+          "每次进入选择任务，用当前已回填值初始化临时值。",
+          "选择和取消选择只修改临时值。确认本次选择时，将临时值一次性写回当前字段或区域。",
+          "取消或关闭选择任务时，丢弃临时值，保留当前已回填值。"
+        ],
+        "选择承载": [
+          "默认在当前界面选择。需求明确指定承载方式时，按需求执行。",
+          "需求未指定承载方式，且候选项由业务动态生成或可由用户维护，或需求明确要求独立搜索、筛选、分页或树形浏览时，使用独立选择界面。",
+          "独立选择界面沿用产品已有承载规则。产品规则未指定时，先确认使用页面、弹窗还是抽屉。"
+        ]
+      },
+      "files": [],
+      "guidanceDigest": "528e7abdaa11b61dde6d5f1359b26db23ab65d913b0b04ca1fa3b258254e9f36",
+      "id": "pattern.xft-selection-backfill",
+      "identityDigest": "99e63641cfd57bd56a355789d54e38e18f578443dbaceb045a85a8760d0dd088",
+      "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+      "kind": "Pattern",
+      "recordDigest": "0e8f340b0c97792f8035afab2c8c44fbf0a4132b7a734e94be0ee0a097e5703e",
+      "semanticDigest": "d27558bb68aedb34779fdef6d9d264ddd5116eedacb092e137f82008ac3b169d",
+      "title": "XFT 选择与回填交互"
+    },
+    {
+      "abstract": "提供顶部导航、工作区标签、统一的工作内容区和下级页面返回栏。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "topBar",
+              "type": "prop"
+            },
+            "id": "top-bar",
+            "purpose": "默认省略 topBar 或使用 variant=global。页面明确属于智能记账应用时传 smart-accounting；明确属于其他下级应用时传 sub-application。两个下级应用变体均通过 brandName 传入实际应用名称。仅 sub-application 支持一级菜单，默认隐藏；需求明确要求显示时传 showPrimaryNav=true，并由页面提供菜单项、当前项和切换回调。globalActions 仅在 global 变体显示；框架级 globalActions 优先于 topBar.globalActions。"
+          },
+          {
+            "binding": {
+              "name": "children",
+              "type": "prop"
+            },
+            "id": "workspace-content",
+            "purpose": "传入工作区正文。框架提供唯一白色工作面，正文保持透明，不再叠加整页白底。普通页面沿用框架提供的正文内边距，不重复添加同一层内边距。设置页或需求明确要求自行管理完整正文布局时，由页面负责正文内边距，并在正文根标记 data-xft-workspace-layout=\"managed\"。框架也识别正文根下一层的标记。贴边区域、正文和底部操作由页面组织。底部操作放在正文内边距之外。工作区默认由框架承担纵向滚动。由主数据区承担唯一纵向滚动时，在正文根标记 data-xft-scroll-owner=\"template\"，并提供可收缩的高度链。工作区默认不显示返回栏。内容区操作进入同一工作区标签内的下级页面时，通过 children 的渲染函数获取 openSubpage，并在点击回调中传入点击事件和下级正文。框架使用该操作的显示文案作为标题，点击返回时恢复上一级正文。无可见文案的入口提供 aria-label。"
+          },
+          {
+            "binding": {
+              "name": "workspaceTabBar",
+              "type": "prop"
+            },
+            "id": "workspace-tabs",
+            "purpose": "传入工作区标签栏的状态和回调。tabs 至少保留一项，activeKey 对应当前标签。通过 onActivate、onClose、onNavigate 和 onCloseAll 处理切换、关闭、相邻导航和关闭全部。"
+          },
+          {
+            "binding": {
+              "name": "onSideNavigationChange",
+              "type": "prop"
+            },
+            "id": "side-navigation-change",
+            "purpose": "侧栏菜单点击时返回菜单项 key。页面据此同步 activeSideNavigationKey，并打开或激活对应工作区标签。菜单项表示稳定的模块入口，页面内的视图切换留在正文。"
+          }
+        ],
+        "mainExport": "XftApplicationFrame"
+      },
+      "entry": "XftApplicationFrame.tsx",
+      "files": [
+        {
+          "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.assets.ts",
+          "sha256": "472b6f815e6c4aa16574e1cf4f88138a0daafafd8efe02ca3d8054cca4842384"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.css",
+          "sha256": "4e7aa376f90a90bc2409ff08648f40a27dcd2b08e1ce49f48d8c0fd2706e73e1"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.tsx",
+          "sha256": "d4d49e54e3bf33d49dea76ee6f624e33650bee7d208429160b15e9717a3da77f"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftTopBar.css",
+          "sha256": "2941ecd21a478ba983fbb2ded0939cca1252a22600abc1e509147db976cdc843"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftTopBar.tsx",
+          "sha256": "a21de169a1a6ed090f937035d74318bf0c2791d6c5a729e2535bd945d9760338"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftWorkspaceTabBar.css",
+          "sha256": "cfa1bd7bd0f800b47e5b6cdc8cf30643fd4a8f6552efab976ae211ef28222e3f"
+        },
+        {
+          "path": "files/template.application-frame/application-frame/XftWorkspaceTabBar.tsx",
+          "sha256": "2d32813d272c0a60ee6a92613375e36f968ac933b3954efe1f6537b45f7b3e21"
+        },
+        {
+          "path": "files/template.application-frame/XftApplicationFrame.css",
+          "sha256": "689dd47254852904f317716a70cd80adb77249a0269f97946fb6bc8a3e726a3c"
+        },
+        {
+          "path": "files/template.application-frame/XftApplicationFrame.tsx",
+          "sha256": "0f5ed833016cd6f8aa27e9547976eb93ad72350e1888c04725da0ed19caed627"
+        }
+      ],
+      "guidanceDigest": "ca340554b39b656dc4aad1a5af0a3235b249536c9b3fe43f069dafd3f024a296",
+      "id": "template.application-frame",
+      "identityDigest": "720d4abae564fc97292b6abd0e9498c2a57369f568365cba55fe575fe41c4b13",
+      "implementationDigest": "e3f745b0972d66d9646ef028fc9b134be282bee75f839c54c5aa53b2689a9507",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftApplicationFrameProps",
+            "XftFrameItem"
+          ],
+          "values": [
+            "XftApplicationFrame"
+          ]
+        },
+        "mainExport": "XftApplicationFrame",
+        "namedTypes": [
+          {
+            "name": "XftFrameItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "name": "XftSubapplicationTopBarAction",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "icon",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "size",
+                "required": false,
+                "type": "24 | 28"
+              },
+              {
+                "default": null,
+                "name": "containerWidth",
+                "required": false,
+                "type": "24 | 28 | 32"
+              }
+            ]
+          },
+          {
+            "name": "XftSubapplicationTopBarNavItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "name": "XftTopBarProps",
+            "properties": [
+              {
+                "default": null,
+                "name": "variant",
+                "required": false,
+                "type": "\"global\" | \"smart-accounting\" | \"sub-application\""
+              },
+              {
+                "default": null,
+                "name": "brandName",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "organizationName",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "organizationLogo",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "accountSetName",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "accountingPeriod",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "userName",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "avatarUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "showPrimaryNav",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "primaryNavItems",
+                "required": false,
+                "type": "XftSubapplicationTopBarNavItem[]"
+              },
+              {
+                "default": null,
+                "name": "activePrimaryNavKey",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "utilityActions",
+                "required": false,
+                "type": "XftSubapplicationTopBarAction[]"
+              },
+              {
+                "default": null,
+                "name": "searchPlaceholder",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "onSwitchOrganization",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "onSwitchAccountSet",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "onAccountingMonthAction",
+                "required": false,
+                "type": "(action: \"previous\" | \"current\" | \"next\") => void"
+              },
+              {
+                "default": null,
+                "name": "onPrimaryNavChange",
+                "required": false,
+                "type": "(key: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onAllAppsClick",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "onSearchChange",
+                "required": false,
+                "type": "(value: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onUtilityAction",
+                "required": false,
+                "type": "(key: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onGuideClick",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "onNoticeClick",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "onUserClick",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "globalActions",
+                "required": false,
+                "type": "ReactNode"
+              }
+            ]
+          },
+          {
+            "name": "XftWorkspaceNavigation",
+            "properties": [
+              {
+                "default": null,
+                "name": "openSubpage",
+                "required": true,
+                "type": "(action: {currentTarget: HTMLElement}, content: ReactNode) => void"
+              }
+            ]
+          },
+          {
+            "name": "XftWorkspaceTab",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "closable",
+                "required": false,
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "name": "XftWorkspaceTabBarProps",
+            "properties": [
+              {
+                "default": null,
+                "name": "tabs",
+                "required": true,
+                "type": "XftWorkspaceTab[]"
+              },
+              {
+                "default": null,
+                "name": "activeKey",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "onActivate",
+                "required": true,
+                "type": "(key: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onClose",
+                "required": true,
+                "type": "(key: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onNavigate",
+                "required": true,
+                "type": "(direction: - 1 | 1) => void"
+              },
+              {
+                "default": null,
+                "name": "onCloseAll",
+                "required": true,
+                "type": "() => void"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftApplicationFrameProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "sideNavigationItems",
+              "required": true,
+              "type": "XftFrameItem[]"
+            },
+            {
+              "default": null,
+              "name": "activeSideNavigationKey",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "onSideNavigationChange",
+              "required": false,
+              "type": "(key: string) => void"
+            },
+            {
+              "default": null,
+              "name": "globalActions",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "topBar",
+              "required": false,
+              "type": "XftTopBarProps"
+            },
+            {
+              "default": null,
+              "name": "workspaceTabBar",
+              "required": true,
+              "type": "XftWorkspaceTabBarProps"
+            },
+            {
+              "default": null,
+              "name": "children",
+              "required": true,
+              "type": "ReactNode | ((navigation: XftWorkspaceNavigation) => ReactNode)"
+            }
+          ]
+        }
+      },
+      "recordDigest": "928586ab496845d26549cbc1cbcc2e411e68b3751afc24a3d5e2bdbcb8796b60",
+      "semanticDigest": "3519c4a078f0114d83b9735066dcbcd5ba9a084c01c5dfcee4af85e0feab69b2",
+      "templateSourceDigest": "18ea967e3efce4f934216c9cb879dcfcbf8de49736c3eecac3d650b8bfbaa5e0",
+      "title": "XFT 应用框架"
+    },
+    {
+      "abstract": "提供审批意见输入，支持图片、附件、常用语和手写签名。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "open",
+              "type": "prop"
+            },
+            "id": "open",
+            "purpose": "弹窗是否打开，由调用方维护。"
+          },
+          {
+            "binding": {
+              "name": "onCancel",
+              "type": "prop"
+            },
+            "id": "on-cancel",
+            "purpose": "取消或关闭时调用。由调用方更新 open。"
+          },
+          {
+            "binding": {
+              "name": "onAgree",
+              "type": "prop"
+            },
+            "id": "on-agree",
+            "purpose": "必填校验通过后返回去掉首尾空白的意见、图片、附件及可选签名。文件项含 name 和 dataUrl。审批提交、文件持久化和关闭由调用方处理。"
+          },
+          {
+            "binding": {
+              "name": "opinionRequired",
+              "type": "prop"
+            },
+            "id": "opinion-required",
+            "purpose": "默认 false。业务要求填写同意意见时传 true，空白意见会阻止提交。"
+          },
+          {
+            "binding": {
+              "name": "signatureMode",
+              "type": "prop"
+            },
+            "id": "signature-mode",
+            "purpose": "默认 optional，显示签名入口但允许留空。无需显示签名入口时用 hidden，业务要求签名才能提交时用 required。"
+          },
+          {
+            "binding": {
+              "name": "commonPhrases",
+              "type": "prop"
+            },
+            "id": "common-phrases",
+            "purpose": "需要提供常用语时传入字符串列表。选择后追加到意见，未传或为空时常用语入口禁用。"
+          }
+        ],
+        "mainExport": "XftApprovalAgreeDialog"
+      },
+      "entry": "approval-agree-dialog/XftApprovalAgreeDialog.tsx",
+      "files": [
+        {
+          "path": "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.css",
+          "sha256": "98541d416cde5339d3d01611bd6ffe988a4076d575de17578f2f825aec3a87bc"
+        },
+        {
+          "path": "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.tsx",
+          "sha256": "7b72213da1686fb0df9ad64cd20edc8c02657169b4dea15805d714f32d40e8db"
+        }
+      ],
+      "guidanceDigest": "280460480cca78ad183713ee01f2c7c06f1e3fce501d9ed01ae1bf962ea95dea",
+      "id": "template.approval-agree-dialog",
+      "identityDigest": "11048bfe9c17c1fc52001088b47be199400433f96b661f56e812b4c535fbe9c5",
+      "implementationDigest": "8698c727bb51084e79e9acf0db1315efb2cdd04285620513ef2242694ffdaac0",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftApprovalAgreeDialogProps",
+            "XftApprovalAgreeFile",
+            "XftApprovalAgreeSignatureMode",
+            "XftApprovalAgreeValue"
+          ],
+          "values": [
+            "XftApprovalAgreeDialog"
+          ]
+        },
+        "mainExport": "XftApprovalAgreeDialog",
+        "namedTypes": [
+          {
+            "name": "XftApprovalAgreeFile",
+            "properties": [
+              {
+                "default": null,
+                "name": "name",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "dataUrl",
+                "required": true,
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "name": "XftApprovalAgreeValue",
+            "properties": [
+              {
+                "default": null,
+                "name": "opinion",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "images",
+                "required": true,
+                "type": "XftApprovalAgreeFile[]"
+              },
+              {
+                "default": null,
+                "name": "attachments",
+                "required": true,
+                "type": "XftApprovalAgreeFile[]"
+              },
+              {
+                "default": null,
+                "name": "signature",
+                "required": false,
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftApprovalAgreeDialogProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "open",
+              "required": true,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "onCancel",
+              "required": true,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "onAgree",
+              "required": true,
+              "type": "(value: XftApprovalAgreeValue) => void"
+            },
+            {
+              "default": false,
+              "name": "opinionRequired",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": "optional",
+              "name": "signatureMode",
+              "required": false,
+              "type": "XftApprovalAgreeSignatureMode"
+            },
+            {
+              "default": null,
+              "name": "commonPhrases",
+              "required": false,
+              "type": "string[]"
+            }
+          ]
+        }
+      },
+      "recordDigest": "35076699ef20cf02aba7caa26afb36f704dbfbae9827dd0de8222f1d5f38e697",
+      "semanticDigest": "b9b255a7a7cf11ceceac30a4d3a392a98f89f4174715cdd618497a9293640a62",
+      "templateSourceDigest": "e6a73e3b20510038b43966f4cb5e99ce3e0e07e8fef8b9e788c95a2ee4c63907",
+      "title": "XFT 审批同意弹窗"
+    },
+    {
+      "abstract": "集中展示当前对象或任务的操作，支持同时呈现汇总信息。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "children",
+              "type": "prop"
+            },
+            "id": "children",
+            "purpose": "传入当前对象或任务的操作按钮，按钮顺序、权限和回调由页面决定。独立操作区按需求给出的顺序排列。未指定时主操作放在左侧，有汇总时其余操作按需求出现顺序排列。嵌入窗口底部时按从辅助到主要排列，主操作放在右侧。"
+          },
+          {
+            "binding": {
+              "name": "summary",
+              "type": "prop"
+            },
+            "id": "summary",
+            "purpose": "需要在同一操作区展示汇总值时传入。每项提供 key、label 和 value，有单位时传 unit。"
+          },
+          {
+            "binding": {
+              "name": "layout",
+              "type": "prop"
+            },
+            "id": "layout",
+            "purpose": "汇总与操作的排列方式，默认 inline（同行）。需要汇总在上、操作在下时传 stacked。"
+          },
+          {
+            "binding": {
+              "name": "ariaLabel",
+              "type": "prop"
+            },
+            "id": "aria-label",
+            "purpose": "操作区的无障碍名称，默认「内容操作」。"
+          },
+          {
+            "binding": {
+              "name": "align",
+              "type": "prop"
+            },
+            "id": "align",
+            "purpose": "默认 center。普通操作区可用 start、center 或 end 对齐。上下布局时控制整体对齐。汇总与操作同行时由模板分置两侧。"
+          },
+          {
+            "binding": {
+              "name": "embedded",
+              "type": "prop"
+            },
+            "id": "embedded",
+            "purpose": "放入 Drawer 或 Modal 的原生 footer 时传 true，由窗口承载底部布局。默认 false，由操作栏提供粘性底部外壳和贯穿所在容器的顶部边界。"
+          }
+        ],
+        "mainExport": "XftContentActionBar"
+      },
+      "entry": "content-action-bar/XftContentActionBar.tsx",
+      "files": [
+        {
+          "path": "files/template.content-action-bar/content-action-bar/XftContentActionBar.css",
+          "sha256": "dca302cd9b8e47b04cd8c708ef25232cce70054195dcffe783d20ff2f3585399"
+        },
+        {
+          "path": "files/template.content-action-bar/content-action-bar/XftContentActionBar.tsx",
+          "sha256": "f32ac7b4c588152eae208de15e321d6cb650a29ca4355ae036d05cc031e64bd2"
+        }
+      ],
+      "guidanceDigest": "84e4b5c9991e32788f0f4ed9a227ec4e0140a3f8a03817785f8888855dcbf460",
+      "id": "template.content-action-bar",
+      "identityDigest": "ebf5e4b9db89b4744287286d52f77e4e2776468959777434448293a7c656f4f3",
+      "implementationDigest": "2c2a831619663fc22fe9acfab6eecad0a6ab631432a3e3f5010d5a3dd5b440b5",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftContentActionBarProps",
+            "XftContentActionBarSummaryItem"
+          ],
+          "values": [
+            "XftContentActionBar"
+          ]
+        },
+        "mainExport": "XftContentActionBar",
+        "namedTypes": [
+          {
+            "name": "XftContentActionBarSummaryItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "unit",
+                "required": false,
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftContentActionBarProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "children",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "summary",
+              "required": false,
+              "type": "XftContentActionBarSummaryItem[]"
+            },
+            {
+              "default": "inline",
+              "name": "layout",
+              "required": false,
+              "type": "\"inline\" | \"stacked\""
+            },
+            {
+              "default": "内容操作",
+              "name": "ariaLabel",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": "center",
+              "name": "align",
+              "required": false,
+              "type": "\"start\" | \"center\" | \"end\""
+            },
+            {
+              "default": false,
+              "name": "embedded",
+              "required": false,
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "recordDigest": "9aab3a73ba755a9e05a6a1057f95c9958788abc24814c017de81fce6ce1cc931",
+      "semanticDigest": "13c8f06194755fbee59276de108fb728d9699e71f19dbb72a049b4f0adba13c8",
+      "templateSourceDigest": "e9ada8247a478625f8661e27bf5b77fd8a34eee96628801b5a82f8f8cf19fa45",
+      "title": "XFT 内容操作栏"
+    },
+    {
+      "abstract": "提供业务范围浏览与选择，支持面板内搜索、折叠和宽度调整。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "directoryContent",
+              "type": "prop"
+            },
+            "id": "directory-content",
+            "purpose": "传入范围选择内容。层级范围用树，平级范围按需求用单选或多选列表。页面维护选中状态，折叠后仍可恢复当前选择。相邻结果区的数据更新由页面处理。"
+          },
+          {
+            "binding": {
+              "name": "directoryWidth",
+              "type": "prop"
+            },
+            "id": "directory-width",
+            "purpose": "展开时的面板宽度，单位为 px，默认 200。模板根据父容器限制宽度，通常不超过其一半，上限为 384，最窄为 48。"
+          },
+          {
+            "binding": {
+              "name": "onDirectoryWidthChange",
+              "type": "prop"
+            },
+            "id": "on-directory-width-change",
+            "purpose": "拖拽调整时返回约束后的宽度。需要跨折叠保留宽度时，把返回值写回 directoryWidth。"
+          },
+          {
+            "binding": {
+              "name": "directoryHeader",
+              "type": "prop"
+            },
+            "id": "directory-header",
+            "purpose": "面板顶部的标题内容。"
+          },
+          {
+            "binding": {
+              "name": "directorySearchValue",
+              "type": "prop"
+            },
+            "id": "directory-search-value",
+            "purpose": "页面受控搜索时传入当前关键词，并用 onDirectorySearchChange 更新。省略时面板自行维护输入值。"
+          },
+          {
+            "binding": {
+              "name": "onDirectorySearchChange",
+              "type": "prop"
+            },
+            "id": "on-directory-search-change",
+            "purpose": "传入此回调才显示搜索框。用返回的关键词过滤面板中的范围选项，结果区查询由结果区处理。"
+          },
+          {
+            "binding": {
+              "name": "directorySearchPlaceholder",
+              "type": "prop"
+            },
+            "id": "directory-search-placeholder",
+            "purpose": "搜索框提示语，默认「搜索」。搜索框启用时生效。"
+          },
+          {
+            "binding": {
+              "name": "directoryActions",
+              "type": "prop"
+            },
+            "id": "directory-actions",
+            "purpose": "面板内作用于范围选项的操作。作用于结果集的操作放在结果区。"
+          },
+          {
+            "binding": {
+              "name": "directoryFooter",
+              "type": "prop"
+            },
+            "id": "directory-footer",
+            "purpose": "面板展开时显示的底部内容。"
+          },
+          {
+            "binding": {
+              "name": "directoryCollapsible",
+              "type": "prop"
+            },
+            "id": "directory-collapsible",
+            "purpose": "需要显示折叠或展开按钮时传 true，默认不显示。"
+          },
+          {
+            "binding": {
+              "name": "directoryCollapsed",
+              "type": "prop"
+            },
+            "id": "directory-collapsed",
+            "purpose": "由页面控制展开状态时传入。省略时面板自行维护，初始为展开。"
+          },
+          {
+            "binding": {
+              "name": "onDirectoryCollapsedChange",
+              "type": "prop"
+            },
+            "id": "on-directory-collapsed-change",
+            "purpose": "用户切换时返回下一折叠状态。传入 directoryCollapsed 时，通过此回调更新它。"
+          }
+        ],
+        "mainExport": "XftContextSelectorPanel"
+      },
+      "entry": "context-selector-panel/XftContextSelectorPanel.tsx",
+      "files": [
+        {
+          "path": "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.css",
+          "sha256": "7b7f473e7a1e8d2c1ba0b47e6e7326a63fb63517c93caa8873315d0d18c1ed72"
+        },
+        {
+          "path": "files/template.context-selector-panel/context-selector-panel/XftContextSelectorPanel.tsx",
+          "sha256": "224c306284a83d8edddd85947f91a5c59d2ff20a51b65a6138020fd71f5d0443"
+        }
+      ],
+      "guidanceDigest": "460b8cbd674b472cb30d22a448f593d00fc9700e18a7a50e00cabd4b35deb798",
+      "id": "template.context-selector-panel",
+      "identityDigest": "5f1f1d02d23dc784eb59b41505f7109b6a430369b62a4ae4c32cebdb0e199036",
+      "implementationDigest": "6c010b7832e84625b1550e1a06af19d25ac2e31eee0c848567728a170c7f232e",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftContextSelectorPanelProps"
+          ],
+          "values": [
+            "XftContextSelectorPanel"
+          ]
+        },
+        "mainExport": "XftContextSelectorPanel",
+        "namedTypes": [],
+        "props": {
+          "name": "XftContextSelectorPanelProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "directoryContent",
+              "required": true,
+              "type": "ReactNode"
+            },
+            {
+              "default": 200,
+              "name": "directoryWidth",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "default": null,
+              "name": "onDirectoryWidthChange",
+              "required": false,
+              "type": "(width: number) => void"
+            },
+            {
+              "default": null,
+              "name": "directoryHeader",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "directorySearchValue",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "onDirectorySearchChange",
+              "required": false,
+              "type": "(value: string) => void"
+            },
+            {
+              "default": "搜索",
+              "name": "directorySearchPlaceholder",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "directoryActions",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "directoryFooter",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": false,
+              "name": "directoryCollapsible",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "directoryCollapsed",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "onDirectoryCollapsedChange",
+              "required": false,
+              "type": "(collapsed: boolean) => void"
+            }
+          ]
+        }
+      },
+      "recordDigest": "e8b9898dcba55011101eb5858428a15ea3496c73c1f4e94fffaa475cbb945ab6",
+      "semanticDigest": "e0bc9e2698786cbbf3b04261c1d06d80a7c3830238fac6e23962c2316b4179ab",
+      "templateSourceDigest": "b2274d63e2d482feb1eb4de8de4a166fc2afef42cb8cefe829fdb3d3c88b5fa2",
+      "title": "XFT 范围选择面板"
+    },
+    {
+      "abstract": "提供纵向列表拖拽排序，返回调整后的条目顺序。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "items",
+              "type": "prop"
+            },
+            "id": "items",
+            "purpose": "按当前顺序传入排序项，每项含稳定唯一的 key 和展示内容 content。排序入口和窗口由调用方提供。"
+          },
+          {
+            "binding": {
+              "name": "onOrderChange",
+              "type": "prop"
+            },
+            "id": "on-order-change",
+            "purpose": "拖拽完成或键盘换位后返回新的 key 顺序。页面按需处理顺序保存和失败反馈。"
+          },
+          {
+            "binding": {
+              "name": "handleIcon",
+              "type": "prop"
+            },
+            "id": "handle-icon",
+            "purpose": "需要替换拖拽手柄时传入图标，默认使用六点拖拽图标。"
+          }
+        ],
+        "mainExport": "XftDragSortableList"
+      },
+      "entry": "drag-sortable-list/XftDragSortableList.tsx",
+      "files": [
+        {
+          "path": "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.css",
+          "sha256": "73cb886ac2282a6b06ca13e1ed0f1738fd0f89e1b7a41710f7040a6395f6217f"
+        },
+        {
+          "path": "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.tsx",
+          "sha256": "1058f602de0885a237090c1ab79bac3c66652cef5458c83c6daa5f3d88f7d84d"
+        }
+      ],
+      "guidanceDigest": "b99b0aaa56024a42b2cfbc015832a0a9660e40d40fc5947246c3d423412f5e84",
+      "id": "template.drag-sortable-list",
+      "identityDigest": "197244f475f63892f5a34ec98efe845274bdf2cee3fef74de832905ccd03ceee",
+      "implementationDigest": "c549572f0301d126f7756e71fc4beeb6e0b198ab97a17490e4c77fc7739ae258",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftDragSortItem",
+            "XftDragSortableListProps"
+          ],
+          "values": [
+            "XftDragSortableList"
+          ]
+        },
+        "mainExport": "XftDragSortableList",
+        "namedTypes": [
+          {
+            "name": "XftDragSortItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "content",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftDragSortableListProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "items",
+              "required": true,
+              "type": "XftDragSortItem[]"
+            },
+            {
+              "default": null,
+              "name": "onOrderChange",
+              "required": true,
+              "type": "(keys: string[]) => void"
+            },
+            {
+              "default": null,
+              "name": "handleIcon",
+              "required": false,
+              "type": "ReactNode"
+            }
+          ]
+        }
+      },
+      "recordDigest": "dc164026e4eb717881076afb30251239d058746d2ea9d8848511a8e1b873b21b",
+      "semanticDigest": "07f179925926c29fec5071f219bb9b9f90a422f4e873afae507baf7600bc6c1e",
+      "templateSourceDigest": "adc5b9c8b5d10b0dfa65eb63fc7b57fa5411fac845633a757f2e6d79ab7228d0",
+      "title": "XFT 拖拽排序列表"
+    },
+    {
+      "abstract": "支持组合筛选条件、统一查询、重置和展开更多条件。",
+      "artifacts": [
+        "filter-bar/XftFilterBar.model.ts"
+      ],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "fields",
+              "type": "prop"
+            },
+            "id": "fields",
+            "purpose": "按展示优先级传入筛选字段，每项提供 key 和 label。省略 type 时用文本输入，选择项用 select 并提供 options，单日期用 date，日期区间用 range。超过三项时默认仅展示前三项，其余由更多筛选展开。"
+          },
+          {
+            "binding": {
+              "name": "value",
+              "type": "prop"
+            },
+            "id": "value",
+            "purpose": "当前受控筛选值，以字段 key 为索引。文本和选项值使用字符串，日期使用 Dayjs，区间使用起止日期二元组。"
+          },
+          {
+            "binding": {
+              "name": "defaultValue",
+              "type": "prop"
+            },
+            "id": "default-value",
+            "purpose": "点击重置时恢复的值，以字段 key 为索引。页面需要同一组初始值时，用它初始化 value。"
+          },
+          {
+            "binding": {
+              "name": "onChange",
+              "type": "prop"
+            },
+            "id": "on-change",
+            "purpose": "字段变化或重置时返回完整的下一组筛选值，页面将它写回 value。"
+          },
+          {
+            "binding": {
+              "name": "onQuery",
+              "type": "prop"
+            },
+            "id": "on-query",
+            "purpose": "点击查询时返回当前完整筛选值，由页面执行查询。"
+          },
+          {
+            "binding": {
+              "name": "onReset",
+              "type": "prop"
+            },
+            "id": "on-reset",
+            "purpose": "需要在重置时执行额外动作时传入。它在 onChange 后收到同一组重置值。"
+          }
+        ],
+        "mainExport": "XftFilterBar"
+      },
+      "entry": "filter-bar/XftFilterBar.tsx",
+      "files": [
+        {
+          "path": "files/template.filter-bar/filter-bar/XftFilterBar.css",
+          "sha256": "fbba0b68700ecf2d582fbd23b73c69fe15b6b081d3a861dfc710b8045fac5d05"
+        },
+        {
+          "path": "files/template.filter-bar/filter-bar/XftFilterBar.model.ts",
+          "sha256": "675f5748225b76eab06d8f049feb922d7368ce045fc3c0fef83da46f9da403af"
+        },
+        {
+          "path": "files/template.filter-bar/filter-bar/XftFilterBar.tsx",
+          "sha256": "a45e8756e99c912ad5f0f73665016e5db04c6b35bbc66558fc39930672dff47d"
+        }
+      ],
+      "guidanceDigest": "f1c3ef2607a2b054e55ccb0e04d1d839a7753662962e0188966ff6430268513a",
+      "id": "template.filter-bar",
+      "identityDigest": "a00d190721ef719fa2cd11ffa44b0cc85cbba32932cb05c15ac5c08d349b407d",
+      "implementationDigest": "962de894fab0a9d4c85f4f1de8452b087076565ef4a62f88848df6a60b7167eb",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftFilterBarProps"
+          ],
+          "values": [
+            "XftFilterBar"
+          ]
+        },
+        "mainExport": "XftFilterBar",
+        "namedTypes": [
+          {
+            "name": "XftFilterBarField",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "type",
+                "required": false,
+                "type": "XftFilterBarControlType"
+              },
+              {
+                "default": null,
+                "name": "placeholder",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "options",
+                "required": false,
+                "type": "XftFilterBarOption[]"
+              },
+              {
+                "default": null,
+                "name": "collapsed",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "advanced",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "disabled",
+                "required": false,
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "name": "XftFilterBarOption",
+            "properties": [
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftFilterBarProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "fields",
+              "required": true,
+              "type": "XftFilterBarField[]"
+            },
+            {
+              "default": null,
+              "name": "value",
+              "required": true,
+              "type": "XftFilterBarValues"
+            },
+            {
+              "default": null,
+              "name": "defaultValue",
+              "required": true,
+              "type": "XftFilterBarValues"
+            },
+            {
+              "default": null,
+              "name": "onChange",
+              "required": true,
+              "type": "(next: XftFilterBarValues) => void"
+            },
+            {
+              "default": null,
+              "name": "onQuery",
+              "required": true,
+              "type": "(value: XftFilterBarValues) => void"
+            },
+            {
+              "default": null,
+              "name": "onReset",
+              "required": false,
+              "type": "(value: XftFilterBarValues) => void"
+            }
+          ]
+        }
+      },
+      "recordDigest": "756dd24e272c9baf4153adde9f8e0da7a523eff1324c59f4518df3c7a773a11e",
+      "semanticDigest": "2a4e159680d05fd24162487aa17e91b7116d008eddeeebcd7cc675c12d256594",
+      "templateSourceDigest": "29034ce4baac7117eef01f14b0c23456859b78e42266e409af0c432b2d4b3b30",
+      "title": "XFT 筛选栏"
+    },
+    {
+      "abstract": "提供筛选面板、表头筛选、当前条件和常用方案，管理待查询条件与已生效条件。",
+      "artifacts": [
+        "filter-workbench/XftFilterWorkbench.model.ts"
+      ],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "mode",
+              "type": "prop"
+            },
+            "id": "mode",
+            "purpose": "必填。明确要求表头列筛选时用 header，确认后应用该列条件；同时需要顶部快捷字段时仍用 header，并传 headerLayout=quick。没有表头筛选时，智能记账选择方案即更新结果用 realtime-scheme，先设置会计期间等前置条件再查询用 precondition；集团财务选择方案仅回填、随后点击查询才应用时用 group-finance。仅有直接更新结果的顶部快捷条件时用 quick。若需求同时指定多套互斥的查询时序，先确认主查询流程，再选择一个 mode。"
+          },
+          {
+            "binding": {
+              "name": "fields",
+              "type": "prop"
+            },
+            "id": "fields",
+            "purpose": "必填。页面按业务提供字段 key、label、控件类型、选项及必填规则。快捷搜索使用 search；自定义控件用 render。表头筛选字段 key 必须对应受管表格的列筛选键。"
+          },
+          {
+            "binding": {
+              "name": "initialValues",
+              "type": "prop"
+            },
+            "id": "initial-values",
+            "purpose": "省略时使用空条件。传入页面初始条件；例如前置查询所需的默认会计期间。"
+          },
+          {
+            "binding": {
+              "name": "schemes",
+              "type": "prop"
+            },
+            "id": "schemes",
+            "purpose": "页面提供方案的稳定 id、名称、条件值及可选默认标记。默认由页面管理数据和持久化；realtime-scheme 点击方案后立即应用并更新结果，group-finance 仅回填待查询字段、点击查询后再更新结果。header 是否显示方案由 schemesEnabled 控制。"
+          },
+          {
+            "binding": {
+              "name": "schemesEnabled",
+              "type": "prop"
+            },
+            "id": "schemes-enabled",
+            "purpose": "仅用于 header。省略时按是否传入非空 schemes 决定是否启用；显式传 false 时隐藏方案栏、保存和管理入口，显式传 true 时允许使用方案能力。"
+          },
+          {
+            "binding": {
+              "name": "headerLayout",
+              "type": "prop"
+            },
+            "id": "header-layout",
+            "purpose": "仅用于 header，默认 standard：业务按钮在方案与当前条件上方；传 quick 时，快捷字段与操作区位于同一顶部行。选定 quick 排列后，当前条件栏默认排除顶部快捷字段，也可用 summaryFieldKeys 指定展示范围。"
+          },
+          {
+            "binding": {
+              "name": "quickFieldKeys",
+              "type": "prop"
+            },
+            "id": "quick-field-keys",
+            "purpose": "按顺序指定顶部快捷字段。quick 模式省略时使用 fields 的全部字段；显式传空数组时左侧不显示筛选字段，右侧操作区仍居右。左侧宽度不足时，放不下的完整控件进入「更多筛选」。"
+          },
+          {
+            "binding": {
+              "name": "summaryFieldKeys",
+              "type": "prop"
+            },
+            "id": "summary-field-keys",
+            "purpose": "指定当前条件栏展示的字段，查询仍使用完整条件。header 默认排除顶部快捷字段与 summarySearchKey；header quick 可传入表头筛选字段以限定展示范围。"
+          },
+          {
+            "binding": {
+              "name": "summarySearchKey",
+              "type": "prop"
+            },
+            "id": "summary-search-key",
+            "purpose": "header 标准排列中，指定显示在当前筛选条件右侧的搜索字段 key。"
+          },
+          {
+            "binding": {
+              "name": "headerPrimaryActions",
+              "type": "prop"
+            },
+            "id": "header-primary-actions",
+            "purpose": "仅用于 header 的 standard 排列，放在方案及当前条件上方。可传节点或操作渲染函数。只需要业务按钮时，表格操作栏传 section=actions。"
+          },
+          {
+            "binding": {
+              "name": "summaryToolbarActions",
+              "type": "prop"
+            },
+            "id": "summary-toolbar-actions",
+            "purpose": "仅用于 header 的 standard 排列，放在当前条件右侧。可传节点或操作渲染函数。只需要刷新、表头设置等工具时，表格操作栏传 section=utilities。"
+          },
+          {
+            "binding": {
+              "name": "onSchemesChange",
+              "type": "prop"
+            },
+            "id": "on-schemes-change",
+            "purpose": "方案列表发生保存变更时，向页面返回最新列表。页面负责持久化。"
+          },
+          {
+            "binding": {
+              "name": "onQuery",
+              "type": "prop"
+            },
+            "id": "on-query",
+            "purpose": "页面用完整条件查询并更新结果；成功后更新已生效条件。quick 模式日期和选择项变更后查询，搜索在回车或点击搜索图标后查询；快速连续变更时以最后一次条件为准。"
+          },
+          {
+            "binding": {
+              "name": "onClear",
+              "type": "prop"
+            },
+            "id": "on-clear",
+            "purpose": "实时方案模式清空当前条件时通知页面清空结果；此操作不执行查询。"
+          },
+          {
+            "binding": {
+              "name": "toolbarActions",
+              "type": "prop"
+            },
+            "id": "toolbar-actions",
+            "purpose": "用于 realtime-scheme、precondition、group-finance、quick 和 header 的 quick 排列。传节点或渲染函数。三个操作区的渲染函数均接收已生效条件 applied、查询状态 hasQueried 和 busy，以及 refresh 和 openPanel。与筛选内容同排并整体靠右时，表格操作栏传 layout=right。"
+          },
+          {
+            "binding": {
+              "name": "renderGroupSchemeTable",
+              "type": "prop"
+            },
+            "id": "render-group-scheme-table",
+            "purpose": "仅在 group-finance 模式使用。需要显示常用方案设置时，将收到的绑定参数传给受管表格导出的 XftSchemeManagerTable。工作区维护方案状态，页面负责持久化。"
+          },
+          {
+            "binding": {
+              "name": "children",
+              "type": "prop"
+            },
+            "id": "children",
+            "purpose": "必填。通过渲染函数承载结果区。使用受管表格时，将 filterValues 和 renderColumnFilter 传给表格；表头样式、列定义和合计行按受管表格全文配置。"
+          }
+        ],
+        "mainExport": "XftFilterWorkbench"
+      },
+      "entry": "filter-workbench/XftFilterWorkbench.tsx",
+      "files": [
+        {
+          "path": "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.css",
+          "sha256": "0c27c524c28ef165c0d622fb0b45b6791b9b821f98427d40379392e6262ac591"
+        },
+        {
+          "path": "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.model.ts",
+          "sha256": "5ed47601511476ff8c0011f6c00b9e3bdbe877e612d1b2dcfbaac3b49c2e2128"
+        },
+        {
+          "path": "files/template.filter-workbench/filter-workbench/XftFilterWorkbench.tsx",
+          "sha256": "638742fb3b9e5ba9c816b68c0b7e9e0e6a3b0626984dd6769c89f21d3537314e"
+        }
+      ],
+      "guidanceDigest": "86040811b6ef81669c7ba8b42a8b5dcf80c5e9ec3b2f01ed416c006beb0798c1",
+      "id": "template.filter-workbench",
+      "identityDigest": "ec5b41e490b943fb1b619974a22c6c8c56828c9ce675fb9e60370597968f1c64",
+      "implementationDigest": "e892684c782d9ead0f726b5f633bc5b4ffcf2461dd0f15fdc8f73e8cb82e553e",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftFilterWorkbenchActions",
+            "XftFilterWorkbenchProps"
+          ],
+          "values": [
+            "XftFilterWorkbench"
+          ]
+        },
+        "mainExport": "XftFilterWorkbench",
+        "namedTypes": [
+          {
+            "name": "XftFilterField",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "type",
+                "required": false,
+                "type": "\"text\" | \"search\" | \"select\" | \"multi-select\" | \"month-range\" | \"date-range\" | \"number-range\" | \"checkbox\""
+              },
+              {
+                "default": null,
+                "name": "options",
+                "required": false,
+                "type": "{label: string; value: string}[]"
+              },
+              {
+                "default": null,
+                "name": "placeholder",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "required",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "showInPanel",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "showInManager",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "autoAdjustRange",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "render",
+                "required": false,
+                "type": "(value: XftFilterValue, change: (value: XftFilterValue) => void) => ReactNode"
+              },
+              {
+                "default": null,
+                "name": "summarize",
+                "required": false,
+                "type": "(value: XftFilterValue) => string"
+              },
+              {
+                "default": null,
+                "name": "summaryItems",
+                "required": false,
+                "type": "(value: XftFilterValue) => {id: string; text: string; title?: string; nextValue: XftFilterValue}[]"
+              }
+            ]
+          },
+          {
+            "name": "XftFilterScheme",
+            "properties": [
+              {
+                "default": null,
+                "name": "id",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "name",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "values",
+                "required": true,
+                "type": "XftFilterValues"
+              },
+              {
+                "default": null,
+                "name": "isDefault",
+                "required": false,
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "name": "XftFilterTableBinding",
+            "properties": [
+              {
+                "default": null,
+                "name": "filterValues",
+                "required": true,
+                "type": "XftFilterValues"
+              },
+              {
+                "default": null,
+                "name": "busy",
+                "required": true,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "renderColumnFilter",
+                "required": true,
+                "type": "(key: string, close: () => void) => ReactNode"
+              }
+            ]
+          },
+          {
+            "name": "XftFilterWorkbenchActions",
+            "properties": [
+              {
+                "default": null,
+                "name": "applied",
+                "required": true,
+                "type": "XftFilterValues"
+              },
+              {
+                "default": null,
+                "name": "hasQueried",
+                "required": true,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "busy",
+                "required": true,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "refresh",
+                "required": true,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "openPanel",
+                "required": true,
+                "type": "() => void"
+              }
+            ]
+          },
+          {
+            "name": "XftSchemeManagerTableBinding",
+            "properties": [
+              {
+                "default": null,
+                "name": "schemes",
+                "required": true,
+                "type": "XftFilterScheme[]"
+              },
+              {
+                "default": null,
+                "name": "onRename",
+                "required": true,
+                "type": "(id: string, name: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onDefault",
+                "required": true,
+                "type": "(id: string) => void"
+              },
+              {
+                "default": null,
+                "name": "onDelete",
+                "required": true,
+                "type": "(id: string) => void"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftFilterWorkbenchProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "mode",
+              "required": true,
+              "type": "XftFilterMode"
+            },
+            {
+              "default": null,
+              "name": "fields",
+              "required": true,
+              "type": "XftFilterField[]"
+            },
+            {
+              "default": null,
+              "name": "initialValues",
+              "required": false,
+              "type": "XftFilterValues"
+            },
+            {
+              "default": null,
+              "name": "schemes",
+              "required": false,
+              "type": "XftFilterScheme[]"
+            },
+            {
+              "default": null,
+              "name": "schemesEnabled",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": "standard",
+              "name": "headerLayout",
+              "required": false,
+              "type": "\"standard\" | \"quick\""
+            },
+            {
+              "default": null,
+              "name": "quickFieldKeys",
+              "required": false,
+              "type": "string[]"
+            },
+            {
+              "default": null,
+              "name": "summaryFieldKeys",
+              "required": false,
+              "type": "string[]"
+            },
+            {
+              "default": null,
+              "name": "summarySearchKey",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "onSchemesChange",
+              "required": false,
+              "type": "(schemes: XftFilterScheme[]) => void"
+            },
+            {
+              "default": null,
+              "name": "onQuery",
+              "required": true,
+              "type": "(values: XftFilterValues) => void | Promise < void >"
+            },
+            {
+              "default": null,
+              "name": "onClear",
+              "required": false,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "toolbarActions",
+              "required": false,
+              "type": "ReactNode | ((actions: XftFilterWorkbenchActions) => ReactNode)"
+            },
+            {
+              "default": null,
+              "name": "headerPrimaryActions",
+              "required": false,
+              "type": "ReactNode | ((actions: XftFilterWorkbenchActions) => ReactNode)"
+            },
+            {
+              "default": null,
+              "name": "summaryToolbarActions",
+              "required": false,
+              "type": "ReactNode | ((actions: XftFilterWorkbenchActions) => ReactNode)"
+            },
+            {
+              "default": null,
+              "name": "renderGroupSchemeTable",
+              "required": false,
+              "type": "(binding: XftSchemeManagerTableBinding) => ReactNode"
+            },
+            {
+              "default": null,
+              "name": "children",
+              "required": true,
+              "type": "(binding: XftFilterTableBinding) => ReactNode"
+            }
+          ]
+        }
+      },
+      "recordDigest": "070f00dae47299887edc530632baecc9d0d3e9c697e86b9ec6458f2e89f2be35",
+      "semanticDigest": "93a9f5c7fed888514c1b120440d1691f933d07764fb1b908d4d856ac2de8928d",
+      "templateSourceDigest": "da77d663692f04b269e64cc9bb59a9139b1f60cd1db515463cf89fb97afc155c",
+      "title": "XFT 筛选工作区"
+    },
+    {
+      "abstract": "提供表单字段分组、标签对齐、校验和提交。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "sections",
+              "type": "prop"
+            },
+            "id": "sections",
+            "purpose": "按业务主题分组。没有具名主题时，传一个无标题组。每组提供 key 和 fields。字段组默认不显示标题。需求明确要求显示组标题时，传 heading。每个字段提供 key、name、label 和 control。校验规则传 rules，输入说明传 extra，标签解释传 tooltip，需要隐藏字段时传 hidden: true。"
+          },
+          {
+            "binding": {
+              "name": "columns",
+              "type": "prop"
+            },
+            "id": "columns",
+            "purpose": "默认双列。需求明确要求整个表单每行只排一个字段时，传 1。仅个别字段需要独占一行时，为该字段传 span=\"full\"。"
+          },
+          {
+            "binding": {
+              "name": "labelLayout",
+              "type": "prop"
+            },
+            "id": "label-layout",
+            "purpose": "默认使用左右结构。仅当需求明确要求标签放在控件上方时，传 vertical。"
+          },
+          {
+            "binding": {
+              "name": "initialValues",
+              "type": "prop"
+            },
+            "id": "initial-values",
+            "purpose": "表单初始化值，键名与字段的 name 对应。"
+          },
+          {
+            "binding": {
+              "name": "loading",
+              "type": "prop"
+            },
+            "id": "loading",
+            "purpose": "需要暂时禁用表单控件时传 true，默认 false。"
+          },
+          {
+            "binding": {
+              "name": "onFinish",
+              "type": "prop"
+            },
+            "id": "on-finish",
+            "purpose": "表单校验通过后收到完整字段值，由页面处理保存或提交。"
+          },
+          {
+            "binding": {
+              "name": "form",
+              "type": "prop"
+            },
+            "id": "form",
+            "purpose": "需要从表单外触发校验与提交时，由页面持有并传入 Ant Design Form 实例。窗口 footer 或页面操作栏可调用该实例的 submit。"
+          }
+        ],
+        "mainExport": "XftFormContent"
+      },
+      "entry": "form-content/XftFormContent.tsx",
+      "files": [
+        {
+          "path": "files/template.form-content/form-content/XftFormContent.css",
+          "sha256": "a366f572462cacc6a59a4cc2de8e5aaec1677930f20e919dcbc1de79fc43200e"
+        },
+        {
+          "path": "files/template.form-content/form-content/XftFormContent.tsx",
+          "sha256": "0c5774d7b3a405b6ee92e4b6ecd042a9ca83ae3f6e3d7789b1ec25f52d11b804"
+        }
+      ],
+      "guidanceDigest": "6f9cd979302bf1c26dfe3684e7e16dc210a2195903c11a8523be44d1985d62c2",
+      "id": "template.form-content",
+      "identityDigest": "55ba891afd63b6adca7acecfa5dff5a89eabcbd654549d8149e09bf9f8ecdce9",
+      "implementationDigest": "75b71cce98c5585a746ae79e492dc8b71ab58e75f0281bbcfbbec5066914e222",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftFormContentProps",
+            "XftFormField",
+            "XftFormSection"
+          ],
+          "values": [
+            "XftFormContent"
+          ]
+        },
+        "mainExport": "XftFormContent",
+        "namedTypes": [
+          {
+            "name": "XftFormField",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "name",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "control",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "rules",
+                "required": false,
+                "type": "FormItemProps[\"rules\"]"
+              },
+              {
+                "default": null,
+                "name": "extra",
+                "required": false,
+                "type": "FormItemProps[\"extra\"]"
+              },
+              {
+                "default": null,
+                "name": "tooltip",
+                "required": false,
+                "type": "FormItemProps[\"tooltip\"]"
+              },
+              {
+                "default": null,
+                "name": "controlWidth",
+                "required": false,
+                "type": "80 | 120"
+              },
+              {
+                "default": null,
+                "name": "span",
+                "required": false,
+                "type": "1 | 2 | 3 | 4 | \"full\""
+              },
+              {
+                "default": null,
+                "name": "hidden",
+                "required": false,
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "name": "XftFormSection",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "heading",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "fields",
+                "required": true,
+                "type": "XftFormField[]"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftFormContentProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "form",
+              "required": false,
+              "type": "FormInstance < Record < string, unknown > >"
+            },
+            {
+              "default": null,
+              "name": "sections",
+              "required": true,
+              "type": "XftFormSection[]"
+            },
+            {
+              "default": 2,
+              "name": "columns",
+              "required": false,
+              "type": "1 | 2 | 3 | 4"
+            },
+            {
+              "default": "horizontal",
+              "name": "labelLayout",
+              "required": false,
+              "type": "\"horizontal\" | \"vertical\""
+            },
+            {
+              "default": null,
+              "name": "labelWidth",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "default": null,
+              "name": "initialValues",
+              "required": false,
+              "type": "Record < string, unknown >"
+            },
+            {
+              "default": false,
+              "name": "loading",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "onFinish",
+              "required": false,
+              "type": "(values: Record < string, unknown >) => void | Promise < void >"
+            }
+          ]
+        }
+      },
+      "recordDigest": "dec5935ef8cd802ad7f4b302d6d9457c70eeb57067416c3a4369a21331b3d2da",
+      "semanticDigest": "6b217620f6d7b210d5370d1bfad153feeebc10a6dcf5c6237d62689d15e0ce08",
+      "templateSourceDigest": "4258c8f656f2693361501a89e0dd99311513c44c4af054f386254a1f2651305b",
+      "title": "XFT 表单内容"
+    },
+    {
+      "abstract": "承载业务数据的表格，支持字段列、分组表头、列筛选、排序、行操作和表格滚动。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "columns",
+              "type": "prop"
+            },
+            "id": "columns",
+            "purpose": "定义字段列。每列提供唯一 key 和表头 title。读取单个字段用 field，合并多个字段用 fields，按给定顺序拼接非空值，separator 默认是「 · 」。普通文本省略 kind。需要标签或徽标时用 tag 或 badge，color 可指定语义色。需要点击入口时用 link 并提供 onClick。需要切换布尔值时用 switch，指定 field，并通过 onChange 更新对应记录。图片预览用 image，field 指向图片地址。表头需要补充说明时传 tooltip。表格统一处理横向滚动、单行省略和文本溢出提示。 分组表头用 children 定义子列。需要覆盖该列的单元格渲染时传 renderCell，它优先于 field、fields 和 kind。需要排序的叶子列传 sorter；本地排序传比较函数，业务排序传 true 并通过 onSortChange 更新结果。需要由页面指定排序方向时传 sortOrder。 集团财务方案设置使用同一入口文件导出的 XftSchemeManagerTable。它接收方案列表及改名、设默认、删除回调；方案状态和保存由筛选工作区处理。"
+          },
+          {
+            "binding": {
+              "name": "dataSource",
+              "type": "prop"
+            },
+            "id": "data-source",
+            "purpose": "当前要展示的记录数组。每条记录提供 columns 引用的字段和 rowKey 对应的唯一标识。"
+          },
+          {
+            "binding": {
+              "name": "rowKey",
+              "type": "prop"
+            },
+            "id": "row-key",
+            "purpose": "记录的稳定唯一标识字段，默认取 key。记录用其他字段标识时，传入该字段名。"
+          },
+          {
+            "binding": {
+              "name": "rowSelection",
+              "type": "prop"
+            },
+            "id": "row-selection",
+            "purpose": "需要让用户勾选记录时传入。由页面维护选中状态时，用 selectedRowKeys 传入选中行键，并在 onChange 中更新。"
+          },
+          {
+            "binding": {
+              "name": "rowActions",
+              "type": "prop"
+            },
+            "id": "row-actions",
+            "purpose": "需求有查看、编辑等逐行操作时，传入按记录返回操作列表的函数。每项提供 key、label 和 onClick。某条记录没有可用操作时返回空数组。表格自动生成右侧固定的文字操作列，并处理列宽和间距。"
+          },
+          {
+            "binding": {
+              "name": "loading",
+              "type": "prop"
+            },
+            "id": "loading",
+            "purpose": "数据加载期间传 true，由表格展示加载状态。"
+          },
+          {
+            "binding": {
+              "name": "empty",
+              "type": "prop"
+            },
+            "id": "empty",
+            "purpose": "无数据时显示的内容。省略时显示「暂无数据」，需求有专门的空状态文案或内容时再传。"
+          },
+          {
+            "binding": {
+              "name": "scrollOwner",
+              "type": "prop"
+            },
+            "id": "scroll-owner",
+            "purpose": "指定纵向滚动归属，默认 table。表格是页面主要数据区且筛选、操作或分页需要持续可用时，用 table。此时父级提供可收缩的高度链，由表格承担唯一主要纵向滚动并固定表头。表格嵌在详情或表单等连续内容中时，传 page，由页面内容区统一纵向滚动。"
+          },
+          {
+            "binding": {
+              "name": "filterValues",
+              "type": "prop"
+            },
+            "id": "filter-values",
+            "purpose": "传入已生效的筛选条件。表格按 filterKey 查询条件并高亮对应图标；省略 filterKey 时使用列 key。"
+          },
+          {
+            "binding": {
+              "name": "renderColumnFilter",
+              "type": "prop"
+            },
+            "id": "render-column-filter",
+            "purpose": "仅在列设置 filterable 且表格收到 renderColumnFilter 时显示筛选入口。使用筛选工作区时，将其结果区提供的 renderColumnFilter 和 filterValues 传给表格；列的 filterKey 或默认列 key 对应工作区字段 key。表格负责浮层开关，工作区负责应用条件。"
+          },
+          {
+            "binding": {
+              "name": "headerVariant",
+              "type": "prop"
+            },
+            "id": "header-variant",
+            "purpose": "默认使用标准表头。智能记账和集团财务的业务结果表格使用 finance-blue；筛选工作区的 mode 不改变表头样式。"
+          },
+          {
+            "binding": {
+              "name": "rowClassName",
+              "type": "prop"
+            },
+            "id": "row-class-name",
+            "purpose": "财务报表需要合计行时，页面用 rowClassName 为对应记录返回 xft-governed-table__summary-row，表格统一显示合计行底色和字重。"
+          },
+          {
+            "binding": {
+              "name": "onSortChange",
+              "type": "prop"
+            },
+            "id": "on-sort-change",
+            "purpose": "业务列使用 sorter: true 时，页面通过 onSortChange 接收列 key 和 ascend、descend 或 null，更新排序结果；本地比较函数可由表格自行排序。"
+          }
+        ],
+        "mainExport": "XftGovernedTable"
+      },
+      "entry": "governed-table/XftGovernedTable.tsx",
+      "files": [
+        {
+          "path": "files/template.governed-table/governed-table/XftGovernedTable.css",
+          "sha256": "eeb1a2830a1f42417e4eba5d6377ee8d7df699c2d5386d5618c7a75b457fb53b"
+        },
+        {
+          "path": "files/template.governed-table/governed-table/XftGovernedTable.tsx",
+          "sha256": "b98bedace039560003938d4f572afc8471c9b061fec8a6774e527c8a0a20ab47"
+        }
+      ],
+      "guidanceDigest": "450a366694fd6e5367cf1bad1d9df57b733a02d13c91e25a6bb180a81fa43d78",
+      "id": "template.governed-table",
+      "identityDigest": "810129f46fe8dc2220f8928cc7e2a1feb8cf45d8253e4a0b704c0c75af9121ec",
+      "implementationDigest": "c96937d881b23119c8cce29146f97e1c94059cf4b3087910251fed9f42766dfb",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftGovernedTableProps",
+            "XftSchemeManagerTableProps",
+            "XftSemanticColor",
+            "XftTableColumn",
+            "XftTableTextAction"
+          ],
+          "values": [
+            "XftGovernedTable",
+            "XftSchemeManagerTable"
+          ]
+        },
+        "mainExport": "XftGovernedTable",
+        "namedTypes": [
+          {
+            "name": "XftTableColumn",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "title",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "tooltip",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "filterable",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "filterKey",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "field",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "fields",
+                "required": false,
+                "type": "string[]"
+              },
+              {
+                "default": null,
+                "name": "separator",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "width",
+                "required": false,
+                "type": "number"
+              },
+              {
+                "default": null,
+                "name": "align",
+                "required": false,
+                "type": "\"left\" | \"center\" | \"right\""
+              },
+              {
+                "default": null,
+                "name": "kind",
+                "required": false,
+                "type": "\"text\" | \"tag\" | \"badge\" | \"link\" | \"switch\" | \"image\""
+              },
+              {
+                "default": null,
+                "name": "color",
+                "required": false,
+                "type": "XftSemanticColor"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": false,
+                "type": "(record: Record < string, unknown >) => void"
+              },
+              {
+                "default": null,
+                "name": "onChange",
+                "required": false,
+                "type": "(record: Record < string, unknown >, checked: boolean) => void"
+              },
+              {
+                "default": null,
+                "name": "children",
+                "required": false,
+                "type": "XftTableColumn[]"
+              },
+              {
+                "default": null,
+                "name": "sorter",
+                "required": false,
+                "type": "boolean | ((a: Record < string, unknown >, b: Record < string, unknown >) => number)"
+              },
+              {
+                "default": null,
+                "name": "sortOrder",
+                "required": false,
+                "type": "\"ascend\" | \"descend\" | null"
+              },
+              {
+                "default": null,
+                "name": "renderCell",
+                "required": false,
+                "type": "(record: Record < string, unknown >) => ReactNode"
+              }
+            ]
+          },
+          {
+            "name": "XftTableTextAction",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": true,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "danger",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "disabled",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "disabledReason",
+                "required": false,
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftGovernedTableProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "columns",
+              "required": true,
+              "type": "XftTableColumn[]"
+            },
+            {
+              "default": null,
+              "name": "dataSource",
+              "required": true,
+              "type": "Record < string, unknown >[]"
+            },
+            {
+              "default": "key",
+              "name": "rowKey",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "rowSelection",
+              "required": false,
+              "type": "TableProps < Record < string, unknown > >[\"rowSelection\"]"
+            },
+            {
+              "default": null,
+              "name": "rowActions",
+              "required": false,
+              "type": "(record: Record < string, unknown >) => readonly XftTableTextAction[]"
+            },
+            {
+              "default": null,
+              "name": "loading",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "empty",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": "table",
+              "name": "scrollOwner",
+              "required": false,
+              "type": "\"table\" | \"page\""
+            },
+            {
+              "default": null,
+              "name": "filterValues",
+              "required": false,
+              "type": "Record < string, unknown >"
+            },
+            {
+              "default": null,
+              "name": "renderColumnFilter",
+              "required": false,
+              "type": "(key: string, close: () => void) => ReactNode"
+            },
+            {
+              "default": "default",
+              "name": "headerVariant",
+              "required": false,
+              "type": "\"default\" | \"finance-blue\""
+            },
+            {
+              "default": null,
+              "name": "rowClassName",
+              "required": false,
+              "type": "TableProps < Record < string, unknown > >[\"rowClassName\"]"
+            },
+            {
+              "default": null,
+              "name": "onSortChange",
+              "required": false,
+              "type": "(key: string, order: \"ascend\" | \"descend\" | null) => void"
+            }
+          ]
+        }
+      },
+      "recordDigest": "8caa4fe551c04904414d399156c4ccfc83027647bbbaea978b5382b953c7cd7d",
+      "semanticDigest": "dfd0afe669ff347b25fd73d1ef4a69d6aa1d37a2d65e24fc4554bbbd322bd8d3",
+      "templateSourceDigest": "11b2138b78aa37c411f5e6be213a2453d8a2a3a06f3a39f4bad68c05632a857d",
+      "title": "XFT 受管表格"
+    },
+    {
+      "abstract": "在单张卡片中展示一条记录的标题和详情，支持图标或图片及记录操作。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "variant",
+              "type": "prop"
+            },
+            "id": "variant",
+            "purpose": "默认 detail-actions。需要在标题旁展示图片或图标时用 icon-details-actions，并传 icon。"
+          },
+          {
+            "binding": {
+              "name": "title",
+              "type": "prop"
+            },
+            "id": "title",
+            "purpose": "卡片对应记录的标题。"
+          },
+          {
+            "binding": {
+              "name": "description",
+              "type": "prop"
+            },
+            "id": "description",
+            "purpose": "标题下的一行说明。"
+          },
+          {
+            "binding": {
+              "name": "icon",
+              "type": "prop"
+            },
+            "id": "icon",
+            "purpose": "在 icon-details-actions 变体中传入图片或图标，模板提供 40px 视觉位置。"
+          },
+          {
+            "binding": {
+              "name": "tags",
+              "type": "prop"
+            },
+            "id": "tags",
+            "purpose": "标题旁的标签，按传入顺序最多展示前三项。"
+          },
+          {
+            "binding": {
+              "name": "details",
+              "type": "prop"
+            },
+            "id": "details",
+            "purpose": "记录详情列表，每项提供 key、label 和 value。"
+          },
+          {
+            "binding": {
+              "name": "actions",
+              "type": "prop"
+            },
+            "id": "actions",
+            "purpose": "卡片底部的记录操作。每项提供 key、label 和相应回调，可设 disabled。前三项直接显示，其余收纳到更多菜单。"
+          },
+          {
+            "binding": {
+              "name": "extra",
+              "type": "prop"
+            },
+            "id": "extra",
+            "purpose": "标题行右侧的补充操作。"
+          },
+          {
+            "binding": {
+              "name": "interactive",
+              "type": "prop"
+            },
+            "id": "interactive",
+            "purpose": "需要卡片悬浮反馈时传 true，默认关闭。此属性提供悬浮样式。"
+          },
+          {
+            "binding": {
+              "name": "selected",
+              "type": "prop"
+            },
+            "id": "selected",
+            "purpose": "需要显示当前记录已选中时传 true，默认 false。选中状态由页面维护。"
+          }
+        ],
+        "mainExport": "XftInformationCard"
+      },
+      "entry": "information-card/XftInformationCard.tsx",
+      "files": [
+        {
+          "path": "files/template.information-card/information-card/XftInformationCard.css",
+          "sha256": "8690e743222dc3dcf03c934eaaa525c9b12a259e148382075fa79b57bc812c7b"
+        },
+        {
+          "path": "files/template.information-card/information-card/XftInformationCard.tsx",
+          "sha256": "4dc705892676bac0c557b5f5dce1529c6306f0235bb8de55b3d008fa5f9956fe"
+        }
+      ],
+      "guidanceDigest": "4894859b7666d6d1e2d00249e689061dd915c5d606e025d67fb3cdc455f6d4d5",
+      "id": "template.information-card",
+      "identityDigest": "261dd431503b88e5d294c17780836a4c44f3e8decc47a0d053c68a1c1c39b32b",
+      "implementationDigest": "391f248c343d044dc128dc974830db80d79f78b51aff17faeaa5e698dc1f92d2",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftInformationCardAction",
+            "XftInformationCardDetail",
+            "XftInformationCardProps"
+          ],
+          "values": [
+            "XftInformationCard"
+          ]
+        },
+        "mainExport": "XftInformationCard",
+        "namedTypes": [
+          {
+            "name": "XftInformationCardAction",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "disabled",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": false,
+                "type": "() => void"
+              }
+            ]
+          },
+          {
+            "name": "XftInformationCardDetail",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftInformationCardProps",
+          "properties": [
+            {
+              "default": "detail-actions",
+              "name": "variant",
+              "required": false,
+              "type": "\"detail-actions\" | \"icon-details-actions\""
+            },
+            {
+              "default": null,
+              "name": "title",
+              "required": true,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "description",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "icon",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "tags",
+              "required": false,
+              "type": "ReactNode[]"
+            },
+            {
+              "default": null,
+              "name": "details",
+              "required": false,
+              "type": "XftInformationCardDetail[]"
+            },
+            {
+              "default": null,
+              "name": "actions",
+              "required": false,
+              "type": "XftInformationCardAction[]"
+            },
+            {
+              "default": null,
+              "name": "extra",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": false,
+              "name": "interactive",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": false,
+              "name": "selected",
+              "required": false,
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "recordDigest": "5ea1f4a3e9c088f91d891334d8be05ad54fffac655e13442fde1791b1ce54913",
+      "semanticDigest": "7b34632f5d35c6bc907c788e78f9fbc2a1d244e46436ffc54d47a1eb36464ce9",
+      "templateSourceDigest": "b33d7027fcf9b58c9191f96b8f37211853bc796c5e66259e283368f5ad6440b0",
+      "title": "XFT 信息卡片"
+    },
+    {
+      "abstract": "提供分区导航、点击定位和当前分区高亮。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "items",
+              "type": "prop"
+            },
+            "id": "items",
+            "purpose": "按分区顺序传入导航项。每项提供唯一 key、显示标题 title，以及指向目标元素 id 的 href（#id）。"
+          },
+          {
+            "binding": {
+              "name": "getContainer",
+              "type": "prop"
+            },
+            "id": "get-container",
+            "purpose": "内容在页面内部容器滚动时，传入返回实际滚动容器的函数。省略时使用 window。"
+          },
+          {
+            "binding": {
+              "name": "onNavigate",
+              "type": "prop"
+            },
+            "id": "on-navigate",
+            "purpose": "点击锚点时先回传目标 key，再由模板定位。使用详情或设置页提供的锚点参数时，原样传入该回调以协助展开目标分区。"
+          },
+          {
+            "binding": {
+              "name": "ariaLabel",
+              "type": "prop"
+            },
+            "id": "aria-label",
+            "purpose": "导航区域的无障碍名称，默认「分区导航」。"
+          }
+        ],
+        "mainExport": "XftSectionAnchor"
+      },
+      "entry": "section-anchor/XftSectionAnchor.tsx",
+      "files": [
+        {
+          "path": "files/template.section-anchor/section-anchor/XftSectionAnchor.css",
+          "sha256": "9be9e5b23aacfa9551695932e412efc5fcabe18ac5cb7cf3aed9eb0f5b3522e2"
+        },
+        {
+          "path": "files/template.section-anchor/section-anchor/XftSectionAnchor.tsx",
+          "sha256": "864b388697f04e4ae5c019e25bd3245b38ed752606263d83743daec8097c42cc"
+        }
+      ],
+      "guidanceDigest": "402f2508c898e25d30b95b8d5999a2cda325b19ec74350cb8f55094337c36391",
+      "id": "template.section-anchor",
+      "identityDigest": "e855021caddb5fb5b68ebe0d9d1d508216b0c90a25a760336e2ccfa6ba43910b",
+      "implementationDigest": "b76b55d5710ce7f0208f629b90ac2c7866ce0874a64dea4b5d3a01fbc2a6867f",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftSectionAnchorItem",
+            "XftSectionAnchorProps"
+          ],
+          "values": [
+            "XftSectionAnchor"
+          ]
+        },
+        "mainExport": "XftSectionAnchor",
+        "namedTypes": [
+          {
+            "name": "XftSectionAnchorItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "href",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "title",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftSectionAnchorProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "items",
+              "required": true,
+              "type": "XftSectionAnchorItem[]"
+            },
+            {
+              "default": null,
+              "name": "getContainer",
+              "required": false,
+              "type": "() => HTMLElement | Window"
+            },
+            {
+              "default": null,
+              "name": "onNavigate",
+              "required": false,
+              "type": "(key: string) => void"
+            },
+            {
+              "default": "分区导航",
+              "name": "ariaLabel",
+              "required": false,
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "recordDigest": "c83349905172d1ee2faf9ea39b5409ee010cb4152854568a8c2999bc27a6ae1f",
+      "semanticDigest": "a347f1d8dda61750689026532d4738e794a83c86f3dfd187b9028fa968f481b2",
+      "templateSourceDigest": "26a727cd093a42a00f15557f2bc20fbfef4dc2375b11c46b50d8d77fd3e02de1",
+      "title": "XFT 分区锚点"
+    },
+    {
+      "abstract": "提供分组标题和标记线，可附加说明或操作。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "title",
+              "type": "prop"
+            },
+            "id": "title",
+            "purpose": "分组标题内容。"
+          },
+          {
+            "binding": {
+              "name": "description",
+              "type": "prop"
+            },
+            "id": "description",
+            "purpose": "有补充说明时传入，显示在标题下方。"
+          },
+          {
+            "binding": {
+              "name": "titleActions",
+              "type": "prop"
+            },
+            "id": "title-actions",
+            "purpose": "与标题直接关联的操作，显示在标题旁，例如控制本组折叠。"
+          },
+          {
+            "binding": {
+              "name": "actions",
+              "type": "prop"
+            },
+            "id": "actions",
+            "purpose": "显示在标题行右侧的分组操作。"
+          },
+          {
+            "binding": {
+              "name": "marker",
+              "type": "prop"
+            },
+            "id": "marker",
+            "purpose": "标题左侧默认显示强调标记线。需要隐藏时传 false。"
+          }
+        ],
+        "mainExport": "XftSectionHeading"
+      },
+      "entry": "section-heading/XftSectionHeading.tsx",
+      "files": [
+        {
+          "path": "files/template.section-heading/section-heading/XftSectionHeading.css",
+          "sha256": "1393174bdb3602039cc6a10b73e76e1750e05021d34a17be1a7ad4da6b30dca8"
+        },
+        {
+          "path": "files/template.section-heading/section-heading/XftSectionHeading.tsx",
+          "sha256": "65090a7758d4a0fffcb5370a34f8825998cfba10ec327082c05b1c47a410e641"
+        }
+      ],
+      "guidanceDigest": "9fe51a5222f74a69801cf2b9c94f9637269e85c7f9bb54eed03cf159b08c78c1",
+      "id": "template.section-heading",
+      "identityDigest": "1d1c9e4ce0227f2b4d46886509c8c1c5fed6d1ea7ed40e1b2c1ee1ed5d30599c",
+      "implementationDigest": "e785b5e5fb49da8cb2fc57debb158d83d1ddec9021556170356ce0e2bde83037",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftSectionHeadingProps"
+          ],
+          "values": [
+            "XftSectionHeading"
+          ]
+        },
+        "mainExport": "XftSectionHeading",
+        "namedTypes": [],
+        "props": {
+          "name": "XftSectionHeadingProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "title",
+              "required": true,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "description",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "titleActions",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "actions",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": true,
+              "name": "marker",
+              "required": false,
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "recordDigest": "36d07dbb70591d46c0accd6812c9cfa4f60ef2877d6c7c7116353d3cced90f8e",
+      "semanticDigest": "ab143881e6c164145955b91b7dfb61ab1a71c044f7e09aa7459e3067a5d2d6c1",
+      "templateSourceDigest": "cbfe86ad90a022e0d7d1970ccb23aeea9e494fd04611a5a07b0a8687e6684695",
+      "title": "XFT 分组标题"
+    },
+    {
+      "abstract": "支持展示已选数量和切换列表页码。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "selectedCount",
+              "type": "prop"
+            },
+            "id": "selected-count",
+            "purpose": "需要显示已选数量时传入，0 也会显示。页面负责维护选中记录和跨页策略。"
+          },
+          {
+            "binding": {
+              "name": "pagination",
+              "type": "prop"
+            },
+            "id": "pagination",
+            "purpose": "需要分页时传入 current、total 和 onChange，可选 pageSize 默认 10。页面收到页码和每页条数后更新分页状态及当前数据。"
+          }
+        ],
+        "mainExport": "XftSelectionPaginationBar"
+      },
+      "entry": "selection-pagination-bar/XftSelectionPaginationBar.tsx",
+      "files": [
+        {
+          "path": "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.css",
+          "sha256": "abb37963ab0fe84277ae0e7d05e86b351a9b197a34a6adb07ab7da6d2f53098c"
+        },
+        {
+          "path": "files/template.selection-pagination-bar/selection-pagination-bar/XftSelectionPaginationBar.tsx",
+          "sha256": "47cc7b6e58371ee0c0699baf568c3fa478e91e96491ddf466cb65b9194170a1e"
+        }
+      ],
+      "guidanceDigest": "d58abb2008b8b46a79f8ee08fe56322d37a56b322a4dffa8adbaf0c1b516cde6",
+      "id": "template.selection-pagination-bar",
+      "identityDigest": "1f7e38c574dea6f6940ad0db3b68e3549c79d766529ea9198c8aefd0de00ab24",
+      "implementationDigest": "be0e31354e3a90e18653ca22d24a0d9dafae7510a1d487137a60a8f8587df650",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftSelectionPagination",
+            "XftSelectionPaginationBarProps"
+          ],
+          "values": [
+            "XftSelectionPaginationBar"
+          ]
+        },
+        "mainExport": "XftSelectionPaginationBar",
+        "namedTypes": [
+          {
+            "name": "XftSelectionPagination",
+            "properties": [
+              {
+                "default": null,
+                "name": "current",
+                "required": true,
+                "type": "number"
+              },
+              {
+                "default": null,
+                "name": "pageSize",
+                "required": false,
+                "type": "number"
+              },
+              {
+                "default": null,
+                "name": "total",
+                "required": true,
+                "type": "number"
+              },
+              {
+                "default": null,
+                "name": "onChange",
+                "required": true,
+                "type": "(page: number, pageSize: number) => void"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftSelectionPaginationBarProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "selectedCount",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "default": null,
+              "name": "pagination",
+              "required": false,
+              "type": "XftSelectionPagination"
+            }
+          ]
+        }
+      },
+      "recordDigest": "a99184f77d72c6eb913b6e589b789b987200ab16702ecdfb7be058dbddc84893",
+      "semanticDigest": "d8d2a7f486d00bf971f113e7279df568fa5d14f652da23d359b30e03ac200814",
+      "templateSourceDigest": "b5cec4da67ec4f23f58d5d9421128a71a8f14ce68dc1406bcbf3d70e338656fb",
+      "title": "XFT 选择统计与分页栏"
+    },
+    {
+      "abstract": "提供可折叠的设置组，支持设置项操作和分区定位。",
+      "artifacts": [
+        "XftSettingsPage.css"
+      ],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "groups",
+              "type": "prop"
+            },
+            "id": "settings-groups",
+            "purpose": "每个具名主题对应一组，传入 key、title 和按需求排序的 items。每项提供 key，title 和 body 承载设置项内容。按需传 description（说明）、action（跳转或即时修改入口）、control（如启停开关）或 details（依赖当前状态的附加内容）。页面即时处理修改和反馈，并决定 details 的显隐。模板按分组生成默认展开的折叠组。"
+          },
+          {
+            "binding": {
+              "name": "renderAnchor",
+              "type": "prop"
+            },
+            "id": "render-anchor",
+            "purpose": "设置页默认不显示分区锚点。仅当需求明确要求按具名分区跳转定位时，传入 renderAnchor，并将模板提供的 items、getContainer 和 onNavigate 原样传给分区锚点。"
+          }
+        ],
+        "mainExport": "XftSettingsPage"
+      },
+      "entry": "XftSettingsPage.tsx",
+      "files": [
+        {
+          "path": "files/template.settings-page/XftSettingsPage.css",
+          "sha256": "22664508666017f92d6579908324b7df6e3be9466e3c898a5017945a7fded3e1"
+        },
+        {
+          "path": "files/template.settings-page/XftSettingsPage.tsx",
+          "sha256": "8cafc2c140c81691ad21e236b8e70097fcbec1ff4b819d61946e8878465383f5"
+        }
+      ],
+      "guidanceDigest": "14b30633f1fa32cecd052a2f52b774bbea78d9eb82e602fe96f8ae97eef58dce",
+      "id": "template.settings-page",
+      "identityDigest": "e6bc021c92a44cbffb222767f87bc599541d6ee57125bdeca6b8d3b0b5ae5dbc",
+      "implementationDigest": "398761937e6fe9d95fca2a9ea6240d3baa05afe613e8558999bb712af3cbdb8b",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftSettingsGroup",
+            "XftSettingsItem",
+            "XftSettingsPageProps"
+          ],
+          "values": [
+            "XftSettingsPage"
+          ]
+        },
+        "mainExport": "XftSettingsPage",
+        "namedTypes": [
+          {
+            "name": "XftSettingsGroup",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "title",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "items",
+                "required": true,
+                "type": "XftSettingsItem[]"
+              }
+            ]
+          },
+          {
+            "name": "XftSettingsItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "title",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "description",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "body",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "action",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "control",
+                "required": false,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "details",
+                "required": false,
+                "type": "ReactNode"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftSettingsPageProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "groups",
+              "required": true,
+              "type": "XftSettingsGroup[]"
+            },
+            {
+              "default": null,
+              "name": "renderAnchor",
+              "required": false,
+              "type": "(options: {items: {key: string; href: string; title: ReactNode}[]; getContainer: () => HTMLElement | Window; onNavigate: (key: string) => void}) => ReactNode"
+            }
+          ]
+        }
+      },
+      "recordDigest": "29a77b594e805fe704d4cb8ba6a2b767c7c2e76343f55d00ec493aec9e9359a3",
+      "semanticDigest": "041a1b73f0caab65ad49fb7d483672b379550b64dbfe1ecceb23ac7c5bcb5a3e",
+      "templateSourceDigest": "9252659324238c690a5e94612f63a8df60d1bf50c8a6dd94ebd0910ac49a2d54",
+      "title": "XFT 设置页"
+    },
+    {
+      "abstract": "展示各类别的统计值，支持只读汇总和类别切换。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "items",
+              "type": "prop"
+            },
+            "id": "items",
+            "purpose": "按展示顺序传入统计项，每项提供 key、label 和 value。交互模式用 active 表示当前选中项，并用 onClick 通知页面切换结果范围。"
+          },
+          {
+            "binding": {
+              "name": "mode",
+              "type": "prop"
+            },
+            "id": "mode",
+            "purpose": "默认 interactive，用于可切换类别的统计项。仅展示只读统计时传 summary，此时只展示标签和值。统计口径和结果查询由页面负责。"
+          }
+        ],
+        "mainExport": "XftStatisticCardGrid"
+      },
+      "entry": "statistic-card-grid/XftStatisticCardGrid.tsx",
+      "files": [
+        {
+          "path": "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.css",
+          "sha256": "d3b4879c999d9c32a562c9edb9cd996b07f5910c8a37f18fecf0b65a84fae74b"
+        },
+        {
+          "path": "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.tsx",
+          "sha256": "cf1a2764d755d1f73bbdce74c7b0955e3dfe33a596067c90c0a62012afd8bfbd"
+        }
+      ],
+      "guidanceDigest": "be5e0adf9370fa31ba0c4c2bbaa9319ff29970941d9d421afba7f6743e03d585",
+      "id": "template.statistic-card-grid",
+      "identityDigest": "ef4e8102747bfd65f70959d7c15d1b413406064fd02921579a8155919fc58897",
+      "implementationDigest": "ba68a1edb8964626fd52e8a6a7decd98f5f1b951bd26b096bdc0ba0af251a0cf",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftStatisticCardGridMode",
+            "XftStatisticCardGridProps",
+            "XftStatisticCardItem"
+          ],
+          "values": [
+            "XftStatisticCardGrid"
+          ]
+        },
+        "mainExport": "XftStatisticCardGrid",
+        "namedTypes": [
+          {
+            "name": "XftStatisticCardItem",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "active",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": false,
+                "type": "() => void"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftStatisticCardGridProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "items",
+              "required": true,
+              "type": "XftStatisticCardItem[]"
+            },
+            {
+              "default": "interactive",
+              "name": "mode",
+              "required": false,
+              "type": "XftStatisticCardGridMode"
+            }
+          ]
+        }
+      },
+      "recordDigest": "e7d29f3ec2823f291ae158418ebfdd394ba707f06a144dc2e30e18b72018ba79",
+      "semanticDigest": "354b60d3d3d57d503228a80537511232e549badbfe17743a3c463aab31b0b24d",
+      "templateSourceDigest": "8dc22ef60cd2b9dcca29549fd8b5f1b689d2f0f1e27a23838f9bc10af232d367",
+      "title": "XFT 统计卡片区"
+    },
+    {
+      "abstract": "集中展示对象或范围的标题、关键字段和统计值。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "variant",
+              "type": "prop"
+            },
+            "id": "variant",
+            "purpose": "默认 custom，显示普通标题。需要带头像的人员摘要时用 person。需要范围标题及切换入口时用 range。"
+          },
+          {
+            "binding": {
+              "name": "title",
+              "type": "prop"
+            },
+            "id": "title",
+            "purpose": "摘要的主要标题。在范围场景中传当前范围名称，选中范围变化时由页面更新标题。"
+          },
+          {
+            "binding": {
+              "name": "showTitle",
+              "type": "prop"
+            },
+            "id": "show-title",
+            "purpose": "默认显示摘要标题。已有弹窗或抽屉标题承载同一信息时，传 false 隐藏摘要标题。"
+          },
+          {
+            "binding": {
+              "name": "avatar",
+              "type": "prop"
+            },
+            "id": "avatar",
+            "purpose": "人员场景的头像内容，在 person 变体中生效。"
+          },
+          {
+            "binding": {
+              "name": "timeNote",
+              "type": "prop"
+            },
+            "id": "time-note",
+            "purpose": "标题旁的时间或范围补充信息。"
+          },
+          {
+            "binding": {
+              "name": "description",
+              "type": "prop"
+            },
+            "id": "description",
+            "purpose": "标题下的辅助说明。"
+          },
+          {
+            "binding": {
+              "name": "tags",
+              "type": "prop"
+            },
+            "id": "tags",
+            "purpose": "标题旁的标签，按传入顺序最多展示前三项。"
+          },
+          {
+            "binding": {
+              "name": "actions",
+              "type": "prop"
+            },
+            "id": "actions",
+            "purpose": "标题右侧的结构化文字操作，最多显示前三项。每项提供 key、文字 label 和相应回调，可设 disabled。"
+          },
+          {
+            "binding": {
+              "name": "fields",
+              "type": "prop"
+            },
+            "id": "fields",
+            "purpose": "摘要字段列表，每项提供 key、label 和 value，最多展示前四项。"
+          },
+          {
+            "binding": {
+              "name": "statisticItems",
+              "type": "prop"
+            },
+            "id": "statistic-items",
+            "purpose": "结构化的底部统计项，每项提供 key、label 和 value。非空时优先于 statistics。"
+          },
+          {
+            "binding": {
+              "name": "statistics",
+              "type": "prop"
+            },
+            "id": "statistics",
+            "purpose": "需要自定义底部统计内容时传入，在未提供非空 statisticItems 时显示。"
+          },
+          {
+            "binding": {
+              "name": "statisticsAction",
+              "type": "prop"
+            },
+            "id": "statistics-action",
+            "purpose": "需要在底部统计区附加文字操作时传入，只有存在统计内容时显示。提供 key、文字 label 和相应回调。"
+          },
+          {
+            "binding": {
+              "name": "collapsible",
+              "type": "prop"
+            },
+            "id": "collapsible",
+            "purpose": "需要让用户收起字段及统计区时传 true，默认 false。至少有一项字段或统计内容时才显示折叠入口。"
+          },
+          {
+            "binding": {
+              "name": "defaultExpanded",
+              "type": "prop"
+            },
+            "id": "default-expanded",
+            "purpose": "启用折叠时的初始状态，默认展开。需要初始收起时传 false。"
+          },
+          {
+            "binding": {
+              "name": "onExpandedChange",
+              "type": "prop"
+            },
+            "id": "on-expanded-change",
+            "purpose": "字段及统计区展开或收起时，返回更新后的展开状态。"
+          },
+          {
+            "binding": {
+              "name": "onTitleClick",
+              "type": "prop"
+            },
+            "id": "on-title-click",
+            "purpose": "范围标题的点击回调。在 range 模式下，rangeOptions 非空时在菜单打开时调用，否则在点击标题时调用。"
+          },
+          {
+            "binding": {
+              "name": "rangeOptions",
+              "type": "prop"
+            },
+            "id": "range-options",
+            "purpose": "需要内置范围菜单时传入选项，每项含 key 和 label。在 range 变体中生效。"
+          },
+          {
+            "binding": {
+              "name": "activeRangeKey",
+              "type": "prop"
+            },
+            "id": "active-range-key",
+            "purpose": "由页面控制选中范围时，传入与 rangeOptions 对应的 key，并在 onRangeChange 中更新。省略时由模板记录菜单内选中项。"
+          },
+          {
+            "binding": {
+              "name": "onRangeChange",
+              "type": "prop"
+            },
+            "id": "on-range-change",
+            "purpose": "选择范围后返回对应 key。页面按需更新标题、摘要和联动数据。"
+          }
+        ],
+        "mainExport": "XftSummaryInfo"
+      },
+      "entry": "summary-info/XftSummaryInfo.tsx",
+      "files": [
+        {
+          "path": "files/template.summary-info/summary-info/XftSummaryInfo.css",
+          "sha256": "28e5786af8356c1b06947cb4ac06c1e1a942434984213e005643476e7d412871"
+        },
+        {
+          "path": "files/template.summary-info/summary-info/XftSummaryInfo.tsx",
+          "sha256": "ebd2f61a0e2b54304785f058c7f9ab8658912ffc9807d3a33a23daed5e005761"
+        }
+      ],
+      "guidanceDigest": "ccc3fea86038ad73dd9f8a32a0f7f772e6454a01d4986212df03376957f4d56e",
+      "id": "template.summary-info",
+      "identityDigest": "339e9dd9489610670dc53f8eb391d8357dadabac816b6e71d96f059c31d8c445",
+      "implementationDigest": "dde1576cb70ae19f2e3e40e452347eb914bae59bbb9c02d9d490b1f8d609fe8c",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftSummaryInfoAction",
+            "XftSummaryInfoField",
+            "XftSummaryInfoProps",
+            "XftSummaryInfoRangeOption",
+            "XftSummaryInfoStatistic",
+            "XftSummaryInfoVariant"
+          ],
+          "values": [
+            "XftSummaryInfo"
+          ]
+        },
+        "mainExport": "XftSummaryInfo",
+        "namedTypes": [
+          {
+            "name": "XftSummaryInfoAction",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": false,
+                "type": "() => void"
+              },
+              {
+                "default": null,
+                "name": "disabled",
+                "required": false,
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "name": "XftSummaryInfoField",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          },
+          {
+            "name": "XftSummaryInfoRangeOption",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          },
+          {
+            "name": "XftSummaryInfoStatistic",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "ReactNode"
+              },
+              {
+                "default": null,
+                "name": "value",
+                "required": true,
+                "type": "ReactNode"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftSummaryInfoProps",
+          "properties": [
+            {
+              "default": "custom",
+              "name": "variant",
+              "required": false,
+              "type": "XftSummaryInfoVariant"
+            },
+            {
+              "default": null,
+              "name": "title",
+              "required": true,
+              "type": "ReactNode"
+            },
+            {
+              "default": true,
+              "name": "showTitle",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "avatar",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "timeNote",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "description",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "tags",
+              "required": false,
+              "type": "ReactNode[]"
+            },
+            {
+              "default": null,
+              "name": "actions",
+              "required": false,
+              "type": "XftSummaryInfoAction[]"
+            },
+            {
+              "default": null,
+              "name": "fields",
+              "required": false,
+              "type": "XftSummaryInfoField[]"
+            },
+            {
+              "default": null,
+              "name": "statisticItems",
+              "required": false,
+              "type": "XftSummaryInfoStatistic[]"
+            },
+            {
+              "default": null,
+              "name": "statistics",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": null,
+              "name": "statisticsAction",
+              "required": false,
+              "type": "XftSummaryInfoAction"
+            },
+            {
+              "default": false,
+              "name": "collapsible",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": true,
+              "name": "defaultExpanded",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "default": null,
+              "name": "onExpandedChange",
+              "required": false,
+              "type": "(expanded: boolean) => void"
+            },
+            {
+              "default": null,
+              "name": "onTitleClick",
+              "required": false,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "rangeOptions",
+              "required": false,
+              "type": "XftSummaryInfoRangeOption[]"
+            },
+            {
+              "default": null,
+              "name": "activeRangeKey",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "default": null,
+              "name": "onRangeChange",
+              "required": false,
+              "type": "(key: string) => void"
+            }
+          ]
+        }
+      },
+      "recordDigest": "5d5a3de310b6c722c5e3ad8c3bf45e7a15fa28d240343cd4d98c872855b464bd",
+      "semanticDigest": "237c5779438181b447b4c5c548dc26aeee4ed2202ee9bfcefb02967764c33a56",
+      "templateSourceDigest": "bf5753fb0731b542a89e3e7f1926f9dfabc8078054b8d888c77aa126acddf1d8",
+      "title": "XFT 汇总信息"
+    },
+    {
+      "abstract": "提供表格结果集操作，以及刷新、排序和显示列的入口。",
+      "artifacts": [],
+      "assetLinks": [],
+      "authoring": {
+        "customizationSurfaces": [
+          {
+            "binding": {
+              "name": "actions",
+              "type": "prop"
+            },
+            "id": "actions",
+            "purpose": "按业务顺序传入结果集操作。每项提供 key、label 和回调，可设 disabled。默认使用普通按钮；需要突出主操作时将该项设为 priority=primary。最多直接显示五项，超出项和标记 priority=overflow 的项进入更多菜单。查看、编辑或删除单条记录的入口放在对应行。"
+          },
+          {
+            "binding": {
+              "name": "onSort",
+              "type": "prop"
+            },
+            "id": "on-sort",
+            "purpose": "需要整表排序入口时传入，页面在回调中处理排序。"
+          },
+          {
+            "binding": {
+              "name": "onColumnSettings",
+              "type": "prop"
+            },
+            "id": "on-column-settings",
+            "purpose": "表头设置图标默认显示，未传回调时禁用。页面负责打开列设置、保存选择，并将更新后的 columns 传给受管表格。"
+          },
+          {
+            "binding": {
+              "name": "onRefresh",
+              "type": "prop"
+            },
+            "id": "on-refresh",
+            "purpose": "刷新图标默认显示。页面传入回调，使用当前已生效的筛选条件重新查询；未传回调时图标保持可见但禁用。"
+          },
+          {
+            "binding": {
+              "name": "extraUtilities",
+              "type": "prop"
+            },
+            "id": "extra-utilities",
+            "purpose": "按业务需要追加展开、显示方式等工具；排序通过 onSort 提供。"
+          },
+          {
+            "binding": {
+              "name": "layout",
+              "type": "prop"
+            },
+            "id": "layout",
+            "purpose": "默认 split，业务按钮居左，工具居右。需要将业务按钮与工具作为整体靠右时传 right。与筛选工作区组合时，由筛选工作区决定操作栏所在区域。"
+          },
+          {
+            "binding": {
+              "name": "section",
+              "type": "prop"
+            },
+            "id": "section",
+            "purpose": "默认 all，显示完整操作栏。仅需业务按钮时传 actions，仅需工具时传 utilities。"
+          }
+        ],
+        "mainExport": "XftTableActionBar"
+      },
+      "entry": "table-action-bar/XftTableActionBar.tsx",
+      "files": [
+        {
+          "path": "files/template.table-action-bar/table-action-bar/XftTableActionBar.css",
+          "sha256": "1db32af273858b60de0f6e1ecdbeba237dec0a9e0019040cd061647ae21dafc5"
+        },
+        {
+          "path": "files/template.table-action-bar/table-action-bar/XftTableActionBar.tsx",
+          "sha256": "79a7c765ff5b3824c56a018937059d939d2cb12b1639e7bfa6f027be95994611"
+        }
+      ],
+      "guidanceDigest": "5a8e954ae4645dee8b68b4bdc221d91e21793c9fe0981f58d8e7645126c92260",
+      "id": "template.table-action-bar",
+      "identityDigest": "b506a6e76e95a5711189943716306f55ddaf6ec9c0d7381c65c3efc236a1f6e1",
+      "implementationDigest": "b7d0378ca32e2aa095cde37ea34244d1f223cf9ab6bab54bde4e2723a9fdf758",
+      "kind": "Template",
+      "publicApi": {
+        "exports": {
+          "types": [
+            "XftTableAction",
+            "XftTableActionBarProps"
+          ],
+          "values": [
+            "XftTableActionBar"
+          ]
+        },
+        "mainExport": "XftTableActionBar",
+        "namedTypes": [
+          {
+            "name": "XftTableAction",
+            "properties": [
+              {
+                "default": null,
+                "name": "key",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "label",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": null,
+                "name": "priority",
+                "required": false,
+                "type": "\"primary\" | \"secondary\" | \"overflow\""
+              },
+              {
+                "default": null,
+                "name": "disabled",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "danger",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": null,
+                "name": "onClick",
+                "required": false,
+                "type": "() => void"
+              }
+            ]
+          }
+        ],
+        "props": {
+          "name": "XftTableActionBarProps",
+          "properties": [
+            {
+              "default": null,
+              "name": "actions",
+              "required": false,
+              "type": "XftTableAction[]"
+            },
+            {
+              "default": null,
+              "name": "onRefresh",
+              "required": false,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "onSort",
+              "required": false,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "onColumnSettings",
+              "required": false,
+              "type": "() => void"
+            },
+            {
+              "default": null,
+              "name": "extraUtilities",
+              "required": false,
+              "type": "ReactNode"
+            },
+            {
+              "default": "split",
+              "name": "layout",
+              "required": false,
+              "type": "\"split\" | \"right\""
+            },
+            {
+              "default": "all",
+              "name": "section",
+              "required": false,
+              "type": "\"all\" | \"actions\" | \"utilities\""
+            }
+          ]
+        }
+      },
+      "recordDigest": "ff79c4ad0bd55cb8eab70b1395affe53e1dbfc125027caf5cce60f20fad50052",
+      "semanticDigest": "f45120660a7b60addc5928a84950da894a2d6e88d3c5ac4fc8c36e65e2c619dc",
+      "templateSourceDigest": "9b468d6e780169706f4732b175289b389d84ff01857354cc7159533a4f55a1bc",
+      "title": "XFT 表格操作栏"
+    }
+  ],
+  "review": [
+    {
+      "assetLink": "knowledge.scroll-ownership-by-page-type",
+      "load": "full",
+      "pointer": "/review/0"
+    },
+    {
+      "assetLink": "knowledge.action-emphasis-by-intent",
+      "load": "full",
+      "pointer": "/review/1"
+    },
+    {
+      "assetLink": "knowledge.action-availability-by-constraint",
+      "load": "full",
+      "pointer": "/review/2"
+    }
+  ],
+  "runtimeTheme": {
+    "artifacts": [
+      {
+        "name": "alias-vars.generated.css",
+        "path": "theme/presets/default/alias-vars.generated.css",
+        "sha256": "72c684a40caec81b0076981f898bee07d0ea9ddfd95a06ae6f2b275aeac27965"
+      },
+      {
+        "name": "antd.generated.css",
+        "path": "theme/presets/default/antd.generated.css",
+        "sha256": "a496e4f5ca80d5ec414f19b824c955f873c5c6137b5373bbb91ef98ab9d2f394"
+      },
+      {
+        "name": "theme-config.generated.mjs",
+        "path": "theme/presets/default/theme-config.generated.mjs",
+        "sha256": "249e8c186ecca6dbf64221ba6b2a9fb16fcf482b63897f9fec918d6e074e38e0"
+      }
+    ]
+  },
+  "schemaVersion": 4,
+  "scope": {
+    "closure": [
+      "knowledge.action-availability-by-constraint",
+      "knowledge.action-emphasis-by-intent",
+      "knowledge.scroll-ownership-by-page-type",
+      "pattern.xft-design-foundations",
+      "pattern.xft-page-action-organization",
+      "pattern.xft-page-template-selection",
+      "pattern.xft-selection-backfill",
+      "template.application-frame",
+      "template.approval-agree-dialog",
+      "template.content-action-bar",
+      "template.context-selector-panel",
+      "template.drag-sortable-list",
+      "template.filter-bar",
+      "template.filter-workbench",
+      "template.form-content",
+      "template.governed-table",
+      "template.information-card",
+      "template.section-anchor",
+      "template.section-heading",
+      "template.selection-pagination-bar",
+      "template.settings-page",
+      "template.statistic-card-grid",
+      "template.summary-info",
+      "template.table-action-bar"
+    ],
+    "roots": [
+      "pattern.xft-design-foundations",
+      "pattern.xft-page-template-selection"
+    ]
+  },
+  "uiConfig": {
+    "antdVersion": "6.5.0",
+    "sha256": "e39fe610638a48ab1478397c7c1e10a520a0e98d1a6cd33082d990e1ffb5914e",
+    "stylesheet": "ui-config/components.css"
+  }
+}

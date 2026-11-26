@@ -1,0 +1,444 @@
+{
+  "abstract": "提供顶部导航、工作区标签、统一的工作内容区和下级页面返回栏。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "topBar",
+          "type": "prop"
+        },
+        "id": "top-bar",
+        "purpose": "默认省略 topBar 或使用 variant=global。页面明确属于智能记账应用时传 smart-accounting；明确属于其他下级应用时传 sub-application。两个下级应用变体均通过 brandName 传入实际应用名称。仅 sub-application 支持一级菜单，默认隐藏；需求明确要求显示时传 showPrimaryNav=true，并由页面提供菜单项、当前项和切换回调。globalActions 仅在 global 变体显示；框架级 globalActions 优先于 topBar.globalActions。"
+      },
+      {
+        "binding": {
+          "name": "children",
+          "type": "prop"
+        },
+        "id": "workspace-content",
+        "purpose": "传入工作区正文。框架提供唯一白色工作面，正文保持透明，不再叠加整页白底。普通页面沿用框架提供的正文内边距，不重复添加同一层内边距。设置页或需求明确要求自行管理完整正文布局时，由页面负责正文内边距，并在正文根标记 data-xft-workspace-layout=\"managed\"。框架也识别正文根下一层的标记。贴边区域、正文和底部操作由页面组织。底部操作放在正文内边距之外。工作区默认由框架承担纵向滚动。由主数据区承担唯一纵向滚动时，在正文根标记 data-xft-scroll-owner=\"template\"，并提供可收缩的高度链。工作区默认不显示返回栏。内容区操作进入同一工作区标签内的下级页面时，通过 children 的渲染函数获取 openSubpage，并在点击回调中传入点击事件和下级正文。框架使用该操作的显示文案作为标题，点击返回时恢复上一级正文。无可见文案的入口提供 aria-label。"
+      },
+      {
+        "binding": {
+          "name": "workspaceTabBar",
+          "type": "prop"
+        },
+        "id": "workspace-tabs",
+        "purpose": "传入工作区标签栏的状态和回调。tabs 至少保留一项，activeKey 对应当前标签。通过 onActivate、onClose、onNavigate 和 onCloseAll 处理切换、关闭、相邻导航和关闭全部。"
+      },
+      {
+        "binding": {
+          "name": "onSideNavigationChange",
+          "type": "prop"
+        },
+        "id": "side-navigation-change",
+        "purpose": "侧栏菜单点击时返回菜单项 key。页面据此同步 activeSideNavigationKey，并打开或激活对应工作区标签。菜单项表示稳定的模块入口，页面内的视图切换留在正文。"
+      }
+    ],
+    "mainExport": "XftApplicationFrame"
+  },
+  "entry": "XftApplicationFrame.tsx",
+  "files": [
+    {
+      "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.assets.ts",
+      "sha256": "472b6f815e6c4aa16574e1cf4f88138a0daafafd8efe02ca3d8054cca4842384"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.css",
+      "sha256": "4e7aa376f90a90bc2409ff08648f40a27dcd2b08e1ce49f48d8c0fd2706e73e1"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftSubapplicationTopBar.tsx",
+      "sha256": "d4d49e54e3bf33d49dea76ee6f624e33650bee7d208429160b15e9717a3da77f"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftTopBar.css",
+      "sha256": "2941ecd21a478ba983fbb2ded0939cca1252a22600abc1e509147db976cdc843"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftTopBar.tsx",
+      "sha256": "a21de169a1a6ed090f937035d74318bf0c2791d6c5a729e2535bd945d9760338"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftWorkspaceTabBar.css",
+      "sha256": "cfa1bd7bd0f800b47e5b6cdc8cf30643fd4a8f6552efab976ae211ef28222e3f"
+    },
+    {
+      "path": "files/template.application-frame/application-frame/XftWorkspaceTabBar.tsx",
+      "sha256": "2d32813d272c0a60ee6a92613375e36f968ac933b3954efe1f6537b45f7b3e21"
+    },
+    {
+      "path": "files/template.application-frame/XftApplicationFrame.css",
+      "sha256": "689dd47254852904f317716a70cd80adb77249a0269f97946fb6bc8a3e726a3c"
+    },
+    {
+      "path": "files/template.application-frame/XftApplicationFrame.tsx",
+      "sha256": "0f5ed833016cd6f8aa27e9547976eb93ad72350e1888c04725da0ed19caed627"
+    }
+  ],
+  "guidanceDigest": "ca340554b39b656dc4aad1a5af0a3235b249536c9b3fe43f069dafd3f024a296",
+  "id": "template.application-frame",
+  "identityDigest": "720d4abae564fc97292b6abd0e9498c2a57369f568365cba55fe575fe41c4b13",
+  "implementationDigest": "e3f745b0972d66d9646ef028fc9b134be282bee75f839c54c5aa53b2689a9507",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftApplicationFrameProps",
+        "XftFrameItem"
+      ],
+      "values": [
+        "XftApplicationFrame"
+      ]
+    },
+    "mainExport": "XftApplicationFrame",
+    "namedTypes": [
+      {
+        "name": "XftFrameItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "XftSubapplicationTopBarAction",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "icon",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "size",
+            "required": false,
+            "type": "24 | 28"
+          },
+          {
+            "default": null,
+            "name": "containerWidth",
+            "required": false,
+            "type": "24 | 28 | 32"
+          }
+        ]
+      },
+      {
+        "name": "XftSubapplicationTopBarNavItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "XftTopBarProps",
+        "properties": [
+          {
+            "default": null,
+            "name": "variant",
+            "required": false,
+            "type": "\"global\" | \"smart-accounting\" | \"sub-application\""
+          },
+          {
+            "default": null,
+            "name": "brandName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "organizationName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "organizationLogo",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "accountSetName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "accountingPeriod",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "userName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "avatarUrl",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "showPrimaryNav",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "primaryNavItems",
+            "required": false,
+            "type": "XftSubapplicationTopBarNavItem[]"
+          },
+          {
+            "default": null,
+            "name": "activePrimaryNavKey",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "utilityActions",
+            "required": false,
+            "type": "XftSubapplicationTopBarAction[]"
+          },
+          {
+            "default": null,
+            "name": "searchPlaceholder",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "onSwitchOrganization",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "onSwitchAccountSet",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "onAccountingMonthAction",
+            "required": false,
+            "type": "(action: \"previous\" | \"current\" | \"next\") => void"
+          },
+          {
+            "default": null,
+            "name": "onPrimaryNavChange",
+            "required": false,
+            "type": "(key: string) => void"
+          },
+          {
+            "default": null,
+            "name": "onAllAppsClick",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "onSearchChange",
+            "required": false,
+            "type": "(value: string) => void"
+          },
+          {
+            "default": null,
+            "name": "onUtilityAction",
+            "required": false,
+            "type": "(key: string) => void"
+          },
+          {
+            "default": null,
+            "name": "onGuideClick",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "onNoticeClick",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "onUserClick",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "globalActions",
+            "required": false,
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "XftWorkspaceNavigation",
+        "properties": [
+          {
+            "default": null,
+            "name": "openSubpage",
+            "required": true,
+            "type": "(action: {currentTarget: HTMLElement}, content: ReactNode) => void"
+          }
+        ]
+      },
+      {
+        "name": "XftWorkspaceTab",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "closable",
+            "required": false,
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "XftWorkspaceTabBarProps",
+        "properties": [
+          {
+            "default": null,
+            "name": "tabs",
+            "required": true,
+            "type": "XftWorkspaceTab[]"
+          },
+          {
+            "default": null,
+            "name": "activeKey",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "onActivate",
+            "required": true,
+            "type": "(key: string) => void"
+          },
+          {
+            "default": null,
+            "name": "onClose",
+            "required": true,
+            "type": "(key: string) => void"
+          },
+          {
+            "default": null,
+            "name": "onNavigate",
+            "required": true,
+            "type": "(direction: - 1 | 1) => void"
+          },
+          {
+            "default": null,
+            "name": "onCloseAll",
+            "required": true,
+            "type": "() => void"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftApplicationFrameProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "sideNavigationItems",
+          "required": true,
+          "type": "XftFrameItem[]"
+        },
+        {
+          "default": null,
+          "name": "activeSideNavigationKey",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": null,
+          "name": "onSideNavigationChange",
+          "required": false,
+          "type": "(key: string) => void"
+        },
+        {
+          "default": null,
+          "name": "globalActions",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "topBar",
+          "required": false,
+          "type": "XftTopBarProps"
+        },
+        {
+          "default": null,
+          "name": "workspaceTabBar",
+          "required": true,
+          "type": "XftWorkspaceTabBarProps"
+        },
+        {
+          "default": null,
+          "name": "children",
+          "required": true,
+          "type": "ReactNode | ((navigation: XftWorkspaceNavigation) => ReactNode)"
+        }
+      ]
+    }
+  },
+  "recordDigest": "928586ab496845d26549cbc1cbcc2e411e68b3751afc24a3d5e2bdbcb8796b60",
+  "semanticDigest": "3519c4a078f0114d83b9735066dcbcd5ba9a084c01c5dfcee4af85e0feab69b2",
+  "templateSourceDigest": "18ea967e3efce4f934216c9cb879dcfcbf8de49736c3eecac3d650b8bfbaa5e0",
+  "title": "XFT 应用框架"
+}

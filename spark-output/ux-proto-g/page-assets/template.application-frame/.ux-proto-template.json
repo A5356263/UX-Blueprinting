@@ -1,0 +1,52 @@
+{
+  "assetId": "template.application-frame",
+  "files": [
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftSubapplicationTopBar.assets.ts",
+      "sourceHash": "472b6f815e6c4aa16574e1cf4f88138a0daafafd8efe02ca3d8054cca4842384"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftSubapplicationTopBar.css",
+      "sourceHash": "4e7aa376f90a90bc2409ff08648f40a27dcd2b08e1ce49f48d8c0fd2706e73e1"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftSubapplicationTopBar.tsx",
+      "sourceHash": "d4d49e54e3bf33d49dea76ee6f624e33650bee7d208429160b15e9717a3da77f"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftTopBar.css",
+      "sourceHash": "2941ecd21a478ba983fbb2ded0939cca1252a22600abc1e509147db976cdc843"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftTopBar.tsx",
+      "sourceHash": "a21de169a1a6ed090f937035d74318bf0c2791d6c5a729e2535bd945d9760338"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftWorkspaceTabBar.css",
+      "sourceHash": "cfa1bd7bd0f800b47e5b6cdc8cf30643fd4a8f6552efab976ae211ef28222e3f"
+    },
+    {
+      "artifactType": "text",
+      "path": "application-frame/XftWorkspaceTabBar.tsx",
+      "sourceHash": "2d32813d272c0a60ee6a92613375e36f968ac933b3954efe1f6537b45f7b3e21"
+    },
+    {
+      "artifactType": "text",
+      "path": "XftApplicationFrame.css",
+      "sourceHash": "689dd47254852904f317716a70cd80adb77249a0269f97946fb6bc8a3e726a3c"
+    },
+    {
+      "artifactType": "text",
+      "path": "XftApplicationFrame.tsx",
+      "sourceHash": "0f5ed833016cd6f8aa27e9547976eb93ad72350e1888c04725da0ed19caed627"
+    }
+  ],
+  "kind": "ux-proto-template-provenance",
+  "schemaVersion": 1
+}

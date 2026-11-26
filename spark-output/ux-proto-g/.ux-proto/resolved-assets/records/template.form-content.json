@@ -1,0 +1,242 @@
+{
+  "abstract": "提供表单字段分组、标签对齐、校验和提交。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "sections",
+          "type": "prop"
+        },
+        "id": "sections",
+        "purpose": "按业务主题分组。没有具名主题时，传一个无标题组。每组提供 key 和 fields。字段组默认不显示标题。需求明确要求显示组标题时，传 heading。每个字段提供 key、name、label 和 control。校验规则传 rules，输入说明传 extra，标签解释传 tooltip，需要隐藏字段时传 hidden: true。"
+      },
+      {
+        "binding": {
+          "name": "columns",
+          "type": "prop"
+        },
+        "id": "columns",
+        "purpose": "默认双列。需求明确要求整个表单每行只排一个字段时，传 1。仅个别字段需要独占一行时，为该字段传 span=\"full\"。"
+      },
+      {
+        "binding": {
+          "name": "labelLayout",
+          "type": "prop"
+        },
+        "id": "label-layout",
+        "purpose": "默认使用左右结构。仅当需求明确要求标签放在控件上方时，传 vertical。"
+      },
+      {
+        "binding": {
+          "name": "initialValues",
+          "type": "prop"
+        },
+        "id": "initial-values",
+        "purpose": "表单初始化值，键名与字段的 name 对应。"
+      },
+      {
+        "binding": {
+          "name": "loading",
+          "type": "prop"
+        },
+        "id": "loading",
+        "purpose": "需要暂时禁用表单控件时传 true，默认 false。"
+      },
+      {
+        "binding": {
+          "name": "onFinish",
+          "type": "prop"
+        },
+        "id": "on-finish",
+        "purpose": "表单校验通过后收到完整字段值，由页面处理保存或提交。"
+      },
+      {
+        "binding": {
+          "name": "form",
+          "type": "prop"
+        },
+        "id": "form",
+        "purpose": "需要从表单外触发校验与提交时，由页面持有并传入 Ant Design Form 实例。窗口 footer 或页面操作栏可调用该实例的 submit。"
+      }
+    ],
+    "mainExport": "XftFormContent"
+  },
+  "entry": "form-content/XftFormContent.tsx",
+  "files": [
+    {
+      "path": "files/template.form-content/form-content/XftFormContent.css",
+      "sha256": "a366f572462cacc6a59a4cc2de8e5aaec1677930f20e919dcbc1de79fc43200e"
+    },
+    {
+      "path": "files/template.form-content/form-content/XftFormContent.tsx",
+      "sha256": "0c5774d7b3a405b6ee92e4b6ecd042a9ca83ae3f6e3d7789b1ec25f52d11b804"
+    }
+  ],
+  "guidanceDigest": "6f9cd979302bf1c26dfe3684e7e16dc210a2195903c11a8523be44d1985d62c2",
+  "id": "template.form-content",
+  "identityDigest": "55ba891afd63b6adca7acecfa5dff5a89eabcbd654549d8149e09bf9f8ecdce9",
+  "implementationDigest": "75b71cce98c5585a746ae79e492dc8b71ab58e75f0281bbcfbbec5066914e222",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftFormContentProps",
+        "XftFormField",
+        "XftFormSection"
+      ],
+      "values": [
+        "XftFormContent"
+      ]
+    },
+    "mainExport": "XftFormContent",
+    "namedTypes": [
+      {
+        "name": "XftFormField",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "control",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "rules",
+            "required": false,
+            "type": "FormItemProps[\"rules\"]"
+          },
+          {
+            "default": null,
+            "name": "extra",
+            "required": false,
+            "type": "FormItemProps[\"extra\"]"
+          },
+          {
+            "default": null,
+            "name": "tooltip",
+            "required": false,
+            "type": "FormItemProps[\"tooltip\"]"
+          },
+          {
+            "default": null,
+            "name": "controlWidth",
+            "required": false,
+            "type": "80 | 120"
+          },
+          {
+            "default": null,
+            "name": "span",
+            "required": false,
+            "type": "1 | 2 | 3 | 4 | \"full\""
+          },
+          {
+            "default": null,
+            "name": "hidden",
+            "required": false,
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "XftFormSection",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "heading",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "fields",
+            "required": true,
+            "type": "XftFormField[]"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftFormContentProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "form",
+          "required": false,
+          "type": "FormInstance < Record < string, unknown > >"
+        },
+        {
+          "default": null,
+          "name": "sections",
+          "required": true,
+          "type": "XftFormSection[]"
+        },
+        {
+          "default": 2,
+          "name": "columns",
+          "required": false,
+          "type": "1 | 2 | 3 | 4"
+        },
+        {
+          "default": "horizontal",
+          "name": "labelLayout",
+          "required": false,
+          "type": "\"horizontal\" | \"vertical\""
+        },
+        {
+          "default": null,
+          "name": "labelWidth",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "default": null,
+          "name": "initialValues",
+          "required": false,
+          "type": "Record < string, unknown >"
+        },
+        {
+          "default": false,
+          "name": "loading",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "onFinish",
+          "required": false,
+          "type": "(values: Record < string, unknown >) => void | Promise < void >"
+        }
+      ]
+    }
+  },
+  "recordDigest": "dec5935ef8cd802ad7f4b302d6d9457c70eeb57067416c3a4369a21331b3d2da",
+  "semanticDigest": "6b217620f6d7b210d5370d1bfad153feeebc10a6dcf5c6237d62689d15e0ce08",
+  "templateSourceDigest": "4258c8f656f2693361501a89e0dd99311513c44c4af054f386254a1f2651305b",
+  "title": "XFT 表单内容"
+}

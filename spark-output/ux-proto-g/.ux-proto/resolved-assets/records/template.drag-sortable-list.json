@@ -1,0 +1,108 @@
+{
+  "abstract": "提供纵向列表拖拽排序，返回调整后的条目顺序。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "items",
+          "type": "prop"
+        },
+        "id": "items",
+        "purpose": "按当前顺序传入排序项，每项含稳定唯一的 key 和展示内容 content。排序入口和窗口由调用方提供。"
+      },
+      {
+        "binding": {
+          "name": "onOrderChange",
+          "type": "prop"
+        },
+        "id": "on-order-change",
+        "purpose": "拖拽完成或键盘换位后返回新的 key 顺序。页面按需处理顺序保存和失败反馈。"
+      },
+      {
+        "binding": {
+          "name": "handleIcon",
+          "type": "prop"
+        },
+        "id": "handle-icon",
+        "purpose": "需要替换拖拽手柄时传入图标，默认使用六点拖拽图标。"
+      }
+    ],
+    "mainExport": "XftDragSortableList"
+  },
+  "entry": "drag-sortable-list/XftDragSortableList.tsx",
+  "files": [
+    {
+      "path": "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.css",
+      "sha256": "73cb886ac2282a6b06ca13e1ed0f1738fd0f89e1b7a41710f7040a6395f6217f"
+    },
+    {
+      "path": "files/template.drag-sortable-list/drag-sortable-list/XftDragSortableList.tsx",
+      "sha256": "1058f602de0885a237090c1ab79bac3c66652cef5458c83c6daa5f3d88f7d84d"
+    }
+  ],
+  "guidanceDigest": "b99b0aaa56024a42b2cfbc015832a0a9660e40d40fc5947246c3d423412f5e84",
+  "id": "template.drag-sortable-list",
+  "identityDigest": "197244f475f63892f5a34ec98efe845274bdf2cee3fef74de832905ccd03ceee",
+  "implementationDigest": "c549572f0301d126f7756e71fc4beeb6e0b198ab97a17490e4c77fc7739ae258",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftDragSortItem",
+        "XftDragSortableListProps"
+      ],
+      "values": [
+        "XftDragSortableList"
+      ]
+    },
+    "mainExport": "XftDragSortableList",
+    "namedTypes": [
+      {
+        "name": "XftDragSortItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "content",
+            "required": true,
+            "type": "ReactNode"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftDragSortableListProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "items",
+          "required": true,
+          "type": "XftDragSortItem[]"
+        },
+        {
+          "default": null,
+          "name": "onOrderChange",
+          "required": true,
+          "type": "(keys: string[]) => void"
+        },
+        {
+          "default": null,
+          "name": "handleIcon",
+          "required": false,
+          "type": "ReactNode"
+        }
+      ]
+    }
+  },
+  "recordDigest": "dc164026e4eb717881076afb30251239d058746d2ea9d8848511a8e1b873b21b",
+  "semanticDigest": "07f179925926c29fec5071f219bb9b9f90a422f4e873afae507baf7600bc6c1e",
+  "templateSourceDigest": "adc5b9c8b5d10b0dfa65eb63fc7b57fa5411fac845633a757f2e6d79ab7228d0",
+  "title": "XFT 拖拽排序列表"
+}

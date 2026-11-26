@@ -1,0 +1,113 @@
+{
+  "abstract": "展示各类别的统计值，支持只读汇总和类别切换。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "items",
+          "type": "prop"
+        },
+        "id": "items",
+        "purpose": "按展示顺序传入统计项，每项提供 key、label 和 value。交互模式用 active 表示当前选中项，并用 onClick 通知页面切换结果范围。"
+      },
+      {
+        "binding": {
+          "name": "mode",
+          "type": "prop"
+        },
+        "id": "mode",
+        "purpose": "默认 interactive，用于可切换类别的统计项。仅展示只读统计时传 summary，此时只展示标签和值。统计口径和结果查询由页面负责。"
+      }
+    ],
+    "mainExport": "XftStatisticCardGrid"
+  },
+  "entry": "statistic-card-grid/XftStatisticCardGrid.tsx",
+  "files": [
+    {
+      "path": "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.css",
+      "sha256": "d3b4879c999d9c32a562c9edb9cd996b07f5910c8a37f18fecf0b65a84fae74b"
+    },
+    {
+      "path": "files/template.statistic-card-grid/statistic-card-grid/XftStatisticCardGrid.tsx",
+      "sha256": "cf1a2764d755d1f73bbdce74c7b0955e3dfe33a596067c90c0a62012afd8bfbd"
+    }
+  ],
+  "guidanceDigest": "be5e0adf9370fa31ba0c4c2bbaa9319ff29970941d9d421afba7f6743e03d585",
+  "id": "template.statistic-card-grid",
+  "identityDigest": "ef4e8102747bfd65f70959d7c15d1b413406064fd02921579a8155919fc58897",
+  "implementationDigest": "ba68a1edb8964626fd52e8a6a7decd98f5f1b951bd26b096bdc0ba0af251a0cf",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftStatisticCardGridMode",
+        "XftStatisticCardGridProps",
+        "XftStatisticCardItem"
+      ],
+      "values": [
+        "XftStatisticCardGrid"
+      ]
+    },
+    "mainExport": "XftStatisticCardGrid",
+    "namedTypes": [
+      {
+        "name": "XftStatisticCardItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "active",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": false,
+            "type": "() => void"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftStatisticCardGridProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "items",
+          "required": true,
+          "type": "XftStatisticCardItem[]"
+        },
+        {
+          "default": "interactive",
+          "name": "mode",
+          "required": false,
+          "type": "XftStatisticCardGridMode"
+        }
+      ]
+    }
+  },
+  "recordDigest": "e7d29f3ec2823f291ae158418ebfdd394ba707f06a144dc2e30e18b72018ba79",
+  "semanticDigest": "354b60d3d3d57d503228a80537511232e549badbfe17743a3c463aab31b0b24d",
+  "templateSourceDigest": "8dc22ef60cd2b9dcca29549fd8b5f1b689d2f0f1e27a23838f9bc10af232d367",
+  "title": "XFT 统计卡片区"
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/source-manifest-v5.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "version", "entrypoints", "review", "runtimeTheme"],
+  "properties": {
+    "schemaVersion": { "enum": [3, 4, 5] },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "entrypoints": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entrypointBinding" }
+    },
+    "review": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reviewBinding" }
+    },
+    "uiConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stylesheet", "antdVersion"],
+      "properties": {
+        "stylesheet": { "allOf": [{ "$ref": "#/$defs/relativePath" }, { "pattern": "\\.css$" }] },
+        "antdVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "runtimeTheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifacts"],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/relativePath" },
+              { "pattern": "(?:^|/)(?:alias-vars\\.generated\\.css|antd\\.generated\\.css|theme-config\\.generated\\.mjs)$" }
+            ]
+          },
+          "allOf": [
+            { "contains": { "type": "string", "pattern": "(?:^|/)alias-vars\\.generated\\.css$" }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "string", "pattern": "(?:^|/)antd\\.generated\\.css$" }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "string", "pattern": "(?:^|/)theme-config\\.generated\\.mjs$" }, "minContains": 1, "maxContains": 1 }
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "schemaVersion": { "enum": [3, 4] } } }, "then": { "not": { "required": ["uiConfig"] } } },
+    { "if": { "properties": { "schemaVersion": { "const": 5 } } }, "then": { "required": ["uiConfig"] } }
+  ],
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\\\)(?!\\.\\.?(?:/|$))(?!.*\\/\\.\\.?(?:\\/|$))(?!.*\\/\\/)(?!.*\\/$).+$"
+    },
+    "stageBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assetLink"],
+      "properties": {
+        "assetLink": { "type": "string" },
+        "load": { "const": "full" }
+      }
+    },
+    "entrypointBinding": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBinding" },
+        { "properties": { "assetLink": { "pattern": "^pattern\\.[a-z0-9]+(?:-[a-z0-9]+)*$" } } }
+      ]
+    },
+    "reviewBinding": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBinding" },
+        { "properties": { "assetLink": { "pattern": "^(?:knowledge|pattern)\\.[a-z0-9]+(?:-[a-z0-9]+)*$" } } }
+      ]
+    }
+  }
+}

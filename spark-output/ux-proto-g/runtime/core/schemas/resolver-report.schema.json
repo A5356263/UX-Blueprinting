@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/resolver-report-v3.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "status", "roots", "closure", "diagnostics"],
+  "properties": {
+    "schemaVersion": { "const": 3 },
+    "status": { "enum": ["resolved", "editing"] },
+    "roots": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "closure": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "diagnostics": { "type": "array" }
+  }
+}

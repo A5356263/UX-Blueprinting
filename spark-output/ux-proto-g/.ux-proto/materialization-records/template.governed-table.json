@@ -1,0 +1,19 @@
+{
+  "assetId": "template.governed-table",
+  "files": [
+    {
+      "path": ".ux-proto-template.json",
+      "sha256": "12d7292299fd2bfcb6df45a3841ae14cb09065ea145650d08d261f68a4be24dd"
+    },
+    {
+      "path": "governed-table/XftGovernedTable.css",
+      "sha256": "7110afc60a3fc53cd99cdfe9d8e8e7d3e3b2eadf9fa89ebb72fbe9ddcadfef6e"
+    },
+    {
+      "path": "governed-table/XftGovernedTable.tsx",
+      "sha256": "9c59c3565f626defc396dcb16d3bd5a1b847cef2528c52c59e511a35034d6f56"
+    }
+  ],
+  "kind": "ux-proto-materialization-original-record",
+  "schemaVersion": 1
+}

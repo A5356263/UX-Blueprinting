@@ -1,0 +1,15 @@
+{
+  "mode": "workspace-local",
+  "runtimeLockHash": "fb166a24475ed22d35ee3072d49e8f1ca74c77ec1451880511d52045f3344556",
+  "schemaVersion": 1,
+  "skillVersion": "1.3.2",
+  "status": "ready",
+  "versions": {
+    "@ant-design/static-style-extract": "2.1.0",
+    "antd": "6.5.0",
+    "dayjs": "1.11.21",
+    "esbuild": "0.25.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

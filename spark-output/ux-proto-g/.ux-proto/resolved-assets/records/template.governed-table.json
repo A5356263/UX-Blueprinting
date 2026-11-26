@@ -1,0 +1,389 @@
+{
+  "abstract": "承载业务数据的表格，支持字段列、分组表头、列筛选、排序、行操作和表格滚动。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "columns",
+          "type": "prop"
+        },
+        "id": "columns",
+        "purpose": "定义字段列。每列提供唯一 key 和表头 title。读取单个字段用 field，合并多个字段用 fields，按给定顺序拼接非空值，separator 默认是「 · 」。普通文本省略 kind。需要标签或徽标时用 tag 或 badge，color 可指定语义色。需要点击入口时用 link 并提供 onClick。需要切换布尔值时用 switch，指定 field，并通过 onChange 更新对应记录。图片预览用 image，field 指向图片地址。表头需要补充说明时传 tooltip。表格统一处理横向滚动、单行省略和文本溢出提示。 分组表头用 children 定义子列。需要覆盖该列的单元格渲染时传 renderCell，它优先于 field、fields 和 kind。需要排序的叶子列传 sorter；本地排序传比较函数，业务排序传 true 并通过 onSortChange 更新结果。需要由页面指定排序方向时传 sortOrder。 集团财务方案设置使用同一入口文件导出的 XftSchemeManagerTable。它接收方案列表及改名、设默认、删除回调；方案状态和保存由筛选工作区处理。"
+      },
+      {
+        "binding": {
+          "name": "dataSource",
+          "type": "prop"
+        },
+        "id": "data-source",
+        "purpose": "当前要展示的记录数组。每条记录提供 columns 引用的字段和 rowKey 对应的唯一标识。"
+      },
+      {
+        "binding": {
+          "name": "rowKey",
+          "type": "prop"
+        },
+        "id": "row-key",
+        "purpose": "记录的稳定唯一标识字段，默认取 key。记录用其他字段标识时，传入该字段名。"
+      },
+      {
+        "binding": {
+          "name": "rowSelection",
+          "type": "prop"
+        },
+        "id": "row-selection",
+        "purpose": "需要让用户勾选记录时传入。由页面维护选中状态时，用 selectedRowKeys 传入选中行键，并在 onChange 中更新。"
+      },
+      {
+        "binding": {
+          "name": "rowActions",
+          "type": "prop"
+        },
+        "id": "row-actions",
+        "purpose": "需求有查看、编辑等逐行操作时，传入按记录返回操作列表的函数。每项提供 key、label 和 onClick。某条记录没有可用操作时返回空数组。表格自动生成右侧固定的文字操作列，并处理列宽和间距。"
+      },
+      {
+        "binding": {
+          "name": "loading",
+          "type": "prop"
+        },
+        "id": "loading",
+        "purpose": "数据加载期间传 true，由表格展示加载状态。"
+      },
+      {
+        "binding": {
+          "name": "empty",
+          "type": "prop"
+        },
+        "id": "empty",
+        "purpose": "无数据时显示的内容。省略时显示「暂无数据」，需求有专门的空状态文案或内容时再传。"
+      },
+      {
+        "binding": {
+          "name": "scrollOwner",
+          "type": "prop"
+        },
+        "id": "scroll-owner",
+        "purpose": "指定纵向滚动归属，默认 table。表格是页面主要数据区且筛选、操作或分页需要持续可用时，用 table。此时父级提供可收缩的高度链，由表格承担唯一主要纵向滚动并固定表头。表格嵌在详情或表单等连续内容中时，传 page，由页面内容区统一纵向滚动。"
+      },
+      {
+        "binding": {
+          "name": "filterValues",
+          "type": "prop"
+        },
+        "id": "filter-values",
+        "purpose": "传入已生效的筛选条件。表格按 filterKey 查询条件并高亮对应图标；省略 filterKey 时使用列 key。"
+      },
+      {
+        "binding": {
+          "name": "renderColumnFilter",
+          "type": "prop"
+        },
+        "id": "render-column-filter",
+        "purpose": "仅在列设置 filterable 且表格收到 renderColumnFilter 时显示筛选入口。使用筛选工作区时，将其结果区提供的 renderColumnFilter 和 filterValues 传给表格；列的 filterKey 或默认列 key 对应工作区字段 key。表格负责浮层开关，工作区负责应用条件。"
+      },
+      {
+        "binding": {
+          "name": "headerVariant",
+          "type": "prop"
+        },
+        "id": "header-variant",
+        "purpose": "默认使用标准表头。智能记账和集团财务的业务结果表格使用 finance-blue；筛选工作区的 mode 不改变表头样式。"
+      },
+      {
+        "binding": {
+          "name": "rowClassName",
+          "type": "prop"
+        },
+        "id": "row-class-name",
+        "purpose": "财务报表需要合计行时，页面用 rowClassName 为对应记录返回 xft-governed-table__summary-row，表格统一显示合计行底色和字重。"
+      },
+      {
+        "binding": {
+          "name": "onSortChange",
+          "type": "prop"
+        },
+        "id": "on-sort-change",
+        "purpose": "业务列使用 sorter: true 时，页面通过 onSortChange 接收列 key 和 ascend、descend 或 null，更新排序结果；本地比较函数可由表格自行排序。"
+      }
+    ],
+    "mainExport": "XftGovernedTable"
+  },
+  "entry": "governed-table/XftGovernedTable.tsx",
+  "files": [
+    {
+      "path": "files/template.governed-table/governed-table/XftGovernedTable.css",
+      "sha256": "eeb1a2830a1f42417e4eba5d6377ee8d7df699c2d5386d5618c7a75b457fb53b"
+    },
+    {
+      "path": "files/template.governed-table/governed-table/XftGovernedTable.tsx",
+      "sha256": "b98bedace039560003938d4f572afc8471c9b061fec8a6774e527c8a0a20ab47"
+    }
+  ],
+  "guidanceDigest": "450a366694fd6e5367cf1bad1d9df57b733a02d13c91e25a6bb180a81fa43d78",
+  "id": "template.governed-table",
+  "identityDigest": "810129f46fe8dc2220f8928cc7e2a1feb8cf45d8253e4a0b704c0c75af9121ec",
+  "implementationDigest": "c96937d881b23119c8cce29146f97e1c94059cf4b3087910251fed9f42766dfb",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftGovernedTableProps",
+        "XftSchemeManagerTableProps",
+        "XftSemanticColor",
+        "XftTableColumn",
+        "XftTableTextAction"
+      ],
+      "values": [
+        "XftGovernedTable",
+        "XftSchemeManagerTable"
+      ]
+    },
+    "mainExport": "XftGovernedTable",
+    "namedTypes": [
+      {
+        "name": "XftTableColumn",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "title",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "tooltip",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "filterable",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "filterKey",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "field",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "fields",
+            "required": false,
+            "type": "string[]"
+          },
+          {
+            "default": null,
+            "name": "separator",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "width",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "default": null,
+            "name": "align",
+            "required": false,
+            "type": "\"left\" | \"center\" | \"right\""
+          },
+          {
+            "default": null,
+            "name": "kind",
+            "required": false,
+            "type": "\"text\" | \"tag\" | \"badge\" | \"link\" | \"switch\" | \"image\""
+          },
+          {
+            "default": null,
+            "name": "color",
+            "required": false,
+            "type": "XftSemanticColor"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": false,
+            "type": "(record: Record < string, unknown >) => void"
+          },
+          {
+            "default": null,
+            "name": "onChange",
+            "required": false,
+            "type": "(record: Record < string, unknown >, checked: boolean) => void"
+          },
+          {
+            "default": null,
+            "name": "children",
+            "required": false,
+            "type": "XftTableColumn[]"
+          },
+          {
+            "default": null,
+            "name": "sorter",
+            "required": false,
+            "type": "boolean | ((a: Record < string, unknown >, b: Record < string, unknown >) => number)"
+          },
+          {
+            "default": null,
+            "name": "sortOrder",
+            "required": false,
+            "type": "\"ascend\" | \"descend\" | null"
+          },
+          {
+            "default": null,
+            "name": "renderCell",
+            "required": false,
+            "type": "(record: Record < string, unknown >) => ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "XftTableTextAction",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": true,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "danger",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "disabled",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "disabledReason",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftGovernedTableProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "columns",
+          "required": true,
+          "type": "XftTableColumn[]"
+        },
+        {
+          "default": null,
+          "name": "dataSource",
+          "required": true,
+          "type": "Record < string, unknown >[]"
+        },
+        {
+          "default": "key",
+          "name": "rowKey",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": null,
+          "name": "rowSelection",
+          "required": false,
+          "type": "TableProps < Record < string, unknown > >[\"rowSelection\"]"
+        },
+        {
+          "default": null,
+          "name": "rowActions",
+          "required": false,
+          "type": "(record: Record < string, unknown >) => readonly XftTableTextAction[]"
+        },
+        {
+          "default": null,
+          "name": "loading",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "empty",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": "table",
+          "name": "scrollOwner",
+          "required": false,
+          "type": "\"table\" | \"page\""
+        },
+        {
+          "default": null,
+          "name": "filterValues",
+          "required": false,
+          "type": "Record < string, unknown >"
+        },
+        {
+          "default": null,
+          "name": "renderColumnFilter",
+          "required": false,
+          "type": "(key: string, close: () => void) => ReactNode"
+        },
+        {
+          "default": "default",
+          "name": "headerVariant",
+          "required": false,
+          "type": "\"default\" | \"finance-blue\""
+        },
+        {
+          "default": null,
+          "name": "rowClassName",
+          "required": false,
+          "type": "TableProps < Record < string, unknown > >[\"rowClassName\"]"
+        },
+        {
+          "default": null,
+          "name": "onSortChange",
+          "required": false,
+          "type": "(key: string, order: \"ascend\" | \"descend\" | null) => void"
+        }
+      ]
+    }
+  },
+  "recordDigest": "8caa4fe551c04904414d399156c4ccfc83027647bbbaea978b5382b953c7cd7d",
+  "semanticDigest": "dfd0afe669ff347b25fd73d1ef4a69d6aa1d37a2d65e24fc4554bbbd322bd8d3",
+  "templateSourceDigest": "11b2138b78aa37c411f5e6be213a2453d8a2a3a06f3a39f4bad68c05632a857d",
+  "title": "XFT 受管表格"
+}

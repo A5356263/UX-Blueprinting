@@ -1,0 +1,19 @@
+{
+  "assetId": "template.table-action-bar",
+  "files": [
+    {
+      "path": ".ux-proto-template.json",
+      "sha256": "996da5e7df750cf3a0de6b4752b3ffb95531c1411661724ae0dd1f0ddcdb2470"
+    },
+    {
+      "path": "table-action-bar/XftTableActionBar.css",
+      "sha256": "b500f109abfd571304e89b415a2cfef581a0558503013eea02e87af369e5f599"
+    },
+    {
+      "path": "table-action-bar/XftTableActionBar.tsx",
+      "sha256": "1ef5f18f0dbb8331b4ba3b02629aa79af4f50384bf7276a4515fada857e849b6"
+    }
+  ],
+  "kind": "ux-proto-materialization-original-record",
+  "schemaVersion": 1
+}

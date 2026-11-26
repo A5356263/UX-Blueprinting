@@ -1,0 +1,181 @@
+{
+  "abstract": "提供审批意见输入，支持图片、附件、常用语和手写签名。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "open",
+          "type": "prop"
+        },
+        "id": "open",
+        "purpose": "弹窗是否打开，由调用方维护。"
+      },
+      {
+        "binding": {
+          "name": "onCancel",
+          "type": "prop"
+        },
+        "id": "on-cancel",
+        "purpose": "取消或关闭时调用。由调用方更新 open。"
+      },
+      {
+        "binding": {
+          "name": "onAgree",
+          "type": "prop"
+        },
+        "id": "on-agree",
+        "purpose": "必填校验通过后返回去掉首尾空白的意见、图片、附件及可选签名。文件项含 name 和 dataUrl。审批提交、文件持久化和关闭由调用方处理。"
+      },
+      {
+        "binding": {
+          "name": "opinionRequired",
+          "type": "prop"
+        },
+        "id": "opinion-required",
+        "purpose": "默认 false。业务要求填写同意意见时传 true，空白意见会阻止提交。"
+      },
+      {
+        "binding": {
+          "name": "signatureMode",
+          "type": "prop"
+        },
+        "id": "signature-mode",
+        "purpose": "默认 optional，显示签名入口但允许留空。无需显示签名入口时用 hidden，业务要求签名才能提交时用 required。"
+      },
+      {
+        "binding": {
+          "name": "commonPhrases",
+          "type": "prop"
+        },
+        "id": "common-phrases",
+        "purpose": "需要提供常用语时传入字符串列表。选择后追加到意见，未传或为空时常用语入口禁用。"
+      }
+    ],
+    "mainExport": "XftApprovalAgreeDialog"
+  },
+  "entry": "approval-agree-dialog/XftApprovalAgreeDialog.tsx",
+  "files": [
+    {
+      "path": "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.css",
+      "sha256": "98541d416cde5339d3d01611bd6ffe988a4076d575de17578f2f825aec3a87bc"
+    },
+    {
+      "path": "files/template.approval-agree-dialog/approval-agree-dialog/XftApprovalAgreeDialog.tsx",
+      "sha256": "7b72213da1686fb0df9ad64cd20edc8c02657169b4dea15805d714f32d40e8db"
+    }
+  ],
+  "guidanceDigest": "280460480cca78ad183713ee01f2c7c06f1e3fce501d9ed01ae1bf962ea95dea",
+  "id": "template.approval-agree-dialog",
+  "identityDigest": "11048bfe9c17c1fc52001088b47be199400433f96b661f56e812b4c535fbe9c5",
+  "implementationDigest": "8698c727bb51084e79e9acf0db1315efb2cdd04285620513ef2242694ffdaac0",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftApprovalAgreeDialogProps",
+        "XftApprovalAgreeFile",
+        "XftApprovalAgreeSignatureMode",
+        "XftApprovalAgreeValue"
+      ],
+      "values": [
+        "XftApprovalAgreeDialog"
+      ]
+    },
+    "mainExport": "XftApprovalAgreeDialog",
+    "namedTypes": [
+      {
+        "name": "XftApprovalAgreeFile",
+        "properties": [
+          {
+            "default": null,
+            "name": "name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "dataUrl",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "XftApprovalAgreeValue",
+        "properties": [
+          {
+            "default": null,
+            "name": "opinion",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "images",
+            "required": true,
+            "type": "XftApprovalAgreeFile[]"
+          },
+          {
+            "default": null,
+            "name": "attachments",
+            "required": true,
+            "type": "XftApprovalAgreeFile[]"
+          },
+          {
+            "default": null,
+            "name": "signature",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftApprovalAgreeDialogProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "open",
+          "required": true,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "onCancel",
+          "required": true,
+          "type": "() => void"
+        },
+        {
+          "default": null,
+          "name": "onAgree",
+          "required": true,
+          "type": "(value: XftApprovalAgreeValue) => void"
+        },
+        {
+          "default": false,
+          "name": "opinionRequired",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": "optional",
+          "name": "signatureMode",
+          "required": false,
+          "type": "XftApprovalAgreeSignatureMode"
+        },
+        {
+          "default": null,
+          "name": "commonPhrases",
+          "required": false,
+          "type": "string[]"
+        }
+      ]
+    }
+  },
+  "recordDigest": "35076699ef20cf02aba7caa26afb36f704dbfbae9827dd0de8222f1d5f38e697",
+  "semanticDigest": "b9b255a7a7cf11ceceac30a4d3a392a98f89f4174715cdd618497a9293640a62",
+  "templateSourceDigest": "e6a73e3b20510038b43966f4cb5e99ce3e0e07e8fef8b9e788c95a2ee4c63907",
+  "title": "XFT 审批同意弹窗"
+}

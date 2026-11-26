@@ -1,0 +1,150 @@
+{
+  "abstract": "提供可折叠的设置组，支持设置项操作和分区定位。",
+  "artifacts": [
+    "XftSettingsPage.css"
+  ],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "groups",
+          "type": "prop"
+        },
+        "id": "settings-groups",
+        "purpose": "每个具名主题对应一组，传入 key、title 和按需求排序的 items。每项提供 key，title 和 body 承载设置项内容。按需传 description（说明）、action（跳转或即时修改入口）、control（如启停开关）或 details（依赖当前状态的附加内容）。页面即时处理修改和反馈，并决定 details 的显隐。模板按分组生成默认展开的折叠组。"
+      },
+      {
+        "binding": {
+          "name": "renderAnchor",
+          "type": "prop"
+        },
+        "id": "render-anchor",
+        "purpose": "设置页默认不显示分区锚点。仅当需求明确要求按具名分区跳转定位时，传入 renderAnchor，并将模板提供的 items、getContainer 和 onNavigate 原样传给分区锚点。"
+      }
+    ],
+    "mainExport": "XftSettingsPage"
+  },
+  "entry": "XftSettingsPage.tsx",
+  "files": [
+    {
+      "path": "files/template.settings-page/XftSettingsPage.css",
+      "sha256": "22664508666017f92d6579908324b7df6e3be9466e3c898a5017945a7fded3e1"
+    },
+    {
+      "path": "files/template.settings-page/XftSettingsPage.tsx",
+      "sha256": "8cafc2c140c81691ad21e236b8e70097fcbec1ff4b819d61946e8878465383f5"
+    }
+  ],
+  "guidanceDigest": "14b30633f1fa32cecd052a2f52b774bbea78d9eb82e602fe96f8ae97eef58dce",
+  "id": "template.settings-page",
+  "identityDigest": "e6bc021c92a44cbffb222767f87bc599541d6ee57125bdeca6b8d3b0b5ae5dbc",
+  "implementationDigest": "398761937e6fe9d95fca2a9ea6240d3baa05afe613e8558999bb712af3cbdb8b",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftSettingsGroup",
+        "XftSettingsItem",
+        "XftSettingsPageProps"
+      ],
+      "values": [
+        "XftSettingsPage"
+      ]
+    },
+    "mainExport": "XftSettingsPage",
+    "namedTypes": [
+      {
+        "name": "XftSettingsGroup",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "title",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "items",
+            "required": true,
+            "type": "XftSettingsItem[]"
+          }
+        ]
+      },
+      {
+        "name": "XftSettingsItem",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "title",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "description",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "body",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "action",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "control",
+            "required": false,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "details",
+            "required": false,
+            "type": "ReactNode"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftSettingsPageProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "groups",
+          "required": true,
+          "type": "XftSettingsGroup[]"
+        },
+        {
+          "default": null,
+          "name": "renderAnchor",
+          "required": false,
+          "type": "(options: {items: {key: string; href: string; title: ReactNode}[]; getContainer: () => HTMLElement | Window; onNavigate: (key: string) => void}) => ReactNode"
+        }
+      ]
+    }
+  },
+  "recordDigest": "29a77b594e805fe704d4cb8ba6a2b767c7c2e76343f55d00ec493aec9e9359a3",
+  "semanticDigest": "041a1b73f0caab65ad49fb7d483672b379550b64dbfe1ecceb23ac7c5bcb5a3e",
+  "templateSourceDigest": "9252659324238c690a5e94612f63a8df60d1bf50c8a6dd94ebd0910ac49a2d54",
+  "title": "XFT 设置页"
+}

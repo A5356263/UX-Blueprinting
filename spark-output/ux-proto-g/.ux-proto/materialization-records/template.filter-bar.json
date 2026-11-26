@@ -1,0 +1,23 @@
+{
+  "assetId": "template.filter-bar",
+  "files": [
+    {
+      "path": ".ux-proto-template.json",
+      "sha256": "ba3c5cea8d855e3fc341e6287a459bb2621525660f035f4c1d522bc6b63b6f59"
+    },
+    {
+      "path": "filter-bar/XftFilterBar.css",
+      "sha256": "8c41ea989fc517a376c8d51bb123711a2fb5d363f60baea38eeb6a3a3c37d5e8"
+    },
+    {
+      "path": "filter-bar/XftFilterBar.model.ts",
+      "sha256": "2ec2652c54de2075f471c66575c379de8aa0e0167052cbb8becda022a3e6b84e"
+    },
+    {
+      "path": "filter-bar/XftFilterBar.tsx",
+      "sha256": "550dea8410b43af2d0e34957eb34b470c892ce352f7c45c4bea6ada2583f5552"
+    }
+  ],
+  "kind": "ux-proto-materialization-original-record",
+  "schemaVersion": 1
+}

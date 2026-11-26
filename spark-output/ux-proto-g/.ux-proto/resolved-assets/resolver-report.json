@@ -1,0 +1,35 @@
+{
+  "closure": [
+    "knowledge.action-availability-by-constraint",
+    "knowledge.action-emphasis-by-intent",
+    "knowledge.scroll-ownership-by-page-type",
+    "pattern.xft-design-foundations",
+    "pattern.xft-page-action-organization",
+    "pattern.xft-page-template-selection",
+    "pattern.xft-selection-backfill",
+    "template.application-frame",
+    "template.approval-agree-dialog",
+    "template.content-action-bar",
+    "template.context-selector-panel",
+    "template.drag-sortable-list",
+    "template.filter-bar",
+    "template.filter-workbench",
+    "template.form-content",
+    "template.governed-table",
+    "template.information-card",
+    "template.section-anchor",
+    "template.section-heading",
+    "template.selection-pagination-bar",
+    "template.settings-page",
+    "template.statistic-card-grid",
+    "template.summary-info",
+    "template.table-action-bar"
+  ],
+  "diagnostics": [],
+  "roots": [
+    "pattern.xft-design-foundations",
+    "pattern.xft-page-template-selection"
+  ],
+  "schemaVersion": 3,
+  "status": "resolved"
+}

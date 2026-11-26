@@ -1,0 +1,47 @@
+{
+  "assetId": "template.application-frame",
+  "files": [
+    {
+      "path": ".ux-proto-template.json",
+      "sha256": "a75b04ee3bc331e3f52418bdb3522bbe278d91692056fd4b9852515aad176018"
+    },
+    {
+      "path": "application-frame/XftSubapplicationTopBar.assets.ts",
+      "sha256": "7ae94407c54f97bc1ae2c7e7ac2db59da9344932be3cfc80196e769510691886"
+    },
+    {
+      "path": "application-frame/XftSubapplicationTopBar.css",
+      "sha256": "e11bf60a56f58912e52e25b02fa8f11bbd26aa5aafd48c2e82271615734efc9d"
+    },
+    {
+      "path": "application-frame/XftSubapplicationTopBar.tsx",
+      "sha256": "0c2978dc7b572e8e3301d3c5249043fa315a26333927b4f3442225492b55b65c"
+    },
+    {
+      "path": "application-frame/XftTopBar.css",
+      "sha256": "1b3e4acdf5da9d33fed8dcf76c307b451027eff78b92c406ae236854e90596ba"
+    },
+    {
+      "path": "application-frame/XftTopBar.tsx",
+      "sha256": "23eb395872b6875943a5d0eace2080c8eaa15b5596db47bdb4e9e92181393a43"
+    },
+    {
+      "path": "application-frame/XftWorkspaceTabBar.css",
+      "sha256": "8500d5e16c59224827e997ae2cb19f3b2a84a22d8edb04f04bddec6b1854d9cf"
+    },
+    {
+      "path": "application-frame/XftWorkspaceTabBar.tsx",
+      "sha256": "3151698cea90f781dd903243134b24b54f8aa57ca822f0d464e11d665c141b4c"
+    },
+    {
+      "path": "XftApplicationFrame.css",
+      "sha256": "c88ae87feb39c0f978d2ecde41f5b850d9293b99933b216a6f14c1dfdb995d3a"
+    },
+    {
+      "path": "XftApplicationFrame.tsx",
+      "sha256": "f624e91c698b0b51c1747770a9b830c954375160b8db9a8628e38f18639632df"
+    }
+  ],
+  "kind": "ux-proto-materialization-original-record",
+  "schemaVersion": 1
+}

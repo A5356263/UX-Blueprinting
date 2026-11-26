@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ux-proto.local/schemas/snapshot-v4.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "generatorVersion", "pack", "entrypoints", "review", "manifestBindingRecords", "runtimeTheme", "scope", "projection", "records", "catalog", "publicSurface", "files", "contentDigest"],
+  "properties": {
+    "schemaVersion": { "enum": [2, 3, 4] },
+    "kind": { "const": "ux-proto-resolved-assets" },
+    "generatorVersion": { "type": "string" },
+    "pack": { "type": "object" },
+    "entrypoints": { "type": "array" },
+    "review": { "type": "array" },
+    "manifestBindingRecords": { "type": "object" },
+    "runtimeTheme": { "type": "object" },
+    "uiConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stylesheet", "antdVersion", "sha256"],
+      "properties": {
+        "stylesheet": { "type": "string" },
+        "antdVersion": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "scope": { "type": "object" },
+    "projection": { "type": "array" },
+    "records": { "type": "array" },
+    "catalog": { "type": "array" },
+    "publicSurface": { "type": "array" },
+    "files": { "type": "object" },
+    "contentDigest": { "type": "string" }
+  },
+  "allOf": [
+    { "if": { "properties": { "schemaVersion": { "enum": [2, 3] } } }, "then": { "not": { "required": ["uiConfig"] } } },
+    { "if": { "properties": { "schemaVersion": { "const": 4 } } }, "then": { "required": ["uiConfig"] } }
+  ]
+}

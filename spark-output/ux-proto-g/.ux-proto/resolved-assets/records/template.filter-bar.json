@@ -1,0 +1,208 @@
+{
+  "abstract": "支持组合筛选条件、统一查询、重置和展开更多条件。",
+  "artifacts": [
+    "filter-bar/XftFilterBar.model.ts"
+  ],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "fields",
+          "type": "prop"
+        },
+        "id": "fields",
+        "purpose": "按展示优先级传入筛选字段，每项提供 key 和 label。省略 type 时用文本输入，选择项用 select 并提供 options，单日期用 date，日期区间用 range。超过三项时默认仅展示前三项，其余由更多筛选展开。"
+      },
+      {
+        "binding": {
+          "name": "value",
+          "type": "prop"
+        },
+        "id": "value",
+        "purpose": "当前受控筛选值，以字段 key 为索引。文本和选项值使用字符串，日期使用 Dayjs，区间使用起止日期二元组。"
+      },
+      {
+        "binding": {
+          "name": "defaultValue",
+          "type": "prop"
+        },
+        "id": "default-value",
+        "purpose": "点击重置时恢复的值，以字段 key 为索引。页面需要同一组初始值时，用它初始化 value。"
+      },
+      {
+        "binding": {
+          "name": "onChange",
+          "type": "prop"
+        },
+        "id": "on-change",
+        "purpose": "字段变化或重置时返回完整的下一组筛选值，页面将它写回 value。"
+      },
+      {
+        "binding": {
+          "name": "onQuery",
+          "type": "prop"
+        },
+        "id": "on-query",
+        "purpose": "点击查询时返回当前完整筛选值，由页面执行查询。"
+      },
+      {
+        "binding": {
+          "name": "onReset",
+          "type": "prop"
+        },
+        "id": "on-reset",
+        "purpose": "需要在重置时执行额外动作时传入。它在 onChange 后收到同一组重置值。"
+      }
+    ],
+    "mainExport": "XftFilterBar"
+  },
+  "entry": "filter-bar/XftFilterBar.tsx",
+  "files": [
+    {
+      "path": "files/template.filter-bar/filter-bar/XftFilterBar.css",
+      "sha256": "fbba0b68700ecf2d582fbd23b73c69fe15b6b081d3a861dfc710b8045fac5d05"
+    },
+    {
+      "path": "files/template.filter-bar/filter-bar/XftFilterBar.model.ts",
+      "sha256": "675f5748225b76eab06d8f049feb922d7368ce045fc3c0fef83da46f9da403af"
+    },
+    {
+      "path": "files/template.filter-bar/filter-bar/XftFilterBar.tsx",
+      "sha256": "a45e8756e99c912ad5f0f73665016e5db04c6b35bbc66558fc39930672dff47d"
+    }
+  ],
+  "guidanceDigest": "f1c3ef2607a2b054e55ccb0e04d1d839a7753662962e0188966ff6430268513a",
+  "id": "template.filter-bar",
+  "identityDigest": "a00d190721ef719fa2cd11ffa44b0cc85cbba32932cb05c15ac5c08d349b407d",
+  "implementationDigest": "962de894fab0a9d4c85f4f1de8452b087076565ef4a62f88848df6a60b7167eb",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftFilterBarProps"
+      ],
+      "values": [
+        "XftFilterBar"
+      ]
+    },
+    "mainExport": "XftFilterBar",
+    "namedTypes": [
+      {
+        "name": "XftFilterBarField",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "type",
+            "required": false,
+            "type": "XftFilterBarControlType"
+          },
+          {
+            "default": null,
+            "name": "placeholder",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "options",
+            "required": false,
+            "type": "XftFilterBarOption[]"
+          },
+          {
+            "default": null,
+            "name": "collapsed",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "advanced",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "default": null,
+            "name": "disabled",
+            "required": false,
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "XftFilterBarOption",
+        "properties": [
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftFilterBarProps",
+      "properties": [
+        {
+          "default": null,
+          "name": "fields",
+          "required": true,
+          "type": "XftFilterBarField[]"
+        },
+        {
+          "default": null,
+          "name": "value",
+          "required": true,
+          "type": "XftFilterBarValues"
+        },
+        {
+          "default": null,
+          "name": "defaultValue",
+          "required": true,
+          "type": "XftFilterBarValues"
+        },
+        {
+          "default": null,
+          "name": "onChange",
+          "required": true,
+          "type": "(next: XftFilterBarValues) => void"
+        },
+        {
+          "default": null,
+          "name": "onQuery",
+          "required": true,
+          "type": "(value: XftFilterBarValues) => void"
+        },
+        {
+          "default": null,
+          "name": "onReset",
+          "required": false,
+          "type": "(value: XftFilterBarValues) => void"
+        }
+      ]
+    }
+  },
+  "recordDigest": "756dd24e272c9baf4153adde9f8e0da7a523eff1324c59f4518df3c7a773a11e",
+  "semanticDigest": "2a4e159680d05fd24162487aa17e91b7116d008eddeeebcd7cc675c12d256594",
+  "templateSourceDigest": "29034ce4baac7117eef01f14b0c23456859b78e42266e409af0c432b2d4b3b30",
+  "title": "XFT 筛选栏"
+}

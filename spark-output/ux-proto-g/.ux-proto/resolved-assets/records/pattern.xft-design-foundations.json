@@ -1,0 +1,67 @@
+{
+  "abstract": "定义所有 XFT 页面共同遵守的结构规则，覆盖内容分组、操作、状态和反馈。",
+  "assetLinks": [
+    {
+      "load": null,
+      "pointer": "/content/独立任务入口/选择与回填/采用模式/assetLink",
+      "source": "pattern.xft-design-foundations",
+      "target": "pattern.xft-selection-backfill"
+    },
+    {
+      "load": null,
+      "pointer": "/content/页面操作/采用模式/assetLink",
+      "source": "pattern.xft-design-foundations",
+      "target": "pattern.xft-page-action-organization"
+    }
+  ],
+  "content": {
+    "信息提示与反馈": {
+      "规则": [
+        "控件已经表达的状态不另加 Tag 或提示。",
+        "普通说明、默认行为和统计口径放在相关字段的说明或邻近辅助文案。",
+        "只有需求要求跨对象快速识别状态时才用 Tag。",
+        "校验失败或缺失项在对应字段或设置项附近展示原因和下一步。",
+        "页面和弹窗默认不显示 Alert。当前页面或弹窗的任务失败、因权限无法继续，或需求明确要求在继续操作前提示风险时，必须在该页面或弹窗的内容区顶部显示 Alert，并说明原因、影响范围和下一步。",
+        "操作成功后，结果已在当前界面可见时只更新原区域，否则提示一次。初始正常状态不显示成功提示。"
+      ]
+    },
+    "内容分组": {
+      "规则": [
+        "同一信息组的内容默认放在同一个透明布局容器中，由该容器统一定义组内排列、对齐和间距。分组容器不设置背景色、边框或阴影。各组通过标题和组间留白区分，不添加横向分割线。仅当需求明确要求独立容器，且明确该组具有独立状态、独立操作、权限边界或风险边界时，才使用 Card。组件内部的结构线由对应组件资产负责。"
+      ]
+    },
+    "独立任务入口": {
+      "选择与回填": {
+        "条件": "需求明确要求在独立界面完成选择，候选项由业务动态生成或可由用户维护，需求明确要求在独立界面搜索、筛选、分页或树形浏览，或需求明确要求在确认本次选择后才更新当前字段或区域时，必须先展开「选择与回填」，再设计选择交互。",
+        "采用模式": {
+          "assetLink": "pattern.xft-selection-backfill"
+        }
+      }
+    },
+    "生效范围": [
+      "生成 XFT 页面或窗口时，必须遵守本模式。"
+    ],
+    "页面操作": {
+      "规则": [
+        "需求明确要求提供用户操作入口时，必须先展开「页面操作组织」，再确定操作的放置位置。"
+      ],
+      "采用模式": {
+        "assetLink": "pattern.xft-page-action-organization"
+      }
+    },
+    "页面级上下文": {
+      "规则": [
+        "XFT 工作区页面默认不显示独立页面大标题。仅当需求明确要求在页面正文顶部显示标题时，才显示。"
+      ]
+    }
+  },
+  "files": [],
+  "guidanceDigest": "fff68adba06b3ee5d5e95daf13a961534c73151006347ef203469eb936dd13b5",
+  "id": "pattern.xft-design-foundations",
+  "identityDigest": "7c5eee39996a3f60eab4d22d450d1d43e32d80954d713b8862174c1d5f776166",
+  "implementationDigest": "ba69dcdfbc579d9f7cf9358f8bbbd3147e4e14e707fa588c87e750c248e09692",
+  "kind": "Pattern",
+  "recordDigest": "4b804b11711cab35e61e018088dde13a60148b2d85560931e4b5987ccc280c1f",
+  "semanticDigest": "b135b8ef4c06d6c98e4faab144ccff38780893e7fb4a77dab6473be151ea2e9e",
+  "title": "XFT 设计基础"
+}

@@ -1,0 +1,411 @@
+{
+  "abstract": "集中展示对象或范围的标题、关键字段和统计值。",
+  "artifacts": [],
+  "assetLinks": [],
+  "authoring": {
+    "customizationSurfaces": [
+      {
+        "binding": {
+          "name": "variant",
+          "type": "prop"
+        },
+        "id": "variant",
+        "purpose": "默认 custom，显示普通标题。需要带头像的人员摘要时用 person。需要范围标题及切换入口时用 range。"
+      },
+      {
+        "binding": {
+          "name": "title",
+          "type": "prop"
+        },
+        "id": "title",
+        "purpose": "摘要的主要标题。在范围场景中传当前范围名称，选中范围变化时由页面更新标题。"
+      },
+      {
+        "binding": {
+          "name": "showTitle",
+          "type": "prop"
+        },
+        "id": "show-title",
+        "purpose": "默认显示摘要标题。已有弹窗或抽屉标题承载同一信息时，传 false 隐藏摘要标题。"
+      },
+      {
+        "binding": {
+          "name": "avatar",
+          "type": "prop"
+        },
+        "id": "avatar",
+        "purpose": "人员场景的头像内容，在 person 变体中生效。"
+      },
+      {
+        "binding": {
+          "name": "timeNote",
+          "type": "prop"
+        },
+        "id": "time-note",
+        "purpose": "标题旁的时间或范围补充信息。"
+      },
+      {
+        "binding": {
+          "name": "description",
+          "type": "prop"
+        },
+        "id": "description",
+        "purpose": "标题下的辅助说明。"
+      },
+      {
+        "binding": {
+          "name": "tags",
+          "type": "prop"
+        },
+        "id": "tags",
+        "purpose": "标题旁的标签，按传入顺序最多展示前三项。"
+      },
+      {
+        "binding": {
+          "name": "actions",
+          "type": "prop"
+        },
+        "id": "actions",
+        "purpose": "标题右侧的结构化文字操作，最多显示前三项。每项提供 key、文字 label 和相应回调，可设 disabled。"
+      },
+      {
+        "binding": {
+          "name": "fields",
+          "type": "prop"
+        },
+        "id": "fields",
+        "purpose": "摘要字段列表，每项提供 key、label 和 value，最多展示前四项。"
+      },
+      {
+        "binding": {
+          "name": "statisticItems",
+          "type": "prop"
+        },
+        "id": "statistic-items",
+        "purpose": "结构化的底部统计项，每项提供 key、label 和 value。非空时优先于 statistics。"
+      },
+      {
+        "binding": {
+          "name": "statistics",
+          "type": "prop"
+        },
+        "id": "statistics",
+        "purpose": "需要自定义底部统计内容时传入，在未提供非空 statisticItems 时显示。"
+      },
+      {
+        "binding": {
+          "name": "statisticsAction",
+          "type": "prop"
+        },
+        "id": "statistics-action",
+        "purpose": "需要在底部统计区附加文字操作时传入，只有存在统计内容时显示。提供 key、文字 label 和相应回调。"
+      },
+      {
+        "binding": {
+          "name": "collapsible",
+          "type": "prop"
+        },
+        "id": "collapsible",
+        "purpose": "需要让用户收起字段及统计区时传 true，默认 false。至少有一项字段或统计内容时才显示折叠入口。"
+      },
+      {
+        "binding": {
+          "name": "defaultExpanded",
+          "type": "prop"
+        },
+        "id": "default-expanded",
+        "purpose": "启用折叠时的初始状态，默认展开。需要初始收起时传 false。"
+      },
+      {
+        "binding": {
+          "name": "onExpandedChange",
+          "type": "prop"
+        },
+        "id": "on-expanded-change",
+        "purpose": "字段及统计区展开或收起时，返回更新后的展开状态。"
+      },
+      {
+        "binding": {
+          "name": "onTitleClick",
+          "type": "prop"
+        },
+        "id": "on-title-click",
+        "purpose": "范围标题的点击回调。在 range 模式下，rangeOptions 非空时在菜单打开时调用，否则在点击标题时调用。"
+      },
+      {
+        "binding": {
+          "name": "rangeOptions",
+          "type": "prop"
+        },
+        "id": "range-options",
+        "purpose": "需要内置范围菜单时传入选项，每项含 key 和 label。在 range 变体中生效。"
+      },
+      {
+        "binding": {
+          "name": "activeRangeKey",
+          "type": "prop"
+        },
+        "id": "active-range-key",
+        "purpose": "由页面控制选中范围时，传入与 rangeOptions 对应的 key，并在 onRangeChange 中更新。省略时由模板记录菜单内选中项。"
+      },
+      {
+        "binding": {
+          "name": "onRangeChange",
+          "type": "prop"
+        },
+        "id": "on-range-change",
+        "purpose": "选择范围后返回对应 key。页面按需更新标题、摘要和联动数据。"
+      }
+    ],
+    "mainExport": "XftSummaryInfo"
+  },
+  "entry": "summary-info/XftSummaryInfo.tsx",
+  "files": [
+    {
+      "path": "files/template.summary-info/summary-info/XftSummaryInfo.css",
+      "sha256": "28e5786af8356c1b06947cb4ac06c1e1a942434984213e005643476e7d412871"
+    },
+    {
+      "path": "files/template.summary-info/summary-info/XftSummaryInfo.tsx",
+      "sha256": "ebd2f61a0e2b54304785f058c7f9ab8658912ffc9807d3a33a23daed5e005761"
+    }
+  ],
+  "guidanceDigest": "ccc3fea86038ad73dd9f8a32a0f7f772e6454a01d4986212df03376957f4d56e",
+  "id": "template.summary-info",
+  "identityDigest": "339e9dd9489610670dc53f8eb391d8357dadabac816b6e71d96f059c31d8c445",
+  "implementationDigest": "dde1576cb70ae19f2e3e40e452347eb914bae59bbb9c02d9d490b1f8d609fe8c",
+  "kind": "Template",
+  "publicApi": {
+    "exports": {
+      "types": [
+        "XftSummaryInfoAction",
+        "XftSummaryInfoField",
+        "XftSummaryInfoProps",
+        "XftSummaryInfoRangeOption",
+        "XftSummaryInfoStatistic",
+        "XftSummaryInfoVariant"
+      ],
+      "values": [
+        "XftSummaryInfo"
+      ]
+    },
+    "mainExport": "XftSummaryInfo",
+    "namedTypes": [
+      {
+        "name": "XftSummaryInfoAction",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "onClick",
+            "required": false,
+            "type": "() => void"
+          },
+          {
+            "default": null,
+            "name": "disabled",
+            "required": false,
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "XftSummaryInfoField",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "XftSummaryInfoRangeOption",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "XftSummaryInfoStatistic",
+        "properties": [
+          {
+            "default": null,
+            "name": "key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "label",
+            "required": true,
+            "type": "ReactNode"
+          },
+          {
+            "default": null,
+            "name": "value",
+            "required": true,
+            "type": "ReactNode"
+          }
+        ]
+      }
+    ],
+    "props": {
+      "name": "XftSummaryInfoProps",
+      "properties": [
+        {
+          "default": "custom",
+          "name": "variant",
+          "required": false,
+          "type": "XftSummaryInfoVariant"
+        },
+        {
+          "default": null,
+          "name": "title",
+          "required": true,
+          "type": "ReactNode"
+        },
+        {
+          "default": true,
+          "name": "showTitle",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "avatar",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "timeNote",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "description",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "tags",
+          "required": false,
+          "type": "ReactNode[]"
+        },
+        {
+          "default": null,
+          "name": "actions",
+          "required": false,
+          "type": "XftSummaryInfoAction[]"
+        },
+        {
+          "default": null,
+          "name": "fields",
+          "required": false,
+          "type": "XftSummaryInfoField[]"
+        },
+        {
+          "default": null,
+          "name": "statisticItems",
+          "required": false,
+          "type": "XftSummaryInfoStatistic[]"
+        },
+        {
+          "default": null,
+          "name": "statistics",
+          "required": false,
+          "type": "ReactNode"
+        },
+        {
+          "default": null,
+          "name": "statisticsAction",
+          "required": false,
+          "type": "XftSummaryInfoAction"
+        },
+        {
+          "default": false,
+          "name": "collapsible",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": true,
+          "name": "defaultExpanded",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "default": null,
+          "name": "onExpandedChange",
+          "required": false,
+          "type": "(expanded: boolean) => void"
+        },
+        {
+          "default": null,
+          "name": "onTitleClick",
+          "required": false,
+          "type": "() => void"
+        },
+        {
+          "default": null,
+          "name": "rangeOptions",
+          "required": false,
+          "type": "XftSummaryInfoRangeOption[]"
+        },
+        {
+          "default": null,
+          "name": "activeRangeKey",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "default": null,
+          "name": "onRangeChange",
+          "required": false,
+          "type": "(key: string) => void"
+        }
+      ]
+    }
+  },
+  "recordDigest": "5d5a3de310b6c722c5e3ad8c3bf45e7a15fa28d240343cd4d98c872855b464bd",
+  "semanticDigest": "237c5779438181b447b4c5c548dc26aeee4ed2202ee9bfcefb02967764c33a56",
+  "templateSourceDigest": "bf5753fb0731b542a89e3e7f1926f9dfabc8078054b8d888c77aa126acddf1d8",
+  "title": "XFT 汇总信息"
+}
