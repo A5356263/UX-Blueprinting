@@ -117,17 +117,138 @@
     .mode { color: var(--accent); font: 650 clamp(16px, 2vw, 22px)/1.3 var(--serif); }
     .chain h2 { font-size: clamp(18px, 2vw, 25px); line-height: 1.25; }
     .chain p:last-child { color: var(--muted); }
+    .card-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 10px; }
+    .detail-trigger, .dialog-close {
+      border: 0;
+      padding: 3px 0;
+      background: transparent;
+      color: var(--accent);
+      font: 650 12px/1.5 var(--sans);
+      cursor: pointer;
+    }
+    .detail-trigger::after { content: ""; position: absolute; inset: 0; }
+    .detail-trigger:hover, .dialog-close:hover { text-decoration: underline; text-underline-offset: .24em; }
+    :where(.detail-trigger, .dialog-close):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    .chain li:has(.detail-trigger:hover) { border-color: var(--accent); }
 
+    .capability-group {
+      display: grid;
+      grid-template-columns: minmax(130px, 1fr) minmax(0, 4fr);
+      align-items: start;
+      gap: 10px clamp(14px, 2vw, 24px);
+      padding: 12px clamp(12px, 1.5vw, 18px);
+      border: 1px solid var(--accent-line);
+      background: var(--accent-surface);
+    }
+    .capability-group h2 { color: var(--accent); font-size: 15px; line-height: 1.5; }
     .capabilities {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      border-block: 1px solid var(--line);
+      gap: 8px 16px;
+    }
+    .capabilities dt { font-weight: 650; }
+    .capabilities dd { margin-top: 2px; color: var(--muted); font-size: .88em; }
+
+    .details-dialog {
+      width: min(540px, calc(100% - 32px));
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid var(--accent-line);
+      border-radius: 12px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 20px 64px #31263b28;
+    }
+    .details-dialog::backdrop { background: #31263b70; }
+    .dialog-body { display: grid; gap: 18px; padding: clamp(19px, 4vw, 30px); font-size: 13.5px; line-height: 1.75; }
+    .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .dialog-header h2 { font-size: clamp(18px, 2.4vw, 21px); line-height: 1.35; }
+    .dialog-close { flex: none; min-height: 32px; padding: 4px 8px; border-radius: 6px; background: var(--surface); }
+    .dialog-caption { color: var(--muted); }
+    .dialog-caption strong { color: var(--accent); }
+    .demo {
+      margin: 0;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 12px;
+      line-height: 1.55;
+      overflow: hidden;
+    }
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 12px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--muted);
+    }
+    .demo-header strong { color: var(--ink); }
+    .ticket-steps { display: flex; align-items: center; gap: 6px; list-style: none; padding: 0; }
+    .ticket-steps li + li::before { content: "›"; margin-right: 6px; color: var(--muted); }
+    .demo-selected { color: var(--accent); background: var(--accent-surface); font-weight: 650; }
+    .ticket-steps .demo-selected { padding: 2px 4px; border-radius: 3px; }
+    .ticket-seats {
+      display: grid;
+      justify-content: center;
+      grid-template-columns: repeat(4, minmax(0, 40px));
+      gap: 6px;
+      list-style: none;
+      padding: 15px 12px;
+    }
+    .ticket-seats li {
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--paper);
+      color: var(--muted);
+      text-align: center;
+    }
+    .ticket-seats .demo-selected { border-color: var(--accent-line); background: var(--accent-surface); color: var(--accent); }
+    .ticket-total { padding: 7px 12px; border-top: 1px solid var(--line); color: var(--ink); }
+
+    .demo-relation {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) auto minmax(0, 1.65fr);
+      gap: 11px;
+      align-items: center;
+      padding: 12px;
+    }
+    .demo-shelf, .demo-target { display: grid; gap: 6px; min-width: 0; }
+    .demo-shelf h3, .demo-target h3 { font-size: 12px; }
+    .demo-arrow { color: var(--accent); font-size: 18px; line-height: 1; }
+    .demo-parts { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; padding: 0; }
+    .demo-parts li, .demo-form-field {
+      padding: 3px 6px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
       background: var(--paper);
     }
-    .capabilities > div { padding: 12px clamp(12px, 1.5vw, 18px); }
-    .capabilities > div + div { border-inline-start: 1px solid var(--line); }
-    .capabilities dt { color: var(--accent); font-weight: 650; }
-    .capabilities dd { margin-top: 3px; color: var(--muted); font-size: .94em; }
+    .demo-form {
+      padding: 8px;
+      border: 1px solid var(--accent-line);
+      border-radius: 5px;
+      background: var(--paper);
+    }
+    .demo-form-field { color: var(--muted); }
+    .demo-form-result { padding: 4px 6px; border-radius: 4px; }
+    .demo-sidebar { list-style: none; padding: 0; }
+    .demo-sidebar li { padding: 4px 6px; color: var(--muted); }
+    .demo-sidebar .demo-selected { border-inline-start: 2px solid var(--accent); color: var(--accent); }
+    .demo-branch { display: grid; gap: 6px; }
+    .demo-branch > div { padding: 6px 8px; border: 1px solid var(--accent-line); border-radius: 4px; background: var(--paper); }
+    .demo-branch dt { font-weight: 650; }
+    .demo-branch dd { color: var(--muted); }
+
+    @media (max-width: 400px) {
+      .demo-relation { grid-template-columns: 1fr; gap: 8px; }
+      .demo-relation .demo-arrow { justify-self: center; transform: rotate(90deg); }
+    }
 
     .note { padding: 12px 16px; border-inline-start: 3px solid var(--accent); background: var(--rose); }
     .note h2 { font-size: 1em; }
@@ -168,7 +289,7 @@
       .page { gap: 17px; padding-block: 24px 18px; }
       h1 { font-size: clamp(30px, 4.5vw, 48px); }
       .chain > li { padding: 14px; }
-      .capabilities > div { padding-block: 8px; }
+      .capability-group { padding-block: 9px; }
       .note { padding-block: 9px; }
     }
 
@@ -182,8 +303,7 @@
         width: 16px;
       }
       .chain > li { gap: 4px; }
-      .capabilities { grid-template-columns: 1fr; }
-      .capabilities > div + div { border-inline-start: 0; border-top: 1px solid var(--line); }
+      .capability-group, .capabilities { grid-template-columns: 1fr; }
       .comparison-head { display: none; }
       .comparison-row:first-of-type { border-top: 0; }
       .comparison-row { display: block; padding: 12px 14px; }
@@ -197,13 +317,13 @@
       @page { size: A4 landscape; margin: 11mm; }
       body { background: white; font-size: 12px; print-color-adjust: exact; }
       .wrap { width: 100%; }
-      .masthead, .pager > a { display: none; }
+      .masthead, .pager > a, .detail-trigger, .details-dialog { display: none !important; }
       .page[hidden] { display: grid !important; }
       .page { gap: 15px; padding-block: 6px; }
       .page + .page { break-before: page; border: 0; }
       h1 { font-size: 34px; }
       .page-header p { font-size: 15px; }
-      .chain, .capabilities, .note, .comparison, .takeaway { break-inside: avoid; }
+      .chain, .capability-group, .note, .comparison, .takeaway { break-inside: avoid; }
     }
   </style>
 </head>
@@ -228,35 +348,47 @@
       <ol class="chain" aria-label="三种扩展程度">
         <li>
           <p class="mode">直接用</p>
-          <h2>线上成品</h2>
+          <div class="card-heading">
+            <h2>线上成品</h2>
+            <button type="button" class="detail-trigger" id="show-product-details" aria-label="查看详情，线上成品" aria-haspopup="dialog" aria-controls="product-details">查看详情 <span aria-hidden="true">↗</span></button>
+          </div>
           <p>打开就能用，按已经设计好的界面和流程操作。</p>
         </li>
         <li>
           <p class="mode">自己搭</p>
-          <h2>低代码平台</h2>
+          <div class="card-heading">
+            <h2>低代码平台</h2>
+            <button type="button" class="detail-trigger" id="show-low-code-details" aria-label="查看详情，低代码平台" aria-haspopup="dialog" aria-controls="low-code-details">查看详情 <span aria-hidden="true">↗</span></button>
+          </div>
           <p>用平台提供的表单、列表和流程节点，搭出自己需要的页面和流程。</p>
         </li>
         <li class="featured">
           <p class="mode">自己做模块</p>
-          <h2>DSH 插件</h2>
+          <div class="card-heading">
+            <h2>DSH 插件</h2>
+            <button type="button" class="detail-trigger" id="show-plugin-details" aria-label="查看详情，DSH 插件" aria-haspopup="dialog" aria-controls="plugin-details">查看详情 <span aria-hidden="true">↗</span></button>
+          </div>
           <p>自己开发一块能力，决定它出现在哪里、能调用什么工具、按什么规则运行。</p>
         </li>
       </ol>
 
-      <dl class="capabilities" aria-label="DSH 插件的扩展点">
-        <div>
-          <dt>技能与工具</dt>
-          <dd>给 Agent 加做事方法和可以调用的动作。</dd>
-        </div>
-        <div>
-          <dt>运行逻辑</dt>
-          <dd>接入会话和工作区，让自己的规则运行起来。</dd>
-        </div>
-        <div>
-          <dt>产品界面</dt>
-          <dd>在客户端预留的位置加入口和专用页面。</dd>
-        </div>
-      </dl>
+      <section class="capability-group" aria-labelledby="capabilities-title">
+        <h2 id="capabilities-title">DSH 插件能扩展哪三层？</h2>
+        <dl class="capabilities">
+          <div>
+            <dt>技能与工具</dt>
+            <dd>给 Agent 加做事方法和可以调用的动作。</dd>
+          </div>
+          <div>
+            <dt>运行逻辑</dt>
+            <dd>接入会话和工作区，让自己的规则运行起来。</dd>
+          </div>
+          <div>
+            <dt>产品界面</dt>
+            <dd>在客户端预留的位置加入口和专用页面。</dd>
+          </div>
+        </dl>
+      </section>
 
       <aside class="note" aria-labelledby="comparison-title">
         <h2 id="comparison-title">和其他 Harness 怎么比？</h2>
@@ -333,12 +465,101 @@
     </section>
   </main>
 
+  <dialog class="details-dialog" id="product-details" aria-labelledby="product-details-title">
+    <div class="dialog-body">
+      <header class="dialog-header">
+        <h2 id="product-details-title">线上成品 · 直接用</h2>
+        <form method="dialog"><button type="submit" class="dialog-close" autofocus>关闭</button></form>
+      </header>
+      <figure class="demo" aria-label="订票网站先选日期、再选座位、最后付款，当前选中 B3">
+        <div class="demo-header">
+          <strong>订票网站</strong>
+          <ol class="ticket-steps">
+            <li>选日期</li>
+            <li class="demo-selected">选座位</li>
+            <li>付款</li>
+          </ol>
+        </div>
+        <ul class="ticket-seats" aria-label="可选座位">
+          <li>A1</li><li>A2</li><li>A3</li><li>A4</li>
+          <li>B1</li><li>B2</li><li class="demo-selected" aria-label="B3，已选">B3</li><li>B4</li>
+        </ul>
+        <p class="ticket-total">已选座位 B3</p>
+      </figure>
+      <p class="dialog-caption"><strong>你选座位，网站定流程。</strong>选完座位，下一步已经由产品安排好。</p>
+    </div>
+  </dialog>
+
+  <dialog class="details-dialog" id="low-code-details" aria-labelledby="low-code-details-title">
+    <div class="dialog-body">
+      <header class="dialog-header">
+        <h2 id="low-code-details-title">低代码平台 · 自己搭</h2>
+        <form method="dialog"><button type="submit" class="dialog-close" autofocus>关闭</button></form>
+      </header>
+      <figure class="demo" aria-label="把现成的表单、名单和提醒组合成活动报名页">
+        <div class="demo-relation">
+          <div class="demo-shelf">
+            <h3>平台提供的模块</h3>
+            <ul class="demo-parts"><li>表单</li><li>名单</li><li>提醒</li></ul>
+          </div>
+          <span class="demo-arrow" aria-hidden="true">→</span>
+          <div class="demo-target demo-form">
+            <h3>活动报名</h3>
+            <p class="demo-form-field">姓名</p>
+            <p class="demo-form-field">联系电话</p>
+            <p class="demo-form-result demo-selected">提交后更新名单、发送提醒</p>
+          </div>
+        </div>
+      </figure>
+      <p class="dialog-caption"><strong>平台给模块，你决定怎么搭。</strong>你选用哪些模块、收什么信息，以及提交后怎么走。</p>
+    </div>
+  </dialog>
+
+  <dialog class="details-dialog" id="plugin-details" aria-labelledby="plugin-details-title">
+    <div class="dialog-body">
+      <header class="dialog-header">
+        <h2 id="plugin-details-title">DSH 插件的三层扩展</h2>
+        <form method="dialog"><button type="submit" class="dialog-close" autofocus>关闭</button></form>
+      </header>
+      <figure class="demo" aria-label="Harness 侧栏中的新入口连接插件提供的技能、工具和运行规则">
+        <div class="demo-header"><strong>DeepSeek Harness</strong></div>
+        <div class="demo-relation">
+          <div class="demo-shelf">
+            <h3>客户端侧栏</h3>
+            <ul class="demo-sidebar"><li>会话</li><li class="demo-selected">新增模块入口</li></ul>
+          </div>
+          <span class="demo-arrow" aria-hidden="true">→</span>
+          <dl class="demo-target demo-branch" aria-label="模块包含的功能">
+            <div><dt>技能与工具</dt><dd>规定 Agent 会做什么</dd></div>
+            <div><dt>运行规则</dt><dd>规定点击后怎么处理</dd></div>
+          </dl>
+        </div>
+      </figure>
+      <p class="dialog-caption"><strong>你可以自己做一块新能力。</strong>入口和专用页面给人操作，技能、工具和规则一起随插件装进 Harness。</p>
+    </div>
+  </dialog>
+
   <script>
     const pages = [...document.querySelectorAll('.page')]
     const links = [...document.querySelectorAll('[data-page-link]')]
+    function currentDialog() {
+      return document.querySelector('.details-dialog[open]')
+    }
+
+    for (const trigger of document.querySelectorAll('.detail-trigger')) {
+      const dialog = document.getElementById(trigger.getAttribute('aria-controls'))
+      trigger.addEventListener('click', () => {
+        trigger.focus({ preventScroll: true })
+        dialog.showModal()
+      })
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close()
+      })
+    }
 
     function showPage(focusHeading = false) {
       const current = pages.find(page => '#' + page.id === location.hash) ?? pages[0]
+      if (current.id !== 'plugins') currentDialog()?.close()
       for (const page of pages) page.hidden = page !== current
       for (const link of links) {
         if (link.hash === '#' + current.id) link.setAttribute('aria-current', 'page')
@@ -350,7 +571,7 @@
 
     window.addEventListener('hashchange', () => showPage(true))
     document.addEventListener('keydown', event => {
-      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+      if (currentDialog() || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
       const current = pages.findIndex(page => !page.hidden)
       const destination = pages[current + (event.key === 'ArrowRight' ? 1 : -1)]
