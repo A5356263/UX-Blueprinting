@@ -6,6 +6,7 @@ import { promisify } from 'node:util'
 import { completedFor, emptyManifest, normalizeSkillId } from './state.js'
 import { classifyPrdReview, validateMarkdown } from './artifacts.js'
 import { recommendHandoff } from './orchestration.js'
+import { inspectPrototype, preparePrototype, rankPrototypes } from './prototype-reuse.js'
 
 const limit = 320_000
 const sessionPattern = /^[A-Za-z0-9._-]{8,120}$/
@@ -408,7 +409,8 @@ export function createWorkbench(ctx, catalog) {
       '禁止直接写 spark-output/ 根目录；正式产物只能通过 submit_design_artifact 登记。',
       '读取上游时优先读任务目录内文件，不要读写 spark-output/ 根目录副本。',
       ...upstream.map(entry => '本轮已登记上游产物：' + entry.path),
-      skill === 'ux-proto-g' ? '使用本任务已登记的正式页面规格。独立原型工作区固定为本任务目录下的 ux-proto-g/。按发行流程完成本轮构建，成功或降级后提交构建摘要；工作台以 .ux-proto/build-report.json 为准。构建失败时向用户报告失败原因和恢复步骤。' : '',
+      skill === 'ux-proto-g' ? '独立原型工作区固定为本任务目录下的 ux-proto-g/。使用列出的正式页面规格及本轮用户材料；只有用户材料时直接使用，遇到影响设计的关键缺口先确认。按 Skill 的发行流程完成本轮构建，成功或降级后提交构建摘要。' : '',
+      task.round?.prototype?.sourceId ? '用户已确认复用 ' + task.round.prototype.sourceId + '。工作台已在本轮 ux-proto-g/ 准备底稿。检查现有页面，保留未受影响的模块，只改本轮需求涉及的部分；不要改动历史任务。' : '',
       skill === 'solution-swimlane' ? '本次工作台任务使用已登记的页面规格作为输入。将泳道图 HTML 与 .work 输出定位到本任务目录下的 solution-swimlane/，保留 Skill 中的渲染和校验。只在 HTML 校验通过后登记产物。' : '',
       '',
       String(text ?? '').trim() || '请按该 Skill 的规则继续本轮任务。',
@@ -456,7 +458,7 @@ export function createWorkbench(ctx, catalog) {
   async function createTask(workspace, body) {
     const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
-    if (skill === 'ux-proto-g') throw new Error('请在已有正式页面规格的任务中使用「页面生成」')
+    if (skill === 'ux-proto-g') return startPrototype(workspace, body)
     const sessionId = String(body.sessionId ?? '')
     if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
     if (!await sessionBelongs(workspace, sessionId)) throw new Error('所选会话不属于当前工作区')
@@ -496,6 +498,124 @@ export function createWorkbench(ctx, catalog) {
     return task
   }
 
+  function prototypeUpstream(workspace, task) {
+    if (!task) return null
+    const manifest = loadManifest(workspace, task.id)
+    if (completedFor(manifest).includes('page-spec')) {
+      const entry = manifest.skills['page-spec']
+      return { taskId: task.id, entry, content: readArtifact(workspace, task.id, entry) }
+    }
+    const previous = task.round?.prototype?.upstream
+    if (!previous) return null
+    const entry = loadManifest(workspace, previous.taskId).skills['page-spec']
+    if (!entry || entry.stale || entry.sha256 !== previous.sha256) return null
+    return { taskId: previous.taskId, entry, content: readArtifact(workspace, previous.taskId, entry) }
+  }
+
+  function prototypeCandidate(workspace, task) {
+    const manifest = loadManifest(workspace, task.id)
+    const artifact = manifest.skills['ux-proto-g']
+    if (!artifact) throw new Error('该任务没有已登记的原型')
+    const registered = readArtifact(workspace, task.id, artifact).toString('utf8')
+    const root = directory(taskDir(workspace, task.id, false), ['ux-proto-g'], false)
+    const info = inspectPrototype(root)
+    if (!registered.split(/\r?\n/).some(line => line === '- 源码摘要：' + info.sourceDigest)) {
+      throw new Error('构建记录和已登记的原型不一致')
+    }
+    return { id: task.id, title: task.title, version: info.version, updatedAt: artifact.updatedAt ?? task.updatedAt,
+      stale: Boolean(artifact.stale), root }
+  }
+
+  async function prototypeOptions(workspace, body, compare) {
+    const index = loadIndex(workspace)
+    const task = body.taskId ? findTask(index, body.taskId) : null
+    const candidates = index.tasks.flatMap(item => {
+      try {
+        const { root, ...candidate } = prototypeCandidate(workspace, item)
+        return [candidate]
+      } catch { return [] }
+    }).sort((a, b) => Number(b.id === task?.id) - Number(a.id === task?.id) ||
+      String(b.updatedAt).localeCompare(String(a.updatedAt)))
+    if (!compare) return { candidates, fork: Boolean(task && existsSync(join(taskDir(workspace, task.id, false), 'ux-proto-g'))) }
+    const upstream = prototypeUpstream(workspace, task)
+    const input = { text: String(body.text ?? '').slice(0, 4000),
+      files: (Array.isArray(body.files) ? body.files : []).slice(0, 8).map(file => String(file).slice(0, 180)),
+      excerpt: String(body.excerpt ?? '').slice(0, 3000),
+      pageSpec: upstream?.content.toString('utf8').slice(0, 4500) }
+    // Compare a batch of recent candidates. The full list remains available for manual selection.
+    const examples = candidates.slice(0, 8).map(item => {
+      const history = findTask(index, item.id)
+      let pageSpec
+      try { pageSpec = prototypeUpstream(workspace, history)?.content.toString('utf8').slice(0, 1500) } catch {}
+      return { id: item.id, title: item.title, pageSpec }
+    })
+    return { recommendations: examples.length ? await rankPrototypes(ctx, input, examples) : [] }
+  }
+
+  function startPrototype(workspace, body) {
+    return serialize(workspace.id + ':prototype', async () => {
+      const choice = body.prototype
+      if (!['new', 'reuse'].includes(choice?.mode)) throw new Error('请先确认原型的起点')
+      let index = loadIndex(workspace)
+      const original = body.taskId ? findTask(index, body.taskId) : null
+      const sessionId = String(original?.sessionId ?? body.sessionId ?? '')
+      if (original ? original.status !== 'active' : !sessionPattern.test(sessionId) ||
+          !await sessionBelongs(workspace, sessionId)) throw new Error('请使用当前工作区的有效会话和进行中任务')
+      if (!original) index = loadIndex(workspace)
+      const upstream = prototypeUpstream(workspace, original)
+      if (!upstream && !String(body.text ?? '').trim() && !body.fileName) throw new Error('请先提供本轮页面需求')
+      const candidate = choice.mode === 'reuse'
+        ? prototypeCandidate(workspace, findTask(index, choice.sourceId)) : null
+      if (candidate && candidate.version !== choice.version) throw new Error('历史原型已更新，请重新选择')
+      const now = new Date().toISOString()
+      let task = original
+      let allocated = index.next
+      const fresh = !original || existsSync(join(taskDir(workspace, original.id, false), 'ux-proto-g'))
+      if (fresh) {
+        const date = now.slice(0, 10).replace(/-/g, '')
+        let id
+        do { id = `T-${date}-${String(allocated++).padStart(2, '0')}` }
+        while (existsSync(join(baseDir(workspace, false), id)))
+        task = { id, title: titleFromInput({ ...body, title: original?.title }, id), titleSource: 'input',
+          status: 'active', sessionId, segments: [{ startSeq: seqOf(sessionId), endSeq: null }],
+          createdAt: now, skills: [] }
+      }
+      const dir = taskDir(workspace, task.id, true)
+      const target = join(dir, 'ux-proto-g')
+      try {
+        if (candidate) await preparePrototype(candidate.root, target, candidate.version)
+        index = loadIndex(workspace)
+        if (original) {
+          const live = findTask(index, original.id)
+          if (live.round?.id !== original.round?.id || live.status !== 'active' ||
+              prototypeUpstream(workspace, live)?.entry.sha256 !== upstream?.entry.sha256) {
+            throw new Error('任务或上游页面规格已变化，请重新确认')
+          }
+          if (!fresh) task = live
+        }
+        if (fresh) {
+          saveManifest(workspace, task.id, emptyManifest(workspace.id, task.id, sessionId))
+          task.segments[0].startSeq = seqOf(sessionId)
+          pauseOthers(workspace, index, '')
+          index.tasks.push(task)
+          index.next = Math.max(index.next, allocated)
+        }
+        task.lastSkill = 'ux-proto-g'
+        task.skills = [...new Set([...(task.skills ?? []), task.lastSkill])]
+        task.updatedAt = new Date().toISOString()
+        task.round = { id: randomUUID(), skill: task.lastSkill, startedAt: Date.now(), prototype: {
+          mode: choice.mode, sourceId: candidate?.id,
+          upstream: upstream && { taskId: upstream.taskId, sha256: upstream.entry.sha256 },
+        } }
+        saveIndex(workspace, index)
+        return { task: summary(task), prompt: promptFor(task, task.lastSkill, body.text, upstream ? [upstream.entry] : []) }
+      } catch (error) {
+        if (candidate && existsSync(target)) renameSync(target, join(dir, '.prototype-preparation-failed-' + randomUUID()))
+        throw error
+      }
+    })
+  }
+
   async function changeTask(workspace, body, action) {
     const index = loadIndex(workspace)
     const task = findTask(index, String(body.taskId ?? ''))
@@ -532,9 +652,7 @@ export function createWorkbench(ctx, catalog) {
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
     const manifest = loadManifest(workspace, task.id)
     const done = completedFor(manifest)
-    if (skill === 'ux-proto-g' && !done.includes('page-spec')) {
-      throw new Error('请先登记本任务的正式页面规格，再生成交互原型')
-    }
+    if (skill === 'ux-proto-g') return startPrototype(workspace, body)
     const upstream = (catalog.reads?.(skill) ?? []).filter(id => done.includes(id)).map(id => {
       const entry = manifest.skills[id]
       readArtifact(workspace, task.id, entry)
@@ -600,6 +718,8 @@ export function createWorkbench(ctx, catalog) {
     if (task.status !== 'active') throw new Error('任务不是进行中，不能发送消息')
     const key = String(body.artifactKey ?? '')
     const manifest = loadManifest(workspace, task.id)
+    const skill = normalizeSkillId(manifest.skills[key]?.skill ?? task.lastSkill)
+    if (skill === 'ux-proto-g') return startPrototype(workspace, body)
     if (key) {
       const entry = manifest.skills[key]
       if (entry?.manualLock) {
@@ -607,7 +727,6 @@ export function createWorkbench(ctx, catalog) {
         saveManifest(workspace, task.id, manifest)
       }
     }
-    const skill = normalizeSkillId(manifest.skills[key]?.skill ?? task.lastSkill)
     task.round = { id: randomUUID(), skill, startedAt: Date.now() }
     task.lastSkill = skill
     task.updatedAt = new Date().toISOString()
@@ -656,10 +775,16 @@ export function createWorkbench(ctx, catalog) {
       let bytes = Buffer.from(markdown)
       let format = 'markdown'
       if (skill === 'ux-proto-g') {
-        if (task.round?.skill !== skill || !completedFor(manifest).includes('page-spec')) {
+        if (task.round?.skill !== skill || (!task.round.prototype && !completedFor(manifest).includes('page-spec'))) {
           throw new Error('请在本任务的交互原型轮次登记构建结果')
         }
-        readArtifact(workspace, task.id, manifest.skills['page-spec'])
+        if (!task.round.prototype) readArtifact(workspace, task.id, manifest.skills['page-spec'])
+        const upstream = task.round.prototype?.upstream
+        if (upstream) {
+          const entry = loadManifest(workspace, upstream.taskId).skills['page-spec']
+          if (!entry || entry.stale || entry.sha256 !== upstream.sha256) throw new Error('本轮上游页面规格已变化')
+          readArtifact(workspace, upstream.taskId, entry)
+        }
         const proofPath = 'ux-proto-g/.ux-proto/build-report.json'
         const proof = join(dir, proofPath)
         if (!existsSync(proof)) throw new Error('找不到本轮原型构建回执')
@@ -785,6 +910,9 @@ export function createWorkbench(ctx, catalog) {
       const workspace = registry.get(body?.workspaceId ?? url.searchParams.get('workspace'))
       if (!workspace) throw new Error('请选择已在 Harness 登记的工作区')
       if (request.method === 'POST') {
+        if (body.action === 'prototype-options' || body.action === 'prototype-compare') {
+          return json(await prototypeOptions(workspace, body, body.action === 'prototype-compare'))
+        }
         if (body.action === 'create-session') return json({ sessionId: await createSession(workspace) })
         if (body.action === 'create-task') return json(await createTask(workspace, body))
         if (body.action === 'prompt') return json(await promptTask(workspace, body))

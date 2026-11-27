@@ -1,7 +1,7 @@
 window.__ModuleLoader__.load({
   id: 'dsh-ux-blueprinting',
   factory(require) {
-    const { createElement: h, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } = require('react')
+    const { createElement: h, Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } = require('react')
 
     const id = 'ux-blueprinting'
     const endpoint = '/api/ux-blueprinting/workbench'
@@ -699,6 +699,14 @@ window.__ModuleLoader__.load({
       .uxbp-finish-dialog::backdrop { background: rgb(20 23 26 / .27); }
       .uxbp-finish-dialog h2 { margin: 0; font-size: 17px; }
       .uxbp-finish-dialog p { margin: 6px 0 16px; color: var(--muted); font-size: 13px; }
+      .uxbp-reuse-dialog { width: min(520px, calc(100% - 32px)); max-height: 82vh; overflow: auto; }
+      .uxbp-reuse-list { display: grid; gap: 8px; max-height: 36vh; overflow: auto; margin: 10px 0 16px; }
+      .uxbp-reuse-option { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px;
+        align-items: start; border: .5px solid var(--line); border-radius: 10px; padding: 10px; cursor: pointer; }
+      .uxbp-reuse-option:has(:checked) { border-color: currentColor; }
+      .uxbp-reuse-option small { display: block; color: var(--muted); margin-top: 3px; overflow-wrap: anywhere; }
+      .uxbp-reuse-search { box-sizing: border-box; width: 100%; margin-top: 10px; padding: 8px 10px;
+        border: .5px solid var(--line); border-radius: 8px; font: inherit; }
       .uxbp-finish-actions { display: flex; gap: 8px; justify-content: flex-end; }
       .uxbp-handoff { margin: 4px 6px 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
       .uxbp-artifact-html { flex: 1; min-height: 0; width: 100%; border: 0; }
@@ -1606,6 +1614,13 @@ window.__ModuleLoader__.load({
       const browseReturn = useRef(null)
       const workspaceRef = useRef(workspace)
       const finishDialog = useRef(null)
+      const reuseDialog = useRef(null)
+      const reuseResolve = useRef(null)
+      const [reusePrompt, setReusePrompt] = useState(null)
+      const [reuseChoice, setReuseChoice] = useState('')
+      const [reuseSearch, setReuseSearch] = useState('')
+      const [reuseAnalysis, setReuseAnalysis] = useState(null)
+      const [reuseBusy, setReuseBusy] = useState(false)
       const shownNotices = useRef(new Set())
       const submitting = useRef(false)
       const drag = useRef({ down: false, moved: false, x: 0, y: 0, left: 0, top: 0 })
@@ -1935,16 +1950,6 @@ window.__ModuleLoader__.load({
 
       function useSkill(skillId) {
         if (submitting.current) return
-        if (skillId === 'ux-proto-g') {
-          if (latest?.status === 'active' && overview?.artifacts?.some(
-            item => item.key === 'page-spec' && !item.stale
-          )) {
-            void prepareHandoff({ id: skillId })
-          } else {
-            setError('请打开已有正式页面规格的进行中任务，再使用「页面生成」。')
-          }
-          return
-        }
         if (task) {
           clearTask()
           browseReturn.current = null
@@ -1992,12 +1997,92 @@ window.__ModuleLoader__.load({
         return data.sessionId
       }
 
+      async function choosePrototype(taskId, text, files = []) {
+        const request = { workspaceId: workspace, taskId, text, files: files.map(file => file.name) }
+        const data = await api(null, { ...request, action: 'prototype-options' })
+        if (workspaceRef.current !== workspace) return null
+        setReusePrompt({ ...data, request, files })
+        setReuseChoice('')
+        setReuseSearch('')
+        setReuseAnalysis(null)
+        setReuseBusy(false)
+        return new Promise(resolve => {
+          reuseResolve.current = resolve
+          reuseDialog.current.showModal()
+        })
+      }
+
+      function closeReuse(choice = null) {
+        const resolve = reuseResolve.current
+        reuseResolve.current = null
+        reuseDialog.current?.close()
+        setReusePrompt(null)
+        resolve?.(choice)
+      }
+
+      async function comparePrototypes() {
+        const request = reusePrompt.request
+        const resolve = reuseResolve.current
+        setReuseBusy(true)
+        try {
+          let excerpt = ''
+          for (const file of reusePrompt.files.filter(file => /\.(md|txt|json|csv)$/i.test(file.name)).slice(0, 3)) {
+            const snippet = await file.slice(0, 2048).text()
+            excerpt += file.name + '\n' + snippet + '\n'
+          }
+          if (reuseResolve.current !== resolve) return
+          const result = await api(null, { ...request, excerpt, action: 'prototype-compare' })
+          if (reuseResolve.current === resolve) setReuseAnalysis(result.recommendations)
+        } catch {
+          if (reuseResolve.current === resolve) setReuseAnalysis('暂时无法比较，你仍可手动选择。')
+        } finally {
+          if (reuseResolve.current === resolve) setReuseBusy(false)
+        }
+      }
+
+      function renderReuseOptions() {
+        const results = Array.isArray(reuseAnalysis) ? reuseAnalysis : []
+        const byId = new Map(results.map(({ id, reason }) => [id, reason]))
+        const candidates = (reusePrompt?.candidates ?? []).filter(item =>
+          (item.title + ' ' + item.id).toLowerCase().includes(reuseSearch.trim().toLowerCase()))
+        candidates.sort((a, b) => Number(byId.has(b.id)) - Number(byId.has(a.id)))
+        const selected = reusePrompt?.candidates.find(item => item.id === reuseChoice)
+        const option = (id, title, description, reason) => h('label', { key: id, className: 'uxbp-reuse-option' },
+          h('input', { type: 'radio', name: 'uxbp-prototype-choice', checked: reuseChoice === id,
+            onChange: () => setReuseChoice(id) }),
+          h('span', null, title, description && h('small', null, description), reason && h('small', null, reason)))
+        return h('dialog', { ref: reuseDialog, className: 'uxbp-finish-dialog uxbp-reuse-dialog',
+          'aria-labelledby': 'uxbp-reuse-title', onCancel: event => { event.preventDefault(); closeReuse() } },
+          h('h2', { id: 'uxbp-reuse-title' }, '选择页面生成的起点'),
+          h('p', null, reusePrompt?.fork ? '本次会开启新任务，保留原任务和原型。' : '可以从空白开始，也可以选一个历史原型作为底稿。'),
+          option('new', '从空白开始'),
+          reusePrompt?.candidates.length ? h(Fragment, null,
+            h('input', { className: 'uxbp-reuse-search', type: 'search', value: reuseSearch,
+              'aria-label': '搜索历史原型', placeholder: '搜索历史原型', onChange: event => setReuseSearch(event.target.value) }),
+            h('div', { className: 'uxbp-reuse-list' }, candidates.length ? candidates.map(item =>
+              option(item.id, item.title, item.id + (item.stale ? ' · 上游已更新，可作底稿' : ''), byId.get(item.id)))
+              : h('small', null, '没有找到匹配的原型')),
+            h('button', { type: 'button', className: 'uxbp-btn', disabled: reuseBusy,
+              title: '使用当前模型比较本轮输入、文本节选和近期候选摘要',
+              onClick: () => void comparePrototypes() }, reuseBusy ? '正在比较…' : 'AI 比较近期候选'),
+            typeof reuseAnalysis === 'string' && h('p', { role: 'status' }, reuseAnalysis),
+            Array.isArray(reuseAnalysis) && !results.length && h('p', { role: 'status' }, '目前资料不足以推荐近期原型。'))
+            : h('p', null, '当前工作区没有可选的历史原型。'),
+          h('div', { className: 'uxbp-finish-actions' },
+            h('button', { type: 'button', className: 'uxbp-btn', onClick: () => closeReuse() }, '取消'),
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-primary', disabled: !reuseChoice,
+              onClick: () => closeReuse(selected ? { mode: 'reuse', sourceId: selected.id, version: selected.version }
+                : { mode: 'new' }) }, '确认并执行')))
+      }
+
       async function execute() {
         if (submitting.current || !workspace || !skill || (!text.trim() && !files.length && !canHandoff)) return
         submitting.current = true
         setSending(true)
         setError('')
         try {
+          const prototype = skill === 'ux-proto-g' ? await choosePrototype(task?.id, text, files) : undefined
+          if (skill === 'ux-proto-g' && !prototype) return
           const targetSession = task?.sessionId || await ensureSession()
           let current = task
           if (current?.status === 'completed') throw new Error('任务已完成，请先恢复任务再执行')
@@ -2010,7 +2095,7 @@ window.__ModuleLoader__.load({
           if (!current) {
             const data = await api(null, {
               action: 'create-task', workspaceId: workspace, sessionId: targetSession, skill,
-              text, fileName: files[0]?.name,
+              text, fileName: files[0]?.name, prototype,
             })
             current = data.task
             prompt = data.prompt
@@ -2019,7 +2104,9 @@ window.__ModuleLoader__.load({
             setSessionId(targetSession)
             save({ workspace, sessionId: targetSession, activeTaskId: current.id })
           } else {
-            const data = await api(null, { action: 'prompt', workspaceId: workspace, taskId: current.id, skill, text })
+            const data = await api(null, { action: 'prompt', workspaceId: workspace, taskId: current.id, skill,
+              text, fileName: files[0]?.name, prototype })
+            current = data.task ?? current
             prompt = data.prompt
           }
           const ref = sessions.retain(targetSession, { source: 'controllerOperation' })
@@ -2198,9 +2285,12 @@ window.__ModuleLoader__.load({
         setError('')
         const content = messageText
         try {
+          const prototypeSkill = (selectedArtifact?.skill ?? task.lastSkill) === 'ux-proto-g'
+          const prototype = prototypeSkill ? await choosePrototype(task.id, content) : undefined
+          if (prototypeSkill && !prototype) return
           const data = await api(null, {
             action: 'message', workspaceId: workspace, taskId: task.id,
-            artifactKey: selectedArtifactKey, text: content,
+            artifactKey: selectedArtifactKey, text: content, prototype,
           })
           const ref = sessions.retain(task.sessionId, { source: 'controllerOperation' })
           const value = await ref.ready
@@ -2209,7 +2299,12 @@ window.__ModuleLoader__.load({
             if (result?.ok === false) throw new Error(result.error?.message || '发送失败')
           } finally { ref.release() }
           setMessageText('')
-          await loadTask(task.id, undefined, true)
+          const resultTask = data.task ?? task
+          if (resultTask.id !== task.id) {
+            save({ workspace, sessionId: resultTask.sessionId, activeTaskId: resultTask.id, viewMode: 'detail' })
+            await loadTask(resultTask.id)
+            await loadWorkspaceData(workspace)
+          } else await loadTask(task.id, undefined, true)
           overviewRefresh.current()
         } catch (e) {
           setError(e.message)
@@ -2793,6 +2888,7 @@ window.__ModuleLoader__.load({
             ),
             h('div', { className: 'uxbp-divider', 'aria-hidden': true }),
             renderOverview()),
+        renderReuseOptions(),
         finishPrompt?.workspace === workspace && h('dialog', {
           ref: finishDialog, className: 'uxbp-finish-dialog', 'aria-labelledby': 'uxbp-finish-title',
           onCancel: event => { event.preventDefault(); void respondToFinish(false) },
