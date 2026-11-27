@@ -261,6 +261,11 @@ window.__ModuleLoader__.load({
       detailPlaceholder: 'Add context or request a change to this task…',
       detailDisabled: 'Continue the task to send a message.',
       noArtifacts: 'No artifacts yet.',
+      runningTask: 'Working on this task. Please wait.',
+      followExecution: 'For execution details,',
+      viewTaskDetail: 'View task details',
+      viewPrototype: 'View page prototype',
+      prototypeFolderOpened: 'Prototype folder opened. Open index.html to view the prototype.',
       documentOutline: 'Document sections',
       artifactSteps: 'Artifact steps',
       editArtifact: 'Edit',
@@ -384,6 +389,11 @@ window.__ModuleLoader__.load({
       detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
       detailDisabled: '继续任务后才能发送消息。',
       noArtifacts: '还没有产物。',
+      runningTask: '正在执行，请稍等。',
+      followExecution: '查看执行过程可',
+      viewTaskDetail: '查看任务详情',
+      viewPrototype: '查看页面原型',
+      prototypeFolderOpened: '已打开原型文件夹，打开 index.html 即可查看。',
       documentOutline: '文档章节',
       artifactSteps: '产物步骤',
       editArtifact: '编辑',
@@ -630,6 +640,7 @@ window.__ModuleLoader__.load({
       .uxbp-taskline .uxbp-status { font-size: 10px; }
       .uxbp-overview-meta { display: flex; align-items: flex-start; gap: 8px; }
       .uxbp-overview-meta time { display: block; margin-top: 2px; color: var(--faint); }
+      .uxbp-view-task { justify-self: start; margin-inline-start: -4px; }
       .uxbp-task-state { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; border-radius: 999px; font-size: 11px; white-space: nowrap;
         background: var(--soft); color: var(--muted); }
       .uxbp-task-state::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
@@ -647,6 +658,9 @@ window.__ModuleLoader__.load({
       .uxbp-step-list svg { width: 14px; height: 14px; color: var(--faint); }
       .uxbp-step-list [data-done="true"] svg { color: #216b51; }
       .uxbp-step-list [aria-current="step"] { font-weight: 600; }
+      .uxbp-step-spinner { width: 12px; height: 12px; margin-inline: 1px; border: 1.5px solid var(--line-strong);
+        border-top-color: var(--accent); border-radius: 50%; animation: uxbp-step-spin .85s linear infinite; }
+      @keyframes uxbp-step-spin { to { transform: rotate(1turn); } }
       .uxbp-next-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 6px 8px; padding: 8px; overflow: hidden;
         border: .5px solid var(--line); border-radius: 14px; background: var(--card); }
       .uxbp-next-card .uxbp-art { width: 64px; height: 48px; margin: 0; border-radius: 7px; }
@@ -659,11 +673,11 @@ window.__ModuleLoader__.load({
         border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
       .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
       .uxbp-next-card .uxbp-use:disabled, .uxbp-next-alternatives .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
-      .uxbp-top .uxbp-guide-entry, .uxbp-next-card .uxbp-next-start, .uxbp-next-alternatives .uxbp-next-start {
+      .uxbp-top .uxbp-guide-entry, .uxbp-next-card .uxbp-next-start, .uxbp-next-alternatives .uxbp-next-start, .uxbp-use.uxbp-view-task {
         background: transparent; border-color: transparent; color: var(--muted); font-size: 11px; font-weight: 500;
         box-shadow: none; backdrop-filter: none; }
       .uxbp-top .uxbp-guide-entry:hover:not(:disabled), .uxbp-next-card .uxbp-next-start:hover:not(:disabled),
-      .uxbp-next-alternatives .uxbp-next-start:hover:not(:disabled) {
+      .uxbp-next-alternatives .uxbp-next-start:hover:not(:disabled), .uxbp-use.uxbp-view-task:hover:not(:disabled) {
         background: transparent; color: var(--ink); opacity: 1; text-decoration: underline; }
       .uxbp-next-alternatives { margin: 4px 0 0; padding: 0; list-style: none; }
       .uxbp-next-alternatives li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center;
@@ -869,8 +883,23 @@ window.__ModuleLoader__.load({
       .uxbp-artifact-step[aria-pressed="true"] .uxbp-artifact-step-number { background: var(--ink); color: var(--card); }
       .uxbp-artifact-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
         border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+      .uxbp-running-state { display: flex; flex: 1; min-height: 0; flex-direction: column; align-items: center;
+        justify-content: center; gap: 6px; padding: 12px; text-align: center; }
+      .uxbp-running-state strong { font-size: 15px; }
+      .uxbp-running-note { margin: 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+      .uxbp-running-summary { margin-bottom: 4px; }
+      .uxbp-session-link { margin: 0; padding: 0; border: 0; background: transparent; color: #315fbd; font: inherit; cursor: pointer; }
+      .uxbp-session-link:hover, .uxbp-session-link:focus-visible { text-decoration: underline; text-underline-offset: .17em; }
+      .uxbp-running-art { flex: 0 1 74px; width: 92px; min-height: 0; margin-bottom: 4px; overflow: visible; }
+      .uxbp-running-art .uxbp-analysis-lens { animation: uxbp-scan 2.8s ease-in-out infinite; }
+      @keyframes uxbp-scan { 0%, 100% { transform: translate(-10px, -6px); } 50% { transform: translate(5px, 10px); } }
+      @media (prefers-reduced-motion: reduce) {
+        .uxbp-running-art .uxbp-analysis-lens, .uxbp-step-spinner { animation: none; }
+      }
       .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
         padding: 10px 0; }
+      .uxbp-artifact-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+      .uxbp-prototype-notice { margin: 0 0 6px; color: var(--muted); font-size: 12px; }
       .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
       .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
       .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 8px 0 20px; }
@@ -1554,6 +1583,8 @@ window.__ModuleLoader__.load({
       const [artifactDraft, setArtifactDraft] = useState('')
       const [artifactSaving, setArtifactSaving] = useState(false)
       const [artifactError, setArtifactError] = useState('')
+      const [prototypeOpening, setPrototypeOpening] = useState(false)
+      const [prototypeResult, setPrototypeResult] = useState(null)
       const [messageText, setMessageText] = useState('')
       const [messageSending, setMessageSending] = useState(false)
       const canvasRef = useRef(null)
@@ -2043,6 +2074,19 @@ window.__ModuleLoader__.load({
         } catch (e) { setError(e.message) }
       }
 
+      async function viewPrototype() {
+        if (!task || prototypeOpening) return
+        const id = task.id
+        setPrototypeOpening(true)
+        setPrototypeResult(null)
+        try {
+          const result = await api(null, { action: 'open-prototype', workspaceId: workspace, taskId: id })
+          if (result.opened === 'folder') setPrototypeResult({ id, workspace, text: t('prototypeFolderOpened') })
+        } catch (error) {
+          setPrototypeResult({ id, workspace, text: error.message, error: true })
+        } finally { setPrototypeOpening(false) }
+      }
+
       async function prepareHandoff(item) {
         if (!latest || latestBusy || artifactSaving) return
         if (artifactEditing && artifactDraft !== artifactContent && !window.confirm('放弃未保存的修改？')) return
@@ -2402,9 +2446,9 @@ window.__ModuleLoader__.load({
             { id: reviewRecord.key, label: reviewRecord.label, done: !reviewRecord.stale, status: reviewRecord.stale ? 'needsReview' : 'completed' },
             ...(replied || isPending(reviewRecord)
               ? [{ id: 'prd-review-reply', label: t('userReply'), done: replied,
-                  current: current && !replied && !artifact, status: replied ? 'completed' : 'awaiting' }]
+              current: current && !executing && !replied && !artifact, status: replied ? 'completed' : 'awaiting' }]
               : []),
-            { ...skillStep, current: current && !(isPending(reviewRecord) && !replied && !artifact) },
+            { ...skillStep, current: current && (executing || !(isPending(reviewRecord) && !replied && !artifact)) },
           ]
         })
         const origin = leftView === 'detail' ? detailOrigin : tab
@@ -2429,7 +2473,10 @@ window.__ModuleLoader__.load({
             latest && h('div', { className: 'uxbp-overview-meta' },
               h('div', { className: 'uxbp-meta' }, latest.id,
                 h('time', { dateTime: latest.createdAt }, formatWhen(latest.createdAt))),
-              h('span', { className: 'uxbp-task-state', 'data-status': latest.status }, statusLabel(latest.status)))),
+              h('span', { className: 'uxbp-task-state', 'data-status': latest.status }, statusLabel(latest.status))),
+            latest && (leftView !== 'detail' || taskId !== latest.id) &&
+              h('button', { type: 'button', className: 'uxbp-use uxbp-view-task', disabled: sending || artifactSaving || messageSending,
+                onClick: () => void openTask(latest, undefined, origin) }, t('viewTaskDetail'))),
           h('div', { className: 'uxbp-overview-body' },
             overviewError && h('p', { className: 'uxbp-empty', role: 'status' }, t('overviewUnavailable')),
             !latest && !overviewError && h('p', { className: 'uxbp-empty' }, t('noTask')),
@@ -2439,7 +2486,9 @@ window.__ModuleLoader__.load({
                 ...steps.map(step => h('li', {
                   key: step.id, 'data-done': step.done, 'aria-current': step.current ? 'step' : undefined,
                   title: t(step.status), 'aria-label': step.label + ' · ' + t(step.status),
-                }, h(Icon, { path: step.done ? 'm5 12 4 4L19 6' : 'M16 12a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z' }),
+                }, step.status === 'workingOn'
+                  ? h('span', { className: 'uxbp-step-spinner', 'aria-hidden': true })
+                  : h(Icon, { path: step.done ? 'm5 12 4 4L19 6' : 'M16 12a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z' }),
                 h('span', null, step.label))))),
             latest && !closed && (pending || recommendation) && h('section', { className: 'uxbp-overview-section' },
               h('h3', null, t('next')),
@@ -2482,19 +2531,38 @@ window.__ModuleLoader__.load({
               onClick: () => selectArtifact(item.key),
             }, h('span', { className: 'uxbp-artifact-step-number', 'aria-hidden': true }, index + 1), h('span', null, item.label)))))
         const meta = selectedArtifact
+        const executing = task.status === 'active' && task.sessionId === sessionId && (running || sending || messageSending)
+        const showExecutionInBody = executing && !artifactEditing && (artifacts.length === 0 || !artifactContent.trim())
+        const canOpenPrototype = Boolean(window.dshDesktop?.fileActions) && meta?.key === 'ux-proto-g' && !meta.stale
+        const prototypeNotice = canOpenPrototype && prototypeResult?.id === task.id && prototypeResult.workspace === workspace
+          ? h('p', { className: 'uxbp-prototype-notice', role: prototypeResult.error ? 'alert' : 'status' }, prototypeResult.text) : null
+        const executionLink = task.sessionId && h('button', { type: 'button', className: 'uxbp-session-link',
+          onClick: () => uiWorkspace.openSession(task.sessionId) }, t('enter'))
+        const executionState = showExecutionInBody && h('div', { className: 'uxbp-running-state' },
+          h('svg', { className: 'uxbp-running-art', viewBox: '0 0 92 74', fill: 'none', 'aria-hidden': true },
+            h('rect', { x: 19, y: 5, width: 49, height: 62, rx: 8, fill: 'var(--soft)', stroke: 'var(--line-strong)' }),
+            h('path', { d: 'M29 19h27M29 29h16M29 54h26', stroke: 'var(--faint)', strokeWidth: 1.8, strokeLinecap: 'round' }),
+            h('path', { d: 'M30 47l7-7 7 3 10-8', stroke: 'var(--accent)', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }),
+            h('g', { className: 'uxbp-analysis-lens' },
+              h('circle', { cx: 58, cy: 33, r: 11, fill: 'var(--card)', fillOpacity: .7, stroke: 'var(--accent)', strokeWidth: 2 }),
+              h('path', { d: 'm66 41 8 8', stroke: 'var(--accent)', strokeWidth: 2.5, strokeLinecap: 'round' }))),
+          h('strong', { role: 'status' }, t('runningTask')),
+          executionLink && h('p', { className: 'uxbp-running-note' }, t('followExecution'), ' ', executionLink))
         const canConfirm = task.status === 'active' && meta?.reviewStatus === 'ready_for_confirmation' && !meta.stale
         const detailStatus = meta?.manualLock
           ? t('manualEdited')
           : [isPending(meta) ? t('needsReview') : meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
         const artifactPanel = artifacts.length === 0
-          ? h('div', { className: 'uxbp-artifact-panel' }, h('p', { className: 'uxbp-empty' }, t('noArtifacts')))
+          ? h('div', { className: 'uxbp-artifact-panel' }, executionState || h('p', { className: 'uxbp-empty' }, t('noArtifacts')))
           : h('div', { className: 'uxbp-artifact-panel' },
               h('div', { className: 'uxbp-artifact-toolbar' },
                 h('div', { className: 'uxbp-artifact-meta' },
                   h('strong', null, meta?.label ?? ''),
                   detailStatus && h('span', null, detailStatus),
                   meta?.origin === 'user' && !meta?.manualLock && h('span', null, t('manualEdited'))),
-                h('div', { style: { display: 'flex', gap: 5 } },
+                h('div', { className: 'uxbp-artifact-actions' },
+                  canOpenPrototype && h('button', { type: 'button', className: 'uxbp-btn', disabled: prototypeOpening,
+                    onClick: () => void viewPrototype() }, prototypeOpening ? t('loading') : t('viewPrototype')),
                   artifactEditing
                     ? h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: () => void saveArtifact() }, artifactSaving ? t('loading') : t('save'))
                     : meta?.editable && h('button', { type: 'button', className: 'uxbp-btn', onClick: startEdit }, t('editArtifact')),
@@ -2503,17 +2571,18 @@ window.__ModuleLoader__.load({
                     onClick: () => void confirmOutput() }, t('confirmOutput')),
                   artifactEditing && h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: cancelEdit }, t('cancel')))),
               artifactError && h('p', { className: 'uxbp-artifact-error', role: 'alert' }, artifactError),
+              prototypeNotice,
               artifactEditing
                 ? h('textarea', {
                     className: 'uxbp-artifact-edit', value: artifactDraft, spellCheck: false,
                     onChange: event => setArtifactDraft(event.target.value),
                   })
-                : artifactLoading
+                : executionState || (artifactLoading
                   ? h('div', { className: 'uxbp-artifact-scroll' }, h('p', { className: 'uxbp-empty' }, t('loading')))
                   : meta?.format === 'html' && !artifactError && artifactContent
                     ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
                         srcDoc: artifactContent.replace(/^\s*<!doctype html>/i, '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; base-uri \'none\'; form-action \'none\'">') })
-                    : h(MarkdownView, { key: selectedArtifactKey, content: artifactContent, outlineLabel: t('documentOutline') }))
+                    : h(MarkdownView, { key: selectedArtifactKey, content: artifactContent, outlineLabel: t('documentOutline') })))
 
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
@@ -2532,7 +2601,9 @@ window.__ModuleLoader__.load({
               h('div', { className: 'uxbp-detail-heading' },
                 h('h1', null, task.title || t('taskName')),
                 h('p', null, task.id + ' · ' + formatWhen(task.createdAt))),
-              artifactSteps)),
+              artifactSteps),
+            executing && !showExecutionInBody && h('p', { className: 'uxbp-running-note uxbp-running-summary', role: 'status' },
+              t('runningTask'), ' ', executionLink)),
           artifactPanel,
           h('div', { className: 'uxbp-detail-composer' },
             h('textarea', {

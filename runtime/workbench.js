@@ -1,6 +1,8 @@
+import { execFile } from 'node:child_process'
 import { createHash, randomUUID } from 'node:crypto'
 import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { promisify } from 'node:util'
 import { completedFor, emptyManifest, normalizeSkillId } from './state.js'
 import { classifyPrdReview, validateMarkdown } from './artifacts.js'
 import { recommendHandoff } from './orchestration.js'
@@ -13,6 +15,22 @@ const confirmationSkills = new Set(['uxs', 'board'])
 const closingSkills = new Set(['uxs', 'ux-proto-g', 'solution-swimlane', 'edge', 'board'])
 const swimlanePath = 'solution-swimlane/solution_swimlane.html'
 const pendingStatuses = ['waiting_response', 'ready_for_confirmation']
+const execFileAsync = promisify(execFile)
+
+function openDesktopPath(path) {
+  if (process.platform === 'win32') {
+    const executable = join(process.env.SystemRoot ?? 'C:/Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe')
+    // Pass the verified path as data so spaces and special characters stay literal.
+    const command = "$ErrorActionPreference = 'Stop'; $launch = [System.Diagnostics.ProcessStartInfo]::new(); " +
+      '$launch.FileName = $env:UXBP_PREVIEW_PATH; $launch.UseShellExecute = $true; [System.Diagnostics.Process]::Start($launch) | Out-Null'
+    return execFileAsync(executable, ['-NoProfile', '-NonInteractive', '-Command', command], {
+      windowsHide: true, timeout: 8000, env: { ...process.env, UXBP_PREVIEW_PATH: path },
+    })
+  }
+  return process.platform === 'darwin'
+    ? execFileAsync('/usr/bin/open', ['--', path], { timeout: 8000 })
+    : execFileAsync('xdg-open', [path], { timeout: 8000 })
+}
 
 function contained(root, path) {
   const local = relative(root, path)
@@ -279,6 +297,34 @@ export function createWorkbench(ctx, catalog) {
     const bytes = readFileSync(requested)
     if (digest(bytes) !== entry.sha256) throw new Error('产物被修改')
     return bytes
+  }
+
+  async function openPrototype(workspace, taskId) {
+    if (!process.versions.electron || process.env.ELECTRON_RUN_AS_NODE !== '1') {
+      throw new Error('请在本机 Harness 桌面端打开页面原型')
+    }
+    const task = findTask(loadIndex(workspace), taskId)
+    const entry = loadManifest(workspace, task.id).skills['ux-proto-g']
+    if (!entry || entry.stale) throw new Error('当前任务没有可打开的页面原型')
+    readArtifact(workspace, task.id, entry)
+    const folder = directory(taskDir(workspace, task.id, false), ['ux-proto-g'], false)
+    const index = join(folder, 'index.html')
+    try {
+      const info = lstatSync(index)
+      if (info.isFile() && !info.isSymbolicLink()) {
+        contained(folder, realpathSync(index))
+        await openDesktopPath(index)
+        return { opened: 'browser' }
+      }
+    } catch {
+      // The folder is still useful when the HTML entry is missing or cannot be opened.
+    }
+    try {
+      await openDesktopPath(folder)
+      return { opened: 'folder' }
+    } catch {
+      throw new Error('无法打开原型文件夹：' + folder)
+    }
   }
 
   function artifactList(workspace, task, manifest) {
@@ -744,6 +790,7 @@ export function createWorkbench(ctx, catalog) {
         if (body.action === 'prompt') return json(await promptTask(workspace, body))
         if (body.action === 'update-artifact') return json(await updateArtifact(workspace, body))
         if (body.action === 'confirm-artifact') return json(await confirmArtifact(workspace, body))
+        if (body.action === 'open-prototype') return json(await openPrototype(workspace, String(body.taskId ?? '')))
         if (body.action === 'message') return json(await message(workspace, body))
         if (['pause', 'complete', 'resume', 'rename'].includes(body.action)) {
           return json({ task: await changeTask(workspace, body, body.action) })
