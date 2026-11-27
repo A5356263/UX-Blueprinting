@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="两页介绍 DeepSeek Harness 的插件机制，以及 Skill 之间的状态记录与交接。">
+  <title>DeepSeek Harness 与 OpenFlow</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #fffcfc;
+      --surface: #f8f5f6;
+      --ink: #31263b;
+      --muted: #62576a;
+      --accent: #473982;
+      --line: #dcd6dd;
+      --accent-line: #bdb0d3;
+      --accent-surface: #f2edf7;
+      --rose: #f8eced;
+      --gutter: clamp(16px, 4vw, 48px);
+      --width: 1120px;
+      --sans: "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC", system-ui, sans-serif;
+      --serif: "Songti SC", "Noto Serif CJK SC", SimSun, Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image: radial-gradient(#a28ba426 .7px, transparent .7px);
+      background-size: 24px 24px;
+      font: 400 clamp(14px, 1.25vw, 16px)/1.65 var(--sans);
+      overflow-wrap: anywhere;
+    }
+    h1, h2, h3, p, ol, ul, dl, dd { margin: 0; }
+    a { color: var(--accent); text-underline-offset: .24em; }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    [hidden] { display: none !important; }
+
+    .wrap { width: min(var(--width), calc(100% - 2 * var(--gutter))); margin-inline: auto; }
+    .masthead { position: sticky; top: 0; z-index: 2; border-bottom: 1px solid var(--line); background: var(--paper); }
+    .masthead-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px 20px;
+      min-height: 58px;
+      padding-block: 6px;
+    }
+    .identity { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 650; }
+    .identity::before { content: ""; width: 7px; height: 7px; flex: none; background: var(--accent); }
+    .nav { display: flex; gap: 4px; }
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding-inline: 10px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .nav a[aria-current="page"] { border-color: var(--accent-line); color: var(--accent); background: var(--accent-surface); }
+    .nav a:hover { color: var(--accent); text-decoration: underline; }
+
+    .page {
+      display: grid;
+      align-content: start;
+      gap: clamp(16px, 2.25vw, 28px);
+      padding-block: clamp(28px, 6vh, 72px) clamp(22px, 5vh, 48px);
+      scroll-margin-top: 98px;
+    }
+    .page + .page { border-top: 1px solid var(--line); }
+    .page-header { display: grid; gap: 10px; max-width: 850px; }
+    h1 {
+      font-size: clamp(28px, 5vw, 58px);
+      line-height: 1.16;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+    h1:focus { outline: none; }
+    .page-header p { color: var(--muted); font-size: clamp(15px, 1.6vw, 20px); text-wrap: pretty; }
+    .page-header strong { color: var(--accent); font-weight: 650; }
+
+    .chain {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      list-style: none;
+      padding: 0;
+    }
+    .chain > li {
+      position: relative;
+      display: grid;
+      align-content: start;
+      gap: 7px;
+      min-width: 0;
+      padding: clamp(14px, 2vw, 24px);
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .chain li:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 1px);
+      width: 17px;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font: 14px/1 var(--sans);
+      text-align: center;
+    }
+    .chain .featured { border-color: var(--accent-line); background: var(--accent-surface); }
+    .mode { color: var(--accent); font: 650 clamp(16px, 2vw, 22px)/1.3 var(--serif); }
+    .chain h2 { font-size: clamp(18px, 2vw, 25px); line-height: 1.25; }
+    .chain p:last-child { color: var(--muted); }
+
+    .capabilities {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-block: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .capabilities > div { padding: 12px clamp(12px, 1.5vw, 18px); }
+    .capabilities > div + div { border-inline-start: 1px solid var(--line); }
+    .capabilities dt { color: var(--accent); font-weight: 650; }
+    .capabilities dd { margin-top: 3px; color: var(--muted); font-size: .94em; }
+
+    .note { padding: 12px 16px; border-inline-start: 3px solid var(--accent); background: var(--rose); }
+    .note h2 { font-size: 1em; }
+    .note p { margin-top: 3px; }
+    .references { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--muted); font-size: 12px; }
+
+    .comparison { border: 1px solid var(--line); background: var(--paper); }
+    .comparison-head, .comparison-row {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr) minmax(0, 1.15fr);
+    }
+    .comparison-head { color: var(--muted); background: var(--surface); font-size: 13px; font-weight: 650; }
+    .comparison-row { border-top: 1px solid var(--line); }
+    .comparison-head > *, .comparison-row > * { padding: 12px clamp(12px, 1.7vw, 20px); min-width: 0; }
+    .comparison-head > * + *, .comparison-row > * + * { border-inline-start: 1px solid var(--line); }
+    .comparison-row h2 { font-size: clamp(16px, 1.65vw, 21px); line-height: 1.35; }
+    .comparison-row dl { display: contents; }
+    .comparison-row dl > div + div { border-inline-start: 1px solid var(--line); }
+    .comparison-row dl > div { padding: 12px clamp(12px, 1.7vw, 20px); border-inline-start: 1px solid var(--line); }
+    .comparison-row dt { display: none; }
+    .comparison-row dd { color: var(--muted); }
+    .comparison-row dd strong { color: var(--ink); }
+    .comparison-row.featured { background: var(--accent-surface); }
+    .comparison-row.featured h2 { color: var(--accent); }
+    .takeaway {
+      padding: 15px clamp(14px, 2.2vw, 24px);
+      color: var(--paper);
+      background: var(--accent);
+      font-size: clamp(16px, 2.1vw, 23px);
+      font-weight: 650;
+      text-wrap: pretty;
+    }
+
+    .pager { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+    .pager a { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-weight: 650; font-size: 13px; white-space: nowrap; }
+
+    @media screen and (min-width: 681px) and (max-height: 760px) {
+      .page { gap: 17px; padding-block: 24px 18px; }
+      h1 { font-size: clamp(30px, 4.5vw, 48px); }
+      .chain > li { padding: 14px; }
+      .capabilities > div { padding-block: 8px; }
+      .note { padding-block: 9px; }
+    }
+
+    @media (max-width: 680px) {
+      .page { gap: 17px; padding-block: 24px; }
+      .chain { grid-template-columns: 1fr; gap: 13px; }
+      .chain li:not(:last-child)::after {
+        content: "↓";
+        inset: auto auto -13px 50%;
+        transform: translateX(-50%);
+        width: 16px;
+      }
+      .chain > li { gap: 4px; }
+      .capabilities { grid-template-columns: 1fr; }
+      .capabilities > div + div { border-inline-start: 0; border-top: 1px solid var(--line); }
+      .comparison-head { display: none; }
+      .comparison-row:first-of-type { border-top: 0; }
+      .comparison-row { display: block; padding: 12px 14px; }
+      .comparison-row h2 { padding: 0; margin-bottom: 8px; }
+      .comparison-row dl > div { padding: 0; border-inline-start: 0; }
+      .comparison-row dl > div + div { margin-top: 8px; border-inline-start: 0; }
+      .comparison-row dt { display: block; color: var(--accent); font-size: 12px; font-weight: 650; }
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 11mm; }
+      body { background: white; font-size: 12px; print-color-adjust: exact; }
+      .wrap { width: 100%; }
+      .masthead, .pager > a { display: none; }
+      .page[hidden] { display: grid !important; }
+      .page { gap: 15px; padding-block: 6px; }
+      .page + .page { break-before: page; border: 0; }
+      h1 { font-size: 34px; }
+      .page-header p { font-size: 15px; }
+      .chain, .capabilities, .note, .comparison, .takeaway { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <p class="identity">DeepSeek Harness × OpenFlow</p>
+      <nav class="nav" aria-label="介绍页导航">
+        <a href="#plugins" data-page-link>插件机制</a>
+        <a href="#handoff" data-page-link>Skill 交接</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page" id="plugins" aria-labelledby="plugins-title">
+      <header class="page-header">
+        <h1 id="plugins-title" tabindex="-1">DeepSeek Harness 插件能扩展什么？</h1>
+        <p>从<strong>直接用</strong>、<strong>自己搭</strong>，到<strong>自己做模块</strong>。</p>
+      </header>
+
+      <ol class="chain" aria-label="三种扩展程度">
+        <li>
+          <p class="mode">直接用</p>
+          <h2>线上成品</h2>
+          <p>打开就能用，按已经设计好的界面和流程操作。</p>
+        </li>
+        <li>
+          <p class="mode">自己搭</p>
+          <h2>低代码平台</h2>
+          <p>用平台提供的表单、列表和流程节点，搭出自己需要的页面和流程。</p>
+        </li>
+        <li class="featured">
+          <p class="mode">自己做模块</p>
+          <h2>DSH 插件</h2>
+          <p>自己开发一块能力，决定它出现在哪里、能调用什么工具、按什么规则运行。</p>
+        </li>
+      </ol>
+
+      <dl class="capabilities" aria-label="DSH 插件的扩展点">
+        <div>
+          <dt>技能与工具</dt>
+          <dd>给 Agent 加做事方法和可以调用的动作。</dd>
+        </div>
+        <div>
+          <dt>运行逻辑</dt>
+          <dd>接入会话和工作区，让自己的规则运行起来。</dd>
+        </div>
+        <div>
+          <dt>产品界面</dt>
+          <dd>在客户端预留的位置加入口和专用页面。</dd>
+        </div>
+      </dl>
+
+      <aside class="note" aria-labelledby="comparison-title">
+        <h2 id="comparison-title">和其他 Harness 怎么比？</h2>
+        <p>看它开放了哪些扩展点。Claude Code 插件可以接工具和运行钩子。DSH 同时开放运行服务和客户端界面位置，开发者可以把两边接进同一个插件。</p>
+      </aside>
+
+      <footer class="pager">
+        <p class="references">
+          <a href="https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/" target="_blank" rel="noopener">DSH 插件开发</a>
+          <a href="https://deepseek-harness.github.io/deepseek-harness/en/reference/subsystems/web-client" target="_blank" rel="noopener">DSH 客户端架构</a>
+          <a href="https://code.claude.com/docs/en/plugins/manifest-reference" target="_blank" rel="noopener">Claude Code 插件</a>
+        </p>
+        <a href="#handoff" data-page-link>Skill 交接 <span aria-hidden="true">→</span></a>
+      </footer>
+    </section>
+
+    <section class="page" id="handoff" aria-labelledby="handoff-title">
+      <header class="page-header">
+        <h1 id="handoff-title" tabindex="-1">多个 Skill 接力，谁来交接？</h1>
+        <p>上一个 Skill 做到哪了？<strong>下一步能不能开始、该用哪份结果？</strong></p>
+      </header>
+
+      <div class="comparison">
+        <div class="comparison-head" aria-hidden="true"><span>实现方式</span><span>怎么交接</span><span>成本和稳定性</span></div>
+
+        <section class="comparison-row" aria-labelledby="cloud-title">
+          <h2 id="cloud-title">云端 Agent</h2>
+          <dl>
+            <div>
+              <dt>怎么交接</dt>
+              <dd>主要用对话和 Skill 时，把规则写进 Skill。每次由 Agent 从对话和材料里判断进度、找交接的结果。</dd>
+            </div>
+            <div>
+              <dt>成本和稳定性</dt>
+              <dd><strong>起步快。</strong>流程越长，交接越依赖 Agent 每次读对上下文、找到正确的材料。</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="comparison-row" aria-labelledby="workspace-title">
+          <h2 id="workspace-title">支持工作区的 Agent</h2>
+          <dl>
+            <div>
+              <dt>怎么交接</dt>
+              <dd>把状态和产物存到工作区，用脚本检查条件、把对应的文件交给下一个 Skill。</dd>
+            </div>
+            <div>
+              <dt>成本和稳定性</dt>
+              <dd><strong>脚本判断可以做稳。</strong>还要接好谁来触发、怎么传入当前任务、用户在哪里确认。</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="comparison-row featured" aria-labelledby="plugin-title">
+          <h2 id="plugin-title">DSH 插件</h2>
+          <dl>
+            <div>
+              <dt>怎么交接</dt>
+              <dd>把用户操作接到业务代码。每次按当前任务的记录判断进度、走确认节点、交给下一步对应的材料。</dd>
+            </div>
+            <div>
+              <dt>成本和稳定性</dt>
+              <dd><strong>前期要开发。</strong>交接规则可以反复验证，用户也能直接看到进度和下一步。</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+
+      <p class="takeaway">Skill 负责做好每一棒，程序负责记住跑到哪、什么时候能交棒、交哪份结果。</p>
+
+      <footer class="pager">
+        <a href="#plugins" data-page-link><span aria-hidden="true">←</span> 插件机制</a>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    const pages = [...document.querySelectorAll('.page')]
+    const links = [...document.querySelectorAll('[data-page-link]')]
+
+    function showPage(focusHeading = false) {
+      const current = pages.find(page => '#' + page.id === location.hash) ?? pages[0]
+      for (const page of pages) page.hidden = page !== current
+      for (const link of links) {
+        if (link.hash === '#' + current.id) link.setAttribute('aria-current', 'page')
+        else link.removeAttribute('aria-current')
+      }
+      window.scrollTo(0, 0)
+      if (focusHeading) current.querySelector('h1').focus({ preventScroll: true })
+    }
+
+    window.addEventListener('hashchange', () => showPage(true))
+    document.addEventListener('keydown', event => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+      const current = pages.findIndex(page => !page.hidden)
+      const destination = pages[current + (event.key === 'ArrowRight' ? 1 : -1)]
+      if (destination) {
+        event.preventDefault()
+        location.hash = destination.id
+      }
+    })
+    showPage()
+  </script>
+</body>
+</html>
