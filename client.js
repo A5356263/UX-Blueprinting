@@ -224,9 +224,9 @@ window.__ModuleLoader__.load({
       prdWhen: '手上已有 PRD，想在做设计前查清业务遗漏、流程断点或没考虑到的异常时使用。',
       prdInput: '提供这次要审核的 PRD。如果已经做过一轮审核，一并提供原问题和逐项回复。',
       prdOutput: '有阻断问题时，先得到一份待确认问题单。问题全部解决后生成正式需求基线；没有阻断时直接生成。',
-      prdNextPage: '把基线转成页面和交互规则。',
-      prdNextStrategy: '先定体验方向，再接页面设计。',
-      prdNextPrototype: '按页面规格生成可点击原型。',
+      prdNextPage: '把基线转成页面\n和交互规则。',
+      prdNextStrategy: '先定体验方向，\n再接页面设计。',
+      prdNextPrototype: '按页面规格生成\n可点击原型。',
       pageSpecWhen: '需求已经明确，准备把它落到具体页面和交互时使用。',
       pageSpecInput: '提供本轮正式需求基线，或明确指定 PRD、截图、交互稿。有确认过的体验策略也可以一并交来。',
       pageSpecOutput: '一份页面规格文档，写清页面结构、流程、规则和状态，可用于设计检查或生成原型。',
@@ -236,13 +236,13 @@ window.__ModuleLoader__.load({
       skillFlowBefore: '可先做',
       skillFlowBackToSpec: '继续做页面规格',
       skillFlowSeparator: '：',
-      pageSpecBeforePrd: '补齐规则和异常，让规格更完整。',
-      pageSpecBeforeUxs: '定清体验方向，让页面设计有依据。',
-      pageSpecAfterPrototype: '用页面规格生成可点击的原型。',
-      uxsBeforePrd: '厘清范围和规则，让策略有边界。',
-      uxsAfterJourney: '把体验方向落实到阶段和触点。',
-      uxsAfterStories: '把体验方向拆成可验证的用户任务。',
-      uxsAfterPageSpec: '把已确认的体验方向落实到页面和交互。',
+      pageSpecBeforePrd: '补齐规则和异常，\n让规格更完整。',
+      pageSpecBeforeUxs: '定清体验方向，\n让页面设计有依据。',
+      pageSpecAfterPrototype: '用页面规格生成\n可点击的原型。',
+      uxsBeforePrd: '厘清范围和规则，\n让策略有边界。',
+      uxsAfterJourney: '把体验方向\n落实到阶段和触点。',
+      uxsAfterStories: '把体验方向\n拆成可验证的用户任务。',
+      uxsAfterPageSpec: '把已确认的\n体验方向落实到页面和交互。',
       confirmOutput: '确认此产物',
       needsReview: '待复核',
       handoff: '承接任务 ',
@@ -496,30 +496,30 @@ window.__ModuleLoader__.load({
       .uxbp-flow-strategy { grid-area: 3 / 3; }
       .uxbp-flow-edge { position: relative; display: grid; place-items: center; min-width: 0; align-self: stretch; color: var(--accent); }
       .uxbp-flow-edge::before { content: ''; position: absolute; inset-inline: 0; top: 50%; border-top: 1px solid currentColor; }
-      .uxbp-flow-caption { position: relative; max-width: calc(100% - 14px); padding: 1px 4px; background: var(--bg);
-        font-size: 10.5px; line-height: 1.45; text-align: center; text-wrap: pretty; }
-      .uxbp-flow-caption b { font-weight: 600; white-space: nowrap; }
+      .uxbp-flow-caption { position: absolute; bottom: calc(50% + 5px); left: 50%; width: max-content;
+        max-width: min(calc(100% - 12px), 16ic); transform: translateX(-50%);
+        font-size: 10.5px; line-height: 1.45; text-align: center; white-space: pre-line; text-wrap: balance; overflow-wrap: anywhere; }
+      .uxbp-flow-caption b { font-weight: 600; }
       .uxbp-flow-edge i { position: absolute; inset-inline-end: 2px; top: 50%; width: 5px; height: 5px;
         border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: translateY(-50%) rotate(45deg); }
       .uxbp-flow-main { grid-area: 1 / 2; z-index: 1; }
-      .uxbp-flow-main .uxbp-flow-caption, .uxbp-flow-next .uxbp-flow-caption { transform: translateY(-16px); }
       .uxbp-flow-next { grid-area: 1 / 4; }
       .uxbp-flow-optional { grid-area: 1 / 2 / 4 / 3; color: var(--muted); }
       .uxbp-flow-optional::before, .uxbp-flow-return::before { content: none; }
       .uxbp-flow-curve { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
       .uxbp-flow-optional .uxbp-flow-curve {
         inset-block: calc(25% - var(--uxbp-flow-gap) / 4); height: calc(50% + var(--uxbp-flow-gap) / 2); }
-      .uxbp-flow-optional .uxbp-flow-caption { transform: translateY(2px); }
+      .uxbp-flow-optional .uxbp-flow-caption { top: calc(75% + var(--uxbp-flow-gap) / 4 + 5px); bottom: auto; }
       .uxbp-flow-optional i { top: auto; bottom: calc(25% - var(--uxbp-flow-gap) / 4);
         transform: translateY(50%) rotate(45deg); }
       .uxbp-flow-return { grid-area: 2 / 3; color: var(--muted); }
       .uxbp-flow-return i { top: 2px; inset-inline-end: auto; left: 44%; transform: translateX(-50%) rotate(-45deg); }
-      .uxbp-flow-return .uxbp-flow-caption { position: absolute; top: 50%; left: 62%; width: max-content; max-width: 245px;
+      .uxbp-flow-return .uxbp-flow-caption { top: 50%; bottom: auto; left: 64%; max-width: 16ic;
         text-align: left; transform: translateY(-50%); }
       .uxbp-skill-detail-content .uxbp-skill-workflow {
-        max-width: 840px; container: uxbp-related-workflow / inline-size; }
+        max-width: 840px; padding-bottom: 24px; container: uxbp-related-workflow / inline-size; }
       .uxbp-related-map { display: grid; grid-template-columns: 148px minmax(0, 1fr) 118px minmax(0, 1fr) 132px;
-        grid-auto-rows: 76px; align-items: center; }
+        grid-auto-rows: 88px; align-items: center; }
       .uxbp-related-current { grid-column: 3; grid-row: var(--current-row); }
       .uxbp-related-route { display: contents; }
       .uxbp-related-route .uxbp-flow-card { grid-column: 5; grid-row: var(--card-row); }
@@ -532,7 +532,12 @@ window.__ModuleLoader__.load({
       .uxbp-related-edge i { position: absolute; top: var(--target-y); right: 2px; width: 5px; height: 5px;
         border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: translateY(-50%) rotate(45deg); }
       .uxbp-related-route[data-before="true"] i { right: auto; left: 2px; transform: translateY(-50%) rotate(225deg); }
-      .uxbp-related-edge .uxbp-flow-caption { position: absolute; left: 50%; top: var(--label-y); width: max-content; transform: translate(-50%, -50%); }
+      .uxbp-related-edge[data-slope="up"] .uxbp-flow-caption { bottom: calc(75% + 5px); }
+      .uxbp-related-edge[data-slope="down"] .uxbp-flow-caption { top: calc(75% + 5px); bottom: auto; }
+      @container uxbp-related-workflow (width > 640px) {
+        .uxbp-related-map[data-branching="true"] .uxbp-related-edge[data-primary="true"] .uxbp-flow-caption {
+          left: auto; right: 4px; transform: none; }
+      }
       @container uxbp-related-workflow (max-width: 640px) {
         .uxbp-flow { grid-template-columns: 144px minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; gap: 9px 10px; }
         .uxbp-flow-source { grid-area: 1 / 1; }
@@ -545,15 +550,14 @@ window.__ModuleLoader__.load({
         .uxbp-flow-return { grid-area: 5 / 2; }
         .uxbp-flow-edge { display: block; align-self: center; }
         .uxbp-flow-edge::before, .uxbp-flow-edge svg, .uxbp-flow-edge i { display: none; }
-        .uxbp-flow .uxbp-flow-edge .uxbp-flow-caption { position: static; display: block; max-width: none; width: auto;
-          padding: 0; text-align: left; transform: none; }
         .uxbp-related-map { display: flex; flex-direction: column; align-items: stretch; gap: 9px; }
         .uxbp-related-current { align-self: flex-start; }
         .uxbp-related-route { display: grid; grid-template-columns: 144px minmax(0, 1fr); column-gap: 10px; align-items: center; }
         .uxbp-related-route .uxbp-flow-card, .uxbp-related-route[data-before="true"] .uxbp-flow-card { grid-area: 1 / 1; }
         .uxbp-related-route .uxbp-related-edge, .uxbp-related-route[data-before="true"] .uxbp-related-edge { grid-area: 1 / 2; align-self: center; }
         .uxbp-related-edge svg, .uxbp-related-edge i { display: none; }
-        .uxbp-related-edge .uxbp-flow-caption { position: static; display: block; width: auto; max-width: none; padding: 0; transform: none; text-align: left; }
+        .uxbp-flow-caption { position: static; display: block; max-width: min(100%, 16ic); transform: none; text-align: left; }
+        .uxbp-flow-return .uxbp-flow-caption { transform: none; }
       }
       .uxbp-guide { flex: 1; min-height: 0; overflow: auto; background: var(--bg); container: uxbp-guide / inline-size; }
       .uxbp-guide-inner { max-width: 1160px; margin-inline: auto; padding: 20px 24px 28px; }
@@ -2075,16 +2079,18 @@ window.__ModuleLoader__.load({
             { id: 'ux-proto-g', row: 1, primary: true, reason: 'pageSpecAfterPrototype' },
           ]
           return h('div', { className: 'uxbp-related-map', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title',
-            style: { '--current-row': currentRow } },
+            'data-branching': strategyView, style: { '--current-row': currentRow } },
           flowCard(detailSkillId),
           ...routes.map(({ id, row, before, primary, reason }) => {
             const fromY = row === currentRow ? 50 : row > currentRow ? 25 : 75
             const toY = 100 - fromY
-            const path = fromY === toY ? 'M0 50H100' : `M0 ${fromY} C52 ${fromY} 48 ${toY} 100 ${toY}`
+            const curve = strategyView ? `C15 ${fromY} 13 ${toY} 38 ${toY} H100` : `C52 ${fromY} 48 ${toY} 100 ${toY}`
+            const path = fromY === toY ? 'M0 50H100' : `M0 ${fromY} ${curve}`
             return h('div', { key: id, className: 'uxbp-related-route', 'data-before': Boolean(before),
               style: { '--card-row': row, '--edge-rows': `${Math.min(row, currentRow)} / ${Math.max(row, currentRow) + 1}`,
-                '--target-y': toY + '%', '--label-y': fromY === toY ? 'calc(50% - 16px)' : row < currentRow ? '36%' : '64%' } },
-            h('div', { className: 'uxbp-related-edge', 'data-primary': Boolean(primary) },
+                '--target-y': toY + '%' } },
+            h('div', { className: 'uxbp-related-edge', 'data-primary': Boolean(primary),
+              'data-slope': row < currentRow ? 'up' : row > currentRow ? 'down' : undefined },
               h('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': true },
                 h('path', { d: path, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
               h('i', { 'aria-hidden': true }),
