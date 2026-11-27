@@ -45,7 +45,13 @@ export function createWorkbench(ctx, catalog) {
   const registry = ctx.workspaceRegistry
   const skills = catalog.list()
   const knownSkills = new Set(skills.map(skill => skill.id))
-  const skillNames = new Set(skills.map(skill => skill.name))
+  const renamedSkillArtifactLabels = new Map([
+    ['uxs', '体验策略'],
+    ['problem-framing', '问题与业务方案'],
+    ['page-spec', '页面规格'],
+    ['ux-proto-g', '交互原型'],
+  ])
+  const skillNames = new Set([...skills.map(skill => skill.name), '需求审核与基线', ...renamedSkillArtifactLabels.values()])
   const queues = new Map()
 
   function serialize(key, task) {
@@ -235,7 +241,8 @@ export function createWorkbench(ctx, catalog) {
   function artifactLabel(key, entry) {
     if (key === 'prd-review-record') return '需求审核记录'
     if (key === 'prd-review') return '正式需求基线'
-    return catalog.name(entry.skill ?? key)
+    const skill = normalizeSkillId(entry.skill ?? key)
+    return renamedSkillArtifactLabels.get(skill) ?? catalog.name(skill)
   }
 
   function artifactEditable(task, manifest, key, entry) {
@@ -403,7 +410,7 @@ export function createWorkbench(ctx, catalog) {
   async function createTask(workspace, body) {
     const skill = normalizeSkillId(String(body.skill ?? ''))
     if (!knownSkills.has(skill)) throw new Error('请选择有效的 Skill')
-    if (skill === 'ux-proto-g') throw new Error('请在已有正式页面规格的任务中使用「交互原型」')
+    if (skill === 'ux-proto-g') throw new Error('请在已有正式页面规格的任务中使用「页面生成」')
     const sessionId = String(body.sessionId ?? '')
     if (!sessionPattern.test(sessionId)) throw new Error('请选择会话')
     if (!await sessionBelongs(workspace, sessionId)) throw new Error('所选会话不属于当前工作区')

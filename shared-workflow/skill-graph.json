@@ -18,7 +18,7 @@
   "skills": [
     {
       "id": "prd-review",
-      "name_zh": "需求审核与基线",
+      "name_zh": "需求分析",
       "description": "检查业务遗漏与流程断点，生成业务闭环、各状态完善的 PRD。",
       "phase": 1,
       "reads": [],
@@ -27,7 +27,7 @@
         "preferred": [
           "page-spec"
         ],
-        "reason": "正式需求基线完成后，进入页面规格生成完整交互流程和页面方案；UXS、Stories 和 Journey Analysis 可按需作为蓝图前增强。",
+        "reason": "正式需求基线完成后，可用「设计说明文档生成」形成完整交互流程和页面方案。交互设计分析、用户故事和用户旅程可按需补充。",
         "alternatives": []
       },
       "anchor": true,
@@ -36,7 +36,7 @@
     {
       "id": "uxs",
       "_comment": "可选增强 Skill，用于形成项目级体验策略与关键体验取舍；不参与 PRD 主链必经流程。",
-      "name_zh": "体验策略",
+      "name_zh": "交互设计分析",
       "description": "基于需求或体验问题，明确体验方向，输出体验方案。",
       "phase": 1,
       "reads": [],
@@ -56,7 +56,7 @@
     },
     {
       "id": "problem-framing",
-      "name_zh": "问题与业务方案",
+      "name_zh": "体验策略生成",
       "description": "明确要解决的问题，比较业务方案，给出推荐方向及依据。",
       "phase": 1,
       "standalone_usable": true,
@@ -69,7 +69,7 @@
           "stories",
           "journey-analysis"
         ],
-        "reason": "问题与业务方案已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程；UXS 是可选的体验策略增强。",
+        "reason": "体验策略生成已完成，可进入用户故事或用户旅程继续拆解任务与梳理过程。交互设计分析可按需补充。",
         "alternatives": [
           "uxs"
         ]
@@ -119,7 +119,7 @@
         "preferred": [
           "page-spec"
         ],
-        "reason": "旅程分析已就位，进入页面规格可以把旅程洞察转化为具体的交互流程和页面设计。",
+        "reason": "旅程分析已就位，可用「设计说明文档生成」把旅程洞察转化成具体的交互流程和页面设计。",
         "alternatives": []
       },
       "requiredAny": []
@@ -127,7 +127,7 @@
     {
       "id": "page-spec",
       "_comment": "以 Page Spec 的最终 Markdown 为正式语义源。绑定同源正式基线后，设计前提取内部页面事实，首次登记前逐项核对并提交完整 Markdown。Edge 仍为可选状态补强。",
-      "name_zh": "页面规格",
+      "name_zh": "设计说明文档生成",
       "description": "将需求转成页面结构、交互流程与规则，形成可交付设计文档。",
       "phase": 2,
       "reads": [
@@ -160,7 +160,7 @@
     },
     {
       "id": "ux-proto-g",
-      "name_zh": "交互原型",
+      "name_zh": "页面生成",
       "description": "将页面规格生成可交互的 React 原型，构建并交付预览。",
       "phase": 2,
       "reads": [

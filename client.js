@@ -7,10 +7,202 @@ window.__ModuleLoader__.load({
     const endpoint = '/api/ux-blueprinting/workbench'
     const STORAGE_KEY = 'uxbp:workbench:v2'
     const NS = 'ux-blueprinting'
+    const detailExtensions = {
+      'problem-framing': {
+        copy: [
+          ['手上有明确的问题或证据，想决定先解决什么、选哪种方案时使用。', 'Use it when there is a concrete problem or evidence and you need to choose what to solve and how.'],
+          ['提供问题现状、影响范围和业务约束。有正式分析或候选根因时，可以一并提供。', 'Provide the problem, its impact and business constraints. Include any formal analysis or candidate root causes.'],
+          ['一份明确的问题定义和方案比较，包含推荐方向、选择依据和待验证事项。', 'Get a problem definition and compared options, with a recommended direction, rationale and open questions.'],
+        ],
+        before: [['root-cause-synthesis', '核对已放行的\n候选根因与依据。', 'Review the cleared candidate causes and their evidence.']],
+        after: [
+          ['stories', '把推荐方向\n拆成可验收的任务。', 'Break the direction into tasks with acceptance criteria.', 'skillFlowPrimary'],
+          ['journey-analysis', '看清方向会影响\n哪些阶段和触点。', 'Identify the stages and touchpoints affected.'],
+          ['uxs', '把策略细化成\n具体的交互方向。', 'Turn the strategy into an interaction direction.'],
+        ],
+      },
+      stories: {
+        copy: [
+          ['已有方案方向，想把它拆成用户实际要做的一项项任务时使用。', 'Use it to break an agreed direction into concrete user tasks.'],
+          ['提供已确认的策略或业务方案，以及目标角色、场景和约束。', 'Provide the confirmed strategy or business solution, plus roles, scenarios and constraints.'],
+          ['一组用户故事，写清每个角色要做什么、为何要做，以及怎样算完成。', 'Get user stories with each role’s goals, motivation and acceptance criteria.'],
+        ],
+        before: [
+          ['problem-framing', '先明确问题\n和推荐的业务方案。', 'Define the problem and choose a business solution.'],
+          ['uxs', '先明确交互方向\n和优先解决的问题。', 'Clarify the interaction direction and its priorities.'],
+        ],
+        after: [
+          ['journey-analysis', '把故事串到\n完整的任务旅程。', 'Place the stories in an end-to-end journey.', 'skillFlowPrimary'],
+          ['page-spec', '把任务和验收条件\n转成页面与规则。', 'Turn tasks and acceptance criteria into pages and rules.'],
+        ],
+      },
+      'journey-analysis': {
+        copy: [
+          ['想看清一个角色从开始到完成任务会经历什么、在哪些地方容易卡住时使用。', 'Use it to understand how a role completes a task and where they get stuck.'],
+          ['提供目标角色、任务、起止点和已知触点。可附上用户故事、策略或观察记录。', 'Provide the role, task boundaries and known touchpoints. Include stories, strategy or observations if available.'],
+          ['一份按阶段整理的旅程图，标出行动、触点、痛点、流失风险和改善机会。', 'Get a staged journey with actions, touchpoints, pain points, drop-off risks and opportunities.'],
+        ],
+        before: [
+          ['stories', '先拆清角色\n要完成的任务。', 'Define the tasks each role needs to complete.'],
+          ['uxs', '先对齐优先改善\n的体验方向。', 'Agree which experience outcomes to improve.'],
+          ['problem-framing', '先明确问题\n和选定的业务方案。', 'Define the problem and chosen business solution.'],
+        ],
+        after: [['page-spec', '把关键触点\n落实为页面流转。', 'Turn key touchpoints into page flows.', 'skillFlowPrimary']],
+      },
+      'ux-proto-g': {
+        copy: [
+          ['已有设计说明，想把页面和关键操作做成可以点击演示的原型时使用。', 'Use it to turn a design specification into a clickable prototype.'],
+          ['在当前任务登记正式页面规格，写清要生成的页面、流程和状态。', 'Register the formal page specification for the task, including its pages, flows and states.'],
+          ['一份可交互的 React 原型，以及可打开的预览和构建结果。', 'Get an interactive React prototype, a preview and the build result.'],
+        ],
+        before: [['page-spec', '先登记本任务\n的正式页面规格。', 'Register this task’s formal page specification first.', 'skillFlowRequired']],
+        after: [['experience-heuristic-analysis', '用原型走查\n关键操作与反馈。', 'Review key actions and feedback in the prototype.', 'skillFlowReview']],
+      },
+      'solution-swimlane': {
+        copy: [
+          ['要讲清不同角色各做什么、业务在哪一步交接时使用。', 'Use it to explain each role’s responsibilities and where handoffs happen.'],
+          ['提供正式页面规格，写清角色、业务动作、系统处理和异常分支。', 'Provide the formal page specification with roles, actions, system behavior and exceptions.'],
+          ['一张可单独打开的 HTML 泳道图，能看到角色职责、交接、异常与恢复。', 'Get a standalone HTML swimlane covering responsibilities, handoffs, exceptions and recovery.'],
+        ],
+        before: [['page-spec', '先准备页面规格\n里的角色和流程。', 'Prepare the roles and flows in the page specification.', 'skillFlowRequired']],
+      },
+      'objective-data-analysis': {
+        copy: [
+          ['想用真实行为数据看功能用了多少、用户在哪一步流失或报错时使用。', 'Use it to measure adoption, drop-off or errors from observed behavior.'],
+          ['提供本次要分析的埋点、日志或任务明细，并说明时间范围、样本和指标口径。', 'Provide events, logs or task records, with the time range, sample and metric definitions.'],
+          ['一份可追溯的客观分析报告，写清指标、漏斗或路径中的发现和数据限制。', 'Get a traceable report of metric, funnel or path findings and data limitations.'],
+        ],
+        before: [['journey-metrics', '先对齐埋点\n和指标怎么计算。', 'Align event and metric definitions first.']],
+        after: [
+          ['evidence-govern', '核对证据\n能支持哪些判断。', 'Check what the objective evidence can support.', 'skillFlowPrimary'],
+          ['data-visualization', '把已确认的趋势\n或漏斗画出来。', 'Visualize confirmed trends or funnels.'],
+          ['evidence-archive', '按授权保存\n有长期价值的证据。', 'Archive valuable evidence when authorized.'],
+        ],
+      },
+      'subjective-feedback-analysis': {
+        copy: [
+          ['想从用户的工单、访谈或评论中找出反复提到的问题时使用。', 'Use it to find recurring issues in tickets, interviews or reviews.'],
+          ['提供明确范围内的原始反馈，并注明来源、时间和可用的样本背景。', 'Provide feedback within a defined scope, with sources, dates and sample context.'],
+          ['一份脱敏反馈报告，归纳主题、情绪、紧急程度和仍要验证的线索。', 'Get a de-identified report covering themes, sentiment, urgency and signals to verify.'],
+        ],
+        after: [
+          ['evidence-govern', '把反馈线索\n与其他证据核对。', 'Reconcile feedback signals with other evidence.', 'skillFlowPrimary'],
+          ['business-impact', '评估已确认问题\n影响哪些用户。', 'Assess who is affected by the confirmed issue.'],
+          ['data-visualization', '展示反馈主题\n和样本内差异。', 'Present themes and differences within the sample.'],
+        ],
+      },
+      'experience-heuristic-analysis': {
+        copy: [
+          ['想逐页或按流程找出体验风险，或检查改版是否还存在旧问题时使用。', 'Use it to find usability risks in screens or flows, or revisit them after a redesign.'],
+          ['提供截图、原型、页面或流程，圈定走查范围和重点任务。', 'Provide screenshots, a prototype, pages or flows and identify the tasks to review.'],
+          ['一份走查报告，写清风险所在、如何观察到，以及会影响哪一步操作。', 'Get a review report documenting the risks, evidence and affected actions.'],
+        ],
+        before: [['page-spec', '用设计说明\n对照目标流程。', 'Use the specification to compare against the intended flow.']],
+        after: [
+          ['evidence-govern', '把走查发现\n纳入证据核对。', 'Bring review findings into evidence governance.', 'skillFlowPrimary'],
+          ['data-visualization', '图示风险集中\n在哪些页面。', 'Show which pages contain the most relevant risks.'],
+        ],
+      },
+      'evidence-govern': {
+        copy: [
+          ['已经有分析或走查结论，需要核对证据能支持什么判断时使用。', 'Use it to check what existing analytical or usability evidence can support.'],
+          ['提供客观分析、主观反馈或走查的正式结论。有回检变化或人工决定时也一并提供。', 'Provide formal evidence from behavior, feedback or usability reviews, plus recheck findings or review decisions if available.'],
+          ['一份核对后的证据清单，说明来源、冲突、适用范围和允许交给谁继续用。', 'Get reconciled evidence, documented conflicts, scope and handoff decisions.'],
+        ],
+        before: [
+          ['objective-data-analysis', '提供正式的\n行为数据发现。', 'Bring formal behavior findings.'],
+          ['subjective-feedback-analysis', '提供已脱敏\n的反馈结论。', 'Bring de-identified feedback findings.'],
+          ['experience-heuristic-analysis', '提供可追溯\n的走查发现。', 'Bring traceable usability findings.'],
+        ],
+        after: [
+          ['root-cause-synthesis', '证据获准后\n再综合候选根因。', 'Synthesize candidate causes after clearance.', 'skillFlowPrimary'],
+          ['business-impact', '用放行证据\n评估影响与损失。', 'Assess impact and loss using cleared evidence.'],
+          ['evidence-archive', '把获准保留\n的证据长期保存。', 'Retain authorized evidence for future review.'],
+        ],
+      },
+      'root-cause-synthesis': {
+        copy: [
+          ['证据已审核放行，想推断为什么会发生问题，以及接下来怎么验证时使用。', 'Use it after evidence clearance to infer candidate causes and how to test them.'],
+          ['提供已放行给本技能的证据、适用情境和限制。', 'Provide evidence cleared for this skill, together with its context and limits.'],
+          ['一份候选根因结论，说明发生机制、证据强度、反例和验证假设。', 'Get candidate causes with mechanisms, confidence, counterevidence and testable hypotheses.'],
+        ],
+        before: [['evidence-govern', '先确认这批证据\n已获准用于根因分析。', 'Confirm clearance for root-cause synthesis.', 'skillFlowRequired']],
+        after: [
+          ['problem-framing', '方向就绪后\n比较业务方案。', 'Compare business options once the direction is ready.', 'skillFlowPrimary'],
+          ['outcome-validation-recheck', '方案批准后\n验证实际效果。', 'Validate outcomes after the intervention is approved.'],
+          ['data-visualization', '把已确认的\n证据关系画出来。', 'Visualize the supported evidence relationships.'],
+        ],
+      },
+      'business-impact': {
+        copy: [
+          ['想判断问题值不值得优先处理，或比较具体方案的收益和投入时使用。', 'Use it to prioritize an issue or compare a concrete option’s benefits and costs.'],
+          ['提供可信的问题或根因结论。评估方案时再提供方案、投入和预计收益依据。', 'Provide supported problem or cause findings. For a solution, include its scope, cost and benefit assumptions.'],
+          ['一份影响和价值评估，区分已知损失、预测收益和验证后能确认的收益。', 'Get an impact assessment that distinguishes known loss, forecast benefit and verified benefit.'],
+        ],
+        before: [
+          ['evidence-govern', '先确认哪些证据\n可以支持业务判断。', 'Identify evidence suitable for assessing impact.'],
+          ['root-cause-synthesis', '补充影响范围\n和原因假设。', 'Add scope and candidate cause hypotheses.'],
+        ],
+        after: [
+          ['outcome-validation-recheck', '有上线数据后\n核对预估收益。', 'Check expected benefits against rollout data.'],
+          ['data-visualization', '展示影响范围\n和收益估算。', 'Present the affected scope and benefit estimates.'],
+        ],
+      },
+      'outcome-validation-recheck': {
+        copy: [
+          ['要上线前检查验证准备度，或上线后判断是否真的改善、有没有副作用时使用。', 'Use it to check validation readiness before launch or assess results and side effects afterwards.'],
+          ['提供正式候选根因、已批准方案，并附上对应阶段的基线、试点或上线数据。', 'Provide formal candidate causes, the approved intervention and available baseline, pilot or rollout evidence.'],
+          ['一份回检结论，区分实际改善、能否归因、潜在伤害和需要继续观察的指标。', 'Get findings on improvement, attribution, possible harm and follow-up measures.'],
+        ],
+        before: [['root-cause-synthesis', '先明确根因假设\n和验证目标。', 'Define the cause hypotheses and validation goals.', 'skillFlowRequired']],
+        after: [
+          ['evidence-govern', '带回新证据\n更新证据链。', 'Feed new findings back into evidence governance.', 'skillFlowPrimary'],
+          ['business-impact', '使用获准结论\n重估实际价值。', 'Use cleared findings to reassess realized value.'],
+          ['evidence-archive', '按授权保留\n本次回检结论。', 'Archive the recheck findings when authorized.'],
+        ],
+      },
+      'evidence-archive': {
+        copy: [
+          ['需要长期留存一份正式证据或结论，方便之后查找和复核时使用。', 'Use it to preserve formal evidence for long-term lookup or review.'],
+          ['提供明确要留存的材料，并说明留存授权、范围和脱敏要求。', 'Specify the material, retention approval, scope and redaction requirements.'],
+          ['一份最小的不可变快照和可追溯记录，保留以后复核所需的信息。', 'Get a minimal immutable snapshot and a traceable record for future review.'],
+        ],
+        before: [
+          ['evidence-govern', '先核对证据\n的归档范围。', 'Confirm what evidence is approved for retention.'],
+          ['root-cause-synthesis', '归档获准留存\n的候选根因。', 'Identify candidate causes approved for retention.'],
+          ['outcome-validation-recheck', '归档获准留存\n的回检结论。', 'Identify recheck findings approved for retention.'],
+        ],
+      },
+      'knowledge-wiki': {
+        copy: [
+          ['需要查清业务规则、字段和权限，或希望把已有资料整理成团队知识时使用。', 'Use it to look up business rules, fields and permissions, or organize material into team knowledge.'],
+          ['直接提问，或给出需要整理的需求、文档、会议记录和其他材料。涉及入库时说明保存意图。', 'Ask a question or provide requirements, documents, notes or other material. State if it should be saved.'],
+          ['可以得到带出处的问答、待确认的知识候选，或按确认结果维护的知识条目。', 'Get sourced answers, knowledge candidates for review or maintained entries after confirmation.'],
+        ],
+        support: [
+          ['需求与设计', 'Requirements and design', '查现有规则、字段、权限和设计规范。', 'Look up existing rules, fields, permissions and design standards.', ['prd-review', 'uxs', 'page-spec']],
+          ['分析与证据', 'Analysis and evidence', '补业务背景，整理需要单独确认的知识线索。', 'Find business context and organize knowledge candidates for separate review.', ['subjective-feedback-analysis', 'evidence-govern']],
+        ],
+      },
+      'data-visualization': {
+        copy: [
+          ['已经有可信结论或整理好的数据，想把趋势、差异或关系讲清楚时使用。', 'Use it to communicate trends, differences or relationships from trusted findings or prepared data.'],
+          ['提供正式结论或本人整理的数据，并说明口径、对比范围和希望读者看懂什么。', 'Provide formal findings or prepared data, with definitions, comparison scope and the message to convey.'],
+          ['一份图表规格、关系图说明或可视化报告，图中的信息可以追溯到原材料。', 'Get traceable chart specifications, relationship diagrams or a visual report.'],
+        ],
+        support: [
+          ['分析发现', 'Analysis findings', '呈现指标、反馈主题和界面风险。', 'Show metrics, feedback themes and interface risks.', ['objective-data-analysis', 'subjective-feedback-analysis', 'experience-heuristic-analysis']],
+          ['证据与方案', 'Evidence and options', '表达证据之间的关系及方案的影响范围。', 'Present evidence relationships and the scope of a solution’s impact.', ['evidence-govern', 'root-cause-synthesis', 'problem-framing', 'page-spec']],
+          ['业务价值与效果', 'Value and outcomes', '展示影响、价值比较与回检变化。', 'Show impact, value comparisons and changes found during rechecks.', ['business-impact', 'outcome-validation-recheck']],
+        ],
+      },
+    }
     const skillDetails = {
       'prd-review': ['prdWhen', 'prdInput', 'prdOutput'],
       'page-spec': ['pageSpecWhen', 'pageSpecInput', 'pageSpecOutput'],
       uxs: ['uxsWhen', 'uxsInput', 'uxsOutput'],
+      ...Object.fromEntries(Object.entries(detailExtensions).map(([id, detail]) =>
+        [id, detail.copy.map((_, index) => `${id}.detail.${index}`)])),
     }
 
     const en = {
@@ -114,6 +306,9 @@ window.__ModuleLoader__.load({
       uxsInput: 'Provide a formal requirements baseline or describe the users, their task and where they get stuck.',
       uxsOutput: 'A proposed experience strategy. Once confirmed, it can guide journey analysis, stories or page design.',
       skillFlowBefore: 'Beforehand',
+      skillFlowRequired: 'Required first',
+      skillFlowReview: 'Optional review',
+      skillSupport: 'Where it helps',
       skillFlowBackToSpec: 'Continue to page spec',
       skillFlowSeparator: ': ',
       pageSpecBeforePrd: 'Clarify business rules and edge cases for a more complete spec.',
@@ -234,6 +429,9 @@ window.__ModuleLoader__.load({
       uxsInput: '提供正式需求基线，或说明用户是谁、要完成什么任务、卡在哪里。',
       uxsOutput: '一份待确认的体验策略。确认后可以继续梳理旅程、拆用户故事，或把方向落实到页面。',
       skillFlowBefore: '可先做',
+      skillFlowRequired: '先准备',
+      skillFlowReview: '按需走查',
+      skillSupport: '服务哪些环节',
       skillFlowBackToSpec: '继续做页面规格',
       skillFlowSeparator: '：',
       pageSpecBeforePrd: '补齐规则和异常，\n让规格更完整。',
@@ -251,6 +449,25 @@ window.__ModuleLoader__.load({
       recordedAt: '记录于',
       taskName: '任务',
       status: '状态',
+    }
+
+    for (const [id, detail] of Object.entries(detailExtensions)) {
+      detail.copy.forEach(([chinese, english], index) => {
+        zh[`${id}.detail.${index}`] = chinese
+        en[`${id}.detail.${index}`] = english
+      })
+      for (const direction of ['before', 'after']) {
+        detail[direction]?.forEach(([target, chinese, english]) => {
+          zh[`${id}.${direction}.${target}`] = chinese
+          en[`${id}.${direction}.${target}`] = english
+        })
+      }
+      detail.support?.forEach(([titleZh, titleEn, copyZh, copyEn], index) => {
+        zh[`${id}.support.${index}.title`] = titleZh
+        en[`${id}.support.${index}.title`] = titleEn
+        zh[`${id}.support.${index}.copy`] = copyZh
+        en[`${id}.support.${index}.copy`] = copyEn
+      })
     }
 
     const styles = `
@@ -438,15 +655,23 @@ window.__ModuleLoader__.load({
       .uxbp-next-card .uxbp-card-body p { display: block; font-size: 11px; line-height: 15px; }
       .uxbp-next-card .uxbp-card-foot { grid-column: 1 / -1; min-height: 0; gap: 6px; padding: 0; }
       .uxbp-next-card .uxbp-card-foot code { font-size: 11px; }
-      .uxbp-next-card .uxbp-use { margin-inline-start: auto; background: var(--ink); color: var(--card);
+      .uxbp-next-card .uxbp-use, .uxbp-next-alternatives .uxbp-use { margin-inline-start: auto; background: var(--ink); color: var(--card);
         border-color: transparent; min-height: 25px; padding: 2px 9px; font-size: 11px; }
       .uxbp-next-card .uxbp-use:hover:not(:disabled) { opacity: .84; }
-      .uxbp-next-card .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
-      .uxbp-top .uxbp-guide-entry, .uxbp-next-card .uxbp-next-start {
+      .uxbp-next-card .uxbp-use:disabled, .uxbp-next-alternatives .uxbp-use:disabled { opacity: .45; cursor: not-allowed; }
+      .uxbp-top .uxbp-guide-entry, .uxbp-next-card .uxbp-next-start, .uxbp-next-alternatives .uxbp-next-start {
         background: transparent; border-color: transparent; color: var(--muted); font-size: 11px; font-weight: 500;
         box-shadow: none; backdrop-filter: none; }
-      .uxbp-top .uxbp-guide-entry:hover:not(:disabled), .uxbp-next-card .uxbp-next-start:hover:not(:disabled) {
+      .uxbp-top .uxbp-guide-entry:hover:not(:disabled), .uxbp-next-card .uxbp-next-start:hover:not(:disabled),
+      .uxbp-next-alternatives .uxbp-next-start:hover:not(:disabled) {
         background: transparent; color: var(--ink); opacity: 1; text-decoration: underline; }
+      .uxbp-next-alternatives { margin: 4px 0 0; padding: 0; list-style: none; }
+      .uxbp-next-alternatives li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center;
+        gap: 8px; min-height: 38px; padding: 3px 8px; border-inline: .5px solid transparent; }
+      .uxbp-next-alternatives .uxbp-art { width: 32px; height: 24px; margin: 0; border-radius: 5px; }
+      .uxbp-next-alternative-label { display: grid; gap: 1px; min-width: 0; font-size: 12px; line-height: 16px; overflow-wrap: anywhere; }
+      .uxbp-next-alternative-label code { margin: 0; padding: 0; border: 0; background: transparent;
+        color: var(--muted); font-size: 11px; line-height: 14px; text-align: start; }
       .uxbp-done-list { margin: 0; padding: 0; list-style: none; border-top: .5px solid var(--line); }
       .uxbp-output-row { width: 100%; display: grid; grid-template-columns: 16px minmax(0, 1fr) 12px; gap: 7px; align-items: center;
         padding: 8px 2px; border: 0; border-bottom: .5px solid var(--line); background: transparent; color: var(--ink);
@@ -489,7 +714,7 @@ window.__ModuleLoader__.load({
       .uxbp-flow-card[data-current="true"] { border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
         background: color-mix(in srgb, var(--accent) 5%, var(--card)); }
       .uxbp-flow-card .uxbp-art { width: 36px; height: 30px; margin: 0; border-radius: 5px; }
-      .uxbp-flow-card strong { display: block; font-size: 12px; line-height: 1.35; font-weight: 600; white-space: nowrap; }
+      .uxbp-flow-card strong { display: block; min-width: 0; font-size: 12px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
       .uxbp-flow-source { grid-area: 1 / 1; align-self: center; }
       .uxbp-flow-spec { grid-area: 1 / 3; }
       .uxbp-flow-prototype { grid-area: 1 / 5; }
@@ -535,8 +760,10 @@ window.__ModuleLoader__.load({
       .uxbp-related-edge[data-slope="up"] .uxbp-flow-caption { bottom: calc(75% + 5px); }
       .uxbp-related-edge[data-slope="down"] .uxbp-flow-caption { top: calc(75% + 5px); bottom: auto; }
       @container uxbp-related-workflow (width > 640px) {
-        .uxbp-related-map[data-branching="true"] .uxbp-related-edge[data-primary="true"] .uxbp-flow-caption {
+        .uxbp-related-edge[data-fan="true"]:not([data-slope]) .uxbp-flow-caption {
           left: auto; right: 4px; transform: none; }
+        .uxbp-related-route[data-before="true"] .uxbp-related-edge[data-fan="true"]:not([data-slope]) .uxbp-flow-caption {
+          left: 4px; right: auto; }
       }
       @container uxbp-related-workflow (max-width: 640px) {
         .uxbp-flow { grid-template-columns: 144px minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; gap: 9px 10px; }
@@ -559,6 +786,12 @@ window.__ModuleLoader__.load({
         .uxbp-flow-caption { position: static; display: block; max-width: min(100%, 16ic); transform: none; text-align: left; }
         .uxbp-flow-return .uxbp-flow-caption { transform: none; }
       }
+      .uxbp-detail-support { display: grid; gap: 14px; }
+      .uxbp-detail-support h3 { margin: 0 0 2px; color: var(--ink); font-size: 12px; font-weight: 600; }
+      .uxbp-detail-support p { margin-bottom: 6px; }
+      .uxbp-detail-support-nodes { display: flex; flex-wrap: wrap; gap: 5px; }
+      .uxbp-detail-support-nodes .uxbp-flow-card { min-height: 36px; padding: 4px 6px; }
+      .uxbp-detail-support-nodes .uxbp-art { width: 28px; height: 22px; }
       .uxbp-guide { flex: 1; min-height: 0; overflow: auto; background: var(--bg); container: uxbp-guide / inline-size; }
       .uxbp-guide-inner { max-width: 1160px; margin-inline: auto; padding: 20px 24px 28px; }
       .uxbp-guide-head { margin-bottom: 17px; }
@@ -1670,7 +1903,7 @@ window.__ModuleLoader__.load({
           )) {
             void prepareHandoff({ id: skillId })
           } else {
-            setError('请打开已有正式页面规格的进行中任务，再使用交互原型。')
+            setError('请打开已有正式页面规格的进行中任务，再使用「页面生成」。')
           }
           return
         }
@@ -2048,13 +2281,14 @@ window.__ModuleLoader__.load({
 
       function renderSkillDetail() {
         const [when, input, output] = skillDetails[detailSkillId]
+        const detail = detailExtensions[detailSkillId]
         const reviewView = detailSkillId === 'prd-review'
         const strategyView = detailSkillId === 'uxs'
         const flowCard = (id, position) => {
           const current = id === detailSkillId
           const canOpen = !current && Object.hasOwn(skillDetails, id)
           return h(canOpen ? 'button' : 'div', {
-            className: 'uxbp-flow-card ' + (position ? 'uxbp-flow-' + position : 'uxbp-related-current'), 'data-current': current,
+            key: id, className: 'uxbp-flow-card ' + (position ? 'uxbp-flow-' + position : 'uxbp-related-current'), 'data-current': current,
             'aria-current': current ? 'page' : undefined,
             ...(canOpen ? { type: 'button', onClick: () => setDetailSkillId(id) } : {}),
           }, h('span', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: id })),
@@ -2067,34 +2301,39 @@ window.__ModuleLoader__.load({
             h('path', { d: curve, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
           edgeCaption(label, reason), h('i', { 'aria-hidden': true }))
         const relatedMap = () => {
-          const currentRow = strategyView ? 2 : 1
-          const routes = strategyView ? [
+          const currentRow = strategyView || Math.max(detail?.before?.length ?? 0, detail?.after?.length ?? 0) === 3 ? 2 : 1
+          const rows = currentRow === 2 ? [2, 1, 3] : [1, 2]
+          const configuredRoutes = direction => (detail?.[direction] ?? []).map(([id, , , label], index, group) => ({
+            id, row: rows[index], before: direction === 'before', fan: group.length > 1,
+            label, primary: label === 'skillFlowPrimary', reason: `${detailSkillId}.${direction}.${id}`,
+          }))
+          const routes = detail ? [...configuredRoutes('before'), ...configuredRoutes('after')] : strategyView ? [
             { id: 'prd-review', row: 2, before: true, reason: 'uxsBeforePrd' },
-            { id: 'journey-analysis', row: 2, primary: true, reason: 'uxsAfterJourney' },
-            { id: 'stories', row: 1, reason: 'uxsAfterStories' },
-            { id: 'page-spec', row: 3, reason: 'uxsAfterPageSpec' },
+            { id: 'journey-analysis', row: 2, primary: true, fan: true, reason: 'uxsAfterJourney' },
+            { id: 'stories', row: 1, fan: true, reason: 'uxsAfterStories' },
+            { id: 'page-spec', row: 3, fan: true, reason: 'uxsAfterPageSpec' },
           ] : [
             { id: 'prd-review', row: 1, before: true, reason: 'pageSpecBeforePrd' },
             { id: 'uxs', row: 2, before: true, reason: 'pageSpecBeforeUxs' },
             { id: 'ux-proto-g', row: 1, primary: true, reason: 'pageSpecAfterPrototype' },
           ]
           return h('div', { className: 'uxbp-related-map', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title',
-            'data-branching': strategyView, style: { '--current-row': currentRow } },
+            style: { '--current-row': currentRow } },
           flowCard(detailSkillId),
-          ...routes.map(({ id, row, before, primary, reason }) => {
+          ...routes.map(({ id, row, before, primary, fan, label, reason }) => {
             const fromY = row === currentRow ? 50 : row > currentRow ? 25 : 75
             const toY = 100 - fromY
-            const curve = strategyView ? `C15 ${fromY} 13 ${toY} 38 ${toY} H100` : `C52 ${fromY} 48 ${toY} 100 ${toY}`
+            const curve = fan ? `C15 ${fromY} 13 ${toY} 38 ${toY} H100` : `C52 ${fromY} 48 ${toY} 100 ${toY}`
             const path = fromY === toY ? 'M0 50H100' : `M0 ${fromY} ${curve}`
             return h('div', { key: id, className: 'uxbp-related-route', 'data-before': Boolean(before),
               style: { '--card-row': row, '--edge-rows': `${Math.min(row, currentRow)} / ${Math.max(row, currentRow) + 1}`,
                 '--target-y': toY + '%' } },
-            h('div', { className: 'uxbp-related-edge', 'data-primary': Boolean(primary),
+            h('div', { className: 'uxbp-related-edge', 'data-primary': Boolean(primary), 'data-fan': Boolean(fan),
               'data-slope': row < currentRow ? 'up' : row > currentRow ? 'down' : undefined },
               h('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': true },
                 h('path', { d: path, fill: 'none', stroke: 'currentColor', vectorEffect: 'non-scaling-stroke' })),
               h('i', { 'aria-hidden': true }),
-              edgeCaption(before ? 'skillFlowBefore' : primary ? 'skillFlowPrimary' : 'skillFlowOptional', reason)),
+              edgeCaption(label ?? (before ? 'skillFlowBefore' : primary ? 'skillFlowPrimary' : 'skillFlowOptional'), reason)),
             flowCard(id, 'target'))
           }))
         }
@@ -2117,8 +2356,13 @@ window.__ModuleLoader__.load({
             h('section', null, h('h2', null, t('skillInput')), h('p', null, t(input))),
             h('section', null, h('h2', null, t('skillOutput')), h('p', null, t(output))),
             h('section', { className: 'uxbp-skill-workflow' },
-              h('h2', { id: 'uxbp-skill-workflow-title' }, t('skillNext')),
-              reviewView ? h('div', { className: 'uxbp-flow', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title' },
+              h('h2', { id: 'uxbp-skill-workflow-title' }, t(detail?.support ? 'skillSupport' : 'skillNext')),
+              detail?.support ? h('div', { className: 'uxbp-detail-support' },
+                ...detail.support.map(([, , , , ids], index) => {
+                  const key = `${detailSkillId}.support.${index}`
+                  return h('div', { key }, h('h3', null, t(key + '.title')), h('p', null, t(key + '.copy')),
+                    h('div', { className: 'uxbp-detail-support-nodes' }, ...ids.map(id => flowCard(id, 'support'))))
+                })) : reviewView ? h('div', { className: 'uxbp-flow', role: 'group', 'aria-labelledby': 'uxbp-skill-workflow-title' },
                 flowCard('prd-review', 'source'),
                 flowEdge('main', 'skillFlowPrimary', 'prdNextPage'),
                 flowCard('page-spec', 'spec'),
@@ -2137,7 +2381,7 @@ window.__ModuleLoader__.load({
         const pending = overview?.pending
         const closed = latest?.status === 'completed'
         const paused = latest?.status === 'paused'
-        const recommendation = overview?.next?.[0]
+        const [recommendation, ...alternatives] = overview?.next ?? []
         const currentSkill = latest?.round?.skill || latest?.lastSkill
         const recorded = overview?.artifacts ?? []
         const reviewRecord = recorded.find(item => item.key === 'prd-review-record')
@@ -2208,7 +2452,14 @@ window.__ModuleLoader__.load({
                   !pending && h('code', null, '/' + recommendation.id),
                   h('button', { type: 'button', className: pending ? 'uxbp-use' : 'uxbp-use uxbp-next-start', disabled: !pending && latestBusy,
                     onClick: () => pending ? void openTask(latest, pending.key, origin) : void prepareHandoff(recommendation) },
-                  t(pending ? 'viewPending' : 'startNextSkill'))))),
+                  t(pending ? 'viewPending' : 'startNextSkill')))),
+              !pending && alternatives.length > 0 && h('ul', { className: 'uxbp-next-alternatives', 'aria-label': t('skillFlowOptional') },
+                ...alternatives.map(item => h('li', { key: item.id },
+                  h('div', { className: 'uxbp-art', 'aria-hidden': true }, h(SkillArt, { skillId: item.id })),
+                  h('div', { className: 'uxbp-next-alternative-label' }, h('span', null, item.name), h('code', null, item.id)),
+                  h('button', { type: 'button', className: 'uxbp-use uxbp-next-start', disabled: latestBusy,
+                    'aria-label': t('startNextSkill') + ' ' + item.name, onClick: () => void prepareHandoff(item) },
+                  t('startNextSkill')))))),
             latest && h('section', { className: 'uxbp-overview-section' },
               h('h3', null, t('taskFiles')),
               done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))

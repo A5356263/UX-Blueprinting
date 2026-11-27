@@ -48,6 +48,6 @@ npm pack --dry-run --json --ignore-scripts
 
 `npm run pack:plugin` 默认递增补丁版本并写入 `package.json`，再将安装包输出到 `out/`。只需按当前版本生成验收包时加 `--no-bump`。生成后在 Harness 中选择对应的 `.tgz`。
 
-## 交互原型
+## 页面生成
 
-`ux-proto-g` 1.3.2 随插件打包，包含发行件自带的 XFT Pack。页面规格登记后，可在同一任务选择「交互原型」。原型与构建回执写入任务目录下的 `ux-proto-g/`，工作台登记构建摘要。插件打包范围以 `package.json` 的 `files` 为准。
+`ux-proto-g` 1.3.2 随插件打包，包含发行件自带的 XFT Pack。页面规格登记后，可在同一任务选择「页面生成」。原型与构建回执写入任务目录下的 `ux-proto-g/`，工作台登记构建摘要。插件打包范围以 `package.json` 的 `files` 为准。
