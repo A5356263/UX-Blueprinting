@@ -85,8 +85,6 @@ export function createWorkbench(ctx, catalog) {
     if (!taskPattern.test(taskId)) throw new Error('无效的任务标识')
     return directory(workspace.path, ['spark-output', 'design-workbench', taskId], create)
   }
-  const indexFile = workspace => join(baseDir(workspace, false), 'tasks.json')
-
   function atomicWrite(dir, name, bytes) {
     const target = join(dir, name)
     try {
@@ -103,13 +101,13 @@ export function createWorkbench(ctx, catalog) {
     }
   }
 
-  function readIndexFile(workspace) {
+  function readIndexFile(dir) {
+    const file = join(dir, 'tasks.json')
     try {
-      const file = indexFile(workspace)
       const info = lstatSync(file)
-      if (info.isSymbolicLink() || !info.isFile()) return null
+      if (info.isSymbolicLink() || !info.isFile()) throw new Error('无效的任务索引')
       const parsed = JSON.parse(readFileSync(file, 'utf8'))
-      if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.tasks)) return null
+      if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.tasks)) throw new Error('无效的任务索引')
       return {
         version: 1,
         next: Number.isSafeInteger(parsed.next) && parsed.next > 0 ? parsed.next : 1,
@@ -119,7 +117,10 @@ export function createWorkbench(ctx, catalog) {
           lastSkill: normalizeSkillId(task.lastSkill),
         })),
       }
-    } catch { return null }
+    } catch (error) {
+      if (error.code === 'ENOENT') return null
+      throw new Error('无法读取工作区的任务索引')
+    }
   }
 
   function saveIndex(workspace, index) {
@@ -329,15 +330,21 @@ export function createWorkbench(ctx, catalog) {
   }
 
   function artifactList(workspace, task, manifest) {
+    const dir = taskDir(workspace, task.id, false)
     return Object.entries(manifest.skills)
-      .filter(([, entry]) => {
+      .flatMap(([key, entry]) => {
         try {
           const file = resolve(workspace.path, entry.path)
-          contained(taskDir(workspace, task.id, false), realpathSync(file))
-          return lstatSync(file).isFile()
-        } catch { return false }
+          contained(dir, file)
+          contained(dir, realpathSync(file))
+          if (lstatSync(file).isFile()) return [artifactMeta(workspace, task, manifest, key, entry)]
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            return [{ ...artifactMeta(workspace, task, manifest, key, entry), missing: true, editable: false }]
+          }
+        }
+        return []
       })
-      .map(([key, entry]) => ({ ...artifactMeta(workspace, task, manifest, key, entry), key }))
       .sort((a, b) => {
         const order = task.skills ?? []
         const rank = item => {
@@ -350,7 +357,8 @@ export function createWorkbench(ctx, catalog) {
 
   function taskDetail(workspace, task, manifest) {
     const artifacts = artifactList(workspace, task, manifest)
-    const record = artifacts.find(item => item.key === 'prd-review-record')
+    const available = artifacts.filter(item => !item.missing)
+    const record = available.find(item => item.key === 'prd-review-record')
     let reviewReplyReceived = false
     if (record) {
       try {
@@ -363,10 +371,11 @@ export function createWorkbench(ctx, catalog) {
           }))
       } catch {}
     }
-    const pending = artifacts.find(item => !item.stale && pendingStatuses.includes(item.reviewStatus) &&
-      (item.key !== 'prd-review-record' || !manifest.skills['prd-review'])) ?? null
-    const current = artifacts.find(item => item.key === task.round?.skill ||
-      (task.round?.skill === 'prd-review' && item.key === 'prd-review-record' && !manifest.skills['prd-review']))
+    const availableSkills = Object.fromEntries(available.map(({ key }) => [key, manifest.skills[key]]))
+    const pending = available.find(item => !item.stale && pendingStatuses.includes(item.reviewStatus) &&
+      (item.key !== 'prd-review-record' || !availableSkills['prd-review'])) ?? null
+    const current = available.find(item => item.key === task.round?.skill ||
+      (task.round?.skill === 'prd-review' && item.key === 'prd-review-record' && !availableSkills['prd-review']))
     const entry = current && manifest.skills[current.key]
     let output = null
     if (current && !current.stale && entry?.roundId === task.round?.id) {
@@ -376,13 +385,29 @@ export function createWorkbench(ctx, catalog) {
       (!confirmationSkills.has(output.skill) || output.reviewStatus === 'formal') &&
       (output.skill !== 'solution-swimlane' || output.format === 'html') ? output : null
     return { task: summary(task), manifest, artifacts, pending, output, finish, reviewReplyReceived,
-      next: pending ? [] : nextForTask(task, manifest) }
+      next: pending ? [] : nextForTask(task, { ...manifest, skills: availableSkills }) }
   }
 
-  function loadIndex(workspace) {
-    baseDir(workspace, true)
-    const index = readIndexFile(workspace) ?? { version: 1, next: 1, tasks: [] }
-    if (migrateTaskTitles(index)) saveIndex(workspace, index)
+  function taskPathExists(dir, taskId) {
+    try {
+      lstatSync(join(dir, taskId))
+      return true
+    } catch (error) {
+      if (error.code === 'ENOENT') return false
+      throw new Error('无法检查工作区的任务目录')
+    }
+  }
+
+  function loadIndex(workspace, reconcile = false) {
+    let dir
+    try { dir = baseDir(workspace, true) } catch { throw new Error('无法访问工作区的任务目录') }
+    const index = readIndexFile(dir) ?? { version: 1, next: 1, tasks: [] }
+    const count = index.tasks.length
+    if (reconcile) index.tasks = index.tasks.filter(task => taskPathExists(dir, task.id))
+    if (migrateTaskTitles(index) || count !== index.tasks.length) {
+      baseDir(workspace, false)
+      atomicWrite(dir, 'tasks.json', JSON.stringify(index))
+    }
     return index
   }
 
@@ -926,8 +951,12 @@ export function createWorkbench(ctx, catalog) {
         throw new Error('未知操作')
       }
       if (url.searchParams.has('latest')) {
-        const task = loadIndex(workspace).tasks.reduce((latest, item) =>
-          !latest || String(item.createdAt) >= String(latest.createdAt) ? item : latest, null)
+        const tasks = loadIndex(workspace).tasks
+        const dir = baseDir(workspace, false)
+        const task = tasks.reduce((latest, item) => {
+          if (latest && String(item.createdAt) < String(latest.createdAt)) return latest
+          return taskPathExists(dir, item.id) ? item : latest
+        }, null)
         return json(task ? taskDetail(workspace, task, loadManifest(workspace, task.id)) : null)
       }
       const taskId = url.searchParams.get('task') ?? ''
@@ -939,12 +968,16 @@ export function createWorkbench(ctx, catalog) {
           const requestedKey = url.searchParams.get('artifact') ?? normalizeSkillId(url.searchParams.get('skill'))
           const entry = manifest.skills[requestedKey]
           if (!entry) throw new Error('该产物尚未登记')
-          const bytes = readArtifact(workspace, taskId, entry)
+          let bytes
+          try { bytes = readArtifact(workspace, taskId, entry) } catch (error) {
+            if (error.code === 'ENOENT') return json({ error: '文件缺失' }, 404)
+            throw error
+          }
           return json({ content: bytes.toString('utf8'), artifact: artifactMeta(workspace, task, manifest, requestedKey, entry) })
         }
         return json(taskDetail(workspace, task, manifest))
       }
-      return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace).tasks.map(summary) })
+      return json({ sessions: await listSessions(workspace), tasks: loadIndex(workspace, true).tasks.map(summary) })
     } catch (error) {
       return json({ error: error?.message || '工作台请求失败' }, error?.status || 400)
     }

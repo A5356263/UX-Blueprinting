@@ -227,7 +227,7 @@ window.__ModuleLoader__.load({
       guideSupport: 'Use as needed',
       sediment: 'Artifacts',
       workspace: 'Workspace',
-      reset: 'Reset workbench',
+      refreshTasks: 'Refresh workspace tasks',
       useSkill: 'Use skill',
       pause: 'Pause',
       resume: 'Resume',
@@ -261,6 +261,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: 'Add context or request a change to this task…',
       detailDisabled: 'Continue the task to send a message.',
       noArtifacts: 'No artifacts yet.',
+      artifactMissing: 'File missing',
       runningTask: 'Working on this task. Please wait.',
       followExecution: 'For execution details,',
       viewTaskDetail: 'View task details',
@@ -355,7 +356,7 @@ window.__ModuleLoader__.load({
       guideSupport: '按需使用',
       sediment: '产物',
       workspace: '工作区',
-      reset: '重置工作台',
+      refreshTasks: '刷新工作区任务',
       useSkill: '使用 Skill',
       pause: '暂停',
       resume: '恢复',
@@ -389,6 +390,7 @@ window.__ModuleLoader__.load({
       detailPlaceholder: '补充任务信息，或描述需要调整的内容……',
       detailDisabled: '继续任务后才能发送消息。',
       noArtifacts: '还没有产物。',
+      artifactMissing: '文件缺失',
       runningTask: '正在执行，请稍等。',
       followExecution: '查看执行过程可',
       viewTaskDetail: '查看任务详情',
@@ -1863,9 +1865,10 @@ window.__ModuleLoader__.load({
       }, [workspace, overview, finishPrompt])
 
       useEffect(() => {
-        if (!task?.id || !selectedArtifactKey) {
+        if (!task?.id || !selectedArtifactKey || selectedArtifact?.missing) {
           setArtifactContent('')
           setArtifactLoading(false)
+          setArtifactError('')
           return
         }
         if (artifactEditing) return
@@ -1880,7 +1883,7 @@ window.__ModuleLoader__.load({
           if (!disposed) { setArtifactError(e.message); setArtifactLoading(false) }
         })
         return () => { disposed = true }
-      }, [workspace, task?.id, selectedArtifactKey, manifest?.updatedAt, artifactEditing])
+      }, [workspace, task?.id, selectedArtifactKey, selectedArtifact?.missing, manifest?.updatedAt, artifactEditing])
 
       useEffect(() => {
         if (artifactEditing && selectedArtifact && !selectedArtifact.editable) {
@@ -1977,15 +1980,24 @@ window.__ModuleLoader__.load({
         save({ workspace: id, sessionId: '', activeTaskId: '', viewMode: 'canvas' })
       }
 
-      function resetAll() {
-        try { localStorage.removeItem(STORAGE_KEY) } catch {}
-        saved.current = null
-        clearTask()
-        browseReturn.current = null
-        setWorkspace(''); setHandoff(null); setTasks([]); setConversations([])
-        setSessionId(''); setSkill(''); setText(''); setFiles([]); setError(''); setFinishPrompt(null)
-        setViewMode('canvas')
-        setTab('task'); setOpenMenu('')
+      async function refreshWorkspaceTasks() {
+        setError('')
+        try {
+          const data = await loadWorkspaceData()
+          if (workspaceRef.current !== workspace || !taskId || requestedTask.current !== taskId) return
+          if (data.tasks.some(item => item.id === taskId)) {
+            await loadTask(taskId, undefined, true)
+            return
+          }
+          clearTask()
+          browseReturn.current = null
+          setHandoff(null)
+          setFinishPrompt(null)
+          setViewMode('canvas')
+          save({ workspace, activeTaskId: '', viewMode: 'canvas' })
+        } catch (e) {
+          if (workspaceRef.current === workspace) setError(e.message)
+        }
       }
 
       async function ensureSession() {
@@ -2529,7 +2541,7 @@ window.__ModuleLoader__.load({
         const paused = latest?.status === 'paused'
         const [recommendation, ...alternatives] = overview?.next ?? []
         const currentSkill = latest?.round?.skill || latest?.lastSkill
-        const recorded = overview?.artifacts ?? []
+        const recorded = (overview?.artifacts ?? []).filter(item => !item.missing)
         const reviewRecord = recorded.find(item => item.key === 'prd-review-record')
         const steps = (latest?.skills ?? []).flatMap(id => {
           const artifact = recorded.find(item => item.key !== 'prd-review-record' && item.skill === id)
@@ -2554,8 +2566,8 @@ window.__ModuleLoader__.load({
           ]
         })
         const origin = leftView === 'detail' ? detailOrigin : tab
-        const done = (overview?.artifacts ?? []).filter(item => !isPending(item) ||
-          (item.key === 'prd-review-record' && overview.artifacts.some(artifact => artifact.key === 'prd-review')))
+        const done = (overview?.artifacts ?? []).filter(item => item.missing || !isPending(item) ||
+          (item.key === 'prd-review-record' && recorded.some(artifact => artifact.key === 'prd-review')))
         return h('aside', { className: 'uxbp-aside', 'aria-label': t('latestTask') },
           h('header', { className: 'uxbp-panel-head' },
             h('div', { className: 'uxbp-overview-top' },
@@ -2616,10 +2628,10 @@ window.__ModuleLoader__.load({
               done.length === 0 ? h('p', { className: 'uxbp-empty' }, t('noArtifacts'))
                 : h('ul', { className: 'uxbp-done-list', role: 'list' },
                     ...done.map(item => h('li', { key: item.key },
-                      h('button', { type: 'button', className: 'uxbp-output-row', title: item.stale ? t('needsReview') : undefined,
+                      h('button', { type: 'button', className: 'uxbp-output-row', title: item.missing ? t('artifactMissing') : item.stale ? t('needsReview') : undefined,
                         onClick: () => void openTask(latest, item.key, origin) },
-                        h(Icon, { path: item.stale ? 'M12 7v5m0 4h.1' : 'm5 12 4 4L19 6' }),
-                        h('span', null, item.label),
+                        h(Icon, { path: item.stale || item.missing ? 'M12 7v5m0 4h.1' : 'm5 12 4 4L19 6' }),
+                        h('span', null, item.label, item.missing ? ' · ' + t('artifactMissing') : ''),
                         h(Icon, { path: 'm9 6 6 6-6 6' }))))))))
       }
 
@@ -2635,7 +2647,7 @@ window.__ModuleLoader__.load({
         const meta = selectedArtifact
         const executing = task.status === 'active' && task.sessionId === sessionId && (running || sending || messageSending)
         const showExecutionInBody = executing && !artifactEditing && (artifacts.length === 0 || !artifactContent.trim())
-        const canOpenPrototype = Boolean(window.dshDesktop?.fileActions) && meta?.key === 'ux-proto-g' && !meta.stale
+        const canOpenPrototype = Boolean(window.dshDesktop?.fileActions) && meta?.key === 'ux-proto-g' && !meta.stale && !meta.missing
         const prototypeFooter = canOpenPrototype && h('div', { className: 'uxbp-prototype-footer' },
           h('button', { type: 'button', className: 'uxbp-btn', disabled: prototypeOpening,
             onClick: () => void viewPrototype() }, prototypeOpening ? t('loading') : t('viewPrototype')),
@@ -2653,8 +2665,8 @@ window.__ModuleLoader__.load({
               h('path', { d: 'm66 41 8 8', stroke: 'var(--accent)', strokeWidth: 2.5, strokeLinecap: 'round' }))),
           h('strong', { role: 'status' }, t('runningTask')),
           executionLink && h('p', { className: 'uxbp-running-note' }, t('followExecution'), ' ', executionLink))
-        const canConfirm = task.status === 'active' && meta?.reviewStatus === 'ready_for_confirmation' && !meta.stale
-        const detailStatus = meta?.manualLock
+        const canConfirm = task.status === 'active' && meta?.reviewStatus === 'ready_for_confirmation' && !meta.stale && !meta.missing
+        const detailStatus = meta?.missing ? t('artifactMissing') : meta?.manualLock
           ? t('manualEdited')
           : [isPending(meta) ? t('needsReview') : meta?.reviewStatus, meta?.stale ? t('stale') : ''].filter(Boolean).join(' · ')
         const artifactPanel = artifacts.length === 0
@@ -2679,7 +2691,7 @@ window.__ModuleLoader__.load({
                     className: 'uxbp-artifact-edit', value: artifactDraft, spellCheck: false,
                     onChange: event => setArtifactDraft(event.target.value),
                   })
-                : executionState || (artifactLoading
+                : meta?.missing ? null : executionState || (artifactLoading
                   ? h('div', { className: 'uxbp-artifact-scroll' }, h('p', { className: 'uxbp-empty' }, t('loading')))
                   : meta?.format === 'html' && !artifactError && artifactContent
                     ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
@@ -2799,7 +2811,8 @@ window.__ModuleLoader__.load({
                     disabled: Boolean(task) && (menuWorkspace !== workspace || item.id !== task.sessionId),
                     onClick: () => chooseSession(menuWorkspace, item.id),
                   }, item.title))))),
-            h('button', { type: 'button', className: 'uxbp-btn uxbp-icon', title: t('reset'), 'aria-label': t('reset'), onClick: resetAll },
+            h('button', { type: 'button', className: 'uxbp-btn uxbp-icon', title: t('refreshTasks'), 'aria-label': t('refreshTasks'),
+              disabled: !workspace || sending || messageSending || artifactSaving, onClick: () => void refreshWorkspaceTasks() },
               h(Icon, { path: 'M20 12a8 8 0 1 1-2.3-5.7M20 4v6h-6' })))),
 
         error && h('p', { className: 'uxbp-error', role: 'alert' }, error),
