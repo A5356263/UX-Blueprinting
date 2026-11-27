@@ -899,7 +899,8 @@ window.__ModuleLoader__.load({
       .uxbp-artifact-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
         padding: 10px 0; }
       .uxbp-artifact-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
-      .uxbp-prototype-notice { margin: 0 0 6px; color: var(--muted); font-size: 12px; }
+      .uxbp-prototype-footer { display: grid; justify-items: start; gap: 6px; margin-top: 16px; }
+      .uxbp-prototype-notice { margin: 0; color: var(--muted); font-size: 12px; }
       .uxbp-artifact-meta { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--muted); font-size: 11px; }
       .uxbp-artifact-meta strong { color: var(--ink); font-size: 13px; font-weight: 600; }
       .uxbp-artifact-scroll { flex: 1; min-height: 0; overflow: auto; padding: 8px 0 20px; }
@@ -931,16 +932,21 @@ window.__ModuleLoader__.load({
         border: .5px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); }
       .uxbp-detail-composer textarea { flex: 1; min-width: 0; min-height: 28px; max-height: 90px; field-sizing: content; resize: none; padding: 4px 6px; border: 0; outline: 0;
         background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 19px; }
-      .uxbp-md { color: var(--ink); font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
-      .uxbp-md > :first-child { margin-top: 0; }
       .uxbp-detail-composer .uxbp-run { flex: none; width: 28px; height: 28px; min-height: 28px; padding: 0; border-radius: 50%; }
-      .uxbp-md h1, .uxbp-md h2, .uxbp-md h3, .uxbp-md h4 { margin: 1.1em 0 .45em; line-height: 1.35; }
-      .uxbp-md h1 { font-size: 20px; } .uxbp-md h2 { font-size: 16px; } .uxbp-md h3 { font-size: 14px; } .uxbp-md h4 { font-size: 13px; }
-      .uxbp-md p { margin: .55em 0; white-space: pre-wrap; }
-      .uxbp-md ul, .uxbp-md ol { margin: .5em 0; padding-left: 1.4em; }
-      .uxbp-md li { margin: .2em 0; }
-      .uxbp-md pre { margin: .8em 0; padding: 10px; overflow: auto; border-radius: 8px; background: var(--soft); font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .uxbp-md { display: flow-root; color: var(--ink); font-size: 14px; line-height: 1.75; overflow-wrap: anywhere; }
+      .uxbp-md :is(h1, h2, h3, h4, h5, h6) { margin: 1.35em 0 .5em; color: var(--ink); line-height: 1.4; font-weight: 650; }
+      .uxbp-md h1 { font-size: 24px; margin-bottom: .7em; }
+      .uxbp-md h2 { font-size: 19px; margin-top: 1.45em; }
+      .uxbp-md h3 { font-size: 16px; }
+      .uxbp-md :is(h4, h5, h6) { font-size: 14px; color: var(--muted); }
+      .uxbp-md p { margin: .7em 0; white-space: pre-wrap; }
+      .uxbp-md ul, .uxbp-md ol { margin: .65em 0 .9em; padding-inline-start: 1.45em; }
+      .uxbp-md li + li { margin-top: .28em; }
+      .uxbp-md pre { margin: .85em 0; padding: 10px 12px; overflow: auto; border-radius: 8px;
+        background: var(--soft); font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
       .uxbp-md .uxbp-md-table { white-space: pre; }
+      .uxbp-md > :first-child { margin-top: 0; }
+      .uxbp-md > :last-child { margin-bottom: 0; }
       .uxbp-sediment { flex: 1; min-height: 0; overflow: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
       .uxbp-sediment-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-bottom: 12px; }
       .uxbp-search { display: flex; align-items: center; gap: 7px; box-sizing: border-box; width: 280px; max-width: 100%; height: 38px;
@@ -973,6 +979,7 @@ window.__ModuleLoader__.load({
         background: var(--card); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
       .uxbp-sediment-row:last-child { border-bottom: 0; }
       .uxbp-sediment-row:hover { background: var(--soft); }
+      .uxbp-sediment-row > .uxbp-status { justify-self: start; white-space: nowrap; }
       .uxbp-sediment-task { min-width: 0; }
       .uxbp-sediment-task strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
       .uxbp-sediment-task span { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--faint); font-size: 10.5px; }
@@ -1463,7 +1470,7 @@ window.__ModuleLoader__.load({
       }
     }
 
-    function MarkdownView({ content, outlineLabel }) {
+    function MarkdownView({ content, outlineLabel, footer }) {
       const { blocks, headings } = useMemo(() => parseMarkdown(content), [content])
       const readingRef = useRef(null)
       const scrollRef = useRef(null)
@@ -1513,7 +1520,7 @@ window.__ModuleLoader__.load({
       const showOutline = hasScroll && headings.length > 0
       return h('div', { ref: readingRef, className: 'uxbp-artifact-reading', 'data-outline': showOutline },
         h('div', { ref: scrollRef, className: 'uxbp-artifact-scroll', onScroll: updateActive },
-          h('div', { className: 'uxbp-md' }, ...blocks)),
+          h('div', null, h('div', { className: 'uxbp-md' }, ...blocks), footer)),
         showOutline && h('nav', { className: 'uxbp-artifact-outline', 'aria-label': outlineLabel, onScroll: () => setHint(null) },
           ...headings.map(({ index, level, label }, position) => h('button', {
             key: index, type: 'button', className: 'uxbp-outline-marker', 'data-level': level, 'aria-label': label,
@@ -2534,8 +2541,11 @@ window.__ModuleLoader__.load({
         const executing = task.status === 'active' && task.sessionId === sessionId && (running || sending || messageSending)
         const showExecutionInBody = executing && !artifactEditing && (artifacts.length === 0 || !artifactContent.trim())
         const canOpenPrototype = Boolean(window.dshDesktop?.fileActions) && meta?.key === 'ux-proto-g' && !meta.stale
-        const prototypeNotice = canOpenPrototype && prototypeResult?.id === task.id && prototypeResult.workspace === workspace
-          ? h('p', { className: 'uxbp-prototype-notice', role: prototypeResult.error ? 'alert' : 'status' }, prototypeResult.text) : null
+        const prototypeFooter = canOpenPrototype && h('div', { className: 'uxbp-prototype-footer' },
+          h('button', { type: 'button', className: 'uxbp-btn', disabled: prototypeOpening,
+            onClick: () => void viewPrototype() }, prototypeOpening ? t('loading') : t('viewPrototype')),
+          prototypeResult?.id === task.id && prototypeResult.workspace === workspace &&
+            h('p', { className: 'uxbp-prototype-notice', role: prototypeResult.error ? 'alert' : 'status' }, prototypeResult.text))
         const executionLink = task.sessionId && h('button', { type: 'button', className: 'uxbp-session-link',
           onClick: () => uiWorkspace.openSession(task.sessionId) }, t('enter'))
         const executionState = showExecutionInBody && h('div', { className: 'uxbp-running-state' },
@@ -2561,8 +2571,6 @@ window.__ModuleLoader__.load({
                   detailStatus && h('span', null, detailStatus),
                   meta?.origin === 'user' && !meta?.manualLock && h('span', null, t('manualEdited'))),
                 h('div', { className: 'uxbp-artifact-actions' },
-                  canOpenPrototype && h('button', { type: 'button', className: 'uxbp-btn', disabled: prototypeOpening,
-                    onClick: () => void viewPrototype() }, prototypeOpening ? t('loading') : t('viewPrototype')),
                   artifactEditing
                     ? h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: () => void saveArtifact() }, artifactSaving ? t('loading') : t('save'))
                     : meta?.editable && h('button', { type: 'button', className: 'uxbp-btn', onClick: startEdit }, t('editArtifact')),
@@ -2571,7 +2579,6 @@ window.__ModuleLoader__.load({
                     onClick: () => void confirmOutput() }, t('confirmOutput')),
                   artifactEditing && h('button', { type: 'button', className: 'uxbp-btn', disabled: artifactSaving, onClick: cancelEdit }, t('cancel')))),
               artifactError && h('p', { className: 'uxbp-artifact-error', role: 'alert' }, artifactError),
-              prototypeNotice,
               artifactEditing
                 ? h('textarea', {
                     className: 'uxbp-artifact-edit', value: artifactDraft, spellCheck: false,
@@ -2582,7 +2589,7 @@ window.__ModuleLoader__.load({
                   : meta?.format === 'html' && !artifactError && artifactContent
                     ? h('iframe', { className: 'uxbp-artifact-html', title: meta.label, sandbox: 'allow-scripts allow-downloads', referrerPolicy: 'no-referrer',
                         srcDoc: artifactContent.replace(/^\s*<!doctype html>/i, '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; base-uri \'none\'; form-action \'none\'">') })
-                    : h(MarkdownView, { key: selectedArtifactKey, content: artifactContent, outlineLabel: t('documentOutline') })))
+                    : h(MarkdownView, { key: selectedArtifactKey, content: artifactContent, outlineLabel: t('documentOutline'), footer: prototypeFooter })))
 
         return h('section', { className: 'uxbp-task-detail' },
           h('div', { className: 'uxbp-detail-head' },
